@@ -429,6 +429,378 @@ void main() {
     { id: 'dart', name: 'Dart' }
   ];
 
+  // === Interactive Format Converter ===
+  let editorInput = '';
+  let editorOutput = '';
+  let editorDetectedFormat = '';
+  let editorDetectedType = '';
+  let editorOutputTab: 'json' | 'flatbuffers' = 'json';
+  let editorSampleKey = '';
+
+  interface SizeInfo {
+    inputBytes: number;
+    jsonBytes: number;
+    fbBytes: number;
+    maxBytes: number;
+  }
+  let sizeInfo: SizeInfo = { inputBytes: 0, jsonBytes: 0, fbBytes: 0, maxBytes: 1 };
+
+  const editorSamples: Record<string, { label: string; format: string; type: string; data: string }> = {
+    tle: {
+      label: 'TLE',
+      format: 'TLE',
+      type: 'OMM',
+      data: `ISS (ZARYA)
+1 25544U 98067A   24174.70577787  .00023456  00000+0  41234-3 0  9993
+2 25544  51.6421 227.1234 0006703 261.2345  98.7654 15.72125391456789`
+    },
+    kvn: {
+      label: 'KVN',
+      format: 'KVN',
+      type: 'OMM',
+      data: `CCSDS_OMM_VERS = 2.0
+CREATION_DATE = 2024-06-22T12:00:00
+ORIGINATOR = CelesTrak
+OBJECT_NAME = ISS (ZARYA)
+OBJECT_ID = 1998-067A
+CENTER_NAME = EARTH
+REF_FRAME = TEME
+TIME_SYSTEM = UTC
+MEAN_ELEMENT_THEORY = SGP4
+EPOCH = 2024-06-22T16:56:20.014080
+MEAN_MOTION = 15.72125391
+ECCENTRICITY = .0006703
+INCLINATION = 51.6421
+RA_OF_ASC_NODE = 227.1234
+ARG_OF_PERICENTER = 261.2345
+MEAN_ANOMALY = 98.7654
+NORAD_CAT_ID = 25544
+BSTAR = .41234E-3
+MEAN_MOTION_DOT = .00023456
+CLASSIFICATION_TYPE = U`
+    },
+    xml: {
+      label: 'XML',
+      format: 'XML',
+      type: 'CDM',
+      data: `<?xml version="1.0" encoding="UTF-8"?>
+<cdm xmlns="urn:ccsds:recommendation:navigation:schema:cdmType">
+  <header>
+    <CREATION_DATE>2024-06-22T18:31:00</CREATION_DATE>
+    <ORIGINATOR>JSPOC</ORIGINATOR>
+    <MESSAGE_ID>CDM-2024-001</MESSAGE_ID>
+  </header>
+  <body>
+    <relativeMetadataData>
+      <TCA>2024-06-25T12:34:56.789</TCA>
+      <MISS_DISTANCE>425.0</MISS_DISTANCE>
+    </relativeMetadataData>
+    <segment>
+      <metadata>
+        <OBJECT>OBJECT1</OBJECT>
+        <OBJECT_DESIGNATOR>25544</OBJECT_DESIGNATOR>
+        <OBJECT_NAME>ISS (ZARYA)</OBJECT_NAME>
+        <INTERNATIONAL_DESIGNATOR>1998-067A</INTERNATIONAL_DESIGNATOR>
+        <OBJECT_TYPE>PAYLOAD</OBJECT_TYPE>
+      </metadata>
+      <data>
+        <stateVector>
+          <X>-4400.123</X>
+          <Y>1502.456</Y>
+          <Z>5201.789</Z>
+          <X_DOT>-3.456</X_DOT>
+          <Y_DOT>-6.789</Y_DOT>
+          <Z_DOT>2.345</Z_DOT>
+        </stateVector>
+      </data>
+    </segment>
+  </body>
+</cdm>`
+    },
+    satcat: {
+      label: 'SATCAT',
+      format: 'SATCAT',
+      type: 'CAT',
+      data: `NORAD_CAT_ID,OBJECT_NAME,INTLDES,OBJECT_TYPE,COUNTRY,LAUNCH_DATE,PERIOD,INCLINATION,APOGEE,PERIGEE
+25544,ISS (ZARYA),1998-067A,PAY,CIS,1998-11-20,92.9,51.64,422,418
+44713,STARLINK-1007,2019-074A,PAY,US,2019-11-11,95.6,53.05,550,540
+58574,STARLINK-30062,2023-068K,PAY,US,2023-03-10,95.9,43.00,560,548
+54032,COSMOS 2251 DEB,1993-036SX,DEB,CIS,1993-09-16,96.4,74.03,820,770`
+    },
+    vcm: {
+      label: 'VCM',
+      format: 'VCM',
+      type: 'VCM',
+      data: `OBJECT_NAME    = ISS (ZARYA)
+OBJECT_ID      = 1998-067A
+NORAD_CAT_ID   = 25544
+EPOCH          = 2024-06-22T18:00:00.000
+REF_FRAME      = ITRF
+X              = -4400.123
+Y              = 1502.456
+Z              = 5201.789
+X_DOT          = -3.456789
+Y_DOT          = -6.789012
+Z_DOT          = 2.345678
+CD_AREA_OVER_MASS = 0.02456
+CR_AREA_OVER_MASS = 0.01234
+CR_R           = 1.234e-3
+CT_R           = 2.345e-4
+CT_T           = 3.456e-3
+CN_R           = 4.567e-5
+CN_T           = 5.678e-4
+CN_N           = 6.789e-3`
+    }
+  };
+
+  function detectInputFormat(input: string): { format: string; type: string } {
+    const trimmed = input.trim();
+    if (trimmed.startsWith('<?xml') || trimmed.charAt(0) === '<') {
+      const m = trimmed.match(/<(\w+)[\s>]/);
+      const root = m ? m[1].toLowerCase() : '';
+      const map: Record<string, string> = { cdm: 'CDM', omm: 'OMM', oem: 'OEM', opm: 'OPM', aem: 'AEM', tdm: 'TDM', xtce: 'XTCE' };
+      return { format: 'XML', type: map[root] || 'XML' };
+    }
+    const lines = trimmed.split('\n').map(l => l.trim()).filter(l => l);
+    if (lines.length >= 2 && lines.some(l => /^1 \d{5}/.test(l)) && lines.some(l => /^2 \d{5}/.test(l))) {
+      return { format: 'TLE', type: 'OMM' };
+    }
+    if (trimmed.startsWith('NORAD_CAT_ID') || (/^\d{1,5},/.test(trimmed) && trimmed.includes(','))) {
+      return { format: 'SATCAT', type: 'CAT' };
+    }
+    if (trimmed.includes('CCSDS_OMM_VERS')) return { format: 'KVN', type: 'OMM' };
+    if (trimmed.includes('CCSDS_OEM_VERS')) return { format: 'KVN', type: 'OEM' };
+    if (trimmed.includes('CCSDS_CDM_VERS')) return { format: 'KVN', type: 'CDM' };
+    if (trimmed.includes('CCSDS_OPM_VERS')) return { format: 'KVN', type: 'OPM' };
+    if (trimmed.includes('CCSDS_AEM_VERS')) return { format: 'KVN', type: 'AEM' };
+    if (trimmed.includes('CCSDS_TDM_VERS')) return { format: 'KVN', type: 'TDM' };
+    if (trimmed.includes('X_DOT') && trimmed.includes('Y_DOT')) return { format: 'VCM', type: 'VCM' };
+    if (trimmed.includes('=')) return { format: 'KVN', type: '' };
+    return { format: 'Unknown', type: '' };
+  }
+
+  function parseTLEFloat(s: string): number {
+    s = s.trim();
+    if (!s || s === '00000+0' || s === '00000-0') return 0;
+    let sign = 1;
+    if (s.charAt(0) === '-') { sign = -1; s = s.substring(1); }
+    else if (s.charAt(0) === '+') { s = s.substring(1); }
+    const m = s.match(/([+-])(\d)$/);
+    if (m) {
+      const mantissa = s.substring(0, s.length - 2);
+      const exp = parseInt(m[1] + m[2]);
+      return sign * parseFloat('0.' + mantissa) * Math.pow(10, exp);
+    }
+    return sign * parseFloat(s);
+  }
+
+  function tleEpochToISO(yr2: number, dayFrac: number): string {
+    const year = yr2 >= 57 ? 1900 + yr2 : 2000 + yr2;
+    const wholeDays = Math.floor(dayFrac);
+    const frac = dayFrac - wholeDays;
+    const d = new Date(Date.UTC(year, 0, 1));
+    d.setUTCDate(wholeDays);
+    d.setUTCMilliseconds(d.getUTCMilliseconds() + Math.round(frac * 86400000));
+    return d.toISOString().replace('Z', '');
+  }
+
+  function parseTLE(input: string): any {
+    const lines = input.trim().split('\n').map(l => l.trim()).filter(l => l);
+    let name = '', line1 = '', line2 = '';
+    if (lines.length >= 3 && !lines[0].startsWith('1 ')) {
+      name = lines[0]; line1 = lines[1]; line2 = lines[2];
+    } else if (lines.length >= 2) {
+      line1 = lines[0]; line2 = lines[1];
+    }
+    const catNum = parseInt(line1.substring(2, 7));
+    const classification = line1.charAt(7);
+    const intlDesig = line1.substring(9, 17).trim();
+    const epochYr = parseInt(line1.substring(18, 20));
+    const epochDay = parseFloat(line1.substring(20, 32));
+    const ndot = parseFloat(line1.substring(33, 43));
+    const nddot = parseTLEFloat(line1.substring(44, 52));
+    const bstar = parseTLEFloat(line1.substring(53, 61));
+    const elsetNum = parseInt(line1.substring(64, 68));
+    const inc = parseFloat(line2.substring(8, 16));
+    const raan = parseFloat(line2.substring(17, 25));
+    const ecc = parseFloat('0.' + line2.substring(26, 33).trim());
+    const argp = parseFloat(line2.substring(34, 42));
+    const ma = parseFloat(line2.substring(43, 51));
+    const mm = parseFloat(line2.substring(52, 63));
+    const revNum = parseInt(line2.substring(63, 68));
+    const yr2 = parseInt(intlDesig.substring(0, 2));
+    const cosparYr = yr2 >= 57 ? '19' + intlDesig.substring(0, 2) : '20' + intlDesig.substring(0, 2);
+    const objectId = cosparYr + '-' + intlDesig.substring(2);
+    return {
+      CCSDS_OMM_VERS: "2.0",
+      OBJECT_NAME: name || 'NORAD ' + catNum,
+      OBJECT_ID: objectId,
+      CENTER_NAME: "EARTH",
+      REF_FRAME: "TEME",
+      TIME_SYSTEM: "UTC",
+      MEAN_ELEMENT_THEORY: "SGP4",
+      EPOCH: tleEpochToISO(epochYr, epochDay),
+      MEAN_MOTION: mm,
+      ECCENTRICITY: ecc,
+      INCLINATION: inc,
+      RA_OF_ASC_NODE: raan,
+      ARG_OF_PERICENTER: argp,
+      MEAN_ANOMALY: ma,
+      NORAD_CAT_ID: catNum,
+      CLASSIFICATION_TYPE: classification,
+      BSTAR: bstar,
+      MEAN_MOTION_DOT: ndot,
+      MEAN_MOTION_DDOT: nddot,
+      ELEMENT_SET_NO: elsetNum,
+      REV_AT_EPOCH: revNum
+    };
+  }
+
+  function parseKVN(input: string): any {
+    const result: any = {};
+    const ephemerisLines: string[] = [];
+    let inData = false;
+    for (const line of input.split('\n')) {
+      const t = line.trim();
+      if (!t || t.startsWith('COMMENT')) continue;
+      if (t === 'META_STOP') { inData = true; continue; }
+      if (t === 'META_START') { inData = false; continue; }
+      const eq = t.indexOf('=');
+      if (eq >= 0) {
+        const key = t.substring(0, eq).trim();
+        let val: any = t.substring(eq + 1).trim();
+        if (/^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?$/.test(val)) val = Number(val);
+        result[key] = val;
+      } else if (inData && /^\d{4}-/.test(t)) {
+        ephemerisLines.push(t);
+      }
+    }
+    if (ephemerisLines.length > 0) {
+      result.EPHEMERIS = ephemerisLines.map(l => {
+        const p = l.split(/\s+/);
+        const e: any = { EPOCH: p[0] };
+        if (p.length >= 4) { e.X = +p[1]; e.Y = +p[2]; e.Z = +p[3]; }
+        if (p.length >= 7) { e.X_DOT = +p[4]; e.Y_DOT = +p[5]; e.Z_DOT = +p[6]; }
+        return e;
+      });
+    }
+    return result;
+  }
+
+  function parseXML(input: string): any {
+    const doc = new DOMParser().parseFromString(input, 'text/xml');
+    function walk(node: Element): any {
+      const kids = Array.from(node.children);
+      if (kids.length === 0) {
+        let v: any = (node.textContent || '').trim();
+        if (/^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?$/.test(v)) v = Number(v);
+        return v;
+      }
+      const obj: any = {};
+      for (const c of kids) {
+        const k = c.tagName.replace(/^.*:/, '');
+        const val = walk(c);
+        if (obj[k] !== undefined) {
+          if (!Array.isArray(obj[k])) obj[k] = [obj[k]];
+          obj[k].push(val);
+        } else {
+          obj[k] = val;
+        }
+      }
+      return obj;
+    }
+    return walk(doc.documentElement);
+  }
+
+  function parseSATCAT(input: string): any[] {
+    const lines = input.trim().split('\n').filter(l => l.trim());
+    if (lines.length === 0) return [];
+    let headers: string[];
+    let dataLines: string[];
+    if (lines[0].includes('NORAD_CAT_ID') || lines[0].includes('OBJECT_NAME')) {
+      headers = lines[0].split(',').map(h => h.trim());
+      dataLines = lines.slice(1);
+    } else {
+      headers = ['NORAD_CAT_ID', 'OBJECT_NAME', 'INTLDES', 'OBJECT_TYPE', 'COUNTRY', 'LAUNCH_DATE'];
+      dataLines = lines;
+    }
+    return dataLines.map(line => {
+      const vals = line.split(',').map(v => v.trim());
+      const obj: any = {};
+      headers.forEach((h, i) => {
+        if (i < vals.length) {
+          let v: any = vals[i];
+          if (/^\d+(\.\d+)?$/.test(v)) v = Number(v);
+          obj[h] = v;
+        }
+      });
+      return obj;
+    });
+  }
+
+  function estimateFBSize(json: any): number {
+    let size = 8;
+    function count(obj: any) {
+      if (Array.isArray(obj)) {
+        size += 4 + obj.length * 4;
+        obj.forEach(item => count(item));
+        return;
+      }
+      if (typeof obj === 'object' && obj !== null) {
+        const keys = Object.keys(obj);
+        size += 4 + keys.length * 2 + 4;
+        for (const k of keys) {
+          const v = obj[k];
+          if (typeof v === 'string') { size += 4 + v.length + 2; }
+          else if (typeof v === 'number') { size += 8; }
+          else { size += 4; count(v); }
+        }
+        return;
+      }
+    }
+    count(json);
+    return size;
+  }
+
+  function convertEditor() {
+    if (!editorInput.trim()) {
+      editorOutput = '';
+      editorDetectedFormat = '';
+      editorDetectedType = '';
+      sizeInfo = { inputBytes: 0, jsonBytes: 0, fbBytes: 0, maxBytes: 1 };
+      return;
+    }
+    const det = detectInputFormat(editorInput);
+    editorDetectedFormat = det.format;
+    editorDetectedType = det.type;
+    try {
+      let parsed: any;
+      switch (det.format) {
+        case 'TLE': parsed = parseTLE(editorInput); break;
+        case 'KVN': case 'VCM': parsed = parseKVN(editorInput); break;
+        case 'XML': parsed = parseXML(editorInput); break;
+        case 'SATCAT': parsed = parseSATCAT(editorInput); break;
+        default: parsed = parseKVN(editorInput);
+      }
+      editorOutput = JSON.stringify(parsed, null, 2);
+      const ib = new TextEncoder().encode(editorInput).length;
+      const jb = new TextEncoder().encode(editorOutput).length;
+      const fb = estimateFBSize(parsed);
+      sizeInfo = { inputBytes: ib, jsonBytes: jb, fbBytes: fb, maxBytes: Math.max(ib, jb, fb) };
+    } catch (e: any) {
+      editorOutput = 'Error: ' + e.message;
+      sizeInfo = { inputBytes: 0, jsonBytes: 0, fbBytes: 0, maxBytes: 1 };
+    }
+  }
+
+  function loadEditorSample(key: string) {
+    editorSampleKey = key;
+    editorInput = editorSamples[key].data;
+    editorDetectedFormat = editorSamples[key].format;
+    editorDetectedType = editorSamples[key].type;
+    convertEditor();
+  }
+
   // Technical grid background with floating data
   function initTechBackground() {
     if (!canvas) return;
@@ -546,6 +918,7 @@ void main() {
       schemaCount = 118; // Fallback count
     }
     const cleanup = initTechBackground();
+    loadEditorSample('tle');
     return cleanup;
   });
 </script>
@@ -714,6 +1087,141 @@ void main() {
           </span>
         </div>
       {/each}
+    </div>
+  </div>
+</section>
+
+<section id="try-it" class="tryit-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Try It Now</h2>
+      <p class="section-subtitle">
+        Drop in any legacy space data format and instantly get structured JSON and FlatBuffers output.
+        <strong>Works in every language SDS supports.</strong>
+      </p>
+    </div>
+
+    <div class="sample-bar">
+      <span class="sample-label">Load example:</span>
+      {#each Object.entries(editorSamples) as [key, sample]}
+        <button
+          class="sample-btn"
+          class:active={editorSampleKey === key}
+          on:click={() => loadEditorSample(key)}
+        >
+          {sample.label}
+        </button>
+      {/each}
+    </div>
+
+    <div class="editor-grid">
+      <div class="editor-pane">
+        <div class="editor-header">
+          <span class="editor-label">Input</span>
+          {#if editorDetectedFormat}
+            <div class="format-badges">
+              <span class="format-badge">{editorDetectedFormat}</span>
+              {#if editorDetectedType}
+                <span class="type-badge">{editorDetectedType}</span>
+              {/if}
+            </div>
+          {/if}
+        </div>
+        <textarea
+          class="editor-textarea"
+          bind:value={editorInput}
+          placeholder="Paste TLE, KVN, XML, SATCAT, or VCM data here..."
+          spellcheck="false"
+        ></textarea>
+      </div>
+
+      <div class="editor-pane">
+        <div class="editor-header">
+          <span class="editor-label">Output</span>
+          <div class="output-tabs">
+            <button
+              class="output-tab"
+              class:active={editorOutputTab === 'json'}
+              on:click={() => editorOutputTab = 'json'}
+            >JSON</button>
+            <button
+              class="output-tab"
+              class:active={editorOutputTab === 'flatbuffers'}
+              on:click={() => editorOutputTab = 'flatbuffers'}
+            >FlatBuffers</button>
+          </div>
+        </div>
+        {#if editorOutputTab === 'json'}
+          <pre class="editor-pre"><code>{editorOutput || 'Output will appear here...'}</code></pre>
+        {:else}
+          <div class="fb-output">
+            {#if sizeInfo.inputBytes > 0}
+              <div class="size-comparison">
+                <div class="size-row">
+                  <span class="size-label">Legacy</span>
+                  <div class="size-bar-track">
+                    <div class="size-bar size-bar-legacy" style="width: {Math.round((sizeInfo.inputBytes / sizeInfo.maxBytes) * 100)}%"></div>
+                  </div>
+                  <span class="size-value">{sizeInfo.inputBytes} B</span>
+                </div>
+                <div class="size-row">
+                  <span class="size-label">JSON</span>
+                  <div class="size-bar-track">
+                    <div class="size-bar size-bar-json" style="width: {Math.round((sizeInfo.jsonBytes / sizeInfo.maxBytes) * 100)}%"></div>
+                  </div>
+                  <span class="size-value">{sizeInfo.jsonBytes} B</span>
+                </div>
+                <div class="size-row">
+                  <span class="size-label">FlatBuffer</span>
+                  <div class="size-bar-track">
+                    <div class="size-bar size-bar-fb" style="width: {Math.round((sizeInfo.fbBytes / sizeInfo.maxBytes) * 100)}%"></div>
+                  </div>
+                  <span class="size-value">{sizeInfo.fbBytes} B</span>
+                </div>
+              </div>
+              <div class="fb-benefits">
+                <div class="fb-benefit"><span class="check">&#x2713;</span> Zero-copy access &mdash; read fields directly from buffer, no parsing step</div>
+                <div class="fb-benefit"><span class="check">&#x2713;</span> Type-safe &mdash; schema enforces correct types in all 13 languages</div>
+                <div class="fb-benefit"><span class="check">&#x2713;</span> Cross-platform &mdash; identical binary format works everywhere</div>
+                <div class="fb-benefit"><span class="check">&#x2713;</span> Streamable &mdash; efficient for real-time data feeds and P2P networks</div>
+              </div>
+            {:else}
+              <p class="fb-placeholder">Convert data to see FlatBuffers size comparison</p>
+            {/if}
+          </div>
+        {/if}
+      </div>
+    </div>
+
+    <div class="editor-actions">
+      <button class="convert-btn" on:click={convertEditor}>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14"></path>
+          <path d="M12 5l7 7-7 7"></path>
+        </svg>
+        Convert
+      </button>
+    </div>
+
+    <div class="language-callout">
+      <div class="callout-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <ellipse cx="12" cy="12" rx="10" ry="4"></ellipse>
+          <line x1="12" y1="2" x2="12" y2="22"></line>
+        </svg>
+      </div>
+      <div class="callout-text">
+        <strong>This conversion works in every language.</strong>
+        SDS schemas generate native code for all 13 supported languages. The same parsing pipeline runs in
+        TypeScript, Python, Go, Rust, C++, Java, C#, Kotlin, Swift, PHP, Dart, and more &mdash; with identical
+        binary output. One schema definition, every platform.
+      </div>
+      <div class="callout-langs">
+        {#each ['TypeScript', 'Python', 'Go', 'Rust', 'C++', 'Java', 'C#', 'Kotlin', 'Swift', 'PHP', 'Dart', 'Lobster', 'JavaScript'] as lang}
+          <span class="callout-lang-pill">{lang}</span>
+        {/each}
+      </div>
     </div>
   </div>
 </section>
@@ -1843,5 +2351,327 @@ void main() {
     .code-grid {
       grid-template-columns: 1fr;
     }
+
+    .editor-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .editor-textarea, .editor-pre, .fb-output {
+      min-height: 250px;
+    }
+
+    .size-row {
+      grid-template-columns: 70px 1fr 80px;
+    }
+  }
+
+  /* Try It Editor Section */
+  .tryit-section {
+    background: linear-gradient(180deg, transparent 0%, rgba(0, 200, 170, 0.03) 50%, transparent 100%);
+  }
+
+  .sample-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .sample-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  .sample-btn {
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--ui-bg);
+    border: 1px solid var(--ui-border);
+    border-radius: 8px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .sample-btn:hover {
+    background: var(--ui-hover);
+    border-color: var(--ui-border-hover);
+    color: var(--text-primary);
+  }
+
+  .sample-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  .editor-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .editor-pane {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: #161b22;
+    border-bottom: 1px solid #30363d;
+  }
+
+  .editor-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #8b949e;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .format-badges {
+    display: flex;
+    gap: 6px;
+  }
+
+  .format-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 2px 8px;
+    background: rgba(251, 146, 60, 0.15);
+    border: 1px solid rgba(251, 146, 60, 0.3);
+    border-radius: 4px;
+    color: #fb923c;
+  }
+
+  .type-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 2px 8px;
+    background: rgba(0, 119, 182, 0.15);
+    border: 1px solid rgba(0, 119, 182, 0.3);
+    border-radius: 4px;
+    color: var(--accent);
+  }
+
+  .editor-textarea {
+    width: 100%;
+    min-height: 340px;
+    padding: 16px;
+    background: transparent;
+    border: none;
+    color: #c9d1d9;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    resize: vertical;
+    outline: none;
+    box-sizing: border-box;
+  }
+
+  .editor-textarea::placeholder {
+    color: #484f58;
+  }
+
+  .editor-pre {
+    margin: 0;
+    padding: 16px;
+    overflow: auto;
+    min-height: 340px;
+    max-height: 500px;
+    flex: 1;
+  }
+
+  .editor-pre code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #c9d1d9;
+  }
+
+  .output-tabs {
+    display: flex;
+    gap: 2px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    padding: 2px;
+  }
+
+  .output-tab {
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    color: #8b949e;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--font-sans);
+  }
+
+  .output-tab:hover {
+    color: #c9d1d9;
+  }
+
+  .output-tab.active {
+    background: var(--accent);
+    color: white;
+  }
+
+  .fb-output {
+    padding: 20px;
+    min-height: 340px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .size-comparison {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+
+  .size-row {
+    display: grid;
+    grid-template-columns: 90px 1fr 90px;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .size-label {
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    color: #8b949e;
+  }
+
+  .size-bar-track {
+    height: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .size-bar {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.5s ease;
+  }
+
+  .size-bar-legacy { background: #f87171; }
+  .size-bar-json { background: #fbbf24; }
+  .size-bar-fb { background: linear-gradient(90deg, #17ead9, #38ef7d); }
+
+  .size-value {
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    color: #c9d1d9;
+    text-align: right;
+  }
+
+  .fb-benefits {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .fb-benefit {
+    font-size: 14px;
+    color: #8b949e;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.5;
+  }
+
+  .fb-placeholder {
+    color: #484f58;
+    text-align: center;
+  }
+
+  .editor-actions {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+
+  .convert-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 36px;
+    font-size: 16px;
+    font-weight: 600;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 28px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .convert-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 119, 182, 0.3);
+  }
+
+  .language-callout {
+    background: var(--ui-bg);
+    border: 1px solid var(--ui-border);
+    border-radius: 20px;
+    padding: 32px;
+    backdrop-filter: blur(20px);
+    text-align: center;
+  }
+
+  .callout-icon {
+    display: inline-flex;
+    margin-bottom: 16px;
+    color: var(--accent);
+  }
+
+  .callout-text {
+    font-size: 16px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 700px;
+    margin: 0 auto 20px;
+  }
+
+  .callout-text strong {
+    color: var(--text-primary);
+  }
+
+  .callout-langs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .callout-lang-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 4px 14px;
+    background: rgba(0, 119, 182, 0.1);
+    border: 1px solid rgba(0, 119, 182, 0.2);
+    border-radius: 20px;
+    color: var(--accent);
   }
 </style>

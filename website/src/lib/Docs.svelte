@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { link } from "svelte-spa-router";
+  import { link, push } from "svelte-spa-router";
 
   // Table of contents sections
   const tocSections = [
@@ -19,9 +19,9 @@
       description: "Quick introduction to Space Data Standards and how to use them in your projects",
       icon: "rocket",
       items: [
-        { title: "Introduction", description: "Overview of Space Data Standards" },
-        { title: "Installation", description: "How to install the SDK" },
-        { title: "Quick Start", description: "Your first SDS application" },
+        { title: "Introduction", description: "Overview of Space Data Standards", section: "pipeline-integration" },
+        { title: "Installation", description: "How to install the SDK", route: "/download" },
+        { title: "Quick Start", description: "Your first SDS application", section: "code-examples" },
       ]
     },
     {
@@ -29,9 +29,9 @@
       description: "Using JSON Schema definitions with x-flatbuffer annotations",
       icon: "file",
       items: [
-        { title: "Schema Structure", description: "Understanding JSON Schema format" },
-        { title: "x-flatbuffer Annotations", description: "Mapping JSON to FlatBuffers" },
-        { title: "Validation", description: "Validating data against schemas" },
+        { title: "Schema Structure", description: "Understanding JSON Schema format", route: "/schemas" },
+        { title: "x-flatbuffer Annotations", description: "Mapping JSON to FlatBuffers", section: "x-flatbuffer" },
+        { title: "Validation", description: "Validating data against schemas", section: "x-flatbuffer" },
       ]
     },
     {
@@ -39,9 +39,9 @@
       description: "Working with FlatBuffers binary serialization",
       icon: "binary",
       items: [
-        { title: "Why FlatBuffers", description: "Benefits of binary serialization" },
-        { title: "Schema Compilation", description: "Using flatc compiler" },
-        { title: "Zero-Copy Access", description: "Reading data without parsing" },
+        { title: "Why FlatBuffers", description: "Benefits of binary serialization", section: "performance-benefits" },
+        { title: "Schema Compilation", description: "Using flatc compiler", section: "migration-guide" },
+        { title: "Zero-Copy Access", description: "Reading data without parsing", section: "code-examples" },
       ]
     },
     {
@@ -49,10 +49,10 @@
       description: "Using SDS in different programming languages",
       icon: "code",
       items: [
-        { title: "TypeScript/JavaScript", description: "Browser and Node.js usage" },
-        { title: "Go", description: "Server-side implementation" },
-        { title: "Python", description: "Data science and analysis" },
-        { title: "Rust", description: "Systems programming" },
+        { title: "TypeScript/JavaScript", description: "Browser and Node.js usage", route: "/download" },
+        { title: "Go", description: "Server-side implementation", route: "/download" },
+        { title: "Python", description: "Data science and analysis", route: "/download" },
+        { title: "Rust", description: "Systems programming", route: "/download" },
       ]
     },
   ];
@@ -107,6 +107,14 @@
       element.scrollIntoView({ behavior: 'smooth' });
       expandedSections[id] = true;
       expandedSections = expandedSections;
+    }
+  }
+
+  function handleDocItemClick(item: { section?: string; route?: string }) {
+    if (item.section) {
+      scrollToSection(item.section);
+    } else if (item.route) {
+      push(item.route);
     }
   }
 </script>
@@ -183,9 +191,12 @@
                     </div>
                     <ul class="doc-items">
                       {#each section.items as item}
-                        <li class="doc-item">
+                        <li class="doc-item" on:click={() => handleDocItemClick(item)} on:keydown={(e) => e.key === 'Enter' && handleDocItemClick(item)} role="button" tabindex="0">
                           <span class="doc-item-title">{item.title}</span>
                           <span class="doc-item-desc">{item.description}</span>
+                          <svg class="doc-item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                          </svg>
                         </li>
                       {/each}
                     </ul>
@@ -1179,6 +1190,11 @@ for (const container of containers) {
     border-bottom: 1px solid var(--ui-border);
     cursor: pointer;
     transition: all 0.2s;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    position: relative;
+    padding-right: 24px;
   }
 
   .doc-item:last-child {
@@ -1189,8 +1205,29 @@ for (const container of containers) {
     padding-left: 8px;
   }
 
+  .doc-item:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  .doc-item-arrow {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .doc-item:hover .doc-item-arrow {
+    opacity: 1;
+  }
+
   .doc-item-title {
     display: block;
+    width: 100%;
     font-weight: 500;
     color: var(--text-primary);
     margin-bottom: 2px;
@@ -1198,6 +1235,7 @@ for (const container of containers) {
 
   .doc-item-desc {
     display: block;
+    width: 100%;
     font-size: 13px;
     color: var(--text-muted);
   }

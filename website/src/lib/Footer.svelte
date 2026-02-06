@@ -17,6 +17,7 @@
     <div class="footer-links">
       <a href="/schemas" use:link>Schemas</a>
       <a href="/docs" use:link>Documentation</a>
+      <a href="/converter" use:link>Converter</a>
       <a href="/download" use:link>Download</a>
       <a href="https://github.com/DigitalArsenal/spacedatastandards.org" target="_blank">GitHub</a>
       <a href="https://spacedatanetwork.org" target="_blank">Space Data Network</a>
