@@ -7,24 +7,52 @@
   let wasmLoading = true;
   let wasmError = "";
 
+  // Group samples by standard type
+  const standards = (() => {
+    const map = new Map<string, { name: string; desc: string; formats: Map<string, string> }>();
+    const descs: Record<string, string> = {
+      OMM: "Orbit Mean-Elements Message",
+      OEM: "Orbit Ephemeris Message",
+      CDM: "Conjunction Data Message",
+      OPM: "Orbit Parameters Message",
+      AEM: "Attitude Ephemeris Message",
+      TDM: "Tracking Data Message",
+      XTCE: "Telemetry & Command Exchange",
+    };
+    for (const s of samples) {
+      if (!map.has(s.type)) map.set(s.type, { name: s.type, desc: descs[s.type] || s.type, formats: new Map() });
+      map.get(s.type)!.formats.set(s.format, s.content);
+    }
+    return Array.from(map.values());
+  })();
+
   // Converter state
-  let input = "";
-  let output = "";
-  let detectedType = "";
-  let detectedFormat = "";
-  let targetFormat = "json";
-  let converting = false;
+  let selectedStandard = "";
+  let inputFormat: 'kvn' | 'xml' | 'json' | 'hex' = "kvn";
+  let outputFormat: 'kvn' | 'xml' | 'json' | 'hex' = "json";
+  let inputText = "";
+  let outputText = "";
+  let intermediate: any = null;
   let convertError = "";
   let copySuccess = false;
+  let hexViewMode: 'hex' | 'base64' = "hex";
+  let fbBytesOutput: Uint8Array | null = null;
 
   // Dropdown state
-  let sampleDropdownOpen = false;
-  let selectedSampleIndex = -1;
+  let standardDropdownOpen = false;
 
   // Language showcase
   let selectedLang = "nodejs";
 
-  // --- Parsers & Serializers ---
+  const allFormats = [
+    { key: "kvn" as const, label: "KVN" },
+    { key: "xml" as const, label: "XML" },
+    { key: "json" as const, label: "JSON" },
+    { key: "hex" as const, label: "FlatBuffer" },
+  ];
+
+  // ========== Parsers ==========
+
   function parseKVN(src: string): any {
     const result: any = {};
     const ephLines: string[] = [];
@@ -38,6 +66,8 @@
       if (eq >= 0) {
         const key = t.substring(0, eq).trim();
         let val: any = t.substring(eq + 1).trim();
+        // Strip units like [rev/day]
+        val = val.replace(/\s*\[.*?\]\s*$/, '');
         if (/^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?$/.test(val)) val = Number(val);
         result[key] = val;
       } else if (inData && /^\d{4}-/.test(t)) {
@@ -78,6 +108,17 @@
     }
     return walk(doc.documentElement);
   }
+
+  function parseInput(text: string, fmt: string): any {
+    if (!text.trim()) return null;
+    if (fmt === 'json') return JSON.parse(text.trim());
+    if (fmt === 'xml') return parseXML(text);
+    if (fmt === 'kvn') return parseKVN(text);
+    if (fmt === 'hex') throw new Error("Cannot parse FlatBuffer hex — switch to a text format to edit");
+    throw new Error(`Unknown format: ${fmt}`);
+  }
+
+  // ========== Serializers ==========
 
   function jsonToKVN(data: any): string {
     const lines: string[] = [];
@@ -124,54 +165,103 @@
     return `<?xml version="1.0" encoding="UTF-8"?>\n<${tag}>\n${ser(data, 1)}</${tag}>`;
   }
 
-  function toHexDump(data: any, type: string): string {
+  // ========== FlatBuffer Builder ==========
+
+  function buildFlatBuffer(data: any, type: string): Uint8Array {
     const enc = new TextEncoder();
     const fileId = ('$' + (type || 'SDS').substring(0, 3)).padEnd(4, '\0');
+
+    // Separate fields by type
     const strFields: [string, string][] = [];
     const numFields: [string, number][] = [];
     for (const [k, v] of Object.entries(data)) {
       if (typeof v === 'string') strFields.push([k, v]);
       else if (typeof v === 'number') numFields.push([k, v]);
     }
+
     const nFields = strFields.length + numFields.length;
-    const vtableBytes = 4 + nFields * 2;
-    const vtablePad = (vtableBytes + 3) & ~3;
-    const tablePad = (4 + numFields.length * 8 + strFields.length * 4 + 3) & ~3;
-    const buf = new ArrayBuffer(4096);
+    const vtableSize = 4 + nFields * 2; // uint16 vtable_size + uint16 table_size + field offsets
+    const vtablePadded = (vtableSize + 3) & ~3;
+    const tableInlineSize = 4 + numFields.length * 8 + strFields.length * 4; // soffset + fields
+    const tablePadded = (tableInlineSize + 3) & ~3;
+
+    // Calculate total size
+    let totalSize = 8 + vtablePadded + tablePadded; // header + vtable + table
+    for (const [, v] of strFields) {
+      totalSize += 4 + enc.encode(v).length + 1; // len + data + null
+      totalSize = (totalSize + 3) & ~3;
+    }
+
+    const buf = new ArrayBuffer(totalSize + 256); // padding safety
     const u8 = new Uint8Array(buf);
     const dv = new DataView(buf);
-    let p = 0;
-    // Root offset + file id
-    dv.setUint32(p, 8 + vtablePad, true); p += 4;
-    for (let i = 0; i < 4; i++) u8[p++] = fileId.charCodeAt(i);
-    // VTable
-    dv.setUint16(p, vtableBytes, true); p += 2;
-    dv.setUint16(p, tablePad, true); p += 2;
-    let fOff = 4;
-    for (const _ of numFields) { dv.setUint16(p, fOff, true); p += 2; fOff += 8; }
-    for (const _ of strFields) { dv.setUint16(p, fOff, true); p += 2; fOff += 4; }
-    p = 8 + vtablePad;
-    // Table
-    const tStart = p;
-    dv.setInt32(p, tStart - 8, true); p += 4;
-    for (const [, v] of numFields) { dv.setFloat64(p, v, true); p += 8; }
-    const sOffBase = p;
+
+    // --- Header (offset 0) ---
+    const tableStart = 8 + vtablePadded;
+    dv.setUint32(0, tableStart, true); // root_offset: points to root table
+    u8[4] = fileId.charCodeAt(0); // file_identifier
+    u8[5] = fileId.charCodeAt(1);
+    u8[6] = fileId.charCodeAt(2);
+    u8[7] = fileId.charCodeAt(3);
+
+    // --- VTable (offset 8) ---
+    const vtableStart = 8;
+    dv.setUint16(vtableStart, vtableSize, true);     // vtable byte size
+    dv.setUint16(vtableStart + 2, tablePadded, true); // table inline byte size
+    let fieldOffset = 4; // first field starts after soffset
+    for (let i = 0; i < numFields.length; i++) {
+      dv.setUint16(vtableStart + 4 + i * 2, fieldOffset, true);
+      fieldOffset += 8; // float64
+    }
+    for (let i = 0; i < strFields.length; i++) {
+      dv.setUint16(vtableStart + 4 + (numFields.length + i) * 2, fieldOffset, true);
+      fieldOffset += 4; // string offset (uint32)
+    }
+
+    // --- Root Table (offset tableStart) ---
+    const soffset = tableStart - vtableStart; // positive distance back to vtable
+    dv.setInt32(tableStart, soffset, true);
+
+    let p = tableStart + 4;
+    // Numeric fields
+    for (const [, v] of numFields) {
+      dv.setFloat64(p, v, true);
+      p += 8;
+    }
+    // String offset placeholders
+    const strOffsetBase = p;
     p += strFields.length * 4;
-    p = tStart + tablePad;
-    // Strings
+
+    // Align to table end
+    p = tableStart + tablePadded;
+
+    // --- String Data ---
     for (let i = 0; i < strFields.length; i++) {
       const bytes = enc.encode(strFields[i][1]);
-      dv.setUint32(sOffBase + i * 4, p - (sOffBase + i * 4), true);
-      dv.setUint32(p, bytes.length, true); p += 4;
-      u8.set(bytes, p); p += bytes.length;
+      // Write offset: relative from the offset field position
+      dv.setUint32(strOffsetBase + i * 4, p - (strOffsetBase + i * 4), true);
+      // Write string: length + data + null
+      dv.setUint32(p, bytes.length, true);
+      p += 4;
+      u8.set(bytes, p);
+      p += bytes.length;
       u8[p++] = 0;
-      p = (p + 3) & ~3;
+      p = (p + 3) & ~3; // align
     }
-    return formatHex(u8.subarray(0, p));
+
+    return u8.subarray(0, p);
   }
 
-  function formatHex(bytes: Uint8Array): string {
+  function formatHexDump(bytes: Uint8Array, type?: string): string {
     const lines: string[] = [];
+    // Header annotation
+    if (bytes.length >= 8) {
+      const rootOff = bytes[0] | (bytes[1] << 8) | (bytes[2] << 16) | (bytes[3] << 24);
+      const fid = String.fromCharCode(bytes[4], bytes[5], bytes[6], bytes[7]);
+      lines.push(`# FlatBuffer: ${type || 'SDS'} (${bytes.length} bytes)`);
+      lines.push(`# root_offset=0x${rootOff.toString(16)} file_id="${fid}"`);
+      lines.push('');
+    }
     for (let i = 0; i < bytes.length; i += 16) {
       const addr = i.toString(16).padStart(8, '0');
       const hex: string[] = [];
@@ -181,23 +271,211 @@
           hex.push(bytes[i + j].toString(16).padStart(2, '0'));
           const c = bytes[i + j];
           asc.push(c >= 0x20 && c < 0x7f ? String.fromCharCode(c) : '.');
-        } else { hex.push('  '); asc.push(' '); }
+        } else {
+          hex.push('  ');
+          asc.push(' ');
+        }
       }
       lines.push(`${addr}  ${hex.slice(0, 8).join(' ')}  ${hex.slice(8).join(' ')}  |${asc.join('')}|`);
     }
     return lines.join('\n');
   }
 
-  const supportedTypes = [
-    { name: "OMM", desc: "Orbit Mean-Elements Message" },
-    { name: "OEM", desc: "Orbit Ephemeris Message" },
-    { name: "CDM", desc: "Conjunction Data Message" },
-    { name: "OPM", desc: "Orbit Parameters Message" },
-    { name: "AEM", desc: "Attitude Ephemeris Message" },
-    { name: "TDM", desc: "Tracking Data Message" },
-    { name: "XTCE", desc: "Telemetry & Command Exchange" },
-  ];
+  function formatBase64(bytes: Uint8Array): string {
+    let binary = '';
+    for (let i = 0; i < bytes.length; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary);
+  }
 
+  function serialize(data: any, fmt: string, type: string): string {
+    if (fmt === 'json') return JSON.stringify(data, null, 2);
+    if (fmt === 'kvn') {
+      // Try WASM via JSON→XML→KVN if available, otherwise JS
+      return jsonToKVN(data);
+    }
+    if (fmt === 'xml') return jsonToXML(data, type || 'message');
+    if (fmt === 'hex') {
+      fbBytesOutput = buildFlatBuffer(data, type);
+      return hexViewMode === 'hex' ? formatHexDump(fbBytesOutput, type) : formatBase64(fbBytesOutput);
+    }
+    throw new Error(`Unknown format: ${fmt}`);
+  }
+
+  // ========== Actions ==========
+
+  function selectStandard(name: string) {
+    selectedStandard = name;
+    standardDropdownOpen = false;
+    const std = standards.find(s => s.name === name);
+    if (!std) return;
+
+    // Load best available native sample
+    const kvn = std.formats.get('kvn');
+    const xml = std.formats.get('xml');
+    if (kvn) {
+      inputFormat = 'kvn';
+      inputText = kvn;
+    } else if (xml) {
+      inputFormat = 'xml';
+      inputText = xml;
+    }
+
+    reparse();
+  }
+
+  function setInputFormat(fmt: typeof inputFormat) {
+    if (fmt === inputFormat) return;
+    convertError = "";
+
+    if (!intermediate) {
+      inputFormat = fmt;
+      return;
+    }
+
+    try {
+      // Check if we have a native sample for this format
+      const std = standards.find(s => s.name === selectedStandard);
+      const nativeSample = std?.formats.get(fmt);
+
+      // For KVN↔XML with WASM, use high-fidelity conversion
+      if (wasmModule && (fmt === 'kvn' || fmt === 'xml') && (inputFormat === 'kvn' || inputFormat === 'xml') && inputText.trim()) {
+        try {
+          inputText = wasmModule.convert(inputText, fmt);
+          inputFormat = fmt;
+          reparse();
+          return;
+        } catch { /* fall through */ }
+      }
+
+      // Use native sample if available for KVN/XML
+      if (nativeSample && (fmt === 'kvn' || fmt === 'xml')) {
+        inputText = nativeSample;
+      } else {
+        inputText = serialize(intermediate, fmt, selectedStandard);
+      }
+      inputFormat = fmt;
+      reparse();
+    } catch (e: any) {
+      convertError = e.message || "Failed to convert input format";
+    }
+  }
+
+  function setOutputFormat(fmt: typeof outputFormat) {
+    if (fmt === outputFormat) return;
+    outputFormat = fmt;
+    fbBytesOutput = null;
+    reconvert();
+  }
+
+  function reparse() {
+    convertError = "";
+    outputText = "";
+    intermediate = null;
+    fbBytesOutput = null;
+
+    if (!inputText.trim()) return;
+
+    try {
+      intermediate = parseInput(inputText, inputFormat);
+    } catch (e: any) {
+      convertError = `Parse error: ${e.message}`;
+      return;
+    }
+
+    reconvert();
+  }
+
+  function reconvert() {
+    if (!intermediate) return;
+    convertError = "";
+    try {
+      // For KVN↔XML output, try WASM for high fidelity
+      if (wasmModule && (outputFormat === 'kvn' || outputFormat === 'xml') && (inputFormat === 'kvn' || inputFormat === 'xml') && inputText.trim()) {
+        try {
+          outputText = wasmModule.convert(inputText, outputFormat);
+          return;
+        } catch { /* fall through to JS */ }
+      }
+      outputText = serialize(intermediate, outputFormat, selectedStandard);
+    } catch (e: any) {
+      convertError = `Output error: ${e.message}`;
+      outputText = "";
+    }
+  }
+
+  function onInputTextChange() {
+    reparse();
+  }
+
+  function toggleHexView() {
+    hexViewMode = hexViewMode === 'hex' ? 'base64' : 'hex';
+    if (outputFormat === 'hex' && fbBytesOutput) {
+      outputText = hexViewMode === 'hex' ? formatHexDump(fbBytesOutput, selectedStandard) : formatBase64(fbBytesOutput);
+    }
+  }
+
+  async function copyOutput() {
+    if (!outputText) return;
+    try {
+      await navigator.clipboard.writeText(outputText);
+      copySuccess = true;
+      setTimeout(() => { copySuccess = false; }, 2000);
+    } catch {
+      const ta = document.createElement("textarea");
+      ta.value = outputText;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      copySuccess = true;
+      setTimeout(() => { copySuccess = false; }, 2000);
+    }
+  }
+
+  function handleKeydown(event: KeyboardEvent) {
+    if (event.key === "Escape") standardDropdownOpen = false;
+  }
+
+  async function loadWasmFactory(): Promise<any> {
+    const moduleUrl = new URL("/wasm/node/sds_parsers.js", window.location.origin).href;
+    const loaderCode = `import Module from "${moduleUrl}"; export default Module;`;
+    const blob = new Blob([loaderCode], { type: "text/javascript" });
+    const blobUrl = URL.createObjectURL(blob);
+    try {
+      const mod = await import(/* @vite-ignore */ blobUrl);
+      return mod.default;
+    } finally {
+      URL.revokeObjectURL(blobUrl);
+    }
+  }
+
+  onMount(async () => {
+    try {
+      const factory = await loadWasmFactory();
+      wasmModule = await factory({
+        locateFile(path: string) {
+          if (path.endsWith(".wasm")) return "/wasm/node/" + path;
+          return path;
+        },
+      });
+      wasmLoading = false;
+      // Auto-load first standard
+      if (standards.length > 0 && !selectedStandard) {
+        selectStandard(standards[0].name);
+      }
+    } catch (e: any) {
+      wasmError = e.message || "Failed to load WASM module";
+      wasmLoading = false;
+      // Still load first standard with JS-only parsing
+      if (standards.length > 0 && !selectedStandard) {
+        selectStandard(standards[0].name);
+      }
+    }
+  });
+
+  // Language examples
   const languageExamples: Record<string, { label: string; icon: string; install: string; code: string }> = {
     nodejs: {
       label: "Node.js",
@@ -401,187 +679,6 @@ final omm = OMMObjectBuilder(
 builder.finish(omm);`
     },
   };
-
-  function detectInput() {
-    if (!input.trim()) return;
-    convertError = "";
-    try {
-      // Try JSON first
-      const trimmed = input.trim();
-      if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
-        try {
-          JSON.parse(trimmed);
-          detectedFormat = "json";
-          // Try to detect type from JSON keys
-          const obj = JSON.parse(trimmed);
-          const keys = Object.keys(obj);
-          if (keys.some(k => /MEAN_MOTION|NORAD_CAT_ID|EPHEMERIS_TYPE/.test(k))) detectedType = "OMM";
-          else if (keys.some(k => /MISS_DISTANCE|TCA/.test(k))) detectedType = "CDM";
-          else if (keys.some(k => /X_DOT|Y_DOT|Z_DOT|EPHEMERIS/.test(k)) && !keys.some(k => /EULER|QUATERNION/.test(k))) detectedType = "OEM";
-          else if (keys.some(k => /QUATERNION|EULER/.test(k))) detectedType = "AEM";
-          else if (keys.some(k => /SEMI_MAJOR_AXIS|STATE_VECTOR/.test(k))) detectedType = "OPM";
-          else detectedType = "";
-          if (!targetFormat || targetFormat === "json") targetFormat = "kvn";
-          return;
-        } catch { /* not JSON */ }
-      }
-      // Use WASM detection for KVN/XML
-      if (wasmModule) {
-        detectedFormat = wasmModule.detectFormat(input);
-        if (detectedFormat === "kvn") {
-          detectedType = wasmModule.detectKvnType(input);
-          if (!targetFormat || targetFormat === "kvn") targetFormat = "json";
-        } else if (detectedFormat === "xml") {
-          detectedType = wasmModule.detectXmlType(input);
-          if (!targetFormat || targetFormat === "xml") targetFormat = "json";
-        } else {
-          detectedType = "";
-        }
-      } else {
-        // Fallback detection without WASM
-        if (trimmed.startsWith('<?xml') || trimmed.startsWith('<')) {
-          detectedFormat = "xml";
-          detectedType = "";
-          if (!targetFormat || targetFormat === "xml") targetFormat = "json";
-        } else if (/^CCSDS_\w+_VERS/.test(trimmed)) {
-          detectedFormat = "kvn";
-          detectedType = "";
-          if (!targetFormat || targetFormat === "kvn") targetFormat = "json";
-        }
-      }
-    } catch {
-      detectedType = "";
-      detectedFormat = "";
-    }
-  }
-
-  function loadSample(index: number) {
-    selectedSampleIndex = index;
-    sampleDropdownOpen = false;
-    const sample = samples[index];
-    input = sample.content;
-    output = "";
-    convertError = "";
-    detectInput();
-  }
-
-  async function convert() {
-    if (!input.trim()) return;
-    converting = true;
-    convertError = "";
-    output = "";
-    try {
-      const src = detectedFormat;
-      const tgt = targetFormat;
-
-      if (src === tgt) {
-        output = input;
-        converting = false;
-        return;
-      }
-
-      // KVN <-> XML via WASM (high fidelity)
-      if (wasmModule && ((src === "kvn" && tgt === "xml") || (src === "xml" && tgt === "kvn"))) {
-        output = wasmModule.convert(input, tgt);
-        converting = false;
-        return;
-      }
-
-      // Parse input to intermediate JSON object
-      let intermediate: any;
-      if (src === "json") {
-        intermediate = JSON.parse(input.trim());
-      } else if (src === "kvn") {
-        // Try WASM KVN->XML->JSON path for better fidelity, fallback to JS parser
-        if (wasmModule && tgt !== "xml") {
-          try {
-            const xmlStr = wasmModule.convert(input, "xml");
-            intermediate = parseXML(xmlStr);
-          } catch {
-            intermediate = parseKVN(input);
-          }
-        } else {
-          intermediate = parseKVN(input);
-        }
-      } else if (src === "xml") {
-        intermediate = parseXML(input);
-      } else {
-        throw new Error(`Cannot parse input format: ${src || 'unknown'}`);
-      }
-
-      // Serialize to target format
-      if (tgt === "json") {
-        output = JSON.stringify(intermediate, null, 2);
-      } else if (tgt === "kvn") {
-        output = jsonToKVN(intermediate);
-      } else if (tgt === "xml") {
-        output = jsonToXML(intermediate, detectedType || "message");
-      } else if (tgt === "hex") {
-        output = toHexDump(intermediate, detectedType || "SDS");
-      }
-    } catch (e: any) {
-      convertError = e.message || "Conversion failed";
-    }
-    converting = false;
-  }
-
-  async function copyOutput() {
-    if (!output) return;
-    try {
-      await navigator.clipboard.writeText(output);
-      copySuccess = true;
-      setTimeout(() => { copySuccess = false; }, 2000);
-    } catch {
-      // Fallback
-      const ta = document.createElement("textarea");
-      ta.value = output;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand("copy");
-      document.body.removeChild(ta);
-      copySuccess = true;
-      setTimeout(() => { copySuccess = false; }, 2000);
-    }
-  }
-
-  function handleKeydown(event: KeyboardEvent) {
-    if (event.key === "Escape") {
-      sampleDropdownOpen = false;
-    }
-  }
-
-  async function loadWasmFactory(): Promise<any> {
-    // Use a blob-based module import to bypass Vite's static import analysis.
-    // The sds_parsers.js is an ES module (Emscripten output) served from /wasm/node/.
-    const moduleUrl = new URL("/wasm/node/sds_parsers.js", window.location.origin).href;
-    const loaderCode = `import Module from "${moduleUrl}"; export default Module;`;
-    const blob = new Blob([loaderCode], { type: "text/javascript" });
-    const blobUrl = URL.createObjectURL(blob);
-    try {
-      const mod = await import(/* @vite-ignore */ blobUrl);
-      return mod.default;
-    } finally {
-      URL.revokeObjectURL(blobUrl);
-    }
-  }
-
-  onMount(async () => {
-    try {
-      const factory = await loadWasmFactory();
-      wasmModule = await factory({
-        locateFile(path: string) {
-          if (path.endsWith(".wasm")) {
-            return "/wasm/node/" + path;
-          }
-          return path;
-        },
-      });
-      wasmLoading = false;
-    } catch (e: any) {
-      wasmError = e.message || "Failed to load WASM module";
-      wasmLoading = false;
-    }
-  });
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
@@ -593,7 +690,7 @@ builder.finish(omm);`
     <div class="hero">
       <div class="hero-badge">CCSDS NDM</div>
       <h1 class="title">Format Converter</h1>
-      <p class="subtitle">Convert between KVN, XML, JSON, and FlatBuffer hex — everything to everything — using C++/WASM parsers in your browser</p>
+      <p class="subtitle">Any format to any format — KVN, XML, JSON, FlatBuffer — powered by C++/WASM in your browser</p>
     </div>
 
     <!-- Main Converter Card -->
@@ -616,30 +713,39 @@ builder.finish(omm);`
         </div>
       {/if}
 
-      <!-- Sample Selector -->
+      <!-- Standard Selector -->
       <div class="selector-section">
-        <label class="selector-label">Load Example</label>
-        <div class="dropdown" class:open={sampleDropdownOpen}>
-          <button class="dropdown-trigger" on:click={() => { sampleDropdownOpen = !sampleDropdownOpen; }}>
+        <div class="selector-label">Standard</div>
+        <div class="dropdown" class:open={standardDropdownOpen}>
+          <button class="dropdown-trigger" on:click={() => { standardDropdownOpen = !standardDropdownOpen; }}>
             <span class="dropdown-text">
-              {selectedSampleIndex >= 0 ? samples[selectedSampleIndex].label : "Select a sample..."}
+              {#if selectedStandard}
+                <span class="selected-std-badge">{selectedStandard}</span>
+                <span class="selected-std-desc">{standards.find(s => s.name === selectedStandard)?.desc || ''}</span>
+              {:else}
+                Select a standard...
+              {/if}
             </span>
             <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
           </button>
 
-          {#if sampleDropdownOpen}
+          {#if standardDropdownOpen}
             <div class="dropdown-menu">
-              {#each samples as sample, i}
+              {#each standards as std}
                 <button
                   class="dropdown-item"
-                  class:selected={i === selectedSampleIndex}
-                  on:click={() => loadSample(i)}
+                  class:selected={std.name === selectedStandard}
+                  on:click={() => selectStandard(std.name)}
                 >
-                  <span class="sample-type-badge">{sample.type}</span>
-                  <span class="sample-format-badge" class:kvn={sample.format === 'kvn'} class:xml={sample.format === 'xml'}>{sample.format.toUpperCase()}</span>
-                  <span class="sample-label">{sample.label}</span>
+                  <span class="std-badge">{std.name}</span>
+                  <span class="std-desc">{std.desc}</span>
+                  <span class="std-formats">
+                    {#each Array.from(std.formats.keys()) as fmt}
+                      <span class="mini-fmt" class:kvn={fmt === 'kvn'} class:xml={fmt === 'xml'}>{fmt.toUpperCase()}</span>
+                    {/each}
+                  </span>
                 </button>
               {/each}
             </div>
@@ -647,65 +753,38 @@ builder.finish(omm);`
         </div>
       </div>
 
-      <!-- Detection Badges & Target -->
-      <div class="detection-row">
-        <div class="badges">
-          {#if detectedType}
-            <span class="badge type-badge">{detectedType}</span>
-          {/if}
-          {#if detectedFormat}
-            <span class="badge det-format-badge">{detectedFormat.toUpperCase()}</span>
-          {/if}
-          {#if !detectedType && !detectedFormat && input.trim()}
-            <span class="badge unknown-badge">Unknown format</span>
-          {/if}
-        </div>
-        {#if detectedFormat}
-          <div class="target-selector">
-            <span class="target-label">Target:</span>
-            <button
-              class="target-btn"
-              class:active={targetFormat === 'kvn'}
-              on:click={() => { targetFormat = 'kvn'; }}
-            >KVN</button>
-            <button
-              class="target-btn"
-              class:active={targetFormat === 'xml'}
-              on:click={() => { targetFormat = 'xml'; }}
-            >XML</button>
-            <button
-              class="target-btn"
-              class:active={targetFormat === 'json'}
-              on:click={() => { targetFormat = 'json'; }}
-            >JSON</button>
-            <button
-              class="target-btn"
-              class:active={targetFormat === 'hex'}
-              on:click={() => { targetFormat = 'hex'; }}
-            >FlatBuffer</button>
-          </div>
-        {/if}
-      </div>
-
-      <!-- Input / Output Areas -->
+      <!-- Editor Grid -->
       <div class="editor-grid">
+        <!-- Input Pane -->
         <div class="editor-pane">
           <div class="editor-header">
             <span class="editor-title">Input</span>
           </div>
+          <div class="format-bar">
+            {#each allFormats as fmt}
+              <button
+                class="fmt-btn"
+                class:active={inputFormat === fmt.key}
+                on:click={() => setInputFormat(fmt.key)}
+              >{fmt.label}</button>
+            {/each}
+          </div>
           <textarea
             class="editor-textarea"
-            bind:value={input}
-            on:input={detectInput}
-            placeholder="Paste KVN, XML, or JSON here, or select a sample above..."
+            class:readonly-hex={inputFormat === 'hex'}
+            bind:value={inputText}
+            on:input={onInputTextChange}
+            readonly={inputFormat === 'hex'}
+            placeholder="Select a standard above or paste data here..."
             spellcheck="false"
           ></textarea>
         </div>
 
+        <!-- Output Pane -->
         <div class="editor-pane">
           <div class="editor-header">
             <span class="editor-title">Output</span>
-            {#if output}
+            {#if outputText}
               <button class="copy-btn" on:click={copyOutput}>
                 {#if copySuccess}
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
@@ -722,36 +801,27 @@ builder.finish(omm);`
               </button>
             {/if}
           </div>
+          <div class="format-bar">
+            {#each allFormats as fmt}
+              <button
+                class="fmt-btn"
+                class:active={outputFormat === fmt.key}
+                on:click={() => setOutputFormat(fmt.key)}
+              >{fmt.label}</button>
+            {/each}
+            {#if outputFormat === 'hex'}
+              <button class="hex-toggle" on:click={toggleHexView}>
+                {hexViewMode === 'hex' ? 'Base64' : 'Hex'}
+              </button>
+            {/if}
+          </div>
           <textarea
             class="editor-textarea"
-            value={output}
+            value={outputText}
             readonly
-            placeholder="Converted output will appear here..."
+            placeholder="Output will appear here..."
           ></textarea>
         </div>
-      </div>
-
-      <!-- Convert Button -->
-      <div class="convert-row">
-        <button
-          class="convert-btn"
-          on:click={convert}
-          disabled={!input.trim() || !detectedFormat || converting}
-        >
-          {#if converting}
-            <div class="spinner small"></div>
-            Converting...
-          {:else}
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
-              <polyline points="16 3 21 3 21 8"></polyline>
-              <line x1="4" y1="20" x2="21" y2="3"></line>
-              <polyline points="21 16 21 21 16 21"></polyline>
-              <line x1="15" y1="15" x2="21" y2="21"></line>
-              <line x1="4" y1="4" x2="9" y2="9"></line>
-            </svg>
-            Convert to {targetFormat === 'hex' ? 'FlatBuffer Hex' : targetFormat.toUpperCase()}
-          {/if}
-        </button>
       </div>
 
       {#if convertError}
@@ -763,11 +833,11 @@ builder.finish(omm);`
     <div class="types-section">
       <h2 class="section-title">Supported CCSDS Types</h2>
       <div class="types-grid">
-        {#each supportedTypes as t}
-          <div class="type-card">
+        {#each standards as t}
+          <button class="type-card" class:active-type={t.name === selectedStandard} on:click={() => selectStandard(t.name)}>
             <span class="type-name">{t.name}</span>
             <span class="type-desc">{t.desc}</span>
-          </div>
+          </button>
         {/each}
       </div>
     </div>
@@ -937,16 +1007,11 @@ builder.finish(omm);`
     animation: spin 0.8s linear infinite;
   }
 
-  .spinner.small {
-    width: 16px;
-    height: 16px;
-  }
-
   @keyframes spin {
     to { transform: rotate(360deg); }
   }
 
-  /* Selector / Dropdown */
+  /* Standard Selector */
   .selector-section {
     margin-bottom: 20px;
   }
@@ -992,7 +1057,26 @@ builder.finish(omm);`
   }
 
   .dropdown-text {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     color: var(--text-secondary);
+  }
+
+  .selected-std-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    background: rgba(0, 119, 182, 0.15);
+    color: var(--accent);
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .selected-std-desc {
+    color: var(--text-secondary);
+    font-size: 13px;
   }
 
   .chevron {
@@ -1017,7 +1101,7 @@ builder.finish(omm);`
     border-radius: 12px;
     overflow: hidden;
     z-index: 100;
-    max-height: 320px;
+    max-height: 360px;
     overflow-y: auto;
   }
 
@@ -1049,7 +1133,7 @@ builder.finish(omm);`
     background: rgba(0, 119, 182, 0.1);
   }
 
-  .sample-type-badge {
+  .std-badge {
     display: inline-block;
     padding: 2px 8px;
     background: rgba(0, 119, 182, 0.15);
@@ -1061,102 +1145,35 @@ builder.finish(omm);`
     flex-shrink: 0;
   }
 
-  .sample-format-badge {
-    display: inline-block;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 600;
+  .std-desc {
+    color: var(--text-secondary);
+    font-size: 13px;
+    flex: 1;
+  }
+
+  .std-formats {
+    display: flex;
+    gap: 4px;
     flex-shrink: 0;
   }
 
-  .sample-format-badge.kvn {
-    background: rgba(247, 151, 30, 0.15);
-    color: #f7971e;
-  }
-
-  .sample-format-badge.xml {
-    background: rgba(23, 234, 217, 0.15);
-    color: #17ead9;
-  }
-
-  .sample-label {
-    color: var(--text-secondary);
-    font-size: 13px;
-  }
-
-  /* Detection Row */
-  .detection-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-    min-height: 36px;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-
-  .badges {
-    display: flex;
-    gap: 8px;
-  }
-
-  .badge {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 8px;
-    font-size: 13px;
+  .mini-fmt {
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 10px;
     font-weight: 600;
-    font-family: var(--font-mono);
-  }
-
-  .type-badge {
-    background: rgba(0, 119, 182, 0.15);
-    color: var(--accent);
-  }
-
-  .det-format-badge {
-    background: rgba(23, 234, 217, 0.15);
-    color: #17ead9;
-  }
-
-  .unknown-badge {
     background: rgba(134, 134, 139, 0.15);
     color: var(--text-muted);
   }
 
-  .target-selector {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  .mini-fmt.kvn {
+    background: rgba(247, 151, 30, 0.15);
+    color: #f7971e;
   }
 
-  .target-label {
-    font-size: 13px;
-    color: var(--text-muted);
-  }
-
-  .target-btn {
-    padding: 6px 14px;
-    background: var(--code-bg);
-    border: 1px solid var(--ui-border);
-    border-radius: 8px;
-    color: var(--text-secondary);
-    font-size: 13px;
-    font-weight: 600;
-    font-family: var(--font-mono);
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-
-  .target-btn:hover {
-    border-color: var(--ui-border-hover);
-  }
-
-  .target-btn.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: white;
+  .mini-fmt.xml {
+    background: rgba(23, 234, 217, 0.15);
+    color: #17ead9;
   }
 
   /* Editor Grid */
@@ -1164,7 +1181,6 @@ builder.finish(omm);`
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
-    margin-bottom: 20px;
   }
 
   .editor-pane {
@@ -1189,6 +1205,58 @@ builder.finish(omm);`
     color: var(--text-secondary);
   }
 
+  .format-bar {
+    display: flex;
+    gap: 4px;
+    padding: 8px 12px;
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-top: none;
+    border-bottom: none;
+  }
+
+  .fmt-btn {
+    padding: 4px 12px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .fmt-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+  }
+
+  .fmt-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  .hex-toggle {
+    margin-left: auto;
+    padding: 3px 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .hex-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+  }
+
   .copy-btn {
     display: flex;
     align-items: center;
@@ -1210,7 +1278,7 @@ builder.finish(omm);`
 
   .editor-textarea {
     flex: 1;
-    min-height: 280px;
+    min-height: 320px;
     padding: 16px;
     background: #0d1117;
     border: 1px solid #30363d;
@@ -1232,38 +1300,9 @@ builder.finish(omm);`
     color: rgba(139, 148, 158, 0.5);
   }
 
-  /* Convert Button */
-  .convert-row {
-    display: flex;
-    justify-content: center;
-  }
-
-  .convert-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 14px 36px;
-    background: var(--accent);
-    border: none;
-    border-radius: 28px;
-    color: white;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .convert-btn:hover:not(:disabled) {
-    transform: translateY(-1px);
-    box-shadow: 0 8px 24px rgba(0, 119, 182, 0.3);
-  }
-
-  .convert-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+  .editor-textarea.readonly-hex {
+    color: #8b949e;
+    cursor: default;
   }
 
   /* Error */
@@ -1311,6 +1350,18 @@ builder.finish(omm);`
     padding: 20px;
     text-align: center;
     backdrop-filter: blur(20px);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .type-card:hover {
+    border-color: var(--ui-border-hover);
+    background: var(--ui-hover);
+  }
+
+  .type-card.active-type {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.1);
   }
 
   .type-name {
@@ -1431,13 +1482,12 @@ builder.finish(omm);`
       min-height: 200px;
     }
 
-    .detection-row {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
     .types-grid {
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    }
+
+    .format-bar {
+      flex-wrap: wrap;
     }
   }
 
