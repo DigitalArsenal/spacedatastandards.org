@@ -14,6 +14,11 @@
   let jsonError = "";
   let isLoading = false;
   let visualizationActive = false;
+  let xtcHudActive = false;
+  let xtcTlmText = '';
+  let xtcCmdText = '';
+  let xtcHudTimer: ReturnType<typeof setInterval> | null = null;
+  let xtcPreRenderCb: (() => void) | null = null;
 
   // Schema options
   const schemaTypes = [
@@ -24,6 +29,7 @@
     { value: "SIT", label: "SIT - Site Information" },
     { value: "LDM", label: "LDM - Launch Data" },
     { value: "TDM", label: "TDM - Tracking Data" },
+    { value: "XTC", label: "XTC - Command & Telemetry Flow" },
   ];
 
   // Sample data
@@ -382,6 +388,77 @@
         Y: 2849.401,
         Z: 4047.689
       }
+    },
+    // XTC - XTCE Command & Telemetry Data Flow
+    // Full end-to-end data flow: SoCal startup → AWS Ground Station → LEO satellite → back
+    // Uses CCSDS XTCE (660.1-G-2) for telemetry/command definitions
+    XTC: {
+      SPACE_SYSTEM_NAME: "NOVA-SAT-1",
+      OPERATIONS_CENTER: {
+        NAME: "AstralLink Operations",
+        LOCATION: "El Segundo, CA",
+        LATITUDE: 33.9192,
+        LONGITUDE: -118.4165
+      },
+      GROUND_NETWORK: {
+        PROVIDER: "AWS Ground Station",
+        STATIONS: [
+          { ID: "aws-usw2", NAME: "AWS GS Oregon", REGION: "US-West-2", LATITUDE: 45.8491, LONGITUDE: -119.7143, ANTENNA_BAND: "S/X-Band", STATUS: "TRACKING" },
+          { ID: "aws-use2", NAME: "AWS GS Ohio", REGION: "US-East-2", LATITUDE: 39.9612, LONGITUDE: -82.9988, ANTENNA_BAND: "S/X-Band", STATUS: "STANDBY" },
+          { ID: "aws-eun1", NAME: "AWS GS Stockholm", REGION: "EU-North-1", LATITUDE: 59.3293, LONGITUDE: 18.0686, ANTENNA_BAND: "S/X-Band", STATUS: "STANDBY" }
+        ]
+      },
+      SATELLITE: {
+        OBJECT_NAME: "NOVA-SAT-1",
+        OBJECT_ID: "2024-901A",
+        NORAD_CAT_ID: 99001,
+        EPOCH: "2024-06-22T16:00:00.000Z",
+        MEAN_MOTION: 15.2,
+        ECCENTRICITY: 0.0002,
+        INCLINATION: 63.0,
+        RA_OF_ASC_NODE: 210.0,
+        ARG_OF_PERICENTER: 45.0,
+        MEAN_ANOMALY: 300.0
+      },
+      TELEMETRY: {
+        PARAMETER_TYPES: [
+          { NAME: "voltage_t", ENCODING: "IEEE754_1985", SIZE_BITS: 32, UNIT: "V" },
+          { NAME: "current_t", ENCODING: "IEEE754_1985", SIZE_BITS: 32, UNIT: "A" },
+          { NAME: "temp_t", ENCODING: "IEEE754_1985", SIZE_BITS: 32, UNIT: "degC" },
+          { NAME: "quat_t", ENCODING: "IEEE754_1985", SIZE_BITS: 64 },
+          { NAME: "mode_t", ENCODING: "UNSIGNED", SIZE_BITS: 8, ENUM: ["OFF","SAFE","NOMINAL","SCIENCE","MANEUVER"] }
+        ],
+        PARAMETERS: [
+          { NAME: "BATT_V", TYPE: "voltage_t", SOURCE: "TELEMETERED" },
+          { NAME: "SOLAR_I", TYPE: "current_t", SOURCE: "TELEMETERED" },
+          { NAME: "OBC_TEMP", TYPE: "temp_t", SOURCE: "TELEMETERED" },
+          { NAME: "RW_TEMP", TYPE: "temp_t", SOURCE: "TELEMETERED" },
+          { NAME: "ATT_Q1", TYPE: "quat_t", SOURCE: "TELEMETERED" },
+          { NAME: "ATT_Q2", TYPE: "quat_t", SOURCE: "TELEMETERED" },
+          { NAME: "ATT_Q3", TYPE: "quat_t", SOURCE: "TELEMETERED" },
+          { NAME: "ATT_QC", TYPE: "quat_t", SOURCE: "TELEMETERED" },
+          { NAME: "SC_MODE", TYPE: "mode_t", SOURCE: "TELEMETERED" }
+        ],
+        CONTAINERS: [
+          { NAME: "HousekeepingPacket", APID: 1, RATE_HZ: 1.0, ENTRIES: ["BATT_V","SOLAR_I","OBC_TEMP","RW_TEMP","SC_MODE"] },
+          { NAME: "AttitudePacket", APID: 2, RATE_HZ: 10.0, ENTRIES: ["ATT_Q1","ATT_Q2","ATT_Q3","ATT_QC"] }
+        ]
+      },
+      COMMANDS: {
+        META_COMMANDS: [
+          { NAME: "SET_MODE", DESC: "Set spacecraft operating mode", ARGS: [{ NAME: "TARGET_MODE", TYPE: "mode_t" }], VERIFY: ["ACCEPTANCE","EXECUTION"] },
+          { NAME: "REPOINT", DESC: "Slew to target attitude", ARGS: [{ NAME: "RA_DEG" },{ NAME: "DEC_DEG" }] },
+          { NAME: "COLLECT_DATA", DESC: "Start science collection", ARGS: [{ NAME: "DURATION_S" },{ NAME: "SENSOR_ID" }] }
+        ]
+      },
+      SIM_VALUES: {
+        BATT_V: 28.3, SOLAR_I: 4.21, OBC_TEMP: 42.7, RW_TEMP: 38.1,
+        ATT_Q1: 0.7071, ATT_Q2: 0.0012, ATT_Q3: -0.0023, ATT_QC: 0.7071,
+        SC_MODE: "NOMINAL", LINK_MARGIN_DB: 8.5, RSSI_DBM: -98.4,
+        BIT_RATE_KBPS: 2048, PKT_COUNT: 14582, CMD_ACCEPT: 847, CMD_REJECT: 0,
+        UL_FREQ_MHZ: 2025.0, DL_FREQ_MHZ: 8200.0,
+        CMD_QUEUE: ["SET_MODE SCIENCE", "REPOINT 185.2 45.8", "COLLECT_DATA 600 IMG-1"]
+      }
     }
   };
 
@@ -505,6 +582,9 @@
           break;
         case "TDM":
           await visualizeTDM(data);
+          break;
+        case "XTC":
+          await visualizeXTC(data);
           break;
       }
 
@@ -1193,12 +1273,376 @@
     viewer.zoomTo(viewer.entities);
   }
 
+  // Visualize XTC (XTCE Command & Telemetry Data Flow)
+  // Shows full end-to-end: SoCal ops center → AWS Ground Station → LEO satellite → back
+  async function visualizeXTC(data: any) {
+    const Cesium = getCesium();
+
+    // === LOCATIONS ===
+    const ops = data.OPERATIONS_CENTER;
+    const opsPos = Cesium.Cartesian3.fromDegrees(ops.LONGITUDE, ops.LATITUDE, 100);
+
+    const stations = data.GROUND_NETWORK.STATIONS;
+    const gsData = stations.map((gs: any) => ({
+      pos: Cesium.Cartesian3.fromDegrees(gs.LONGITUDE, gs.LATITUDE, 100),
+      ...gs
+    }));
+
+    // === SATELLITE CONSTELLATION (4 sats, different inclinations, spaced in anomaly) ===
+    const satNames = [
+      data.SATELLITE.OBJECT_NAME,
+      data.SATELLITE.OBJECT_NAME.replace('-1', '-2'),
+      data.SATELLITE.OBJECT_NAME.replace('-1', '-3'),
+      data.SATELLITE.OBJECT_NAME.replace('-1', '-4')
+    ];
+    const satColors = ['#38ef7d', '#00bcd4', '#ab47bc', '#ffeb3b'];
+    const incOffsets = [0, 3, -4, 7]; // degrees offset from base inclination
+    const anomalyOffsets = [0, 90, 180, 270]; // degrees offset in mean anomaly
+
+    // Generate per-satellite orbit positions with slightly different inclinations
+    const satOrbits = incOffsets.map((dInc, i) => {
+      const satParams = { ...data.SATELLITE, INCLINATION: data.SATELLITE.INCLINATION + dInc, MEAN_ANOMALY: data.SATELLITE.MEAN_ANOMALY + anomalyOffsets[i] };
+      return ommToOrbitPositions(satParams);
+    });
+    const numPos = satOrbits[0].length;
+
+    // Animation phase offsets (90° apart around orbit)
+    const satAnimOffsets = [0, numPos / 4, numPos / 2, (3 * numPos) / 4];
+
+    // Smooth interpolated satellite position (50% slower: /240)
+    function getSatPosition(timeMs: number, satIdx: number): any {
+      const orbit = satOrbits[satIdx];
+      const t = ((timeMs / 240) + satAnimOffsets[satIdx]) % numPos;
+      const idx = Math.floor(t);
+      const frac = t - idx;
+      const p1 = orbit[idx % numPos];
+      const p2 = orbit[(idx + 1) % numPos];
+      return new Cesium.Cartesian3(
+        p1.x + (p2.x - p1.x) * frac,
+        p1.y + (p2.y - p1.y) * frac,
+        p1.z + (p2.z - p1.z) * frac
+      );
+    }
+
+    // === LINE-OF-SIGHT: EllipsoidalOccluder per ground station ===
+    const gsOccluders = gsData.map((gs: any) =>
+      new Cesium.EllipsoidalOccluder(viewer.scene.globe.ellipsoid, gs.pos)
+    );
+
+    // Compute visibility ONCE per Cesium render frame via preRender event.
+    // All CallbackProperty callbacks read this shared result, so they're consistent.
+    let _visResult: { gs: any; satIdx: number } | null = null;
+
+    function updateVisibility() {
+      const now = Date.now();
+      for (let s = 0; s < satOrbits.length; s++) {
+        const satPos = getSatPosition(now, s);
+        for (let g = 0; g < gsData.length; g++) {
+          if (gsOccluders[g].isPointVisible(satPos)) {
+            _visResult = { gs: gsData[g], satIdx: s };
+            return;
+          }
+        }
+      }
+      _visResult = null;
+    }
+
+    xtcPreRenderCb = updateVisibility;
+    viewer.scene.preRender.addEventListener(updateVisibility);
+
+    function getVisibleGs(): { gs: any; satIdx: number } | null {
+      return _visResult;
+    }
+
+    // === 1. OPERATIONS CENTER ===
+    viewer.entities.add({
+      name: ops.NAME,
+      position: opsPos,
+      point: {
+        pixelSize: 18,
+        color: Cesium.Color.fromCssColorString("#4fc3f7"),
+        outlineColor: Cesium.Color.WHITE,
+        outlineWidth: 3
+      },
+      label: {
+        text: `${ops.NAME}\n${ops.LOCATION}`,
+        font: "13px JetBrains Mono, monospace",
+        fillColor: Cesium.Color.fromCssColorString("#4fc3f7"),
+        outlineColor: Cesium.Color.BLACK,
+        outlineWidth: 2,
+        style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+        verticalOrigin: Cesium.VerticalOrigin.TOP,
+        pixelOffset: new Cesium.Cartesian2(0, 16),
+        disableDepthTestDistance: Number.POSITIVE_INFINITY
+      }
+    });
+
+    // === 2. GROUND STATIONS (all shown equally, active one determined dynamically) ===
+    gsData.forEach((gs: any) => {
+      viewer.entities.add({
+        name: gs.NAME,
+        position: gs.pos,
+        point: {
+          pixelSize: 14,
+          color: Cesium.Color.fromCssColorString("#ff9800"),
+          outlineColor: Cesium.Color.WHITE,
+          outlineWidth: 2
+        },
+        label: {
+          text: `${gs.NAME}\n${gs.ANTENNA_BAND}`,
+          font: "11px JetBrains Mono, monospace",
+          fillColor: Cesium.Color.fromCssColorString("#ff9800"),
+          outlineColor: Cesium.Color.BLACK,
+          outlineWidth: 2,
+          style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+          verticalOrigin: Cesium.VerticalOrigin.TOP,
+          pixelOffset: new Cesium.Cartesian2(0, 14),
+          disableDepthTestDistance: Number.POSITIVE_INFINITY
+        }
+      });
+
+      // Static dim fiber link to every GS
+      viewer.entities.add({
+        name: `Internet: Ops → ${gs.NAME}`,
+        polyline: {
+          positions: [opsPos, gs.pos],
+          width: 1,
+          material: new Cesium.PolylineDashMaterialProperty({
+            color: Cesium.Color.fromCssColorString("#4fc3f7").withAlpha(0.12),
+            dashLength: 12
+          })
+        }
+      });
+    });
+
+    // Dynamic bright fiber link — lights up to whichever GS has contact
+    viewer.entities.add({
+      name: "Active Internet Link",
+      polyline: {
+        positions: new Cesium.CallbackProperty(() => {
+          const vis = getVisibleGs();
+          if (!vis) return [opsPos, opsPos];
+          return [opsPos, vis.gs.pos];
+        }, false),
+        width: 2,
+        material: new Cesium.PolylineDashMaterialProperty({
+          color: Cesium.Color.fromCssColorString("#4fc3f7").withAlpha(0.6),
+          dashLength: 12
+        })
+      }
+    });
+
+    // === 3. SATELLITE ORBIT TRACKS (one per satellite, colored) ===
+    for (let s = 0; s < satOrbits.length; s++) {
+      viewer.entities.add({
+        name: `Orbit Track ${satNames[s]}`,
+        polyline: {
+          positions: satOrbits[s].map((p: any) => new Cesium.Cartesian3(p.x, p.y, p.z)),
+          width: 1.5,
+          material: Cesium.Color.fromCssColorString(satColors[s]).withAlpha(0.15)
+        }
+      });
+    }
+
+    // === 4. ANIMATED SATELLITES (4 sats, different inclinations) ===
+    for (let s = 0; s < satNames.length; s++) {
+      const idx = s;
+      const col = Cesium.Color.fromCssColorString(satColors[s]);
+      viewer.entities.add({
+        name: satNames[s],
+        position: new Cesium.CallbackProperty(() => getSatPosition(Date.now(), idx), false),
+        point: {
+          pixelSize: 14,
+          color: col,
+          outlineColor: Cesium.Color.WHITE,
+          outlineWidth: 2
+        },
+        label: {
+          text: satNames[s],
+          font: "13px JetBrains Mono, monospace",
+          fillColor: col,
+          outlineColor: Cesium.Color.BLACK,
+          outlineWidth: 2,
+          style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+          verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+          pixelOffset: new Cesium.Cartesian2(0, -16),
+          disableDepthTestDistance: Number.POSITIVE_INFINITY
+        }
+      });
+    }
+
+    // === 5. RF LINK (dynamically connects to whichever GS + sat has LOS) ===
+    viewer.entities.add({
+      name: "RF Link (TC/TM)",
+      polyline: {
+        positions: new Cesium.CallbackProperty(() => {
+          const vis = getVisibleGs();
+          if (!vis) return [opsPos, opsPos];
+          return [vis.gs.pos, getSatPosition(Date.now(), vis.satIdx)];
+        }, false),
+        width: 2,
+        material: new Cesium.PolylineDashMaterialProperty({
+          color: Cesium.Color.WHITE.withAlpha(0.3),
+          dashLength: 10
+        })
+      }
+    });
+
+    // === 6. ANIMATED DATA PACKETS ===
+    // All packet flow gated on LOS. Packets route through whichever GS has contact.
+
+    // Command uplink packets (orange): ops → visible GS → satellite
+    for (let i = 0; i < 3; i++) {
+      const phase = i / 3;
+      viewer.entities.add({
+        name: `TC Packet ${i}`,
+        position: new Cesium.CallbackProperty(() => {
+          const vis = getVisibleGs();
+          if (!vis) return opsPos;
+          const t = ((Date.now() / 15000 + phase) % 1);
+          const satPos = getSatPosition(Date.now(), vis.satIdx);
+          if (t < 0.35) {
+            const ft = t / 0.35;
+            return Cesium.Cartesian3.lerp(opsPos, vis.gs.pos, ft, new Cesium.Cartesian3());
+          } else {
+            const rt = (t - 0.35) / 0.65;
+            return Cesium.Cartesian3.lerp(vis.gs.pos, satPos, rt, new Cesium.Cartesian3());
+          }
+        }, false),
+        point: {
+          pixelSize: 7,
+          color: Cesium.Color.fromCssColorString("#ff9800"),
+          outlineColor: Cesium.Color.fromCssColorString("#ffcc80"),
+          outlineWidth: 1,
+          disableDepthTestDistance: Number.POSITIVE_INFINITY
+        }
+      });
+    }
+
+    // Telemetry downlink packets (green): satellite → visible GS → ops
+    for (let i = 0; i < 5; i++) {
+      const phase = i / 5;
+      viewer.entities.add({
+        name: `TM Packet ${i}`,
+        position: new Cesium.CallbackProperty(() => {
+          const vis = getVisibleGs();
+          if (!vis) return opsPos;
+          const t = ((Date.now() / 10500 + phase) % 1);
+          const satPos = getSatPosition(Date.now(), vis.satIdx);
+          if (t < 0.65) {
+            const rt = t / 0.65;
+            return Cesium.Cartesian3.lerp(satPos, vis.gs.pos, rt, new Cesium.Cartesian3());
+          } else {
+            const ft = (t - 0.65) / 0.35;
+            return Cesium.Cartesian3.lerp(vis.gs.pos, opsPos, ft, new Cesium.Cartesian3());
+          }
+        }, false),
+        point: {
+          pixelSize: 6,
+          color: Cesium.Color.fromCssColorString("#38ef7d"),
+          outlineColor: Cesium.Color.fromCssColorString("#80ffb0"),
+          outlineWidth: 1,
+          disableDepthTestDistance: Number.POSITIVE_INFINITY
+        }
+      });
+    }
+
+    // === 7. HTML HUDs (stacked upper-left, updated via interval) ===
+    const sim = data.SIM_VALUES;
+    xtcHudActive = true;
+
+    xtcHudTimer = setInterval(() => {
+      const now = Date.now();
+      const vis = getVisibleGs();
+      const visible = vis !== null;
+      const battV = (sim.BATT_V + Math.sin(now / 2000) * 0.3).toFixed(1);
+      const solarI = (sim.SOLAR_I + Math.sin(now / 1500) * 0.15).toFixed(2);
+      const obcTemp = (sim.OBC_TEMP + Math.sin(now / 3000) * 1.2).toFixed(1);
+      const rssi = (sim.RSSI_DBM + Math.sin(now / 1000) * 1.5).toFixed(1);
+      const margin = (sim.LINK_MARGIN_DB + Math.sin(now / 2500) * 0.5).toFixed(1);
+      const hkSeq = Math.floor(now / 1000) % 16384;
+      const attSeq = Math.floor(now / 100) % 16384;
+      const pktCount = sim.PKT_COUNT + Math.floor(now / 1000) % 1000;
+      const linkStatus = visible ? `${satNames[vis.satIdx]} via ${vis.gs.NAME}` : 'WAITING FOR PASS';
+
+      xtcTlmText = [
+        `TELEMETRY (XTCE)`,
+        `BATT_V:   ${battV} V`,
+        `SOLAR_I:  ${solarI} A`,
+        `OBC_TEMP: ${obcTemp} degC`,
+        `SC_MODE:  ${sim.SC_MODE}`,
+        ``,
+        `CCSDS SPACE PACKETS`,
+        `HK  APID:0x01 SEQ:${String(hkSeq).padStart(5)}`,
+        `ATT APID:0x02 SEQ:${String(attSeq).padStart(5)}`,
+        `TOTAL: ${pktCount} pkts`,
+        ``,
+        `DOWNLINK  [${linkStatus}]`,
+        `${sim.BIT_RATE_KBPS} kbps | ${sim.DL_FREQ_MHZ} MHz`,
+        `RSSI: ${rssi} dBm`,
+        `Eb/N0: ${margin} dB`
+      ].join('\n');
+
+      const cmds = sim.CMD_QUEUE || [];
+      const cmdIdx = Math.floor(now / 24000) % cmds.length;
+      const accepted = sim.CMD_ACCEPT + Math.floor(now / 24000);
+      const gsLabel = visible ? vis.gs.NAME : 'NONE';
+      const satLabel = visible ? satNames[vis.satIdx] : 'NONE';
+
+      xtcCmdText = [
+        `COMMAND QUEUE (XTCE)`,
+        ...cmds.map((c: string, i: number) =>
+          `${i === cmdIdx ? '\u25b8' : ' '} TC: ${c}`
+        ),
+        ``,
+        `CMD STATUS`,
+        `ACCEPTED: ${accepted}`,
+        `REJECTED: ${sim.CMD_REJECT}`,
+        `UPLINK: ${sim.UL_FREQ_MHZ} MHz S-Band`,
+        `SAT: ${satLabel} | GS: ${gsLabel}`
+      ].join('\n');
+    }, 100);
+
+    // === 8. XTCE SYSTEM INFO (follows first satellite) ===
+    viewer.entities.add({
+      name: "XTCE SpaceSystem Info",
+      position: new Cesium.CallbackProperty(() => getSatPosition(Date.now(), 0), false),
+      label: {
+        text: [
+          `XTCE: ${data.SPACE_SYSTEM_NAME}`,
+          `TM: ${data.TELEMETRY.CONTAINERS.map((c: any) => c.NAME).join(', ')}`,
+          `TC: ${data.COMMANDS.META_COMMANDS.map((c: any) => c.NAME).join(', ')}`
+        ].join('\n'),
+        font: "10px JetBrains Mono, monospace",
+        fillColor: Cesium.Color.WHITE.withAlpha(0.85),
+        showBackground: true,
+        backgroundColor: Cesium.Color.fromCssColorString("rgba(0, 0, 0, 0.8)"),
+        backgroundPadding: new Cesium.Cartesian2(10, 6),
+        horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
+        verticalOrigin: Cesium.VerticalOrigin.TOP,
+        pixelOffset: new Cesium.Cartesian2(18, 8),
+        disableDepthTestDistance: Number.POSITIVE_INFINITY
+      }
+    });
+
+    // Camera stays at its current position — no flyTo
+  }
+
   // Clear visualization
   function clearVisualization() {
     if (viewer) {
       viewer.entities.removeAll();
     }
     visualizationActive = false;
+    xtcHudActive = false;
+    if (xtcHudTimer) {
+      clearInterval(xtcHudTimer);
+      xtcHudTimer = null;
+    }
+    if (xtcPreRenderCb && viewer) {
+      viewer.scene.preRender.removeEventListener(xtcPreRenderCb);
+      xtcPreRenderCb = null;
+    }
   }
 
   // Load Cesium script via CDN
@@ -1301,7 +1745,7 @@
     if (footer) (footer as HTMLElement).style.display = 'none';
 
     await initCesium();
-    loadSample("OMM");
+    loadSample("XTC");
   });
 
   onDestroy(() => {
@@ -1309,6 +1753,11 @@
     document.body.style.overflow = '';
     const footer = document.querySelector('footer');
     if (footer) (footer as HTMLElement).style.display = '';
+
+    if (xtcHudTimer) {
+      clearInterval(xtcHudTimer);
+      xtcHudTimer = null;
+    }
 
     if (viewer) {
       viewer.destroy();
@@ -1350,6 +1799,7 @@
           <button class="sample-btn" on:click={() => loadSample("SIT")}>SIT</button>
           <button class="sample-btn" on:click={() => loadSample("LDM")}>LDM</button>
           <button class="sample-btn" on:click={() => loadSample("TDM")}>TDM</button>
+          <button class="sample-btn xtc-btn" on:click={() => loadSample("XTC")}>XTC</button>
         </div>
       </div>
 
@@ -1436,6 +1886,10 @@
             <span class="help-badge tdm">TDM</span>
             <span>Tracking data and geometry</span>
           </div>
+          <div class="help-item">
+            <span class="help-badge xtc">XTC</span>
+            <span>Full command &amp; telemetry flow</span>
+          </div>
         </div>
       </div>
     </div>
@@ -1443,6 +1897,12 @@
     <!-- Globe Container -->
     <div class="globe-container">
       <div class="cesium-wrapper" bind:this={cesiumContainer}></div>
+      {#if xtcHudActive}
+        <div class="xtc-hud-stack">
+          <pre class="xtc-hud xtc-hud-tlm">{xtcTlmText}</pre>
+          <pre class="xtc-hud xtc-hud-cmd">{xtcCmdText}</pre>
+        </div>
+      {/if}
       {#if !cesiumLoaded}
         <div class="loading-overlay">
           <div class="loading-content">
@@ -1781,6 +2241,51 @@
   .help-badge.tdm {
     background: rgba(78, 205, 196, 0.2);
     color: #4ecdc4;
+  }
+
+  .help-badge.xtc {
+    background: rgba(206, 147, 216, 0.2);
+    color: #ce93d8;
+  }
+
+  .xtc-btn {
+    background: rgba(206, 147, 216, 0.12) !important;
+    border-color: rgba(206, 147, 216, 0.3) !important;
+    color: #ce93d8 !important;
+  }
+
+  /* XTC HUD Overlay */
+  .xtc-hud-stack {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  .xtc-hud {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.5;
+    padding: 12px 14px;
+    border-radius: 8px;
+    margin: 0;
+    white-space: pre;
+  }
+
+  .xtc-hud-tlm {
+    color: #38ef7d;
+    background: rgba(0, 8, 0, 0.9);
+    border: 1px solid rgba(56, 239, 125, 0.2);
+  }
+
+  .xtc-hud-cmd {
+    color: #ff9800;
+    background: rgba(8, 4, 0, 0.9);
+    border: 1px solid rgba(255, 152, 0, 0.2);
   }
 
   /* Globe Container */
