@@ -26,6 +26,137 @@
     return Array.from(map.values());
   })();
 
+  // All schema types (full catalog)
+  const allTypes: { abbr: string; desc: string; hasSample: boolean }[] = [
+    { abbr: "ACL", desc: "Access Control Grant", hasSample: false },
+    { abbr: "ACM", desc: "Attitude State Data", hasSample: false },
+    { abbr: "ACR", desc: "Aircraft Dynamics", hasSample: false },
+    { abbr: "AEM", desc: "Attitude Ephemeris Message", hasSample: true },
+    { abbr: "ANI", desc: "Analytic Imagery Product", hasSample: false },
+    { abbr: "AOF", desc: "AOS Transfer Frame", hasSample: false },
+    { abbr: "APM", desc: "Attitude Parameter Message", hasSample: false },
+    { abbr: "ARM", desc: "Armor and Protection", hasSample: false },
+    { abbr: "AST", desc: "Astrodynamics", hasSample: false },
+    { abbr: "ATD", desc: "Attitude Data Point", hasSample: false },
+    { abbr: "ATM", desc: "Atmospheric Model Message", hasSample: false },
+    { abbr: "BAL", desc: "Ballistics", hasSample: false },
+    { abbr: "BEM", desc: "Beam Contour Point", hasSample: false },
+    { abbr: "BMC", desc: "Beam Contour", hasSample: false },
+    { abbr: "BOV", desc: "Burn Out Vector Message", hasSample: false },
+    { abbr: "BUS", desc: "Satellite Bus Specification", hasSample: false },
+    { abbr: "CAT", desc: "Catalog Entity Message", hasSample: false },
+    { abbr: "CDM", desc: "Conjunction Data Message", hasSample: true },
+    { abbr: "CFP", desc: "CCSDS File Delivery Protocol PDU", hasSample: false },
+    { abbr: "CHN", desc: "Communications Channel", hasSample: false },
+    { abbr: "CLT", desc: "Command Link Transmission Unit", hasSample: false },
+    { abbr: "CMS", desc: "Transponder Channel", hasSample: false },
+    { abbr: "COM", desc: "Communications Systems", hasSample: false },
+    { abbr: "CRD", desc: "Coordinate Systems", hasSample: false },
+    { abbr: "CRM", desc: "Collection Request Message", hasSample: false },
+    { abbr: "CSM", desc: "Conjunction Summary Message", hasSample: false },
+    { abbr: "CTR", desc: "Country Identity Message", hasSample: false },
+    { abbr: "DFH", desc: "GEO Drift History Record", hasSample: false },
+    { abbr: "DMG", desc: "Damage Models", hasSample: false },
+    { abbr: "DOA", desc: "Difference of Arrival Geolocation", hasSample: false },
+    { abbr: "EME", desc: "Encrypted Message Envelope", hasSample: false },
+    { abbr: "ENC", desc: "Encryption Header", hasSample: false },
+    { abbr: "ENV", desc: "Atmosphere and Environment", hasSample: false },
+    { abbr: "EOO", desc: "Electro-Optical Observation", hasSample: false },
+    { abbr: "EOP", desc: "Earth Orientation Parameters", hasSample: false },
+    { abbr: "EPM", desc: "Cryptographic Key Information", hasSample: false },
+    { abbr: "EWR", desc: "Electronic Warfare", hasSample: false },
+    { abbr: "FCS", desc: "Fire Control Systems", hasSample: false },
+    { abbr: "GDI", desc: "Ground Imagery", hasSample: false },
+    { abbr: "GEO", desc: "GEO Spacecraft Status", hasSample: false },
+    { abbr: "GNO", desc: "GNSS Observation Data Point", hasSample: false },
+    { abbr: "GRV", desc: "Gravity Models", hasSample: false },
+    { abbr: "GVH", desc: "Ground Vehicles", hasSample: false },
+    { abbr: "HEL", desc: "Helicopter Dynamics", hasSample: false },
+    { abbr: "HYP", desc: "Hypothesis Message", hasSample: false },
+    { abbr: "IDM", desc: "Frequency Range Definition", hasSample: false },
+    { abbr: "ION", desc: "Ionospheric Observation", hasSample: false },
+    { abbr: "IRO", desc: "Infrared Observation", hasSample: false },
+    { abbr: "LCC", desc: "Legacy Country Code", hasSample: false },
+    { abbr: "LDM", desc: "Launch Data Message", hasSample: false },
+    { abbr: "LKS", desc: "Link Status", hasSample: false },
+    { abbr: "LND", desc: "Launch Detection", hasSample: false },
+    { abbr: "LNE", desc: "Launch Event", hasSample: false },
+    { abbr: "MET", desc: "Mean Element Theory", hasSample: false },
+    { abbr: "MFE", desc: "Manifold Element Set", hasSample: false },
+    { abbr: "MNF", desc: "Manifold Element Set", hasSample: false },
+    { abbr: "MNV", desc: "Maneuver Orbital State", hasSample: false },
+    { abbr: "MPE", desc: "Minimum Propagatable Element Set", hasSample: false },
+    { abbr: "MSL", desc: "Guided Missiles", hasSample: false },
+    { abbr: "MST", desc: "Missile Track", hasSample: false },
+    { abbr: "MTI", desc: "Moving Target Indicator", hasSample: false },
+    { abbr: "NAV", desc: "Naval Vessels", hasSample: false },
+    { abbr: "OBD", desc: "Orbit Determination Solution", hasSample: false },
+    { abbr: "OBT", desc: "Orbit Track", hasSample: false },
+    { abbr: "OCM", desc: "Orbit Comprehensive Message", hasSample: false },
+    { abbr: "OEM", desc: "Orbit Ephemeris Message", hasSample: true },
+    { abbr: "OMM", desc: "Orbit Mean Elements Message", hasSample: true },
+    { abbr: "OOA", desc: "On-Orbit Antenna", hasSample: false },
+    { abbr: "OOB", desc: "On-Orbit Battery", hasSample: false },
+    { abbr: "OOD", desc: "On-Orbit Object Details", hasSample: false },
+    { abbr: "OOE", desc: "On-Orbit Event", hasSample: false },
+    { abbr: "OOI", desc: "Object of Interest", hasSample: false },
+    { abbr: "OOL", desc: "On-Orbit Object List", hasSample: false },
+    { abbr: "OON", desc: "On-Orbit Object", hasSample: false },
+    { abbr: "OOS", desc: "On-Orbit Solar Array", hasSample: false },
+    { abbr: "OOT", desc: "On-Orbit Thruster", hasSample: false },
+    { abbr: "OPM", desc: "Orbit Parameter Message", hasSample: true },
+    { abbr: "OSM", desc: "Observation Stability Message", hasSample: false },
+    { abbr: "PCF", desc: "Propagator Configuration", hasSample: false },
+    { abbr: "PHY", desc: "Physics and Rigid Body Dynamics", hasSample: false },
+    { abbr: "PLD", desc: "Payload Information", hasSample: false },
+    { abbr: "PLG", desc: "Plugin Capability Declaration", hasSample: false },
+    { abbr: "PLK", desc: "Plugin Key Exchange", hasSample: false },
+    { abbr: "PNM", desc: "Publish Notification Message", hasSample: false },
+    { abbr: "PRG", desc: "Program Description Message", hasSample: false },
+    { abbr: "PUR", desc: "Purchase Request", hasSample: false },
+    { abbr: "RAF", desc: "Return All Frames Service", hasSample: false },
+    { abbr: "RCF", desc: "Return Channel Frames Service", hasSample: false },
+    { abbr: "RDM", desc: "Reentry State Vector", hasSample: false },
+    { abbr: "RDO", desc: "Radar Observation", hasSample: false },
+    { abbr: "REC", desc: "Record Wrapper", hasSample: false },
+    { abbr: "REV", desc: "Review", hasSample: false },
+    { abbr: "RFB", desc: "RF Band Specification", hasSample: false },
+    { abbr: "RFE", desc: "RF Emitter Detail Record", hasSample: false },
+    { abbr: "RFM", desc: "Reference Frame Message", hasSample: false },
+    { abbr: "RFO", desc: "RF Observation", hasSample: false },
+    { abbr: "ROC", desc: "Rocket Configuration", hasSample: false },
+    { abbr: "SAR", desc: "SAR Observation", hasSample: false },
+    { abbr: "SCM", desc: "Schema Standard Definition", hasSample: false },
+    { abbr: "SDL", desc: "Space Data Link Security", hasSample: false },
+    { abbr: "SEN", desc: "Sensor Maintenance Event", hasSample: false },
+    { abbr: "SEO", desc: "Space Environment Observation", hasSample: false },
+    { abbr: "SEV", desc: "Space Environment Detail", hasSample: false },
+    { abbr: "SIT", desc: "Geometric Properties", hasSample: false },
+    { abbr: "SKI", desc: "Sky Imagery", hasSample: false },
+    { abbr: "SNR", desc: "Sensor Systems", hasSample: false },
+    { abbr: "SOI", desc: "Space Object Identification", hasSample: false },
+    { abbr: "SON", desc: "Sonar and Underwater Acoustics", hasSample: false },
+    { abbr: "SPP", desc: "Space Packet Protocol", hasSample: false },
+    { abbr: "SPW", desc: "Space Weather Data Record", hasSample: false },
+    { abbr: "STF", desc: "Spatial Coverage Definition", hasSample: false },
+    { abbr: "STR", desc: "Star Catalog Entry", hasSample: false },
+    { abbr: "STV", desc: "State Vector", hasSample: false },
+    { abbr: "SWR", desc: "Short-Wave Infrared Observation", hasSample: false },
+    { abbr: "TCF", desc: "Telecommand Transfer Frame", hasSample: false },
+    { abbr: "TDM", desc: "Tracking Data Message", hasSample: true },
+    { abbr: "TIM", desc: "Time System", hasSample: false },
+    { abbr: "TKG", desc: "Tracking and Data Fusion", hasSample: false },
+    { abbr: "TME", desc: "Time Systems", hasSample: false },
+    { abbr: "TMF", desc: "Telemetry Transfer Frame", hasSample: false },
+    { abbr: "TPN", desc: "Transponder", hasSample: false },
+    { abbr: "TRK", desc: "Track", hasSample: false },
+    { abbr: "TRN", desc: "Terrain Models", hasSample: false },
+    { abbr: "VCM", desc: "Vector Covariance Message", hasSample: false },
+    { abbr: "WPN", desc: "Weapons and Munitions", hasSample: false },
+    { abbr: "WTH", desc: "Weather Data", hasSample: false },
+    { abbr: "XTC", desc: "XML Telemetry & Command Exchange", hasSample: true },
+  ];
+
   // Converter state
   let selectedStandard = "";
   let inputFormat: 'kvn' | 'xml' | 'json' | 'hex' = "kvn";
@@ -35,7 +166,7 @@
   let intermediate: any = null;
   let convertError = "";
   let copySuccess = false;
-  let hexViewMode: 'hex' | 'base64' = "hex";
+  let hexViewMode: 'hex' | 'utf16' = "hex";
   let fbBytesOutput: Uint8Array | null = null;
 
   // Dropdown state
@@ -252,41 +383,24 @@
     return u8.subarray(0, p);
   }
 
-  function formatHexDump(bytes: Uint8Array, type?: string): string {
-    const lines: string[] = [];
-    // Header annotation
-    if (bytes.length >= 8) {
-      const rootOff = bytes[0] | (bytes[1] << 8) | (bytes[2] << 16) | (bytes[3] << 24);
-      const fid = String.fromCharCode(bytes[4], bytes[5], bytes[6], bytes[7]);
-      lines.push(`# FlatBuffer: ${type || 'SDS'} (${bytes.length} bytes)`);
-      lines.push(`# root_offset=0x${rootOff.toString(16)} file_id="${fid}"`);
-      lines.push('');
+  function formatHex(bytes: Uint8Array): string {
+    const parts: string[] = [];
+    for (let i = 0; i < bytes.length; i++) {
+      parts.push(bytes[i].toString(16).padStart(2, '0'));
     }
-    for (let i = 0; i < bytes.length; i += 16) {
-      const addr = i.toString(16).padStart(8, '0');
-      const hex: string[] = [];
-      const asc: string[] = [];
-      for (let j = 0; j < 16; j++) {
-        if (i + j < bytes.length) {
-          hex.push(bytes[i + j].toString(16).padStart(2, '0'));
-          const c = bytes[i + j];
-          asc.push(c >= 0x20 && c < 0x7f ? String.fromCharCode(c) : '.');
-        } else {
-          hex.push('  ');
-          asc.push(' ');
-        }
-      }
-      lines.push(`${addr}  ${hex.slice(0, 8).join(' ')}  ${hex.slice(8).join(' ')}  |${asc.join('')}|`);
+    // Line-wrap every 32 bytes for readability
+    const lines: string[] = [];
+    for (let i = 0; i < parts.length; i += 32) {
+      lines.push(parts.slice(i, i + 32).join(' '));
     }
     return lines.join('\n');
   }
 
-  function formatBase64(bytes: Uint8Array): string {
-    let binary = '';
-    for (let i = 0; i < bytes.length; i++) {
-      binary += String.fromCharCode(bytes[i]);
-    }
-    return btoa(binary);
+  function formatUtf16(bytes: Uint8Array): string {
+    // Pad to even length if needed
+    const padded = bytes.length % 2 === 0 ? bytes : new Uint8Array([...bytes, 0]);
+    const u16 = new Uint16Array(padded.buffer, padded.byteOffset, padded.length >> 1);
+    return String.fromCharCode(...u16);
   }
 
   function serialize(data: any, fmt: string, type: string): string {
@@ -298,7 +412,7 @@
     if (fmt === 'xml') return jsonToXML(data, type || 'message');
     if (fmt === 'hex') {
       fbBytesOutput = buildFlatBuffer(data, type);
-      return hexViewMode === 'hex' ? formatHexDump(fbBytesOutput, type) : formatBase64(fbBytesOutput);
+      return hexViewMode === 'hex' ? formatHex(fbBytesOutput) : formatUtf16(fbBytesOutput);
     }
     throw new Error(`Unknown format: ${fmt}`);
   }
@@ -356,7 +470,12 @@
         inputText = serialize(intermediate, fmt, selectedStandard);
       }
       inputFormat = fmt;
-      reparse();
+      // Don't reparse hex — intermediate is already set, just reconvert output
+      if (fmt === 'hex') {
+        reconvert();
+      } else {
+        reparse();
+      }
     } catch (e: any) {
       convertError = e.message || "Failed to convert input format";
     }
@@ -372,11 +491,17 @@
   function reparse() {
     convertError = "";
     outputText = "";
-    intermediate = null;
     fbBytesOutput = null;
 
     if (!inputText.trim()) return;
 
+    // FlatBuffer input is readonly display — intermediate already set
+    if (inputFormat === 'hex') {
+      reconvert();
+      return;
+    }
+
+    intermediate = null;
     try {
       intermediate = parseInput(inputText, inputFormat);
     } catch (e: any) {
@@ -410,9 +535,11 @@
   }
 
   function toggleHexView() {
-    hexViewMode = hexViewMode === 'hex' ? 'base64' : 'hex';
-    if (outputFormat === 'hex' && fbBytesOutput) {
-      outputText = hexViewMode === 'hex' ? formatHexDump(fbBytesOutput, selectedStandard) : formatBase64(fbBytesOutput);
+    hexViewMode = hexViewMode === 'hex' ? 'utf16' : 'hex';
+    if (fbBytesOutput) {
+      const text = hexViewMode === 'hex' ? formatHex(fbBytesOutput) : formatUtf16(fbBytesOutput);
+      if (outputFormat === 'hex') outputText = text;
+      if (inputFormat === 'hex') inputText = text;
     }
   }
 
@@ -768,6 +895,11 @@ builder.finish(omm);`
                 on:click={() => setInputFormat(fmt.key)}
               >{fmt.label}</button>
             {/each}
+            {#if inputFormat === 'hex'}
+              <button class="hex-toggle" on:click={toggleHexView}>
+                {hexViewMode === 'hex' ? 'UTF-16' : 'Hex'}
+              </button>
+            {/if}
           </div>
           <textarea
             class="editor-textarea"
@@ -811,7 +943,7 @@ builder.finish(omm);`
             {/each}
             {#if outputFormat === 'hex'}
               <button class="hex-toggle" on:click={toggleHexView}>
-                {hexViewMode === 'hex' ? 'Base64' : 'Hex'}
+                {hexViewMode === 'hex' ? 'UTF-16' : 'Hex'}
               </button>
             {/if}
           </div>
@@ -831,12 +963,22 @@ builder.finish(omm);`
 
     <!-- Supported Types -->
     <div class="types-section">
-      <h2 class="section-title">Supported CCSDS Types</h2>
+      <h2 class="section-title">All {allTypes.length} Standards</h2>
+      <p class="section-subtitle">FlatBuffers schemas for space domain data — types with converter samples are highlighted</p>
       <div class="types-grid">
-        {#each standards as t}
-          <button class="type-card" class:active-type={t.name === selectedStandard} on:click={() => selectStandard(t.name)}>
-            <span class="type-name">{t.name}</span>
+        {#each allTypes as t}
+          <button
+            class="type-card"
+            class:active-type={t.abbr === selectedStandard}
+            class:has-sample={t.hasSample}
+            on:click={() => {
+              const std = standards.find(s => s.name === t.abbr || (t.abbr === 'XTC' && s.name === 'XTCE'));
+              if (std) selectStandard(std.name);
+            }}
+          >
+            <span class="type-name">{t.abbr}</span>
             <span class="type-desc">{t.desc}</span>
+            {#if t.hasSample}<span class="sample-badge">WASM</span>{/if}
           </button>
         {/each}
       </div>
@@ -1339,44 +1481,66 @@ builder.finish(omm);`
 
   .types-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 8px;
   }
 
   .type-card {
+    position: relative;
     background: var(--ui-bg);
     border: 1px solid var(--ui-border);
-    border-radius: 16px;
-    padding: 20px;
+    border-radius: 12px;
+    padding: 14px 12px;
     text-align: center;
-    backdrop-filter: blur(20px);
     cursor: pointer;
     transition: all 0.15s;
+    opacity: 0.7;
+  }
+
+  .type-card.has-sample {
+    opacity: 1;
+    border-color: rgba(0, 119, 182, 0.3);
   }
 
   .type-card:hover {
     border-color: var(--ui-border-hover);
     background: var(--ui-hover);
+    opacity: 1;
   }
 
   .type-card.active-type {
     border-color: var(--accent);
     box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.1);
+    opacity: 1;
   }
 
   .type-name {
     display: block;
     font-family: var(--font-mono);
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 700;
     color: var(--accent);
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
 
   .type-desc {
     display: block;
-    font-size: 13px;
+    font-size: 11px;
     color: var(--text-secondary);
+    line-height: 1.3;
+  }
+
+  .sample-badge {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 1px 6px;
+    background: rgba(56, 239, 125, 0.12);
+    color: #38ef7d;
+    border-radius: 4px;
+    font-size: 9px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    letter-spacing: 0.05em;
   }
 
   /* Language Showcase */
@@ -1483,7 +1647,7 @@ builder.finish(omm);`
     }
 
     .types-grid {
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     }
 
     .format-bar {
