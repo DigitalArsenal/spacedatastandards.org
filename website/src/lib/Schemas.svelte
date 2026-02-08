@@ -10,29 +10,59 @@
     category: string;
   }
 
-  // Category mapping for known schemas
+  // Category mapping for all schemas
   const categoryMap: Record<string, string> = {
-    // Orbital
-    "OMM": "Orbital", "OEM": "Orbital", "OCM": "Orbital", "OSM": "Orbital", "AEM": "Orbital",
-    // Conjunction
-    "CDM": "Conjunction", "CSM": "Conjunction", "CAT": "Conjunction",
-    // Entity
-    "EPM": "Entity", "PNM": "Entity",
+    // Orbit & Navigation
+    "OMM": "Orbit", "OEM": "Orbit", "OPM": "Orbit", "OCM": "Orbit",
+    "BOV": "Orbit", "MNV": "Orbit", "MFE": "Orbit", "MNF": "Orbit",
+    "MPE": "Orbit", "STV": "Orbit", "OBT": "Orbit", "OBD": "Orbit",
+    "OSM": "Orbit", "AST": "Orbit", "PCF": "Orbit", "VCM": "Orbit",
+    // Attitude
+    "AEM": "Attitude", "APM": "Attitude", "ACM": "Attitude", "ATD": "Attitude",
+    // Conjunction & Safety
+    "CDM": "Conjunction", "CSM": "Conjunction", "HYP": "Conjunction",
     // Tracking
-    "TDM": "Tracking", "RFM": "Tracking",
-    // Telemetry
-    "XTC": "Telemetry",
-    // Maneuver
-    "MET": "Maneuver", "MPE": "Maneuver", "MNV": "Maneuver",
-    // Propagation
-    "HYP": "Propagation", "EME": "Propagation", "EOO": "Propagation", "EOP": "Propagation", "PCF": "Propagation",
-    // Reference
-    "LCC": "Reference", "LDM": "Reference", "CRM": "Reference", "CTR": "Reference", "TIM": "Reference", "RFM": "Reference",
-    // Marketplace
-    "STF": "Marketplace", "PUR": "Marketplace", "REV": "Marketplace", "ACL": "Marketplace",
+    "TDM": "Tracking", "TRK": "Tracking", "TKG": "Tracking",
+    // Space Objects & Catalog
+    "CAT": "Objects", "OON": "Objects", "OOD": "Objects", "OOL": "Objects",
+    "OOI": "Objects", "OOE": "Objects", "OOA": "Objects", "OOB": "Objects",
+    "OOS": "Objects", "OOT": "Objects", "SOI": "Objects", "IDM": "Objects",
+    // Observations & Sensors
+    "EOO": "Observation", "IRO": "Observation", "RDO": "Observation", "SAR": "Observation",
+    "RFO": "Observation", "GNO": "Observation", "DOA": "Observation", "MTI": "Observation",
+    "SWR": "Observation", "GDI": "Observation", "SKI": "Observation", "ANI": "Observation",
+    "SNR": "Observation", "SEN": "Observation",
+    // Communications & RF
+    "COM": "Comms", "CMS": "Comms", "CHN": "Comms", "TPN": "Comms",
+    "RFB": "Comms", "RFE": "Comms", "LKS": "Comms", "BEM": "Comms", "BMC": "Comms",
+    // Space Environment
+    "ENV": "Environment", "SEO": "Environment", "SEV": "Environment", "ION": "Environment",
+    "ATM": "Environment", "SPW": "Environment", "WTH": "Environment", "GRV": "Environment",
+    "EOP": "Environment", "PHY": "Environment", "TRN": "Environment", "STR": "Environment",
+    // Launch & Reentry
+    "LDM": "Launch", "LND": "Launch", "LNE": "Launch", "ROC": "Launch", "RDM": "Launch",
+    // Vehicles & Platforms
+    "BUS": "Vehicle", "PLD": "Vehicle", "GEO": "Vehicle", "DFH": "Vehicle", "PRG": "Vehicle",
+    // Defense & EW
+    "ACR": "Defense", "GVH": "Defense", "HEL": "Defense", "MSL": "Defense",
+    "MST": "Defense", "NAV": "Defense", "ARM": "Defense", "BAL": "Defense",
+    "DMG": "Defense", "EWR": "Defense", "FCS": "Defense", "WPN": "Defense", "SON": "Defense",
+    // Protocol & Data Link
+    "SPP": "Protocol", "AOF": "Protocol", "TCF": "Protocol", "TMF": "Protocol",
+    "CFP": "Protocol", "CLT": "Protocol", "RAF": "Protocol", "RCF": "Protocol",
+    "SDL": "Protocol", "XTC": "Protocol",
+    // Security & Encryption
+    "EME": "Security", "ENC": "Security", "EPM": "Security", "PLK": "Security",
+    // Reference & Metadata
+    "RFM": "Reference", "CRD": "Reference", "TIM": "Reference", "TME": "Reference",
+    "MET": "Reference", "LCC": "Reference", "CTR": "Reference", "SIT": "Reference",
+    "SCM": "Reference",
+    // Data Exchange
+    "CRM": "Exchange", "PNM": "Exchange", "ACL": "Exchange", "PUR": "Exchange",
+    "REV": "Exchange", "REC": "Exchange", "STF": "Exchange", "PLG": "Exchange",
   };
 
-  const categories = ["All", "Orbital", "Conjunction", "Entity", "Tracking", "Telemetry", "Maneuver", "Propagation", "Reference", "Marketplace", "Other"];
+  const categories = ["All", "Orbit", "Attitude", "Conjunction", "Tracking", "Objects", "Observation", "Comms", "Environment", "Launch", "Vehicle", "Defense", "Protocol", "Security", "Reference", "Exchange"];
 
   let schemas = writable<SchemaInfo[]>([]);
   let searchQuery = writable("");
@@ -96,34 +126,44 @@
 
   function getCategoryColor(category: string): string {
     const colors: Record<string, string> = {
-      "Orbital": "rgba(102, 126, 234, 0.2)",
+      "Orbit": "rgba(102, 126, 234, 0.2)",
+      "Attitude": "rgba(142, 45, 226, 0.2)",
       "Conjunction": "rgba(245, 87, 108, 0.2)",
-      "Entity": "rgba(56, 239, 125, 0.2)",
       "Tracking": "rgba(23, 234, 217, 0.2)",
-      "Telemetry": "rgba(0, 200, 170, 0.2)",
-      "Maneuver": "rgba(142, 45, 226, 0.2)",
-      "Propagation": "rgba(240, 147, 251, 0.2)",
-      "Reference": "rgba(247, 151, 30, 0.2)",
-      "Marketplace": "rgba(255, 210, 0, 0.2)",
-      "Other": "rgba(134, 134, 139, 0.2)",
+      "Objects": "rgba(56, 239, 125, 0.2)",
+      "Observation": "rgba(0, 200, 170, 0.2)",
+      "Comms": "rgba(240, 147, 251, 0.2)",
+      "Environment": "rgba(72, 202, 228, 0.2)",
+      "Launch": "rgba(255, 159, 67, 0.2)",
+      "Vehicle": "rgba(247, 151, 30, 0.2)",
+      "Defense": "rgba(220, 80, 80, 0.2)",
+      "Protocol": "rgba(162, 155, 254, 0.2)",
+      "Security": "rgba(255, 107, 107, 0.2)",
+      "Reference": "rgba(255, 210, 0, 0.2)",
+      "Exchange": "rgba(38, 222, 129, 0.2)",
     };
-    return colors[category] || colors["Other"];
+    return colors[category] || "rgba(134, 134, 139, 0.2)";
   }
 
   function getCategoryTextColor(category: string): string {
     const colors: Record<string, string> = {
-      "Orbital": "#0077b6",
+      "Orbit": "#667eea",
+      "Attitude": "#8E2DE2",
       "Conjunction": "#f5576c",
-      "Entity": "#38ef7d",
       "Tracking": "#17ead9",
-      "Telemetry": "#00c8aa",
-      "Maneuver": "#8E2DE2",
-      "Propagation": "#f093fb",
-      "Reference": "#f7971e",
-      "Marketplace": "#ffd200",
-      "Other": "#86868b",
+      "Objects": "#38ef7d",
+      "Observation": "#00c8aa",
+      "Comms": "#f093fb",
+      "Environment": "#48cae4",
+      "Launch": "#ff9f43",
+      "Vehicle": "#f7971e",
+      "Defense": "#dc5050",
+      "Protocol": "#a29bfe",
+      "Security": "#ff6b6b",
+      "Reference": "#ffd200",
+      "Exchange": "#26de81",
     };
-    return colors[category] || colors["Other"];
+    return colors[category] || "#86868b";
   }
 </script>
 
