@@ -878,7 +878,6 @@ builder.finish(omm);`
 
   <div class="container">
     <div class="hero">
-      <div class="hero-badge">CCSDS NDM</div>
       <h1 class="title">Format Converter</h1>
       <p class="subtitle">Any format to any format — KVN, XML, JSON, FlatBuffer — powered by C++/WASM in your browser</p>
     </div>
@@ -1114,18 +1113,6 @@ builder.finish(omm);`
   .hero {
     text-align: center;
     margin-bottom: 48px;
-  }
-
-  .hero-badge {
-    display: inline-block;
-    padding: 6px 14px;
-    background: rgba(0, 119, 182, 0.1);
-    border: 1px solid rgba(0, 119, 182, 0.2);
-    border-radius: 20px;
-    font-family: var(--font-mono);
-    font-size: 13px;
-    color: var(--accent);
-    margin-bottom: 20px;
   }
 
   .title {
