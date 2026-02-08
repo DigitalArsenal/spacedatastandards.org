@@ -26,136 +26,169 @@
     return Array.from(map.values());
   })();
 
-  // All schema types (full catalog)
-  const allTypes: { abbr: string; desc: string; hasSample: boolean }[] = [
-    { abbr: "ACL", desc: "Access Control Grant", hasSample: false },
-    { abbr: "ACM", desc: "Attitude State Data", hasSample: false },
-    { abbr: "ACR", desc: "Aircraft Dynamics", hasSample: false },
-    { abbr: "AEM", desc: "Attitude Ephemeris Message", hasSample: true },
-    { abbr: "ANI", desc: "Analytic Imagery Product", hasSample: false },
-    { abbr: "AOF", desc: "AOS Transfer Frame", hasSample: false },
-    { abbr: "APM", desc: "Attitude Parameter Message", hasSample: false },
-    { abbr: "ARM", desc: "Armor and Protection", hasSample: false },
-    { abbr: "AST", desc: "Astrodynamics", hasSample: false },
-    { abbr: "ATD", desc: "Attitude Data Point", hasSample: false },
-    { abbr: "ATM", desc: "Atmospheric Model Message", hasSample: false },
-    { abbr: "BAL", desc: "Ballistics", hasSample: false },
-    { abbr: "BEM", desc: "Beam Contour Point", hasSample: false },
-    { abbr: "BMC", desc: "Beam Contour", hasSample: false },
-    { abbr: "BOV", desc: "Burn Out Vector Message", hasSample: false },
-    { abbr: "BUS", desc: "Satellite Bus Specification", hasSample: false },
-    { abbr: "CAT", desc: "Catalog Entity Message", hasSample: false },
-    { abbr: "CDM", desc: "Conjunction Data Message", hasSample: true },
-    { abbr: "CFP", desc: "CCSDS File Delivery Protocol PDU", hasSample: false },
-    { abbr: "CHN", desc: "Communications Channel", hasSample: false },
-    { abbr: "CLT", desc: "Command Link Transmission Unit", hasSample: false },
-    { abbr: "CMS", desc: "Transponder Channel", hasSample: false },
-    { abbr: "COM", desc: "Communications Systems", hasSample: false },
-    { abbr: "CRD", desc: "Coordinate Systems", hasSample: false },
-    { abbr: "CRM", desc: "Collection Request Message", hasSample: false },
-    { abbr: "CSM", desc: "Conjunction Summary Message", hasSample: false },
-    { abbr: "CTR", desc: "Country Identity Message", hasSample: false },
-    { abbr: "DFH", desc: "GEO Drift History Record", hasSample: false },
-    { abbr: "DMG", desc: "Damage Models", hasSample: false },
-    { abbr: "DOA", desc: "Difference of Arrival Geolocation", hasSample: false },
-    { abbr: "EME", desc: "Encrypted Message Envelope", hasSample: false },
-    { abbr: "ENC", desc: "Encryption Header", hasSample: false },
-    { abbr: "ENV", desc: "Atmosphere and Environment", hasSample: false },
-    { abbr: "EOO", desc: "Electro-Optical Observation", hasSample: false },
-    { abbr: "EOP", desc: "Earth Orientation Parameters", hasSample: false },
-    { abbr: "EPM", desc: "Cryptographic Key Information", hasSample: false },
-    { abbr: "EWR", desc: "Electronic Warfare", hasSample: false },
-    { abbr: "FCS", desc: "Fire Control Systems", hasSample: false },
-    { abbr: "GDI", desc: "Ground Imagery", hasSample: false },
-    { abbr: "GEO", desc: "GEO Spacecraft Status", hasSample: false },
-    { abbr: "GNO", desc: "GNSS Observation Data Point", hasSample: false },
-    { abbr: "GRV", desc: "Gravity Models", hasSample: false },
-    { abbr: "GVH", desc: "Ground Vehicles", hasSample: false },
-    { abbr: "HEL", desc: "Helicopter Dynamics", hasSample: false },
-    { abbr: "HYP", desc: "Hypothesis Message", hasSample: false },
-    { abbr: "IDM", desc: "Frequency Range Definition", hasSample: false },
-    { abbr: "ION", desc: "Ionospheric Observation", hasSample: false },
-    { abbr: "IRO", desc: "Infrared Observation", hasSample: false },
-    { abbr: "LCC", desc: "Legacy Country Code", hasSample: false },
-    { abbr: "LDM", desc: "Launch Data Message", hasSample: false },
-    { abbr: "LKS", desc: "Link Status", hasSample: false },
-    { abbr: "LND", desc: "Launch Detection", hasSample: false },
-    { abbr: "LNE", desc: "Launch Event", hasSample: false },
-    { abbr: "MET", desc: "Mean Element Theory", hasSample: false },
-    { abbr: "MFE", desc: "Manifold Element Set", hasSample: false },
-    { abbr: "MNF", desc: "Manifold Element Set", hasSample: false },
-    { abbr: "MNV", desc: "Maneuver Orbital State", hasSample: false },
-    { abbr: "MPE", desc: "Minimum Propagatable Element Set", hasSample: false },
-    { abbr: "MSL", desc: "Guided Missiles", hasSample: false },
-    { abbr: "MST", desc: "Missile Track", hasSample: false },
-    { abbr: "MTI", desc: "Moving Target Indicator", hasSample: false },
-    { abbr: "NAV", desc: "Naval Vessels", hasSample: false },
-    { abbr: "OBD", desc: "Orbit Determination Solution", hasSample: false },
-    { abbr: "OBT", desc: "Orbit Track", hasSample: false },
-    { abbr: "OCM", desc: "Orbit Comprehensive Message", hasSample: false },
-    { abbr: "OEM", desc: "Orbit Ephemeris Message", hasSample: true },
-    { abbr: "OMM", desc: "Orbit Mean Elements Message", hasSample: true },
-    { abbr: "OOA", desc: "On-Orbit Antenna", hasSample: false },
-    { abbr: "OOB", desc: "On-Orbit Battery", hasSample: false },
-    { abbr: "OOD", desc: "On-Orbit Object Details", hasSample: false },
-    { abbr: "OOE", desc: "On-Orbit Event", hasSample: false },
-    { abbr: "OOI", desc: "Object of Interest", hasSample: false },
-    { abbr: "OOL", desc: "On-Orbit Object List", hasSample: false },
-    { abbr: "OON", desc: "On-Orbit Object", hasSample: false },
-    { abbr: "OOS", desc: "On-Orbit Solar Array", hasSample: false },
-    { abbr: "OOT", desc: "On-Orbit Thruster", hasSample: false },
-    { abbr: "OPM", desc: "Orbit Parameter Message", hasSample: true },
-    { abbr: "OSM", desc: "Observation Stability Message", hasSample: false },
-    { abbr: "PCF", desc: "Propagator Configuration", hasSample: false },
-    { abbr: "PHY", desc: "Physics and Rigid Body Dynamics", hasSample: false },
-    { abbr: "PLD", desc: "Payload Information", hasSample: false },
-    { abbr: "PLG", desc: "Plugin Capability Declaration", hasSample: false },
-    { abbr: "PLK", desc: "Plugin Key Exchange", hasSample: false },
-    { abbr: "PNM", desc: "Publish Notification Message", hasSample: false },
-    { abbr: "PRG", desc: "Program Description Message", hasSample: false },
-    { abbr: "PUR", desc: "Purchase Request", hasSample: false },
-    { abbr: "RAF", desc: "Return All Frames Service", hasSample: false },
-    { abbr: "RCF", desc: "Return Channel Frames Service", hasSample: false },
-    { abbr: "RDM", desc: "Reentry State Vector", hasSample: false },
-    { abbr: "RDO", desc: "Radar Observation", hasSample: false },
-    { abbr: "REC", desc: "Record Wrapper", hasSample: false },
-    { abbr: "REV", desc: "Review", hasSample: false },
-    { abbr: "RFB", desc: "RF Band Specification", hasSample: false },
-    { abbr: "RFE", desc: "RF Emitter Detail Record", hasSample: false },
-    { abbr: "RFM", desc: "Reference Frame Message", hasSample: false },
-    { abbr: "RFO", desc: "RF Observation", hasSample: false },
-    { abbr: "ROC", desc: "Rocket Configuration", hasSample: false },
-    { abbr: "SAR", desc: "SAR Observation", hasSample: false },
-    { abbr: "SCM", desc: "Schema Standard Definition", hasSample: false },
-    { abbr: "SDL", desc: "Space Data Link Security", hasSample: false },
-    { abbr: "SEN", desc: "Sensor Maintenance Event", hasSample: false },
-    { abbr: "SEO", desc: "Space Environment Observation", hasSample: false },
-    { abbr: "SEV", desc: "Space Environment Detail", hasSample: false },
-    { abbr: "SIT", desc: "Geometric Properties", hasSample: false },
-    { abbr: "SKI", desc: "Sky Imagery", hasSample: false },
-    { abbr: "SNR", desc: "Sensor Systems", hasSample: false },
-    { abbr: "SOI", desc: "Space Object Identification", hasSample: false },
-    { abbr: "SON", desc: "Sonar and Underwater Acoustics", hasSample: false },
-    { abbr: "SPP", desc: "Space Packet Protocol", hasSample: false },
-    { abbr: "SPW", desc: "Space Weather Data Record", hasSample: false },
-    { abbr: "STF", desc: "Spatial Coverage Definition", hasSample: false },
-    { abbr: "STR", desc: "Star Catalog Entry", hasSample: false },
-    { abbr: "STV", desc: "State Vector", hasSample: false },
-    { abbr: "SWR", desc: "Short-Wave Infrared Observation", hasSample: false },
-    { abbr: "TCF", desc: "Telecommand Transfer Frame", hasSample: false },
-    { abbr: "TDM", desc: "Tracking Data Message", hasSample: true },
-    { abbr: "TIM", desc: "Time System", hasSample: false },
-    { abbr: "TKG", desc: "Tracking and Data Fusion", hasSample: false },
-    { abbr: "TME", desc: "Time Systems", hasSample: false },
-    { abbr: "TMF", desc: "Telemetry Transfer Frame", hasSample: false },
-    { abbr: "TPN", desc: "Transponder", hasSample: false },
-    { abbr: "TRK", desc: "Track", hasSample: false },
-    { abbr: "TRN", desc: "Terrain Models", hasSample: false },
-    { abbr: "VCM", desc: "Vector Covariance Message", hasSample: false },
-    { abbr: "WPN", desc: "Weapons and Munitions", hasSample: false },
-    { abbr: "WTH", desc: "Weather Data", hasSample: false },
-    { abbr: "XTC", desc: "XML Telemetry & Command Exchange", hasSample: true },
+  // All schema types organized by category
+  const typeCategories: { name: string; types: { abbr: string; desc: string }[] }[] = [
+    { name: "Orbit & Navigation", types: [
+      { abbr: "OMM", desc: "Orbit Mean Elements Message" },
+      { abbr: "OEM", desc: "Orbit Ephemeris Message" },
+      { abbr: "OPM", desc: "Orbit Parameter Message" },
+      { abbr: "OCM", desc: "Orbit Comprehensive Message" },
+      { abbr: "BOV", desc: "Burn Out Vector" },
+      { abbr: "MNV", desc: "Maneuver Orbital State" },
+      { abbr: "MFE", desc: "Manifold Element Set" },
+      { abbr: "MNF", desc: "Manifold Element Set" },
+      { abbr: "MPE", desc: "Min Propagatable Element Set" },
+      { abbr: "STV", desc: "State Vector" },
+      { abbr: "OBT", desc: "Orbit Track" },
+      { abbr: "OBD", desc: "Orbit Determination Solution" },
+      { abbr: "OSM", desc: "Observation Stability Message" },
+      { abbr: "AST", desc: "Astrodynamics" },
+      { abbr: "PCF", desc: "Propagator Configuration" },
+      { abbr: "VCM", desc: "Vector Covariance Message" },
+    ]},
+    { name: "Attitude", types: [
+      { abbr: "AEM", desc: "Attitude Ephemeris Message" },
+      { abbr: "APM", desc: "Attitude Parameter Message" },
+      { abbr: "ACM", desc: "Attitude State Data" },
+      { abbr: "ATD", desc: "Attitude Data Point" },
+    ]},
+    { name: "Conjunction & Safety", types: [
+      { abbr: "CDM", desc: "Conjunction Data Message" },
+      { abbr: "CSM", desc: "Conjunction Summary Message" },
+      { abbr: "HYP", desc: "Hypothesis Message" },
+    ]},
+    { name: "Tracking & Data", types: [
+      { abbr: "TDM", desc: "Tracking Data Message" },
+      { abbr: "TRK", desc: "Track" },
+      { abbr: "TKG", desc: "Tracking and Data Fusion" },
+      { abbr: "NAV", desc: "Navigation" },
+    ]},
+    { name: "Space Objects & Catalog", types: [
+      { abbr: "CAT", desc: "Catalog Entity Message" },
+      { abbr: "OON", desc: "On-Orbit Object" },
+      { abbr: "OOD", desc: "On-Orbit Object Details" },
+      { abbr: "OOL", desc: "On-Orbit Object List" },
+      { abbr: "OOI", desc: "Object of Interest" },
+      { abbr: "OOE", desc: "On-Orbit Event" },
+      { abbr: "OOA", desc: "On-Orbit Antenna" },
+      { abbr: "OOB", desc: "On-Orbit Battery" },
+      { abbr: "OOS", desc: "On-Orbit Solar Array" },
+      { abbr: "OOT", desc: "On-Orbit Thruster" },
+      { abbr: "SOI", desc: "Space Object Identification" },
+      { abbr: "IDM", desc: "Frequency Range Definition" },
+    ]},
+    { name: "Observations & Sensors", types: [
+      { abbr: "EOO", desc: "Electro-Optical Observation" },
+      { abbr: "IRO", desc: "Infrared Observation" },
+      { abbr: "RDO", desc: "Radar Observation" },
+      { abbr: "SAR", desc: "SAR Observation" },
+      { abbr: "RFO", desc: "RF Observation" },
+      { abbr: "GNO", desc: "GNSS Observation" },
+      { abbr: "DOA", desc: "Difference of Arrival" },
+      { abbr: "MTI", desc: "Moving Target Indicator" },
+      { abbr: "SWR", desc: "Short-Wave IR Observation" },
+      { abbr: "GDI", desc: "Ground Imagery" },
+      { abbr: "SKI", desc: "Sky Imagery" },
+      { abbr: "ANI", desc: "Analytic Imagery Product" },
+      { abbr: "SNR", desc: "Sensor Systems" },
+      { abbr: "SEN", desc: "Sensor Maintenance Event" },
+    ]},
+    { name: "Communications & RF", types: [
+      { abbr: "COM", desc: "Communications Systems" },
+      { abbr: "CMS", desc: "Transponder Channel" },
+      { abbr: "CHN", desc: "Communications Channel" },
+      { abbr: "TPN", desc: "Transponder" },
+      { abbr: "RFB", desc: "RF Band Specification" },
+      { abbr: "RFE", desc: "RF Emitter Detail Record" },
+      { abbr: "LKS", desc: "Link Status" },
+      { abbr: "BEM", desc: "Beam Contour Point" },
+      { abbr: "BMC", desc: "Beam Contour" },
+    ]},
+    { name: "Space Environment", types: [
+      { abbr: "ENV", desc: "Atmosphere and Environment" },
+      { abbr: "SEO", desc: "Space Environment Observation" },
+      { abbr: "SEV", desc: "Space Environment Detail" },
+      { abbr: "ION", desc: "Ionospheric Observation" },
+      { abbr: "ATM", desc: "Atmospheric Model" },
+      { abbr: "SPW", desc: "Space Weather Data Record" },
+      { abbr: "WTH", desc: "Weather Data" },
+      { abbr: "GRV", desc: "Gravity Models" },
+      { abbr: "EOP", desc: "Earth Orientation Parameters" },
+      { abbr: "PHY", desc: "Physics & Rigid Body Dynamics" },
+      { abbr: "TRN", desc: "Terrain Models" },
+      { abbr: "STR", desc: "Star Catalog Entry" },
+    ]},
+    { name: "Launch & Reentry", types: [
+      { abbr: "LDM", desc: "Launch Data Message" },
+      { abbr: "LND", desc: "Launch Detection" },
+      { abbr: "LNE", desc: "Launch Event" },
+      { abbr: "ROC", desc: "Rocket Configuration" },
+      { abbr: "RDM", desc: "Reentry State Vector" },
+    ]},
+    { name: "Vehicles & Platforms", types: [
+      { abbr: "BUS", desc: "Satellite Bus Specification" },
+      { abbr: "PLD", desc: "Payload Information" },
+      { abbr: "GEO", desc: "GEO Spacecraft Status" },
+      { abbr: "DFH", desc: "GEO Drift History" },
+      { abbr: "PRG", desc: "Program Description" },
+      { abbr: "ACR", desc: "Aircraft Dynamics" },
+      { abbr: "GVH", desc: "Ground Vehicles" },
+      { abbr: "HEL", desc: "Helicopter Dynamics" },
+      { abbr: "MSL", desc: "Guided Missiles" },
+      { abbr: "MST", desc: "Missile Track" },
+      { abbr: "NAV", desc: "Naval Vessels" },
+    ]},
+    { name: "Defense & EW", types: [
+      { abbr: "ARM", desc: "Armor and Protection" },
+      { abbr: "BAL", desc: "Ballistics" },
+      { abbr: "DMG", desc: "Damage Models" },
+      { abbr: "EWR", desc: "Electronic Warfare" },
+      { abbr: "FCS", desc: "Fire Control Systems" },
+      { abbr: "WPN", desc: "Weapons and Munitions" },
+      { abbr: "SON", desc: "Sonar & Underwater Acoustics" },
+    ]},
+    { name: "Protocol & Data Link", types: [
+      { abbr: "SPP", desc: "Space Packet Protocol" },
+      { abbr: "AOF", desc: "AOS Transfer Frame" },
+      { abbr: "TCF", desc: "Telecommand Transfer Frame" },
+      { abbr: "TMF", desc: "Telemetry Transfer Frame" },
+      { abbr: "CFP", desc: "CCSDS File Delivery PDU" },
+      { abbr: "CLT", desc: "Command Link Transmission" },
+      { abbr: "RAF", desc: "Return All Frames Service" },
+      { abbr: "RCF", desc: "Return Channel Frames" },
+      { abbr: "SDL", desc: "Space Data Link Security" },
+      { abbr: "XTC", desc: "Telemetry & Command Exchange" },
+    ]},
+    { name: "Security & Encryption", types: [
+      { abbr: "EME", desc: "Encrypted Message Envelope" },
+      { abbr: "ENC", desc: "Encryption Header" },
+      { abbr: "EPM", desc: "Cryptographic Key Info" },
+      { abbr: "PLK", desc: "Plugin Key Exchange" },
+    ]},
+    { name: "Reference & Metadata", types: [
+      { abbr: "RFM", desc: "Reference Frame Message" },
+      { abbr: "CRD", desc: "Coordinate Systems" },
+      { abbr: "TIM", desc: "Time System" },
+      { abbr: "TME", desc: "Time Systems" },
+      { abbr: "MET", desc: "Mean Element Theory" },
+      { abbr: "LCC", desc: "Legacy Country Code" },
+      { abbr: "CTR", desc: "Country Identity" },
+      { abbr: "SIT", desc: "Geometric Properties" },
+      { abbr: "SCM", desc: "Schema Standard Definition" },
+    ]},
+    { name: "Data Exchange", types: [
+      { abbr: "CRM", desc: "Collection Request Message" },
+      { abbr: "PNM", desc: "Publish Notification" },
+      { abbr: "ACL", desc: "Access Control Grant" },
+      { abbr: "PUR", desc: "Purchase Request" },
+      { abbr: "REV", desc: "Review" },
+      { abbr: "REC", desc: "Record Wrapper" },
+      { abbr: "STF", desc: "Spatial Coverage Definition" },
+      { abbr: "PLG", desc: "Plugin Declaration" },
+    ]},
   ];
+
+  const totalTypeCount = typeCategories.reduce((n, c) => n + c.types.length, 0);
 
   // Converter state
   let selectedStandard = "";
@@ -298,17 +331,40 @@
 
   // ========== FlatBuffer Builder ==========
 
+  function flattenData(obj: any, prefix = ''): { strs: [string, string][]; nums: [string, number][] } {
+    const strs: [string, string][] = [];
+    const nums: [string, number][] = [];
+    for (const [k, v] of Object.entries(obj)) {
+      const key = prefix ? `${prefix}.${k}` : k;
+      if (v === null || v === undefined) continue;
+      if (typeof v === 'string') strs.push([key, v]);
+      else if (typeof v === 'number') nums.push([key, v]);
+      else if (Array.isArray(v)) {
+        for (let i = 0; i < v.length; i++) {
+          const ak = `${key}[${i}]`;
+          if (typeof v[i] === 'string') strs.push([ak, v[i]]);
+          else if (typeof v[i] === 'number') nums.push([ak, v[i]]);
+          else if (v[i] && typeof v[i] === 'object') {
+            const sub = flattenData(v[i], ak);
+            strs.push(...sub.strs);
+            nums.push(...sub.nums);
+          }
+        }
+      } else if (typeof v === 'object') {
+        const sub = flattenData(v, key);
+        strs.push(...sub.strs);
+        nums.push(...sub.nums);
+      }
+    }
+    return { strs, nums };
+  }
+
   function buildFlatBuffer(data: any, type: string): Uint8Array {
     const enc = new TextEncoder();
     const fileId = ('$' + (type || 'SDS').substring(0, 3)).padEnd(4, '\0');
 
-    // Separate fields by type
-    const strFields: [string, string][] = [];
-    const numFields: [string, number][] = [];
-    for (const [k, v] of Object.entries(data)) {
-      if (typeof v === 'string') strFields.push([k, v]);
-      else if (typeof v === 'number') numFields.push([k, v]);
-    }
+    // Recursively flatten all nested fields
+    const { strs: strFields, nums: numFields } = flattenData(data);
 
     const nFields = strFields.length + numFields.length;
     const vtableSize = 4 + nFields * 2; // uint16 vtable_size + uint16 table_size + field offsets
@@ -970,25 +1026,29 @@ builder.finish(omm);`
 
     <!-- Supported Types -->
     <div class="types-section">
-      <h2 class="section-title">All {allTypes.length} Standards</h2>
-      <p class="section-subtitle">FlatBuffers schemas for space domain data — types with converter samples are highlighted</p>
-      <div class="types-grid">
-        {#each allTypes as t}
-          <button
-            class="type-card"
-            class:active-type={t.abbr === selectedStandard}
-            class:has-sample={t.hasSample}
-            on:click={() => {
-              const std = standards.find(s => s.name === t.abbr || (t.abbr === 'XTC' && s.name === 'XTCE'));
-              if (std) selectStandard(std.name);
-            }}
-          >
-            <span class="type-name">{t.abbr}</span>
-            <span class="type-desc">{t.desc}</span>
-            {#if t.hasSample}<span class="sample-badge">WASM</span>{/if}
-          </button>
-        {/each}
-      </div>
+      <h2 class="section-title">All {totalTypeCount} Standards</h2>
+      <p class="section-subtitle">FlatBuffers schemas for space domain data across {typeCategories.length} categories</p>
+
+      {#each typeCategories as cat}
+        <div class="type-category">
+          <h3 class="category-title">{cat.name}</h3>
+          <div class="types-grid">
+            {#each cat.types as t}
+              <button
+                class="type-card"
+                class:active-type={t.abbr === selectedStandard || (t.abbr === 'XTC' && selectedStandard === 'XTCE')}
+                on:click={() => {
+                  const std = standards.find(s => s.name === t.abbr || (t.abbr === 'XTC' && s.name === 'XTCE'));
+                  if (std) selectStandard(std.name);
+                }}
+              >
+                <span class="type-name">{t.abbr}</span>
+                <span class="type-desc">{t.desc}</span>
+              </button>
+            {/each}
+          </div>
+        </div>
+      {/each}
     </div>
 
     <!-- Language Showcase -->
@@ -1486,6 +1546,20 @@ builder.finish(omm);`
     margin-bottom: 32px;
   }
 
+  .type-category {
+    margin-bottom: 28px;
+  }
+
+  .category-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+    padding-left: 4px;
+    border-left: 3px solid var(--accent);
+    padding-left: 12px;
+  }
+
   .types-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -1501,24 +1575,16 @@ builder.finish(omm);`
     text-align: center;
     cursor: pointer;
     transition: all 0.15s;
-    opacity: 0.7;
-  }
-
-  .type-card.has-sample {
-    opacity: 1;
-    border-color: rgba(0, 119, 182, 0.3);
   }
 
   .type-card:hover {
     border-color: var(--ui-border-hover);
     background: var(--ui-hover);
-    opacity: 1;
   }
 
   .type-card.active-type {
     border-color: var(--accent);
     box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.1);
-    opacity: 1;
   }
 
   .type-name {
@@ -1535,19 +1601,6 @@ builder.finish(omm);`
     font-size: 11px;
     color: var(--text-secondary);
     line-height: 1.3;
-  }
-
-  .sample-badge {
-    display: inline-block;
-    margin-top: 6px;
-    padding: 1px 6px;
-    background: rgba(56, 239, 125, 0.12);
-    color: #38ef7d;
-    border-radius: 4px;
-    font-size: 9px;
-    font-weight: 700;
-    font-family: var(--font-mono);
-    letter-spacing: 0.05em;
   }
 
   /* Language Showcase */
