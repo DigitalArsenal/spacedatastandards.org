@@ -129,6 +129,11 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 use core::mem;
 use core::cmp::Ordering;
 
@@ -138,10 +143,10 @@ use self::flatbuffers::{EndianScalar, Follow};
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 126;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 131;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 127] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 132] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -166,10 +171,12 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 127] = [
   RecordType::CLT,
   RecordType::CMS,
   RecordType::COM,
+  RecordType::COT,
   RecordType::CRD,
   RecordType::CRM,
   RecordType::CSM,
   RecordType::CTR,
+  RecordType::CZM,
   RecordType::DFH,
   RecordType::DMG,
   RecordType::DOA,
@@ -183,7 +190,9 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 127] = [
   RecordType::FCS,
   RecordType::GDI,
   RecordType::GEO,
+  RecordType::GJN,
   RecordType::GNO,
+  RecordType::GPX,
   RecordType::GRV,
   RecordType::GVH,
   RecordType::HEL,
@@ -191,6 +200,7 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 127] = [
   RecordType::IDM,
   RecordType::ION,
   RecordType::IRO,
+  RecordType::KML,
   RecordType::LCC,
   RecordType::LDM,
   RecordType::LKS,
@@ -300,112 +310,117 @@ impl RecordType {
   pub const CLT: Self = Self(21);
   pub const CMS: Self = Self(22);
   pub const COM: Self = Self(23);
-  pub const CRD: Self = Self(24);
-  pub const CRM: Self = Self(25);
-  pub const CSM: Self = Self(26);
-  pub const CTR: Self = Self(27);
-  pub const DFH: Self = Self(28);
-  pub const DMG: Self = Self(29);
-  pub const DOA: Self = Self(30);
-  pub const EME: Self = Self(31);
-  pub const ENC: Self = Self(32);
-  pub const ENV: Self = Self(33);
-  pub const EOO: Self = Self(34);
-  pub const EOP: Self = Self(35);
-  pub const EPM: Self = Self(36);
-  pub const EWR: Self = Self(37);
-  pub const FCS: Self = Self(38);
-  pub const GDI: Self = Self(39);
-  pub const GEO: Self = Self(40);
-  pub const GNO: Self = Self(41);
-  pub const GRV: Self = Self(42);
-  pub const GVH: Self = Self(43);
-  pub const HEL: Self = Self(44);
-  pub const HYP: Self = Self(45);
-  pub const IDM: Self = Self(46);
-  pub const ION: Self = Self(47);
-  pub const IRO: Self = Self(48);
-  pub const LCC: Self = Self(49);
-  pub const LDM: Self = Self(50);
-  pub const LKS: Self = Self(51);
-  pub const LND: Self = Self(52);
-  pub const LNE: Self = Self(53);
-  pub const MET: Self = Self(54);
-  pub const MFE: Self = Self(55);
-  pub const MNF: Self = Self(56);
-  pub const MNV: Self = Self(57);
-  pub const MPE: Self = Self(58);
-  pub const MSL: Self = Self(59);
-  pub const MST: Self = Self(60);
-  pub const MTI: Self = Self(61);
-  pub const NAV: Self = Self(62);
-  pub const OBD: Self = Self(63);
-  pub const OBT: Self = Self(64);
-  pub const OCM: Self = Self(65);
-  pub const OEM: Self = Self(66);
-  pub const OMM: Self = Self(67);
-  pub const OOA: Self = Self(68);
-  pub const OOB: Self = Self(69);
-  pub const OOD: Self = Self(70);
-  pub const OOE: Self = Self(71);
-  pub const OOI: Self = Self(72);
-  pub const OOL: Self = Self(73);
-  pub const OON: Self = Self(74);
-  pub const OOS: Self = Self(75);
-  pub const OOT: Self = Self(76);
-  pub const OPM: Self = Self(77);
-  pub const OSM: Self = Self(78);
-  pub const PCF: Self = Self(79);
-  pub const PHY: Self = Self(80);
-  pub const PLD: Self = Self(81);
-  pub const PLG: Self = Self(82);
-  pub const PLK: Self = Self(83);
-  pub const PNM: Self = Self(84);
-  pub const PRG: Self = Self(85);
-  pub const PUR: Self = Self(86);
-  pub const RAF: Self = Self(87);
-  pub const RCF: Self = Self(88);
-  pub const RDM: Self = Self(89);
-  pub const RDO: Self = Self(90);
-  pub const REV: Self = Self(91);
-  pub const RFB: Self = Self(92);
-  pub const RFE: Self = Self(93);
-  pub const RFM: Self = Self(94);
-  pub const RFO: Self = Self(95);
-  pub const ROC: Self = Self(96);
-  pub const SAR: Self = Self(97);
-  pub const SCM: Self = Self(98);
-  pub const SDL: Self = Self(99);
-  pub const SEN: Self = Self(100);
-  pub const SEO: Self = Self(101);
-  pub const SEV: Self = Self(102);
-  pub const SIT: Self = Self(103);
-  pub const SKI: Self = Self(104);
-  pub const SNR: Self = Self(105);
-  pub const SOI: Self = Self(106);
-  pub const SON: Self = Self(107);
-  pub const SPP: Self = Self(108);
-  pub const SPW: Self = Self(109);
-  pub const STF: Self = Self(110);
-  pub const STR: Self = Self(111);
-  pub const STV: Self = Self(112);
-  pub const SWR: Self = Self(113);
-  pub const TCF: Self = Self(114);
-  pub const TDM: Self = Self(115);
-  pub const TIM: Self = Self(116);
-  pub const TKG: Self = Self(117);
-  pub const TME: Self = Self(118);
-  pub const TMF: Self = Self(119);
-  pub const TPN: Self = Self(120);
-  pub const TRK: Self = Self(121);
-  pub const TRN: Self = Self(122);
-  pub const VCM: Self = Self(123);
-  pub const WPN: Self = Self(124);
-  pub const WTH: Self = Self(125);
-  pub const XTC: Self = Self(126);
+  pub const COT: Self = Self(24);
+  pub const CRD: Self = Self(25);
+  pub const CRM: Self = Self(26);
+  pub const CSM: Self = Self(27);
+  pub const CTR: Self = Self(28);
+  pub const CZM: Self = Self(29);
+  pub const DFH: Self = Self(30);
+  pub const DMG: Self = Self(31);
+  pub const DOA: Self = Self(32);
+  pub const EME: Self = Self(33);
+  pub const ENC: Self = Self(34);
+  pub const ENV: Self = Self(35);
+  pub const EOO: Self = Self(36);
+  pub const EOP: Self = Self(37);
+  pub const EPM: Self = Self(38);
+  pub const EWR: Self = Self(39);
+  pub const FCS: Self = Self(40);
+  pub const GDI: Self = Self(41);
+  pub const GEO: Self = Self(42);
+  pub const GJN: Self = Self(43);
+  pub const GNO: Self = Self(44);
+  pub const GPX: Self = Self(45);
+  pub const GRV: Self = Self(46);
+  pub const GVH: Self = Self(47);
+  pub const HEL: Self = Self(48);
+  pub const HYP: Self = Self(49);
+  pub const IDM: Self = Self(50);
+  pub const ION: Self = Self(51);
+  pub const IRO: Self = Self(52);
+  pub const KML: Self = Self(53);
+  pub const LCC: Self = Self(54);
+  pub const LDM: Self = Self(55);
+  pub const LKS: Self = Self(56);
+  pub const LND: Self = Self(57);
+  pub const LNE: Self = Self(58);
+  pub const MET: Self = Self(59);
+  pub const MFE: Self = Self(60);
+  pub const MNF: Self = Self(61);
+  pub const MNV: Self = Self(62);
+  pub const MPE: Self = Self(63);
+  pub const MSL: Self = Self(64);
+  pub const MST: Self = Self(65);
+  pub const MTI: Self = Self(66);
+  pub const NAV: Self = Self(67);
+  pub const OBD: Self = Self(68);
+  pub const OBT: Self = Self(69);
+  pub const OCM: Self = Self(70);
+  pub const OEM: Self = Self(71);
+  pub const OMM: Self = Self(72);
+  pub const OOA: Self = Self(73);
+  pub const OOB: Self = Self(74);
+  pub const OOD: Self = Self(75);
+  pub const OOE: Self = Self(76);
+  pub const OOI: Self = Self(77);
+  pub const OOL: Self = Self(78);
+  pub const OON: Self = Self(79);
+  pub const OOS: Self = Self(80);
+  pub const OOT: Self = Self(81);
+  pub const OPM: Self = Self(82);
+  pub const OSM: Self = Self(83);
+  pub const PCF: Self = Self(84);
+  pub const PHY: Self = Self(85);
+  pub const PLD: Self = Self(86);
+  pub const PLG: Self = Self(87);
+  pub const PLK: Self = Self(88);
+  pub const PNM: Self = Self(89);
+  pub const PRG: Self = Self(90);
+  pub const PUR: Self = Self(91);
+  pub const RAF: Self = Self(92);
+  pub const RCF: Self = Self(93);
+  pub const RDM: Self = Self(94);
+  pub const RDO: Self = Self(95);
+  pub const REV: Self = Self(96);
+  pub const RFB: Self = Self(97);
+  pub const RFE: Self = Self(98);
+  pub const RFM: Self = Self(99);
+  pub const RFO: Self = Self(100);
+  pub const ROC: Self = Self(101);
+  pub const SAR: Self = Self(102);
+  pub const SCM: Self = Self(103);
+  pub const SDL: Self = Self(104);
+  pub const SEN: Self = Self(105);
+  pub const SEO: Self = Self(106);
+  pub const SEV: Self = Self(107);
+  pub const SIT: Self = Self(108);
+  pub const SKI: Self = Self(109);
+  pub const SNR: Self = Self(110);
+  pub const SOI: Self = Self(111);
+  pub const SON: Self = Self(112);
+  pub const SPP: Self = Self(113);
+  pub const SPW: Self = Self(114);
+  pub const STF: Self = Self(115);
+  pub const STR: Self = Self(116);
+  pub const STV: Self = Self(117);
+  pub const SWR: Self = Self(118);
+  pub const TCF: Self = Self(119);
+  pub const TDM: Self = Self(120);
+  pub const TIM: Self = Self(121);
+  pub const TKG: Self = Self(122);
+  pub const TME: Self = Self(123);
+  pub const TMF: Self = Self(124);
+  pub const TPN: Self = Self(125);
+  pub const TRK: Self = Self(126);
+  pub const TRN: Self = Self(127);
+  pub const VCM: Self = Self(128);
+  pub const WPN: Self = Self(129);
+  pub const WTH: Self = Self(130);
+  pub const XTC: Self = Self(131);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 126;
+  pub const ENUM_MAX: u8 = 131;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -431,10 +446,12 @@ impl RecordType {
     Self::CLT,
     Self::CMS,
     Self::COM,
+    Self::COT,
     Self::CRD,
     Self::CRM,
     Self::CSM,
     Self::CTR,
+    Self::CZM,
     Self::DFH,
     Self::DMG,
     Self::DOA,
@@ -448,7 +465,9 @@ impl RecordType {
     Self::FCS,
     Self::GDI,
     Self::GEO,
+    Self::GJN,
     Self::GNO,
+    Self::GPX,
     Self::GRV,
     Self::GVH,
     Self::HEL,
@@ -456,6 +475,7 @@ impl RecordType {
     Self::IDM,
     Self::ION,
     Self::IRO,
+    Self::KML,
     Self::LCC,
     Self::LDM,
     Self::LKS,
@@ -562,10 +582,12 @@ impl RecordType {
       Self::CLT => Some("CLT"),
       Self::CMS => Some("CMS"),
       Self::COM => Some("COM"),
+      Self::COT => Some("COT"),
       Self::CRD => Some("CRD"),
       Self::CRM => Some("CRM"),
       Self::CSM => Some("CSM"),
       Self::CTR => Some("CTR"),
+      Self::CZM => Some("CZM"),
       Self::DFH => Some("DFH"),
       Self::DMG => Some("DMG"),
       Self::DOA => Some("DOA"),
@@ -579,7 +601,9 @@ impl RecordType {
       Self::FCS => Some("FCS"),
       Self::GDI => Some("GDI"),
       Self::GEO => Some("GEO"),
+      Self::GJN => Some("GJN"),
       Self::GNO => Some("GNO"),
+      Self::GPX => Some("GPX"),
       Self::GRV => Some("GRV"),
       Self::GVH => Some("GVH"),
       Self::HEL => Some("HEL"),
@@ -587,6 +611,7 @@ impl RecordType {
       Self::IDM => Some("IDM"),
       Self::ION => Some("ION"),
       Self::IRO => Some("IRO"),
+      Self::KML => Some("KML"),
       Self::LCC => Some("LCC"),
       Self::LDM => Some("LDM"),
       Self::LKS => Some("LKS"),
@@ -750,10 +775,12 @@ pub enum RecordTypeT {
   CLT(Box<CLTT>),
   CMS(Box<CMST>),
   COM(Box<COMT>),
+  COT(Box<COTT>),
   CRD(Box<CRDT>),
   CRM(Box<CRMT>),
   CSM(Box<CSMT>),
   CTR(Box<CTRT>),
+  CZM(Box<CZMT>),
   DFH(Box<DFHT>),
   DMG(Box<DMGT>),
   DOA(Box<DOAT>),
@@ -767,7 +794,9 @@ pub enum RecordTypeT {
   FCS(Box<FCST>),
   GDI(Box<GDIT>),
   GEO(Box<GEOT>),
+  GJN(Box<GJNT>),
   GNO(Box<GNOT>),
+  GPX(Box<GPXT>),
   GRV(Box<GRVT>),
   GVH(Box<GVHT>),
   HEL(Box<HELT>),
@@ -775,6 +804,7 @@ pub enum RecordTypeT {
   IDM(Box<IDMT>),
   ION(Box<IONT>),
   IRO(Box<IROT>),
+  KML(Box<KMLT>),
   LCC(Box<LCCT>),
   LDM(Box<LDMT>),
   LKS(Box<LKST>),
@@ -886,10 +916,12 @@ impl RecordTypeT {
       Self::CLT(_) => RecordType::CLT,
       Self::CMS(_) => RecordType::CMS,
       Self::COM(_) => RecordType::COM,
+      Self::COT(_) => RecordType::COT,
       Self::CRD(_) => RecordType::CRD,
       Self::CRM(_) => RecordType::CRM,
       Self::CSM(_) => RecordType::CSM,
       Self::CTR(_) => RecordType::CTR,
+      Self::CZM(_) => RecordType::CZM,
       Self::DFH(_) => RecordType::DFH,
       Self::DMG(_) => RecordType::DMG,
       Self::DOA(_) => RecordType::DOA,
@@ -903,7 +935,9 @@ impl RecordTypeT {
       Self::FCS(_) => RecordType::FCS,
       Self::GDI(_) => RecordType::GDI,
       Self::GEO(_) => RecordType::GEO,
+      Self::GJN(_) => RecordType::GJN,
       Self::GNO(_) => RecordType::GNO,
+      Self::GPX(_) => RecordType::GPX,
       Self::GRV(_) => RecordType::GRV,
       Self::GVH(_) => RecordType::GVH,
       Self::HEL(_) => RecordType::HEL,
@@ -911,6 +945,7 @@ impl RecordTypeT {
       Self::IDM(_) => RecordType::IDM,
       Self::ION(_) => RecordType::ION,
       Self::IRO(_) => RecordType::IRO,
+      Self::KML(_) => RecordType::KML,
       Self::LCC(_) => RecordType::LCC,
       Self::LDM(_) => RecordType::LDM,
       Self::LKS(_) => RecordType::LKS,
@@ -1017,10 +1052,12 @@ impl RecordTypeT {
       Self::CLT(v) => Some(v.pack(fbb).as_union_value()),
       Self::CMS(v) => Some(v.pack(fbb).as_union_value()),
       Self::COM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::COT(v) => Some(v.pack(fbb).as_union_value()),
       Self::CRD(v) => Some(v.pack(fbb).as_union_value()),
       Self::CRM(v) => Some(v.pack(fbb).as_union_value()),
       Self::CSM(v) => Some(v.pack(fbb).as_union_value()),
       Self::CTR(v) => Some(v.pack(fbb).as_union_value()),
+      Self::CZM(v) => Some(v.pack(fbb).as_union_value()),
       Self::DFH(v) => Some(v.pack(fbb).as_union_value()),
       Self::DMG(v) => Some(v.pack(fbb).as_union_value()),
       Self::DOA(v) => Some(v.pack(fbb).as_union_value()),
@@ -1034,7 +1071,9 @@ impl RecordTypeT {
       Self::FCS(v) => Some(v.pack(fbb).as_union_value()),
       Self::GDI(v) => Some(v.pack(fbb).as_union_value()),
       Self::GEO(v) => Some(v.pack(fbb).as_union_value()),
+      Self::GJN(v) => Some(v.pack(fbb).as_union_value()),
       Self::GNO(v) => Some(v.pack(fbb).as_union_value()),
+      Self::GPX(v) => Some(v.pack(fbb).as_union_value()),
       Self::GRV(v) => Some(v.pack(fbb).as_union_value()),
       Self::GVH(v) => Some(v.pack(fbb).as_union_value()),
       Self::HEL(v) => Some(v.pack(fbb).as_union_value()),
@@ -1042,6 +1081,7 @@ impl RecordTypeT {
       Self::IDM(v) => Some(v.pack(fbb).as_union_value()),
       Self::ION(v) => Some(v.pack(fbb).as_union_value()),
       Self::IRO(v) => Some(v.pack(fbb).as_union_value()),
+      Self::KML(v) => Some(v.pack(fbb).as_union_value()),
       Self::LCC(v) => Some(v.pack(fbb).as_union_value()),
       Self::LDM(v) => Some(v.pack(fbb).as_union_value()),
       Self::LKS(v) => Some(v.pack(fbb).as_union_value()),
@@ -1605,6 +1645,27 @@ impl RecordTypeT {
   pub fn as_COM_mut(&mut self) -> Option<&mut COMT> {
     if let Self::COM(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned COTT, setting the union to NONE.
+  pub fn take_COT(&mut self) -> Option<Box<COTT>> {
+    if let Self::COT(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::COT(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the COTT.
+  pub fn as_COT(&self) -> Option<&COTT> {
+    if let Self::COT(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the COTT.
+  pub fn as_COT_mut(&mut self) -> Option<&mut COTT> {
+    if let Self::COT(v) = self { Some(v.as_mut()) } else { None }
+  }
   /// If the union variant matches, return the owned CRDT, setting the union to NONE.
   pub fn take_CRD(&mut self) -> Option<Box<CRDT>> {
     if let Self::CRD(_) = self {
@@ -1688,6 +1749,27 @@ impl RecordTypeT {
   /// If the union variant matches, return a mutable reference to the CTRT.
   pub fn as_CTR_mut(&mut self) -> Option<&mut CTRT> {
     if let Self::CTR(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned CZMT, setting the union to NONE.
+  pub fn take_CZM(&mut self) -> Option<Box<CZMT>> {
+    if let Self::CZM(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::CZM(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the CZMT.
+  pub fn as_CZM(&self) -> Option<&CZMT> {
+    if let Self::CZM(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the CZMT.
+  pub fn as_CZM_mut(&mut self) -> Option<&mut CZMT> {
+    if let Self::CZM(v) = self { Some(v.as_mut()) } else { None }
   }
   /// If the union variant matches, return the owned DFHT, setting the union to NONE.
   pub fn take_DFH(&mut self) -> Option<Box<DFHT>> {
@@ -1962,6 +2044,27 @@ impl RecordTypeT {
   pub fn as_GEO_mut(&mut self) -> Option<&mut GEOT> {
     if let Self::GEO(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned GJNT, setting the union to NONE.
+  pub fn take_GJN(&mut self) -> Option<Box<GJNT>> {
+    if let Self::GJN(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::GJN(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the GJNT.
+  pub fn as_GJN(&self) -> Option<&GJNT> {
+    if let Self::GJN(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the GJNT.
+  pub fn as_GJN_mut(&mut self) -> Option<&mut GJNT> {
+    if let Self::GJN(v) = self { Some(v.as_mut()) } else { None }
+  }
   /// If the union variant matches, return the owned GNOT, setting the union to NONE.
   pub fn take_GNO(&mut self) -> Option<Box<GNOT>> {
     if let Self::GNO(_) = self {
@@ -1982,6 +2085,27 @@ impl RecordTypeT {
   /// If the union variant matches, return a mutable reference to the GNOT.
   pub fn as_GNO_mut(&mut self) -> Option<&mut GNOT> {
     if let Self::GNO(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned GPXT, setting the union to NONE.
+  pub fn take_GPX(&mut self) -> Option<Box<GPXT>> {
+    if let Self::GPX(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::GPX(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the GPXT.
+  pub fn as_GPX(&self) -> Option<&GPXT> {
+    if let Self::GPX(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the GPXT.
+  pub fn as_GPX_mut(&mut self) -> Option<&mut GPXT> {
+    if let Self::GPX(v) = self { Some(v.as_mut()) } else { None }
   }
   /// If the union variant matches, return the owned GRVT, setting the union to NONE.
   pub fn take_GRV(&mut self) -> Option<Box<GRVT>> {
@@ -2129,6 +2253,27 @@ impl RecordTypeT {
   /// If the union variant matches, return a mutable reference to the IROT.
   pub fn as_IRO_mut(&mut self) -> Option<&mut IROT> {
     if let Self::IRO(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned KMLT, setting the union to NONE.
+  pub fn take_KML(&mut self) -> Option<Box<KMLT>> {
+    if let Self::KML(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::KML(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the KMLT.
+  pub fn as_KML(&self) -> Option<&KMLT> {
+    if let Self::KML(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the KMLT.
+  pub fn as_KML_mut(&mut self) -> Option<&mut KMLT> {
+    if let Self::KML(v) = self { Some(v.as_mut()) } else { None }
   }
   /// If the union variant matches, return the owned LCCT, setting the union to NONE.
   pub fn take_LCC(&mut self) -> Option<Box<LCCT>> {
@@ -3924,6 +4069,11 @@ impl<'a> Record<'a> {
             .expect("Invalid union table, expected `RecordType::COM`.")
             .unpack()
       )),
+      RecordType::COT => RecordTypeT::COT(Box::new(
+        self.value_as_COT()
+            .expect("Invalid union table, expected `RecordType::COT`.")
+            .unpack()
+      )),
       RecordType::CRD => RecordTypeT::CRD(Box::new(
         self.value_as_CRD()
             .expect("Invalid union table, expected `RecordType::CRD`.")
@@ -3942,6 +4092,11 @@ impl<'a> Record<'a> {
       RecordType::CTR => RecordTypeT::CTR(Box::new(
         self.value_as_CTR()
             .expect("Invalid union table, expected `RecordType::CTR`.")
+            .unpack()
+      )),
+      RecordType::CZM => RecordTypeT::CZM(Box::new(
+        self.value_as_CZM()
+            .expect("Invalid union table, expected `RecordType::CZM`.")
             .unpack()
       )),
       RecordType::DFH => RecordTypeT::DFH(Box::new(
@@ -4009,9 +4164,19 @@ impl<'a> Record<'a> {
             .expect("Invalid union table, expected `RecordType::GEO`.")
             .unpack()
       )),
+      RecordType::GJN => RecordTypeT::GJN(Box::new(
+        self.value_as_GJN()
+            .expect("Invalid union table, expected `RecordType::GJN`.")
+            .unpack()
+      )),
       RecordType::GNO => RecordTypeT::GNO(Box::new(
         self.value_as_GNO()
             .expect("Invalid union table, expected `RecordType::GNO`.")
+            .unpack()
+      )),
+      RecordType::GPX => RecordTypeT::GPX(Box::new(
+        self.value_as_GPX()
+            .expect("Invalid union table, expected `RecordType::GPX`.")
             .unpack()
       )),
       RecordType::GRV => RecordTypeT::GRV(Box::new(
@@ -4047,6 +4212,11 @@ impl<'a> Record<'a> {
       RecordType::IRO => RecordTypeT::IRO(Box::new(
         self.value_as_IRO()
             .expect("Invalid union table, expected `RecordType::IRO`.")
+            .unpack()
+      )),
+      RecordType::KML => RecordTypeT::KML(Box::new(
+        self.value_as_KML()
+            .expect("Invalid union table, expected `RecordType::KML`.")
             .unpack()
       )),
       RecordType::LCC => RecordTypeT::LCC(Box::new(
@@ -4820,6 +4990,21 @@ impl<'a> Record<'a> {
 
   #[inline]
   #[allow(non_snake_case)]
+  pub fn value_as_COT(&self) -> Option<COT<'a>> {
+    if self.value_type() == RecordType::COT {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { COT::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
   pub fn value_as_CRD(&self) -> Option<CRD<'a>> {
     if self.value_type() == RecordType::CRD {
       self.value().map(|t| {
@@ -4872,6 +5057,21 @@ impl<'a> Record<'a> {
        // Created from a valid Table for this object
        // Which contains a valid union in this slot
        unsafe { CTR::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_CZM(&self) -> Option<CZM<'a>> {
+    if self.value_type() == RecordType::CZM {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { CZM::init_from_table(t) }
      })
     } else {
       None
@@ -5075,6 +5275,21 @@ impl<'a> Record<'a> {
 
   #[inline]
   #[allow(non_snake_case)]
+  pub fn value_as_GJN(&self) -> Option<GJN<'a>> {
+    if self.value_type() == RecordType::GJN {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { GJN::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
   pub fn value_as_GNO(&self) -> Option<GNO<'a>> {
     if self.value_type() == RecordType::GNO {
       self.value().map(|t| {
@@ -5082,6 +5297,21 @@ impl<'a> Record<'a> {
        // Created from a valid Table for this object
        // Which contains a valid union in this slot
        unsafe { GNO::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_GPX(&self) -> Option<GPX<'a>> {
+    if self.value_type() == RecordType::GPX {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { GPX::init_from_table(t) }
      })
     } else {
       None
@@ -5187,6 +5417,21 @@ impl<'a> Record<'a> {
        // Created from a valid Table for this object
        // Which contains a valid union in this slot
        unsafe { IRO::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_KML(&self) -> Option<KML<'a>> {
+    if self.value_type() == RecordType::KML {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { KML::init_from_table(t) }
      })
     } else {
       None
@@ -6397,10 +6642,12 @@ impl flatbuffers::Verifiable for Record<'_> {
           RecordType::CLT => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CLT>>("RecordType::CLT", pos),
           RecordType::CMS => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CMS>>("RecordType::CMS", pos),
           RecordType::COM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<COM>>("RecordType::COM", pos),
+          RecordType::COT => v.verify_union_variant::<flatbuffers::ForwardsUOffset<COT>>("RecordType::COT", pos),
           RecordType::CRD => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CRD>>("RecordType::CRD", pos),
           RecordType::CRM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CRM>>("RecordType::CRM", pos),
           RecordType::CSM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CSM>>("RecordType::CSM", pos),
           RecordType::CTR => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CTR>>("RecordType::CTR", pos),
+          RecordType::CZM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CZM>>("RecordType::CZM", pos),
           RecordType::DFH => v.verify_union_variant::<flatbuffers::ForwardsUOffset<DFH>>("RecordType::DFH", pos),
           RecordType::DMG => v.verify_union_variant::<flatbuffers::ForwardsUOffset<DMG>>("RecordType::DMG", pos),
           RecordType::DOA => v.verify_union_variant::<flatbuffers::ForwardsUOffset<DOA>>("RecordType::DOA", pos),
@@ -6414,7 +6661,9 @@ impl flatbuffers::Verifiable for Record<'_> {
           RecordType::FCS => v.verify_union_variant::<flatbuffers::ForwardsUOffset<FCS>>("RecordType::FCS", pos),
           RecordType::GDI => v.verify_union_variant::<flatbuffers::ForwardsUOffset<GDI>>("RecordType::GDI", pos),
           RecordType::GEO => v.verify_union_variant::<flatbuffers::ForwardsUOffset<GEO>>("RecordType::GEO", pos),
+          RecordType::GJN => v.verify_union_variant::<flatbuffers::ForwardsUOffset<GJN>>("RecordType::GJN", pos),
           RecordType::GNO => v.verify_union_variant::<flatbuffers::ForwardsUOffset<GNO>>("RecordType::GNO", pos),
+          RecordType::GPX => v.verify_union_variant::<flatbuffers::ForwardsUOffset<GPX>>("RecordType::GPX", pos),
           RecordType::GRV => v.verify_union_variant::<flatbuffers::ForwardsUOffset<GRV>>("RecordType::GRV", pos),
           RecordType::GVH => v.verify_union_variant::<flatbuffers::ForwardsUOffset<GVH>>("RecordType::GVH", pos),
           RecordType::HEL => v.verify_union_variant::<flatbuffers::ForwardsUOffset<HEL>>("RecordType::HEL", pos),
@@ -6422,6 +6671,7 @@ impl flatbuffers::Verifiable for Record<'_> {
           RecordType::IDM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<IDM>>("RecordType::IDM", pos),
           RecordType::ION => v.verify_union_variant::<flatbuffers::ForwardsUOffset<ION>>("RecordType::ION", pos),
           RecordType::IRO => v.verify_union_variant::<flatbuffers::ForwardsUOffset<IRO>>("RecordType::IRO", pos),
+          RecordType::KML => v.verify_union_variant::<flatbuffers::ForwardsUOffset<KML>>("RecordType::KML", pos),
           RecordType::LCC => v.verify_union_variant::<flatbuffers::ForwardsUOffset<LCC>>("RecordType::LCC", pos),
           RecordType::LDM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<LDM>>("RecordType::LDM", pos),
           RecordType::LKS => v.verify_union_variant::<flatbuffers::ForwardsUOffset<LKS>>("RecordType::LKS", pos),
@@ -6722,6 +6972,13 @@ impl core::fmt::Debug for Record<'_> {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
           }
         },
+        RecordType::COT => {
+          if let Some(x) = self.value_as_COT() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
         RecordType::CRD => {
           if let Some(x) = self.value_as_CRD() {
             ds.field("value", &x)
@@ -6745,6 +7002,13 @@ impl core::fmt::Debug for Record<'_> {
         },
         RecordType::CTR => {
           if let Some(x) = self.value_as_CTR() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::CZM => {
+          if let Some(x) = self.value_as_CZM() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
@@ -6841,8 +7105,22 @@ impl core::fmt::Debug for Record<'_> {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
           }
         },
+        RecordType::GJN => {
+          if let Some(x) = self.value_as_GJN() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
         RecordType::GNO => {
           if let Some(x) = self.value_as_GNO() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::GPX => {
+          if let Some(x) = self.value_as_GPX() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
@@ -6892,6 +7170,13 @@ impl core::fmt::Debug for Record<'_> {
         },
         RecordType::IRO => {
           if let Some(x) = self.value_as_IRO() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::KML => {
+          if let Some(x) = self.value_as_KML() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

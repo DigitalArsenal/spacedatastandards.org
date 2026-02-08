@@ -1,0 +1,279 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "GJNGeometryType": {
+      "type": "string",
+      "enum": [
+        "POINT",
+        "MULTI_POINT",
+        "LINE_STRING",
+        "MULTI_LINE_STRING",
+        "POLYGON",
+        "MULTI_POLYGON",
+        "GEOMETRY_COLLECTION"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "POINT": {
+          "value": 0
+        },
+        "MULTI_POINT": {
+          "value": 1
+        },
+        "LINE_STRING": {
+          "value": 2
+        },
+        "MULTI_LINE_STRING": {
+          "value": 3
+        },
+        "POLYGON": {
+          "value": 4
+        },
+        "MULTI_POLYGON": {
+          "value": 5
+        },
+        "GEOMETRY_COLLECTION": {
+          "value": 6
+        }
+      }
+    },
+    "GJNPosition": {
+      "type": "object",
+      "description": "A single position (longitude, latitude, optional altitude)",
+      "properties": {
+        "LONGITUDE": {
+          "type": "number",
+          "description": "Longitude in decimal degrees (WGS84)",
+          "x-flatbuffer-type": "double"
+        },
+        "LATITUDE": {
+          "type": "number",
+          "description": "Latitude in decimal degrees (WGS84)",
+          "x-flatbuffer-type": "double"
+        },
+        "ALTITUDE": {
+          "type": "number",
+          "description": "Altitude in meters above WGS84 ellipsoid (optional)",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GJNLinearRing": {
+      "type": "object",
+      "description": "A linear ring is a closed LineString with 4+ positions (first = last)",
+      "properties": {
+        "POSITIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GJNPosition"
+          },
+          "description": "Ordered positions forming the ring",
+          "x-flatbuffer-type": "[GJNPosition]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GJNPolygonRings": {
+      "type": "object",
+      "description": "A polygon represented as an array of rings (outer boundary + holes)",
+      "properties": {
+        "RINGS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GJNLinearRing"
+          },
+          "description": "Rings: first is outer boundary, rest are holes",
+          "x-flatbuffer-type": "[GJNLinearRing]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GJNGeometry": {
+      "type": "object",
+      "description": "GeoJSON Geometry object",
+      "properties": {
+        "TYPE": {
+          "$ref": "#/definitions/GJNGeometryType",
+          "description": "Geometry type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "POINT": {
+              "value": 0
+            },
+            "MULTI_POINT": {
+              "value": 1
+            },
+            "LINE_STRING": {
+              "value": 2
+            },
+            "MULTI_LINE_STRING": {
+              "value": 3
+            },
+            "POLYGON": {
+              "value": 4
+            },
+            "MULTI_POLYGON": {
+              "value": 5
+            },
+            "GEOMETRY_COLLECTION": {
+              "value": 6
+            }
+          }
+        },
+        "POINT": {
+          "$ref": "#/definitions/GJNPosition",
+          "description": "Single position (for Point)",
+          "x-flatbuffer-type": "GJNPosition"
+        },
+        "POSITIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GJNPosition"
+          },
+          "description": "Array of positions (for MultiPoint, LineString)",
+          "x-flatbuffer-type": "[GJNPosition]"
+        },
+        "RINGS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GJNLinearRing"
+          },
+          "description": "Array of position arrays (for MultiLineString, Polygon rings)",
+          "x-flatbuffer-type": "[GJNLinearRing]"
+        },
+        "POLYGON_RINGS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GJNPolygonRings"
+          },
+          "description": "Array of polygons each as array of rings (for MultiPolygon)",
+          "x-flatbuffer-type": "[GJNPolygonRings]"
+        },
+        "GEOMETRIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GJNGeometry"
+          },
+          "description": "Child geometries (for GeometryCollection)",
+          "x-flatbuffer-type": "[GJNGeometry]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GJNProperty": {
+      "type": "object",
+      "description": "A key-value property entry for Feature properties",
+      "properties": {
+        "KEY": {
+          "type": "string",
+          "description": "Property key",
+          "x-flatbuffer-type": "string"
+        },
+        "VALUE": {
+          "type": "string",
+          "description": "Property value as string",
+          "x-flatbuffer-type": "string"
+        },
+        "NUM_VALUE": {
+          "type": "number",
+          "description": "Property value as number (use if numeric)",
+          "x-flatbuffer-type": "double"
+        },
+        "IS_NUMERIC": {
+          "type": "boolean",
+          "description": "True if NUM_VALUE should be used instead of VALUE",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GJNFeature": {
+      "type": "object",
+      "description": "GeoJSON Feature object",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Feature identifier (optional)",
+          "x-flatbuffer-type": "string"
+        },
+        "GEOMETRY": {
+          "$ref": "#/definitions/GJNGeometry",
+          "description": "Geometry of the feature",
+          "x-flatbuffer-type": "GJNGeometry"
+        },
+        "PROPERTIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GJNProperty"
+          },
+          "description": "Properties as key-value pairs",
+          "x-flatbuffer-type": "[GJNProperty]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GJNBoundingBox": {
+      "type": "object",
+      "description": "GeoJSON Bounding Box [west, south, east, north] or [west, south, min-alt, east, north, max-alt]",
+      "properties": {
+        "WEST": {
+          "type": "number",
+          "description": "Western longitude",
+          "x-flatbuffer-type": "double"
+        },
+        "SOUTH": {
+          "type": "number",
+          "description": "Southern latitude",
+          "x-flatbuffer-type": "double"
+        },
+        "EAST": {
+          "type": "number",
+          "description": "Eastern longitude",
+          "x-flatbuffer-type": "double"
+        },
+        "NORTH": {
+          "type": "number",
+          "description": "Northern latitude",
+          "x-flatbuffer-type": "double"
+        },
+        "MIN_ALTITUDE": {
+          "type": "number",
+          "description": "Minimum altitude (optional)",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_ALTITUDE": {
+          "type": "number",
+          "description": "Maximum altitude (optional)",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GJN": {
+      "type": "object",
+      "description": "GeoJSON FeatureCollection",
+      "properties": {
+        "FEATURES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GJNFeature"
+          },
+          "description": "Features in the collection",
+          "x-flatbuffer-type": "[GJNFeature]"
+        },
+        "BBOX": {
+          "$ref": "#/definitions/GJNBoundingBox",
+          "description": "Bounding box (optional)",
+          "x-flatbuffer-type": "GJNBoundingBox"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/GJN",
+  "x-flatbuffer-root-type": "GJN",
+  "x-flatbuffer-file-identifier": "$GJN"
+}

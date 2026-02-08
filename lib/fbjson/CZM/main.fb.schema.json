@@ -1,0 +1,936 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "CZMHeightReference": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "CLAMP_TO_GROUND",
+        "RELATIVE_TO_GROUND"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0
+        },
+        "CLAMP_TO_GROUND": {
+          "value": 1
+        },
+        "RELATIVE_TO_GROUND": {
+          "value": 2
+        }
+      }
+    },
+    "CZMClassificationType": {
+      "type": "string",
+      "enum": [
+        "TERRAIN",
+        "CESIUM_3D_TILE",
+        "BOTH"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "TERRAIN": {
+          "value": 0
+        },
+        "CESIUM_3D_TILE": {
+          "value": 1
+        },
+        "BOTH": {
+          "value": 2
+        }
+      }
+    },
+    "CZMLabelStyle": {
+      "type": "string",
+      "enum": [
+        "FILL",
+        "OUTLINE",
+        "FILL_AND_OUTLINE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "FILL": {
+          "value": 0
+        },
+        "OUTLINE": {
+          "value": 1
+        },
+        "FILL_AND_OUTLINE": {
+          "value": 2
+        }
+      }
+    },
+    "CZMHorizontalOrigin": {
+      "type": "string",
+      "enum": [
+        "LEFT",
+        "CENTER",
+        "RIGHT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "LEFT": {
+          "value": 0
+        },
+        "CENTER": {
+          "value": 1
+        },
+        "RIGHT": {
+          "value": 2
+        }
+      }
+    },
+    "CZMVerticalOrigin": {
+      "type": "string",
+      "enum": [
+        "BASELINE",
+        "BOTTOM",
+        "CENTER",
+        "TOP"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "BASELINE": {
+          "value": 0
+        },
+        "BOTTOM": {
+          "value": 1
+        },
+        "CENTER": {
+          "value": 2
+        },
+        "TOP": {
+          "value": 3
+        }
+      }
+    },
+    "CZMInterval": {
+      "type": "object",
+      "description": "Time interval for time-dynamic properties",
+      "properties": {
+        "INTERVAL": {
+          "type": "string",
+          "description": "ISO 8601 interval string (e.g. \"2012-03-15T10:00:00Z/2012-03-16T10:00:00Z\")",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZMCartographicDegrees": {
+      "type": "object",
+      "description": "Cartographic position (longitude, latitude, height in radians/meters)",
+      "properties": {
+        "LONGITUDE": {
+          "type": "number",
+          "description": "Longitude in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "LATITUDE": {
+          "type": "number",
+          "description": "Latitude in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "HEIGHT": {
+          "type": "number",
+          "description": "Height in meters above WGS84 ellipsoid",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZMCartesian": {
+      "type": "object",
+      "description": "Cartesian position (X, Y, Z in meters)",
+      "properties": {
+        "X": {
+          "type": "number",
+          "description": "X component in meters (Earth-fixed)",
+          "x-flatbuffer-type": "double"
+        },
+        "Y": {
+          "type": "number",
+          "description": "Y component in meters (Earth-fixed)",
+          "x-flatbuffer-type": "double"
+        },
+        "Z": {
+          "type": "number",
+          "description": "Z component in meters (Earth-fixed)",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZMColor": {
+      "type": "object",
+      "description": "RGBA color",
+      "properties": {
+        "RED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Red component (0-255)",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "GREEN": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Green component (0-255)",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "BLUE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Blue component (0-255)",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "ALPHA": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Alpha component (0-255)",
+          "x-flatbuffer-type": "ubyte"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZMNearFarScalar": {
+      "type": "object",
+      "description": "Near/Far scalar for distance-based display",
+      "properties": {
+        "NEAR_DISTANCE": {
+          "type": "number",
+          "description": "Near distance in meters",
+          "x-flatbuffer-type": "double"
+        },
+        "NEAR_VALUE": {
+          "type": "number",
+          "description": "Value at near distance",
+          "x-flatbuffer-type": "double"
+        },
+        "FAR_DISTANCE": {
+          "type": "number",
+          "description": "Far distance in meters",
+          "x-flatbuffer-type": "double"
+        },
+        "FAR_VALUE": {
+          "type": "number",
+          "description": "Value at far distance",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZMBillboard": {
+      "type": "object",
+      "description": "Billboard (icon) properties",
+      "properties": {
+        "SHOW": {
+          "type": "boolean",
+          "description": "Whether the billboard is displayed",
+          "x-flatbuffer-type": "bool"
+        },
+        "IMAGE": {
+          "type": "string",
+          "description": "URI of the billboard image",
+          "x-flatbuffer-type": "string"
+        },
+        "SCALE": {
+          "type": "number",
+          "description": "Scale factor",
+          "x-flatbuffer-type": "double"
+        },
+        "COLOR": {
+          "$ref": "#/definitions/CZMColor",
+          "description": "Billboard color tint",
+          "x-flatbuffer-type": "CZMColor"
+        },
+        "HEIGHT_REFERENCE": {
+          "$ref": "#/definitions/CZMHeightReference",
+          "description": "Height reference",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            },
+            "CLAMP_TO_GROUND": {
+              "value": 1
+            },
+            "RELATIVE_TO_GROUND": {
+              "value": 2
+            }
+          }
+        },
+        "PIXEL_OFFSET_X": {
+          "type": "number",
+          "description": "Pixel offset X",
+          "x-flatbuffer-type": "double"
+        },
+        "PIXEL_OFFSET_Y": {
+          "type": "number",
+          "description": "Pixel offset Y",
+          "x-flatbuffer-type": "double"
+        },
+        "HORIZONTAL_ORIGIN": {
+          "$ref": "#/definitions/CZMHorizontalOrigin",
+          "description": "Horizontal origin",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "LEFT": {
+              "value": 0
+            },
+            "CENTER": {
+              "value": 1
+            },
+            "RIGHT": {
+              "value": 2
+            }
+          }
+        },
+        "VERTICAL_ORIGIN": {
+          "$ref": "#/definitions/CZMVerticalOrigin",
+          "description": "Vertical origin",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "BASELINE": {
+              "value": 0
+            },
+            "BOTTOM": {
+              "value": 1
+            },
+            "CENTER": {
+              "value": 2
+            },
+            "TOP": {
+              "value": 3
+            }
+          }
+        },
+        "TRANSLUCENCY_BY_DISTANCE": {
+          "$ref": "#/definitions/CZMNearFarScalar",
+          "description": "Translucency by distance",
+          "x-flatbuffer-type": "CZMNearFarScalar"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZMLabel": {
+      "type": "object",
+      "description": "Label properties",
+      "properties": {
+        "SHOW": {
+          "type": "boolean",
+          "description": "Whether the label is displayed",
+          "x-flatbuffer-type": "bool"
+        },
+        "TEXT": {
+          "type": "string",
+          "description": "Label text",
+          "x-flatbuffer-type": "string"
+        },
+        "FONT": {
+          "type": "string",
+          "description": "Font CSS string (e.g. \"12pt Lucida Console\")",
+          "x-flatbuffer-type": "string"
+        },
+        "STYLE": {
+          "$ref": "#/definitions/CZMLabelStyle",
+          "description": "Label style",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "FILL": {
+              "value": 0
+            },
+            "OUTLINE": {
+              "value": 1
+            },
+            "FILL_AND_OUTLINE": {
+              "value": 2
+            }
+          }
+        },
+        "FILL_COLOR": {
+          "$ref": "#/definitions/CZMColor",
+          "description": "Fill color",
+          "x-flatbuffer-type": "CZMColor"
+        },
+        "OUTLINE_COLOR": {
+          "$ref": "#/definitions/CZMColor",
+          "description": "Outline color",
+          "x-flatbuffer-type": "CZMColor"
+        },
+        "OUTLINE_WIDTH": {
+          "type": "number",
+          "description": "Outline width in pixels",
+          "x-flatbuffer-type": "double"
+        },
+        "PIXEL_OFFSET_X": {
+          "type": "number",
+          "description": "Pixel offset X",
+          "x-flatbuffer-type": "double"
+        },
+        "PIXEL_OFFSET_Y": {
+          "type": "number",
+          "description": "Pixel offset Y",
+          "x-flatbuffer-type": "double"
+        },
+        "SCALE": {
+          "type": "number",
+          "description": "Scale factor",
+          "x-flatbuffer-type": "double"
+        },
+        "HORIZONTAL_ORIGIN": {
+          "$ref": "#/definitions/CZMHorizontalOrigin",
+          "description": "Horizontal origin",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "LEFT": {
+              "value": 0
+            },
+            "CENTER": {
+              "value": 1
+            },
+            "RIGHT": {
+              "value": 2
+            }
+          }
+        },
+        "VERTICAL_ORIGIN": {
+          "$ref": "#/definitions/CZMVerticalOrigin",
+          "description": "Vertical origin",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "BASELINE": {
+              "value": 0
+            },
+            "BOTTOM": {
+              "value": 1
+            },
+            "CENTER": {
+              "value": 2
+            },
+            "TOP": {
+              "value": 3
+            }
+          }
+        },
+        "HEIGHT_REFERENCE": {
+          "$ref": "#/definitions/CZMHeightReference",
+          "description": "Height reference",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            },
+            "CLAMP_TO_GROUND": {
+              "value": 1
+            },
+            "RELATIVE_TO_GROUND": {
+              "value": 2
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZMPoint": {
+      "type": "object",
+      "description": "Point properties",
+      "properties": {
+        "SHOW": {
+          "type": "boolean",
+          "description": "Whether the point is displayed",
+          "x-flatbuffer-type": "bool"
+        },
+        "COLOR": {
+          "$ref": "#/definitions/CZMColor",
+          "description": "Point color",
+          "x-flatbuffer-type": "CZMColor"
+        },
+        "OUTLINE_COLOR": {
+          "$ref": "#/definitions/CZMColor",
+          "description": "Outline color",
+          "x-flatbuffer-type": "CZMColor"
+        },
+        "OUTLINE_WIDTH": {
+          "type": "number",
+          "description": "Outline width in pixels",
+          "x-flatbuffer-type": "double"
+        },
+        "PIXEL_SIZE": {
+          "type": "number",
+          "description": "Pixel size",
+          "x-flatbuffer-type": "double"
+        },
+        "HEIGHT_REFERENCE": {
+          "$ref": "#/definitions/CZMHeightReference",
+          "description": "Height reference",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            },
+            "CLAMP_TO_GROUND": {
+              "value": 1
+            },
+            "RELATIVE_TO_GROUND": {
+              "value": 2
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZMPolyline": {
+      "type": "object",
+      "description": "Polyline properties",
+      "properties": {
+        "SHOW": {
+          "type": "boolean",
+          "description": "Whether the polyline is displayed",
+          "x-flatbuffer-type": "bool"
+        },
+        "POSITIONS_CARTOGRAPHIC_DEGREES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Positions as cartographic degrees [lon, lat, height, lon, lat, height, ...]",
+          "x-flatbuffer-type": "[double]"
+        },
+        "POSITIONS_CARTESIAN": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Positions as Cartesian [X, Y, Z, X, Y, Z, ...]",
+          "x-flatbuffer-type": "[double]"
+        },
+        "WIDTH": {
+          "type": "number",
+          "description": "Line width in pixels",
+          "x-flatbuffer-type": "double"
+        },
+        "COLOR": {
+          "$ref": "#/definitions/CZMColor",
+          "description": "Line color (solid color material)",
+          "x-flatbuffer-type": "CZMColor"
+        },
+        "CLAMP_TO_GROUND": {
+          "type": "boolean",
+          "description": "Whether to clamp to ground",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZMPolygon": {
+      "type": "object",
+      "description": "Polygon properties",
+      "properties": {
+        "SHOW": {
+          "type": "boolean",
+          "description": "Whether the polygon is displayed",
+          "x-flatbuffer-type": "bool"
+        },
+        "POSITIONS_CARTOGRAPHIC_DEGREES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Positions as cartographic degrees [lon, lat, height, ...]",
+          "x-flatbuffer-type": "[double]"
+        },
+        "POSITIONS_CARTESIAN": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Positions as Cartesian [X, Y, Z, ...]",
+          "x-flatbuffer-type": "[double]"
+        },
+        "FILL": {
+          "type": "boolean",
+          "description": "Fill flag",
+          "x-flatbuffer-type": "bool"
+        },
+        "COLOR": {
+          "$ref": "#/definitions/CZMColor",
+          "description": "Fill color (solid color material)",
+          "x-flatbuffer-type": "CZMColor"
+        },
+        "OUTLINE": {
+          "type": "boolean",
+          "description": "Outline flag",
+          "x-flatbuffer-type": "bool"
+        },
+        "OUTLINE_COLOR": {
+          "$ref": "#/definitions/CZMColor",
+          "description": "Outline color",
+          "x-flatbuffer-type": "CZMColor"
+        },
+        "EXTRUDED_HEIGHT": {
+          "type": "number",
+          "description": "Extruded height in meters",
+          "x-flatbuffer-type": "double"
+        },
+        "HEIGHT_REFERENCE": {
+          "$ref": "#/definitions/CZMHeightReference",
+          "description": "Height reference",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            },
+            "CLAMP_TO_GROUND": {
+              "value": 1
+            },
+            "RELATIVE_TO_GROUND": {
+              "value": 2
+            }
+          }
+        },
+        "CLASSIFICATION_TYPE": {
+          "$ref": "#/definitions/CZMClassificationType",
+          "description": "Classification type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "TERRAIN": {
+              "value": 0
+            },
+            "CESIUM_3D_TILE": {
+              "value": 1
+            },
+            "BOTH": {
+              "value": 2
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZMModel": {
+      "type": "object",
+      "description": "Model properties (glTF)",
+      "properties": {
+        "SHOW": {
+          "type": "boolean",
+          "description": "Whether the model is displayed",
+          "x-flatbuffer-type": "bool"
+        },
+        "GLTF": {
+          "type": "string",
+          "description": "URI to the glTF model",
+          "x-flatbuffer-type": "string"
+        },
+        "SCALE": {
+          "type": "number",
+          "description": "Scale factor",
+          "x-flatbuffer-type": "double"
+        },
+        "MINIMUM_PIXEL_SIZE": {
+          "type": "number",
+          "description": "Minimum pixel size",
+          "x-flatbuffer-type": "double"
+        },
+        "MAXIMUM_SCALE": {
+          "type": "number",
+          "description": "Maximum scale",
+          "x-flatbuffer-type": "double"
+        },
+        "HEIGHT_REFERENCE": {
+          "$ref": "#/definitions/CZMHeightReference",
+          "description": "Height reference",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            },
+            "CLAMP_TO_GROUND": {
+              "value": 1
+            },
+            "RELATIVE_TO_GROUND": {
+              "value": 2
+            }
+          }
+        },
+        "COLOR": {
+          "$ref": "#/definitions/CZMColor",
+          "description": "Color tint",
+          "x-flatbuffer-type": "CZMColor"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZMPath": {
+      "type": "object",
+      "description": "Path properties (orbit trail)",
+      "properties": {
+        "SHOW": {
+          "type": "boolean",
+          "description": "Whether the path is displayed",
+          "x-flatbuffer-type": "bool"
+        },
+        "LEAD_TIME": {
+          "type": "number",
+          "description": "Trail time in seconds (how far behind)",
+          "x-flatbuffer-type": "double"
+        },
+        "TRAIL_TIME": {
+          "type": "number",
+          "description": "Lead time in seconds (how far ahead)",
+          "x-flatbuffer-type": "double"
+        },
+        "WIDTH": {
+          "type": "number",
+          "description": "Line width in pixels",
+          "x-flatbuffer-type": "double"
+        },
+        "COLOR": {
+          "$ref": "#/definitions/CZMColor",
+          "description": "Path color",
+          "x-flatbuffer-type": "CZMColor"
+        },
+        "RESOLUTION": {
+          "type": "number",
+          "description": "Resolution in seconds",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZMEllipse": {
+      "type": "object",
+      "description": "Ellipse properties (for ground circles/ellipses)",
+      "properties": {
+        "SHOW": {
+          "type": "boolean",
+          "description": "Whether the ellipse is displayed",
+          "x-flatbuffer-type": "bool"
+        },
+        "SEMI_MAJOR_AXIS": {
+          "type": "number",
+          "description": "Semi-major axis in meters",
+          "x-flatbuffer-type": "double"
+        },
+        "SEMI_MINOR_AXIS": {
+          "type": "number",
+          "description": "Semi-minor axis in meters",
+          "x-flatbuffer-type": "double"
+        },
+        "ROTATION": {
+          "type": "number",
+          "description": "Rotation from north in radians",
+          "x-flatbuffer-type": "double"
+        },
+        "FILL": {
+          "type": "boolean",
+          "description": "Fill flag",
+          "x-flatbuffer-type": "bool"
+        },
+        "COLOR": {
+          "$ref": "#/definitions/CZMColor",
+          "description": "Fill color",
+          "x-flatbuffer-type": "CZMColor"
+        },
+        "OUTLINE": {
+          "type": "boolean",
+          "description": "Outline flag",
+          "x-flatbuffer-type": "bool"
+        },
+        "OUTLINE_COLOR": {
+          "$ref": "#/definitions/CZMColor",
+          "description": "Outline color",
+          "x-flatbuffer-type": "CZMColor"
+        },
+        "HEIGHT": {
+          "type": "number",
+          "description": "Height in meters",
+          "x-flatbuffer-type": "double"
+        },
+        "HEIGHT_REFERENCE": {
+          "$ref": "#/definitions/CZMHeightReference",
+          "description": "Height reference",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            },
+            "CLAMP_TO_GROUND": {
+              "value": 1
+            },
+            "RELATIVE_TO_GROUND": {
+              "value": 2
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZMPacket": {
+      "type": "object",
+      "description": "A CZML Packet describing an entity and its properties",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Unique identifier for this object",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Human-readable name",
+          "x-flatbuffer-type": "string"
+        },
+        "PARENT": {
+          "type": "string",
+          "description": "Parent packet ID",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Description (HTML allowed)",
+          "x-flatbuffer-type": "string"
+        },
+        "AVAILABILITY": {
+          "type": "string",
+          "description": "Availability interval (ISO 8601 interval)",
+          "x-flatbuffer-type": "string"
+        },
+        "POSITION_CARTOGRAPHIC_DEGREES": {
+          "$ref": "#/definitions/CZMCartographicDegrees",
+          "description": "Position as cartographic degrees",
+          "x-flatbuffer-type": "CZMCartographicDegrees"
+        },
+        "POSITION_CARTESIAN": {
+          "$ref": "#/definitions/CZMCartesian",
+          "description": "Position as Cartesian",
+          "x-flatbuffer-type": "CZMCartesian"
+        },
+        "POSITION_EPOCH": {
+          "type": "string",
+          "description": "Time-tagged positions [time, lon, lat, height, time, lon, lat, height, ...]",
+          "x-flatbuffer-type": "string"
+        },
+        "POSITION_CARTOGRAPHIC_DEGREES_ARRAY": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Time-tagged cartographic degree values",
+          "x-flatbuffer-type": "[double]"
+        },
+        "POSITION_CARTESIAN_ARRAY": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Time-tagged Cartesian values",
+          "x-flatbuffer-type": "[double]"
+        },
+        "BILLBOARD": {
+          "$ref": "#/definitions/CZMBillboard",
+          "description": "Billboard properties",
+          "x-flatbuffer-type": "CZMBillboard"
+        },
+        "LABEL": {
+          "$ref": "#/definitions/CZMLabel",
+          "description": "Label properties",
+          "x-flatbuffer-type": "CZMLabel"
+        },
+        "POINT": {
+          "$ref": "#/definitions/CZMPoint",
+          "description": "Point properties",
+          "x-flatbuffer-type": "CZMPoint"
+        },
+        "POLYLINE": {
+          "$ref": "#/definitions/CZMPolyline",
+          "description": "Polyline properties",
+          "x-flatbuffer-type": "CZMPolyline"
+        },
+        "POLYGON": {
+          "$ref": "#/definitions/CZMPolygon",
+          "description": "Polygon properties",
+          "x-flatbuffer-type": "CZMPolygon"
+        },
+        "MODEL": {
+          "$ref": "#/definitions/CZMModel",
+          "description": "Model properties",
+          "x-flatbuffer-type": "CZMModel"
+        },
+        "PATH": {
+          "$ref": "#/definitions/CZMPath",
+          "description": "Path properties",
+          "x-flatbuffer-type": "CZMPath"
+        },
+        "ELLIPSE": {
+          "$ref": "#/definitions/CZMEllipse",
+          "description": "Ellipse properties",
+          "x-flatbuffer-type": "CZMEllipse"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZM": {
+      "type": "object",
+      "description": "CZML Document",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Document-level name",
+          "x-flatbuffer-type": "string"
+        },
+        "VERSION": {
+          "type": "string",
+          "description": "Document-level version",
+          "x-flatbuffer-type": "string"
+        },
+        "CLOCK_CURRENT_TIME": {
+          "type": "string",
+          "description": "Clock settings - current time (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "CLOCK_INTERVAL": {
+          "type": "string",
+          "description": "Clock settings - interval (ISO 8601 interval)",
+          "x-flatbuffer-type": "string"
+        },
+        "CLOCK_MULTIPLIER": {
+          "type": "number",
+          "description": "Clock settings - multiplier",
+          "x-flatbuffer-type": "double"
+        },
+        "PACKETS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CZMPacket"
+          },
+          "description": "All packets in the document",
+          "x-flatbuffer-type": "[CZMPacket]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/CZM",
+  "x-flatbuffer-root-type": "CZM",
+  "x-flatbuffer-file-identifier": "$CZM"
+}

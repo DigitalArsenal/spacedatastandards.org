@@ -22,10 +22,12 @@ import { CHNT } from './CHN.js';
 import { CLTT } from './CLT.js';
 import { CMST } from './CMS.js';
 import { COMT } from './COM.js';
+import { COTT } from './COT.js';
 import { CRDT } from './CRD.js';
 import { CRMT } from './CRM.js';
 import { CSMT } from './CSM.js';
 import { CTRT } from './CTR.js';
+import { CZMT } from './CZM.js';
 import { DFHT } from './DFH.js';
 import { DMGT } from './DMG.js';
 import { DOAT } from './DOA.js';
@@ -39,7 +41,9 @@ import { EWRT } from './EWR.js';
 import { FCST } from './FCS.js';
 import { GDIT } from './GDI.js';
 import { GEOT } from './GEO.js';
+import { GJNT } from './GJN.js';
 import { GNOT } from './GNO.js';
+import { GPXT } from './GPX.js';
 import { GRVT } from './GRV.js';
 import { GVHT } from './GVH.js';
 import { HELT } from './HEL.js';
@@ -47,6 +51,7 @@ import { HYPT } from './HYP.js';
 import { IDMT } from './IDM.js';
 import { IONT } from './ION.js';
 import { IROT } from './IRO.js';
+import { KMLT } from './KML.js';
 import { LCCT } from './LCC.js';
 import { LDMT } from './LDM.js';
 import { LKST } from './LKS.js';
@@ -156,9 +161,9 @@ export declare class Record implements flatbuffers.IUnpackableObject<RecordT> {
 }
 export declare class RecordT implements flatbuffers.IGeneratedObject {
     valueType: RecordType;
-    value: ACLT | ACMT | ACRT | AEMT | ANIT | AOFT | APMT | ARMT | ASTT | ATDT | ATMT | BALT | BEMT | BMCT | BOVT | BUST | CATT | CDMT | CFPT | CHNT | CLTT | CMST | COMT | CRDT | CRMT | CSMT | CTRT | DFHT | DMGT | DOAT | EMET | ENCT | ENVT | EOOT | EOPT | EPMT | EWRT | FCST | GDIT | GEOT | GNOT | GRVT | GVHT | HELT | HYPT | IDMT | IONT | IROT | LCCT | LDMT | LKST | LNDT | LNET | METT | MFET | MNFT | MNVT | MPET | MSLT | MSTT | MTIT | NAVT | OBDT | OBTT | OCMT | OEMT | OMMT | OOAT | OOBT | OODT | OOET | OOIT | OOLT | OONT | OOST | OOTT | OPMT | OSMT | PCFT | PHYT | PLDT | PLGT | PLKT | PNMT | PRGT | PURT | RAFT | RCFT | RDMT | RDOT | REVT | RFBT | RFET | RFMT | RFOT | ROCT | SART | SCMT | SDLT | SENT | SEOT | SEVT | SITT | SKIT | SNRT | SOIT | SONT | SPPT | SPWT | STFT | STRT | STVT | SWRT | TCFT | TDMT | TIMT | TKGT | TMET | TMFT | TPNT | TRKT | TRNT | VCMT | WPNT | WTHT | XTCT | null;
+    value: ACLT | ACMT | ACRT | AEMT | ANIT | AOFT | APMT | ARMT | ASTT | ATDT | ATMT | BALT | BEMT | BMCT | BOVT | BUST | CATT | CDMT | CFPT | CHNT | CLTT | CMST | COMT | COTT | CRDT | CRMT | CSMT | CTRT | CZMT | DFHT | DMGT | DOAT | EMET | ENCT | ENVT | EOOT | EOPT | EPMT | EWRT | FCST | GDIT | GEOT | GJNT | GNOT | GPXT | GRVT | GVHT | HELT | HYPT | IDMT | IONT | IROT | KMLT | LCCT | LDMT | LKST | LNDT | LNET | METT | MFET | MNFT | MNVT | MPET | MSLT | MSTT | MTIT | NAVT | OBDT | OBTT | OCMT | OEMT | OMMT | OOAT | OOBT | OODT | OOET | OOIT | OOLT | OONT | OOST | OOTT | OPMT | OSMT | PCFT | PHYT | PLDT | PLGT | PLKT | PNMT | PRGT | PURT | RAFT | RCFT | RDMT | RDOT | REVT | RFBT | RFET | RFMT | RFOT | ROCT | SART | SCMT | SDLT | SENT | SEOT | SEVT | SITT | SKIT | SNRT | SOIT | SONT | SPPT | SPWT | STFT | STRT | STVT | SWRT | TCFT | TDMT | TIMT | TKGT | TMET | TMFT | TPNT | TRKT | TRNT | VCMT | WPNT | WTHT | XTCT | null;
     standard: string | Uint8Array | null;
-    constructor(valueType?: RecordType, value?: ACLT | ACMT | ACRT | AEMT | ANIT | AOFT | APMT | ARMT | ASTT | ATDT | ATMT | BALT | BEMT | BMCT | BOVT | BUST | CATT | CDMT | CFPT | CHNT | CLTT | CMST | COMT | CRDT | CRMT | CSMT | CTRT | DFHT | DMGT | DOAT | EMET | ENCT | ENVT | EOOT | EOPT | EPMT | EWRT | FCST | GDIT | GEOT | GNOT | GRVT | GVHT | HELT | HYPT | IDMT | IONT | IROT | LCCT | LDMT | LKST | LNDT | LNET | METT | MFET | MNFT | MNVT | MPET | MSLT | MSTT | MTIT | NAVT | OBDT | OBTT | OCMT | OEMT | OMMT | OOAT | OOBT | OODT | OOET | OOIT | OOLT | OONT | OOST | OOTT | OPMT | OSMT | PCFT | PHYT | PLDT | PLGT | PLKT | PNMT | PRGT | PURT | RAFT | RCFT | RDMT | RDOT | REVT | RFBT | RFET | RFMT | RFOT | ROCT | SART | SCMT | SDLT | SENT | SEOT | SEVT | SITT | SKIT | SNRT | SOIT | SONT | SPPT | SPWT | STFT | STRT | STVT | SWRT | TCFT | TDMT | TIMT | TKGT | TMET | TMFT | TPNT | TRKT | TRNT | VCMT | WPNT | WTHT | XTCT | null, standard?: string | Uint8Array | null);
+    constructor(valueType?: RecordType, value?: ACLT | ACMT | ACRT | AEMT | ANIT | AOFT | APMT | ARMT | ASTT | ATDT | ATMT | BALT | BEMT | BMCT | BOVT | BUST | CATT | CDMT | CFPT | CHNT | CLTT | CMST | COMT | COTT | CRDT | CRMT | CSMT | CTRT | CZMT | DFHT | DMGT | DOAT | EMET | ENCT | ENVT | EOOT | EOPT | EPMT | EWRT | FCST | GDIT | GEOT | GJNT | GNOT | GPXT | GRVT | GVHT | HELT | HYPT | IDMT | IONT | IROT | KMLT | LCCT | LDMT | LKST | LNDT | LNET | METT | MFET | MNFT | MNVT | MPET | MSLT | MSTT | MTIT | NAVT | OBDT | OBTT | OCMT | OEMT | OMMT | OOAT | OOBT | OODT | OOET | OOIT | OOLT | OONT | OOST | OOTT | OPMT | OSMT | PCFT | PHYT | PLDT | PLGT | PLKT | PNMT | PRGT | PURT | RAFT | RCFT | RDMT | RDOT | REVT | RFBT | RFET | RFMT | RFOT | ROCT | SART | SCMT | SDLT | SENT | SEOT | SEVT | SITT | SKIT | SNRT | SOIT | SONT | SPPT | SPWT | STFT | STRT | STVT | SWRT | TCFT | TDMT | TIMT | TKGT | TMET | TMFT | TPNT | TRKT | TRNT | VCMT | WPNT | WTHT | XTCT | null, standard?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=Record.d.ts.map

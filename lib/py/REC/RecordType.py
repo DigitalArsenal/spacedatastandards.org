@@ -27,109 +27,114 @@ class RecordType(object):
     CLT = 21
     CMS = 22
     COM = 23
-    CRD = 24
-    CRM = 25
-    CSM = 26
-    CTR = 27
-    DFH = 28
-    DMG = 29
-    DOA = 30
-    EME = 31
-    ENC = 32
-    ENV = 33
-    EOO = 34
-    EOP = 35
-    EPM = 36
-    EWR = 37
-    FCS = 38
-    GDI = 39
-    GEO = 40
-    GNO = 41
-    GRV = 42
-    GVH = 43
-    HEL = 44
-    HYP = 45
-    IDM = 46
-    ION = 47
-    IRO = 48
-    LCC = 49
-    LDM = 50
-    LKS = 51
-    LND = 52
-    LNE = 53
-    MET = 54
-    MFE = 55
-    MNF = 56
-    MNV = 57
-    MPE = 58
-    MSL = 59
-    MST = 60
-    MTI = 61
-    NAV = 62
-    OBD = 63
-    OBT = 64
-    OCM = 65
-    OEM = 66
-    OMM = 67
-    OOA = 68
-    OOB = 69
-    OOD = 70
-    OOE = 71
-    OOI = 72
-    OOL = 73
-    OON = 74
-    OOS = 75
-    OOT = 76
-    OPM = 77
-    OSM = 78
-    PCF = 79
-    PHY = 80
-    PLD = 81
-    PLG = 82
-    PLK = 83
-    PNM = 84
-    PRG = 85
-    PUR = 86
-    RAF = 87
-    RCF = 88
-    RDM = 89
-    RDO = 90
-    REV = 91
-    RFB = 92
-    RFE = 93
-    RFM = 94
-    RFO = 95
-    ROC = 96
-    SAR = 97
-    SCM = 98
-    SDL = 99
-    SEN = 100
-    SEO = 101
-    SEV = 102
-    SIT = 103
-    SKI = 104
-    SNR = 105
-    SOI = 106
-    SON = 107
-    SPP = 108
-    SPW = 109
-    STF = 110
-    STR = 111
-    STV = 112
-    SWR = 113
-    TCF = 114
-    TDM = 115
-    TIM = 116
-    TKG = 117
-    TME = 118
-    TMF = 119
-    TPN = 120
-    TRK = 121
-    TRN = 122
-    VCM = 123
-    WPN = 124
-    WTH = 125
-    XTC = 126
+    COT = 24
+    CRD = 25
+    CRM = 26
+    CSM = 27
+    CTR = 28
+    CZM = 29
+    DFH = 30
+    DMG = 31
+    DOA = 32
+    EME = 33
+    ENC = 34
+    ENV = 35
+    EOO = 36
+    EOP = 37
+    EPM = 38
+    EWR = 39
+    FCS = 40
+    GDI = 41
+    GEO = 42
+    GJN = 43
+    GNO = 44
+    GPX = 45
+    GRV = 46
+    GVH = 47
+    HEL = 48
+    HYP = 49
+    IDM = 50
+    ION = 51
+    IRO = 52
+    KML = 53
+    LCC = 54
+    LDM = 55
+    LKS = 56
+    LND = 57
+    LNE = 58
+    MET = 59
+    MFE = 60
+    MNF = 61
+    MNV = 62
+    MPE = 63
+    MSL = 64
+    MST = 65
+    MTI = 66
+    NAV = 67
+    OBD = 68
+    OBT = 69
+    OCM = 70
+    OEM = 71
+    OMM = 72
+    OOA = 73
+    OOB = 74
+    OOD = 75
+    OOE = 76
+    OOI = 77
+    OOL = 78
+    OON = 79
+    OOS = 80
+    OOT = 81
+    OPM = 82
+    OSM = 83
+    PCF = 84
+    PHY = 85
+    PLD = 86
+    PLG = 87
+    PLK = 88
+    PNM = 89
+    PRG = 90
+    PUR = 91
+    RAF = 92
+    RCF = 93
+    RDM = 94
+    RDO = 95
+    REV = 96
+    RFB = 97
+    RFE = 98
+    RFM = 99
+    RFO = 100
+    ROC = 101
+    SAR = 102
+    SCM = 103
+    SDL = 104
+    SEN = 105
+    SEO = 106
+    SEV = 107
+    SIT = 108
+    SKI = 109
+    SNR = 110
+    SOI = 111
+    SON = 112
+    SPP = 113
+    SPW = 114
+    STF = 115
+    STR = 116
+    STV = 117
+    SWR = 118
+    TCF = 119
+    TDM = 120
+    TIM = 121
+    TKG = 122
+    TME = 123
+    TMF = 124
+    TPN = 125
+    TRK = 126
+    TRN = 127
+    VCM = 128
+    WPN = 129
+    WTH = 130
+    XTC = 131
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -204,6 +209,9 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.COM:
         import COM
         return COM.COMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.COT:
+        import COT
+        return COT.COTT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.CRD:
         import CRD
         return CRD.CRDT.InitFromBuf(table.Bytes, table.Pos)
@@ -216,6 +224,9 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.CTR:
         import CTR
         return CTR.CTRT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.CZM:
+        import CZM
+        return CZM.CZMT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.DFH:
         import DFH
         return DFH.DFHT.InitFromBuf(table.Bytes, table.Pos)
@@ -255,9 +266,15 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.GEO:
         import GEO
         return GEO.GEOT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.GJN:
+        import GJN
+        return GJN.GJNT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.GNO:
         import GNO
         return GNO.GNOT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.GPX:
+        import GPX
+        return GPX.GPXT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.GRV:
         import GRV
         return GRV.GRVT.InitFromBuf(table.Bytes, table.Pos)
@@ -279,6 +296,9 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.IRO:
         import IRO
         return IRO.IROT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.KML:
+        import KML
+        return KML.KMLT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.LCC:
         import LCC
         return LCC.LCCT.InitFromBuf(table.Bytes, table.Pos)

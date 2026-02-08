@@ -27,10 +27,12 @@ import { CHN, CHNT } from './CHN.js';
 import { CLT, CLTT } from './CLT.js';
 import { CMS, CMST } from './CMS.js';
 import { COM, COMT } from './COM.js';
+import { COT, COTT } from './COT.js';
 import { CRD, CRDT } from './CRD.js';
 import { CRM, CRMT } from './CRM.js';
 import { CSM, CSMT } from './CSM.js';
 import { CTR, CTRT } from './CTR.js';
+import { CZM, CZMT } from './CZM.js';
 import { DFH, DFHT } from './DFH.js';
 import { DMG, DMGT } from './DMG.js';
 import { DOA, DOAT } from './DOA.js';
@@ -44,7 +46,9 @@ import { EWR, EWRT } from './EWR.js';
 import { FCS, FCST } from './FCS.js';
 import { GDI, GDIT } from './GDI.js';
 import { GEO, GEOT } from './GEO.js';
+import { GJN, GJNT } from './GJN.js';
 import { GNO, GNOT } from './GNO.js';
+import { GPX, GPXT } from './GPX.js';
 import { GRV, GRVT } from './GRV.js';
 import { GVH, GVHT } from './GVH.js';
 import { HEL, HELT } from './HEL.js';
@@ -52,6 +56,7 @@ import { HYP, HYPT } from './HYP.js';
 import { IDM, IDMT } from './IDM.js';
 import { ION, IONT } from './ION.js';
 import { IRO, IROT } from './IRO.js';
+import { KML, KMLT } from './KML.js';
 import { LCC, LCCT } from './LCC.js';
 import { LDM, LDMT } from './LDM.js';
 import { LKS, LKST } from './LKS.js';
@@ -233,7 +238,7 @@ unpackTo(_o: RecordT): void {
 export class RecordT implements flatbuffers.IGeneratedObject {
 constructor(
   public valueType: RecordType = RecordType.NONE,
-  public value: ACLT|ACMT|ACRT|AEMT|ANIT|AOFT|APMT|ARMT|ASTT|ATDT|ATMT|BALT|BEMT|BMCT|BOVT|BUST|CATT|CDMT|CFPT|CHNT|CLTT|CMST|COMT|CRDT|CRMT|CSMT|CTRT|DFHT|DMGT|DOAT|EMET|ENCT|ENVT|EOOT|EOPT|EPMT|EWRT|FCST|GDIT|GEOT|GNOT|GRVT|GVHT|HELT|HYPT|IDMT|IONT|IROT|LCCT|LDMT|LKST|LNDT|LNET|METT|MFET|MNFT|MNVT|MPET|MSLT|MSTT|MTIT|NAVT|OBDT|OBTT|OCMT|OEMT|OMMT|OOAT|OOBT|OODT|OOET|OOIT|OOLT|OONT|OOST|OOTT|OPMT|OSMT|PCFT|PHYT|PLDT|PLGT|PLKT|PNMT|PRGT|PURT|RAFT|RCFT|RDMT|RDOT|REVT|RFBT|RFET|RFMT|RFOT|ROCT|SART|SCMT|SDLT|SENT|SEOT|SEVT|SITT|SKIT|SNRT|SOIT|SONT|SPPT|SPWT|STFT|STRT|STVT|SWRT|TCFT|TDMT|TIMT|TKGT|TMET|TMFT|TPNT|TRKT|TRNT|VCMT|WPNT|WTHT|XTCT|null = null,
+  public value: ACLT|ACMT|ACRT|AEMT|ANIT|AOFT|APMT|ARMT|ASTT|ATDT|ATMT|BALT|BEMT|BMCT|BOVT|BUST|CATT|CDMT|CFPT|CHNT|CLTT|CMST|COMT|COTT|CRDT|CRMT|CSMT|CTRT|CZMT|DFHT|DMGT|DOAT|EMET|ENCT|ENVT|EOOT|EOPT|EPMT|EWRT|FCST|GDIT|GEOT|GJNT|GNOT|GPXT|GRVT|GVHT|HELT|HYPT|IDMT|IONT|IROT|KMLT|LCCT|LDMT|LKST|LNDT|LNET|METT|MFET|MNFT|MNVT|MPET|MSLT|MSTT|MTIT|NAVT|OBDT|OBTT|OCMT|OEMT|OMMT|OOAT|OOBT|OODT|OOET|OOIT|OOLT|OONT|OOST|OOTT|OPMT|OSMT|PCFT|PHYT|PLDT|PLGT|PLKT|PNMT|PRGT|PURT|RAFT|RCFT|RDMT|RDOT|REVT|RFBT|RFET|RFMT|RFOT|ROCT|SART|SCMT|SDLT|SENT|SEOT|SEVT|SITT|SKIT|SNRT|SOIT|SONT|SPPT|SPWT|STFT|STRT|STVT|SWRT|TCFT|TDMT|TIMT|TKGT|TMET|TMFT|TPNT|TRKT|TRNT|VCMT|WPNT|WTHT|XTCT|null = null,
   public standard: string|Uint8Array|null = null
 ){}
 

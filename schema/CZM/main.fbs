@@ -1,0 +1,317 @@
+// Hash: aace0039dd59980beb9a8c8f6032fe708bfec9f4dbb7a7ddb43ee8f7e93d26ea
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+// CZML (Cesium Language)
+//
+// CZML is a JSON-based format for describing time-dynamic 3D scenes,
+// primarily for use with CesiumJS. A CZML document is an array of packets
+// that describe objects and their properties over time.
+// Reference: https://github.com/AnalyticalGraphicsInc/czml-writer/wiki/CZML-Guide
+
+enum CZMHeightReference : byte {
+  NONE,
+  CLAMP_TO_GROUND,
+  RELATIVE_TO_GROUND
+}
+
+enum CZMClassificationType : byte {
+  TERRAIN,
+  CESIUM_3D_TILE,
+  BOTH
+}
+
+enum CZMLabelStyle : byte {
+  FILL,
+  OUTLINE,
+  FILL_AND_OUTLINE
+}
+
+enum CZMHorizontalOrigin : byte {
+  LEFT,
+  CENTER,
+  RIGHT
+}
+
+enum CZMVerticalOrigin : byte {
+  BASELINE,
+  BOTTOM,
+  CENTER,
+  TOP
+}
+
+/// Time interval for time-dynamic properties
+table CZMInterval {
+  /// ISO 8601 interval string (e.g. "2012-03-15T10:00:00Z/2012-03-16T10:00:00Z")
+  INTERVAL:string;
+}
+
+/// Cartographic position (longitude, latitude, height in radians/meters)
+table CZMCartographicDegrees {
+  /// Longitude in degrees
+  LONGITUDE:double;
+  /// Latitude in degrees
+  LATITUDE:double;
+  /// Height in meters above WGS84 ellipsoid
+  HEIGHT:double;
+}
+
+/// Cartesian position (X, Y, Z in meters)
+table CZMCartesian {
+  /// X component in meters (Earth-fixed)
+  X:double;
+  /// Y component in meters (Earth-fixed)
+  Y:double;
+  /// Z component in meters (Earth-fixed)
+  Z:double;
+}
+
+/// RGBA color
+table CZMColor {
+  /// Red component (0-255)
+  RED:ubyte;
+  /// Green component (0-255)
+  GREEN:ubyte;
+  /// Blue component (0-255)
+  BLUE:ubyte;
+  /// Alpha component (0-255)
+  ALPHA:ubyte;
+}
+
+/// Near/Far scalar for distance-based display
+table CZMNearFarScalar {
+  /// Near distance in meters
+  NEAR_DISTANCE:double;
+  /// Value at near distance
+  NEAR_VALUE:double;
+  /// Far distance in meters
+  FAR_DISTANCE:double;
+  /// Value at far distance
+  FAR_VALUE:double;
+}
+
+/// Billboard (icon) properties
+table CZMBillboard {
+  /// Whether the billboard is displayed
+  SHOW:bool;
+  /// URI of the billboard image
+  IMAGE:string;
+  /// Scale factor
+  SCALE:double;
+  /// Billboard color tint
+  COLOR:CZMColor;
+  /// Height reference
+  HEIGHT_REFERENCE:CZMHeightReference;
+  /// Pixel offset X
+  PIXEL_OFFSET_X:double;
+  /// Pixel offset Y
+  PIXEL_OFFSET_Y:double;
+  /// Horizontal origin
+  HORIZONTAL_ORIGIN:CZMHorizontalOrigin;
+  /// Vertical origin
+  VERTICAL_ORIGIN:CZMVerticalOrigin;
+  /// Translucency by distance
+  TRANSLUCENCY_BY_DISTANCE:CZMNearFarScalar;
+}
+
+/// Label properties
+table CZMLabel {
+  /// Whether the label is displayed
+  SHOW:bool;
+  /// Label text
+  TEXT:string;
+  /// Font CSS string (e.g. "12pt Lucida Console")
+  FONT:string;
+  /// Label style
+  STYLE:CZMLabelStyle;
+  /// Fill color
+  FILL_COLOR:CZMColor;
+  /// Outline color
+  OUTLINE_COLOR:CZMColor;
+  /// Outline width in pixels
+  OUTLINE_WIDTH:double;
+  /// Pixel offset X
+  PIXEL_OFFSET_X:double;
+  /// Pixel offset Y
+  PIXEL_OFFSET_Y:double;
+  /// Scale factor
+  SCALE:double;
+  /// Horizontal origin
+  HORIZONTAL_ORIGIN:CZMHorizontalOrigin;
+  /// Vertical origin
+  VERTICAL_ORIGIN:CZMVerticalOrigin;
+  /// Height reference
+  HEIGHT_REFERENCE:CZMHeightReference;
+}
+
+/// Point properties
+table CZMPoint {
+  /// Whether the point is displayed
+  SHOW:bool;
+  /// Point color
+  COLOR:CZMColor;
+  /// Outline color
+  OUTLINE_COLOR:CZMColor;
+  /// Outline width in pixels
+  OUTLINE_WIDTH:double;
+  /// Pixel size
+  PIXEL_SIZE:double;
+  /// Height reference
+  HEIGHT_REFERENCE:CZMHeightReference;
+}
+
+/// Polyline properties
+table CZMPolyline {
+  /// Whether the polyline is displayed
+  SHOW:bool;
+  /// Positions as cartographic degrees [lon, lat, height, lon, lat, height, ...]
+  POSITIONS_CARTOGRAPHIC_DEGREES:[double];
+  /// Positions as Cartesian [X, Y, Z, X, Y, Z, ...]
+  POSITIONS_CARTESIAN:[double];
+  /// Line width in pixels
+  WIDTH:double;
+  /// Line color (solid color material)
+  COLOR:CZMColor;
+  /// Whether to clamp to ground
+  CLAMP_TO_GROUND:bool;
+}
+
+/// Polygon properties
+table CZMPolygon {
+  /// Whether the polygon is displayed
+  SHOW:bool;
+  /// Positions as cartographic degrees [lon, lat, height, ...]
+  POSITIONS_CARTOGRAPHIC_DEGREES:[double];
+  /// Positions as Cartesian [X, Y, Z, ...]
+  POSITIONS_CARTESIAN:[double];
+  /// Fill flag
+  FILL:bool;
+  /// Fill color (solid color material)
+  COLOR:CZMColor;
+  /// Outline flag
+  OUTLINE:bool;
+  /// Outline color
+  OUTLINE_COLOR:CZMColor;
+  /// Extruded height in meters
+  EXTRUDED_HEIGHT:double;
+  /// Height reference
+  HEIGHT_REFERENCE:CZMHeightReference;
+  /// Classification type
+  CLASSIFICATION_TYPE:CZMClassificationType;
+}
+
+/// Model properties (glTF)
+table CZMModel {
+  /// Whether the model is displayed
+  SHOW:bool;
+  /// URI to the glTF model
+  GLTF:string;
+  /// Scale factor
+  SCALE:double;
+  /// Minimum pixel size
+  MINIMUM_PIXEL_SIZE:double;
+  /// Maximum scale
+  MAXIMUM_SCALE:double;
+  /// Height reference
+  HEIGHT_REFERENCE:CZMHeightReference;
+  /// Color tint
+  COLOR:CZMColor;
+}
+
+/// Path properties (orbit trail)
+table CZMPath {
+  /// Whether the path is displayed
+  SHOW:bool;
+  /// Trail time in seconds (how far behind)
+  LEAD_TIME:double;
+  /// Lead time in seconds (how far ahead)
+  TRAIL_TIME:double;
+  /// Line width in pixels
+  WIDTH:double;
+  /// Path color
+  COLOR:CZMColor;
+  /// Resolution in seconds
+  RESOLUTION:double;
+}
+
+/// Ellipse properties (for ground circles/ellipses)
+table CZMEllipse {
+  /// Whether the ellipse is displayed
+  SHOW:bool;
+  /// Semi-major axis in meters
+  SEMI_MAJOR_AXIS:double;
+  /// Semi-minor axis in meters
+  SEMI_MINOR_AXIS:double;
+  /// Rotation from north in radians
+  ROTATION:double;
+  /// Fill flag
+  FILL:bool;
+  /// Fill color
+  COLOR:CZMColor;
+  /// Outline flag
+  OUTLINE:bool;
+  /// Outline color
+  OUTLINE_COLOR:CZMColor;
+  /// Height in meters
+  HEIGHT:double;
+  /// Height reference
+  HEIGHT_REFERENCE:CZMHeightReference;
+}
+
+/// A CZML Packet describing an entity and its properties
+table CZMPacket {
+  /// Unique identifier for this object
+  ID:string;
+  /// Human-readable name
+  NAME:string;
+  /// Parent packet ID
+  PARENT:string;
+  /// Description (HTML allowed)
+  DESCRIPTION:string;
+  /// Availability interval (ISO 8601 interval)
+  AVAILABILITY:string;
+  /// Position as cartographic degrees
+  POSITION_CARTOGRAPHIC_DEGREES:CZMCartographicDegrees;
+  /// Position as Cartesian
+  POSITION_CARTESIAN:CZMCartesian;
+  /// Time-tagged positions [time, lon, lat, height, time, lon, lat, height, ...]
+  POSITION_EPOCH:string;
+  /// Time-tagged cartographic degree values
+  POSITION_CARTOGRAPHIC_DEGREES_ARRAY:[double];
+  /// Time-tagged Cartesian values
+  POSITION_CARTESIAN_ARRAY:[double];
+  /// Billboard properties
+  BILLBOARD:CZMBillboard;
+  /// Label properties
+  LABEL:CZMLabel;
+  /// Point properties
+  POINT:CZMPoint;
+  /// Polyline properties
+  POLYLINE:CZMPolyline;
+  /// Polygon properties
+  POLYGON:CZMPolygon;
+  /// Model properties
+  MODEL:CZMModel;
+  /// Path properties
+  PATH:CZMPath;
+  /// Ellipse properties
+  ELLIPSE:CZMEllipse;
+}
+
+/// CZML Document
+table CZM {
+  /// Document-level name
+  NAME:string;
+  /// Document-level version
+  VERSION:string;
+  /// Clock settings - current time (ISO 8601)
+  CLOCK_CURRENT_TIME:string;
+  /// Clock settings - interval (ISO 8601 interval)
+  CLOCK_INTERVAL:string;
+  /// Clock settings - multiplier
+  CLOCK_MULTIPLIER:double;
+  /// All packets in the document
+  PACKETS:[CZMPacket];
+}
+
+root_type CZM;
+file_identifier "$CZM";

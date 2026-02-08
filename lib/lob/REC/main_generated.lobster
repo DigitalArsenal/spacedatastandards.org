@@ -26,109 +26,114 @@ enum RecordType:
     RecordType_CLT = 21
     RecordType_CMS = 22
     RecordType_COM = 23
-    RecordType_CRD = 24
-    RecordType_CRM = 25
-    RecordType_CSM = 26
-    RecordType_CTR = 27
-    RecordType_DFH = 28
-    RecordType_DMG = 29
-    RecordType_DOA = 30
-    RecordType_EME = 31
-    RecordType_ENC = 32
-    RecordType_ENV = 33
-    RecordType_EOO = 34
-    RecordType_EOP = 35
-    RecordType_EPM = 36
-    RecordType_EWR = 37
-    RecordType_FCS = 38
-    RecordType_GDI = 39
-    RecordType_GEO = 40
-    RecordType_GNO = 41
-    RecordType_GRV = 42
-    RecordType_GVH = 43
-    RecordType_HEL = 44
-    RecordType_HYP = 45
-    RecordType_IDM = 46
-    RecordType_ION = 47
-    RecordType_IRO = 48
-    RecordType_LCC = 49
-    RecordType_LDM = 50
-    RecordType_LKS = 51
-    RecordType_LND = 52
-    RecordType_LNE = 53
-    RecordType_MET = 54
-    RecordType_MFE = 55
-    RecordType_MNF = 56
-    RecordType_MNV = 57
-    RecordType_MPE = 58
-    RecordType_MSL = 59
-    RecordType_MST = 60
-    RecordType_MTI = 61
-    RecordType_NAV = 62
-    RecordType_OBD = 63
-    RecordType_OBT = 64
-    RecordType_OCM = 65
-    RecordType_OEM = 66
-    RecordType_OMM = 67
-    RecordType_OOA = 68
-    RecordType_OOB = 69
-    RecordType_OOD = 70
-    RecordType_OOE = 71
-    RecordType_OOI = 72
-    RecordType_OOL = 73
-    RecordType_OON = 74
-    RecordType_OOS = 75
-    RecordType_OOT = 76
-    RecordType_OPM = 77
-    RecordType_OSM = 78
-    RecordType_PCF = 79
-    RecordType_PHY = 80
-    RecordType_PLD = 81
-    RecordType_PLG = 82
-    RecordType_PLK = 83
-    RecordType_PNM = 84
-    RecordType_PRG = 85
-    RecordType_PUR = 86
-    RecordType_RAF = 87
-    RecordType_RCF = 88
-    RecordType_RDM = 89
-    RecordType_RDO = 90
-    RecordType_REV = 91
-    RecordType_RFB = 92
-    RecordType_RFE = 93
-    RecordType_RFM = 94
-    RecordType_RFO = 95
-    RecordType_ROC = 96
-    RecordType_SAR = 97
-    RecordType_SCM = 98
-    RecordType_SDL = 99
-    RecordType_SEN = 100
-    RecordType_SEO = 101
-    RecordType_SEV = 102
-    RecordType_SIT = 103
-    RecordType_SKI = 104
-    RecordType_SNR = 105
-    RecordType_SOI = 106
-    RecordType_SON = 107
-    RecordType_SPP = 108
-    RecordType_SPW = 109
-    RecordType_STF = 110
-    RecordType_STR = 111
-    RecordType_STV = 112
-    RecordType_SWR = 113
-    RecordType_TCF = 114
-    RecordType_TDM = 115
-    RecordType_TIM = 116
-    RecordType_TKG = 117
-    RecordType_TME = 118
-    RecordType_TMF = 119
-    RecordType_TPN = 120
-    RecordType_TRK = 121
-    RecordType_TRN = 122
-    RecordType_VCM = 123
-    RecordType_WPN = 124
-    RecordType_WTH = 125
-    RecordType_XTC = 126
+    RecordType_COT = 24
+    RecordType_CRD = 25
+    RecordType_CRM = 26
+    RecordType_CSM = 27
+    RecordType_CTR = 28
+    RecordType_CZM = 29
+    RecordType_DFH = 30
+    RecordType_DMG = 31
+    RecordType_DOA = 32
+    RecordType_EME = 33
+    RecordType_ENC = 34
+    RecordType_ENV = 35
+    RecordType_EOO = 36
+    RecordType_EOP = 37
+    RecordType_EPM = 38
+    RecordType_EWR = 39
+    RecordType_FCS = 40
+    RecordType_GDI = 41
+    RecordType_GEO = 42
+    RecordType_GJN = 43
+    RecordType_GNO = 44
+    RecordType_GPX = 45
+    RecordType_GRV = 46
+    RecordType_GVH = 47
+    RecordType_HEL = 48
+    RecordType_HYP = 49
+    RecordType_IDM = 50
+    RecordType_ION = 51
+    RecordType_IRO = 52
+    RecordType_KML = 53
+    RecordType_LCC = 54
+    RecordType_LDM = 55
+    RecordType_LKS = 56
+    RecordType_LND = 57
+    RecordType_LNE = 58
+    RecordType_MET = 59
+    RecordType_MFE = 60
+    RecordType_MNF = 61
+    RecordType_MNV = 62
+    RecordType_MPE = 63
+    RecordType_MSL = 64
+    RecordType_MST = 65
+    RecordType_MTI = 66
+    RecordType_NAV = 67
+    RecordType_OBD = 68
+    RecordType_OBT = 69
+    RecordType_OCM = 70
+    RecordType_OEM = 71
+    RecordType_OMM = 72
+    RecordType_OOA = 73
+    RecordType_OOB = 74
+    RecordType_OOD = 75
+    RecordType_OOE = 76
+    RecordType_OOI = 77
+    RecordType_OOL = 78
+    RecordType_OON = 79
+    RecordType_OOS = 80
+    RecordType_OOT = 81
+    RecordType_OPM = 82
+    RecordType_OSM = 83
+    RecordType_PCF = 84
+    RecordType_PHY = 85
+    RecordType_PLD = 86
+    RecordType_PLG = 87
+    RecordType_PLK = 88
+    RecordType_PNM = 89
+    RecordType_PRG = 90
+    RecordType_PUR = 91
+    RecordType_RAF = 92
+    RecordType_RCF = 93
+    RecordType_RDM = 94
+    RecordType_RDO = 95
+    RecordType_REV = 96
+    RecordType_RFB = 97
+    RecordType_RFE = 98
+    RecordType_RFM = 99
+    RecordType_RFO = 100
+    RecordType_ROC = 101
+    RecordType_SAR = 102
+    RecordType_SCM = 103
+    RecordType_SDL = 104
+    RecordType_SEN = 105
+    RecordType_SEO = 106
+    RecordType_SEV = 107
+    RecordType_SIT = 108
+    RecordType_SKI = 109
+    RecordType_SNR = 110
+    RecordType_SOI = 111
+    RecordType_SON = 112
+    RecordType_SPP = 113
+    RecordType_SPW = 114
+    RecordType_STF = 115
+    RecordType_STR = 116
+    RecordType_STV = 117
+    RecordType_SWR = 118
+    RecordType_TCF = 119
+    RecordType_TDM = 120
+    RecordType_TIM = 121
+    RecordType_TKG = 122
+    RecordType_TME = 123
+    RecordType_TMF = 124
+    RecordType_TPN = 125
+    RecordType_TRK = 126
+    RecordType_TRN = 127
+    RecordType_VCM = 128
+    RecordType_WPN = 129
+    RecordType_WTH = 130
+    RecordType_XTC = 131
 
 class Record
 
@@ -185,6 +190,8 @@ class Record : flatbuffers.handle
         return CMS { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_COM():
         return COM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_COT():
+        return COT { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_CRD():
         return CRD { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_CRM():
@@ -193,6 +200,8 @@ class Record : flatbuffers.handle
         return CSM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_CTR():
         return CTR { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_CZM():
+        return CZM { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_DFH():
         return DFH { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_DMG():
@@ -219,8 +228,12 @@ class Record : flatbuffers.handle
         return GDI { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_GEO():
         return GEO { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_GJN():
+        return GJN { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_GNO():
         return GNO { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_GPX():
+        return GPX { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_GRV():
         return GRV { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_GVH():
@@ -235,6 +248,8 @@ class Record : flatbuffers.handle
         return ION { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_IRO():
         return IRO { buf_, flatbuffers.field_table(buf_, pos_, 6) }
+    def value_as_KML():
+        return KML { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_LCC():
         return LCC { buf_, flatbuffers.field_table(buf_, pos_, 6) }
     def value_as_LDM():

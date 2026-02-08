@@ -43,10 +43,12 @@ public struct Record : IFlatbufferObject
   public CLT ValueAsCLT() { return Value<CLT>().Value; }
   public CMS ValueAsCMS() { return Value<CMS>().Value; }
   public COM ValueAsCOM() { return Value<COM>().Value; }
+  public COT ValueAsCOT() { return Value<COT>().Value; }
   public CRD ValueAsCRD() { return Value<CRD>().Value; }
   public CRM ValueAsCRM() { return Value<CRM>().Value; }
   public CSM ValueAsCSM() { return Value<CSM>().Value; }
   public CTR ValueAsCTR() { return Value<CTR>().Value; }
+  public CZM ValueAsCZM() { return Value<CZM>().Value; }
   public DFH ValueAsDFH() { return Value<DFH>().Value; }
   public DMG ValueAsDMG() { return Value<DMG>().Value; }
   public DOA ValueAsDOA() { return Value<DOA>().Value; }
@@ -60,7 +62,9 @@ public struct Record : IFlatbufferObject
   public FCS ValueAsFCS() { return Value<FCS>().Value; }
   public GDI ValueAsGDI() { return Value<GDI>().Value; }
   public GEO ValueAsGEO() { return Value<GEO>().Value; }
+  public GJN ValueAsGJN() { return Value<GJN>().Value; }
   public GNO ValueAsGNO() { return Value<GNO>().Value; }
+  public GPX ValueAsGPX() { return Value<GPX>().Value; }
   public GRV ValueAsGRV() { return Value<GRV>().Value; }
   public GVH ValueAsGVH() { return Value<GVH>().Value; }
   public HEL ValueAsHEL() { return Value<HEL>().Value; }
@@ -68,6 +72,7 @@ public struct Record : IFlatbufferObject
   public IDM ValueAsIDM() { return Value<IDM>().Value; }
   public ION ValueAsION() { return Value<ION>().Value; }
   public IRO ValueAsIRO() { return Value<IRO>().Value; }
+  public KML ValueAsKML() { return Value<KML>().Value; }
   public LCC ValueAsLCC() { return Value<LCC>().Value; }
   public LDM ValueAsLDM() { return Value<LDM>().Value; }
   public LKS ValueAsLKS() { return Value<LKS>().Value; }
@@ -253,6 +258,9 @@ public struct Record : IFlatbufferObject
       case RecordType.COM:
         _o.Value.Value = this.Value<COM>().HasValue ? this.Value<COM>().Value.UnPack() : null;
         break;
+      case RecordType.COT:
+        _o.Value.Value = this.Value<COT>().HasValue ? this.Value<COT>().Value.UnPack() : null;
+        break;
       case RecordType.CRD:
         _o.Value.Value = this.Value<CRD>().HasValue ? this.Value<CRD>().Value.UnPack() : null;
         break;
@@ -264,6 +272,9 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.CTR:
         _o.Value.Value = this.Value<CTR>().HasValue ? this.Value<CTR>().Value.UnPack() : null;
+        break;
+      case RecordType.CZM:
+        _o.Value.Value = this.Value<CZM>().HasValue ? this.Value<CZM>().Value.UnPack() : null;
         break;
       case RecordType.DFH:
         _o.Value.Value = this.Value<DFH>().HasValue ? this.Value<DFH>().Value.UnPack() : null;
@@ -304,8 +315,14 @@ public struct Record : IFlatbufferObject
       case RecordType.GEO:
         _o.Value.Value = this.Value<GEO>().HasValue ? this.Value<GEO>().Value.UnPack() : null;
         break;
+      case RecordType.GJN:
+        _o.Value.Value = this.Value<GJN>().HasValue ? this.Value<GJN>().Value.UnPack() : null;
+        break;
       case RecordType.GNO:
         _o.Value.Value = this.Value<GNO>().HasValue ? this.Value<GNO>().Value.UnPack() : null;
+        break;
+      case RecordType.GPX:
+        _o.Value.Value = this.Value<GPX>().HasValue ? this.Value<GPX>().Value.UnPack() : null;
         break;
       case RecordType.GRV:
         _o.Value.Value = this.Value<GRV>().HasValue ? this.Value<GRV>().Value.UnPack() : null;
@@ -327,6 +344,9 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.IRO:
         _o.Value.Value = this.Value<IRO>().HasValue ? this.Value<IRO>().Value.UnPack() : null;
+        break;
+      case RecordType.KML:
+        _o.Value.Value = this.Value<KML>().HasValue ? this.Value<KML>().Value.UnPack() : null;
         break;
       case RecordType.LCC:
         _o.Value.Value = this.Value<LCC>().HasValue ? this.Value<LCC>().Value.UnPack() : null;

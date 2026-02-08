@@ -3406,6 +3406,50 @@
         }
       }
     },
+    "COTHowType": {
+      "type": "string",
+      "enum": [
+        "HE",
+        "H_E",
+        "M_G",
+        "M_S",
+        "M_F",
+        "M_I",
+        "M_C"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "HE": {
+          "value": 0,
+          "description": "Human entered or generated"
+        },
+        "H_E": {
+          "value": 1,
+          "description": "Human estimated"
+        },
+        "M_G": {
+          "value": 2,
+          "description": "Machine generated via GPS"
+        },
+        "M_S": {
+          "value": 3,
+          "description": "Machine generated via sensor"
+        },
+        "M_F": {
+          "value": 4,
+          "description": "Machine fused"
+        },
+        "M_I": {
+          "value": 5,
+          "description": "Machine inferred"
+        },
+        "M_C": {
+          "value": 6,
+          "description": "Configured"
+        }
+      }
+    },
     "CoordFrame": {
       "type": "string",
       "enum": [
@@ -3501,6 +3545,115 @@
         },
         "MARS": {
           "value": 5
+        }
+      }
+    },
+    "CZMHeightReference": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "CLAMP_TO_GROUND",
+        "RELATIVE_TO_GROUND"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0
+        },
+        "CLAMP_TO_GROUND": {
+          "value": 1
+        },
+        "RELATIVE_TO_GROUND": {
+          "value": 2
+        }
+      }
+    },
+    "CZMClassificationType": {
+      "type": "string",
+      "enum": [
+        "TERRAIN",
+        "CESIUM_3D_TILE",
+        "BOTH"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "TERRAIN": {
+          "value": 0
+        },
+        "CESIUM_3D_TILE": {
+          "value": 1
+        },
+        "BOTH": {
+          "value": 2
+        }
+      }
+    },
+    "CZMLabelStyle": {
+      "type": "string",
+      "enum": [
+        "FILL",
+        "OUTLINE",
+        "FILL_AND_OUTLINE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "FILL": {
+          "value": 0
+        },
+        "OUTLINE": {
+          "value": 1
+        },
+        "FILL_AND_OUTLINE": {
+          "value": 2
+        }
+      }
+    },
+    "CZMHorizontalOrigin": {
+      "type": "string",
+      "enum": [
+        "LEFT",
+        "CENTER",
+        "RIGHT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "LEFT": {
+          "value": 0
+        },
+        "CENTER": {
+          "value": 1
+        },
+        "RIGHT": {
+          "value": 2
+        }
+      }
+    },
+    "CZMVerticalOrigin": {
+      "type": "string",
+      "enum": [
+        "BASELINE",
+        "BOTTOM",
+        "CENTER",
+        "TOP"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "BASELINE": {
+          "value": 0
+        },
+        "BOTTOM": {
+          "value": 1
+        },
+        "CENTER": {
+          "value": 2
+        },
+        "TOP": {
+          "value": 3
         }
       }
     },
@@ -4561,6 +4714,43 @@
         }
       }
     },
+    "GJNGeometryType": {
+      "type": "string",
+      "enum": [
+        "POINT",
+        "MULTI_POINT",
+        "LINE_STRING",
+        "MULTI_LINE_STRING",
+        "POLYGON",
+        "MULTI_POLYGON",
+        "GEOMETRY_COLLECTION"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "POINT": {
+          "value": 0
+        },
+        "MULTI_POINT": {
+          "value": 1
+        },
+        "LINE_STRING": {
+          "value": 2
+        },
+        "MULTI_LINE_STRING": {
+          "value": 3
+        },
+        "POLYGON": {
+          "value": 4
+        },
+        "MULTI_POLYGON": {
+          "value": 5
+        },
+        "GEOMETRY_COLLECTION": {
+          "value": 6
+        }
+      }
+    },
     "gnssConstellation": {
       "type": "string",
       "enum": [
@@ -4628,6 +4818,39 @@
         },
         "RAW_IF": {
           "value": 4
+        }
+      }
+    },
+    "GPXFixType": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "FIX_2D",
+        "FIX_3D",
+        "DGPS",
+        "PPS"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0
+        },
+        "FIX_2D": {
+          "value": 1,
+          "description": "2D fix"
+        },
+        "FIX_3D": {
+          "value": 2,
+          "description": "3D fix"
+        },
+        "DGPS": {
+          "value": 3,
+          "description": "Differential GPS fix"
+        },
+        "PPS": {
+          "value": 4,
+          "description": "PPP fix"
         }
       }
     },
@@ -5101,6 +5324,141 @@
         },
         "EXTENDED": {
           "value": 4
+        }
+      }
+    },
+    "KMLAltitudeMode": {
+      "type": "string",
+      "enum": [
+        "CLAMP_TO_GROUND",
+        "RELATIVE_TO_GROUND",
+        "ABSOLUTE",
+        "CLAMP_TO_SEA_FLOOR",
+        "RELATIVE_TO_SEA_FLOOR"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "CLAMP_TO_GROUND": {
+          "value": 0,
+          "description": "Altitude relative to ground surface"
+        },
+        "RELATIVE_TO_GROUND": {
+          "value": 1,
+          "description": "Altitude relative to ground elevation"
+        },
+        "ABSOLUTE": {
+          "value": 2,
+          "description": "Altitude as absolute meters above WGS84 ellipsoid"
+        },
+        "CLAMP_TO_SEA_FLOOR": {
+          "value": 3,
+          "description": "Clamp to sea floor"
+        },
+        "RELATIVE_TO_SEA_FLOOR": {
+          "value": 4,
+          "description": "Relative to sea floor"
+        }
+      }
+    },
+    "KMLColorMode": {
+      "type": "string",
+      "enum": [
+        "NORMAL",
+        "RANDOM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NORMAL": {
+          "value": 0
+        },
+        "RANDOM": {
+          "value": 1
+        }
+      }
+    },
+    "KMLStyleState": {
+      "type": "string",
+      "enum": [
+        "NORMAL",
+        "HIGHLIGHT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NORMAL": {
+          "value": 0
+        },
+        "HIGHLIGHT": {
+          "value": 1
+        }
+      }
+    },
+    "KMLUnits": {
+      "type": "string",
+      "enum": [
+        "PIXELS",
+        "FRACTION",
+        "INSET_PIXELS"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "PIXELS": {
+          "value": 0
+        },
+        "FRACTION": {
+          "value": 1
+        },
+        "INSET_PIXELS": {
+          "value": 2
+        }
+      }
+    },
+    "KMLRefreshMode": {
+      "type": "string",
+      "enum": [
+        "ON_CHANGE",
+        "ON_INTERVAL",
+        "ON_EXPIRE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ON_CHANGE": {
+          "value": 0
+        },
+        "ON_INTERVAL": {
+          "value": 1
+        },
+        "ON_EXPIRE": {
+          "value": 2
+        }
+      }
+    },
+    "KMLViewRefreshMode": {
+      "type": "string",
+      "enum": [
+        "NEVER",
+        "ON_STOP",
+        "ON_REQUEST",
+        "ON_REGION"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NEVER": {
+          "value": 0
+        },
+        "ON_STOP": {
+          "value": 1
+        },
+        "ON_REQUEST": {
+          "value": 2
+        },
+        "ON_REGION": {
+          "value": 3
         }
       }
     },
@@ -9759,10 +10117,12 @@
         "CLT",
         "CMS",
         "COM",
+        "COT",
         "CRD",
         "CRM",
         "CSM",
         "CTR",
+        "CZM",
         "DFH",
         "DMG",
         "DOA",
@@ -9776,7 +10136,9 @@
         "FCS",
         "GDI",
         "GEO",
+        "GJN",
         "GNO",
+        "GPX",
         "GRV",
         "GVH",
         "HEL",
@@ -9784,6 +10146,7 @@
         "IDM",
         "ION",
         "IRO",
+        "KML",
         "LCC",
         "LDM",
         "LKS",
@@ -15495,6 +15858,267 @@
       },
       "additionalProperties": false
     },
+    "COTPoint": {
+      "type": "object",
+      "description": "CoT Point - geographical point with error estimates",
+      "properties": {
+        "LATITUDE": {
+          "type": "number",
+          "description": "Latitude in decimal degrees (WGS84)",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE": {
+          "type": "number",
+          "description": "Longitude in decimal degrees (WGS84)",
+          "x-flatbuffer-type": "double"
+        },
+        "HAE": {
+          "type": "number",
+          "description": "Height above WGS84 ellipsoid in meters",
+          "x-flatbuffer-type": "double"
+        },
+        "CE": {
+          "type": "number",
+          "description": "Circular error in meters (95% confidence)",
+          "x-flatbuffer-type": "double"
+        },
+        "LE": {
+          "type": "number",
+          "description": "Linear error (vertical) in meters (95% confidence)",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "COTDetail": {
+      "type": "object",
+      "description": "CoT Detail - extensible detail element",
+      "properties": {
+        "CALLSIGN": {
+          "type": "string",
+          "description": "Contact callsign",
+          "x-flatbuffer-type": "string"
+        },
+        "ENDPOINT": {
+          "type": "string",
+          "description": "Contact endpoint (e.g. IP:port)",
+          "x-flatbuffer-type": "string"
+        },
+        "PHONE": {
+          "type": "string",
+          "description": "Contact phone number",
+          "x-flatbuffer-type": "string"
+        },
+        "COURSE": {
+          "type": "number",
+          "description": "Track course in degrees true",
+          "x-flatbuffer-type": "double"
+        },
+        "SPEED": {
+          "type": "number",
+          "description": "Track speed in m/s",
+          "x-flatbuffer-type": "double"
+        },
+        "GROUP_NAME": {
+          "type": "string",
+          "description": "Group name/team",
+          "x-flatbuffer-type": "string"
+        },
+        "GROUP_ROLE": {
+          "type": "string",
+          "description": "Group role",
+          "x-flatbuffer-type": "string"
+        },
+        "STATUS_BATTERY": {
+          "type": "number",
+          "description": "Status (battery percentage, etc.)",
+          "x-flatbuffer-type": "double"
+        },
+        "STATUS_READINESS": {
+          "type": "boolean",
+          "description": "Status readiness",
+          "x-flatbuffer-type": "bool"
+        },
+        "PREC_LOCATION_SOURCE": {
+          "type": "string",
+          "description": "Precision location source",
+          "x-flatbuffer-type": "string"
+        },
+        "PREC_ALTSRC": {
+          "type": "string",
+          "description": "Precision location altitude source",
+          "x-flatbuffer-type": "string"
+        },
+        "UID_DROID": {
+          "type": "string",
+          "description": "UID of the device",
+          "x-flatbuffer-type": "string"
+        },
+        "REMARKS": {
+          "type": "string",
+          "description": "Remarks text",
+          "x-flatbuffer-type": "string"
+        },
+        "REMARKS_SOURCE": {
+          "type": "string",
+          "description": "Remarks source",
+          "x-flatbuffer-type": "string"
+        },
+        "REMARKS_TIME": {
+          "type": "string",
+          "description": "Remarks timestamp (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "LINK_UID": {
+          "type": "string",
+          "description": "Link UID (for related events)",
+          "x-flatbuffer-type": "string"
+        },
+        "LINK_TYPE": {
+          "type": "string",
+          "description": "Link type",
+          "x-flatbuffer-type": "string"
+        },
+        "LINK_RELATION": {
+          "type": "string",
+          "description": "Link relation",
+          "x-flatbuffer-type": "string"
+        },
+        "COLOR": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Color in ARGB integer format",
+          "x-flatbuffer-type": "int32"
+        },
+        "STROKE_WEIGHT": {
+          "type": "number",
+          "description": "Stroke weight for drawing",
+          "x-flatbuffer-type": "double"
+        },
+        "FILL_COLOR": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Fill color in ARGB integer format",
+          "x-flatbuffer-type": "int32"
+        },
+        "LABELLED": {
+          "type": "boolean",
+          "description": "Labeled flag",
+          "x-flatbuffer-type": "bool"
+        },
+        "ARCHIVE": {
+          "type": "boolean",
+          "description": "Archive flag",
+          "x-flatbuffer-type": "bool"
+        },
+        "RAW_XML": {
+          "type": "string",
+          "description": "Raw XML detail content (for extensions not covered above)",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "COT": {
+      "type": "object",
+      "description": "Cursor on Target Event",
+      "properties": {
+        "VERSION": {
+          "type": "string",
+          "description": "Schema version",
+          "x-flatbuffer-type": "string"
+        },
+        "UID": {
+          "type": "string",
+          "description": "Globally unique event identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "TYPE": {
+          "type": "string",
+          "description": "CoT event type (dot-delimited MIL-STD-2525/APP-6 hierarchy)\ne.g. \"a-f-G-U-C\" = atom, friend, Ground, Unit, Combat",
+          "x-flatbuffer-type": "string"
+        },
+        "HOW": {
+          "$ref": "#/definitions/COTHowType",
+          "description": "How the event was generated (e.g. \"m-g\" = machine GPS)",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "HE": {
+              "value": 0,
+              "description": "Human entered or generated"
+            },
+            "H_E": {
+              "value": 1,
+              "description": "Human estimated"
+            },
+            "M_G": {
+              "value": 2,
+              "description": "Machine generated via GPS"
+            },
+            "M_S": {
+              "value": 3,
+              "description": "Machine generated via sensor"
+            },
+            "M_F": {
+              "value": 4,
+              "description": "Machine fused"
+            },
+            "M_I": {
+              "value": 5,
+              "description": "Machine inferred"
+            },
+            "M_C": {
+              "value": 6,
+              "description": "Configured"
+            }
+          }
+        },
+        "TIME": {
+          "type": "string",
+          "description": "Time the event was generated (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "START": {
+          "type": "string",
+          "description": "Time the event information was valid (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "STALE": {
+          "type": "string",
+          "description": "Time the event information is no longer valid (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "ACCESS": {
+          "type": "string",
+          "description": "Access control marking",
+          "x-flatbuffer-type": "string"
+        },
+        "QOS": {
+          "type": "string",
+          "description": "Quality of service",
+          "x-flatbuffer-type": "string"
+        },
+        "OPEX": {
+          "type": "string",
+          "description": "Operational status",
+          "x-flatbuffer-type": "string"
+        },
+        "POINT": {
+          "$ref": "#/definitions/COTPoint",
+          "description": "Point location",
+          "x-flatbuffer-type": "COTPoint"
+        },
+        "DETAIL": {
+          "$ref": "#/definitions/COTDetail",
+          "description": "Detailed event information",
+          "x-flatbuffer-type": "COTDetail"
+        }
+      },
+      "additionalProperties": false
+    },
     "CRD": {
       "type": "object",
       "description": "Coordinate Systems",
@@ -16055,6 +16679,825 @@
           "type": "string",
           "description": "Additional comments",
           "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZMInterval": {
+      "type": "object",
+      "description": "Time interval for time-dynamic properties",
+      "properties": {
+        "INTERVAL": {
+          "type": "string",
+          "description": "ISO 8601 interval string (e.g. \"2012-03-15T10:00:00Z/2012-03-16T10:00:00Z\")",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZMCartographicDegrees": {
+      "type": "object",
+      "description": "Cartographic position (longitude, latitude, height in radians/meters)",
+      "properties": {
+        "LONGITUDE": {
+          "type": "number",
+          "description": "Longitude in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "LATITUDE": {
+          "type": "number",
+          "description": "Latitude in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "HEIGHT": {
+          "type": "number",
+          "description": "Height in meters above WGS84 ellipsoid",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZMCartesian": {
+      "type": "object",
+      "description": "Cartesian position (X, Y, Z in meters)",
+      "properties": {
+        "X": {
+          "type": "number",
+          "description": "X component in meters (Earth-fixed)",
+          "x-flatbuffer-type": "double"
+        },
+        "Y": {
+          "type": "number",
+          "description": "Y component in meters (Earth-fixed)",
+          "x-flatbuffer-type": "double"
+        },
+        "Z": {
+          "type": "number",
+          "description": "Z component in meters (Earth-fixed)",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZMColor": {
+      "type": "object",
+      "description": "RGBA color",
+      "properties": {
+        "RED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Red component (0-255)",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "GREEN": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Green component (0-255)",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "BLUE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Blue component (0-255)",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "ALPHA": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Alpha component (0-255)",
+          "x-flatbuffer-type": "ubyte"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZMNearFarScalar": {
+      "type": "object",
+      "description": "Near/Far scalar for distance-based display",
+      "properties": {
+        "NEAR_DISTANCE": {
+          "type": "number",
+          "description": "Near distance in meters",
+          "x-flatbuffer-type": "double"
+        },
+        "NEAR_VALUE": {
+          "type": "number",
+          "description": "Value at near distance",
+          "x-flatbuffer-type": "double"
+        },
+        "FAR_DISTANCE": {
+          "type": "number",
+          "description": "Far distance in meters",
+          "x-flatbuffer-type": "double"
+        },
+        "FAR_VALUE": {
+          "type": "number",
+          "description": "Value at far distance",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZMBillboard": {
+      "type": "object",
+      "description": "Billboard (icon) properties",
+      "properties": {
+        "SHOW": {
+          "type": "boolean",
+          "description": "Whether the billboard is displayed",
+          "x-flatbuffer-type": "bool"
+        },
+        "IMAGE": {
+          "type": "string",
+          "description": "URI of the billboard image",
+          "x-flatbuffer-type": "string"
+        },
+        "SCALE": {
+          "type": "number",
+          "description": "Scale factor",
+          "x-flatbuffer-type": "double"
+        },
+        "COLOR": {
+          "$ref": "#/definitions/CZMColor",
+          "description": "Billboard color tint",
+          "x-flatbuffer-type": "CZMColor"
+        },
+        "HEIGHT_REFERENCE": {
+          "$ref": "#/definitions/CZMHeightReference",
+          "description": "Height reference",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            },
+            "CLAMP_TO_GROUND": {
+              "value": 1
+            },
+            "RELATIVE_TO_GROUND": {
+              "value": 2
+            }
+          }
+        },
+        "PIXEL_OFFSET_X": {
+          "type": "number",
+          "description": "Pixel offset X",
+          "x-flatbuffer-type": "double"
+        },
+        "PIXEL_OFFSET_Y": {
+          "type": "number",
+          "description": "Pixel offset Y",
+          "x-flatbuffer-type": "double"
+        },
+        "HORIZONTAL_ORIGIN": {
+          "$ref": "#/definitions/CZMHorizontalOrigin",
+          "description": "Horizontal origin",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "LEFT": {
+              "value": 0
+            },
+            "CENTER": {
+              "value": 1
+            },
+            "RIGHT": {
+              "value": 2
+            }
+          }
+        },
+        "VERTICAL_ORIGIN": {
+          "$ref": "#/definitions/CZMVerticalOrigin",
+          "description": "Vertical origin",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "BASELINE": {
+              "value": 0
+            },
+            "BOTTOM": {
+              "value": 1
+            },
+            "CENTER": {
+              "value": 2
+            },
+            "TOP": {
+              "value": 3
+            }
+          }
+        },
+        "TRANSLUCENCY_BY_DISTANCE": {
+          "$ref": "#/definitions/CZMNearFarScalar",
+          "description": "Translucency by distance",
+          "x-flatbuffer-type": "CZMNearFarScalar"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZMLabel": {
+      "type": "object",
+      "description": "Label properties",
+      "properties": {
+        "SHOW": {
+          "type": "boolean",
+          "description": "Whether the label is displayed",
+          "x-flatbuffer-type": "bool"
+        },
+        "TEXT": {
+          "type": "string",
+          "description": "Label text",
+          "x-flatbuffer-type": "string"
+        },
+        "FONT": {
+          "type": "string",
+          "description": "Font CSS string (e.g. \"12pt Lucida Console\")",
+          "x-flatbuffer-type": "string"
+        },
+        "STYLE": {
+          "$ref": "#/definitions/CZMLabelStyle",
+          "description": "Label style",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "FILL": {
+              "value": 0
+            },
+            "OUTLINE": {
+              "value": 1
+            },
+            "FILL_AND_OUTLINE": {
+              "value": 2
+            }
+          }
+        },
+        "FILL_COLOR": {
+          "$ref": "#/definitions/CZMColor",
+          "description": "Fill color",
+          "x-flatbuffer-type": "CZMColor"
+        },
+        "OUTLINE_COLOR": {
+          "$ref": "#/definitions/CZMColor",
+          "description": "Outline color",
+          "x-flatbuffer-type": "CZMColor"
+        },
+        "OUTLINE_WIDTH": {
+          "type": "number",
+          "description": "Outline width in pixels",
+          "x-flatbuffer-type": "double"
+        },
+        "PIXEL_OFFSET_X": {
+          "type": "number",
+          "description": "Pixel offset X",
+          "x-flatbuffer-type": "double"
+        },
+        "PIXEL_OFFSET_Y": {
+          "type": "number",
+          "description": "Pixel offset Y",
+          "x-flatbuffer-type": "double"
+        },
+        "SCALE": {
+          "type": "number",
+          "description": "Scale factor",
+          "x-flatbuffer-type": "double"
+        },
+        "HORIZONTAL_ORIGIN": {
+          "$ref": "#/definitions/CZMHorizontalOrigin",
+          "description": "Horizontal origin",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "LEFT": {
+              "value": 0
+            },
+            "CENTER": {
+              "value": 1
+            },
+            "RIGHT": {
+              "value": 2
+            }
+          }
+        },
+        "VERTICAL_ORIGIN": {
+          "$ref": "#/definitions/CZMVerticalOrigin",
+          "description": "Vertical origin",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "BASELINE": {
+              "value": 0
+            },
+            "BOTTOM": {
+              "value": 1
+            },
+            "CENTER": {
+              "value": 2
+            },
+            "TOP": {
+              "value": 3
+            }
+          }
+        },
+        "HEIGHT_REFERENCE": {
+          "$ref": "#/definitions/CZMHeightReference",
+          "description": "Height reference",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            },
+            "CLAMP_TO_GROUND": {
+              "value": 1
+            },
+            "RELATIVE_TO_GROUND": {
+              "value": 2
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZMPoint": {
+      "type": "object",
+      "description": "Point properties",
+      "properties": {
+        "SHOW": {
+          "type": "boolean",
+          "description": "Whether the point is displayed",
+          "x-flatbuffer-type": "bool"
+        },
+        "COLOR": {
+          "$ref": "#/definitions/CZMColor",
+          "description": "Point color",
+          "x-flatbuffer-type": "CZMColor"
+        },
+        "OUTLINE_COLOR": {
+          "$ref": "#/definitions/CZMColor",
+          "description": "Outline color",
+          "x-flatbuffer-type": "CZMColor"
+        },
+        "OUTLINE_WIDTH": {
+          "type": "number",
+          "description": "Outline width in pixels",
+          "x-flatbuffer-type": "double"
+        },
+        "PIXEL_SIZE": {
+          "type": "number",
+          "description": "Pixel size",
+          "x-flatbuffer-type": "double"
+        },
+        "HEIGHT_REFERENCE": {
+          "$ref": "#/definitions/CZMHeightReference",
+          "description": "Height reference",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            },
+            "CLAMP_TO_GROUND": {
+              "value": 1
+            },
+            "RELATIVE_TO_GROUND": {
+              "value": 2
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZMPolyline": {
+      "type": "object",
+      "description": "Polyline properties",
+      "properties": {
+        "SHOW": {
+          "type": "boolean",
+          "description": "Whether the polyline is displayed",
+          "x-flatbuffer-type": "bool"
+        },
+        "POSITIONS_CARTOGRAPHIC_DEGREES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Positions as cartographic degrees [lon, lat, height, lon, lat, height, ...]",
+          "x-flatbuffer-type": "[double]"
+        },
+        "POSITIONS_CARTESIAN": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Positions as Cartesian [X, Y, Z, X, Y, Z, ...]",
+          "x-flatbuffer-type": "[double]"
+        },
+        "WIDTH": {
+          "type": "number",
+          "description": "Line width in pixels",
+          "x-flatbuffer-type": "double"
+        },
+        "COLOR": {
+          "$ref": "#/definitions/CZMColor",
+          "description": "Line color (solid color material)",
+          "x-flatbuffer-type": "CZMColor"
+        },
+        "CLAMP_TO_GROUND": {
+          "type": "boolean",
+          "description": "Whether to clamp to ground",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZMPolygon": {
+      "type": "object",
+      "description": "Polygon properties",
+      "properties": {
+        "SHOW": {
+          "type": "boolean",
+          "description": "Whether the polygon is displayed",
+          "x-flatbuffer-type": "bool"
+        },
+        "POSITIONS_CARTOGRAPHIC_DEGREES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Positions as cartographic degrees [lon, lat, height, ...]",
+          "x-flatbuffer-type": "[double]"
+        },
+        "POSITIONS_CARTESIAN": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Positions as Cartesian [X, Y, Z, ...]",
+          "x-flatbuffer-type": "[double]"
+        },
+        "FILL": {
+          "type": "boolean",
+          "description": "Fill flag",
+          "x-flatbuffer-type": "bool"
+        },
+        "COLOR": {
+          "$ref": "#/definitions/CZMColor",
+          "description": "Fill color (solid color material)",
+          "x-flatbuffer-type": "CZMColor"
+        },
+        "OUTLINE": {
+          "type": "boolean",
+          "description": "Outline flag",
+          "x-flatbuffer-type": "bool"
+        },
+        "OUTLINE_COLOR": {
+          "$ref": "#/definitions/CZMColor",
+          "description": "Outline color",
+          "x-flatbuffer-type": "CZMColor"
+        },
+        "EXTRUDED_HEIGHT": {
+          "type": "number",
+          "description": "Extruded height in meters",
+          "x-flatbuffer-type": "double"
+        },
+        "HEIGHT_REFERENCE": {
+          "$ref": "#/definitions/CZMHeightReference",
+          "description": "Height reference",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            },
+            "CLAMP_TO_GROUND": {
+              "value": 1
+            },
+            "RELATIVE_TO_GROUND": {
+              "value": 2
+            }
+          }
+        },
+        "CLASSIFICATION_TYPE": {
+          "$ref": "#/definitions/CZMClassificationType",
+          "description": "Classification type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "TERRAIN": {
+              "value": 0
+            },
+            "CESIUM_3D_TILE": {
+              "value": 1
+            },
+            "BOTH": {
+              "value": 2
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZMModel": {
+      "type": "object",
+      "description": "Model properties (glTF)",
+      "properties": {
+        "SHOW": {
+          "type": "boolean",
+          "description": "Whether the model is displayed",
+          "x-flatbuffer-type": "bool"
+        },
+        "GLTF": {
+          "type": "string",
+          "description": "URI to the glTF model",
+          "x-flatbuffer-type": "string"
+        },
+        "SCALE": {
+          "type": "number",
+          "description": "Scale factor",
+          "x-flatbuffer-type": "double"
+        },
+        "MINIMUM_PIXEL_SIZE": {
+          "type": "number",
+          "description": "Minimum pixel size",
+          "x-flatbuffer-type": "double"
+        },
+        "MAXIMUM_SCALE": {
+          "type": "number",
+          "description": "Maximum scale",
+          "x-flatbuffer-type": "double"
+        },
+        "HEIGHT_REFERENCE": {
+          "$ref": "#/definitions/CZMHeightReference",
+          "description": "Height reference",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            },
+            "CLAMP_TO_GROUND": {
+              "value": 1
+            },
+            "RELATIVE_TO_GROUND": {
+              "value": 2
+            }
+          }
+        },
+        "COLOR": {
+          "$ref": "#/definitions/CZMColor",
+          "description": "Color tint",
+          "x-flatbuffer-type": "CZMColor"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZMPath": {
+      "type": "object",
+      "description": "Path properties (orbit trail)",
+      "properties": {
+        "SHOW": {
+          "type": "boolean",
+          "description": "Whether the path is displayed",
+          "x-flatbuffer-type": "bool"
+        },
+        "LEAD_TIME": {
+          "type": "number",
+          "description": "Trail time in seconds (how far behind)",
+          "x-flatbuffer-type": "double"
+        },
+        "TRAIL_TIME": {
+          "type": "number",
+          "description": "Lead time in seconds (how far ahead)",
+          "x-flatbuffer-type": "double"
+        },
+        "WIDTH": {
+          "type": "number",
+          "description": "Line width in pixels",
+          "x-flatbuffer-type": "double"
+        },
+        "COLOR": {
+          "$ref": "#/definitions/CZMColor",
+          "description": "Path color",
+          "x-flatbuffer-type": "CZMColor"
+        },
+        "RESOLUTION": {
+          "type": "number",
+          "description": "Resolution in seconds",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZMEllipse": {
+      "type": "object",
+      "description": "Ellipse properties (for ground circles/ellipses)",
+      "properties": {
+        "SHOW": {
+          "type": "boolean",
+          "description": "Whether the ellipse is displayed",
+          "x-flatbuffer-type": "bool"
+        },
+        "SEMI_MAJOR_AXIS": {
+          "type": "number",
+          "description": "Semi-major axis in meters",
+          "x-flatbuffer-type": "double"
+        },
+        "SEMI_MINOR_AXIS": {
+          "type": "number",
+          "description": "Semi-minor axis in meters",
+          "x-flatbuffer-type": "double"
+        },
+        "ROTATION": {
+          "type": "number",
+          "description": "Rotation from north in radians",
+          "x-flatbuffer-type": "double"
+        },
+        "FILL": {
+          "type": "boolean",
+          "description": "Fill flag",
+          "x-flatbuffer-type": "bool"
+        },
+        "COLOR": {
+          "$ref": "#/definitions/CZMColor",
+          "description": "Fill color",
+          "x-flatbuffer-type": "CZMColor"
+        },
+        "OUTLINE": {
+          "type": "boolean",
+          "description": "Outline flag",
+          "x-flatbuffer-type": "bool"
+        },
+        "OUTLINE_COLOR": {
+          "$ref": "#/definitions/CZMColor",
+          "description": "Outline color",
+          "x-flatbuffer-type": "CZMColor"
+        },
+        "HEIGHT": {
+          "type": "number",
+          "description": "Height in meters",
+          "x-flatbuffer-type": "double"
+        },
+        "HEIGHT_REFERENCE": {
+          "$ref": "#/definitions/CZMHeightReference",
+          "description": "Height reference",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            },
+            "CLAMP_TO_GROUND": {
+              "value": 1
+            },
+            "RELATIVE_TO_GROUND": {
+              "value": 2
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZMPacket": {
+      "type": "object",
+      "description": "A CZML Packet describing an entity and its properties",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Unique identifier for this object",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Human-readable name",
+          "x-flatbuffer-type": "string"
+        },
+        "PARENT": {
+          "type": "string",
+          "description": "Parent packet ID",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Description (HTML allowed)",
+          "x-flatbuffer-type": "string"
+        },
+        "AVAILABILITY": {
+          "type": "string",
+          "description": "Availability interval (ISO 8601 interval)",
+          "x-flatbuffer-type": "string"
+        },
+        "POSITION_CARTOGRAPHIC_DEGREES": {
+          "$ref": "#/definitions/CZMCartographicDegrees",
+          "description": "Position as cartographic degrees",
+          "x-flatbuffer-type": "CZMCartographicDegrees"
+        },
+        "POSITION_CARTESIAN": {
+          "$ref": "#/definitions/CZMCartesian",
+          "description": "Position as Cartesian",
+          "x-flatbuffer-type": "CZMCartesian"
+        },
+        "POSITION_EPOCH": {
+          "type": "string",
+          "description": "Time-tagged positions [time, lon, lat, height, time, lon, lat, height, ...]",
+          "x-flatbuffer-type": "string"
+        },
+        "POSITION_CARTOGRAPHIC_DEGREES_ARRAY": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Time-tagged cartographic degree values",
+          "x-flatbuffer-type": "[double]"
+        },
+        "POSITION_CARTESIAN_ARRAY": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Time-tagged Cartesian values",
+          "x-flatbuffer-type": "[double]"
+        },
+        "BILLBOARD": {
+          "$ref": "#/definitions/CZMBillboard",
+          "description": "Billboard properties",
+          "x-flatbuffer-type": "CZMBillboard"
+        },
+        "LABEL": {
+          "$ref": "#/definitions/CZMLabel",
+          "description": "Label properties",
+          "x-flatbuffer-type": "CZMLabel"
+        },
+        "POINT": {
+          "$ref": "#/definitions/CZMPoint",
+          "description": "Point properties",
+          "x-flatbuffer-type": "CZMPoint"
+        },
+        "POLYLINE": {
+          "$ref": "#/definitions/CZMPolyline",
+          "description": "Polyline properties",
+          "x-flatbuffer-type": "CZMPolyline"
+        },
+        "POLYGON": {
+          "$ref": "#/definitions/CZMPolygon",
+          "description": "Polygon properties",
+          "x-flatbuffer-type": "CZMPolygon"
+        },
+        "MODEL": {
+          "$ref": "#/definitions/CZMModel",
+          "description": "Model properties",
+          "x-flatbuffer-type": "CZMModel"
+        },
+        "PATH": {
+          "$ref": "#/definitions/CZMPath",
+          "description": "Path properties",
+          "x-flatbuffer-type": "CZMPath"
+        },
+        "ELLIPSE": {
+          "$ref": "#/definitions/CZMEllipse",
+          "description": "Ellipse properties",
+          "x-flatbuffer-type": "CZMEllipse"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CZM": {
+      "type": "object",
+      "description": "CZML Document",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Document-level name",
+          "x-flatbuffer-type": "string"
+        },
+        "VERSION": {
+          "type": "string",
+          "description": "Document-level version",
+          "x-flatbuffer-type": "string"
+        },
+        "CLOCK_CURRENT_TIME": {
+          "type": "string",
+          "description": "Clock settings - current time (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "CLOCK_INTERVAL": {
+          "type": "string",
+          "description": "Clock settings - interval (ISO 8601 interval)",
+          "x-flatbuffer-type": "string"
+        },
+        "CLOCK_MULTIPLIER": {
+          "type": "number",
+          "description": "Clock settings - multiplier",
+          "x-flatbuffer-type": "double"
+        },
+        "PACKETS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CZMPacket"
+          },
+          "description": "All packets in the document",
+          "x-flatbuffer-type": "[CZMPacket]"
         }
       },
       "additionalProperties": false
@@ -18175,6 +19618,240 @@
       },
       "additionalProperties": false
     },
+    "GJNPosition": {
+      "type": "object",
+      "description": "A single position (longitude, latitude, optional altitude)",
+      "properties": {
+        "LONGITUDE": {
+          "type": "number",
+          "description": "Longitude in decimal degrees (WGS84)",
+          "x-flatbuffer-type": "double"
+        },
+        "LATITUDE": {
+          "type": "number",
+          "description": "Latitude in decimal degrees (WGS84)",
+          "x-flatbuffer-type": "double"
+        },
+        "ALTITUDE": {
+          "type": "number",
+          "description": "Altitude in meters above WGS84 ellipsoid (optional)",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GJNLinearRing": {
+      "type": "object",
+      "description": "A linear ring is a closed LineString with 4+ positions (first = last)",
+      "properties": {
+        "POSITIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GJNPosition"
+          },
+          "description": "Ordered positions forming the ring",
+          "x-flatbuffer-type": "[GJNPosition]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GJNPolygonRings": {
+      "type": "object",
+      "description": "A polygon represented as an array of rings (outer boundary + holes)",
+      "properties": {
+        "RINGS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GJNLinearRing"
+          },
+          "description": "Rings: first is outer boundary, rest are holes",
+          "x-flatbuffer-type": "[GJNLinearRing]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GJNGeometry": {
+      "type": "object",
+      "description": "GeoJSON Geometry object",
+      "properties": {
+        "TYPE": {
+          "$ref": "#/definitions/GJNGeometryType",
+          "description": "Geometry type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "POINT": {
+              "value": 0
+            },
+            "MULTI_POINT": {
+              "value": 1
+            },
+            "LINE_STRING": {
+              "value": 2
+            },
+            "MULTI_LINE_STRING": {
+              "value": 3
+            },
+            "POLYGON": {
+              "value": 4
+            },
+            "MULTI_POLYGON": {
+              "value": 5
+            },
+            "GEOMETRY_COLLECTION": {
+              "value": 6
+            }
+          }
+        },
+        "POINT": {
+          "$ref": "#/definitions/GJNPosition",
+          "description": "Single position (for Point)",
+          "x-flatbuffer-type": "GJNPosition"
+        },
+        "POSITIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GJNPosition"
+          },
+          "description": "Array of positions (for MultiPoint, LineString)",
+          "x-flatbuffer-type": "[GJNPosition]"
+        },
+        "RINGS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GJNLinearRing"
+          },
+          "description": "Array of position arrays (for MultiLineString, Polygon rings)",
+          "x-flatbuffer-type": "[GJNLinearRing]"
+        },
+        "POLYGON_RINGS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GJNPolygonRings"
+          },
+          "description": "Array of polygons each as array of rings (for MultiPolygon)",
+          "x-flatbuffer-type": "[GJNPolygonRings]"
+        },
+        "GEOMETRIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GJNGeometry"
+          },
+          "description": "Child geometries (for GeometryCollection)",
+          "x-flatbuffer-type": "[GJNGeometry]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GJNProperty": {
+      "type": "object",
+      "description": "A key-value property entry for Feature properties",
+      "properties": {
+        "KEY": {
+          "type": "string",
+          "description": "Property key",
+          "x-flatbuffer-type": "string"
+        },
+        "VALUE": {
+          "type": "string",
+          "description": "Property value as string",
+          "x-flatbuffer-type": "string"
+        },
+        "NUM_VALUE": {
+          "type": "number",
+          "description": "Property value as number (use if numeric)",
+          "x-flatbuffer-type": "double"
+        },
+        "IS_NUMERIC": {
+          "type": "boolean",
+          "description": "True if NUM_VALUE should be used instead of VALUE",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GJNFeature": {
+      "type": "object",
+      "description": "GeoJSON Feature object",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Feature identifier (optional)",
+          "x-flatbuffer-type": "string"
+        },
+        "GEOMETRY": {
+          "$ref": "#/definitions/GJNGeometry",
+          "description": "Geometry of the feature",
+          "x-flatbuffer-type": "GJNGeometry"
+        },
+        "PROPERTIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GJNProperty"
+          },
+          "description": "Properties as key-value pairs",
+          "x-flatbuffer-type": "[GJNProperty]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GJNBoundingBox": {
+      "type": "object",
+      "description": "GeoJSON Bounding Box [west, south, east, north] or [west, south, min-alt, east, north, max-alt]",
+      "properties": {
+        "WEST": {
+          "type": "number",
+          "description": "Western longitude",
+          "x-flatbuffer-type": "double"
+        },
+        "SOUTH": {
+          "type": "number",
+          "description": "Southern latitude",
+          "x-flatbuffer-type": "double"
+        },
+        "EAST": {
+          "type": "number",
+          "description": "Eastern longitude",
+          "x-flatbuffer-type": "double"
+        },
+        "NORTH": {
+          "type": "number",
+          "description": "Northern latitude",
+          "x-flatbuffer-type": "double"
+        },
+        "MIN_ALTITUDE": {
+          "type": "number",
+          "description": "Minimum altitude (optional)",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_ALTITUDE": {
+          "type": "number",
+          "description": "Maximum altitude (optional)",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GJN": {
+      "type": "object",
+      "description": "GeoJSON FeatureCollection",
+      "properties": {
+        "FEATURES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GJNFeature"
+          },
+          "description": "Features in the collection",
+          "x-flatbuffer-type": "[GJNFeature]"
+        },
+        "BBOX": {
+          "$ref": "#/definitions/GJNBoundingBox",
+          "description": "Bounding box (optional)",
+          "x-flatbuffer-type": "GJNBoundingBox"
+        }
+      },
+      "additionalProperties": false
+    },
     "gnssObsData": {
       "type": "object",
       "description": "GNSS Observation Data Point",
@@ -18431,6 +20108,418 @@
           "type": "string",
           "description": "Additional notes",
           "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GPXLink": {
+      "type": "object",
+      "description": "GPX link to an external resource",
+      "properties": {
+        "HREF": {
+          "type": "string",
+          "description": "URL",
+          "x-flatbuffer-type": "string"
+        },
+        "TEXT": {
+          "type": "string",
+          "description": "Link text",
+          "x-flatbuffer-type": "string"
+        },
+        "TYPE": {
+          "type": "string",
+          "description": "MIME type",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GPXWaypoint": {
+      "type": "object",
+      "description": "A waypoint, point of interest, or named feature",
+      "properties": {
+        "LATITUDE": {
+          "type": "number",
+          "description": "Latitude in decimal degrees (WGS84)",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE": {
+          "type": "number",
+          "description": "Longitude in decimal degrees (WGS84)",
+          "x-flatbuffer-type": "double"
+        },
+        "ELEVATION": {
+          "type": "number",
+          "description": "Elevation in meters above WGS84 ellipsoid",
+          "x-flatbuffer-type": "double"
+        },
+        "TIME": {
+          "type": "string",
+          "description": "UTC timestamp (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "MAGVAR": {
+          "type": "number",
+          "description": "Magnetic variation in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "GEOID_HEIGHT": {
+          "type": "number",
+          "description": "Height of geoid above WGS84 ellipsoid in meters",
+          "x-flatbuffer-type": "double"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Waypoint name",
+          "x-flatbuffer-type": "string"
+        },
+        "COMMENT": {
+          "type": "string",
+          "description": "Comment",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Description",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE": {
+          "type": "string",
+          "description": "Source of data",
+          "x-flatbuffer-type": "string"
+        },
+        "LINKS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GPXLink"
+          },
+          "description": "Links to additional information",
+          "x-flatbuffer-type": "[GPXLink]"
+        },
+        "SYMBOL": {
+          "type": "string",
+          "description": "Symbol name",
+          "x-flatbuffer-type": "string"
+        },
+        "TYPE": {
+          "type": "string",
+          "description": "Type/category",
+          "x-flatbuffer-type": "string"
+        },
+        "FIX": {
+          "$ref": "#/definitions/GPXFixType",
+          "description": "Type of GPS fix",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            },
+            "FIX_2D": {
+              "value": 1,
+              "description": "2D fix"
+            },
+            "FIX_3D": {
+              "value": 2,
+              "description": "3D fix"
+            },
+            "DGPS": {
+              "value": 3,
+              "description": "Differential GPS fix"
+            },
+            "PPS": {
+              "value": 4,
+              "description": "PPP fix"
+            }
+          }
+        },
+        "SAT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Number of satellites used for fix",
+          "x-flatbuffer-type": "uint16"
+        },
+        "HDOP": {
+          "type": "number",
+          "description": "Horizontal dilution of precision",
+          "x-flatbuffer-type": "double"
+        },
+        "VDOP": {
+          "type": "number",
+          "description": "Vertical dilution of precision",
+          "x-flatbuffer-type": "double"
+        },
+        "PDOP": {
+          "type": "number",
+          "description": "Position dilution of precision",
+          "x-flatbuffer-type": "double"
+        },
+        "AGE_OF_DGPS_DATA": {
+          "type": "number",
+          "description": "Age of DGPS data in seconds",
+          "x-flatbuffer-type": "double"
+        },
+        "DGPS_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "DGPS station ID",
+          "x-flatbuffer-type": "uint16"
+        },
+        "SPEED": {
+          "type": "number",
+          "description": "Speed in meters per second",
+          "x-flatbuffer-type": "double"
+        },
+        "COURSE": {
+          "type": "number",
+          "description": "Course/heading in degrees true",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GPXTrackSegment": {
+      "type": "object",
+      "description": "Track segment (continuous span of track points)",
+      "properties": {
+        "POINTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GPXWaypoint"
+          },
+          "description": "Ordered track points in this segment",
+          "x-flatbuffer-type": "[GPXWaypoint]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GPXTrack": {
+      "type": "object",
+      "description": "Track (ordered list of track segments)",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Track name",
+          "x-flatbuffer-type": "string"
+        },
+        "COMMENT": {
+          "type": "string",
+          "description": "Comment",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Description",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE": {
+          "type": "string",
+          "description": "Source of data",
+          "x-flatbuffer-type": "string"
+        },
+        "LINKS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GPXLink"
+          },
+          "description": "Links to additional information",
+          "x-flatbuffer-type": "[GPXLink]"
+        },
+        "NUMBER": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Track number",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TYPE": {
+          "type": "string",
+          "description": "Type/category",
+          "x-flatbuffer-type": "string"
+        },
+        "SEGMENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GPXTrackSegment"
+          },
+          "description": "Track segments",
+          "x-flatbuffer-type": "[GPXTrackSegment]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GPXRoute": {
+      "type": "object",
+      "description": "Route (ordered list of waypoints for navigation)",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Route name",
+          "x-flatbuffer-type": "string"
+        },
+        "COMMENT": {
+          "type": "string",
+          "description": "Comment",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Description",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE": {
+          "type": "string",
+          "description": "Source of data",
+          "x-flatbuffer-type": "string"
+        },
+        "LINKS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GPXLink"
+          },
+          "description": "Links to additional information",
+          "x-flatbuffer-type": "[GPXLink]"
+        },
+        "NUMBER": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Route number",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TYPE": {
+          "type": "string",
+          "description": "Type/category",
+          "x-flatbuffer-type": "string"
+        },
+        "POINTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GPXWaypoint"
+          },
+          "description": "Route points (ordered waypoints)",
+          "x-flatbuffer-type": "[GPXWaypoint]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GPX": {
+      "type": "object",
+      "description": "GPX Document",
+      "properties": {
+        "VERSION": {
+          "type": "string",
+          "description": "GPX schema version",
+          "x-flatbuffer-type": "string"
+        },
+        "CREATOR": {
+          "type": "string",
+          "description": "Creator software/organization",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "File name",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "File description",
+          "x-flatbuffer-type": "string"
+        },
+        "AUTHOR_NAME": {
+          "type": "string",
+          "description": "Person or organization who created the file",
+          "x-flatbuffer-type": "string"
+        },
+        "AUTHOR_EMAIL": {
+          "type": "string",
+          "description": "Author email",
+          "x-flatbuffer-type": "string"
+        },
+        "AUTHOR_LINK": {
+          "$ref": "#/definitions/GPXLink",
+          "description": "Author link",
+          "x-flatbuffer-type": "GPXLink"
+        },
+        "COPYRIGHT_AUTHOR": {
+          "type": "string",
+          "description": "Copyright holder",
+          "x-flatbuffer-type": "string"
+        },
+        "COPYRIGHT_YEAR": {
+          "type": "string",
+          "description": "Copyright year",
+          "x-flatbuffer-type": "string"
+        },
+        "COPYRIGHT_LICENSE": {
+          "type": "string",
+          "description": "Copyright license URL",
+          "x-flatbuffer-type": "string"
+        },
+        "LINKS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GPXLink"
+          },
+          "description": "Links to additional information",
+          "x-flatbuffer-type": "[GPXLink]"
+        },
+        "TIME": {
+          "type": "string",
+          "description": "Creation timestamp (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "KEYWORDS": {
+          "type": "string",
+          "description": "Keywords",
+          "x-flatbuffer-type": "string"
+        },
+        "BOUNDS_MIN_LAT": {
+          "type": "number",
+          "description": "Minimum latitude of bounding box",
+          "x-flatbuffer-type": "double"
+        },
+        "BOUNDS_MIN_LON": {
+          "type": "number",
+          "description": "Minimum longitude of bounding box",
+          "x-flatbuffer-type": "double"
+        },
+        "BOUNDS_MAX_LAT": {
+          "type": "number",
+          "description": "Maximum latitude of bounding box",
+          "x-flatbuffer-type": "double"
+        },
+        "BOUNDS_MAX_LON": {
+          "type": "number",
+          "description": "Maximum longitude of bounding box",
+          "x-flatbuffer-type": "double"
+        },
+        "WAYPOINTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GPXWaypoint"
+          },
+          "description": "Waypoints",
+          "x-flatbuffer-type": "[GPXWaypoint]"
+        },
+        "ROUTES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GPXRoute"
+          },
+          "description": "Routes",
+          "x-flatbuffer-type": "[GPXRoute]"
+        },
+        "TRACKS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GPXTrack"
+          },
+          "description": "Tracks",
+          "x-flatbuffer-type": "[GPXTrack]"
         }
       },
       "additionalProperties": false
@@ -19346,6 +21435,1085 @@
           "type": "string",
           "description": "Additional notes",
           "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "KMLCoordinate": {
+      "type": "object",
+      "description": "KML coordinate (longitude, latitude, optional altitude)",
+      "properties": {
+        "LONGITUDE": {
+          "type": "number",
+          "description": "Longitude in decimal degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "LATITUDE": {
+          "type": "number",
+          "description": "Latitude in decimal degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "ALTITUDE": {
+          "type": "number",
+          "description": "Altitude in meters",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "KMLLookAt": {
+      "type": "object",
+      "description": "LookAt viewpoint",
+      "properties": {
+        "LONGITUDE": {
+          "type": "number",
+          "description": "Longitude of the point being looked at",
+          "x-flatbuffer-type": "double"
+        },
+        "LATITUDE": {
+          "type": "number",
+          "description": "Latitude of the point being looked at",
+          "x-flatbuffer-type": "double"
+        },
+        "ALTITUDE": {
+          "type": "number",
+          "description": "Altitude of the point being looked at",
+          "x-flatbuffer-type": "double"
+        },
+        "HEADING": {
+          "type": "number",
+          "description": "Heading in degrees (0=North)",
+          "x-flatbuffer-type": "double"
+        },
+        "TILT": {
+          "type": "number",
+          "description": "Tilt in degrees from vertical (0=straight down)",
+          "x-flatbuffer-type": "double"
+        },
+        "RANGE": {
+          "type": "number",
+          "description": "Range in meters from the point",
+          "x-flatbuffer-type": "double"
+        },
+        "ALTITUDE_MODE": {
+          "$ref": "#/definitions/KMLAltitudeMode",
+          "description": "Altitude mode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "CLAMP_TO_GROUND": {
+              "value": 0,
+              "description": "Altitude relative to ground surface"
+            },
+            "RELATIVE_TO_GROUND": {
+              "value": 1,
+              "description": "Altitude relative to ground elevation"
+            },
+            "ABSOLUTE": {
+              "value": 2,
+              "description": "Altitude as absolute meters above WGS84 ellipsoid"
+            },
+            "CLAMP_TO_SEA_FLOOR": {
+              "value": 3,
+              "description": "Clamp to sea floor"
+            },
+            "RELATIVE_TO_SEA_FLOOR": {
+              "value": 4,
+              "description": "Relative to sea floor"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "KMLCamera": {
+      "type": "object",
+      "description": "Camera viewpoint",
+      "properties": {
+        "LONGITUDE": {
+          "type": "number",
+          "description": "Camera longitude",
+          "x-flatbuffer-type": "double"
+        },
+        "LATITUDE": {
+          "type": "number",
+          "description": "Camera latitude",
+          "x-flatbuffer-type": "double"
+        },
+        "ALTITUDE": {
+          "type": "number",
+          "description": "Camera altitude",
+          "x-flatbuffer-type": "double"
+        },
+        "HEADING": {
+          "type": "number",
+          "description": "Heading in degrees (0=North)",
+          "x-flatbuffer-type": "double"
+        },
+        "TILT": {
+          "type": "number",
+          "description": "Tilt in degrees from vertical",
+          "x-flatbuffer-type": "double"
+        },
+        "ROLL": {
+          "type": "number",
+          "description": "Roll in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "ALTITUDE_MODE": {
+          "$ref": "#/definitions/KMLAltitudeMode",
+          "description": "Altitude mode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "CLAMP_TO_GROUND": {
+              "value": 0,
+              "description": "Altitude relative to ground surface"
+            },
+            "RELATIVE_TO_GROUND": {
+              "value": 1,
+              "description": "Altitude relative to ground elevation"
+            },
+            "ABSOLUTE": {
+              "value": 2,
+              "description": "Altitude as absolute meters above WGS84 ellipsoid"
+            },
+            "CLAMP_TO_SEA_FLOOR": {
+              "value": 3,
+              "description": "Clamp to sea floor"
+            },
+            "RELATIVE_TO_SEA_FLOOR": {
+              "value": 4,
+              "description": "Relative to sea floor"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "KMLIconStyle": {
+      "type": "object",
+      "description": "Icon style",
+      "properties": {
+        "COLOR": {
+          "type": "string",
+          "description": "KML color in aabbggrr hex format",
+          "x-flatbuffer-type": "string"
+        },
+        "COLOR_MODE": {
+          "$ref": "#/definitions/KMLColorMode",
+          "description": "Color mode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NORMAL": {
+              "value": 0
+            },
+            "RANDOM": {
+              "value": 1
+            }
+          }
+        },
+        "SCALE": {
+          "type": "number",
+          "description": "Scale factor",
+          "x-flatbuffer-type": "double"
+        },
+        "HEADING": {
+          "type": "number",
+          "description": "Heading in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "ICON_HREF": {
+          "type": "string",
+          "description": "Icon href (URL)",
+          "x-flatbuffer-type": "string"
+        },
+        "HOTSPOT_X": {
+          "type": "number",
+          "description": "Hot spot X value",
+          "x-flatbuffer-type": "double"
+        },
+        "HOTSPOT_Y": {
+          "type": "number",
+          "description": "Hot spot Y value",
+          "x-flatbuffer-type": "double"
+        },
+        "HOTSPOT_X_UNITS": {
+          "$ref": "#/definitions/KMLUnits",
+          "description": "Hot spot X units",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "PIXELS": {
+              "value": 0
+            },
+            "FRACTION": {
+              "value": 1
+            },
+            "INSET_PIXELS": {
+              "value": 2
+            }
+          }
+        },
+        "HOTSPOT_Y_UNITS": {
+          "$ref": "#/definitions/KMLUnits",
+          "description": "Hot spot Y units",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "PIXELS": {
+              "value": 0
+            },
+            "FRACTION": {
+              "value": 1
+            },
+            "INSET_PIXELS": {
+              "value": 2
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "KMLLineStyle": {
+      "type": "object",
+      "description": "Line style",
+      "properties": {
+        "COLOR": {
+          "type": "string",
+          "description": "KML color in aabbggrr hex format",
+          "x-flatbuffer-type": "string"
+        },
+        "COLOR_MODE": {
+          "$ref": "#/definitions/KMLColorMode",
+          "description": "Color mode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NORMAL": {
+              "value": 0
+            },
+            "RANDOM": {
+              "value": 1
+            }
+          }
+        },
+        "WIDTH": {
+          "type": "number",
+          "description": "Width in pixels",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "KMLPolyStyle": {
+      "type": "object",
+      "description": "Polygon style",
+      "properties": {
+        "COLOR": {
+          "type": "string",
+          "description": "KML color in aabbggrr hex format",
+          "x-flatbuffer-type": "string"
+        },
+        "COLOR_MODE": {
+          "$ref": "#/definitions/KMLColorMode",
+          "description": "Color mode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NORMAL": {
+              "value": 0
+            },
+            "RANDOM": {
+              "value": 1
+            }
+          }
+        },
+        "FILL": {
+          "type": "boolean",
+          "description": "Whether to fill",
+          "x-flatbuffer-type": "bool"
+        },
+        "OUTLINE": {
+          "type": "boolean",
+          "description": "Whether to outline",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    },
+    "KMLLabelStyle": {
+      "type": "object",
+      "description": "Label style",
+      "properties": {
+        "COLOR": {
+          "type": "string",
+          "description": "KML color in aabbggrr hex format",
+          "x-flatbuffer-type": "string"
+        },
+        "COLOR_MODE": {
+          "$ref": "#/definitions/KMLColorMode",
+          "description": "Color mode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NORMAL": {
+              "value": 0
+            },
+            "RANDOM": {
+              "value": 1
+            }
+          }
+        },
+        "SCALE": {
+          "type": "number",
+          "description": "Scale factor",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "KMLBalloonStyle": {
+      "type": "object",
+      "description": "Balloon style",
+      "properties": {
+        "BG_COLOR": {
+          "type": "string",
+          "description": "Background color in aabbggrr hex format",
+          "x-flatbuffer-type": "string"
+        },
+        "TEXT_COLOR": {
+          "type": "string",
+          "description": "Text color in aabbggrr hex format",
+          "x-flatbuffer-type": "string"
+        },
+        "TEXT": {
+          "type": "string",
+          "description": "Balloon text template (supports $[name], $[description])",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "KMLStyle": {
+      "type": "object",
+      "description": "Style definition",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Style identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "ICON_STYLE": {
+          "$ref": "#/definitions/KMLIconStyle",
+          "description": "Icon style",
+          "x-flatbuffer-type": "KMLIconStyle"
+        },
+        "LABEL_STYLE": {
+          "$ref": "#/definitions/KMLLabelStyle",
+          "description": "Label style",
+          "x-flatbuffer-type": "KMLLabelStyle"
+        },
+        "LINE_STYLE": {
+          "$ref": "#/definitions/KMLLineStyle",
+          "description": "Line style",
+          "x-flatbuffer-type": "KMLLineStyle"
+        },
+        "POLY_STYLE": {
+          "$ref": "#/definitions/KMLPolyStyle",
+          "description": "Polygon style",
+          "x-flatbuffer-type": "KMLPolyStyle"
+        },
+        "BALLOON_STYLE": {
+          "$ref": "#/definitions/KMLBalloonStyle",
+          "description": "Balloon style",
+          "x-flatbuffer-type": "KMLBalloonStyle"
+        }
+      },
+      "additionalProperties": false
+    },
+    "KMLStyleMapPair": {
+      "type": "object",
+      "description": "Style map pair",
+      "properties": {
+        "STATE": {
+          "$ref": "#/definitions/KMLStyleState",
+          "description": "State (normal or highlight)",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NORMAL": {
+              "value": 0
+            },
+            "HIGHLIGHT": {
+              "value": 1
+            }
+          }
+        },
+        "STYLE_URL": {
+          "type": "string",
+          "description": "Style URL or inline style ID",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "KMLStyleMap": {
+      "type": "object",
+      "description": "Style map (normal/highlight pair)",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Style map identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "PAIRS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/KMLStyleMapPair"
+          },
+          "description": "Pairs",
+          "x-flatbuffer-type": "[KMLStyleMapPair]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "KMLPoint": {
+      "type": "object",
+      "description": "Point geometry",
+      "properties": {
+        "COORDINATES": {
+          "$ref": "#/definitions/KMLCoordinate",
+          "description": "Coordinate",
+          "x-flatbuffer-type": "KMLCoordinate"
+        },
+        "ALTITUDE_MODE": {
+          "$ref": "#/definitions/KMLAltitudeMode",
+          "description": "Altitude mode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "CLAMP_TO_GROUND": {
+              "value": 0,
+              "description": "Altitude relative to ground surface"
+            },
+            "RELATIVE_TO_GROUND": {
+              "value": 1,
+              "description": "Altitude relative to ground elevation"
+            },
+            "ABSOLUTE": {
+              "value": 2,
+              "description": "Altitude as absolute meters above WGS84 ellipsoid"
+            },
+            "CLAMP_TO_SEA_FLOOR": {
+              "value": 3,
+              "description": "Clamp to sea floor"
+            },
+            "RELATIVE_TO_SEA_FLOOR": {
+              "value": 4,
+              "description": "Relative to sea floor"
+            }
+          }
+        },
+        "EXTRUDE": {
+          "type": "boolean",
+          "description": "Whether to extrude to ground",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    },
+    "KMLLineString": {
+      "type": "object",
+      "description": "LineString geometry",
+      "properties": {
+        "COORDINATES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/KMLCoordinate"
+          },
+          "description": "Coordinates",
+          "x-flatbuffer-type": "[KMLCoordinate]"
+        },
+        "ALTITUDE_MODE": {
+          "$ref": "#/definitions/KMLAltitudeMode",
+          "description": "Altitude mode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "CLAMP_TO_GROUND": {
+              "value": 0,
+              "description": "Altitude relative to ground surface"
+            },
+            "RELATIVE_TO_GROUND": {
+              "value": 1,
+              "description": "Altitude relative to ground elevation"
+            },
+            "ABSOLUTE": {
+              "value": 2,
+              "description": "Altitude as absolute meters above WGS84 ellipsoid"
+            },
+            "CLAMP_TO_SEA_FLOOR": {
+              "value": 3,
+              "description": "Clamp to sea floor"
+            },
+            "RELATIVE_TO_SEA_FLOOR": {
+              "value": 4,
+              "description": "Relative to sea floor"
+            }
+          }
+        },
+        "EXTRUDE": {
+          "type": "boolean",
+          "description": "Whether to extrude to ground",
+          "x-flatbuffer-type": "bool"
+        },
+        "TESSELLATE": {
+          "type": "boolean",
+          "description": "Whether to tessellate (follow terrain)",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    },
+    "KMLLinearRing": {
+      "type": "object",
+      "description": "LinearRing geometry",
+      "properties": {
+        "COORDINATES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/KMLCoordinate"
+          },
+          "description": "Coordinates (first = last to close the ring)",
+          "x-flatbuffer-type": "[KMLCoordinate]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "KMLPolygon": {
+      "type": "object",
+      "description": "Polygon geometry",
+      "properties": {
+        "OUTER_BOUNDARY": {
+          "$ref": "#/definitions/KMLLinearRing",
+          "description": "Outer boundary",
+          "x-flatbuffer-type": "KMLLinearRing"
+        },
+        "INNER_BOUNDARIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/KMLLinearRing"
+          },
+          "description": "Inner boundaries (holes)",
+          "x-flatbuffer-type": "[KMLLinearRing]"
+        },
+        "ALTITUDE_MODE": {
+          "$ref": "#/definitions/KMLAltitudeMode",
+          "description": "Altitude mode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "CLAMP_TO_GROUND": {
+              "value": 0,
+              "description": "Altitude relative to ground surface"
+            },
+            "RELATIVE_TO_GROUND": {
+              "value": 1,
+              "description": "Altitude relative to ground elevation"
+            },
+            "ABSOLUTE": {
+              "value": 2,
+              "description": "Altitude as absolute meters above WGS84 ellipsoid"
+            },
+            "CLAMP_TO_SEA_FLOOR": {
+              "value": 3,
+              "description": "Clamp to sea floor"
+            },
+            "RELATIVE_TO_SEA_FLOOR": {
+              "value": 4,
+              "description": "Relative to sea floor"
+            }
+          }
+        },
+        "EXTRUDE": {
+          "type": "boolean",
+          "description": "Whether to extrude to ground",
+          "x-flatbuffer-type": "bool"
+        },
+        "TESSELLATE": {
+          "type": "boolean",
+          "description": "Whether to tessellate",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    },
+    "KMLMultiGeometry": {
+      "type": "object",
+      "description": "MultiGeometry",
+      "properties": {
+        "POINTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/KMLPoint"
+          },
+          "description": "Child points",
+          "x-flatbuffer-type": "[KMLPoint]"
+        },
+        "LINE_STRINGS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/KMLLineString"
+          },
+          "description": "Child line strings",
+          "x-flatbuffer-type": "[KMLLineString]"
+        },
+        "POLYGONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/KMLPolygon"
+          },
+          "description": "Child polygons",
+          "x-flatbuffer-type": "[KMLPolygon]"
+        },
+        "MULTI_GEOMETRIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/KMLMultiGeometry"
+          },
+          "description": "Nested multi-geometries",
+          "x-flatbuffer-type": "[KMLMultiGeometry]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "KMLTimeSpan": {
+      "type": "object",
+      "description": "TimeSpan",
+      "properties": {
+        "BEGIN": {
+          "type": "string",
+          "description": "Begin time (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "END": {
+          "type": "string",
+          "description": "End time (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "KMLTimeStamp": {
+      "type": "object",
+      "description": "TimeStamp",
+      "properties": {
+        "WHEN": {
+          "type": "string",
+          "description": "Time (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "KMLData": {
+      "type": "object",
+      "description": "Extended data key-value pair",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Data name",
+          "x-flatbuffer-type": "string"
+        },
+        "DISPLAY_NAME": {
+          "type": "string",
+          "description": "Display name",
+          "x-flatbuffer-type": "string"
+        },
+        "VALUE": {
+          "type": "string",
+          "description": "Data value",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "KMLNetworkLink": {
+      "type": "object",
+      "description": "Network link",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Name of the network link",
+          "x-flatbuffer-type": "string"
+        },
+        "VISIBILITY": {
+          "type": "boolean",
+          "description": "Whether the link is visible",
+          "x-flatbuffer-type": "bool"
+        },
+        "HREF": {
+          "type": "string",
+          "description": "Link URL",
+          "x-flatbuffer-type": "string"
+        },
+        "REFRESH_MODE": {
+          "$ref": "#/definitions/KMLRefreshMode",
+          "description": "Refresh mode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ON_CHANGE": {
+              "value": 0
+            },
+            "ON_INTERVAL": {
+              "value": 1
+            },
+            "ON_EXPIRE": {
+              "value": 2
+            }
+          }
+        },
+        "REFRESH_INTERVAL": {
+          "type": "number",
+          "description": "Refresh interval in seconds",
+          "x-flatbuffer-type": "double"
+        },
+        "VIEW_REFRESH_MODE": {
+          "$ref": "#/definitions/KMLViewRefreshMode",
+          "description": "View refresh mode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NEVER": {
+              "value": 0
+            },
+            "ON_STOP": {
+              "value": 1
+            },
+            "ON_REQUEST": {
+              "value": 2
+            },
+            "ON_REGION": {
+              "value": 3
+            }
+          }
+        },
+        "VIEW_REFRESH_TIME": {
+          "type": "number",
+          "description": "View refresh time in seconds",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "KMLGroundOverlay": {
+      "type": "object",
+      "description": "Ground overlay",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Name",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Description",
+          "x-flatbuffer-type": "string"
+        },
+        "VISIBILITY": {
+          "type": "boolean",
+          "description": "Visibility",
+          "x-flatbuffer-type": "bool"
+        },
+        "ICON_HREF": {
+          "type": "string",
+          "description": "Icon/image URL",
+          "x-flatbuffer-type": "string"
+        },
+        "COLOR": {
+          "type": "string",
+          "description": "Color in aabbggrr hex format",
+          "x-flatbuffer-type": "string"
+        },
+        "NORTH": {
+          "type": "number",
+          "description": "North latitude of bounding box",
+          "x-flatbuffer-type": "double"
+        },
+        "SOUTH": {
+          "type": "number",
+          "description": "South latitude of bounding box",
+          "x-flatbuffer-type": "double"
+        },
+        "EAST": {
+          "type": "number",
+          "description": "East longitude of bounding box",
+          "x-flatbuffer-type": "double"
+        },
+        "WEST": {
+          "type": "number",
+          "description": "West longitude of bounding box",
+          "x-flatbuffer-type": "double"
+        },
+        "ROTATION": {
+          "type": "number",
+          "description": "Rotation in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "ALTITUDE": {
+          "type": "number",
+          "description": "Altitude in meters",
+          "x-flatbuffer-type": "double"
+        },
+        "ALTITUDE_MODE": {
+          "$ref": "#/definitions/KMLAltitudeMode",
+          "description": "Altitude mode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "CLAMP_TO_GROUND": {
+              "value": 0,
+              "description": "Altitude relative to ground surface"
+            },
+            "RELATIVE_TO_GROUND": {
+              "value": 1,
+              "description": "Altitude relative to ground elevation"
+            },
+            "ABSOLUTE": {
+              "value": 2,
+              "description": "Altitude as absolute meters above WGS84 ellipsoid"
+            },
+            "CLAMP_TO_SEA_FLOOR": {
+              "value": 3,
+              "description": "Clamp to sea floor"
+            },
+            "RELATIVE_TO_SEA_FLOOR": {
+              "value": 4,
+              "description": "Relative to sea floor"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "KMLPlacemark": {
+      "type": "object",
+      "description": "Placemark feature",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Placemark name",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Description (may contain HTML)",
+          "x-flatbuffer-type": "string"
+        },
+        "VISIBILITY": {
+          "type": "boolean",
+          "description": "Visibility flag",
+          "x-flatbuffer-type": "bool"
+        },
+        "STYLE_URL": {
+          "type": "string",
+          "description": "Style URL reference",
+          "x-flatbuffer-type": "string"
+        },
+        "STYLE": {
+          "$ref": "#/definitions/KMLStyle",
+          "description": "Inline style",
+          "x-flatbuffer-type": "KMLStyle"
+        },
+        "SNIPPET": {
+          "type": "string",
+          "description": "Snippet (short description)",
+          "x-flatbuffer-type": "string"
+        },
+        "POINT": {
+          "$ref": "#/definitions/KMLPoint",
+          "description": "Point geometry",
+          "x-flatbuffer-type": "KMLPoint"
+        },
+        "LINE_STRING": {
+          "$ref": "#/definitions/KMLLineString",
+          "description": "LineString geometry",
+          "x-flatbuffer-type": "KMLLineString"
+        },
+        "POLYGON": {
+          "$ref": "#/definitions/KMLPolygon",
+          "description": "Polygon geometry",
+          "x-flatbuffer-type": "KMLPolygon"
+        },
+        "MULTI_GEOMETRY": {
+          "$ref": "#/definitions/KMLMultiGeometry",
+          "description": "MultiGeometry",
+          "x-flatbuffer-type": "KMLMultiGeometry"
+        },
+        "LOOK_AT": {
+          "$ref": "#/definitions/KMLLookAt",
+          "description": "LookAt viewpoint",
+          "x-flatbuffer-type": "KMLLookAt"
+        },
+        "CAMERA": {
+          "$ref": "#/definitions/KMLCamera",
+          "description": "Camera viewpoint",
+          "x-flatbuffer-type": "KMLCamera"
+        },
+        "TIME_SPAN": {
+          "$ref": "#/definitions/KMLTimeSpan",
+          "description": "TimeSpan",
+          "x-flatbuffer-type": "KMLTimeSpan"
+        },
+        "TIME_STAMP": {
+          "$ref": "#/definitions/KMLTimeStamp",
+          "description": "TimeStamp",
+          "x-flatbuffer-type": "KMLTimeStamp"
+        },
+        "EXTENDED_DATA": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/KMLData"
+          },
+          "description": "Extended data",
+          "x-flatbuffer-type": "[KMLData]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "KMLFolder": {
+      "type": "object",
+      "description": "Folder container",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Folder name",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Description",
+          "x-flatbuffer-type": "string"
+        },
+        "VISIBILITY": {
+          "type": "boolean",
+          "description": "Visibility flag",
+          "x-flatbuffer-type": "bool"
+        },
+        "OPEN": {
+          "type": "boolean",
+          "description": "Whether folder is open in tree view",
+          "x-flatbuffer-type": "bool"
+        },
+        "PLACEMARKS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/KMLPlacemark"
+          },
+          "description": "Placemarks in this folder",
+          "x-flatbuffer-type": "[KMLPlacemark]"
+        },
+        "FOLDERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/KMLFolder"
+          },
+          "description": "Sub-folders",
+          "x-flatbuffer-type": "[KMLFolder]"
+        },
+        "NETWORK_LINKS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/KMLNetworkLink"
+          },
+          "description": "Network links",
+          "x-flatbuffer-type": "[KMLNetworkLink]"
+        },
+        "GROUND_OVERLAYS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/KMLGroundOverlay"
+          },
+          "description": "Ground overlays",
+          "x-flatbuffer-type": "[KMLGroundOverlay]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "KML": {
+      "type": "object",
+      "description": "KML Document",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Document name",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Document description",
+          "x-flatbuffer-type": "string"
+        },
+        "VISIBILITY": {
+          "type": "boolean",
+          "description": "Whether document is visible",
+          "x-flatbuffer-type": "bool"
+        },
+        "OPEN": {
+          "type": "boolean",
+          "description": "Whether document is open in tree view",
+          "x-flatbuffer-type": "bool"
+        },
+        "STYLES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/KMLStyle"
+          },
+          "description": "Shared styles",
+          "x-flatbuffer-type": "[KMLStyle]"
+        },
+        "STYLE_MAPS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/KMLStyleMap"
+          },
+          "description": "Style maps",
+          "x-flatbuffer-type": "[KMLStyleMap]"
+        },
+        "PLACEMARKS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/KMLPlacemark"
+          },
+          "description": "Top-level placemarks",
+          "x-flatbuffer-type": "[KMLPlacemark]"
+        },
+        "FOLDERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/KMLFolder"
+          },
+          "description": "Top-level folders",
+          "x-flatbuffer-type": "[KMLFolder]"
+        },
+        "NETWORK_LINKS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/KMLNetworkLink"
+          },
+          "description": "Network links",
+          "x-flatbuffer-type": "[KMLNetworkLink]"
+        },
+        "GROUND_OVERLAYS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/KMLGroundOverlay"
+          },
+          "description": "Ground overlays",
+          "x-flatbuffer-type": "[KMLGroundOverlay]"
         }
       },
       "additionalProperties": false
@@ -35779,6 +38947,9 @@
               "$ref": "#/definitions/COM"
             },
             {
+              "$ref": "#/definitions/COT"
+            },
+            {
               "$ref": "#/definitions/CRD"
             },
             {
@@ -35789,6 +38960,9 @@
             },
             {
               "$ref": "#/definitions/CTR"
+            },
+            {
+              "$ref": "#/definitions/CZM"
             },
             {
               "$ref": "#/definitions/DFH"
@@ -35830,7 +39004,13 @@
               "$ref": "#/definitions/GEO"
             },
             {
+              "$ref": "#/definitions/GJN"
+            },
+            {
               "$ref": "#/definitions/GNO"
+            },
+            {
+              "$ref": "#/definitions/GPX"
             },
             {
               "$ref": "#/definitions/GRV"
@@ -35852,6 +39032,9 @@
             },
             {
               "$ref": "#/definitions/IRO"
+            },
+            {
+              "$ref": "#/definitions/KML"
             },
             {
               "$ref": "#/definitions/LCC"

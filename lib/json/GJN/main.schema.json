@@ -1,0 +1,170 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "GJNGeometryType" : {
+      "type" : "string",
+      "enum": ["POINT", "MULTI_POINT", "LINE_STRING", "MULTI_LINE_STRING", "POLYGON", "MULTI_POLYGON", "GEOMETRY_COLLECTION"]
+    },
+    "GJNPosition" : {
+      "type" : "object",
+      "description" : "A single position (longitude, latitude, optional altitude)",
+      "properties" : {
+        "LONGITUDE" : {
+                "type" : "number",
+                "description" : "Longitude in decimal degrees (WGS84)"
+              },
+        "LATITUDE" : {
+                "type" : "number",
+                "description" : "Latitude in decimal degrees (WGS84)"
+              },
+        "ALTITUDE" : {
+                "type" : "number",
+                "description" : "Altitude in meters above WGS84 ellipsoid (optional)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GJNLinearRing" : {
+      "type" : "object",
+      "description" : "A linear ring is a closed LineString with 4+ positions (first = last)",
+      "properties" : {
+        "POSITIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GJNPosition"},
+                "description" : "Ordered positions forming the ring"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GJNPolygonRings" : {
+      "type" : "object",
+      "description" : "A polygon represented as an array of rings (outer boundary + holes)",
+      "properties" : {
+        "RINGS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GJNLinearRing"},
+                "description" : "Rings: first is outer boundary, rest are holes"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GJNGeometry" : {
+      "type" : "object",
+      "description" : "GeoJSON Geometry object",
+      "properties" : {
+        "TYPE" : {
+                "$ref" : "#/definitions/GJNGeometryType",
+                "description" : "Geometry type"
+              },
+        "POINT" : {
+                "$ref" : "#/definitions/GJNPosition",
+                "description" : "Single position (for Point)"
+              },
+        "POSITIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GJNPosition"},
+                "description" : "Array of positions (for MultiPoint, LineString)"
+              },
+        "RINGS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GJNLinearRing"},
+                "description" : "Array of position arrays (for MultiLineString, Polygon rings)"
+              },
+        "POLYGON_RINGS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GJNPolygonRings"},
+                "description" : "Array of polygons each as array of rings (for MultiPolygon)"
+              },
+        "GEOMETRIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GJNGeometry"},
+                "description" : "Child geometries (for GeometryCollection)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GJNProperty" : {
+      "type" : "object",
+      "description" : "A key-value property entry for Feature properties",
+      "properties" : {
+        "KEY" : {
+                "type" : "string",
+                "description" : "Property key"
+              },
+        "VALUE" : {
+                "type" : "string",
+                "description" : "Property value as string"
+              },
+        "NUM_VALUE" : {
+                "type" : "number",
+                "description" : "Property value as number (use if numeric)"
+              },
+        "IS_NUMERIC" : {
+                "type" : "boolean",
+                "description" : "True if NUM_VALUE should be used instead of VALUE"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GJNFeature" : {
+      "type" : "object",
+      "description" : "GeoJSON Feature object",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Feature identifier (optional)"
+              },
+        "GEOMETRY" : {
+                "$ref" : "#/definitions/GJNGeometry",
+                "description" : "Geometry of the feature"
+              },
+        "PROPERTIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GJNProperty"},
+                "description" : "Properties as key-value pairs"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GJNBoundingBox" : {
+      "type" : "object",
+      "description" : "GeoJSON Bounding Box [west, south, east, north] or [west, south, min-alt, east, north, max-alt]",
+      "properties" : {
+        "WEST" : {
+                "type" : "number",
+                "description" : "Western longitude"
+              },
+        "SOUTH" : {
+                "type" : "number",
+                "description" : "Southern latitude"
+              },
+        "EAST" : {
+                "type" : "number",
+                "description" : "Eastern longitude"
+              },
+        "NORTH" : {
+                "type" : "number",
+                "description" : "Northern latitude"
+              },
+        "MIN_ALTITUDE" : {
+                "type" : "number",
+                "description" : "Minimum altitude (optional)"
+              },
+        "MAX_ALTITUDE" : {
+                "type" : "number",
+                "description" : "Maximum altitude (optional)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GJN" : {
+      "type" : "object",
+      "description" : "GeoJSON FeatureCollection",
+      "properties" : {
+        "FEATURES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GJNFeature"},
+                "description" : "Features in the collection"
+              },
+        "BBOX" : {
+                "$ref" : "#/definitions/GJNBoundingBox",
+                "description" : "Bounding box (optional)"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/GJN"
+}

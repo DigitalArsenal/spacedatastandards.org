@@ -1,0 +1,453 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "GPXFixType": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "FIX_2D",
+        "FIX_3D",
+        "DGPS",
+        "PPS"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0
+        },
+        "FIX_2D": {
+          "value": 1,
+          "description": "2D fix"
+        },
+        "FIX_3D": {
+          "value": 2,
+          "description": "3D fix"
+        },
+        "DGPS": {
+          "value": 3,
+          "description": "Differential GPS fix"
+        },
+        "PPS": {
+          "value": 4,
+          "description": "PPP fix"
+        }
+      }
+    },
+    "GPXLink": {
+      "type": "object",
+      "description": "GPX link to an external resource",
+      "properties": {
+        "HREF": {
+          "type": "string",
+          "description": "URL",
+          "x-flatbuffer-type": "string"
+        },
+        "TEXT": {
+          "type": "string",
+          "description": "Link text",
+          "x-flatbuffer-type": "string"
+        },
+        "TYPE": {
+          "type": "string",
+          "description": "MIME type",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GPXWaypoint": {
+      "type": "object",
+      "description": "A waypoint, point of interest, or named feature",
+      "properties": {
+        "LATITUDE": {
+          "type": "number",
+          "description": "Latitude in decimal degrees (WGS84)",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE": {
+          "type": "number",
+          "description": "Longitude in decimal degrees (WGS84)",
+          "x-flatbuffer-type": "double"
+        },
+        "ELEVATION": {
+          "type": "number",
+          "description": "Elevation in meters above WGS84 ellipsoid",
+          "x-flatbuffer-type": "double"
+        },
+        "TIME": {
+          "type": "string",
+          "description": "UTC timestamp (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "MAGVAR": {
+          "type": "number",
+          "description": "Magnetic variation in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "GEOID_HEIGHT": {
+          "type": "number",
+          "description": "Height of geoid above WGS84 ellipsoid in meters",
+          "x-flatbuffer-type": "double"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Waypoint name",
+          "x-flatbuffer-type": "string"
+        },
+        "COMMENT": {
+          "type": "string",
+          "description": "Comment",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Description",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE": {
+          "type": "string",
+          "description": "Source of data",
+          "x-flatbuffer-type": "string"
+        },
+        "LINKS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GPXLink"
+          },
+          "description": "Links to additional information",
+          "x-flatbuffer-type": "[GPXLink]"
+        },
+        "SYMBOL": {
+          "type": "string",
+          "description": "Symbol name",
+          "x-flatbuffer-type": "string"
+        },
+        "TYPE": {
+          "type": "string",
+          "description": "Type/category",
+          "x-flatbuffer-type": "string"
+        },
+        "FIX": {
+          "$ref": "#/definitions/GPXFixType",
+          "description": "Type of GPS fix",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            },
+            "FIX_2D": {
+              "value": 1,
+              "description": "2D fix"
+            },
+            "FIX_3D": {
+              "value": 2,
+              "description": "3D fix"
+            },
+            "DGPS": {
+              "value": 3,
+              "description": "Differential GPS fix"
+            },
+            "PPS": {
+              "value": 4,
+              "description": "PPP fix"
+            }
+          }
+        },
+        "SAT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Number of satellites used for fix",
+          "x-flatbuffer-type": "uint16"
+        },
+        "HDOP": {
+          "type": "number",
+          "description": "Horizontal dilution of precision",
+          "x-flatbuffer-type": "double"
+        },
+        "VDOP": {
+          "type": "number",
+          "description": "Vertical dilution of precision",
+          "x-flatbuffer-type": "double"
+        },
+        "PDOP": {
+          "type": "number",
+          "description": "Position dilution of precision",
+          "x-flatbuffer-type": "double"
+        },
+        "AGE_OF_DGPS_DATA": {
+          "type": "number",
+          "description": "Age of DGPS data in seconds",
+          "x-flatbuffer-type": "double"
+        },
+        "DGPS_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "DGPS station ID",
+          "x-flatbuffer-type": "uint16"
+        },
+        "SPEED": {
+          "type": "number",
+          "description": "Speed in meters per second",
+          "x-flatbuffer-type": "double"
+        },
+        "COURSE": {
+          "type": "number",
+          "description": "Course/heading in degrees true",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GPXTrackSegment": {
+      "type": "object",
+      "description": "Track segment (continuous span of track points)",
+      "properties": {
+        "POINTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GPXWaypoint"
+          },
+          "description": "Ordered track points in this segment",
+          "x-flatbuffer-type": "[GPXWaypoint]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GPXTrack": {
+      "type": "object",
+      "description": "Track (ordered list of track segments)",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Track name",
+          "x-flatbuffer-type": "string"
+        },
+        "COMMENT": {
+          "type": "string",
+          "description": "Comment",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Description",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE": {
+          "type": "string",
+          "description": "Source of data",
+          "x-flatbuffer-type": "string"
+        },
+        "LINKS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GPXLink"
+          },
+          "description": "Links to additional information",
+          "x-flatbuffer-type": "[GPXLink]"
+        },
+        "NUMBER": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Track number",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TYPE": {
+          "type": "string",
+          "description": "Type/category",
+          "x-flatbuffer-type": "string"
+        },
+        "SEGMENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GPXTrackSegment"
+          },
+          "description": "Track segments",
+          "x-flatbuffer-type": "[GPXTrackSegment]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GPXRoute": {
+      "type": "object",
+      "description": "Route (ordered list of waypoints for navigation)",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Route name",
+          "x-flatbuffer-type": "string"
+        },
+        "COMMENT": {
+          "type": "string",
+          "description": "Comment",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Description",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE": {
+          "type": "string",
+          "description": "Source of data",
+          "x-flatbuffer-type": "string"
+        },
+        "LINKS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GPXLink"
+          },
+          "description": "Links to additional information",
+          "x-flatbuffer-type": "[GPXLink]"
+        },
+        "NUMBER": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Route number",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TYPE": {
+          "type": "string",
+          "description": "Type/category",
+          "x-flatbuffer-type": "string"
+        },
+        "POINTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GPXWaypoint"
+          },
+          "description": "Route points (ordered waypoints)",
+          "x-flatbuffer-type": "[GPXWaypoint]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GPX": {
+      "type": "object",
+      "description": "GPX Document",
+      "properties": {
+        "VERSION": {
+          "type": "string",
+          "description": "GPX schema version",
+          "x-flatbuffer-type": "string"
+        },
+        "CREATOR": {
+          "type": "string",
+          "description": "Creator software/organization",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "File name",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "File description",
+          "x-flatbuffer-type": "string"
+        },
+        "AUTHOR_NAME": {
+          "type": "string",
+          "description": "Person or organization who created the file",
+          "x-flatbuffer-type": "string"
+        },
+        "AUTHOR_EMAIL": {
+          "type": "string",
+          "description": "Author email",
+          "x-flatbuffer-type": "string"
+        },
+        "AUTHOR_LINK": {
+          "$ref": "#/definitions/GPXLink",
+          "description": "Author link",
+          "x-flatbuffer-type": "GPXLink"
+        },
+        "COPYRIGHT_AUTHOR": {
+          "type": "string",
+          "description": "Copyright holder",
+          "x-flatbuffer-type": "string"
+        },
+        "COPYRIGHT_YEAR": {
+          "type": "string",
+          "description": "Copyright year",
+          "x-flatbuffer-type": "string"
+        },
+        "COPYRIGHT_LICENSE": {
+          "type": "string",
+          "description": "Copyright license URL",
+          "x-flatbuffer-type": "string"
+        },
+        "LINKS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GPXLink"
+          },
+          "description": "Links to additional information",
+          "x-flatbuffer-type": "[GPXLink]"
+        },
+        "TIME": {
+          "type": "string",
+          "description": "Creation timestamp (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "KEYWORDS": {
+          "type": "string",
+          "description": "Keywords",
+          "x-flatbuffer-type": "string"
+        },
+        "BOUNDS_MIN_LAT": {
+          "type": "number",
+          "description": "Minimum latitude of bounding box",
+          "x-flatbuffer-type": "double"
+        },
+        "BOUNDS_MIN_LON": {
+          "type": "number",
+          "description": "Minimum longitude of bounding box",
+          "x-flatbuffer-type": "double"
+        },
+        "BOUNDS_MAX_LAT": {
+          "type": "number",
+          "description": "Maximum latitude of bounding box",
+          "x-flatbuffer-type": "double"
+        },
+        "BOUNDS_MAX_LON": {
+          "type": "number",
+          "description": "Maximum longitude of bounding box",
+          "x-flatbuffer-type": "double"
+        },
+        "WAYPOINTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GPXWaypoint"
+          },
+          "description": "Waypoints",
+          "x-flatbuffer-type": "[GPXWaypoint]"
+        },
+        "ROUTES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GPXRoute"
+          },
+          "description": "Routes",
+          "x-flatbuffer-type": "[GPXRoute]"
+        },
+        "TRACKS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GPXTrack"
+          },
+          "description": "Tracks",
+          "x-flatbuffer-type": "[GPXTrack]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/GPX",
+  "x-flatbuffer-root-type": "GPX",
+  "x-flatbuffer-file-identifier": "$GPX"
+}

@@ -1,0 +1,106 @@
+// Hash: 3185afe238b277e70ae825349e9b57e2ae6cb614a79d7f4787a4c0ff46a62a4c
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+// GeoJSON (RFC 7946)
+//
+// GeoJSON is a format for encoding geographic data structures using JSON.
+// It supports Point, MultiPoint, LineString, MultiLineString, Polygon,
+// MultiPolygon, GeometryCollection, Feature, and FeatureCollection types.
+// Reference: https://datatracker.ietf.org/doc/html/rfc7946
+
+enum GJNGeometryType : byte {
+  POINT,
+  MULTI_POINT,
+  LINE_STRING,
+  MULTI_LINE_STRING,
+  POLYGON,
+  MULTI_POLYGON,
+  GEOMETRY_COLLECTION
+}
+
+/// A single position (longitude, latitude, optional altitude)
+table GJNPosition {
+  /// Longitude in decimal degrees (WGS84)
+  LONGITUDE:double;
+  /// Latitude in decimal degrees (WGS84)
+  LATITUDE:double;
+  /// Altitude in meters above WGS84 ellipsoid (optional)
+  ALTITUDE:double;
+}
+
+/// A linear ring is a closed LineString with 4+ positions (first = last)
+table GJNLinearRing {
+  /// Ordered positions forming the ring
+  POSITIONS:[GJNPosition];
+}
+
+/// A polygon represented as an array of rings (outer boundary + holes)
+table GJNPolygonRings {
+  /// Rings: first is outer boundary, rest are holes
+  RINGS:[GJNLinearRing];
+}
+
+/// GeoJSON Geometry object
+table GJNGeometry {
+  /// Geometry type
+  TYPE:GJNGeometryType;
+  /// Single position (for Point)
+  POINT:GJNPosition;
+  /// Array of positions (for MultiPoint, LineString)
+  POSITIONS:[GJNPosition];
+  /// Array of position arrays (for MultiLineString, Polygon rings)
+  RINGS:[GJNLinearRing];
+  /// Array of polygons each as array of rings (for MultiPolygon)
+  POLYGON_RINGS:[GJNPolygonRings];
+  /// Child geometries (for GeometryCollection)
+  GEOMETRIES:[GJNGeometry];
+}
+
+/// A key-value property entry for Feature properties
+table GJNProperty {
+  /// Property key
+  KEY:string;
+  /// Property value as string
+  VALUE:string;
+  /// Property value as number (use if numeric)
+  NUM_VALUE:double;
+  /// True if NUM_VALUE should be used instead of VALUE
+  IS_NUMERIC:bool;
+}
+
+/// GeoJSON Feature object
+table GJNFeature {
+  /// Feature identifier (optional)
+  ID:string;
+  /// Geometry of the feature
+  GEOMETRY:GJNGeometry;
+  /// Properties as key-value pairs
+  PROPERTIES:[GJNProperty];
+}
+
+/// GeoJSON Bounding Box [west, south, east, north] or [west, south, min-alt, east, north, max-alt]
+table GJNBoundingBox {
+  /// Western longitude
+  WEST:double;
+  /// Southern latitude
+  SOUTH:double;
+  /// Eastern longitude
+  EAST:double;
+  /// Northern latitude
+  NORTH:double;
+  /// Minimum altitude (optional)
+  MIN_ALTITUDE:double;
+  /// Maximum altitude (optional)
+  MAX_ALTITUDE:double;
+}
+
+/// GeoJSON FeatureCollection
+table GJN {
+  /// Features in the collection
+  FEATURES:[GJNFeature];
+  /// Bounding box (optional)
+  BBOX:GJNBoundingBox;
+}
+
+root_type GJN;
+file_identifier "$GJN";

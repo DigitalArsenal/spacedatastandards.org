@@ -1,0 +1,559 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "CZMHeightReference" : {
+      "type" : "string",
+      "enum": ["NONE", "CLAMP_TO_GROUND", "RELATIVE_TO_GROUND"]
+    },
+    "CZMClassificationType" : {
+      "type" : "string",
+      "enum": ["TERRAIN", "CESIUM_3D_TILE", "BOTH"]
+    },
+    "CZMLabelStyle" : {
+      "type" : "string",
+      "enum": ["FILL", "OUTLINE", "FILL_AND_OUTLINE"]
+    },
+    "CZMHorizontalOrigin" : {
+      "type" : "string",
+      "enum": ["LEFT", "CENTER", "RIGHT"]
+    },
+    "CZMVerticalOrigin" : {
+      "type" : "string",
+      "enum": ["BASELINE", "BOTTOM", "CENTER", "TOP"]
+    },
+    "CZMInterval" : {
+      "type" : "object",
+      "description" : "Time interval for time-dynamic properties",
+      "properties" : {
+        "INTERVAL" : {
+                "type" : "string",
+                "description" : "ISO 8601 interval string (e.g. \"2012-03-15T10:00:00Z/2012-03-16T10:00:00Z\")"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMCartographicDegrees" : {
+      "type" : "object",
+      "description" : "Cartographic position (longitude, latitude, height in radians/meters)",
+      "properties" : {
+        "LONGITUDE" : {
+                "type" : "number",
+                "description" : "Longitude in degrees"
+              },
+        "LATITUDE" : {
+                "type" : "number",
+                "description" : "Latitude in degrees"
+              },
+        "HEIGHT" : {
+                "type" : "number",
+                "description" : "Height in meters above WGS84 ellipsoid"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMCartesian" : {
+      "type" : "object",
+      "description" : "Cartesian position (X, Y, Z in meters)",
+      "properties" : {
+        "X" : {
+                "type" : "number",
+                "description" : "X component in meters (Earth-fixed)"
+              },
+        "Y" : {
+                "type" : "number",
+                "description" : "Y component in meters (Earth-fixed)"
+              },
+        "Z" : {
+                "type" : "number",
+                "description" : "Z component in meters (Earth-fixed)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMColor" : {
+      "type" : "object",
+      "description" : "RGBA color",
+      "properties" : {
+        "RED" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Red component (0-255)"
+              },
+        "GREEN" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Green component (0-255)"
+              },
+        "BLUE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Blue component (0-255)"
+              },
+        "ALPHA" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Alpha component (0-255)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMNearFarScalar" : {
+      "type" : "object",
+      "description" : "Near/Far scalar for distance-based display",
+      "properties" : {
+        "NEAR_DISTANCE" : {
+                "type" : "number",
+                "description" : "Near distance in meters"
+              },
+        "NEAR_VALUE" : {
+                "type" : "number",
+                "description" : "Value at near distance"
+              },
+        "FAR_DISTANCE" : {
+                "type" : "number",
+                "description" : "Far distance in meters"
+              },
+        "FAR_VALUE" : {
+                "type" : "number",
+                "description" : "Value at far distance"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMBillboard" : {
+      "type" : "object",
+      "description" : "Billboard (icon) properties",
+      "properties" : {
+        "SHOW" : {
+                "type" : "boolean",
+                "description" : "Whether the billboard is displayed"
+              },
+        "IMAGE" : {
+                "type" : "string",
+                "description" : "URI of the billboard image"
+              },
+        "SCALE" : {
+                "type" : "number",
+                "description" : "Scale factor"
+              },
+        "COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Billboard color tint"
+              },
+        "HEIGHT_REFERENCE" : {
+                "$ref" : "#/definitions/CZMHeightReference",
+                "description" : "Height reference"
+              },
+        "PIXEL_OFFSET_X" : {
+                "type" : "number",
+                "description" : "Pixel offset X"
+              },
+        "PIXEL_OFFSET_Y" : {
+                "type" : "number",
+                "description" : "Pixel offset Y"
+              },
+        "HORIZONTAL_ORIGIN" : {
+                "$ref" : "#/definitions/CZMHorizontalOrigin",
+                "description" : "Horizontal origin"
+              },
+        "VERTICAL_ORIGIN" : {
+                "$ref" : "#/definitions/CZMVerticalOrigin",
+                "description" : "Vertical origin"
+              },
+        "TRANSLUCENCY_BY_DISTANCE" : {
+                "$ref" : "#/definitions/CZMNearFarScalar",
+                "description" : "Translucency by distance"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMLabel" : {
+      "type" : "object",
+      "description" : "Label properties",
+      "properties" : {
+        "SHOW" : {
+                "type" : "boolean",
+                "description" : "Whether the label is displayed"
+              },
+        "TEXT" : {
+                "type" : "string",
+                "description" : "Label text"
+              },
+        "FONT" : {
+                "type" : "string",
+                "description" : "Font CSS string (e.g. \"12pt Lucida Console\")"
+              },
+        "STYLE" : {
+                "$ref" : "#/definitions/CZMLabelStyle",
+                "description" : "Label style"
+              },
+        "FILL_COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Fill color"
+              },
+        "OUTLINE_COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Outline color"
+              },
+        "OUTLINE_WIDTH" : {
+                "type" : "number",
+                "description" : "Outline width in pixels"
+              },
+        "PIXEL_OFFSET_X" : {
+                "type" : "number",
+                "description" : "Pixel offset X"
+              },
+        "PIXEL_OFFSET_Y" : {
+                "type" : "number",
+                "description" : "Pixel offset Y"
+              },
+        "SCALE" : {
+                "type" : "number",
+                "description" : "Scale factor"
+              },
+        "HORIZONTAL_ORIGIN" : {
+                "$ref" : "#/definitions/CZMHorizontalOrigin",
+                "description" : "Horizontal origin"
+              },
+        "VERTICAL_ORIGIN" : {
+                "$ref" : "#/definitions/CZMVerticalOrigin",
+                "description" : "Vertical origin"
+              },
+        "HEIGHT_REFERENCE" : {
+                "$ref" : "#/definitions/CZMHeightReference",
+                "description" : "Height reference"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMPoint" : {
+      "type" : "object",
+      "description" : "Point properties",
+      "properties" : {
+        "SHOW" : {
+                "type" : "boolean",
+                "description" : "Whether the point is displayed"
+              },
+        "COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Point color"
+              },
+        "OUTLINE_COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Outline color"
+              },
+        "OUTLINE_WIDTH" : {
+                "type" : "number",
+                "description" : "Outline width in pixels"
+              },
+        "PIXEL_SIZE" : {
+                "type" : "number",
+                "description" : "Pixel size"
+              },
+        "HEIGHT_REFERENCE" : {
+                "$ref" : "#/definitions/CZMHeightReference",
+                "description" : "Height reference"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMPolyline" : {
+      "type" : "object",
+      "description" : "Polyline properties",
+      "properties" : {
+        "SHOW" : {
+                "type" : "boolean",
+                "description" : "Whether the polyline is displayed"
+              },
+        "POSITIONS_CARTOGRAPHIC_DEGREES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Positions as cartographic degrees [lon, lat, height, lon, lat, height, ...]"
+              },
+        "POSITIONS_CARTESIAN" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Positions as Cartesian [X, Y, Z, X, Y, Z, ...]"
+              },
+        "WIDTH" : {
+                "type" : "number",
+                "description" : "Line width in pixels"
+              },
+        "COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Line color (solid color material)"
+              },
+        "CLAMP_TO_GROUND" : {
+                "type" : "boolean",
+                "description" : "Whether to clamp to ground"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMPolygon" : {
+      "type" : "object",
+      "description" : "Polygon properties",
+      "properties" : {
+        "SHOW" : {
+                "type" : "boolean",
+                "description" : "Whether the polygon is displayed"
+              },
+        "POSITIONS_CARTOGRAPHIC_DEGREES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Positions as cartographic degrees [lon, lat, height, ...]"
+              },
+        "POSITIONS_CARTESIAN" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Positions as Cartesian [X, Y, Z, ...]"
+              },
+        "FILL" : {
+                "type" : "boolean",
+                "description" : "Fill flag"
+              },
+        "COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Fill color (solid color material)"
+              },
+        "OUTLINE" : {
+                "type" : "boolean",
+                "description" : "Outline flag"
+              },
+        "OUTLINE_COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Outline color"
+              },
+        "EXTRUDED_HEIGHT" : {
+                "type" : "number",
+                "description" : "Extruded height in meters"
+              },
+        "HEIGHT_REFERENCE" : {
+                "$ref" : "#/definitions/CZMHeightReference",
+                "description" : "Height reference"
+              },
+        "CLASSIFICATION_TYPE" : {
+                "$ref" : "#/definitions/CZMClassificationType",
+                "description" : "Classification type"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMModel" : {
+      "type" : "object",
+      "description" : "Model properties (glTF)",
+      "properties" : {
+        "SHOW" : {
+                "type" : "boolean",
+                "description" : "Whether the model is displayed"
+              },
+        "GLTF" : {
+                "type" : "string",
+                "description" : "URI to the glTF model"
+              },
+        "SCALE" : {
+                "type" : "number",
+                "description" : "Scale factor"
+              },
+        "MINIMUM_PIXEL_SIZE" : {
+                "type" : "number",
+                "description" : "Minimum pixel size"
+              },
+        "MAXIMUM_SCALE" : {
+                "type" : "number",
+                "description" : "Maximum scale"
+              },
+        "HEIGHT_REFERENCE" : {
+                "$ref" : "#/definitions/CZMHeightReference",
+                "description" : "Height reference"
+              },
+        "COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Color tint"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMPath" : {
+      "type" : "object",
+      "description" : "Path properties (orbit trail)",
+      "properties" : {
+        "SHOW" : {
+                "type" : "boolean",
+                "description" : "Whether the path is displayed"
+              },
+        "LEAD_TIME" : {
+                "type" : "number",
+                "description" : "Trail time in seconds (how far behind)"
+              },
+        "TRAIL_TIME" : {
+                "type" : "number",
+                "description" : "Lead time in seconds (how far ahead)"
+              },
+        "WIDTH" : {
+                "type" : "number",
+                "description" : "Line width in pixels"
+              },
+        "COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Path color"
+              },
+        "RESOLUTION" : {
+                "type" : "number",
+                "description" : "Resolution in seconds"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMEllipse" : {
+      "type" : "object",
+      "description" : "Ellipse properties (for ground circles/ellipses)",
+      "properties" : {
+        "SHOW" : {
+                "type" : "boolean",
+                "description" : "Whether the ellipse is displayed"
+              },
+        "SEMI_MAJOR_AXIS" : {
+                "type" : "number",
+                "description" : "Semi-major axis in meters"
+              },
+        "SEMI_MINOR_AXIS" : {
+                "type" : "number",
+                "description" : "Semi-minor axis in meters"
+              },
+        "ROTATION" : {
+                "type" : "number",
+                "description" : "Rotation from north in radians"
+              },
+        "FILL" : {
+                "type" : "boolean",
+                "description" : "Fill flag"
+              },
+        "COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Fill color"
+              },
+        "OUTLINE" : {
+                "type" : "boolean",
+                "description" : "Outline flag"
+              },
+        "OUTLINE_COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Outline color"
+              },
+        "HEIGHT" : {
+                "type" : "number",
+                "description" : "Height in meters"
+              },
+        "HEIGHT_REFERENCE" : {
+                "$ref" : "#/definitions/CZMHeightReference",
+                "description" : "Height reference"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMPacket" : {
+      "type" : "object",
+      "description" : "A CZML Packet describing an entity and its properties",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Unique identifier for this object"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Human-readable name"
+              },
+        "PARENT" : {
+                "type" : "string",
+                "description" : "Parent packet ID"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Description (HTML allowed)"
+              },
+        "AVAILABILITY" : {
+                "type" : "string",
+                "description" : "Availability interval (ISO 8601 interval)"
+              },
+        "POSITION_CARTOGRAPHIC_DEGREES" : {
+                "$ref" : "#/definitions/CZMCartographicDegrees",
+                "description" : "Position as cartographic degrees"
+              },
+        "POSITION_CARTESIAN" : {
+                "$ref" : "#/definitions/CZMCartesian",
+                "description" : "Position as Cartesian"
+              },
+        "POSITION_EPOCH" : {
+                "type" : "string",
+                "description" : "Time-tagged positions [time, lon, lat, height, time, lon, lat, height, ...]"
+              },
+        "POSITION_CARTOGRAPHIC_DEGREES_ARRAY" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Time-tagged cartographic degree values"
+              },
+        "POSITION_CARTESIAN_ARRAY" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Time-tagged Cartesian values"
+              },
+        "BILLBOARD" : {
+                "$ref" : "#/definitions/CZMBillboard",
+                "description" : "Billboard properties"
+              },
+        "LABEL" : {
+                "$ref" : "#/definitions/CZMLabel",
+                "description" : "Label properties"
+              },
+        "POINT" : {
+                "$ref" : "#/definitions/CZMPoint",
+                "description" : "Point properties"
+              },
+        "POLYLINE" : {
+                "$ref" : "#/definitions/CZMPolyline",
+                "description" : "Polyline properties"
+              },
+        "POLYGON" : {
+                "$ref" : "#/definitions/CZMPolygon",
+                "description" : "Polygon properties"
+              },
+        "MODEL" : {
+                "$ref" : "#/definitions/CZMModel",
+                "description" : "Model properties"
+              },
+        "PATH" : {
+                "$ref" : "#/definitions/CZMPath",
+                "description" : "Path properties"
+              },
+        "ELLIPSE" : {
+                "$ref" : "#/definitions/CZMEllipse",
+                "description" : "Ellipse properties"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZM" : {
+      "type" : "object",
+      "description" : "CZML Document",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Document-level name"
+              },
+        "VERSION" : {
+                "type" : "string",
+                "description" : "Document-level version"
+              },
+        "CLOCK_CURRENT_TIME" : {
+                "type" : "string",
+                "description" : "Clock settings - current time (ISO 8601)"
+              },
+        "CLOCK_INTERVAL" : {
+                "type" : "string",
+                "description" : "Clock settings - interval (ISO 8601 interval)"
+              },
+        "CLOCK_MULTIPLIER" : {
+                "type" : "number",
+                "description" : "Clock settings - multiplier"
+              },
+        "PACKETS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CZMPacket"},
+                "description" : "All packets in the document"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/CZM"
+}

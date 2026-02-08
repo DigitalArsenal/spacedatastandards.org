@@ -1,0 +1,313 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "COTHowType": {
+      "type": "string",
+      "enum": [
+        "HE",
+        "H_E",
+        "M_G",
+        "M_S",
+        "M_F",
+        "M_I",
+        "M_C"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "HE": {
+          "value": 0,
+          "description": "Human entered or generated"
+        },
+        "H_E": {
+          "value": 1,
+          "description": "Human estimated"
+        },
+        "M_G": {
+          "value": 2,
+          "description": "Machine generated via GPS"
+        },
+        "M_S": {
+          "value": 3,
+          "description": "Machine generated via sensor"
+        },
+        "M_F": {
+          "value": 4,
+          "description": "Machine fused"
+        },
+        "M_I": {
+          "value": 5,
+          "description": "Machine inferred"
+        },
+        "M_C": {
+          "value": 6,
+          "description": "Configured"
+        }
+      }
+    },
+    "COTPoint": {
+      "type": "object",
+      "description": "CoT Point - geographical point with error estimates",
+      "properties": {
+        "LATITUDE": {
+          "type": "number",
+          "description": "Latitude in decimal degrees (WGS84)",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE": {
+          "type": "number",
+          "description": "Longitude in decimal degrees (WGS84)",
+          "x-flatbuffer-type": "double"
+        },
+        "HAE": {
+          "type": "number",
+          "description": "Height above WGS84 ellipsoid in meters",
+          "x-flatbuffer-type": "double"
+        },
+        "CE": {
+          "type": "number",
+          "description": "Circular error in meters (95% confidence)",
+          "x-flatbuffer-type": "double"
+        },
+        "LE": {
+          "type": "number",
+          "description": "Linear error (vertical) in meters (95% confidence)",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "COTDetail": {
+      "type": "object",
+      "description": "CoT Detail - extensible detail element",
+      "properties": {
+        "CALLSIGN": {
+          "type": "string",
+          "description": "Contact callsign",
+          "x-flatbuffer-type": "string"
+        },
+        "ENDPOINT": {
+          "type": "string",
+          "description": "Contact endpoint (e.g. IP:port)",
+          "x-flatbuffer-type": "string"
+        },
+        "PHONE": {
+          "type": "string",
+          "description": "Contact phone number",
+          "x-flatbuffer-type": "string"
+        },
+        "COURSE": {
+          "type": "number",
+          "description": "Track course in degrees true",
+          "x-flatbuffer-type": "double"
+        },
+        "SPEED": {
+          "type": "number",
+          "description": "Track speed in m/s",
+          "x-flatbuffer-type": "double"
+        },
+        "GROUP_NAME": {
+          "type": "string",
+          "description": "Group name/team",
+          "x-flatbuffer-type": "string"
+        },
+        "GROUP_ROLE": {
+          "type": "string",
+          "description": "Group role",
+          "x-flatbuffer-type": "string"
+        },
+        "STATUS_BATTERY": {
+          "type": "number",
+          "description": "Status (battery percentage, etc.)",
+          "x-flatbuffer-type": "double"
+        },
+        "STATUS_READINESS": {
+          "type": "boolean",
+          "description": "Status readiness",
+          "x-flatbuffer-type": "bool"
+        },
+        "PREC_LOCATION_SOURCE": {
+          "type": "string",
+          "description": "Precision location source",
+          "x-flatbuffer-type": "string"
+        },
+        "PREC_ALTSRC": {
+          "type": "string",
+          "description": "Precision location altitude source",
+          "x-flatbuffer-type": "string"
+        },
+        "UID_DROID": {
+          "type": "string",
+          "description": "UID of the device",
+          "x-flatbuffer-type": "string"
+        },
+        "REMARKS": {
+          "type": "string",
+          "description": "Remarks text",
+          "x-flatbuffer-type": "string"
+        },
+        "REMARKS_SOURCE": {
+          "type": "string",
+          "description": "Remarks source",
+          "x-flatbuffer-type": "string"
+        },
+        "REMARKS_TIME": {
+          "type": "string",
+          "description": "Remarks timestamp (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "LINK_UID": {
+          "type": "string",
+          "description": "Link UID (for related events)",
+          "x-flatbuffer-type": "string"
+        },
+        "LINK_TYPE": {
+          "type": "string",
+          "description": "Link type",
+          "x-flatbuffer-type": "string"
+        },
+        "LINK_RELATION": {
+          "type": "string",
+          "description": "Link relation",
+          "x-flatbuffer-type": "string"
+        },
+        "COLOR": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Color in ARGB integer format",
+          "x-flatbuffer-type": "int32"
+        },
+        "STROKE_WEIGHT": {
+          "type": "number",
+          "description": "Stroke weight for drawing",
+          "x-flatbuffer-type": "double"
+        },
+        "FILL_COLOR": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Fill color in ARGB integer format",
+          "x-flatbuffer-type": "int32"
+        },
+        "LABELLED": {
+          "type": "boolean",
+          "description": "Labeled flag",
+          "x-flatbuffer-type": "bool"
+        },
+        "ARCHIVE": {
+          "type": "boolean",
+          "description": "Archive flag",
+          "x-flatbuffer-type": "bool"
+        },
+        "RAW_XML": {
+          "type": "string",
+          "description": "Raw XML detail content (for extensions not covered above)",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "COT": {
+      "type": "object",
+      "description": "Cursor on Target Event",
+      "properties": {
+        "VERSION": {
+          "type": "string",
+          "description": "Schema version",
+          "x-flatbuffer-type": "string"
+        },
+        "UID": {
+          "type": "string",
+          "description": "Globally unique event identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "TYPE": {
+          "type": "string",
+          "description": "CoT event type (dot-delimited MIL-STD-2525/APP-6 hierarchy)\ne.g. \"a-f-G-U-C\" = atom, friend, Ground, Unit, Combat",
+          "x-flatbuffer-type": "string"
+        },
+        "HOW": {
+          "$ref": "#/definitions/COTHowType",
+          "description": "How the event was generated (e.g. \"m-g\" = machine GPS)",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "HE": {
+              "value": 0,
+              "description": "Human entered or generated"
+            },
+            "H_E": {
+              "value": 1,
+              "description": "Human estimated"
+            },
+            "M_G": {
+              "value": 2,
+              "description": "Machine generated via GPS"
+            },
+            "M_S": {
+              "value": 3,
+              "description": "Machine generated via sensor"
+            },
+            "M_F": {
+              "value": 4,
+              "description": "Machine fused"
+            },
+            "M_I": {
+              "value": 5,
+              "description": "Machine inferred"
+            },
+            "M_C": {
+              "value": 6,
+              "description": "Configured"
+            }
+          }
+        },
+        "TIME": {
+          "type": "string",
+          "description": "Time the event was generated (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "START": {
+          "type": "string",
+          "description": "Time the event information was valid (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "STALE": {
+          "type": "string",
+          "description": "Time the event information is no longer valid (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "ACCESS": {
+          "type": "string",
+          "description": "Access control marking",
+          "x-flatbuffer-type": "string"
+        },
+        "QOS": {
+          "type": "string",
+          "description": "Quality of service",
+          "x-flatbuffer-type": "string"
+        },
+        "OPEX": {
+          "type": "string",
+          "description": "Operational status",
+          "x-flatbuffer-type": "string"
+        },
+        "POINT": {
+          "$ref": "#/definitions/COTPoint",
+          "description": "Point location",
+          "x-flatbuffer-type": "COTPoint"
+        },
+        "DETAIL": {
+          "$ref": "#/definitions/COTDetail",
+          "description": "Detailed event information",
+          "x-flatbuffer-type": "COTDetail"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/COT",
+  "x-flatbuffer-root-type": "COT",
+  "x-flatbuffer-file-identifier": "$COT"
+}

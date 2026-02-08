@@ -1,0 +1,398 @@
+// Hash: 78b66c7ca5b2b7793618350ddbbac7defba3ea2d5b65d81d254b92f470c2ef6e
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+// KML (Keyhole Markup Language)
+//
+// KML is an OGC standard for expressing geographic annotation and
+// visualization within 2D maps and 3D Earth browsers. Originally
+// developed for Google Earth.
+// Reference: OGC 07-147r2 (KML 2.2), OGC 12-007r2 (KML 2.3)
+
+enum KMLAltitudeMode : byte {
+  /// Altitude relative to ground surface
+  CLAMP_TO_GROUND,
+  /// Altitude relative to ground elevation
+  RELATIVE_TO_GROUND,
+  /// Altitude as absolute meters above WGS84 ellipsoid
+  ABSOLUTE,
+  /// Clamp to sea floor
+  CLAMP_TO_SEA_FLOOR,
+  /// Relative to sea floor
+  RELATIVE_TO_SEA_FLOOR
+}
+
+enum KMLColorMode : byte {
+  NORMAL,
+  RANDOM
+}
+
+enum KMLStyleState : byte {
+  NORMAL,
+  HIGHLIGHT
+}
+
+enum KMLUnits : byte {
+  PIXELS,
+  FRACTION,
+  INSET_PIXELS
+}
+
+enum KMLRefreshMode : byte {
+  ON_CHANGE,
+  ON_INTERVAL,
+  ON_EXPIRE
+}
+
+enum KMLViewRefreshMode : byte {
+  NEVER,
+  ON_STOP,
+  ON_REQUEST,
+  ON_REGION
+}
+
+/// KML coordinate (longitude, latitude, optional altitude)
+table KMLCoordinate {
+  /// Longitude in decimal degrees
+  LONGITUDE:double;
+  /// Latitude in decimal degrees
+  LATITUDE:double;
+  /// Altitude in meters
+  ALTITUDE:double;
+}
+
+/// LookAt viewpoint
+table KMLLookAt {
+  /// Longitude of the point being looked at
+  LONGITUDE:double;
+  /// Latitude of the point being looked at
+  LATITUDE:double;
+  /// Altitude of the point being looked at
+  ALTITUDE:double;
+  /// Heading in degrees (0=North)
+  HEADING:double;
+  /// Tilt in degrees from vertical (0=straight down)
+  TILT:double;
+  /// Range in meters from the point
+  RANGE:double;
+  /// Altitude mode
+  ALTITUDE_MODE:KMLAltitudeMode;
+}
+
+/// Camera viewpoint
+table KMLCamera {
+  /// Camera longitude
+  LONGITUDE:double;
+  /// Camera latitude
+  LATITUDE:double;
+  /// Camera altitude
+  ALTITUDE:double;
+  /// Heading in degrees (0=North)
+  HEADING:double;
+  /// Tilt in degrees from vertical
+  TILT:double;
+  /// Roll in degrees
+  ROLL:double;
+  /// Altitude mode
+  ALTITUDE_MODE:KMLAltitudeMode;
+}
+
+/// Icon style
+table KMLIconStyle {
+  /// KML color in aabbggrr hex format
+  COLOR:string;
+  /// Color mode
+  COLOR_MODE:KMLColorMode;
+  /// Scale factor
+  SCALE:double;
+  /// Heading in degrees
+  HEADING:double;
+  /// Icon href (URL)
+  ICON_HREF:string;
+  /// Hot spot X value
+  HOTSPOT_X:double;
+  /// Hot spot Y value
+  HOTSPOT_Y:double;
+  /// Hot spot X units
+  HOTSPOT_X_UNITS:KMLUnits;
+  /// Hot spot Y units
+  HOTSPOT_Y_UNITS:KMLUnits;
+}
+
+/// Line style
+table KMLLineStyle {
+  /// KML color in aabbggrr hex format
+  COLOR:string;
+  /// Color mode
+  COLOR_MODE:KMLColorMode;
+  /// Width in pixels
+  WIDTH:double;
+}
+
+/// Polygon style
+table KMLPolyStyle {
+  /// KML color in aabbggrr hex format
+  COLOR:string;
+  /// Color mode
+  COLOR_MODE:KMLColorMode;
+  /// Whether to fill
+  FILL:bool;
+  /// Whether to outline
+  OUTLINE:bool;
+}
+
+/// Label style
+table KMLLabelStyle {
+  /// KML color in aabbggrr hex format
+  COLOR:string;
+  /// Color mode
+  COLOR_MODE:KMLColorMode;
+  /// Scale factor
+  SCALE:double;
+}
+
+/// Balloon style
+table KMLBalloonStyle {
+  /// Background color in aabbggrr hex format
+  BG_COLOR:string;
+  /// Text color in aabbggrr hex format
+  TEXT_COLOR:string;
+  /// Balloon text template (supports $[name], $[description])
+  TEXT:string;
+}
+
+/// Style definition
+table KMLStyle {
+  /// Style identifier
+  ID:string;
+  /// Icon style
+  ICON_STYLE:KMLIconStyle;
+  /// Label style
+  LABEL_STYLE:KMLLabelStyle;
+  /// Line style
+  LINE_STYLE:KMLLineStyle;
+  /// Polygon style
+  POLY_STYLE:KMLPolyStyle;
+  /// Balloon style
+  BALLOON_STYLE:KMLBalloonStyle;
+}
+
+/// Style map pair
+table KMLStyleMapPair {
+  /// State (normal or highlight)
+  STATE:KMLStyleState;
+  /// Style URL or inline style ID
+  STYLE_URL:string;
+}
+
+/// Style map (normal/highlight pair)
+table KMLStyleMap {
+  /// Style map identifier
+  ID:string;
+  /// Pairs
+  PAIRS:[KMLStyleMapPair];
+}
+
+/// Point geometry
+table KMLPoint {
+  /// Coordinate
+  COORDINATES:KMLCoordinate;
+  /// Altitude mode
+  ALTITUDE_MODE:KMLAltitudeMode;
+  /// Whether to extrude to ground
+  EXTRUDE:bool;
+}
+
+/// LineString geometry
+table KMLLineString {
+  /// Coordinates
+  COORDINATES:[KMLCoordinate];
+  /// Altitude mode
+  ALTITUDE_MODE:KMLAltitudeMode;
+  /// Whether to extrude to ground
+  EXTRUDE:bool;
+  /// Whether to tessellate (follow terrain)
+  TESSELLATE:bool;
+}
+
+/// LinearRing geometry
+table KMLLinearRing {
+  /// Coordinates (first = last to close the ring)
+  COORDINATES:[KMLCoordinate];
+}
+
+/// Polygon geometry
+table KMLPolygon {
+  /// Outer boundary
+  OUTER_BOUNDARY:KMLLinearRing;
+  /// Inner boundaries (holes)
+  INNER_BOUNDARIES:[KMLLinearRing];
+  /// Altitude mode
+  ALTITUDE_MODE:KMLAltitudeMode;
+  /// Whether to extrude to ground
+  EXTRUDE:bool;
+  /// Whether to tessellate
+  TESSELLATE:bool;
+}
+
+/// MultiGeometry
+table KMLMultiGeometry {
+  /// Child points
+  POINTS:[KMLPoint];
+  /// Child line strings
+  LINE_STRINGS:[KMLLineString];
+  /// Child polygons
+  POLYGONS:[KMLPolygon];
+  /// Nested multi-geometries
+  MULTI_GEOMETRIES:[KMLMultiGeometry];
+}
+
+/// TimeSpan
+table KMLTimeSpan {
+  /// Begin time (ISO 8601)
+  BEGIN:string;
+  /// End time (ISO 8601)
+  END:string;
+}
+
+/// TimeStamp
+table KMLTimeStamp {
+  /// Time (ISO 8601)
+  WHEN:string;
+}
+
+/// Extended data key-value pair
+table KMLData {
+  /// Data name
+  NAME:string;
+  /// Display name
+  DISPLAY_NAME:string;
+  /// Data value
+  VALUE:string;
+}
+
+/// Network link
+table KMLNetworkLink {
+  /// Name of the network link
+  NAME:string;
+  /// Whether the link is visible
+  VISIBILITY:bool;
+  /// Link URL
+  HREF:string;
+  /// Refresh mode
+  REFRESH_MODE:KMLRefreshMode;
+  /// Refresh interval in seconds
+  REFRESH_INTERVAL:double;
+  /// View refresh mode
+  VIEW_REFRESH_MODE:KMLViewRefreshMode;
+  /// View refresh time in seconds
+  VIEW_REFRESH_TIME:double;
+}
+
+/// Ground overlay
+table KMLGroundOverlay {
+  /// Name
+  NAME:string;
+  /// Description
+  DESCRIPTION:string;
+  /// Visibility
+  VISIBILITY:bool;
+  /// Icon/image URL
+  ICON_HREF:string;
+  /// Color in aabbggrr hex format
+  COLOR:string;
+  /// North latitude of bounding box
+  NORTH:double;
+  /// South latitude of bounding box
+  SOUTH:double;
+  /// East longitude of bounding box
+  EAST:double;
+  /// West longitude of bounding box
+  WEST:double;
+  /// Rotation in degrees
+  ROTATION:double;
+  /// Altitude in meters
+  ALTITUDE:double;
+  /// Altitude mode
+  ALTITUDE_MODE:KMLAltitudeMode;
+}
+
+/// Placemark feature
+table KMLPlacemark {
+  /// Placemark name
+  NAME:string;
+  /// Description (may contain HTML)
+  DESCRIPTION:string;
+  /// Visibility flag
+  VISIBILITY:bool;
+  /// Style URL reference
+  STYLE_URL:string;
+  /// Inline style
+  STYLE:KMLStyle;
+  /// Snippet (short description)
+  SNIPPET:string;
+  /// Point geometry
+  POINT:KMLPoint;
+  /// LineString geometry
+  LINE_STRING:KMLLineString;
+  /// Polygon geometry
+  POLYGON:KMLPolygon;
+  /// MultiGeometry
+  MULTI_GEOMETRY:KMLMultiGeometry;
+  /// LookAt viewpoint
+  LOOK_AT:KMLLookAt;
+  /// Camera viewpoint
+  CAMERA:KMLCamera;
+  /// TimeSpan
+  TIME_SPAN:KMLTimeSpan;
+  /// TimeStamp
+  TIME_STAMP:KMLTimeStamp;
+  /// Extended data
+  EXTENDED_DATA:[KMLData];
+}
+
+/// Folder container
+table KMLFolder {
+  /// Folder name
+  NAME:string;
+  /// Description
+  DESCRIPTION:string;
+  /// Visibility flag
+  VISIBILITY:bool;
+  /// Whether folder is open in tree view
+  OPEN:bool;
+  /// Placemarks in this folder
+  PLACEMARKS:[KMLPlacemark];
+  /// Sub-folders
+  FOLDERS:[KMLFolder];
+  /// Network links
+  NETWORK_LINKS:[KMLNetworkLink];
+  /// Ground overlays
+  GROUND_OVERLAYS:[KMLGroundOverlay];
+}
+
+/// KML Document
+table KML {
+  /// Document name
+  NAME:string;
+  /// Document description
+  DESCRIPTION:string;
+  /// Whether document is visible
+  VISIBILITY:bool;
+  /// Whether document is open in tree view
+  OPEN:bool;
+  /// Shared styles
+  STYLES:[KMLStyle];
+  /// Style maps
+  STYLE_MAPS:[KMLStyleMap];
+  /// Top-level placemarks
+  PLACEMARKS:[KMLPlacemark];
+  /// Top-level folders
+  FOLDERS:[KMLFolder];
+  /// Network links
+  NETWORK_LINKS:[KMLNetworkLink];
+  /// Ground overlays
+  GROUND_OVERLAYS:[KMLGroundOverlay];
+}
+
+root_type KML;
+file_identifier "$KML";

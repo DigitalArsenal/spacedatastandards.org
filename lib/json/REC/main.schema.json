@@ -233,6 +233,10 @@
       "type" : "string",
       "enum": ["ISOTROPIC", "DIPOLE", "YAGI", "PARABOLIC", "PHASED_ARRAY", "HORN", "PATCH", "HELICAL", "LOG_PERIODIC", "OMNIDIRECTIONAL", "SECTOR", "CUSTOM_PATTERN"]
     },
+    "COTHowType" : {
+      "type" : "string",
+      "enum": ["HE", "H_E", "M_G", "M_S", "M_F", "M_I", "M_C"]
+    },
     "CoordFrame" : {
       "type" : "string",
       "enum": ["ECEF", "ECI_J2000", "ECI_MOD", "ECI_TOD", "TEME", "NED", "ENU", "BODY", "MOON_CI", "MOON_CF", "MARS_CI", "GEOCENTRIC", "GEODETIC"]
@@ -240,6 +244,26 @@
     "Ellipsoid" : {
       "type" : "string",
       "enum": ["WGS84", "GRS80", "WGS72", "SPHERE", "MOON", "MARS"]
+    },
+    "CZMHeightReference" : {
+      "type" : "string",
+      "enum": ["NONE", "CLAMP_TO_GROUND", "RELATIVE_TO_GROUND"]
+    },
+    "CZMClassificationType" : {
+      "type" : "string",
+      "enum": ["TERRAIN", "CESIUM_3D_TILE", "BOTH"]
+    },
+    "CZMLabelStyle" : {
+      "type" : "string",
+      "enum": ["FILL", "OUTLINE", "FILL_AND_OUTLINE"]
+    },
+    "CZMHorizontalOrigin" : {
+      "type" : "string",
+      "enum": ["LEFT", "CENTER", "RIGHT"]
+    },
+    "CZMVerticalOrigin" : {
+      "type" : "string",
+      "enum": ["BASELINE", "BOTTOM", "CENTER", "TOP"]
     },
     "ModuleType" : {
       "type" : "string",
@@ -349,6 +373,10 @@
       "type" : "string",
       "enum": ["EAST", "WEST", "NEITHER"]
     },
+    "GJNGeometryType" : {
+      "type" : "string",
+      "enum": ["POINT", "MULTI_POINT", "LINE_STRING", "MULTI_LINE_STRING", "POLYGON", "MULTI_POLYGON", "GEOMETRY_COLLECTION"]
+    },
     "gnssConstellation" : {
       "type" : "string",
       "enum": ["GPS", "GLONASS", "GALILEO", "BEIDOU", "QZSS", "IRNSS", "SBAS", "MIXED"]
@@ -356,6 +384,10 @@
     "gnssObsType" : {
       "type" : "string",
       "enum": ["PSEUDORANGE", "CARRIER_PHASE", "DOPPLER", "SNR", "RAW_IF"]
+    },
+    "GPXFixType" : {
+      "type" : "string",
+      "enum": ["NONE", "FIX_2D", "FIX_3D", "DGPS", "PPS"]
     },
     "GravityModelType" : {
       "type" : "string",
@@ -408,6 +440,30 @@
     "irDetectionType" : {
       "type" : "string",
       "enum": ["POINT_SOURCE", "RESOLVED", "STREAK", "UNRESOLVED", "EXTENDED"]
+    },
+    "KMLAltitudeMode" : {
+      "type" : "string",
+      "enum": ["CLAMP_TO_GROUND", "RELATIVE_TO_GROUND", "ABSOLUTE", "CLAMP_TO_SEA_FLOOR", "RELATIVE_TO_SEA_FLOOR"]
+    },
+    "KMLColorMode" : {
+      "type" : "string",
+      "enum": ["NORMAL", "RANDOM"]
+    },
+    "KMLStyleState" : {
+      "type" : "string",
+      "enum": ["NORMAL", "HIGHLIGHT"]
+    },
+    "KMLUnits" : {
+      "type" : "string",
+      "enum": ["PIXELS", "FRACTION", "INSET_PIXELS"]
+    },
+    "KMLRefreshMode" : {
+      "type" : "string",
+      "enum": ["ON_CHANGE", "ON_INTERVAL", "ON_EXPIRE"]
+    },
+    "KMLViewRefreshMode" : {
+      "type" : "string",
+      "enum": ["NEVER", "ON_STOP", "ON_REQUEST", "ON_REGION"]
     },
     "SiteType" : {
       "type" : "string",
@@ -883,7 +939,7 @@
     },
     "RecordType" : {
       "type" : "string",
-      "enum": ["NONE", "ACL", "ACM", "ACR", "AEM", "ANI", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "BUS", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "CRD", "CRM", "CSM", "CTR", "DFH", "DMG", "DOA", "EME", "ENC", "ENV", "EOO", "EOP", "EPM", "EWR", "FCS", "GDI", "GEO", "GNO", "GRV", "GVH", "HEL", "HYP", "IDM", "ION", "IRO", "LCC", "LDM", "LKS", "LND", "LNE", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "OBD", "OBT", "OCM", "OEM", "OMM", "OOA", "OOB", "OOD", "OOE", "OOI", "OOL", "OON", "OOS", "OOT", "OPM", "OSM", "PCF", "PHY", "PLD", "PLG", "PLK", "PNM", "PRG", "PUR", "RAF", "RCF", "RDM", "RDO", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDL", "SEN", "SEO", "SEV", "SIT", "SKI", "SNR", "SOI", "SON", "SPP", "SPW", "STF", "STR", "STV", "SWR", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TPN", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC"]
+      "enum": ["NONE", "ACL", "ACM", "ACR", "AEM", "ANI", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "BUS", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "COT", "CRD", "CRM", "CSM", "CTR", "CZM", "DFH", "DMG", "DOA", "EME", "ENC", "ENV", "EOO", "EOP", "EPM", "EWR", "FCS", "GDI", "GEO", "GJN", "GNO", "GPX", "GRV", "GVH", "HEL", "HYP", "IDM", "ION", "IRO", "KML", "LCC", "LDM", "LKS", "LND", "LNE", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "OBD", "OBT", "OCM", "OEM", "OMM", "OOA", "OOB", "OOD", "OOE", "OOI", "OOL", "OON", "OOS", "OOT", "OPM", "OSM", "PCF", "PHY", "PLD", "PLG", "PLK", "PNM", "PRG", "PUR", "RAF", "RCF", "RDM", "RDO", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDL", "SEN", "SEO", "SEV", "SIT", "SKI", "SNR", "SOI", "SON", "SPP", "SPW", "STF", "STR", "STV", "SWR", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TPN", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC"]
     },
     "SpatialCoverage" : {
       "type" : "object",
@@ -3464,6 +3520,191 @@
       },
       "additionalProperties" : false
     },
+    "COTPoint" : {
+      "type" : "object",
+      "description" : "CoT Point - geographical point with error estimates",
+      "properties" : {
+        "LATITUDE" : {
+                "type" : "number",
+                "description" : "Latitude in decimal degrees (WGS84)"
+              },
+        "LONGITUDE" : {
+                "type" : "number",
+                "description" : "Longitude in decimal degrees (WGS84)"
+              },
+        "HAE" : {
+                "type" : "number",
+                "description" : "Height above WGS84 ellipsoid in meters"
+              },
+        "CE" : {
+                "type" : "number",
+                "description" : "Circular error in meters (95% confidence)"
+              },
+        "LE" : {
+                "type" : "number",
+                "description" : "Linear error (vertical) in meters (95% confidence)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "COTDetail" : {
+      "type" : "object",
+      "description" : "CoT Detail - extensible detail element",
+      "properties" : {
+        "CALLSIGN" : {
+                "type" : "string",
+                "description" : "Contact callsign"
+              },
+        "ENDPOINT" : {
+                "type" : "string",
+                "description" : "Contact endpoint (e.g. IP:port)"
+              },
+        "PHONE" : {
+                "type" : "string",
+                "description" : "Contact phone number"
+              },
+        "COURSE" : {
+                "type" : "number",
+                "description" : "Track course in degrees true"
+              },
+        "SPEED" : {
+                "type" : "number",
+                "description" : "Track speed in m/s"
+              },
+        "GROUP_NAME" : {
+                "type" : "string",
+                "description" : "Group name/team"
+              },
+        "GROUP_ROLE" : {
+                "type" : "string",
+                "description" : "Group role"
+              },
+        "STATUS_BATTERY" : {
+                "type" : "number",
+                "description" : "Status (battery percentage, etc.)"
+              },
+        "STATUS_READINESS" : {
+                "type" : "boolean",
+                "description" : "Status readiness"
+              },
+        "PREC_LOCATION_SOURCE" : {
+                "type" : "string",
+                "description" : "Precision location source"
+              },
+        "PREC_ALTSRC" : {
+                "type" : "string",
+                "description" : "Precision location altitude source"
+              },
+        "UID_DROID" : {
+                "type" : "string",
+                "description" : "UID of the device"
+              },
+        "REMARKS" : {
+                "type" : "string",
+                "description" : "Remarks text"
+              },
+        "REMARKS_SOURCE" : {
+                "type" : "string",
+                "description" : "Remarks source"
+              },
+        "REMARKS_TIME" : {
+                "type" : "string",
+                "description" : "Remarks timestamp (ISO 8601)"
+              },
+        "LINK_UID" : {
+                "type" : "string",
+                "description" : "Link UID (for related events)"
+              },
+        "LINK_TYPE" : {
+                "type" : "string",
+                "description" : "Link type"
+              },
+        "LINK_RELATION" : {
+                "type" : "string",
+                "description" : "Link relation"
+              },
+        "COLOR" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Color in ARGB integer format"
+              },
+        "STROKE_WEIGHT" : {
+                "type" : "number",
+                "description" : "Stroke weight for drawing"
+              },
+        "FILL_COLOR" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Fill color in ARGB integer format"
+              },
+        "LABELLED" : {
+                "type" : "boolean",
+                "description" : "Labeled flag"
+              },
+        "ARCHIVE" : {
+                "type" : "boolean",
+                "description" : "Archive flag"
+              },
+        "RAW_XML" : {
+                "type" : "string",
+                "description" : "Raw XML detail content (for extensions not covered above)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "COT" : {
+      "type" : "object",
+      "description" : "Cursor on Target Event",
+      "properties" : {
+        "VERSION" : {
+                "type" : "string",
+                "description" : "Schema version"
+              },
+        "UID" : {
+                "type" : "string",
+                "description" : "Globally unique event identifier"
+              },
+        "TYPE" : {
+                "type" : "string",
+                "description" : "CoT event type (dot-delimited MIL-STD-2525/APP-6 hierarchy)\ne.g. \"a-f-G-U-C\" = atom, friend, Ground, Unit, Combat"
+              },
+        "HOW" : {
+                "$ref" : "#/definitions/COTHowType",
+                "description" : "How the event was generated (e.g. \"m-g\" = machine GPS)"
+              },
+        "TIME" : {
+                "type" : "string",
+                "description" : "Time the event was generated (ISO 8601)"
+              },
+        "START" : {
+                "type" : "string",
+                "description" : "Time the event information was valid (ISO 8601)"
+              },
+        "STALE" : {
+                "type" : "string",
+                "description" : "Time the event information is no longer valid (ISO 8601)"
+              },
+        "ACCESS" : {
+                "type" : "string",
+                "description" : "Access control marking"
+              },
+        "QOS" : {
+                "type" : "string",
+                "description" : "Quality of service"
+              },
+        "OPEX" : {
+                "type" : "string",
+                "description" : "Operational status"
+              },
+        "POINT" : {
+                "$ref" : "#/definitions/COTPoint",
+                "description" : "Point location"
+              },
+        "DETAIL" : {
+                "$ref" : "#/definitions/COTDetail",
+                "description" : "Detailed event information"
+              }
+      },
+      "additionalProperties" : false
+    },
     "CRD" : {
       "type" : "object",
       "description" : "Coordinate Systems",
@@ -3895,6 +4136,539 @@
         "COMMENT" : {
                 "type" : "string",
                 "description" : "Additional comments"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMInterval" : {
+      "type" : "object",
+      "description" : "Time interval for time-dynamic properties",
+      "properties" : {
+        "INTERVAL" : {
+                "type" : "string",
+                "description" : "ISO 8601 interval string (e.g. \"2012-03-15T10:00:00Z/2012-03-16T10:00:00Z\")"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMCartographicDegrees" : {
+      "type" : "object",
+      "description" : "Cartographic position (longitude, latitude, height in radians/meters)",
+      "properties" : {
+        "LONGITUDE" : {
+                "type" : "number",
+                "description" : "Longitude in degrees"
+              },
+        "LATITUDE" : {
+                "type" : "number",
+                "description" : "Latitude in degrees"
+              },
+        "HEIGHT" : {
+                "type" : "number",
+                "description" : "Height in meters above WGS84 ellipsoid"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMCartesian" : {
+      "type" : "object",
+      "description" : "Cartesian position (X, Y, Z in meters)",
+      "properties" : {
+        "X" : {
+                "type" : "number",
+                "description" : "X component in meters (Earth-fixed)"
+              },
+        "Y" : {
+                "type" : "number",
+                "description" : "Y component in meters (Earth-fixed)"
+              },
+        "Z" : {
+                "type" : "number",
+                "description" : "Z component in meters (Earth-fixed)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMColor" : {
+      "type" : "object",
+      "description" : "RGBA color",
+      "properties" : {
+        "RED" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Red component (0-255)"
+              },
+        "GREEN" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Green component (0-255)"
+              },
+        "BLUE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Blue component (0-255)"
+              },
+        "ALPHA" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Alpha component (0-255)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMNearFarScalar" : {
+      "type" : "object",
+      "description" : "Near/Far scalar for distance-based display",
+      "properties" : {
+        "NEAR_DISTANCE" : {
+                "type" : "number",
+                "description" : "Near distance in meters"
+              },
+        "NEAR_VALUE" : {
+                "type" : "number",
+                "description" : "Value at near distance"
+              },
+        "FAR_DISTANCE" : {
+                "type" : "number",
+                "description" : "Far distance in meters"
+              },
+        "FAR_VALUE" : {
+                "type" : "number",
+                "description" : "Value at far distance"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMBillboard" : {
+      "type" : "object",
+      "description" : "Billboard (icon) properties",
+      "properties" : {
+        "SHOW" : {
+                "type" : "boolean",
+                "description" : "Whether the billboard is displayed"
+              },
+        "IMAGE" : {
+                "type" : "string",
+                "description" : "URI of the billboard image"
+              },
+        "SCALE" : {
+                "type" : "number",
+                "description" : "Scale factor"
+              },
+        "COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Billboard color tint"
+              },
+        "HEIGHT_REFERENCE" : {
+                "$ref" : "#/definitions/CZMHeightReference",
+                "description" : "Height reference"
+              },
+        "PIXEL_OFFSET_X" : {
+                "type" : "number",
+                "description" : "Pixel offset X"
+              },
+        "PIXEL_OFFSET_Y" : {
+                "type" : "number",
+                "description" : "Pixel offset Y"
+              },
+        "HORIZONTAL_ORIGIN" : {
+                "$ref" : "#/definitions/CZMHorizontalOrigin",
+                "description" : "Horizontal origin"
+              },
+        "VERTICAL_ORIGIN" : {
+                "$ref" : "#/definitions/CZMVerticalOrigin",
+                "description" : "Vertical origin"
+              },
+        "TRANSLUCENCY_BY_DISTANCE" : {
+                "$ref" : "#/definitions/CZMNearFarScalar",
+                "description" : "Translucency by distance"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMLabel" : {
+      "type" : "object",
+      "description" : "Label properties",
+      "properties" : {
+        "SHOW" : {
+                "type" : "boolean",
+                "description" : "Whether the label is displayed"
+              },
+        "TEXT" : {
+                "type" : "string",
+                "description" : "Label text"
+              },
+        "FONT" : {
+                "type" : "string",
+                "description" : "Font CSS string (e.g. \"12pt Lucida Console\")"
+              },
+        "STYLE" : {
+                "$ref" : "#/definitions/CZMLabelStyle",
+                "description" : "Label style"
+              },
+        "FILL_COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Fill color"
+              },
+        "OUTLINE_COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Outline color"
+              },
+        "OUTLINE_WIDTH" : {
+                "type" : "number",
+                "description" : "Outline width in pixels"
+              },
+        "PIXEL_OFFSET_X" : {
+                "type" : "number",
+                "description" : "Pixel offset X"
+              },
+        "PIXEL_OFFSET_Y" : {
+                "type" : "number",
+                "description" : "Pixel offset Y"
+              },
+        "SCALE" : {
+                "type" : "number",
+                "description" : "Scale factor"
+              },
+        "HORIZONTAL_ORIGIN" : {
+                "$ref" : "#/definitions/CZMHorizontalOrigin",
+                "description" : "Horizontal origin"
+              },
+        "VERTICAL_ORIGIN" : {
+                "$ref" : "#/definitions/CZMVerticalOrigin",
+                "description" : "Vertical origin"
+              },
+        "HEIGHT_REFERENCE" : {
+                "$ref" : "#/definitions/CZMHeightReference",
+                "description" : "Height reference"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMPoint" : {
+      "type" : "object",
+      "description" : "Point properties",
+      "properties" : {
+        "SHOW" : {
+                "type" : "boolean",
+                "description" : "Whether the point is displayed"
+              },
+        "COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Point color"
+              },
+        "OUTLINE_COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Outline color"
+              },
+        "OUTLINE_WIDTH" : {
+                "type" : "number",
+                "description" : "Outline width in pixels"
+              },
+        "PIXEL_SIZE" : {
+                "type" : "number",
+                "description" : "Pixel size"
+              },
+        "HEIGHT_REFERENCE" : {
+                "$ref" : "#/definitions/CZMHeightReference",
+                "description" : "Height reference"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMPolyline" : {
+      "type" : "object",
+      "description" : "Polyline properties",
+      "properties" : {
+        "SHOW" : {
+                "type" : "boolean",
+                "description" : "Whether the polyline is displayed"
+              },
+        "POSITIONS_CARTOGRAPHIC_DEGREES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Positions as cartographic degrees [lon, lat, height, lon, lat, height, ...]"
+              },
+        "POSITIONS_CARTESIAN" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Positions as Cartesian [X, Y, Z, X, Y, Z, ...]"
+              },
+        "WIDTH" : {
+                "type" : "number",
+                "description" : "Line width in pixels"
+              },
+        "COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Line color (solid color material)"
+              },
+        "CLAMP_TO_GROUND" : {
+                "type" : "boolean",
+                "description" : "Whether to clamp to ground"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMPolygon" : {
+      "type" : "object",
+      "description" : "Polygon properties",
+      "properties" : {
+        "SHOW" : {
+                "type" : "boolean",
+                "description" : "Whether the polygon is displayed"
+              },
+        "POSITIONS_CARTOGRAPHIC_DEGREES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Positions as cartographic degrees [lon, lat, height, ...]"
+              },
+        "POSITIONS_CARTESIAN" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Positions as Cartesian [X, Y, Z, ...]"
+              },
+        "FILL" : {
+                "type" : "boolean",
+                "description" : "Fill flag"
+              },
+        "COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Fill color (solid color material)"
+              },
+        "OUTLINE" : {
+                "type" : "boolean",
+                "description" : "Outline flag"
+              },
+        "OUTLINE_COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Outline color"
+              },
+        "EXTRUDED_HEIGHT" : {
+                "type" : "number",
+                "description" : "Extruded height in meters"
+              },
+        "HEIGHT_REFERENCE" : {
+                "$ref" : "#/definitions/CZMHeightReference",
+                "description" : "Height reference"
+              },
+        "CLASSIFICATION_TYPE" : {
+                "$ref" : "#/definitions/CZMClassificationType",
+                "description" : "Classification type"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMModel" : {
+      "type" : "object",
+      "description" : "Model properties (glTF)",
+      "properties" : {
+        "SHOW" : {
+                "type" : "boolean",
+                "description" : "Whether the model is displayed"
+              },
+        "GLTF" : {
+                "type" : "string",
+                "description" : "URI to the glTF model"
+              },
+        "SCALE" : {
+                "type" : "number",
+                "description" : "Scale factor"
+              },
+        "MINIMUM_PIXEL_SIZE" : {
+                "type" : "number",
+                "description" : "Minimum pixel size"
+              },
+        "MAXIMUM_SCALE" : {
+                "type" : "number",
+                "description" : "Maximum scale"
+              },
+        "HEIGHT_REFERENCE" : {
+                "$ref" : "#/definitions/CZMHeightReference",
+                "description" : "Height reference"
+              },
+        "COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Color tint"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMPath" : {
+      "type" : "object",
+      "description" : "Path properties (orbit trail)",
+      "properties" : {
+        "SHOW" : {
+                "type" : "boolean",
+                "description" : "Whether the path is displayed"
+              },
+        "LEAD_TIME" : {
+                "type" : "number",
+                "description" : "Trail time in seconds (how far behind)"
+              },
+        "TRAIL_TIME" : {
+                "type" : "number",
+                "description" : "Lead time in seconds (how far ahead)"
+              },
+        "WIDTH" : {
+                "type" : "number",
+                "description" : "Line width in pixels"
+              },
+        "COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Path color"
+              },
+        "RESOLUTION" : {
+                "type" : "number",
+                "description" : "Resolution in seconds"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMEllipse" : {
+      "type" : "object",
+      "description" : "Ellipse properties (for ground circles/ellipses)",
+      "properties" : {
+        "SHOW" : {
+                "type" : "boolean",
+                "description" : "Whether the ellipse is displayed"
+              },
+        "SEMI_MAJOR_AXIS" : {
+                "type" : "number",
+                "description" : "Semi-major axis in meters"
+              },
+        "SEMI_MINOR_AXIS" : {
+                "type" : "number",
+                "description" : "Semi-minor axis in meters"
+              },
+        "ROTATION" : {
+                "type" : "number",
+                "description" : "Rotation from north in radians"
+              },
+        "FILL" : {
+                "type" : "boolean",
+                "description" : "Fill flag"
+              },
+        "COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Fill color"
+              },
+        "OUTLINE" : {
+                "type" : "boolean",
+                "description" : "Outline flag"
+              },
+        "OUTLINE_COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Outline color"
+              },
+        "HEIGHT" : {
+                "type" : "number",
+                "description" : "Height in meters"
+              },
+        "HEIGHT_REFERENCE" : {
+                "$ref" : "#/definitions/CZMHeightReference",
+                "description" : "Height reference"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMPacket" : {
+      "type" : "object",
+      "description" : "A CZML Packet describing an entity and its properties",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Unique identifier for this object"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Human-readable name"
+              },
+        "PARENT" : {
+                "type" : "string",
+                "description" : "Parent packet ID"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Description (HTML allowed)"
+              },
+        "AVAILABILITY" : {
+                "type" : "string",
+                "description" : "Availability interval (ISO 8601 interval)"
+              },
+        "POSITION_CARTOGRAPHIC_DEGREES" : {
+                "$ref" : "#/definitions/CZMCartographicDegrees",
+                "description" : "Position as cartographic degrees"
+              },
+        "POSITION_CARTESIAN" : {
+                "$ref" : "#/definitions/CZMCartesian",
+                "description" : "Position as Cartesian"
+              },
+        "POSITION_EPOCH" : {
+                "type" : "string",
+                "description" : "Time-tagged positions [time, lon, lat, height, time, lon, lat, height, ...]"
+              },
+        "POSITION_CARTOGRAPHIC_DEGREES_ARRAY" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Time-tagged cartographic degree values"
+              },
+        "POSITION_CARTESIAN_ARRAY" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Time-tagged Cartesian values"
+              },
+        "BILLBOARD" : {
+                "$ref" : "#/definitions/CZMBillboard",
+                "description" : "Billboard properties"
+              },
+        "LABEL" : {
+                "$ref" : "#/definitions/CZMLabel",
+                "description" : "Label properties"
+              },
+        "POINT" : {
+                "$ref" : "#/definitions/CZMPoint",
+                "description" : "Point properties"
+              },
+        "POLYLINE" : {
+                "$ref" : "#/definitions/CZMPolyline",
+                "description" : "Polyline properties"
+              },
+        "POLYGON" : {
+                "$ref" : "#/definitions/CZMPolygon",
+                "description" : "Polygon properties"
+              },
+        "MODEL" : {
+                "$ref" : "#/definitions/CZMModel",
+                "description" : "Model properties"
+              },
+        "PATH" : {
+                "$ref" : "#/definitions/CZMPath",
+                "description" : "Path properties"
+              },
+        "ELLIPSE" : {
+                "$ref" : "#/definitions/CZMEllipse",
+                "description" : "Ellipse properties"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZM" : {
+      "type" : "object",
+      "description" : "CZML Document",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Document-level name"
+              },
+        "VERSION" : {
+                "type" : "string",
+                "description" : "Document-level version"
+              },
+        "CLOCK_CURRENT_TIME" : {
+                "type" : "string",
+                "description" : "Clock settings - current time (ISO 8601)"
+              },
+        "CLOCK_INTERVAL" : {
+                "type" : "string",
+                "description" : "Clock settings - interval (ISO 8601 interval)"
+              },
+        "CLOCK_MULTIPLIER" : {
+                "type" : "number",
+                "description" : "Clock settings - multiplier"
+              },
+        "PACKETS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CZMPacket"},
+                "description" : "All packets in the document"
               }
       },
       "additionalProperties" : false
@@ -5193,6 +5967,166 @@
       },
       "additionalProperties" : false
     },
+    "GJNPosition" : {
+      "type" : "object",
+      "description" : "A single position (longitude, latitude, optional altitude)",
+      "properties" : {
+        "LONGITUDE" : {
+                "type" : "number",
+                "description" : "Longitude in decimal degrees (WGS84)"
+              },
+        "LATITUDE" : {
+                "type" : "number",
+                "description" : "Latitude in decimal degrees (WGS84)"
+              },
+        "ALTITUDE" : {
+                "type" : "number",
+                "description" : "Altitude in meters above WGS84 ellipsoid (optional)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GJNLinearRing" : {
+      "type" : "object",
+      "description" : "A linear ring is a closed LineString with 4+ positions (first = last)",
+      "properties" : {
+        "POSITIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GJNPosition"},
+                "description" : "Ordered positions forming the ring"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GJNPolygonRings" : {
+      "type" : "object",
+      "description" : "A polygon represented as an array of rings (outer boundary + holes)",
+      "properties" : {
+        "RINGS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GJNLinearRing"},
+                "description" : "Rings: first is outer boundary, rest are holes"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GJNGeometry" : {
+      "type" : "object",
+      "description" : "GeoJSON Geometry object",
+      "properties" : {
+        "TYPE" : {
+                "$ref" : "#/definitions/GJNGeometryType",
+                "description" : "Geometry type"
+              },
+        "POINT" : {
+                "$ref" : "#/definitions/GJNPosition",
+                "description" : "Single position (for Point)"
+              },
+        "POSITIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GJNPosition"},
+                "description" : "Array of positions (for MultiPoint, LineString)"
+              },
+        "RINGS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GJNLinearRing"},
+                "description" : "Array of position arrays (for MultiLineString, Polygon rings)"
+              },
+        "POLYGON_RINGS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GJNPolygonRings"},
+                "description" : "Array of polygons each as array of rings (for MultiPolygon)"
+              },
+        "GEOMETRIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GJNGeometry"},
+                "description" : "Child geometries (for GeometryCollection)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GJNProperty" : {
+      "type" : "object",
+      "description" : "A key-value property entry for Feature properties",
+      "properties" : {
+        "KEY" : {
+                "type" : "string",
+                "description" : "Property key"
+              },
+        "VALUE" : {
+                "type" : "string",
+                "description" : "Property value as string"
+              },
+        "NUM_VALUE" : {
+                "type" : "number",
+                "description" : "Property value as number (use if numeric)"
+              },
+        "IS_NUMERIC" : {
+                "type" : "boolean",
+                "description" : "True if NUM_VALUE should be used instead of VALUE"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GJNFeature" : {
+      "type" : "object",
+      "description" : "GeoJSON Feature object",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Feature identifier (optional)"
+              },
+        "GEOMETRY" : {
+                "$ref" : "#/definitions/GJNGeometry",
+                "description" : "Geometry of the feature"
+              },
+        "PROPERTIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GJNProperty"},
+                "description" : "Properties as key-value pairs"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GJNBoundingBox" : {
+      "type" : "object",
+      "description" : "GeoJSON Bounding Box [west, south, east, north] or [west, south, min-alt, east, north, max-alt]",
+      "properties" : {
+        "WEST" : {
+                "type" : "number",
+                "description" : "Western longitude"
+              },
+        "SOUTH" : {
+                "type" : "number",
+                "description" : "Southern latitude"
+              },
+        "EAST" : {
+                "type" : "number",
+                "description" : "Eastern longitude"
+              },
+        "NORTH" : {
+                "type" : "number",
+                "description" : "Northern latitude"
+              },
+        "MIN_ALTITUDE" : {
+                "type" : "number",
+                "description" : "Minimum altitude (optional)"
+              },
+        "MAX_ALTITUDE" : {
+                "type" : "number",
+                "description" : "Maximum altitude (optional)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GJN" : {
+      "type" : "object",
+      "description" : "GeoJSON FeatureCollection",
+      "properties" : {
+        "FEATURES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GJNFeature"},
+                "description" : "Features in the collection"
+              },
+        "BBOX" : {
+                "$ref" : "#/definitions/GJNBoundingBox",
+                "description" : "Bounding box (optional)"
+              }
+      },
+      "additionalProperties" : false
+    },
     "gnssObsData" : {
       "type" : "object",
       "description" : "GNSS Observation Data Point",
@@ -5350,6 +6284,296 @@
         "NOTES" : {
                 "type" : "string",
                 "description" : "Additional notes"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GPXLink" : {
+      "type" : "object",
+      "description" : "GPX link to an external resource",
+      "properties" : {
+        "HREF" : {
+                "type" : "string",
+                "description" : "URL"
+              },
+        "TEXT" : {
+                "type" : "string",
+                "description" : "Link text"
+              },
+        "TYPE" : {
+                "type" : "string",
+                "description" : "MIME type"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GPXWaypoint" : {
+      "type" : "object",
+      "description" : "A waypoint, point of interest, or named feature",
+      "properties" : {
+        "LATITUDE" : {
+                "type" : "number",
+                "description" : "Latitude in decimal degrees (WGS84)"
+              },
+        "LONGITUDE" : {
+                "type" : "number",
+                "description" : "Longitude in decimal degrees (WGS84)"
+              },
+        "ELEVATION" : {
+                "type" : "number",
+                "description" : "Elevation in meters above WGS84 ellipsoid"
+              },
+        "TIME" : {
+                "type" : "string",
+                "description" : "UTC timestamp (ISO 8601)"
+              },
+        "MAGVAR" : {
+                "type" : "number",
+                "description" : "Magnetic variation in degrees"
+              },
+        "GEOID_HEIGHT" : {
+                "type" : "number",
+                "description" : "Height of geoid above WGS84 ellipsoid in meters"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Waypoint name"
+              },
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "Comment"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Description"
+              },
+        "SOURCE" : {
+                "type" : "string",
+                "description" : "Source of data"
+              },
+        "LINKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GPXLink"},
+                "description" : "Links to additional information"
+              },
+        "SYMBOL" : {
+                "type" : "string",
+                "description" : "Symbol name"
+              },
+        "TYPE" : {
+                "type" : "string",
+                "description" : "Type/category"
+              },
+        "FIX" : {
+                "$ref" : "#/definitions/GPXFixType",
+                "description" : "Type of GPS fix"
+              },
+        "SAT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Number of satellites used for fix"
+              },
+        "HDOP" : {
+                "type" : "number",
+                "description" : "Horizontal dilution of precision"
+              },
+        "VDOP" : {
+                "type" : "number",
+                "description" : "Vertical dilution of precision"
+              },
+        "PDOP" : {
+                "type" : "number",
+                "description" : "Position dilution of precision"
+              },
+        "AGE_OF_DGPS_DATA" : {
+                "type" : "number",
+                "description" : "Age of DGPS data in seconds"
+              },
+        "DGPS_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "DGPS station ID"
+              },
+        "SPEED" : {
+                "type" : "number",
+                "description" : "Speed in meters per second"
+              },
+        "COURSE" : {
+                "type" : "number",
+                "description" : "Course/heading in degrees true"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GPXTrackSegment" : {
+      "type" : "object",
+      "description" : "Track segment (continuous span of track points)",
+      "properties" : {
+        "POINTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GPXWaypoint"},
+                "description" : "Ordered track points in this segment"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GPXTrack" : {
+      "type" : "object",
+      "description" : "Track (ordered list of track segments)",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Track name"
+              },
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "Comment"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Description"
+              },
+        "SOURCE" : {
+                "type" : "string",
+                "description" : "Source of data"
+              },
+        "LINKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GPXLink"},
+                "description" : "Links to additional information"
+              },
+        "NUMBER" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Track number"
+              },
+        "TYPE" : {
+                "type" : "string",
+                "description" : "Type/category"
+              },
+        "SEGMENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GPXTrackSegment"},
+                "description" : "Track segments"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GPXRoute" : {
+      "type" : "object",
+      "description" : "Route (ordered list of waypoints for navigation)",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Route name"
+              },
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "Comment"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Description"
+              },
+        "SOURCE" : {
+                "type" : "string",
+                "description" : "Source of data"
+              },
+        "LINKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GPXLink"},
+                "description" : "Links to additional information"
+              },
+        "NUMBER" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Route number"
+              },
+        "TYPE" : {
+                "type" : "string",
+                "description" : "Type/category"
+              },
+        "POINTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GPXWaypoint"},
+                "description" : "Route points (ordered waypoints)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GPX" : {
+      "type" : "object",
+      "description" : "GPX Document",
+      "properties" : {
+        "VERSION" : {
+                "type" : "string",
+                "description" : "GPX schema version"
+              },
+        "CREATOR" : {
+                "type" : "string",
+                "description" : "Creator software/organization"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "File name"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "File description"
+              },
+        "AUTHOR_NAME" : {
+                "type" : "string",
+                "description" : "Person or organization who created the file"
+              },
+        "AUTHOR_EMAIL" : {
+                "type" : "string",
+                "description" : "Author email"
+              },
+        "AUTHOR_LINK" : {
+                "$ref" : "#/definitions/GPXLink",
+                "description" : "Author link"
+              },
+        "COPYRIGHT_AUTHOR" : {
+                "type" : "string",
+                "description" : "Copyright holder"
+              },
+        "COPYRIGHT_YEAR" : {
+                "type" : "string",
+                "description" : "Copyright year"
+              },
+        "COPYRIGHT_LICENSE" : {
+                "type" : "string",
+                "description" : "Copyright license URL"
+              },
+        "LINKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GPXLink"},
+                "description" : "Links to additional information"
+              },
+        "TIME" : {
+                "type" : "string",
+                "description" : "Creation timestamp (ISO 8601)"
+              },
+        "KEYWORDS" : {
+                "type" : "string",
+                "description" : "Keywords"
+              },
+        "BOUNDS_MIN_LAT" : {
+                "type" : "number",
+                "description" : "Minimum latitude of bounding box"
+              },
+        "BOUNDS_MIN_LON" : {
+                "type" : "number",
+                "description" : "Minimum longitude of bounding box"
+              },
+        "BOUNDS_MAX_LAT" : {
+                "type" : "number",
+                "description" : "Maximum latitude of bounding box"
+              },
+        "BOUNDS_MAX_LON" : {
+                "type" : "number",
+                "description" : "Maximum longitude of bounding box"
+              },
+        "WAYPOINTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GPXWaypoint"},
+                "description" : "Waypoints"
+              },
+        "ROUTES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GPXRoute"},
+                "description" : "Routes"
+              },
+        "TRACKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GPXTrack"},
+                "description" : "Tracks"
               }
       },
       "additionalProperties" : false
@@ -5900,6 +7124,670 @@
         "NOTES" : {
                 "type" : "string",
                 "description" : "Additional notes"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLCoordinate" : {
+      "type" : "object",
+      "description" : "KML coordinate (longitude, latitude, optional altitude)",
+      "properties" : {
+        "LONGITUDE" : {
+                "type" : "number",
+                "description" : "Longitude in decimal degrees"
+              },
+        "LATITUDE" : {
+                "type" : "number",
+                "description" : "Latitude in decimal degrees"
+              },
+        "ALTITUDE" : {
+                "type" : "number",
+                "description" : "Altitude in meters"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLLookAt" : {
+      "type" : "object",
+      "description" : "LookAt viewpoint",
+      "properties" : {
+        "LONGITUDE" : {
+                "type" : "number",
+                "description" : "Longitude of the point being looked at"
+              },
+        "LATITUDE" : {
+                "type" : "number",
+                "description" : "Latitude of the point being looked at"
+              },
+        "ALTITUDE" : {
+                "type" : "number",
+                "description" : "Altitude of the point being looked at"
+              },
+        "HEADING" : {
+                "type" : "number",
+                "description" : "Heading in degrees (0=North)"
+              },
+        "TILT" : {
+                "type" : "number",
+                "description" : "Tilt in degrees from vertical (0=straight down)"
+              },
+        "RANGE" : {
+                "type" : "number",
+                "description" : "Range in meters from the point"
+              },
+        "ALTITUDE_MODE" : {
+                "$ref" : "#/definitions/KMLAltitudeMode",
+                "description" : "Altitude mode"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLCamera" : {
+      "type" : "object",
+      "description" : "Camera viewpoint",
+      "properties" : {
+        "LONGITUDE" : {
+                "type" : "number",
+                "description" : "Camera longitude"
+              },
+        "LATITUDE" : {
+                "type" : "number",
+                "description" : "Camera latitude"
+              },
+        "ALTITUDE" : {
+                "type" : "number",
+                "description" : "Camera altitude"
+              },
+        "HEADING" : {
+                "type" : "number",
+                "description" : "Heading in degrees (0=North)"
+              },
+        "TILT" : {
+                "type" : "number",
+                "description" : "Tilt in degrees from vertical"
+              },
+        "ROLL" : {
+                "type" : "number",
+                "description" : "Roll in degrees"
+              },
+        "ALTITUDE_MODE" : {
+                "$ref" : "#/definitions/KMLAltitudeMode",
+                "description" : "Altitude mode"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLIconStyle" : {
+      "type" : "object",
+      "description" : "Icon style",
+      "properties" : {
+        "COLOR" : {
+                "type" : "string",
+                "description" : "KML color in aabbggrr hex format"
+              },
+        "COLOR_MODE" : {
+                "$ref" : "#/definitions/KMLColorMode",
+                "description" : "Color mode"
+              },
+        "SCALE" : {
+                "type" : "number",
+                "description" : "Scale factor"
+              },
+        "HEADING" : {
+                "type" : "number",
+                "description" : "Heading in degrees"
+              },
+        "ICON_HREF" : {
+                "type" : "string",
+                "description" : "Icon href (URL)"
+              },
+        "HOTSPOT_X" : {
+                "type" : "number",
+                "description" : "Hot spot X value"
+              },
+        "HOTSPOT_Y" : {
+                "type" : "number",
+                "description" : "Hot spot Y value"
+              },
+        "HOTSPOT_X_UNITS" : {
+                "$ref" : "#/definitions/KMLUnits",
+                "description" : "Hot spot X units"
+              },
+        "HOTSPOT_Y_UNITS" : {
+                "$ref" : "#/definitions/KMLUnits",
+                "description" : "Hot spot Y units"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLLineStyle" : {
+      "type" : "object",
+      "description" : "Line style",
+      "properties" : {
+        "COLOR" : {
+                "type" : "string",
+                "description" : "KML color in aabbggrr hex format"
+              },
+        "COLOR_MODE" : {
+                "$ref" : "#/definitions/KMLColorMode",
+                "description" : "Color mode"
+              },
+        "WIDTH" : {
+                "type" : "number",
+                "description" : "Width in pixels"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLPolyStyle" : {
+      "type" : "object",
+      "description" : "Polygon style",
+      "properties" : {
+        "COLOR" : {
+                "type" : "string",
+                "description" : "KML color in aabbggrr hex format"
+              },
+        "COLOR_MODE" : {
+                "$ref" : "#/definitions/KMLColorMode",
+                "description" : "Color mode"
+              },
+        "FILL" : {
+                "type" : "boolean",
+                "description" : "Whether to fill"
+              },
+        "OUTLINE" : {
+                "type" : "boolean",
+                "description" : "Whether to outline"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLLabelStyle" : {
+      "type" : "object",
+      "description" : "Label style",
+      "properties" : {
+        "COLOR" : {
+                "type" : "string",
+                "description" : "KML color in aabbggrr hex format"
+              },
+        "COLOR_MODE" : {
+                "$ref" : "#/definitions/KMLColorMode",
+                "description" : "Color mode"
+              },
+        "SCALE" : {
+                "type" : "number",
+                "description" : "Scale factor"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLBalloonStyle" : {
+      "type" : "object",
+      "description" : "Balloon style",
+      "properties" : {
+        "BG_COLOR" : {
+                "type" : "string",
+                "description" : "Background color in aabbggrr hex format"
+              },
+        "TEXT_COLOR" : {
+                "type" : "string",
+                "description" : "Text color in aabbggrr hex format"
+              },
+        "TEXT" : {
+                "type" : "string",
+                "description" : "Balloon text template (supports $[name], $[description])"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLStyle" : {
+      "type" : "object",
+      "description" : "Style definition",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Style identifier"
+              },
+        "ICON_STYLE" : {
+                "$ref" : "#/definitions/KMLIconStyle",
+                "description" : "Icon style"
+              },
+        "LABEL_STYLE" : {
+                "$ref" : "#/definitions/KMLLabelStyle",
+                "description" : "Label style"
+              },
+        "LINE_STYLE" : {
+                "$ref" : "#/definitions/KMLLineStyle",
+                "description" : "Line style"
+              },
+        "POLY_STYLE" : {
+                "$ref" : "#/definitions/KMLPolyStyle",
+                "description" : "Polygon style"
+              },
+        "BALLOON_STYLE" : {
+                "$ref" : "#/definitions/KMLBalloonStyle",
+                "description" : "Balloon style"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLStyleMapPair" : {
+      "type" : "object",
+      "description" : "Style map pair",
+      "properties" : {
+        "STATE" : {
+                "$ref" : "#/definitions/KMLStyleState",
+                "description" : "State (normal or highlight)"
+              },
+        "STYLE_URL" : {
+                "type" : "string",
+                "description" : "Style URL or inline style ID"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLStyleMap" : {
+      "type" : "object",
+      "description" : "Style map (normal/highlight pair)",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Style map identifier"
+              },
+        "PAIRS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLStyleMapPair"},
+                "description" : "Pairs"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLPoint" : {
+      "type" : "object",
+      "description" : "Point geometry",
+      "properties" : {
+        "COORDINATES" : {
+                "$ref" : "#/definitions/KMLCoordinate",
+                "description" : "Coordinate"
+              },
+        "ALTITUDE_MODE" : {
+                "$ref" : "#/definitions/KMLAltitudeMode",
+                "description" : "Altitude mode"
+              },
+        "EXTRUDE" : {
+                "type" : "boolean",
+                "description" : "Whether to extrude to ground"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLLineString" : {
+      "type" : "object",
+      "description" : "LineString geometry",
+      "properties" : {
+        "COORDINATES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLCoordinate"},
+                "description" : "Coordinates"
+              },
+        "ALTITUDE_MODE" : {
+                "$ref" : "#/definitions/KMLAltitudeMode",
+                "description" : "Altitude mode"
+              },
+        "EXTRUDE" : {
+                "type" : "boolean",
+                "description" : "Whether to extrude to ground"
+              },
+        "TESSELLATE" : {
+                "type" : "boolean",
+                "description" : "Whether to tessellate (follow terrain)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLLinearRing" : {
+      "type" : "object",
+      "description" : "LinearRing geometry",
+      "properties" : {
+        "COORDINATES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLCoordinate"},
+                "description" : "Coordinates (first = last to close the ring)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLPolygon" : {
+      "type" : "object",
+      "description" : "Polygon geometry",
+      "properties" : {
+        "OUTER_BOUNDARY" : {
+                "$ref" : "#/definitions/KMLLinearRing",
+                "description" : "Outer boundary"
+              },
+        "INNER_BOUNDARIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLLinearRing"},
+                "description" : "Inner boundaries (holes)"
+              },
+        "ALTITUDE_MODE" : {
+                "$ref" : "#/definitions/KMLAltitudeMode",
+                "description" : "Altitude mode"
+              },
+        "EXTRUDE" : {
+                "type" : "boolean",
+                "description" : "Whether to extrude to ground"
+              },
+        "TESSELLATE" : {
+                "type" : "boolean",
+                "description" : "Whether to tessellate"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLMultiGeometry" : {
+      "type" : "object",
+      "description" : "MultiGeometry",
+      "properties" : {
+        "POINTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLPoint"},
+                "description" : "Child points"
+              },
+        "LINE_STRINGS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLLineString"},
+                "description" : "Child line strings"
+              },
+        "POLYGONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLPolygon"},
+                "description" : "Child polygons"
+              },
+        "MULTI_GEOMETRIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLMultiGeometry"},
+                "description" : "Nested multi-geometries"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLTimeSpan" : {
+      "type" : "object",
+      "description" : "TimeSpan",
+      "properties" : {
+        "BEGIN" : {
+                "type" : "string",
+                "description" : "Begin time (ISO 8601)"
+              },
+        "END" : {
+                "type" : "string",
+                "description" : "End time (ISO 8601)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLTimeStamp" : {
+      "type" : "object",
+      "description" : "TimeStamp",
+      "properties" : {
+        "WHEN" : {
+                "type" : "string",
+                "description" : "Time (ISO 8601)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLData" : {
+      "type" : "object",
+      "description" : "Extended data key-value pair",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Data name"
+              },
+        "DISPLAY_NAME" : {
+                "type" : "string",
+                "description" : "Display name"
+              },
+        "VALUE" : {
+                "type" : "string",
+                "description" : "Data value"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLNetworkLink" : {
+      "type" : "object",
+      "description" : "Network link",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Name of the network link"
+              },
+        "VISIBILITY" : {
+                "type" : "boolean",
+                "description" : "Whether the link is visible"
+              },
+        "HREF" : {
+                "type" : "string",
+                "description" : "Link URL"
+              },
+        "REFRESH_MODE" : {
+                "$ref" : "#/definitions/KMLRefreshMode",
+                "description" : "Refresh mode"
+              },
+        "REFRESH_INTERVAL" : {
+                "type" : "number",
+                "description" : "Refresh interval in seconds"
+              },
+        "VIEW_REFRESH_MODE" : {
+                "$ref" : "#/definitions/KMLViewRefreshMode",
+                "description" : "View refresh mode"
+              },
+        "VIEW_REFRESH_TIME" : {
+                "type" : "number",
+                "description" : "View refresh time in seconds"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLGroundOverlay" : {
+      "type" : "object",
+      "description" : "Ground overlay",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Name"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Description"
+              },
+        "VISIBILITY" : {
+                "type" : "boolean",
+                "description" : "Visibility"
+              },
+        "ICON_HREF" : {
+                "type" : "string",
+                "description" : "Icon/image URL"
+              },
+        "COLOR" : {
+                "type" : "string",
+                "description" : "Color in aabbggrr hex format"
+              },
+        "NORTH" : {
+                "type" : "number",
+                "description" : "North latitude of bounding box"
+              },
+        "SOUTH" : {
+                "type" : "number",
+                "description" : "South latitude of bounding box"
+              },
+        "EAST" : {
+                "type" : "number",
+                "description" : "East longitude of bounding box"
+              },
+        "WEST" : {
+                "type" : "number",
+                "description" : "West longitude of bounding box"
+              },
+        "ROTATION" : {
+                "type" : "number",
+                "description" : "Rotation in degrees"
+              },
+        "ALTITUDE" : {
+                "type" : "number",
+                "description" : "Altitude in meters"
+              },
+        "ALTITUDE_MODE" : {
+                "$ref" : "#/definitions/KMLAltitudeMode",
+                "description" : "Altitude mode"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLPlacemark" : {
+      "type" : "object",
+      "description" : "Placemark feature",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Placemark name"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Description (may contain HTML)"
+              },
+        "VISIBILITY" : {
+                "type" : "boolean",
+                "description" : "Visibility flag"
+              },
+        "STYLE_URL" : {
+                "type" : "string",
+                "description" : "Style URL reference"
+              },
+        "STYLE" : {
+                "$ref" : "#/definitions/KMLStyle",
+                "description" : "Inline style"
+              },
+        "SNIPPET" : {
+                "type" : "string",
+                "description" : "Snippet (short description)"
+              },
+        "POINT" : {
+                "$ref" : "#/definitions/KMLPoint",
+                "description" : "Point geometry"
+              },
+        "LINE_STRING" : {
+                "$ref" : "#/definitions/KMLLineString",
+                "description" : "LineString geometry"
+              },
+        "POLYGON" : {
+                "$ref" : "#/definitions/KMLPolygon",
+                "description" : "Polygon geometry"
+              },
+        "MULTI_GEOMETRY" : {
+                "$ref" : "#/definitions/KMLMultiGeometry",
+                "description" : "MultiGeometry"
+              },
+        "LOOK_AT" : {
+                "$ref" : "#/definitions/KMLLookAt",
+                "description" : "LookAt viewpoint"
+              },
+        "CAMERA" : {
+                "$ref" : "#/definitions/KMLCamera",
+                "description" : "Camera viewpoint"
+              },
+        "TIME_SPAN" : {
+                "$ref" : "#/definitions/KMLTimeSpan",
+                "description" : "TimeSpan"
+              },
+        "TIME_STAMP" : {
+                "$ref" : "#/definitions/KMLTimeStamp",
+                "description" : "TimeStamp"
+              },
+        "EXTENDED_DATA" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLData"},
+                "description" : "Extended data"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLFolder" : {
+      "type" : "object",
+      "description" : "Folder container",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Folder name"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Description"
+              },
+        "VISIBILITY" : {
+                "type" : "boolean",
+                "description" : "Visibility flag"
+              },
+        "OPEN" : {
+                "type" : "boolean",
+                "description" : "Whether folder is open in tree view"
+              },
+        "PLACEMARKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLPlacemark"},
+                "description" : "Placemarks in this folder"
+              },
+        "FOLDERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLFolder"},
+                "description" : "Sub-folders"
+              },
+        "NETWORK_LINKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLNetworkLink"},
+                "description" : "Network links"
+              },
+        "GROUND_OVERLAYS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLGroundOverlay"},
+                "description" : "Ground overlays"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KML" : {
+      "type" : "object",
+      "description" : "KML Document",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Document name"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Document description"
+              },
+        "VISIBILITY" : {
+                "type" : "boolean",
+                "description" : "Whether document is visible"
+              },
+        "OPEN" : {
+                "type" : "boolean",
+                "description" : "Whether document is open in tree view"
+              },
+        "STYLES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLStyle"},
+                "description" : "Shared styles"
+              },
+        "STYLE_MAPS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLStyleMap"},
+                "description" : "Style maps"
+              },
+        "PLACEMARKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLPlacemark"},
+                "description" : "Top-level placemarks"
+              },
+        "FOLDERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLFolder"},
+                "description" : "Top-level folders"
+              },
+        "NETWORK_LINKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLNetworkLink"},
+                "description" : "Network links"
+              },
+        "GROUND_OVERLAYS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLGroundOverlay"},
+                "description" : "Ground overlays"
               }
       },
       "additionalProperties" : false
@@ -16421,7 +18309,7 @@
                 "$ref" : "#/definitions/RecordType"
               },
         "value" : {
-                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ACM" },{ "$ref" : "#/definitions/ACR" },{ "$ref" : "#/definitions/AEM" },{ "$ref" : "#/definitions/ANI" },{ "$ref" : "#/definitions/AOF" },{ "$ref" : "#/definitions/APM" },{ "$ref" : "#/definitions/ARM" },{ "$ref" : "#/definitions/AST" },{ "$ref" : "#/definitions/ATD" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BAL" },{ "$ref" : "#/definitions/BEM" },{ "$ref" : "#/definitions/BMC" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/BUS" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CFP" },{ "$ref" : "#/definitions/CHN" },{ "$ref" : "#/definitions/CLT" },{ "$ref" : "#/definitions/CMS" },{ "$ref" : "#/definitions/COM" },{ "$ref" : "#/definitions/CRD" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/DFH" },{ "$ref" : "#/definitions/DMG" },{ "$ref" : "#/definitions/DOA" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/ENC" },{ "$ref" : "#/definitions/ENV" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/EWR" },{ "$ref" : "#/definitions/FCS" },{ "$ref" : "#/definitions/GDI" },{ "$ref" : "#/definitions/GEO" },{ "$ref" : "#/definitions/GNO" },{ "$ref" : "#/definitions/GRV" },{ "$ref" : "#/definitions/GVH" },{ "$ref" : "#/definitions/HEL" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/ION" },{ "$ref" : "#/definitions/IRO" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/LKS" },{ "$ref" : "#/definitions/LND" },{ "$ref" : "#/definitions/LNE" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MFE" },{ "$ref" : "#/definitions/MNF" },{ "$ref" : "#/definitions/MNV" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/MSL" },{ "$ref" : "#/definitions/MST" },{ "$ref" : "#/definitions/MTI" },{ "$ref" : "#/definitions/NAV" },{ "$ref" : "#/definitions/OBD" },{ "$ref" : "#/definitions/OBT" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OOA" },{ "$ref" : "#/definitions/OOB" },{ "$ref" : "#/definitions/OOD" },{ "$ref" : "#/definitions/OOE" },{ "$ref" : "#/definitions/OOI" },{ "$ref" : "#/definitions/OOL" },{ "$ref" : "#/definitions/OON" },{ "$ref" : "#/definitions/OOS" },{ "$ref" : "#/definitions/OOT" },{ "$ref" : "#/definitions/OPM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PCF" },{ "$ref" : "#/definitions/PHY" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PLK" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/RAF" },{ "$ref" : "#/definitions/RCF" },{ "$ref" : "#/definitions/RDM" },{ "$ref" : "#/definitions/RDO" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFB" },{ "$ref" : "#/definitions/RFE" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/RFO" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SAR" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SDL" },{ "$ref" : "#/definitions/SEN" },{ "$ref" : "#/definitions/SEO" },{ "$ref" : "#/definitions/SEV" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/SKI" },{ "$ref" : "#/definitions/SNR" },{ "$ref" : "#/definitions/SOI" },{ "$ref" : "#/definitions/SON" },{ "$ref" : "#/definitions/SPP" },{ "$ref" : "#/definitions/SPW" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/STR" },{ "$ref" : "#/definitions/STV" },{ "$ref" : "#/definitions/SWR" },{ "$ref" : "#/definitions/TCF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/TKG" },{ "$ref" : "#/definitions/TME" },{ "$ref" : "#/definitions/TMF" },{ "$ref" : "#/definitions/TPN" },{ "$ref" : "#/definitions/TRK" },{ "$ref" : "#/definitions/TRN" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/WPN" },{ "$ref" : "#/definitions/WTH" },{ "$ref" : "#/definitions/XTC" }],
+                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ACM" },{ "$ref" : "#/definitions/ACR" },{ "$ref" : "#/definitions/AEM" },{ "$ref" : "#/definitions/ANI" },{ "$ref" : "#/definitions/AOF" },{ "$ref" : "#/definitions/APM" },{ "$ref" : "#/definitions/ARM" },{ "$ref" : "#/definitions/AST" },{ "$ref" : "#/definitions/ATD" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BAL" },{ "$ref" : "#/definitions/BEM" },{ "$ref" : "#/definitions/BMC" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/BUS" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CFP" },{ "$ref" : "#/definitions/CHN" },{ "$ref" : "#/definitions/CLT" },{ "$ref" : "#/definitions/CMS" },{ "$ref" : "#/definitions/COM" },{ "$ref" : "#/definitions/COT" },{ "$ref" : "#/definitions/CRD" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/CZM" },{ "$ref" : "#/definitions/DFH" },{ "$ref" : "#/definitions/DMG" },{ "$ref" : "#/definitions/DOA" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/ENC" },{ "$ref" : "#/definitions/ENV" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/EWR" },{ "$ref" : "#/definitions/FCS" },{ "$ref" : "#/definitions/GDI" },{ "$ref" : "#/definitions/GEO" },{ "$ref" : "#/definitions/GJN" },{ "$ref" : "#/definitions/GNO" },{ "$ref" : "#/definitions/GPX" },{ "$ref" : "#/definitions/GRV" },{ "$ref" : "#/definitions/GVH" },{ "$ref" : "#/definitions/HEL" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/ION" },{ "$ref" : "#/definitions/IRO" },{ "$ref" : "#/definitions/KML" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/LKS" },{ "$ref" : "#/definitions/LND" },{ "$ref" : "#/definitions/LNE" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MFE" },{ "$ref" : "#/definitions/MNF" },{ "$ref" : "#/definitions/MNV" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/MSL" },{ "$ref" : "#/definitions/MST" },{ "$ref" : "#/definitions/MTI" },{ "$ref" : "#/definitions/NAV" },{ "$ref" : "#/definitions/OBD" },{ "$ref" : "#/definitions/OBT" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OOA" },{ "$ref" : "#/definitions/OOB" },{ "$ref" : "#/definitions/OOD" },{ "$ref" : "#/definitions/OOE" },{ "$ref" : "#/definitions/OOI" },{ "$ref" : "#/definitions/OOL" },{ "$ref" : "#/definitions/OON" },{ "$ref" : "#/definitions/OOS" },{ "$ref" : "#/definitions/OOT" },{ "$ref" : "#/definitions/OPM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PCF" },{ "$ref" : "#/definitions/PHY" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PLK" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/RAF" },{ "$ref" : "#/definitions/RCF" },{ "$ref" : "#/definitions/RDM" },{ "$ref" : "#/definitions/RDO" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFB" },{ "$ref" : "#/definitions/RFE" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/RFO" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SAR" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SDL" },{ "$ref" : "#/definitions/SEN" },{ "$ref" : "#/definitions/SEO" },{ "$ref" : "#/definitions/SEV" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/SKI" },{ "$ref" : "#/definitions/SNR" },{ "$ref" : "#/definitions/SOI" },{ "$ref" : "#/definitions/SON" },{ "$ref" : "#/definitions/SPP" },{ "$ref" : "#/definitions/SPW" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/STR" },{ "$ref" : "#/definitions/STV" },{ "$ref" : "#/definitions/SWR" },{ "$ref" : "#/definitions/TCF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/TKG" },{ "$ref" : "#/definitions/TME" },{ "$ref" : "#/definitions/TMF" },{ "$ref" : "#/definitions/TPN" },{ "$ref" : "#/definitions/TRK" },{ "$ref" : "#/definitions/TRN" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/WPN" },{ "$ref" : "#/definitions/WTH" },{ "$ref" : "#/definitions/XTC" }],
                 "description" : "The record data (union of all supported standards)"
               },
         "standard" : {

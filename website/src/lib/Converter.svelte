@@ -61,7 +61,6 @@
       { abbr: "TDM", desc: "Tracking Data Message" },
       { abbr: "TRK", desc: "Track" },
       { abbr: "TKG", desc: "Tracking and Data Fusion" },
-      { abbr: "NAV", desc: "Navigation" },
     ]},
     { name: "Space Objects & Catalog", types: [
       { abbr: "CAT", desc: "Catalog Entity Message" },
@@ -185,6 +184,13 @@
       { abbr: "REC", desc: "Record Wrapper" },
       { abbr: "STF", desc: "Spatial Coverage Definition" },
       { abbr: "PLG", desc: "Plugin Declaration" },
+    ]},
+    { name: "Geospatial & Industry", types: [
+      { abbr: "GJN", desc: "GeoJSON Feature Collection" },
+      { abbr: "CZM", desc: "CZML (Cesium Language)" },
+      { abbr: "KML", desc: "Keyhole Markup Language" },
+      { abbr: "GPX", desc: "GPS Exchange Format" },
+      { abbr: "COT", desc: "Cursor on Target" },
     ]},
   ];
 

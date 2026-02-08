@@ -1,0 +1,300 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "GPXFixType" : {
+      "type" : "string",
+      "enum": ["NONE", "FIX_2D", "FIX_3D", "DGPS", "PPS"]
+    },
+    "GPXLink" : {
+      "type" : "object",
+      "description" : "GPX link to an external resource",
+      "properties" : {
+        "HREF" : {
+                "type" : "string",
+                "description" : "URL"
+              },
+        "TEXT" : {
+                "type" : "string",
+                "description" : "Link text"
+              },
+        "TYPE" : {
+                "type" : "string",
+                "description" : "MIME type"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GPXWaypoint" : {
+      "type" : "object",
+      "description" : "A waypoint, point of interest, or named feature",
+      "properties" : {
+        "LATITUDE" : {
+                "type" : "number",
+                "description" : "Latitude in decimal degrees (WGS84)"
+              },
+        "LONGITUDE" : {
+                "type" : "number",
+                "description" : "Longitude in decimal degrees (WGS84)"
+              },
+        "ELEVATION" : {
+                "type" : "number",
+                "description" : "Elevation in meters above WGS84 ellipsoid"
+              },
+        "TIME" : {
+                "type" : "string",
+                "description" : "UTC timestamp (ISO 8601)"
+              },
+        "MAGVAR" : {
+                "type" : "number",
+                "description" : "Magnetic variation in degrees"
+              },
+        "GEOID_HEIGHT" : {
+                "type" : "number",
+                "description" : "Height of geoid above WGS84 ellipsoid in meters"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Waypoint name"
+              },
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "Comment"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Description"
+              },
+        "SOURCE" : {
+                "type" : "string",
+                "description" : "Source of data"
+              },
+        "LINKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GPXLink"},
+                "description" : "Links to additional information"
+              },
+        "SYMBOL" : {
+                "type" : "string",
+                "description" : "Symbol name"
+              },
+        "TYPE" : {
+                "type" : "string",
+                "description" : "Type/category"
+              },
+        "FIX" : {
+                "$ref" : "#/definitions/GPXFixType",
+                "description" : "Type of GPS fix"
+              },
+        "SAT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Number of satellites used for fix"
+              },
+        "HDOP" : {
+                "type" : "number",
+                "description" : "Horizontal dilution of precision"
+              },
+        "VDOP" : {
+                "type" : "number",
+                "description" : "Vertical dilution of precision"
+              },
+        "PDOP" : {
+                "type" : "number",
+                "description" : "Position dilution of precision"
+              },
+        "AGE_OF_DGPS_DATA" : {
+                "type" : "number",
+                "description" : "Age of DGPS data in seconds"
+              },
+        "DGPS_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "DGPS station ID"
+              },
+        "SPEED" : {
+                "type" : "number",
+                "description" : "Speed in meters per second"
+              },
+        "COURSE" : {
+                "type" : "number",
+                "description" : "Course/heading in degrees true"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GPXTrackSegment" : {
+      "type" : "object",
+      "description" : "Track segment (continuous span of track points)",
+      "properties" : {
+        "POINTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GPXWaypoint"},
+                "description" : "Ordered track points in this segment"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GPXTrack" : {
+      "type" : "object",
+      "description" : "Track (ordered list of track segments)",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Track name"
+              },
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "Comment"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Description"
+              },
+        "SOURCE" : {
+                "type" : "string",
+                "description" : "Source of data"
+              },
+        "LINKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GPXLink"},
+                "description" : "Links to additional information"
+              },
+        "NUMBER" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Track number"
+              },
+        "TYPE" : {
+                "type" : "string",
+                "description" : "Type/category"
+              },
+        "SEGMENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GPXTrackSegment"},
+                "description" : "Track segments"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GPXRoute" : {
+      "type" : "object",
+      "description" : "Route (ordered list of waypoints for navigation)",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Route name"
+              },
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "Comment"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Description"
+              },
+        "SOURCE" : {
+                "type" : "string",
+                "description" : "Source of data"
+              },
+        "LINKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GPXLink"},
+                "description" : "Links to additional information"
+              },
+        "NUMBER" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Route number"
+              },
+        "TYPE" : {
+                "type" : "string",
+                "description" : "Type/category"
+              },
+        "POINTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GPXWaypoint"},
+                "description" : "Route points (ordered waypoints)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GPX" : {
+      "type" : "object",
+      "description" : "GPX Document",
+      "properties" : {
+        "VERSION" : {
+                "type" : "string",
+                "description" : "GPX schema version"
+              },
+        "CREATOR" : {
+                "type" : "string",
+                "description" : "Creator software/organization"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "File name"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "File description"
+              },
+        "AUTHOR_NAME" : {
+                "type" : "string",
+                "description" : "Person or organization who created the file"
+              },
+        "AUTHOR_EMAIL" : {
+                "type" : "string",
+                "description" : "Author email"
+              },
+        "AUTHOR_LINK" : {
+                "$ref" : "#/definitions/GPXLink",
+                "description" : "Author link"
+              },
+        "COPYRIGHT_AUTHOR" : {
+                "type" : "string",
+                "description" : "Copyright holder"
+              },
+        "COPYRIGHT_YEAR" : {
+                "type" : "string",
+                "description" : "Copyright year"
+              },
+        "COPYRIGHT_LICENSE" : {
+                "type" : "string",
+                "description" : "Copyright license URL"
+              },
+        "LINKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GPXLink"},
+                "description" : "Links to additional information"
+              },
+        "TIME" : {
+                "type" : "string",
+                "description" : "Creation timestamp (ISO 8601)"
+              },
+        "KEYWORDS" : {
+                "type" : "string",
+                "description" : "Keywords"
+              },
+        "BOUNDS_MIN_LAT" : {
+                "type" : "number",
+                "description" : "Minimum latitude of bounding box"
+              },
+        "BOUNDS_MIN_LON" : {
+                "type" : "number",
+                "description" : "Minimum longitude of bounding box"
+              },
+        "BOUNDS_MAX_LAT" : {
+                "type" : "number",
+                "description" : "Maximum latitude of bounding box"
+              },
+        "BOUNDS_MAX_LON" : {
+                "type" : "number",
+                "description" : "Maximum longitude of bounding box"
+              },
+        "WAYPOINTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GPXWaypoint"},
+                "description" : "Waypoints"
+              },
+        "ROUTES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GPXRoute"},
+                "description" : "Routes"
+              },
+        "TRACKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/GPXTrack"},
+                "description" : "Tracks"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/GPX"
+}

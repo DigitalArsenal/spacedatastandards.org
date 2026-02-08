@@ -1,0 +1,172 @@
+// Hash: 6aec30c7ddc6f550df2c2bf01b6d49254441ba165aa6779def14fd70543baec3
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+// GPX (GPS Exchange Format)
+//
+// GPX is an XML schema for exchanging GPS data (waypoints, tracks, routes)
+// between applications and web services. It is an open standard maintained
+// by the TopoGrafix community.
+// Reference: https://www.topografix.com/gpx.asp (GPX 1.1)
+
+enum GPXFixType : byte {
+  NONE,
+  /// 2D fix
+  FIX_2D,
+  /// 3D fix
+  FIX_3D,
+  /// Differential GPS fix
+  DGPS,
+  /// PPP fix
+  PPS
+}
+
+/// GPX link to an external resource
+table GPXLink {
+  /// URL
+  HREF:string;
+  /// Link text
+  TEXT:string;
+  /// MIME type
+  TYPE:string;
+}
+
+/// A waypoint, point of interest, or named feature
+table GPXWaypoint {
+  /// Latitude in decimal degrees (WGS84)
+  LATITUDE:double;
+  /// Longitude in decimal degrees (WGS84)
+  LONGITUDE:double;
+  /// Elevation in meters above WGS84 ellipsoid
+  ELEVATION:double;
+  /// UTC timestamp (ISO 8601)
+  TIME:string;
+  /// Magnetic variation in degrees
+  MAGVAR:double;
+  /// Height of geoid above WGS84 ellipsoid in meters
+  GEOID_HEIGHT:double;
+  /// Waypoint name
+  NAME:string;
+  /// Comment
+  COMMENT:string;
+  /// Description
+  DESCRIPTION:string;
+  /// Source of data
+  SOURCE:string;
+  /// Links to additional information
+  LINKS:[GPXLink];
+  /// Symbol name
+  SYMBOL:string;
+  /// Type/category
+  TYPE:string;
+  /// Type of GPS fix
+  FIX:GPXFixType;
+  /// Number of satellites used for fix
+  SAT:uint16;
+  /// Horizontal dilution of precision
+  HDOP:double;
+  /// Vertical dilution of precision
+  VDOP:double;
+  /// Position dilution of precision
+  PDOP:double;
+  /// Age of DGPS data in seconds
+  AGE_OF_DGPS_DATA:double;
+  /// DGPS station ID
+  DGPS_ID:uint16;
+  /// Speed in meters per second
+  SPEED:double;
+  /// Course/heading in degrees true
+  COURSE:double;
+}
+
+/// Track segment (continuous span of track points)
+table GPXTrackSegment {
+  /// Ordered track points in this segment
+  POINTS:[GPXWaypoint];
+}
+
+/// Track (ordered list of track segments)
+table GPXTrack {
+  /// Track name
+  NAME:string;
+  /// Comment
+  COMMENT:string;
+  /// Description
+  DESCRIPTION:string;
+  /// Source of data
+  SOURCE:string;
+  /// Links to additional information
+  LINKS:[GPXLink];
+  /// Track number
+  NUMBER:uint32;
+  /// Type/category
+  TYPE:string;
+  /// Track segments
+  SEGMENTS:[GPXTrackSegment];
+}
+
+/// Route (ordered list of waypoints for navigation)
+table GPXRoute {
+  /// Route name
+  NAME:string;
+  /// Comment
+  COMMENT:string;
+  /// Description
+  DESCRIPTION:string;
+  /// Source of data
+  SOURCE:string;
+  /// Links to additional information
+  LINKS:[GPXLink];
+  /// Route number
+  NUMBER:uint32;
+  /// Type/category
+  TYPE:string;
+  /// Route points (ordered waypoints)
+  POINTS:[GPXWaypoint];
+}
+
+/// GPX Document
+table GPX {
+  /// GPX schema version
+  VERSION:string;
+  /// Creator software/organization
+  CREATOR:string;
+  /// File name
+  NAME:string;
+  /// File description
+  DESCRIPTION:string;
+  /// Person or organization who created the file
+  AUTHOR_NAME:string;
+  /// Author email
+  AUTHOR_EMAIL:string;
+  /// Author link
+  AUTHOR_LINK:GPXLink;
+  /// Copyright holder
+  COPYRIGHT_AUTHOR:string;
+  /// Copyright year
+  COPYRIGHT_YEAR:string;
+  /// Copyright license URL
+  COPYRIGHT_LICENSE:string;
+  /// Links to additional information
+  LINKS:[GPXLink];
+  /// Creation timestamp (ISO 8601)
+  TIME:string;
+  /// Keywords
+  KEYWORDS:string;
+  /// Minimum latitude of bounding box
+  BOUNDS_MIN_LAT:double;
+  /// Minimum longitude of bounding box
+  BOUNDS_MIN_LON:double;
+  /// Maximum latitude of bounding box
+  BOUNDS_MAX_LAT:double;
+  /// Maximum longitude of bounding box
+  BOUNDS_MAX_LON:double;
+  /// Waypoints
+  WAYPOINTS:[GPXWaypoint];
+  /// Routes
+  ROUTES:[GPXRoute];
+  /// Tracks
+  TRACKS:[GPXTrack];
+}
+
+root_type GPX;
+file_identifier "$GPX";

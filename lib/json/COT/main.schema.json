@@ -1,0 +1,195 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "COTHowType" : {
+      "type" : "string",
+      "enum": ["HE", "H_E", "M_G", "M_S", "M_F", "M_I", "M_C"]
+    },
+    "COTPoint" : {
+      "type" : "object",
+      "description" : "CoT Point - geographical point with error estimates",
+      "properties" : {
+        "LATITUDE" : {
+                "type" : "number",
+                "description" : "Latitude in decimal degrees (WGS84)"
+              },
+        "LONGITUDE" : {
+                "type" : "number",
+                "description" : "Longitude in decimal degrees (WGS84)"
+              },
+        "HAE" : {
+                "type" : "number",
+                "description" : "Height above WGS84 ellipsoid in meters"
+              },
+        "CE" : {
+                "type" : "number",
+                "description" : "Circular error in meters (95% confidence)"
+              },
+        "LE" : {
+                "type" : "number",
+                "description" : "Linear error (vertical) in meters (95% confidence)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "COTDetail" : {
+      "type" : "object",
+      "description" : "CoT Detail - extensible detail element",
+      "properties" : {
+        "CALLSIGN" : {
+                "type" : "string",
+                "description" : "Contact callsign"
+              },
+        "ENDPOINT" : {
+                "type" : "string",
+                "description" : "Contact endpoint (e.g. IP:port)"
+              },
+        "PHONE" : {
+                "type" : "string",
+                "description" : "Contact phone number"
+              },
+        "COURSE" : {
+                "type" : "number",
+                "description" : "Track course in degrees true"
+              },
+        "SPEED" : {
+                "type" : "number",
+                "description" : "Track speed in m/s"
+              },
+        "GROUP_NAME" : {
+                "type" : "string",
+                "description" : "Group name/team"
+              },
+        "GROUP_ROLE" : {
+                "type" : "string",
+                "description" : "Group role"
+              },
+        "STATUS_BATTERY" : {
+                "type" : "number",
+                "description" : "Status (battery percentage, etc.)"
+              },
+        "STATUS_READINESS" : {
+                "type" : "boolean",
+                "description" : "Status readiness"
+              },
+        "PREC_LOCATION_SOURCE" : {
+                "type" : "string",
+                "description" : "Precision location source"
+              },
+        "PREC_ALTSRC" : {
+                "type" : "string",
+                "description" : "Precision location altitude source"
+              },
+        "UID_DROID" : {
+                "type" : "string",
+                "description" : "UID of the device"
+              },
+        "REMARKS" : {
+                "type" : "string",
+                "description" : "Remarks text"
+              },
+        "REMARKS_SOURCE" : {
+                "type" : "string",
+                "description" : "Remarks source"
+              },
+        "REMARKS_TIME" : {
+                "type" : "string",
+                "description" : "Remarks timestamp (ISO 8601)"
+              },
+        "LINK_UID" : {
+                "type" : "string",
+                "description" : "Link UID (for related events)"
+              },
+        "LINK_TYPE" : {
+                "type" : "string",
+                "description" : "Link type"
+              },
+        "LINK_RELATION" : {
+                "type" : "string",
+                "description" : "Link relation"
+              },
+        "COLOR" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Color in ARGB integer format"
+              },
+        "STROKE_WEIGHT" : {
+                "type" : "number",
+                "description" : "Stroke weight for drawing"
+              },
+        "FILL_COLOR" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Fill color in ARGB integer format"
+              },
+        "LABELLED" : {
+                "type" : "boolean",
+                "description" : "Labeled flag"
+              },
+        "ARCHIVE" : {
+                "type" : "boolean",
+                "description" : "Archive flag"
+              },
+        "RAW_XML" : {
+                "type" : "string",
+                "description" : "Raw XML detail content (for extensions not covered above)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "COT" : {
+      "type" : "object",
+      "description" : "Cursor on Target Event",
+      "properties" : {
+        "VERSION" : {
+                "type" : "string",
+                "description" : "Schema version"
+              },
+        "UID" : {
+                "type" : "string",
+                "description" : "Globally unique event identifier"
+              },
+        "TYPE" : {
+                "type" : "string",
+                "description" : "CoT event type (dot-delimited MIL-STD-2525/APP-6 hierarchy)\ne.g. \"a-f-G-U-C\" = atom, friend, Ground, Unit, Combat"
+              },
+        "HOW" : {
+                "$ref" : "#/definitions/COTHowType",
+                "description" : "How the event was generated (e.g. \"m-g\" = machine GPS)"
+              },
+        "TIME" : {
+                "type" : "string",
+                "description" : "Time the event was generated (ISO 8601)"
+              },
+        "START" : {
+                "type" : "string",
+                "description" : "Time the event information was valid (ISO 8601)"
+              },
+        "STALE" : {
+                "type" : "string",
+                "description" : "Time the event information is no longer valid (ISO 8601)"
+              },
+        "ACCESS" : {
+                "type" : "string",
+                "description" : "Access control marking"
+              },
+        "QOS" : {
+                "type" : "string",
+                "description" : "Quality of service"
+              },
+        "OPEX" : {
+                "type" : "string",
+                "description" : "Operational status"
+              },
+        "POINT" : {
+                "$ref" : "#/definitions/COTPoint",
+                "description" : "Point location"
+              },
+        "DETAIL" : {
+                "$ref" : "#/definitions/COTDetail",
+                "description" : "Detailed event information"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/COT"
+}

@@ -1,0 +1,694 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "KMLAltitudeMode" : {
+      "type" : "string",
+      "enum": ["CLAMP_TO_GROUND", "RELATIVE_TO_GROUND", "ABSOLUTE", "CLAMP_TO_SEA_FLOOR", "RELATIVE_TO_SEA_FLOOR"]
+    },
+    "KMLColorMode" : {
+      "type" : "string",
+      "enum": ["NORMAL", "RANDOM"]
+    },
+    "KMLStyleState" : {
+      "type" : "string",
+      "enum": ["NORMAL", "HIGHLIGHT"]
+    },
+    "KMLUnits" : {
+      "type" : "string",
+      "enum": ["PIXELS", "FRACTION", "INSET_PIXELS"]
+    },
+    "KMLRefreshMode" : {
+      "type" : "string",
+      "enum": ["ON_CHANGE", "ON_INTERVAL", "ON_EXPIRE"]
+    },
+    "KMLViewRefreshMode" : {
+      "type" : "string",
+      "enum": ["NEVER", "ON_STOP", "ON_REQUEST", "ON_REGION"]
+    },
+    "KMLCoordinate" : {
+      "type" : "object",
+      "description" : "KML coordinate (longitude, latitude, optional altitude)",
+      "properties" : {
+        "LONGITUDE" : {
+                "type" : "number",
+                "description" : "Longitude in decimal degrees"
+              },
+        "LATITUDE" : {
+                "type" : "number",
+                "description" : "Latitude in decimal degrees"
+              },
+        "ALTITUDE" : {
+                "type" : "number",
+                "description" : "Altitude in meters"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLLookAt" : {
+      "type" : "object",
+      "description" : "LookAt viewpoint",
+      "properties" : {
+        "LONGITUDE" : {
+                "type" : "number",
+                "description" : "Longitude of the point being looked at"
+              },
+        "LATITUDE" : {
+                "type" : "number",
+                "description" : "Latitude of the point being looked at"
+              },
+        "ALTITUDE" : {
+                "type" : "number",
+                "description" : "Altitude of the point being looked at"
+              },
+        "HEADING" : {
+                "type" : "number",
+                "description" : "Heading in degrees (0=North)"
+              },
+        "TILT" : {
+                "type" : "number",
+                "description" : "Tilt in degrees from vertical (0=straight down)"
+              },
+        "RANGE" : {
+                "type" : "number",
+                "description" : "Range in meters from the point"
+              },
+        "ALTITUDE_MODE" : {
+                "$ref" : "#/definitions/KMLAltitudeMode",
+                "description" : "Altitude mode"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLCamera" : {
+      "type" : "object",
+      "description" : "Camera viewpoint",
+      "properties" : {
+        "LONGITUDE" : {
+                "type" : "number",
+                "description" : "Camera longitude"
+              },
+        "LATITUDE" : {
+                "type" : "number",
+                "description" : "Camera latitude"
+              },
+        "ALTITUDE" : {
+                "type" : "number",
+                "description" : "Camera altitude"
+              },
+        "HEADING" : {
+                "type" : "number",
+                "description" : "Heading in degrees (0=North)"
+              },
+        "TILT" : {
+                "type" : "number",
+                "description" : "Tilt in degrees from vertical"
+              },
+        "ROLL" : {
+                "type" : "number",
+                "description" : "Roll in degrees"
+              },
+        "ALTITUDE_MODE" : {
+                "$ref" : "#/definitions/KMLAltitudeMode",
+                "description" : "Altitude mode"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLIconStyle" : {
+      "type" : "object",
+      "description" : "Icon style",
+      "properties" : {
+        "COLOR" : {
+                "type" : "string",
+                "description" : "KML color in aabbggrr hex format"
+              },
+        "COLOR_MODE" : {
+                "$ref" : "#/definitions/KMLColorMode",
+                "description" : "Color mode"
+              },
+        "SCALE" : {
+                "type" : "number",
+                "description" : "Scale factor"
+              },
+        "HEADING" : {
+                "type" : "number",
+                "description" : "Heading in degrees"
+              },
+        "ICON_HREF" : {
+                "type" : "string",
+                "description" : "Icon href (URL)"
+              },
+        "HOTSPOT_X" : {
+                "type" : "number",
+                "description" : "Hot spot X value"
+              },
+        "HOTSPOT_Y" : {
+                "type" : "number",
+                "description" : "Hot spot Y value"
+              },
+        "HOTSPOT_X_UNITS" : {
+                "$ref" : "#/definitions/KMLUnits",
+                "description" : "Hot spot X units"
+              },
+        "HOTSPOT_Y_UNITS" : {
+                "$ref" : "#/definitions/KMLUnits",
+                "description" : "Hot spot Y units"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLLineStyle" : {
+      "type" : "object",
+      "description" : "Line style",
+      "properties" : {
+        "COLOR" : {
+                "type" : "string",
+                "description" : "KML color in aabbggrr hex format"
+              },
+        "COLOR_MODE" : {
+                "$ref" : "#/definitions/KMLColorMode",
+                "description" : "Color mode"
+              },
+        "WIDTH" : {
+                "type" : "number",
+                "description" : "Width in pixels"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLPolyStyle" : {
+      "type" : "object",
+      "description" : "Polygon style",
+      "properties" : {
+        "COLOR" : {
+                "type" : "string",
+                "description" : "KML color in aabbggrr hex format"
+              },
+        "COLOR_MODE" : {
+                "$ref" : "#/definitions/KMLColorMode",
+                "description" : "Color mode"
+              },
+        "FILL" : {
+                "type" : "boolean",
+                "description" : "Whether to fill"
+              },
+        "OUTLINE" : {
+                "type" : "boolean",
+                "description" : "Whether to outline"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLLabelStyle" : {
+      "type" : "object",
+      "description" : "Label style",
+      "properties" : {
+        "COLOR" : {
+                "type" : "string",
+                "description" : "KML color in aabbggrr hex format"
+              },
+        "COLOR_MODE" : {
+                "$ref" : "#/definitions/KMLColorMode",
+                "description" : "Color mode"
+              },
+        "SCALE" : {
+                "type" : "number",
+                "description" : "Scale factor"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLBalloonStyle" : {
+      "type" : "object",
+      "description" : "Balloon style",
+      "properties" : {
+        "BG_COLOR" : {
+                "type" : "string",
+                "description" : "Background color in aabbggrr hex format"
+              },
+        "TEXT_COLOR" : {
+                "type" : "string",
+                "description" : "Text color in aabbggrr hex format"
+              },
+        "TEXT" : {
+                "type" : "string",
+                "description" : "Balloon text template (supports $[name], $[description])"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLStyle" : {
+      "type" : "object",
+      "description" : "Style definition",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Style identifier"
+              },
+        "ICON_STYLE" : {
+                "$ref" : "#/definitions/KMLIconStyle",
+                "description" : "Icon style"
+              },
+        "LABEL_STYLE" : {
+                "$ref" : "#/definitions/KMLLabelStyle",
+                "description" : "Label style"
+              },
+        "LINE_STYLE" : {
+                "$ref" : "#/definitions/KMLLineStyle",
+                "description" : "Line style"
+              },
+        "POLY_STYLE" : {
+                "$ref" : "#/definitions/KMLPolyStyle",
+                "description" : "Polygon style"
+              },
+        "BALLOON_STYLE" : {
+                "$ref" : "#/definitions/KMLBalloonStyle",
+                "description" : "Balloon style"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLStyleMapPair" : {
+      "type" : "object",
+      "description" : "Style map pair",
+      "properties" : {
+        "STATE" : {
+                "$ref" : "#/definitions/KMLStyleState",
+                "description" : "State (normal or highlight)"
+              },
+        "STYLE_URL" : {
+                "type" : "string",
+                "description" : "Style URL or inline style ID"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLStyleMap" : {
+      "type" : "object",
+      "description" : "Style map (normal/highlight pair)",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Style map identifier"
+              },
+        "PAIRS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLStyleMapPair"},
+                "description" : "Pairs"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLPoint" : {
+      "type" : "object",
+      "description" : "Point geometry",
+      "properties" : {
+        "COORDINATES" : {
+                "$ref" : "#/definitions/KMLCoordinate",
+                "description" : "Coordinate"
+              },
+        "ALTITUDE_MODE" : {
+                "$ref" : "#/definitions/KMLAltitudeMode",
+                "description" : "Altitude mode"
+              },
+        "EXTRUDE" : {
+                "type" : "boolean",
+                "description" : "Whether to extrude to ground"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLLineString" : {
+      "type" : "object",
+      "description" : "LineString geometry",
+      "properties" : {
+        "COORDINATES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLCoordinate"},
+                "description" : "Coordinates"
+              },
+        "ALTITUDE_MODE" : {
+                "$ref" : "#/definitions/KMLAltitudeMode",
+                "description" : "Altitude mode"
+              },
+        "EXTRUDE" : {
+                "type" : "boolean",
+                "description" : "Whether to extrude to ground"
+              },
+        "TESSELLATE" : {
+                "type" : "boolean",
+                "description" : "Whether to tessellate (follow terrain)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLLinearRing" : {
+      "type" : "object",
+      "description" : "LinearRing geometry",
+      "properties" : {
+        "COORDINATES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLCoordinate"},
+                "description" : "Coordinates (first = last to close the ring)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLPolygon" : {
+      "type" : "object",
+      "description" : "Polygon geometry",
+      "properties" : {
+        "OUTER_BOUNDARY" : {
+                "$ref" : "#/definitions/KMLLinearRing",
+                "description" : "Outer boundary"
+              },
+        "INNER_BOUNDARIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLLinearRing"},
+                "description" : "Inner boundaries (holes)"
+              },
+        "ALTITUDE_MODE" : {
+                "$ref" : "#/definitions/KMLAltitudeMode",
+                "description" : "Altitude mode"
+              },
+        "EXTRUDE" : {
+                "type" : "boolean",
+                "description" : "Whether to extrude to ground"
+              },
+        "TESSELLATE" : {
+                "type" : "boolean",
+                "description" : "Whether to tessellate"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLMultiGeometry" : {
+      "type" : "object",
+      "description" : "MultiGeometry",
+      "properties" : {
+        "POINTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLPoint"},
+                "description" : "Child points"
+              },
+        "LINE_STRINGS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLLineString"},
+                "description" : "Child line strings"
+              },
+        "POLYGONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLPolygon"},
+                "description" : "Child polygons"
+              },
+        "MULTI_GEOMETRIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLMultiGeometry"},
+                "description" : "Nested multi-geometries"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLTimeSpan" : {
+      "type" : "object",
+      "description" : "TimeSpan",
+      "properties" : {
+        "BEGIN" : {
+                "type" : "string",
+                "description" : "Begin time (ISO 8601)"
+              },
+        "END" : {
+                "type" : "string",
+                "description" : "End time (ISO 8601)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLTimeStamp" : {
+      "type" : "object",
+      "description" : "TimeStamp",
+      "properties" : {
+        "WHEN" : {
+                "type" : "string",
+                "description" : "Time (ISO 8601)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLData" : {
+      "type" : "object",
+      "description" : "Extended data key-value pair",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Data name"
+              },
+        "DISPLAY_NAME" : {
+                "type" : "string",
+                "description" : "Display name"
+              },
+        "VALUE" : {
+                "type" : "string",
+                "description" : "Data value"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLNetworkLink" : {
+      "type" : "object",
+      "description" : "Network link",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Name of the network link"
+              },
+        "VISIBILITY" : {
+                "type" : "boolean",
+                "description" : "Whether the link is visible"
+              },
+        "HREF" : {
+                "type" : "string",
+                "description" : "Link URL"
+              },
+        "REFRESH_MODE" : {
+                "$ref" : "#/definitions/KMLRefreshMode",
+                "description" : "Refresh mode"
+              },
+        "REFRESH_INTERVAL" : {
+                "type" : "number",
+                "description" : "Refresh interval in seconds"
+              },
+        "VIEW_REFRESH_MODE" : {
+                "$ref" : "#/definitions/KMLViewRefreshMode",
+                "description" : "View refresh mode"
+              },
+        "VIEW_REFRESH_TIME" : {
+                "type" : "number",
+                "description" : "View refresh time in seconds"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLGroundOverlay" : {
+      "type" : "object",
+      "description" : "Ground overlay",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Name"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Description"
+              },
+        "VISIBILITY" : {
+                "type" : "boolean",
+                "description" : "Visibility"
+              },
+        "ICON_HREF" : {
+                "type" : "string",
+                "description" : "Icon/image URL"
+              },
+        "COLOR" : {
+                "type" : "string",
+                "description" : "Color in aabbggrr hex format"
+              },
+        "NORTH" : {
+                "type" : "number",
+                "description" : "North latitude of bounding box"
+              },
+        "SOUTH" : {
+                "type" : "number",
+                "description" : "South latitude of bounding box"
+              },
+        "EAST" : {
+                "type" : "number",
+                "description" : "East longitude of bounding box"
+              },
+        "WEST" : {
+                "type" : "number",
+                "description" : "West longitude of bounding box"
+              },
+        "ROTATION" : {
+                "type" : "number",
+                "description" : "Rotation in degrees"
+              },
+        "ALTITUDE" : {
+                "type" : "number",
+                "description" : "Altitude in meters"
+              },
+        "ALTITUDE_MODE" : {
+                "$ref" : "#/definitions/KMLAltitudeMode",
+                "description" : "Altitude mode"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLPlacemark" : {
+      "type" : "object",
+      "description" : "Placemark feature",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Placemark name"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Description (may contain HTML)"
+              },
+        "VISIBILITY" : {
+                "type" : "boolean",
+                "description" : "Visibility flag"
+              },
+        "STYLE_URL" : {
+                "type" : "string",
+                "description" : "Style URL reference"
+              },
+        "STYLE" : {
+                "$ref" : "#/definitions/KMLStyle",
+                "description" : "Inline style"
+              },
+        "SNIPPET" : {
+                "type" : "string",
+                "description" : "Snippet (short description)"
+              },
+        "POINT" : {
+                "$ref" : "#/definitions/KMLPoint",
+                "description" : "Point geometry"
+              },
+        "LINE_STRING" : {
+                "$ref" : "#/definitions/KMLLineString",
+                "description" : "LineString geometry"
+              },
+        "POLYGON" : {
+                "$ref" : "#/definitions/KMLPolygon",
+                "description" : "Polygon geometry"
+              },
+        "MULTI_GEOMETRY" : {
+                "$ref" : "#/definitions/KMLMultiGeometry",
+                "description" : "MultiGeometry"
+              },
+        "LOOK_AT" : {
+                "$ref" : "#/definitions/KMLLookAt",
+                "description" : "LookAt viewpoint"
+              },
+        "CAMERA" : {
+                "$ref" : "#/definitions/KMLCamera",
+                "description" : "Camera viewpoint"
+              },
+        "TIME_SPAN" : {
+                "$ref" : "#/definitions/KMLTimeSpan",
+                "description" : "TimeSpan"
+              },
+        "TIME_STAMP" : {
+                "$ref" : "#/definitions/KMLTimeStamp",
+                "description" : "TimeStamp"
+              },
+        "EXTENDED_DATA" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLData"},
+                "description" : "Extended data"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLFolder" : {
+      "type" : "object",
+      "description" : "Folder container",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Folder name"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Description"
+              },
+        "VISIBILITY" : {
+                "type" : "boolean",
+                "description" : "Visibility flag"
+              },
+        "OPEN" : {
+                "type" : "boolean",
+                "description" : "Whether folder is open in tree view"
+              },
+        "PLACEMARKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLPlacemark"},
+                "description" : "Placemarks in this folder"
+              },
+        "FOLDERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLFolder"},
+                "description" : "Sub-folders"
+              },
+        "NETWORK_LINKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLNetworkLink"},
+                "description" : "Network links"
+              },
+        "GROUND_OVERLAYS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLGroundOverlay"},
+                "description" : "Ground overlays"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KML" : {
+      "type" : "object",
+      "description" : "KML Document",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Document name"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Document description"
+              },
+        "VISIBILITY" : {
+                "type" : "boolean",
+                "description" : "Whether document is visible"
+              },
+        "OPEN" : {
+                "type" : "boolean",
+                "description" : "Whether document is open in tree view"
+              },
+        "STYLES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLStyle"},
+                "description" : "Shared styles"
+              },
+        "STYLE_MAPS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLStyleMap"},
+                "description" : "Style maps"
+              },
+        "PLACEMARKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLPlacemark"},
+                "description" : "Top-level placemarks"
+              },
+        "FOLDERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLFolder"},
+                "description" : "Top-level folders"
+              },
+        "NETWORK_LINKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLNetworkLink"},
+                "description" : "Network links"
+              },
+        "GROUND_OVERLAYS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLGroundOverlay"},
+                "description" : "Ground overlays"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/KML"
+}

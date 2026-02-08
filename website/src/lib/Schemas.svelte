@@ -60,9 +60,12 @@
     // Data Exchange
     "CRM": "Exchange", "PNM": "Exchange", "ACL": "Exchange", "PUR": "Exchange",
     "REV": "Exchange", "REC": "Exchange", "STF": "Exchange", "PLG": "Exchange",
+    // Geospatial & Industry
+    "GJN": "Geospatial", "CZM": "Geospatial", "KML": "Geospatial", "GPX": "Geospatial",
+    "COT": "Geospatial",
   };
 
-  const categories = ["All", "Orbit", "Attitude", "Conjunction", "Tracking", "Objects", "Observation", "Comms", "Environment", "Launch", "Vehicle", "Defense", "Protocol", "Security", "Reference", "Exchange"];
+  const categories = ["All", "Orbit", "Attitude", "Conjunction", "Tracking", "Objects", "Observation", "Comms", "Environment", "Launch", "Vehicle", "Defense", "Protocol", "Security", "Reference", "Exchange", "Geospatial"];
 
   let schemas = writable<SchemaInfo[]>([]);
   let searchQuery = writable("");
@@ -141,6 +144,7 @@
       "Security": "rgba(255, 107, 107, 0.2)",
       "Reference": "rgba(255, 210, 0, 0.2)",
       "Exchange": "rgba(38, 222, 129, 0.2)",
+      "Geospatial": "rgba(52, 152, 219, 0.2)",
     };
     return colors[category] || "rgba(134, 134, 139, 0.2)";
   }
@@ -162,6 +166,7 @@
       "Security": "#ff6b6b",
       "Reference": "#ffd200",
       "Exchange": "#26de81",
+      "Geospatial": "#3498db",
     };
     return colors[category] || "#86868b";
   }
