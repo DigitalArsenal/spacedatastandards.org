@@ -11,6 +11,17 @@ namespace ccsds {
 // ENUMERATIONS
 // ============================================================================
 
+// macOS defines BIG_ENDIAN, LITTLE_ENDIAN, BYTE_ORDER as macros in <sys/__endian.h>
+#ifdef BIG_ENDIAN
+#undef BIG_ENDIAN
+#endif
+#ifdef LITTLE_ENDIAN
+#undef LITTLE_ENDIAN
+#endif
+#ifdef BYTE_ORDER
+#undef BYTE_ORDER
+#endif
+
 enum class ComparisonOperator {
     EQ, NE, GT, LT, GE, LE,
     STARTS_WITH, ENDS_WITH, CONTAINS,

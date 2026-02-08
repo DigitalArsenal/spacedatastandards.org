@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<event version="2.0"
+       uid="ISS-ZARYA-25544"
+       type="a-f-S-C-O"
+       how="m-g"
+       time="2024-01-15T12:00:00Z"
+       start="2024-01-15T12:00:00Z"
+       stale="2024-01-15T12:05:00Z">
+  <point lat="29.7604" lon="-95.364" hae="408000" ce="50" le="100"/>
+  <detail>
+    <contact callsign="ISS" endpoint="*:-1:stcp"/>
+    <track course="45.2" speed="7660"/>
+    <__group name="Space" role="Satellite"/>
+    <status battery="100"/>
+    <precisionlocation geopointsrc="GPS" altsrc="GPS"/>
+    <uid Droid="ISS-ZARYA"/>
+    <remarks source="NORAD" time="2024-01-15T12:00:00Z">International Space Station, NORAD ID 25544</remarks>
+    <link uid="1998-067A" type="a-f-S" relation="p-p"/>
+  </detail>
+</event>

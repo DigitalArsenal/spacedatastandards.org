@@ -1,7 +1,7 @@
 export interface Sample {
   label: string;
   type: string;
-  format: 'kvn' | 'xml';
+  format: 'kvn' | 'xml' | 'json';
   content: string;
 }
 
@@ -657,5 +657,251 @@ DATA_STOP
     </xtce:ParameterSet>
   </xtce:TelemetryMetaData>
 </xtce:SpaceSystem>`
+  },
+  {
+    label: "GeoJSON (ISS Track)",
+    type: "GJN",
+    format: "json",
+    content: `{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "iss-position",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-95.364, 29.7604, 408000]
+      },
+      "properties": {
+        "name": "ISS Current Position",
+        "altitude_km": 408,
+        "velocity_kms": 7.66,
+        "object_id": "1998-067A"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "iss-ground-track",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-95.364, 29.7604, 408000],
+          [-80.191, 25.7617, 408000],
+          [-60.025, 15.4942, 408000],
+          [-40.321, 3.119, 408000],
+          [-25.746, -10.122, 408000]
+        ]
+      },
+      "properties": {
+        "name": "ISS Ground Track",
+        "orbit_number": 48170
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "coverage-zone",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-100.0, 25.0],
+            [-90.0, 25.0],
+            [-90.0, 35.0],
+            [-100.0, 35.0],
+            [-100.0, 25.0]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Ground Station Coverage",
+        "station": "Houston"
+      }
+    }
+  ]
+}`
+  },
+  {
+    label: "CZML (ISS Tracking)",
+    type: "CZM",
+    format: "json",
+    content: `[
+  {
+    "id": "document",
+    "name": "ISS Tracking",
+    "version": "1.0",
+    "clock": {
+      "interval": "2024-01-15T00:00:00Z/2024-01-16T00:00:00Z",
+      "currentTime": "2024-01-15T12:00:00Z",
+      "multiplier": 60
+    }
+  },
+  {
+    "id": "iss",
+    "name": "ISS (ZARYA)",
+    "description": "International Space Station",
+    "availability": "2024-01-15T00:00:00Z/2024-01-16T00:00:00Z",
+    "position": {
+      "epoch": "2024-01-15T00:00:00Z",
+      "cartographicDegrees": [
+        0, -95.364, 29.7604, 408000,
+        3600, -80.191, 25.7617, 408000,
+        7200, -60.025, 15.4942, 408000,
+        10800, -40.321, 3.119, 408000
+      ]
+    },
+    "billboard": {
+      "show": true,
+      "image": "data:image/png;base64,iVBORw0KGgo=",
+      "scale": 1.5,
+      "color": { "rgba": [255, 255, 0, 255] }
+    },
+    "label": {
+      "show": true,
+      "text": "ISS",
+      "font": "12pt sans-serif",
+      "fillColor": { "rgba": [255, 255, 255, 255] }
+    },
+    "path": {
+      "show": true,
+      "leadTime": 3600,
+      "trailTime": 3600,
+      "width": 2,
+      "material": {
+        "solidColor": {
+          "color": { "rgba": [0, 255, 255, 128] }
+        }
+      },
+      "resolution": 120
+    }
+  }
+]`
+  },
+  {
+    label: "KML (Space Facilities)",
+    type: "KML",
+    format: "xml",
+    content: `<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Space Data Locations</name>
+    <description>Key space tracking facilities</description>
+    <Style id="station-style">
+      <IconStyle>
+        <color>ff0000ff</color>
+        <scale>1.2</scale>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <color>ffffffff</color>
+        <scale>0.8</scale>
+      </LabelStyle>
+      <LineStyle>
+        <color>ff00ffff</color>
+        <width>2</width>
+      </LineStyle>
+    </Style>
+    <Folder>
+      <name>Ground Stations</name>
+      <Placemark>
+        <name>NASA Johnson Space Center</name>
+        <description>Mission Control Center, Houston TX</description>
+        <styleUrl>#station-style</styleUrl>
+        <Point>
+          <altitudeMode>clampToGround</altitudeMode>
+          <coordinates>-95.0933,29.5593,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>ESA ESOC</name>
+        <description>European Space Operations Centre, Darmstadt</description>
+        <styleUrl>#station-style</styleUrl>
+        <Point>
+          <coordinates>8.6724,49.8697,0</coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+    <Placemark>
+      <name>ISS Ground Track Segment</name>
+      <LineString>
+        <tessellate>1</tessellate>
+        <coordinates>
+          -95.364,29.7604,408000 -80.191,25.7617,408000 -60.025,15.4942,408000
+        </coordinates>
+      </LineString>
+    </Placemark>
+  </Document>
+</kml>`
+  },
+  {
+    label: "GPX (ISS Observation)",
+    type: "GPX",
+    format: "xml",
+    content: `<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="SpaceDataStandards"
+     xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata>
+    <name>ISS Pass Observations</name>
+    <desc>Observed ISS passes from Houston TX</desc>
+    <author>
+      <name>SDS Observer</name>
+    </author>
+    <time>2024-01-15T12:00:00Z</time>
+    <bounds minlat="29.5" minlon="-95.5" maxlat="30.0" maxlon="-95.0"/>
+  </metadata>
+  <wpt lat="29.7604" lon="-95.3631">
+    <ele>15</ele>
+    <time>2024-01-15T02:30:00Z</time>
+    <name>Observation Point Alpha</name>
+    <desc>Primary ISS observation site</desc>
+    <sym>Flag</sym>
+    <type>Observation</type>
+  </wpt>
+  <trk>
+    <name>ISS Visual Pass</name>
+    <desc>Observed track of ISS evening pass</desc>
+    <type>Satellite Pass</type>
+    <trkseg>
+      <trkpt lat="29.50" lon="-95.80">
+        <ele>408000</ele>
+        <time>2024-01-15T02:30:00Z</time>
+      </trkpt>
+      <trkpt lat="29.80" lon="-95.20">
+        <ele>408000</ele>
+        <time>2024-01-15T02:32:00Z</time>
+      </trkpt>
+      <trkpt lat="30.10" lon="-94.60">
+        <ele>408000</ele>
+        <time>2024-01-15T02:34:00Z</time>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>`
+  },
+  {
+    label: "CoT (ISS Position)",
+    type: "COT",
+    format: "xml",
+    content: `<?xml version="1.0" encoding="UTF-8"?>
+<event version="2.0"
+       uid="ISS-ZARYA-25544"
+       type="a-f-S-C-O"
+       how="m-g"
+       time="2024-01-15T12:00:00Z"
+       start="2024-01-15T12:00:00Z"
+       stale="2024-01-15T12:05:00Z">
+  <point lat="29.7604" lon="-95.364" hae="408000" ce="50" le="100"/>
+  <detail>
+    <contact callsign="ISS" endpoint="*:-1:stcp"/>
+    <track course="45.2" speed="7660"/>
+    <__group name="Space" role="Satellite"/>
+    <status battery="100"/>
+    <precisionlocation geopointsrc="GPS" altsrc="GPS"/>
+    <uid Droid="ISS-ZARYA"/>
+    <remarks source="NORAD" time="2024-01-15T12:00:00Z">International Space Station, NORAD ID 25544</remarks>
+    <link uid="1998-067A" type="a-f-S" relation="p-p"/>
+  </detail>
+</event>`
   },
 ];

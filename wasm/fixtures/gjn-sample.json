@@ -1,0 +1,58 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "iss-position",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-95.364, 29.7604, 408000]
+      },
+      "properties": {
+        "name": "ISS Current Position",
+        "altitude_km": 408,
+        "velocity_kms": 7.66,
+        "object_id": "1998-067A"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "iss-ground-track",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-95.364, 29.7604, 408000],
+          [-80.191, 25.7617, 408000],
+          [-60.025, 15.4942, 408000],
+          [-40.321, 3.1190, 408000],
+          [-25.746, -10.122, 408000]
+        ]
+      },
+      "properties": {
+        "name": "ISS Ground Track",
+        "orbit_number": 48170
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "coverage-zone",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-100.0, 25.0],
+            [-90.0, 25.0],
+            [-90.0, 35.0],
+            [-100.0, 35.0],
+            [-100.0, 25.0]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Ground Station Coverage",
+        "station": "Houston"
+      }
+    }
+  ],
+  "bbox": [-100.0, -10.122, 0, -25.746, 35.0, 408000]
+}

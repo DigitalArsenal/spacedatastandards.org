@@ -4,7 +4,7 @@
  * Provides functions for parsing and converting CCSDS navigation messages
  * between KVN, XML, and FlatBuffers formats.
  *
- * Supported message types: OMM, OEM, CDM, OPM, AEM, TDM, XTCE
+ * Supported message types: OMM, OEM, CDM, OPM, AEM, TDM, XTCE, GJN, CZM, KML, GPX, COT
  *
  * Usage:
  *   import { init } from './index.mjs';
@@ -106,6 +106,28 @@ export async function init() {
 
       // XTCE functions
       xtceXmlRoundtrip: (input) => Module.xtceXmlRoundtrip(input),
+
+      // GeoJSON functions
+      gjnJsonRoundtrip: (input) => Module.gjnJsonRoundtrip(input),
+
+      // CZML functions
+      czmJsonRoundtrip: (input) => Module.czmJsonRoundtrip(input),
+
+      // KML functions
+      kmlXmlRoundtrip: (input) => Module.kmlXmlRoundtrip(input),
+
+      // GPX functions
+      gpxXmlRoundtrip: (input) => Module.gpxXmlRoundtrip(input),
+
+      // CoT functions
+      cotXmlRoundtrip: (input) => Module.cotXmlRoundtrip(input),
+
+      /**
+       * Detect the JSON message type (e.g. 'GJN', 'CZM').
+       * @param {string} input - The JSON message
+       * @returns {string} The detected message type, or empty string if unknown
+       */
+      detectJsonType: (input) => Module.detectJsonType(input),
 
       /** The raw Emscripten Module (for advanced use) */
       _module: Module,

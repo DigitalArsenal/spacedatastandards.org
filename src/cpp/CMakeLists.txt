@@ -9,6 +9,8 @@ set(SOURCES
     src/kvn_writer.cpp
     src/xml_sax_parser.cpp
     src/xml_writer.cpp
+    src/json_parser.cpp
+    src/json_writer.cpp
     src/navigation/omm_parser.cpp
     src/navigation/oem_parser.cpp
     src/navigation/cdm_parser.cpp
@@ -16,6 +18,11 @@ set(SOURCES
     src/navigation/aem_parser.cpp
     src/navigation/tdm_parser.cpp
     src/navigation/xtce_parser.cpp
+    src/navigation/gjn_parser.cpp
+    src/navigation/czm_parser.cpp
+    src/navigation/kml_parser.cpp
+    src/navigation/gpx_parser.cpp
+    src/navigation/cot_parser.cpp
     wasm_api.cpp
 )
 

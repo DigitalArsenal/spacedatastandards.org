@@ -18,6 +18,11 @@
       AEM: "Attitude Ephemeris Message",
       TDM: "Tracking Data Message",
       XTCE: "Telemetry & Command Exchange",
+      GJN: "GeoJSON Feature Collection",
+      CZM: "CZML (Cesium Language)",
+      KML: "Keyhole Markup Language",
+      GPX: "GPS Exchange Format",
+      COT: "Cursor on Target",
     };
     for (const s of samples) {
       if (!map.has(s.type)) map.set(s.type, { name: s.type, desc: descs[s.type] || s.type, formats: new Map() });
@@ -485,12 +490,16 @@
     // Load best available native sample
     const kvn = std.formats.get('kvn');
     const xml = std.formats.get('xml');
+    const json = std.formats.get('json');
     if (kvn) {
       inputFormat = 'kvn';
       inputText = kvn;
     } else if (xml) {
       inputFormat = 'xml';
       inputText = xml;
+    } else if (json) {
+      inputFormat = 'json';
+      inputText = json;
     }
 
     reparse();
@@ -510,8 +519,8 @@
       const std = standards.find(s => s.name === selectedStandard);
       const nativeSample = std?.formats.get(fmt);
 
-      // For KVN↔XML with WASM, use high-fidelity conversion
-      if (wasmModule && (fmt === 'kvn' || fmt === 'xml') && (inputFormat === 'kvn' || inputFormat === 'xml') && inputText.trim()) {
+      // For KVN/XML/JSON with WASM, use high-fidelity conversion
+      if (wasmModule && (fmt === 'kvn' || fmt === 'xml' || fmt === 'json') && (inputFormat === 'kvn' || inputFormat === 'xml' || inputFormat === 'json') && inputText.trim()) {
         try {
           inputText = wasmModule.convert(inputText, fmt);
           inputFormat = fmt;
@@ -520,8 +529,8 @@
         } catch { /* fall through */ }
       }
 
-      // Use native sample if available for KVN/XML
-      if (nativeSample && (fmt === 'kvn' || fmt === 'xml')) {
+      // Use native sample if available for KVN/XML/JSON
+      if (nativeSample && (fmt === 'kvn' || fmt === 'xml' || fmt === 'json')) {
         inputText = nativeSample;
       } else if (fmt === 'hex') {
         // Build FlatBuffer directly and set both bytes + display text
@@ -578,8 +587,8 @@
     if (!intermediate) return;
     convertError = "";
     try {
-      // For KVN↔XML output, try WASM for high fidelity
-      if (wasmModule && (outputFormat === 'kvn' || outputFormat === 'xml') && (inputFormat === 'kvn' || inputFormat === 'xml') && inputText.trim()) {
+      // For KVN/XML/JSON output, try WASM for high fidelity
+      if (wasmModule && (outputFormat === 'kvn' || outputFormat === 'xml' || outputFormat === 'json') && (inputFormat === 'kvn' || inputFormat === 'xml' || inputFormat === 'json') && inputText.trim()) {
         try {
           outputText = wasmModule.convert(inputText, outputFormat);
           return;
@@ -938,7 +947,7 @@ builder.finish(omm);`
                   <span class="std-desc">{std.desc}</span>
                   <span class="std-formats">
                     {#each Array.from(std.formats.keys()) as fmt}
-                      <span class="mini-fmt" class:kvn={fmt === 'kvn'} class:xml={fmt === 'xml'}>{fmt.toUpperCase()}</span>
+                      <span class="mini-fmt" class:kvn={fmt === 'kvn'} class:xml={fmt === 'xml'} class:json={fmt === 'json'}>{fmt.toUpperCase()}</span>
                     {/each}
                   </span>
                 </button>
@@ -1376,6 +1385,11 @@ builder.finish(omm);`
   .mini-fmt.xml {
     background: rgba(23, 234, 217, 0.15);
     color: #17ead9;
+  }
+
+  .mini-fmt.json {
+    background: rgba(139, 92, 246, 0.15);
+    color: #8b5cf6;
   }
 
   /* Editor Grid */

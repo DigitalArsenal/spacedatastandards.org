@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Space Data Locations</name>
+    <description>Key space tracking facilities</description>
+    <open>1</open>
+    <Style id="station-style">
+      <IconStyle>
+        <color>ff0000ff</color>
+        <scale>1.2</scale>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <color>ffffffff</color>
+        <scale>0.8</scale>
+      </LabelStyle>
+      <LineStyle>
+        <color>ff00ffff</color>
+        <width>2</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>7f00ff00</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+    </Style>
+    <StyleMap id="station-map">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#station-style</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#station-style</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Folder>
+      <name>Ground Stations</name>
+      <description>CCSDS-compatible ground stations</description>
+      <open>1</open>
+      <Placemark>
+        <name>NASA Johnson Space Center</name>
+        <description>Mission Control Center, Houston TX</description>
+        <styleUrl>#station-style</styleUrl>
+        <Point>
+          <altitudeMode>clampToGround</altitudeMode>
+          <coordinates>-95.0933,29.5593,0</coordinates>
+        </Point>
+        <LookAt>
+          <longitude>-95.0933</longitude>
+          <latitude>29.5593</latitude>
+          <altitude>0</altitude>
+          <heading>0</heading>
+          <tilt>45</tilt>
+          <range>5000</range>
+        </LookAt>
+      </Placemark>
+      <Placemark>
+        <name>ESA ESOC</name>
+        <description>European Space Operations Centre, Darmstadt</description>
+        <styleUrl>#station-style</styleUrl>
+        <Point>
+          <coordinates>8.6724,49.8697,0</coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+    <Placemark>
+      <name>ISS Ground Track Segment</name>
+      <styleUrl>#station-style</styleUrl>
+      <LineString>
+        <tessellate>1</tessellate>
+        <coordinates>
+          -95.364,29.7604,408000 -80.191,25.7617,408000 -60.025,15.4942,408000
+        </coordinates>
+      </LineString>
+    </Placemark>
+  </Document>
+</kml>

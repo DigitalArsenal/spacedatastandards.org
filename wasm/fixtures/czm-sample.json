@@ -1,0 +1,57 @@
+[
+  {
+    "id": "document",
+    "name": "ISS Tracking",
+    "version": "1.0",
+    "clock": {
+      "interval": "2024-01-15T00:00:00Z/2024-01-16T00:00:00Z",
+      "currentTime": "2024-01-15T12:00:00Z",
+      "multiplier": 60
+    }
+  },
+  {
+    "id": "iss",
+    "name": "ISS (ZARYA)",
+    "description": "International Space Station",
+    "availability": "2024-01-15T00:00:00Z/2024-01-16T00:00:00Z",
+    "position": {
+      "epoch": "2024-01-15T00:00:00Z",
+      "cartographicDegrees": [
+        0, -95.364, 29.7604, 408000,
+        3600, -80.191, 25.7617, 408000,
+        7200, -60.025, 15.4942, 408000,
+        10800, -40.321, 3.119, 408000
+      ]
+    },
+    "billboard": {
+      "show": true,
+      "image": "data:image/png;base64,iVBORw0KGgo=",
+      "scale": 1.5,
+      "color": {
+        "rgba": [255, 255, 0, 255]
+      }
+    },
+    "label": {
+      "show": true,
+      "text": "ISS",
+      "font": "12pt sans-serif",
+      "fillColor": {
+        "rgba": [255, 255, 255, 255]
+      }
+    },
+    "path": {
+      "show": true,
+      "leadTime": 3600,
+      "trailTime": 3600,
+      "width": 2,
+      "material": {
+        "solidColor": {
+          "color": {
+            "rgba": [0, 255, 255, 128]
+          }
+        }
+      },
+      "resolution": 120
+    }
+  }
+]
