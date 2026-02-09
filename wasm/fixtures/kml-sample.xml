@@ -7,21 +7,26 @@
     <Style id="station-style">
       <IconStyle>
         <color>ff0000ff</color>
+        <colorMode>normal</colorMode>
         <scale>1.2</scale>
         <Icon>
           <href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href>
         </Icon>
+        <hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
       </IconStyle>
       <LabelStyle>
         <color>ffffffff</color>
+        <colorMode>normal</colorMode>
         <scale>0.8</scale>
       </LabelStyle>
       <LineStyle>
         <color>ff00ffff</color>
+        <colorMode>normal</colorMode>
         <width>2</width>
       </LineStyle>
       <PolyStyle>
         <color>7f00ff00</color>
+        <colorMode>random</colorMode>
         <fill>1</fill>
         <outline>1</outline>
       </PolyStyle>
@@ -36,10 +41,28 @@
         <styleUrl>#station-style</styleUrl>
       </Pair>
     </StyleMap>
+    <NetworkLink>
+      <name>Live TLE Data</name>
+      <Link>
+        <href>http://example.com/tle-updates.kml</href>
+        <refreshMode>onInterval</refreshMode>
+        <refreshInterval>300</refreshInterval>
+        <viewRefreshMode>onStop</viewRefreshMode>
+        <viewRefreshTime>5</viewRefreshTime>
+      </Link>
+    </NetworkLink>
     <Folder>
       <name>Ground Stations</name>
       <description>CCSDS-compatible ground stations</description>
       <open>1</open>
+      <NetworkLink>
+        <name>Station Status Feed</name>
+        <Link>
+          <href>http://example.com/station-status.kml</href>
+          <refreshMode>onInterval</refreshMode>
+          <refreshInterval>60</refreshInterval>
+        </Link>
+      </NetworkLink>
       <Placemark>
         <name>NASA Johnson Space Center</name>
         <description>Mission Control Center, Houston TX</description>
@@ -64,6 +87,15 @@
         <Point>
           <coordinates>8.6724,49.8697,0</coordinates>
         </Point>
+        <Camera>
+          <longitude>8.6724</longitude>
+          <latitude>49.8697</latitude>
+          <altitude>500</altitude>
+          <heading>180</heading>
+          <tilt>75</tilt>
+          <roll>0</roll>
+          <altitudeMode>absolute</altitudeMode>
+        </Camera>
       </Placemark>
     </Folder>
     <Placemark>
@@ -75,6 +107,16 @@
           -95.364,29.7604,408000 -80.191,25.7617,408000 -60.025,15.4942,408000
         </coordinates>
       </LineString>
+    </Placemark>
+    <Placemark>
+      <name>Observation Areas</name>
+      <MultiGeometry>
+        <Point><coordinates>-95.0933,29.5593,0</coordinates></Point>
+        <MultiGeometry>
+          <LineString><coordinates>-95.0,29.5,0 -95.2,29.6,0</coordinates></LineString>
+          <Point><coordinates>8.6724,49.8697,0</coordinates></Point>
+        </MultiGeometry>
+      </MultiGeometry>
     </Placemark>
   </Document>
 </kml>

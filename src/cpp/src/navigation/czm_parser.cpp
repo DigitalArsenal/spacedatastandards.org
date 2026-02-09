@@ -41,12 +41,54 @@ static std::optional<CzmColor> parse_opt_color(const JsonValue& parent, const st
     return parse_color(*v);
 }
 
+static CzmNearFarScalar parse_near_far_scalar(const JsonValue& val) {
+    CzmNearFarScalar nfs;
+    if (val.is_object()) {
+        auto* arr = val.get("nearFarScalar");
+        if (arr && arr->is_array() && arr->arr.size() >= 4) {
+            nfs.NEAR_DISTANCE = arr->arr[0].as_number();
+            nfs.NEAR_VALUE = arr->arr[1].as_number();
+            nfs.FAR_DISTANCE = arr->arr[2].as_number();
+            nfs.FAR_VALUE = arr->arr[3].as_number();
+        } else {
+            nfs.NEAR_DISTANCE = val.get_number("nearDistance").value_or(0);
+            nfs.NEAR_VALUE = val.get_number("nearValue").value_or(0);
+            nfs.FAR_DISTANCE = val.get_number("farDistance").value_or(0);
+            nfs.FAR_VALUE = val.get_number("farValue").value_or(0);
+        }
+    } else if (val.is_array() && val.arr.size() >= 4) {
+        nfs.NEAR_DISTANCE = val.arr[0].as_number();
+        nfs.NEAR_VALUE = val.arr[1].as_number();
+        nfs.FAR_DISTANCE = val.arr[2].as_number();
+        nfs.FAR_VALUE = val.arr[3].as_number();
+    }
+    return nfs;
+}
+
 static CzmBillboard parse_billboard(const JsonValue& val) {
     CzmBillboard bb;
     bb.SHOW = val.get_bool("show").value_or(true);
     bb.IMAGE = val.get_string("image").value_or("");
     bb.SCALE = val.get_number("scale").value_or(1.0);
     bb.COLOR = parse_opt_color(val, "color");
+    bb.HEIGHT_REFERENCE = val.get_string("heightReference").value_or("");
+    bb.HORIZONTAL_ORIGIN = val.get_string("horizontalOrigin").value_or("");
+    bb.VERTICAL_ORIGIN = val.get_string("verticalOrigin").value_or("");
+
+    auto* po = val.get("pixelOffset");
+    if (po && po->is_object()) {
+        auto* cart = po->get("cartesian2");
+        if (cart && cart->is_array() && cart->arr.size() >= 2) {
+            bb.PIXEL_OFFSET_X = cart->arr[0].as_number();
+            bb.PIXEL_OFFSET_Y = cart->arr[1].as_number();
+        }
+    }
+
+    auto* tbd = val.get("translucencyByDistance");
+    if (tbd) {
+        bb.TRANSLUCENCY_BY_DISTANCE = parse_near_far_scalar(*tbd);
+    }
+
     return bb;
 }
 
@@ -55,10 +97,15 @@ static CzmLabel parse_label(const JsonValue& val) {
     lbl.SHOW = val.get_bool("show").value_or(true);
     lbl.TEXT = val.get_string("text").value_or("");
     lbl.FONT = val.get_string("font").value_or("");
+    lbl.STYLE = val.get_string("style").value_or("");
     lbl.SCALE = val.get_number("scale").value_or(1.0);
     lbl.FILL_COLOR = parse_opt_color(val, "fillColor");
     lbl.OUTLINE_COLOR = parse_opt_color(val, "outlineColor");
     lbl.OUTLINE_WIDTH = val.get_number("outlineWidth").value_or(0);
+    lbl.HORIZONTAL_ORIGIN = val.get_string("horizontalOrigin").value_or("");
+    lbl.VERTICAL_ORIGIN = val.get_string("verticalOrigin").value_or("");
+    lbl.HEIGHT_REFERENCE = val.get_string("heightReference").value_or("");
+
     auto* po = val.get("pixelOffset");
     if (po && po->is_object()) {
         auto* cart = po->get("cartesian2");
@@ -77,6 +124,7 @@ static CzmPoint parse_czm_point(const JsonValue& val) {
     pt.OUTLINE_COLOR = parse_opt_color(val, "outlineColor");
     pt.OUTLINE_WIDTH = val.get_number("outlineWidth").value_or(0);
     pt.PIXEL_SIZE = val.get_number("pixelSize").value_or(1);
+    pt.HEIGHT_REFERENCE = val.get_string("heightReference").value_or("");
     return pt;
 }
 
@@ -110,6 +158,8 @@ static CzmPolygon parse_czm_polygon(const JsonValue& val) {
     pg.FILL = val.get_bool("fill").value_or(true);
     pg.OUTLINE = val.get_bool("outline").value_or(false);
     pg.EXTRUDED_HEIGHT = val.get_number("extrudedHeight").value_or(0);
+    pg.HEIGHT_REFERENCE = val.get_string("heightReference").value_or("");
+    pg.CLASSIFICATION_TYPE = val.get_string("classificationType").value_or("");
 
     auto* positions = val.get("positions");
     if (positions) {
@@ -155,7 +205,31 @@ static CzmModel parse_model(const JsonValue& val) {
     model.SCALE = val.get_number("scale").value_or(1.0);
     model.MINIMUM_PIXEL_SIZE = val.get_number("minimumPixelSize").value_or(0);
     model.MAXIMUM_SCALE = val.get_number("maximumScale").value_or(0);
+    model.HEIGHT_REFERENCE = val.get_string("heightReference").value_or("");
+    model.COLOR = parse_opt_color(val, "color");
     return model;
+}
+
+static CzmEllipse parse_ellipse(const JsonValue& val) {
+    CzmEllipse e;
+    e.SHOW = val.get_bool("show").value_or(true);
+    e.SEMI_MAJOR_AXIS = val.get_number("semiMajorAxis").value_or(0);
+    e.SEMI_MINOR_AXIS = val.get_number("semiMinorAxis").value_or(0);
+    e.ROTATION = val.get_number("rotation").value_or(0);
+    e.FILL = val.get_bool("fill").value_or(true);
+    e.OUTLINE = val.get_bool("outline").value_or(false);
+    e.HEIGHT = val.get_number("height").value_or(0);
+    e.HEIGHT_REFERENCE = val.get_string("heightReference").value_or("");
+
+    auto* material = val.get("material");
+    if (material) {
+        auto* solidColor = material->get("solidColor");
+        if (solidColor) {
+            e.COLOR = parse_opt_color(*solidColor, "color");
+        }
+    }
+    e.OUTLINE_COLOR = parse_opt_color(val, "outlineColor");
+    return e;
 }
 
 static CzmPacket parse_packet(const JsonValue& val) {
@@ -222,6 +296,9 @@ static CzmPacket parse_packet(const JsonValue& val) {
     auto* path = val.get("path");
     if (path) pkt.PATH = parse_path(*path);
 
+    auto* ellipse = val.get("ellipse");
+    if (ellipse) pkt.ELLIPSE = parse_ellipse(*ellipse);
+
     return pkt;
 }
 
@@ -281,6 +358,17 @@ static JsonValue material_solid_color(const CzmColor& c) {
     return json_object(std::move(material));
 }
 
+static JsonValue near_far_scalar_to_json(const CzmNearFarScalar& nfs) {
+    std::map<std::string, JsonValue> obj;
+    std::vector<JsonValue> arr;
+    arr.push_back(json_number(nfs.NEAR_DISTANCE));
+    arr.push_back(json_number(nfs.NEAR_VALUE));
+    arr.push_back(json_number(nfs.FAR_DISTANCE));
+    arr.push_back(json_number(nfs.FAR_VALUE));
+    obj["nearFarScalar"] = json_array(std::move(arr));
+    return json_object(std::move(obj));
+}
+
 static JsonValue packet_to_json(const CzmPacket& pkt) {
     std::map<std::string, JsonValue> obj;
     obj["id"] = json_string(pkt.ID);
@@ -326,6 +414,18 @@ static JsonValue packet_to_json(const CzmPacket& pkt) {
         if (!bb.IMAGE.empty()) bobj["image"] = json_string(bb.IMAGE);
         if (bb.SCALE != 1.0) bobj["scale"] = json_number(bb.SCALE);
         if (bb.COLOR) bobj["color"] = color_to_json(*bb.COLOR);
+        if (!bb.HEIGHT_REFERENCE.empty()) bobj["heightReference"] = json_string(bb.HEIGHT_REFERENCE);
+        if (bb.PIXEL_OFFSET_X != 0 || bb.PIXEL_OFFSET_Y != 0) {
+            std::map<std::string, JsonValue> po;
+            std::vector<JsonValue> cart2;
+            cart2.push_back(json_number(bb.PIXEL_OFFSET_X));
+            cart2.push_back(json_number(bb.PIXEL_OFFSET_Y));
+            po["cartesian2"] = json_array(std::move(cart2));
+            bobj["pixelOffset"] = json_object(std::move(po));
+        }
+        if (!bb.HORIZONTAL_ORIGIN.empty()) bobj["horizontalOrigin"] = json_string(bb.HORIZONTAL_ORIGIN);
+        if (!bb.VERTICAL_ORIGIN.empty()) bobj["verticalOrigin"] = json_string(bb.VERTICAL_ORIGIN);
+        if (bb.TRANSLUCENCY_BY_DISTANCE) bobj["translucencyByDistance"] = near_far_scalar_to_json(*bb.TRANSLUCENCY_BY_DISTANCE);
         obj["billboard"] = json_object(std::move(bobj));
     }
 
@@ -335,10 +435,22 @@ static JsonValue packet_to_json(const CzmPacket& pkt) {
         lobj["show"] = json_bool(lbl.SHOW);
         if (!lbl.TEXT.empty()) lobj["text"] = json_string(lbl.TEXT);
         if (!lbl.FONT.empty()) lobj["font"] = json_string(lbl.FONT);
+        if (!lbl.STYLE.empty()) lobj["style"] = json_string(lbl.STYLE);
         if (lbl.SCALE != 1.0) lobj["scale"] = json_number(lbl.SCALE);
         if (lbl.FILL_COLOR) lobj["fillColor"] = color_to_json(*lbl.FILL_COLOR);
         if (lbl.OUTLINE_COLOR) lobj["outlineColor"] = color_to_json(*lbl.OUTLINE_COLOR);
         if (lbl.OUTLINE_WIDTH != 0) lobj["outlineWidth"] = json_number(lbl.OUTLINE_WIDTH);
+        if (lbl.PIXEL_OFFSET_X != 0 || lbl.PIXEL_OFFSET_Y != 0) {
+            std::map<std::string, JsonValue> po;
+            std::vector<JsonValue> cart2;
+            cart2.push_back(json_number(lbl.PIXEL_OFFSET_X));
+            cart2.push_back(json_number(lbl.PIXEL_OFFSET_Y));
+            po["cartesian2"] = json_array(std::move(cart2));
+            lobj["pixelOffset"] = json_object(std::move(po));
+        }
+        if (!lbl.HORIZONTAL_ORIGIN.empty()) lobj["horizontalOrigin"] = json_string(lbl.HORIZONTAL_ORIGIN);
+        if (!lbl.VERTICAL_ORIGIN.empty()) lobj["verticalOrigin"] = json_string(lbl.VERTICAL_ORIGIN);
+        if (!lbl.HEIGHT_REFERENCE.empty()) lobj["heightReference"] = json_string(lbl.HEIGHT_REFERENCE);
         obj["label"] = json_object(std::move(lobj));
     }
 
@@ -350,6 +462,7 @@ static JsonValue packet_to_json(const CzmPacket& pkt) {
         if (pt.OUTLINE_COLOR) pobj["outlineColor"] = color_to_json(*pt.OUTLINE_COLOR);
         if (pt.OUTLINE_WIDTH != 0) pobj["outlineWidth"] = json_number(pt.OUTLINE_WIDTH);
         if (pt.PIXEL_SIZE != 1) pobj["pixelSize"] = json_number(pt.PIXEL_SIZE);
+        if (!pt.HEIGHT_REFERENCE.empty()) pobj["heightReference"] = json_string(pt.HEIGHT_REFERENCE);
         obj["point"] = json_object(std::move(pobj));
     }
 
@@ -376,6 +489,8 @@ static JsonValue packet_to_json(const CzmPacket& pkt) {
         if (!pg.FILL) pgobj["fill"] = json_bool(false);
         if (pg.OUTLINE) pgobj["outline"] = json_bool(true);
         if (pg.EXTRUDED_HEIGHT != 0) pgobj["extrudedHeight"] = json_number(pg.EXTRUDED_HEIGHT);
+        if (!pg.HEIGHT_REFERENCE.empty()) pgobj["heightReference"] = json_string(pg.HEIGHT_REFERENCE);
+        if (!pg.CLASSIFICATION_TYPE.empty()) pgobj["classificationType"] = json_string(pg.CLASSIFICATION_TYPE);
         std::map<std::string, JsonValue> positions;
         if (!pg.POSITIONS_CARTOGRAPHIC_DEGREES.empty())
             positions["cartographicDegrees"] = double_array_to_json(pg.POSITIONS_CARTOGRAPHIC_DEGREES);
@@ -395,6 +510,8 @@ static JsonValue packet_to_json(const CzmPacket& pkt) {
         if (mdl.SCALE != 1.0) mobj["scale"] = json_number(mdl.SCALE);
         if (mdl.MINIMUM_PIXEL_SIZE != 0) mobj["minimumPixelSize"] = json_number(mdl.MINIMUM_PIXEL_SIZE);
         if (mdl.MAXIMUM_SCALE != 0) mobj["maximumScale"] = json_number(mdl.MAXIMUM_SCALE);
+        if (!mdl.HEIGHT_REFERENCE.empty()) mobj["heightReference"] = json_string(mdl.HEIGHT_REFERENCE);
+        if (mdl.COLOR) mobj["color"] = color_to_json(*mdl.COLOR);
         obj["model"] = json_object(std::move(mobj));
     }
 
@@ -408,6 +525,22 @@ static JsonValue packet_to_json(const CzmPacket& pkt) {
         if (path.RESOLUTION != 60) pathobj["resolution"] = json_number(path.RESOLUTION);
         if (path.COLOR) pathobj["material"] = material_solid_color(*path.COLOR);
         obj["path"] = json_object(std::move(pathobj));
+    }
+
+    if (pkt.ELLIPSE) {
+        const auto& e = *pkt.ELLIPSE;
+        std::map<std::string, JsonValue> eobj;
+        eobj["show"] = json_bool(e.SHOW);
+        if (e.SEMI_MAJOR_AXIS != 0) eobj["semiMajorAxis"] = json_number(e.SEMI_MAJOR_AXIS);
+        if (e.SEMI_MINOR_AXIS != 0) eobj["semiMinorAxis"] = json_number(e.SEMI_MINOR_AXIS);
+        if (e.ROTATION != 0) eobj["rotation"] = json_number(e.ROTATION);
+        if (!e.FILL) eobj["fill"] = json_bool(false);
+        if (e.OUTLINE) eobj["outline"] = json_bool(true);
+        if (e.HEIGHT != 0) eobj["height"] = json_number(e.HEIGHT);
+        if (!e.HEIGHT_REFERENCE.empty()) eobj["heightReference"] = json_string(e.HEIGHT_REFERENCE);
+        if (e.COLOR) eobj["material"] = material_solid_color(*e.COLOR);
+        if (e.OUTLINE_COLOR) eobj["outlineColor"] = color_to_json(*e.OUTLINE_COLOR);
+        obj["ellipse"] = json_object(std::move(eobj));
     }
 
     return json_object(std::move(obj));

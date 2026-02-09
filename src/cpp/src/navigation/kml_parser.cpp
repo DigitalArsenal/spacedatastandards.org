@@ -50,16 +50,25 @@ static std::string coord_to_string(const KmlCoordinate& c) {
 static KmlIconStyle parse_icon_style(const XmlElement& el) {
     KmlIconStyle s;
     s.COLOR = get_child_text(el, "color").value_or("");
+    s.COLOR_MODE = get_child_text(el, "colorMode").value_or("");
     s.SCALE = opt_num(get_child_text(el, "scale")).value_or(1.0);
     s.HEADING = opt_num(get_child_text(el, "heading")).value_or(0);
     auto* icon = find_child(el, "Icon");
     if (icon) s.ICON_HREF = get_child_text(*icon, "href").value_or("");
+    auto* hotSpot = find_child(el, "hotSpot");
+    if (hotSpot) {
+        s.HOTSPOT_X = opt_num(get_attribute(*hotSpot, "x")).value_or(0);
+        s.HOTSPOT_Y = opt_num(get_attribute(*hotSpot, "y")).value_or(0);
+        s.HOTSPOT_X_UNITS = get_attribute(*hotSpot, "xunits").value_or("");
+        s.HOTSPOT_Y_UNITS = get_attribute(*hotSpot, "yunits").value_or("");
+    }
     return s;
 }
 
 static KmlLineStyle parse_line_style(const XmlElement& el) {
     KmlLineStyle s;
     s.COLOR = get_child_text(el, "color").value_or("");
+    s.COLOR_MODE = get_child_text(el, "colorMode").value_or("");
     s.WIDTH = opt_num(get_child_text(el, "width")).value_or(1.0);
     return s;
 }
@@ -67,6 +76,7 @@ static KmlLineStyle parse_line_style(const XmlElement& el) {
 static KmlPolyStyle parse_poly_style(const XmlElement& el) {
     KmlPolyStyle s;
     s.COLOR = get_child_text(el, "color").value_or("");
+    s.COLOR_MODE = get_child_text(el, "colorMode").value_or("");
     auto fill_str = get_child_text(el, "fill");
     s.FILL = !fill_str || *fill_str != "0";
     auto outline_str = get_child_text(el, "outline");
@@ -77,6 +87,7 @@ static KmlPolyStyle parse_poly_style(const XmlElement& el) {
 static KmlLabelStyle parse_label_style(const XmlElement& el) {
     KmlLabelStyle s;
     s.COLOR = get_child_text(el, "color").value_or("");
+    s.COLOR_MODE = get_child_text(el, "colorMode").value_or("");
     s.SCALE = opt_num(get_child_text(el, "scale")).value_or(1.0);
     return s;
 }
@@ -185,6 +196,7 @@ static KmlMultiGeometry parse_multi_geometry(const XmlElement& el) {
         if (tag == "Point") mg.POINTS.push_back(parse_point(child));
         else if (tag == "LineString") mg.LINE_STRINGS.push_back(parse_line_string(child));
         else if (tag == "Polygon") mg.POLYGONS.push_back(parse_polygon(child));
+        else if (tag == "MultiGeometry") mg.MULTI_GEOMETRIES.push_back(parse_multi_geometry(child));
     }
     return mg;
 }
@@ -199,6 +211,18 @@ static KmlLookAt parse_look_at(const XmlElement& el) {
     la.RANGE = opt_num(get_child_text(el, "range")).value_or(0);
     la.ALTITUDE_MODE = get_child_text(el, "altitudeMode").value_or("");
     return la;
+}
+
+static KmlCamera parse_camera(const XmlElement& el) {
+    KmlCamera cam;
+    cam.LONGITUDE = opt_num(get_child_text(el, "longitude")).value_or(0);
+    cam.LATITUDE = opt_num(get_child_text(el, "latitude")).value_or(0);
+    cam.ALTITUDE = opt_num(get_child_text(el, "altitude")).value_or(0);
+    cam.HEADING = opt_num(get_child_text(el, "heading")).value_or(0);
+    cam.TILT = opt_num(get_child_text(el, "tilt")).value_or(0);
+    cam.ROLL = opt_num(get_child_text(el, "roll")).value_or(0);
+    cam.ALTITUDE_MODE = get_child_text(el, "altitudeMode").value_or("");
+    return cam;
 }
 
 static KmlGroundOverlay parse_ground_overlay(const XmlElement& el) {
@@ -221,6 +245,23 @@ static KmlGroundOverlay parse_ground_overlay(const XmlElement& el) {
     go.ALTITUDE = opt_num(get_child_text(el, "altitude")).value_or(0);
     go.ALTITUDE_MODE = get_child_text(el, "altitudeMode").value_or("");
     return go;
+}
+
+static KmlNetworkLink parse_network_link(const XmlElement& el) {
+    KmlNetworkLink nl;
+    nl.NAME = get_child_text(el, "name").value_or("");
+    auto vis_str = get_child_text(el, "visibility");
+    nl.VISIBILITY = !vis_str || *vis_str != "0";
+    auto* link = find_child(el, "Link");
+    if (!link) link = find_child(el, "Url"); // legacy KML support
+    if (link) {
+        nl.HREF = get_child_text(*link, "href").value_or("");
+        nl.REFRESH_MODE = get_child_text(*link, "refreshMode").value_or("");
+        nl.REFRESH_INTERVAL = opt_num(get_child_text(*link, "refreshInterval")).value_or(0);
+        nl.VIEW_REFRESH_MODE = get_child_text(*link, "viewRefreshMode").value_or("");
+        nl.VIEW_REFRESH_TIME = opt_num(get_child_text(*link, "viewRefreshTime")).value_or(0);
+    }
+    return nl;
 }
 
 static KmlPlacemark parse_placemark(const XmlElement& el) {
@@ -249,6 +290,9 @@ static KmlPlacemark parse_placemark(const XmlElement& el) {
 
     auto* la_el = find_child(el, "LookAt");
     if (la_el) pm.LOOK_AT = parse_look_at(*la_el);
+
+    auto* cam_el = find_child(el, "Camera");
+    if (cam_el) pm.CAMERA = parse_camera(*cam_el);
 
     auto* ts_el = find_child(el, "TimeSpan");
     if (ts_el) {
@@ -299,6 +343,7 @@ static KmlFolder parse_folder(const XmlElement& el) {
         if (colon != std::string::npos) tag = tag.substr(colon + 1);
         if (tag == "Placemark") folder.PLACEMARKS.push_back(parse_placemark(child));
         else if (tag == "Folder") folder.FOLDERS.push_back(parse_folder(child));
+        else if (tag == "NetworkLink") folder.NETWORK_LINKS.push_back(parse_network_link(child));
         else if (tag == "GroundOverlay") folder.GROUND_OVERLAYS.push_back(parse_ground_overlay(child));
     }
     return folder;
@@ -332,11 +377,15 @@ KmlMessage parse_kml_xml(std::string_view text) {
         else if (tag == "StyleMap") msg.STYLE_MAPS.push_back(parse_style_map(child));
         else if (tag == "Placemark") msg.PLACEMARKS.push_back(parse_placemark(child));
         else if (tag == "Folder") msg.FOLDERS.push_back(parse_folder(child));
+        else if (tag == "NetworkLink") msg.NETWORK_LINKS.push_back(parse_network_link(child));
         else if (tag == "GroundOverlay") msg.GROUND_OVERLAYS.push_back(parse_ground_overlay(child));
     }
 
     return msg;
 }
+
+// Forward declaration for recursive multi-geometry writing
+static XmlElement write_multi_geometry_el(const KmlMultiGeometry& mg);
 
 // Writer helpers
 static XmlElement write_style_el(const KmlStyle& style) {
@@ -353,10 +402,20 @@ static XmlElement write_style_el(const KmlStyle& style) {
         XmlElement ise;
         ise.tag = "IconStyle";
         if (!is.COLOR.empty()) ise.children.push_back(txt("color", is.COLOR));
+        if (!is.COLOR_MODE.empty()) ise.children.push_back(txt("colorMode", is.COLOR_MODE));
         if (is.SCALE != 1.0) ise.children.push_back(txt("scale", std::to_string(is.SCALE)));
         if (is.HEADING != 0) ise.children.push_back(txt("heading", std::to_string(is.HEADING)));
         if (!is.ICON_HREF.empty()) {
             ise.children.push_back(xml_elem("Icon", {}, {txt("href", is.ICON_HREF)}));
+        }
+        if (is.HOTSPOT_X != 0 || is.HOTSPOT_Y != 0 || !is.HOTSPOT_X_UNITS.empty() || !is.HOTSPOT_Y_UNITS.empty()) {
+            XmlElement hs;
+            hs.tag = "hotSpot";
+            hs.attributes["x"] = std::to_string(is.HOTSPOT_X);
+            hs.attributes["y"] = std::to_string(is.HOTSPOT_Y);
+            if (!is.HOTSPOT_X_UNITS.empty()) hs.attributes["xunits"] = is.HOTSPOT_X_UNITS;
+            if (!is.HOTSPOT_Y_UNITS.empty()) hs.attributes["yunits"] = is.HOTSPOT_Y_UNITS;
+            ise.children.push_back(std::move(hs));
         }
         el.children.push_back(std::move(ise));
     }
@@ -366,6 +425,7 @@ static XmlElement write_style_el(const KmlStyle& style) {
         XmlElement lse;
         lse.tag = "LabelStyle";
         if (!ls.COLOR.empty()) lse.children.push_back(txt("color", ls.COLOR));
+        if (!ls.COLOR_MODE.empty()) lse.children.push_back(txt("colorMode", ls.COLOR_MODE));
         if (ls.SCALE != 1.0) lse.children.push_back(txt("scale", std::to_string(ls.SCALE)));
         el.children.push_back(std::move(lse));
     }
@@ -375,6 +435,7 @@ static XmlElement write_style_el(const KmlStyle& style) {
         XmlElement lse;
         lse.tag = "LineStyle";
         if (!ls.COLOR.empty()) lse.children.push_back(txt("color", ls.COLOR));
+        if (!ls.COLOR_MODE.empty()) lse.children.push_back(txt("colorMode", ls.COLOR_MODE));
         if (ls.WIDTH != 1.0) lse.children.push_back(txt("width", std::to_string(ls.WIDTH)));
         el.children.push_back(std::move(lse));
     }
@@ -384,6 +445,7 @@ static XmlElement write_style_el(const KmlStyle& style) {
         XmlElement pse;
         pse.tag = "PolyStyle";
         if (!ps.COLOR.empty()) pse.children.push_back(txt("color", ps.COLOR));
+        if (!ps.COLOR_MODE.empty()) pse.children.push_back(txt("colorMode", ps.COLOR_MODE));
         pse.children.push_back(txt("fill", ps.FILL ? "1" : "0"));
         pse.children.push_back(txt("outline", ps.OUTLINE ? "1" : "0"));
         el.children.push_back(std::move(pse));
@@ -400,6 +462,60 @@ static XmlElement write_style_el(const KmlStyle& style) {
     }
 
     return el;
+}
+
+static XmlElement write_multi_geometry_el(const KmlMultiGeometry& mg) {
+    auto txt = [](const std::string& t, const std::string& v) {
+        return xml_elem(t, {}, {}, v);
+    };
+
+    XmlElement mge;
+    mge.tag = "MultiGeometry";
+    for (const auto& pt : mg.POINTS) {
+        XmlElement pte;
+        pte.tag = "Point";
+        if (pt.EXTRUDE) pte.children.push_back(txt("extrude", "1"));
+        if (!pt.ALTITUDE_MODE.empty()) pte.children.push_back(txt("altitudeMode", pt.ALTITUDE_MODE));
+        pte.children.push_back(txt("coordinates", coord_to_string(pt.COORDINATES)));
+        mge.children.push_back(std::move(pte));
+    }
+    for (const auto& ls : mg.LINE_STRINGS) {
+        XmlElement lse;
+        lse.tag = "LineString";
+        if (ls.EXTRUDE) lse.children.push_back(txt("extrude", "1"));
+        if (ls.TESSELLATE) lse.children.push_back(txt("tessellate", "1"));
+        if (!ls.ALTITUDE_MODE.empty()) lse.children.push_back(txt("altitudeMode", ls.ALTITUDE_MODE));
+        lse.children.push_back(txt("coordinates", coords_to_string(ls.COORDINATES)));
+        mge.children.push_back(std::move(lse));
+    }
+    for (const auto& pg : mg.POLYGONS) {
+        XmlElement pge;
+        pge.tag = "Polygon";
+        if (pg.EXTRUDE) pge.children.push_back(txt("extrude", "1"));
+        if (pg.TESSELLATE) pge.children.push_back(txt("tessellate", "1"));
+        if (!pg.ALTITUDE_MODE.empty()) pge.children.push_back(txt("altitudeMode", pg.ALTITUDE_MODE));
+        XmlElement outer;
+        outer.tag = "outerBoundaryIs";
+        XmlElement outerRing;
+        outerRing.tag = "LinearRing";
+        outerRing.children.push_back(txt("coordinates", coords_to_string(pg.OUTER_BOUNDARY.COORDINATES)));
+        outer.children.push_back(std::move(outerRing));
+        pge.children.push_back(std::move(outer));
+        for (const auto& inner : pg.INNER_BOUNDARIES) {
+            XmlElement innerEl;
+            innerEl.tag = "innerBoundaryIs";
+            XmlElement innerRing;
+            innerRing.tag = "LinearRing";
+            innerRing.children.push_back(txt("coordinates", coords_to_string(inner.COORDINATES)));
+            innerEl.children.push_back(std::move(innerRing));
+            pge.children.push_back(std::move(innerEl));
+        }
+        mge.children.push_back(std::move(pge));
+    }
+    for (const auto& nested : mg.MULTI_GEOMETRIES) {
+        mge.children.push_back(write_multi_geometry_el(nested));
+    }
+    return mge;
 }
 
 static XmlElement write_placemark_el(const KmlPlacemark& pm) {
@@ -466,34 +582,7 @@ static XmlElement write_placemark_el(const KmlPlacemark& pm) {
     }
 
     if (pm.MULTI_GEOMETRY) {
-        const auto& mg = *pm.MULTI_GEOMETRY;
-        XmlElement mge;
-        mge.tag = "MultiGeometry";
-        for (const auto& pt : mg.POINTS) {
-            XmlElement pte;
-            pte.tag = "Point";
-            pte.children.push_back(txt("coordinates", coord_to_string(pt.COORDINATES)));
-            mge.children.push_back(std::move(pte));
-        }
-        for (const auto& ls : mg.LINE_STRINGS) {
-            XmlElement lse;
-            lse.tag = "LineString";
-            lse.children.push_back(txt("coordinates", coords_to_string(ls.COORDINATES)));
-            mge.children.push_back(std::move(lse));
-        }
-        for (const auto& pg : mg.POLYGONS) {
-            XmlElement pge;
-            pge.tag = "Polygon";
-            XmlElement outer;
-            outer.tag = "outerBoundaryIs";
-            XmlElement outerRing;
-            outerRing.tag = "LinearRing";
-            outerRing.children.push_back(txt("coordinates", coords_to_string(pg.OUTER_BOUNDARY.COORDINATES)));
-            outer.children.push_back(std::move(outerRing));
-            pge.children.push_back(std::move(outer));
-            mge.children.push_back(std::move(pge));
-        }
-        el.children.push_back(std::move(mge));
+        el.children.push_back(write_multi_geometry_el(*pm.MULTI_GEOMETRY));
     }
 
     if (pm.LOOK_AT) {
@@ -508,6 +597,20 @@ static XmlElement write_placemark_el(const KmlPlacemark& pm) {
         lae.children.push_back(txt("range", std::to_string(la.RANGE)));
         if (!la.ALTITUDE_MODE.empty()) lae.children.push_back(txt("altitudeMode", la.ALTITUDE_MODE));
         el.children.push_back(std::move(lae));
+    }
+
+    if (pm.CAMERA) {
+        const auto& cam = *pm.CAMERA;
+        XmlElement ce;
+        ce.tag = "Camera";
+        ce.children.push_back(txt("longitude", std::to_string(cam.LONGITUDE)));
+        ce.children.push_back(txt("latitude", std::to_string(cam.LATITUDE)));
+        ce.children.push_back(txt("altitude", std::to_string(cam.ALTITUDE)));
+        ce.children.push_back(txt("heading", std::to_string(cam.HEADING)));
+        ce.children.push_back(txt("tilt", std::to_string(cam.TILT)));
+        ce.children.push_back(txt("roll", std::to_string(cam.ROLL)));
+        if (!cam.ALTITUDE_MODE.empty()) ce.children.push_back(txt("altitudeMode", cam.ALTITUDE_MODE));
+        el.children.push_back(std::move(ce));
     }
 
     if (pm.TIME_SPAN) {
@@ -542,6 +645,57 @@ static XmlElement write_placemark_el(const KmlPlacemark& pm) {
     return el;
 }
 
+static XmlElement write_network_link_el(const KmlNetworkLink& nl) {
+    auto txt = [](const std::string& t, const std::string& v) {
+        return xml_elem(t, {}, {}, v);
+    };
+
+    XmlElement el;
+    el.tag = "NetworkLink";
+    if (!nl.NAME.empty()) el.children.push_back(txt("name", nl.NAME));
+    if (!nl.VISIBILITY) el.children.push_back(txt("visibility", "0"));
+    if (!nl.HREF.empty() || !nl.REFRESH_MODE.empty() || !nl.VIEW_REFRESH_MODE.empty()) {
+        XmlElement link;
+        link.tag = "Link";
+        if (!nl.HREF.empty()) link.children.push_back(txt("href", nl.HREF));
+        if (!nl.REFRESH_MODE.empty()) link.children.push_back(txt("refreshMode", nl.REFRESH_MODE));
+        if (nl.REFRESH_INTERVAL != 0) link.children.push_back(txt("refreshInterval", std::to_string(nl.REFRESH_INTERVAL)));
+        if (!nl.VIEW_REFRESH_MODE.empty()) link.children.push_back(txt("viewRefreshMode", nl.VIEW_REFRESH_MODE));
+        if (nl.VIEW_REFRESH_TIME != 0) link.children.push_back(txt("viewRefreshTime", std::to_string(nl.VIEW_REFRESH_TIME)));
+        el.children.push_back(std::move(link));
+    }
+    return el;
+}
+
+static XmlElement write_ground_overlay_el(const KmlGroundOverlay& go) {
+    auto txt = [](const std::string& t, const std::string& v) {
+        return xml_elem(t, {}, {}, v);
+    };
+
+    XmlElement el;
+    el.tag = "GroundOverlay";
+    if (!go.NAME.empty()) el.children.push_back(txt("name", go.NAME));
+    if (!go.DESCRIPTION.empty()) el.children.push_back(txt("description", go.DESCRIPTION));
+    if (!go.VISIBILITY) el.children.push_back(txt("visibility", "0"));
+    if (!go.ICON_HREF.empty()) {
+        el.children.push_back(xml_elem("Icon", {}, {txt("href", go.ICON_HREF)}));
+    }
+    if (!go.COLOR.empty()) el.children.push_back(txt("color", go.COLOR));
+    if (go.NORTH != 0 || go.SOUTH != 0 || go.EAST != 0 || go.WEST != 0) {
+        XmlElement llb;
+        llb.tag = "LatLonBox";
+        llb.children.push_back(txt("north", std::to_string(go.NORTH)));
+        llb.children.push_back(txt("south", std::to_string(go.SOUTH)));
+        llb.children.push_back(txt("east", std::to_string(go.EAST)));
+        llb.children.push_back(txt("west", std::to_string(go.WEST)));
+        if (go.ROTATION != 0) llb.children.push_back(txt("rotation", std::to_string(go.ROTATION)));
+        el.children.push_back(std::move(llb));
+    }
+    if (go.ALTITUDE != 0) el.children.push_back(txt("altitude", std::to_string(go.ALTITUDE)));
+    if (!go.ALTITUDE_MODE.empty()) el.children.push_back(txt("altitudeMode", go.ALTITUDE_MODE));
+    return el;
+}
+
 static XmlElement write_folder_el(const KmlFolder& folder) {
     XmlElement el;
     el.tag = "Folder";
@@ -557,6 +711,8 @@ static XmlElement write_folder_el(const KmlFolder& folder) {
 
     for (const auto& pm : folder.PLACEMARKS) el.children.push_back(write_placemark_el(pm));
     for (const auto& f : folder.FOLDERS) el.children.push_back(write_folder_el(f));
+    for (const auto& nl : folder.NETWORK_LINKS) el.children.push_back(write_network_link_el(nl));
+    for (const auto& go : folder.GROUND_OVERLAYS) el.children.push_back(write_ground_overlay_el(go));
 
     return el;
 }
@@ -591,6 +747,8 @@ std::string write_kml_xml(const KmlMessage& msg) {
 
     for (const auto& pm : msg.PLACEMARKS) doc.children.push_back(write_placemark_el(pm));
     for (const auto& f : msg.FOLDERS) doc.children.push_back(write_folder_el(f));
+    for (const auto& nl : msg.NETWORK_LINKS) doc.children.push_back(write_network_link_el(nl));
+    for (const auto& go : msg.GROUND_OVERLAYS) doc.children.push_back(write_ground_overlay_el(go));
 
     XmlElement kml;
     kml.tag = "kml";

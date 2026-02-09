@@ -27,23 +27,40 @@ struct CzmCartesian {
     double Z = 0;
 };
 
+struct CzmNearFarScalar {
+    double NEAR_DISTANCE = 0;
+    double NEAR_VALUE = 0;
+    double FAR_DISTANCE = 0;
+    double FAR_VALUE = 0;
+};
+
 struct CzmBillboard {
     bool SHOW = true;
     std::string IMAGE;
     double SCALE = 1.0;
     std::optional<CzmColor> COLOR;
+    std::string HEIGHT_REFERENCE;
+    double PIXEL_OFFSET_X = 0;
+    double PIXEL_OFFSET_Y = 0;
+    std::string HORIZONTAL_ORIGIN;
+    std::string VERTICAL_ORIGIN;
+    std::optional<CzmNearFarScalar> TRANSLUCENCY_BY_DISTANCE;
 };
 
 struct CzmLabel {
     bool SHOW = true;
     std::string TEXT;
     std::string FONT;
+    std::string STYLE;
     double SCALE = 1.0;
     std::optional<CzmColor> FILL_COLOR;
     std::optional<CzmColor> OUTLINE_COLOR;
     double OUTLINE_WIDTH = 0;
     double PIXEL_OFFSET_X = 0;
     double PIXEL_OFFSET_Y = 0;
+    std::string HORIZONTAL_ORIGIN;
+    std::string VERTICAL_ORIGIN;
+    std::string HEIGHT_REFERENCE;
 };
 
 struct CzmPoint {
@@ -52,6 +69,7 @@ struct CzmPoint {
     std::optional<CzmColor> OUTLINE_COLOR;
     double OUTLINE_WIDTH = 0;
     double PIXEL_SIZE = 1;
+    std::string HEIGHT_REFERENCE;
 };
 
 struct CzmPolyline {
@@ -72,6 +90,8 @@ struct CzmPolygon {
     bool OUTLINE = false;
     std::optional<CzmColor> OUTLINE_COLOR;
     double EXTRUDED_HEIGHT = 0;
+    std::string HEIGHT_REFERENCE;
+    std::string CLASSIFICATION_TYPE;
 };
 
 struct CzmPath {
@@ -89,6 +109,21 @@ struct CzmModel {
     double SCALE = 1.0;
     double MINIMUM_PIXEL_SIZE = 0;
     double MAXIMUM_SCALE = 0;
+    std::string HEIGHT_REFERENCE;
+    std::optional<CzmColor> COLOR;
+};
+
+struct CzmEllipse {
+    bool SHOW = true;
+    double SEMI_MAJOR_AXIS = 0;
+    double SEMI_MINOR_AXIS = 0;
+    double ROTATION = 0;
+    bool FILL = true;
+    std::optional<CzmColor> COLOR;
+    bool OUTLINE = false;
+    std::optional<CzmColor> OUTLINE_COLOR;
+    double HEIGHT = 0;
+    std::string HEIGHT_REFERENCE;
 };
 
 struct CzmPacket {
@@ -109,6 +144,7 @@ struct CzmPacket {
     std::optional<CzmPolygon> POLYGON;
     std::optional<CzmModel> MODEL;
     std::optional<CzmPath> PATH;
+    std::optional<CzmEllipse> ELLIPSE;
 };
 
 struct CzmMessage {

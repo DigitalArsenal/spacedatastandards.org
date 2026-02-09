@@ -29,15 +29,39 @@
       "scale": 1.5,
       "color": {
         "rgba": [255, 255, 0, 255]
+      },
+      "heightReference": "NONE",
+      "pixelOffset": {
+        "cartesian2": [0, -20]
+      },
+      "horizontalOrigin": "CENTER",
+      "verticalOrigin": "BOTTOM",
+      "translucencyByDistance": {
+        "nearFarScalar": [1000, 1.0, 5000000, 0.2]
       }
     },
     "label": {
       "show": true,
       "text": "ISS",
       "font": "12pt sans-serif",
+      "style": "FILL_AND_OUTLINE",
       "fillColor": {
         "rgba": [255, 255, 255, 255]
+      },
+      "outlineColor": {
+        "rgba": [0, 0, 0, 255]
+      },
+      "outlineWidth": 2,
+      "horizontalOrigin": "LEFT",
+      "verticalOrigin": "BASELINE",
+      "heightReference": "NONE",
+      "pixelOffset": {
+        "cartesian2": [12, 0]
       }
+    },
+    "point": {
+      "show": false,
+      "heightReference": "NONE"
     },
     "path": {
       "show": true,
@@ -52,6 +76,80 @@
         }
       },
       "resolution": 120
+    }
+  },
+  {
+    "id": "coverage-zone",
+    "name": "ISS Coverage Zone",
+    "parent": "iss",
+    "position": {
+      "cartographicDegrees": [-95.364, 29.7604, 0]
+    },
+    "ellipse": {
+      "show": true,
+      "semiMajorAxis": 2200000,
+      "semiMinorAxis": 2200000,
+      "rotation": 0,
+      "fill": true,
+      "outline": true,
+      "height": 0,
+      "heightReference": "CLAMP_TO_GROUND",
+      "material": {
+        "solidColor": {
+          "color": {
+            "rgba": [0, 128, 255, 64]
+          }
+        }
+      },
+      "outlineColor": {
+        "rgba": [0, 128, 255, 255]
+      }
+    }
+  },
+  {
+    "id": "ground-station",
+    "name": "Houston MCC",
+    "position": {
+      "cartographicDegrees": [-95.0933, 29.5593, 0]
+    },
+    "point": {
+      "show": true,
+      "color": {
+        "rgba": [255, 0, 0, 255]
+      },
+      "pixelSize": 10,
+      "heightReference": "CLAMP_TO_GROUND"
+    },
+    "model": {
+      "show": true,
+      "gltf": "models/antenna.glb",
+      "scale": 100,
+      "heightReference": "CLAMP_TO_GROUND",
+      "color": {
+        "rgba": [200, 200, 200, 255]
+      }
+    },
+    "polygon": {
+      "show": true,
+      "positions": {
+        "cartographicDegrees": [
+          -95.1, 29.55, 0,
+          -95.08, 29.55, 0,
+          -95.08, 29.57, 0,
+          -95.1, 29.57, 0
+        ]
+      },
+      "fill": true,
+      "outline": true,
+      "heightReference": "CLAMP_TO_GROUND",
+      "classificationType": "TERRAIN",
+      "material": {
+        "solidColor": {
+          "color": {
+            "rgba": [255, 0, 0, 64]
+          }
+        }
+      }
     }
   }
 ]

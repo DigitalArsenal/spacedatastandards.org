@@ -24,26 +24,44 @@ struct KmlLookAt {
     std::string ALTITUDE_MODE;
 };
 
+struct KmlCamera {
+    double LONGITUDE = 0;
+    double LATITUDE = 0;
+    double ALTITUDE = 0;
+    double HEADING = 0;
+    double TILT = 0;
+    double ROLL = 0;
+    std::string ALTITUDE_MODE;
+};
+
 struct KmlIconStyle {
     std::string COLOR;
+    std::string COLOR_MODE;
     double SCALE = 1.0;
     double HEADING = 0;
     std::string ICON_HREF;
+    double HOTSPOT_X = 0;
+    double HOTSPOT_Y = 0;
+    std::string HOTSPOT_X_UNITS;
+    std::string HOTSPOT_Y_UNITS;
 };
 
 struct KmlLineStyle {
     std::string COLOR;
+    std::string COLOR_MODE;
     double WIDTH = 1.0;
 };
 
 struct KmlPolyStyle {
     std::string COLOR;
+    std::string COLOR_MODE;
     bool FILL = true;
     bool OUTLINE = true;
 };
 
 struct KmlLabelStyle {
     std::string COLOR;
+    std::string COLOR_MODE;
     double SCALE = 1.0;
 };
 
@@ -101,6 +119,7 @@ struct KmlMultiGeometry {
     std::vector<KmlPoint> POINTS;
     std::vector<KmlLineString> LINE_STRINGS;
     std::vector<KmlPolygon> POLYGONS;
+    std::vector<KmlMultiGeometry> MULTI_GEOMETRIES;
 };
 
 struct KmlTimeSpan {
@@ -133,6 +152,16 @@ struct KmlGroundOverlay {
     std::string ALTITUDE_MODE;
 };
 
+struct KmlNetworkLink {
+    std::string NAME;
+    bool VISIBILITY = true;
+    std::string HREF;
+    std::string REFRESH_MODE;
+    double REFRESH_INTERVAL = 0;
+    std::string VIEW_REFRESH_MODE;
+    double VIEW_REFRESH_TIME = 0;
+};
+
 struct KmlPlacemark {
     std::string NAME;
     std::string DESCRIPTION;
@@ -145,6 +174,7 @@ struct KmlPlacemark {
     std::optional<KmlPolygon> POLYGON;
     std::optional<KmlMultiGeometry> MULTI_GEOMETRY;
     std::optional<KmlLookAt> LOOK_AT;
+    std::optional<KmlCamera> CAMERA;
     std::optional<KmlTimeSpan> TIME_SPAN;
     std::optional<KmlTimeStamp> TIME_STAMP;
     std::vector<KmlData> EXTENDED_DATA;
@@ -157,6 +187,7 @@ struct KmlFolder {
     bool OPEN = false;
     std::vector<KmlPlacemark> PLACEMARKS;
     std::vector<KmlFolder> FOLDERS;
+    std::vector<KmlNetworkLink> NETWORK_LINKS;
     std::vector<KmlGroundOverlay> GROUND_OVERLAYS;
 };
 
@@ -169,6 +200,7 @@ struct KmlMessage {
     std::vector<KmlStyleMap> STYLE_MAPS;
     std::vector<KmlPlacemark> PLACEMARKS;
     std::vector<KmlFolder> FOLDERS;
+    std::vector<KmlNetworkLink> NETWORK_LINKS;
     std::vector<KmlGroundOverlay> GROUND_OVERLAYS;
 };
 
