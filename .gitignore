@@ -28,3 +28,6 @@ packages/emsdk/
 # WASM build artifacts
 packages/ccsds-parser/wasm/
 packages/ccsds-parser/build/
+
+# C++ build artifacts
+src/cpp/build/
