@@ -26,6 +26,8 @@ table GJNPosition {
   LATITUDE:double;
   /// Altitude in meters above WGS84 ellipsoid (optional)
   ALTITUDE:double;
+  /// True if altitude was explicitly provided (distinguishes 0 from absent)
+  HAS_ALTITUDE:bool;
 }
 
 /// A linear ring is a closed LineString with 4+ positions (first = last)
@@ -54,6 +56,8 @@ table GJNGeometry {
   POLYGON_RINGS:[GJNPolygonRings];
   /// Child geometries (for GeometryCollection)
   GEOMETRIES:[GJNGeometry];
+  /// Bounding box (optional, per RFC 7946 Section 5)
+  BBOX:GJNBoundingBox;
 }
 
 /// A key-value property entry for Feature properties
@@ -66,16 +70,34 @@ table GJNProperty {
   NUM_VALUE:double;
   /// True if NUM_VALUE should be used instead of VALUE
   IS_NUMERIC:bool;
+  /// True if this property value is a boolean
+  IS_BOOL:bool;
+  /// Boolean value (use when IS_BOOL is true)
+  BOOL_VALUE:bool;
+  /// True if this property value is JSON null
+  IS_NULL:bool;
+  /// Raw JSON string for complex values (objects, arrays)
+  JSON_VALUE:string;
 }
 
 /// GeoJSON Feature object
 table GJNFeature {
-  /// Feature identifier (optional)
+  /// Feature identifier (optional, string form)
   ID:string;
   /// Geometry of the feature
   GEOMETRY:GJNGeometry;
   /// Properties as key-value pairs
   PROPERTIES:[GJNProperty];
+  /// Numeric feature identifier (use when ID_IS_NUMERIC is true)
+  NUM_ID:double;
+  /// True if the feature id is numeric rather than string
+  ID_IS_NUMERIC:bool;
+  /// True if the feature has a geometry (false means geometry was JSON null)
+  HAS_GEOMETRY:bool;
+  /// True if properties was JSON null (vs empty object)
+  PROPERTIES_IS_NULL:bool;
+  /// Bounding box (optional, per RFC 7946 Section 5)
+  BBOX:GJNBoundingBox;
 }
 
 /// GeoJSON Bounding Box [west, south, east, north] or [west, south, min-alt, east, north, max-alt]
@@ -92,6 +114,8 @@ table GJNBoundingBox {
   MIN_ALTITUDE:double;
   /// Maximum altitude (optional)
   MAX_ALTITUDE:double;
+  /// True if the bbox includes altitude (6 values vs 4)
+  HAS_ALTITUDE:bool;
 }
 
 /// GeoJSON FeatureCollection

@@ -50,6 +50,34 @@ enum KMLViewRefreshMode : byte {
   ON_REGION
 }
 
+enum KMLListItemType : byte {
+  CHECK,
+  CHECK_OFF_ONLY,
+  CHECK_HIDE_CHILDREN,
+  RADIO_FOLDER
+}
+
+enum KMLDisplayMode : byte {
+  DEFAULT,
+  HIDE
+}
+
+enum KMLGridOrigin : byte {
+  LOWER_LEFT,
+  UPPER_LEFT
+}
+
+enum KMLShape : byte {
+  RECTANGLE,
+  CYLINDER,
+  SPHERE
+}
+
+enum KMLFlyToMode : byte {
+  BOUNCE,
+  SMOOTH
+}
+
 /// KML coordinate (longitude, latitude, optional altitude)
 table KMLCoordinate {
   /// Longitude in decimal degrees
@@ -126,6 +154,14 @@ table KMLLineStyle {
   COLOR_MODE:KMLColorMode;
   /// Width in pixels
   WIDTH:double;
+  /// gx:outerColor
+  GX_OUTER_COLOR:string;
+  /// gx:outerWidth
+  GX_OUTER_WIDTH:double;
+  /// gx:physicalWidth
+  GX_PHYSICAL_WIDTH:double;
+  /// gx:labelVisibility
+  GX_LABEL_VISIBILITY:bool;
 }
 
 /// Polygon style
@@ -158,6 +194,28 @@ table KMLBalloonStyle {
   TEXT_COLOR:string;
   /// Balloon text template (supports $[name], $[description])
   TEXT:string;
+  /// Display mode
+  DISPLAY_MODE:KMLDisplayMode;
+}
+
+/// Item icon for ListStyle
+table KMLItemIcon {
+  /// State (open, closed, error, fetching0-2)
+  STATE:string;
+  /// Icon URL
+  HREF:string;
+}
+
+/// List style
+table KMLListStyle {
+  /// List item type
+  LIST_ITEM_TYPE:KMLListItemType;
+  /// Background color
+  BG_COLOR:string;
+  /// Item icons
+  ITEM_ICONS:[KMLItemIcon];
+  /// Maximum snippet lines
+  MAX_SNIPPET_LINES:int;
 }
 
 /// Style definition
@@ -174,6 +232,8 @@ table KMLStyle {
   POLY_STYLE:KMLPolyStyle;
   /// Balloon style
   BALLOON_STYLE:KMLBalloonStyle;
+  /// List style
+  LIST_STYLE:KMLListStyle;
 }
 
 /// Style map pair
@@ -212,12 +272,20 @@ table KMLLineString {
   EXTRUDE:bool;
   /// Whether to tessellate (follow terrain)
   TESSELLATE:bool;
+  /// gx:drawOrder
+  GX_DRAW_ORDER:int;
 }
 
 /// LinearRing geometry
 table KMLLinearRing {
   /// Coordinates (first = last to close the ring)
   COORDINATES:[KMLCoordinate];
+  /// Whether to extrude to ground
+  EXTRUDE:bool;
+  /// Whether to tessellate
+  TESSELLATE:bool;
+  /// Altitude mode
+  ALTITUDE_MODE:KMLAltitudeMode;
 }
 
 /// Polygon geometry
@@ -234,6 +302,70 @@ table KMLPolygon {
   TESSELLATE:bool;
 }
 
+/// Resource map alias for Model
+table KMLResourceMapAlias {
+  /// Target href
+  TARGET_HREF:string;
+  /// Source href
+  SOURCE_HREF:string;
+}
+
+/// 3D Model geometry
+table KMLModel {
+  /// Altitude mode
+  ALTITUDE_MODE:KMLAltitudeMode;
+  /// Location longitude
+  LOCATION_LON:double;
+  /// Location latitude
+  LOCATION_LAT:double;
+  /// Location altitude
+  LOCATION_ALT:double;
+  /// Orientation heading
+  ORIENTATION_HEADING:double;
+  /// Orientation tilt
+  ORIENTATION_TILT:double;
+  /// Orientation roll
+  ORIENTATION_ROLL:double;
+  /// Scale X
+  SCALE_X:double;
+  /// Scale Y
+  SCALE_Y:double;
+  /// Scale Z
+  SCALE_Z:double;
+  /// Link to 3D model file
+  LINK_HREF:string;
+  /// Resource map aliases
+  RESOURCE_MAP:[KMLResourceMapAlias];
+}
+
+/// gx:Track — time-stamped position track
+table KMLTrack {
+  /// Whether to extrude
+  EXTRUDE:bool;
+  /// Whether to tessellate
+  TESSELLATE:bool;
+  /// Altitude mode
+  ALTITUDE_MODE:KMLAltitudeMode;
+  /// Time stamps (ISO 8601)
+  WHEN:[string];
+  /// Coordinates (lon lat alt per entry)
+  COORDS:[KMLCoordinate];
+  /// Angles (heading tilt roll per entry)
+  ANGLES:[KMLCoordinate];
+  /// Model for track visualization
+  MODEL:KMLModel;
+}
+
+/// gx:MultiTrack
+table KMLMultiTrack {
+  /// Altitude mode
+  ALTITUDE_MODE:KMLAltitudeMode;
+  /// Whether to interpolate between tracks
+  INTERPOLATE:bool;
+  /// Child tracks
+  TRACKS:[KMLTrack];
+}
+
 /// MultiGeometry
 table KMLMultiGeometry {
   /// Child points
@@ -244,6 +376,14 @@ table KMLMultiGeometry {
   POLYGONS:[KMLPolygon];
   /// Nested multi-geometries
   MULTI_GEOMETRIES:[KMLMultiGeometry];
+  /// Child linear rings (standalone)
+  LINEAR_RINGS:[KMLLinearRing];
+  /// Child 3D models
+  MODELS:[KMLModel];
+  /// Child tracks
+  TRACKS:[KMLTrack];
+  /// Child multi-tracks
+  MULTI_TRACKS:[KMLMultiTrack];
 }
 
 /// TimeSpan
@@ -270,12 +410,142 @@ table KMLData {
   VALUE:string;
 }
 
+/// Schema simple field definition
+table KMLSimpleField {
+  /// Field name
+  NAME:string;
+  /// Field type (xsd:string, xsd:int, xsd:float, etc.)
+  FIELD_TYPE:string;
+  /// Display name
+  DISPLAY_NAME:string;
+}
+
+/// Schema definition
+table KMLSchema {
+  /// Schema name
+  NAME:string;
+  /// Schema ID
+  ID:string;
+  /// Simple field definitions
+  SIMPLE_FIELDS:[KMLSimpleField];
+}
+
+/// Simple data value for SchemaData
+table KMLSimpleData {
+  /// Field name
+  NAME:string;
+  /// Field value
+  VALUE:string;
+}
+
+/// Schema data reference
+table KMLSchemaData {
+  /// Schema URL reference
+  SCHEMA_URL:string;
+  /// Simple data values
+  SIMPLE_DATA:[KMLSimpleData];
+}
+
+/// LatLonQuad — four corner coordinates for ground overlay
+table KMLLatLonQuad {
+  /// Four corner coordinates
+  COORDINATES:[KMLCoordinate];
+}
+
+/// Region — Level of Detail bounding region
+table KMLRegion {
+  /// LatLonAltBox
+  LAT_LON_ALT_BOX:KMLLatLonAltBox;
+  /// Level of detail
+  LOD:KMLLod;
+}
+
+/// LatLonAltBox for Region
+table KMLLatLonAltBox {
+  /// North latitude
+  NORTH:double;
+  /// South latitude
+  SOUTH:double;
+  /// East longitude
+  EAST:double;
+  /// West longitude
+  WEST:double;
+  /// Minimum altitude
+  MIN_ALTITUDE:double;
+  /// Maximum altitude
+  MAX_ALTITUDE:double;
+  /// Altitude mode
+  ALTITUDE_MODE:KMLAltitudeMode;
+}
+
+/// Level of Detail parameters
+table KMLLod {
+  /// Minimum LOD pixels
+  MIN_LOD_PIXELS:double;
+  /// Maximum LOD pixels (-1 = infinite)
+  MAX_LOD_PIXELS:double;
+  /// Minimum fade extent
+  MIN_FADE_EXTENT:double;
+  /// Maximum fade extent
+  MAX_FADE_EXTENT:double;
+}
+
+/// Full Link element
+table KMLLink {
+  /// URL
+  HREF:string;
+  /// Refresh mode
+  REFRESH_MODE:KMLRefreshMode;
+  /// Refresh interval in seconds
+  REFRESH_INTERVAL:double;
+  /// View refresh mode
+  VIEW_REFRESH_MODE:KMLViewRefreshMode;
+  /// View refresh time in seconds
+  VIEW_REFRESH_TIME:double;
+  /// View bound scale
+  VIEW_BOUND_SCALE:double;
+  /// View format string
+  VIEW_FORMAT:string;
+  /// HTTP query string
+  HTTP_QUERY:string;
+}
+
+/// ViewVolume for PhotoOverlay
+table KMLViewVolume {
+  /// Left field of view angle
+  LEFT_FOV:double;
+  /// Right field of view angle
+  RIGHT_FOV:double;
+  /// Bottom field of view angle
+  BOTTOM_FOV:double;
+  /// Top field of view angle
+  TOP_FOV:double;
+  /// Near clipping plane
+  NEAR:double;
+}
+
+/// ImagePyramid for PhotoOverlay
+table KMLImagePyramid {
+  /// Tile size in pixels
+  TILE_SIZE:int;
+  /// Maximum image width
+  MAX_WIDTH:int;
+  /// Maximum image height
+  MAX_HEIGHT:int;
+  /// Grid origin
+  GRID_ORIGIN:KMLGridOrigin;
+}
+
 /// Network link
 table KMLNetworkLink {
   /// Name of the network link
   NAME:string;
+  /// Description
+  DESCRIPTION:string;
   /// Whether the link is visible
   VISIBILITY:bool;
+  /// Whether open in tree view
+  OPEN:bool;
   /// Link URL
   HREF:string;
   /// Refresh mode
@@ -286,6 +556,88 @@ table KMLNetworkLink {
   VIEW_REFRESH_MODE:KMLViewRefreshMode;
   /// View refresh time in seconds
   VIEW_REFRESH_TIME:double;
+  /// Whether to refresh on visibility change
+  REFRESH_VISIBILITY:bool;
+  /// Whether to fly to view on refresh
+  FLY_TO_VIEW:bool;
+  /// Full link element
+  LINK:KMLLink;
+}
+
+/// Screen overlay
+table KMLScreenOverlay {
+  /// Name
+  NAME:string;
+  /// Description
+  DESCRIPTION:string;
+  /// Visibility
+  VISIBILITY:bool;
+  /// Icon/image URL
+  ICON_HREF:string;
+  /// Color
+  COLOR:string;
+  /// Draw order
+  DRAW_ORDER:int;
+  /// Overlay X position
+  OVERLAY_XY_X:double;
+  /// Overlay Y position
+  OVERLAY_XY_Y:double;
+  /// Overlay X units
+  OVERLAY_XY_XUNITS:KMLUnits;
+  /// Overlay Y units
+  OVERLAY_XY_YUNITS:KMLUnits;
+  /// Screen X position
+  SCREEN_XY_X:double;
+  /// Screen Y position
+  SCREEN_XY_Y:double;
+  /// Screen X units
+  SCREEN_XY_XUNITS:KMLUnits;
+  /// Screen Y units
+  SCREEN_XY_YUNITS:KMLUnits;
+  /// Rotation X
+  ROTATION_XY_X:double;
+  /// Rotation Y
+  ROTATION_XY_Y:double;
+  /// Rotation X units
+  ROTATION_XY_XUNITS:KMLUnits;
+  /// Rotation Y units
+  ROTATION_XY_YUNITS:KMLUnits;
+  /// Size X
+  SIZE_X:double;
+  /// Size Y
+  SIZE_Y:double;
+  /// Size X units
+  SIZE_XUNITS:KMLUnits;
+  /// Size Y units
+  SIZE_YUNITS:KMLUnits;
+  /// Rotation in degrees
+  ROTATION:double;
+}
+
+/// Photo overlay
+table KMLPhotoOverlay {
+  /// Name
+  NAME:string;
+  /// Description
+  DESCRIPTION:string;
+  /// Visibility
+  VISIBILITY:bool;
+  /// Icon/image URL
+  ICON_HREF:string;
+  /// Color
+  COLOR:string;
+  /// Draw order
+  DRAW_ORDER:int;
+  /// Rotation
+  ROTATION:double;
+  /// View volume
+  VIEW_VOLUME:KMLViewVolume;
+  /// Image pyramid
+  IMAGE_PYRAMID:KMLImagePyramid;
+  /// Point for position
+  POINT:KMLPoint;
+  /// Shape
+  SHAPE:KMLShape;
 }
 
 /// Ground overlay
@@ -296,6 +648,8 @@ table KMLGroundOverlay {
   DESCRIPTION:string;
   /// Visibility
   VISIBILITY:bool;
+  /// Whether open in tree view
+  OPEN:bool;
   /// Icon/image URL
   ICON_HREF:string;
   /// Color in aabbggrr hex format
@@ -314,6 +668,126 @@ table KMLGroundOverlay {
   ALTITUDE:double;
   /// Altitude mode
   ALTITUDE_MODE:KMLAltitudeMode;
+  /// Draw order
+  DRAW_ORDER:int;
+  /// LatLonQuad (non-rectangular overlay)
+  LAT_LON_QUAD:KMLLatLonQuad;
+  /// Style URL reference
+  STYLE_URL:string;
+  /// Region
+  REGION:KMLRegion;
+}
+
+/// Update element for NetworkLinkControl
+table KMLUpdate {
+  /// Target href
+  TARGET_HREF:string;
+  /// Change KML (raw)
+  CHANGE_KML:string;
+  /// Create KML (raw)
+  CREATE_KML:string;
+  /// Delete KML (raw)
+  DELETE_KML:string;
+}
+
+/// NetworkLinkControl
+table KMLNetworkLinkControl {
+  /// Minimum refresh period in seconds
+  MIN_REFRESH_PERIOD:double;
+  /// Maximum session length in seconds
+  MAX_SESSION_LENGTH:double;
+  /// Cookie
+  COOKIE:string;
+  /// Message to display
+  MESSAGE:string;
+  /// Link name override
+  LINK_NAME:string;
+  /// Link description override
+  LINK_DESCRIPTION:string;
+  /// Link snippet override
+  LINK_SNIPPET:string;
+  /// Expiration time (ISO 8601)
+  EXPIRES:string;
+  /// Update
+  UPDATE:KMLUpdate;
+  /// LookAt
+  LOOK_AT:KMLLookAt;
+  /// Camera
+  CAMERA:KMLCamera;
+}
+
+/// gx:FlyTo tour primitive
+table KMLFlyTo {
+  /// Duration in seconds
+  DURATION:double;
+  /// Fly-to mode
+  FLY_TO_MODE:KMLFlyToMode;
+  /// LookAt viewpoint
+  LOOK_AT:KMLLookAt;
+  /// Camera viewpoint
+  CAMERA:KMLCamera;
+}
+
+/// gx:Wait tour primitive
+table KMLWait {
+  /// Duration in seconds
+  DURATION:double;
+}
+
+/// gx:AnimatedUpdate tour primitive
+table KMLAnimatedUpdate {
+  /// Duration in seconds
+  DURATION:double;
+  /// Delayed start in seconds
+  DELAYED_START:double;
+  /// Update
+  UPDATE:KMLUpdate;
+}
+
+/// gx:TourControl tour primitive
+table KMLTourControl {
+  /// Play mode (pause)
+  PLAY_MODE:string;
+}
+
+/// gx:SoundCue tour primitive
+table KMLSoundCue {
+  /// Audio file URL
+  HREF:string;
+  /// Delayed start in seconds
+  DELAYED_START:double;
+}
+
+/// Tour primitive (union-like)
+table KMLTourPrimitive {
+  /// FlyTo
+  FLY_TO:KMLFlyTo;
+  /// Wait
+  WAIT:KMLWait;
+  /// AnimatedUpdate
+  ANIMATED_UPDATE:KMLAnimatedUpdate;
+  /// TourControl
+  TOUR_CONTROL:KMLTourControl;
+  /// SoundCue
+  SOUND_CUE:KMLSoundCue;
+}
+
+/// gx:Playlist
+table KMLPlaylist {
+  /// Tour primitives
+  PRIMITIVES:[KMLTourPrimitive];
+}
+
+/// gx:Tour
+table KMLTour {
+  /// Tour name
+  NAME:string;
+  /// Description
+  DESCRIPTION:string;
+  /// Visibility
+  VISIBILITY:bool;
+  /// Playlist
+  PLAYLIST:KMLPlaylist;
 }
 
 /// Placemark feature
@@ -330,14 +804,26 @@ table KMLPlacemark {
   STYLE:KMLStyle;
   /// Snippet (short description)
   SNIPPET:string;
+  /// Whether open in tree view
+  OPEN:bool;
+  /// Address
+  ADDRESS:string;
   /// Point geometry
   POINT:KMLPoint;
   /// LineString geometry
   LINE_STRING:KMLLineString;
   /// Polygon geometry
   POLYGON:KMLPolygon;
+  /// LinearRing geometry (standalone)
+  LINEAR_RING:KMLLinearRing;
   /// MultiGeometry
   MULTI_GEOMETRY:KMLMultiGeometry;
+  /// 3D Model
+  MODEL:KMLModel;
+  /// gx:Track
+  TRACK:KMLTrack;
+  /// gx:MultiTrack
+  MULTI_TRACK:KMLMultiTrack;
   /// LookAt viewpoint
   LOOK_AT:KMLLookAt;
   /// Camera viewpoint
@@ -348,6 +834,12 @@ table KMLPlacemark {
   TIME_STAMP:KMLTimeStamp;
   /// Extended data
   EXTENDED_DATA:[KMLData];
+  /// Schema data
+  SCHEMA_DATA:KMLSchemaData;
+  /// Region
+  REGION:KMLRegion;
+  /// StyleMap (inline)
+  STYLE_MAP:KMLStyleMap;
 }
 
 /// Folder container
@@ -368,6 +860,30 @@ table KMLFolder {
   NETWORK_LINKS:[KMLNetworkLink];
   /// Ground overlays
   GROUND_OVERLAYS:[KMLGroundOverlay];
+  /// Shared styles
+  STYLES:[KMLStyle];
+  /// Style maps
+  STYLE_MAPS:[KMLStyleMap];
+  /// Screen overlays
+  SCREEN_OVERLAYS:[KMLScreenOverlay];
+  /// Photo overlays
+  PHOTO_OVERLAYS:[KMLPhotoOverlay];
+  /// Tours
+  TOURS:[KMLTour];
+  /// Style URL reference
+  STYLE_URL:string;
+  /// Region
+  REGION:KMLRegion;
+  /// Extended data
+  EXTENDED_DATA:[KMLData];
+  /// LookAt viewpoint
+  LOOK_AT:KMLLookAt;
+  /// Camera viewpoint
+  CAMERA:KMLCamera;
+  /// TimeSpan
+  TIME_SPAN:KMLTimeSpan;
+  /// TimeStamp
+  TIME_STAMP:KMLTimeStamp;
 }
 
 /// KML Document
@@ -392,6 +908,16 @@ table KML {
   NETWORK_LINKS:[KMLNetworkLink];
   /// Ground overlays
   GROUND_OVERLAYS:[KMLGroundOverlay];
+  /// Schemas
+  SCHEMAS:[KMLSchema];
+  /// Screen overlays
+  SCREEN_OVERLAYS:[KMLScreenOverlay];
+  /// Photo overlays
+  PHOTO_OVERLAYS:[KMLPhotoOverlay];
+  /// Tours
+  TOURS:[KMLTour];
+  /// NetworkLinkControl
+  NETWORK_LINK_CONTROL:KMLNetworkLinkControl;
 }
 
 root_type KML;

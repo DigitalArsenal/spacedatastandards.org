@@ -39,10 +39,114 @@ enum CZMVerticalOrigin : byte {
   TOP
 }
 
+enum CZMShadowMode : byte {
+  DISABLED,
+  ENABLED,
+  CAST_ONLY,
+  RECEIVE_ONLY
+}
+
+enum CZMColorBlendMode : byte {
+  HIGHLIGHT,
+  REPLACE,
+  MIX
+}
+
+enum CZMCornerType : byte {
+  ROUNDED,
+  MITERED,
+  BEVELED
+}
+
+enum CZMArcType : byte {
+  NONE,
+  GEODESIC,
+  RHUMB
+}
+
+enum CZMStripeOrientation : byte {
+  HORIZONTAL,
+  VERTICAL
+}
+
+enum CZMClockRange : byte {
+  UNBOUNDED,
+  CLAMPED,
+  LOOP_STOP
+}
+
+enum CZMClockStep : byte {
+  TICK_DEPENDENT,
+  SYSTEM_CLOCK_MULTIPLIER,
+  SYSTEM_CLOCK
+}
+
 /// Time interval for time-dynamic properties
 table CZMInterval {
   /// ISO 8601 interval string (e.g. "2012-03-15T10:00:00Z/2012-03-16T10:00:00Z")
   INTERVAL:string;
+}
+
+/// Interpolation settings for sampled data
+table CZMInterpolation {
+  /// Algorithm: LINEAR, LAGRANGE, HERMITE
+  ALGORITHM:string;
+  /// Polynomial degree (1=linear, 5=typical Lagrange)
+  DEGREE:int;
+}
+
+/// Dynamic value types for time-varying properties
+enum CZMDynValueType : byte {
+  NUMBER,
+  BOOLEAN,
+  STRING,
+  COLOR,
+  CARTESIAN3,
+  CARTESIAN2,
+  NEAR_FAR_SCALAR,
+  UNIT_QUATERNION
+}
+
+/// A single interval in a time-varying property
+table CZMDynInterval {
+  /// ISO 8601 interval string
+  INTERVAL:string;
+  /// Value type
+  VALUE_TYPE:CZMDynValueType;
+  /// Numeric value (when VALUE_TYPE is NUMBER)
+  NUMBER_VALUE:double;
+  /// Boolean value (when VALUE_TYPE is BOOLEAN)
+  BOOLEAN_VALUE:bool;
+  /// String value (when VALUE_TYPE is STRING)
+  STRING_VALUE:string;
+  /// Color value (when VALUE_TYPE is COLOR)
+  COLOR_VALUE:CZMColor;
+  /// Array value for cartesian/nearFarScalar types
+  ARRAY_VALUE:[double];
+}
+
+/// Sampled time-varying data
+table CZMDynSampled {
+  /// Reference epoch (ISO 8601)
+  EPOCH:string;
+  /// Value type determines stride through DATA
+  VALUE_TYPE:CZMDynValueType;
+  /// Interleaved [time, value(s), ...] — stride depends on VALUE_TYPE
+  DATA:[double];
+  /// Interpolation settings
+  INTERPOLATION:CZMInterpolation;
+}
+
+/// A single time-dynamic property (non-static value)
+table CZMDynamicProperty {
+  /// Dotted path name, e.g. "billboard.scale", "point.color"
+  NAME:string;
+  /// Sampled data (when property uses epoch + data array)
+  SAMPLED:CZMDynSampled;
+  /// Interval-based values
+  INTERVALS:[CZMDynInterval];
+  /// Reference to another entity's property
+  REFERENCE:string;
 }
 
 /// Cartographic position (longitude, latitude, height in radians/meters)
@@ -89,6 +193,172 @@ table CZMNearFarScalar {
   FAR_VALUE:double;
 }
 
+/// Distance display condition
+table CZMDistanceDisplayCondition {
+  /// Near distance in meters
+  NEAR_DISTANCE:double;
+  /// Far distance in meters
+  FAR_DISTANCE:double;
+}
+
+/// Orientation as unit quaternion
+table CZMOrientation {
+  /// X component
+  UNIT_QUATERNION_X:double;
+  /// Y component
+  UNIT_QUATERNION_Y:double;
+  /// Z component
+  UNIT_QUATERNION_Z:double;
+  /// W component
+  UNIT_QUATERNION_W:double;
+}
+
+/// Suggested camera offset from entity
+table CZMViewFrom {
+  /// X offset in meters
+  X:double;
+  /// Y offset in meters
+  Y:double;
+  /// Z offset in meters
+  Z:double;
+}
+
+// ---- Material System ----
+
+/// Solid color material
+table CZMSolidColorMaterial {
+  /// Color
+  COLOR:CZMColor;
+}
+
+/// Image material
+table CZMImageMaterial {
+  /// Image URI
+  IMAGE:string;
+  /// Repeat X
+  REPEAT_X:double;
+  /// Repeat Y
+  REPEAT_Y:double;
+  /// Color tint
+  COLOR:CZMColor;
+  /// Whether the image has transparency
+  TRANSPARENT:bool;
+}
+
+/// Grid material
+table CZMGridMaterial {
+  /// Grid line color
+  COLOR:CZMColor;
+  /// Cell alpha
+  CELL_ALPHA:double;
+  /// Number of grid lines along X
+  LINE_COUNT_X:double;
+  /// Number of grid lines along Y
+  LINE_COUNT_Y:double;
+  /// Thickness of grid lines along X
+  LINE_THICKNESS_X:double;
+  /// Thickness of grid lines along Y
+  LINE_THICKNESS_Y:double;
+  /// Offset of grid lines along X
+  LINE_OFFSET_X:double;
+  /// Offset of grid lines along Y
+  LINE_OFFSET_Y:double;
+}
+
+/// Stripe material
+table CZMStripeMaterial {
+  /// Stripe orientation
+  ORIENTATION:string;
+  /// Even color
+  EVEN_COLOR:CZMColor;
+  /// Odd color
+  ODD_COLOR:CZMColor;
+  /// Offset
+  OFFSET:double;
+  /// Number of times to repeat
+  REPEAT_COUNT:double;
+}
+
+/// Checkerboard material
+table CZMCheckerboardMaterial {
+  /// Even color
+  EVEN_COLOR:CZMColor;
+  /// Odd color
+  ODD_COLOR:CZMColor;
+  /// Repeat X
+  REPEAT_X:double;
+  /// Repeat Y
+  REPEAT_Y:double;
+}
+
+/// Surface material (used by polygon, ellipse, box, etc.)
+table CZMMaterial {
+  /// Solid color material
+  SOLID_COLOR:CZMSolidColorMaterial;
+  /// Image material
+  IMAGE:CZMImageMaterial;
+  /// Grid material
+  GRID:CZMGridMaterial;
+  /// Stripe material
+  STRIPE:CZMStripeMaterial;
+  /// Checkerboard material
+  CHECKERBOARD:CZMCheckerboardMaterial;
+}
+
+/// Polyline outline material
+table CZMPolylineOutlineMaterial {
+  /// Line color
+  COLOR:CZMColor;
+  /// Outline color
+  OUTLINE_COLOR:CZMColor;
+  /// Outline width
+  OUTLINE_WIDTH:double;
+}
+
+/// Polyline arrow material
+table CZMPolylineArrowMaterial {
+  /// Arrow color
+  COLOR:CZMColor;
+}
+
+/// Polyline dash material
+table CZMPolylineDashMaterial {
+  /// Dash color
+  COLOR:CZMColor;
+  /// Gap color
+  GAP_COLOR:CZMColor;
+  /// Dash length in pixels
+  DASH_LENGTH:double;
+  /// Dash pattern (bitmask)
+  DASH_PATTERN:int;
+}
+
+/// Polyline glow material
+table CZMPolylineGlowMaterial {
+  /// Glow color
+  COLOR:CZMColor;
+  /// Glow power
+  GLOW_POWER:double;
+  /// Taper power
+  TAPER_POWER:double;
+}
+
+/// Polyline material (used by polyline, path)
+table CZMPolylineMaterial {
+  /// Solid color material
+  SOLID_COLOR:CZMSolidColorMaterial;
+  /// Polyline outline material
+  POLYLINE_OUTLINE:CZMPolylineOutlineMaterial;
+  /// Polyline arrow material
+  POLYLINE_ARROW:CZMPolylineArrowMaterial;
+  /// Polyline dash material
+  POLYLINE_DASH:CZMPolylineDashMaterial;
+  /// Polyline glow material
+  POLYLINE_GLOW:CZMPolylineGlowMaterial;
+}
+
+// ---- Entity Types ----
+
 /// Billboard (icon) properties
 table CZMBillboard {
   /// Whether the billboard is displayed
@@ -111,6 +381,30 @@ table CZMBillboard {
   VERTICAL_ORIGIN:CZMVerticalOrigin;
   /// Translucency by distance
   TRANSLUCENCY_BY_DISTANCE:CZMNearFarScalar;
+  /// Rotation in radians
+  ROTATION:double;
+  /// Whether size is in meters
+  SIZE_IN_METERS:bool;
+  /// Width in pixels
+  WIDTH:double;
+  /// Height in pixels
+  HEIGHT:double;
+  /// Eye offset X in meters
+  EYE_OFFSET_X:double;
+  /// Eye offset Y in meters
+  EYE_OFFSET_Y:double;
+  /// Eye offset Z in meters
+  EYE_OFFSET_Z:double;
+  /// Scale by distance
+  SCALE_BY_DISTANCE:CZMNearFarScalar;
+  /// Pixel offset scale by distance
+  PIXEL_OFFSET_SCALE_BY_DISTANCE:CZMNearFarScalar;
+  /// Distance display condition near
+  DISTANCE_DISPLAY_CONDITION_NEAR:double;
+  /// Distance display condition far
+  DISTANCE_DISPLAY_CONDITION_FAR:double;
+  /// Disable depth test distance
+  DISABLE_DEPTH_TEST_DISTANCE:double;
 }
 
 /// Label properties
@@ -141,6 +435,32 @@ table CZMLabel {
   VERTICAL_ORIGIN:CZMVerticalOrigin;
   /// Height reference
   HEIGHT_REFERENCE:CZMHeightReference;
+  /// Whether to show background
+  SHOW_BACKGROUND:bool;
+  /// Background color
+  BACKGROUND_COLOR:CZMColor;
+  /// Background padding X
+  BACKGROUND_PADDING_X:double;
+  /// Background padding Y
+  BACKGROUND_PADDING_Y:double;
+  /// Eye offset X in meters
+  EYE_OFFSET_X:double;
+  /// Eye offset Y in meters
+  EYE_OFFSET_Y:double;
+  /// Eye offset Z in meters
+  EYE_OFFSET_Z:double;
+  /// Translucency by distance
+  TRANSLUCENCY_BY_DISTANCE:CZMNearFarScalar;
+  /// Pixel offset scale by distance
+  PIXEL_OFFSET_SCALE_BY_DISTANCE:CZMNearFarScalar;
+  /// Scale by distance
+  SCALE_BY_DISTANCE:CZMNearFarScalar;
+  /// Distance display condition near
+  DISTANCE_DISPLAY_CONDITION_NEAR:double;
+  /// Distance display condition far
+  DISTANCE_DISPLAY_CONDITION_FAR:double;
+  /// Disable depth test distance
+  DISABLE_DEPTH_TEST_DISTANCE:double;
 }
 
 /// Point properties
@@ -157,6 +477,16 @@ table CZMPoint {
   PIXEL_SIZE:double;
   /// Height reference
   HEIGHT_REFERENCE:CZMHeightReference;
+  /// Scale by distance
+  SCALE_BY_DISTANCE:CZMNearFarScalar;
+  /// Translucency by distance
+  TRANSLUCENCY_BY_DISTANCE:CZMNearFarScalar;
+  /// Distance display condition near
+  DISTANCE_DISPLAY_CONDITION_NEAR:double;
+  /// Distance display condition far
+  DISTANCE_DISPLAY_CONDITION_FAR:double;
+  /// Disable depth test distance
+  DISABLE_DEPTH_TEST_DISTANCE:double;
 }
 
 /// Polyline properties
@@ -169,10 +499,24 @@ table CZMPolyline {
   POSITIONS_CARTESIAN:[double];
   /// Line width in pixels
   WIDTH:double;
-  /// Line color (solid color material)
+  /// Line color (solid color material, legacy)
   COLOR:CZMColor;
   /// Whether to clamp to ground
   CLAMP_TO_GROUND:bool;
+  /// Arc type
+  ARC_TYPE:string;
+  /// Granularity in radians
+  GRANULARITY:double;
+  /// Full polyline material
+  MATERIAL:CZMPolylineMaterial;
+  /// Shadow mode
+  SHADOWS:string;
+  /// Depth fail material
+  DEPTH_FAIL_MATERIAL:CZMPolylineMaterial;
+  /// Classification type
+  CLASSIFICATION_TYPE:string;
+  /// Z-index for ordering
+  Z_INDEX:int;
 }
 
 /// Polygon properties
@@ -185,7 +529,7 @@ table CZMPolygon {
   POSITIONS_CARTESIAN:[double];
   /// Fill flag
   FILL:bool;
-  /// Fill color (solid color material)
+  /// Fill color (solid color material, legacy)
   COLOR:CZMColor;
   /// Outline flag
   OUTLINE:bool;
@@ -197,6 +541,40 @@ table CZMPolygon {
   HEIGHT_REFERENCE:CZMHeightReference;
   /// Classification type
   CLASSIFICATION_TYPE:CZMClassificationType;
+  /// Holes (position lists: each hole is [lon,lat,h,...])
+  HOLES:[CZMPolygonHole];
+  /// Arc type
+  ARC_TYPE:string;
+  /// Height in meters
+  HEIGHT:double;
+  /// Extruded height reference
+  EXTRUDED_HEIGHT_REFERENCE:string;
+  /// Texture rotation in radians
+  ST_ROTATION:double;
+  /// Granularity in radians
+  GRANULARITY:double;
+  /// Full surface material
+  MATERIAL:CZMMaterial;
+  /// Outline width in pixels
+  OUTLINE_WIDTH:double;
+  /// Whether to use per-position heights
+  PER_POSITION_HEIGHT:bool;
+  /// Whether to close the top of extruded polygon
+  CLOSE_TOP:bool;
+  /// Whether to close the bottom of extruded polygon
+  CLOSE_BOTTOM:bool;
+  /// Shadow mode
+  SHADOWS:string;
+  /// Z-index for ordering
+  Z_INDEX:int;
+}
+
+/// Polygon hole position list
+table CZMPolygonHole {
+  /// Positions as cartographic degrees [lon, lat, height, ...]
+  POSITIONS_CARTOGRAPHIC_DEGREES:[double];
+  /// Positions as Cartesian [X, Y, Z, ...]
+  POSITIONS_CARTESIAN:[double];
 }
 
 /// Model properties (glTF)
@@ -215,6 +593,20 @@ table CZMModel {
   HEIGHT_REFERENCE:CZMHeightReference;
   /// Color tint
   COLOR:CZMColor;
+  /// Whether to incrementally load textures
+  INCREMENTALLY_LOAD_TEXTURES:bool;
+  /// Whether to run animations
+  RUN_ANIMATIONS:bool;
+  /// Shadow mode
+  SHADOWS:string;
+  /// Silhouette color
+  SILHOUETTE_COLOR:CZMColor;
+  /// Silhouette size in pixels
+  SILHOUETTE_SIZE:double;
+  /// Color blend mode
+  COLOR_BLEND_MODE:string;
+  /// Color blend amount (0-1)
+  COLOR_BLEND_AMOUNT:double;
 }
 
 /// Path properties (orbit trail)
@@ -227,10 +619,12 @@ table CZMPath {
   TRAIL_TIME:double;
   /// Line width in pixels
   WIDTH:double;
-  /// Path color
+  /// Path color (legacy solid color)
   COLOR:CZMColor;
   /// Resolution in seconds
   RESOLUTION:double;
+  /// Full polyline material
+  MATERIAL:CZMPolylineMaterial;
 }
 
 /// Ellipse properties (for ground circles/ellipses)
@@ -245,7 +639,7 @@ table CZMEllipse {
   ROTATION:double;
   /// Fill flag
   FILL:bool;
-  /// Fill color
+  /// Fill color (legacy solid color)
   COLOR:CZMColor;
   /// Outline flag
   OUTLINE:bool;
@@ -255,6 +649,278 @@ table CZMEllipse {
   HEIGHT:double;
   /// Height reference
   HEIGHT_REFERENCE:CZMHeightReference;
+  /// Extruded height in meters
+  EXTRUDED_HEIGHT:double;
+  /// Extruded height reference
+  EXTRUDED_HEIGHT_REFERENCE:string;
+  /// Texture rotation in radians
+  ST_ROTATION:double;
+  /// Granularity in radians
+  GRANULARITY:double;
+  /// Full surface material
+  MATERIAL:CZMMaterial;
+  /// Outline width in pixels
+  OUTLINE_WIDTH:double;
+  /// Number of vertical lines
+  NUMBER_OF_VERTICAL_LINES:int;
+  /// Shadow mode
+  SHADOWS:string;
+  /// Classification type
+  CLASSIFICATION_TYPE:string;
+  /// Z-index for ordering
+  Z_INDEX:int;
+}
+
+// ---- New Entity Types ----
+
+/// Box (rectangular cuboid)
+table CZMBox {
+  /// Whether the box is displayed
+  SHOW:bool;
+  /// Width (X) in meters
+  DIMENSIONS_X:double;
+  /// Depth (Y) in meters
+  DIMENSIONS_Y:double;
+  /// Height (Z) in meters
+  DIMENSIONS_Z:double;
+  /// Height reference
+  HEIGHT_REFERENCE:string;
+  /// Fill flag
+  FILL:bool;
+  /// Surface material
+  MATERIAL:CZMMaterial;
+  /// Outline flag
+  OUTLINE:bool;
+  /// Outline color
+  OUTLINE_COLOR:CZMColor;
+  /// Outline width
+  OUTLINE_WIDTH:double;
+  /// Shadow mode
+  SHADOWS:string;
+  /// Distance display condition near
+  DISTANCE_DISPLAY_CONDITION_NEAR:double;
+  /// Distance display condition far
+  DISTANCE_DISPLAY_CONDITION_FAR:double;
+}
+
+/// Corridor (centerline + width shape)
+table CZMCorridor {
+  /// Whether the corridor is displayed
+  SHOW:bool;
+  /// Positions as cartographic degrees
+  POSITIONS_CARTOGRAPHIC_DEGREES:[double];
+  /// Positions as Cartesian
+  POSITIONS_CARTESIAN:[double];
+  /// Width in meters
+  WIDTH:double;
+  /// Height in meters
+  HEIGHT:double;
+  /// Height reference
+  HEIGHT_REFERENCE:string;
+  /// Extruded height
+  EXTRUDED_HEIGHT:double;
+  /// Extruded height reference
+  EXTRUDED_HEIGHT_REFERENCE:string;
+  /// Corner type
+  CORNER_TYPE:string;
+  /// Granularity in radians
+  GRANULARITY:double;
+  /// Fill flag
+  FILL:bool;
+  /// Surface material
+  MATERIAL:CZMMaterial;
+  /// Outline flag
+  OUTLINE:bool;
+  /// Outline color
+  OUTLINE_COLOR:CZMColor;
+  /// Outline width
+  OUTLINE_WIDTH:double;
+  /// Shadow mode
+  SHADOWS:string;
+  /// Classification type
+  CLASSIFICATION_TYPE:string;
+  /// Z-index for ordering
+  Z_INDEX:int;
+}
+
+/// Cylinder or cone
+table CZMCylinder {
+  /// Whether the cylinder is displayed
+  SHOW:bool;
+  /// Length in meters
+  LENGTH:double;
+  /// Top radius in meters
+  TOP_RADIUS:double;
+  /// Bottom radius in meters
+  BOTTOM_RADIUS:double;
+  /// Height reference
+  HEIGHT_REFERENCE:string;
+  /// Fill flag
+  FILL:bool;
+  /// Surface material
+  MATERIAL:CZMMaterial;
+  /// Outline flag
+  OUTLINE:bool;
+  /// Outline color
+  OUTLINE_COLOR:CZMColor;
+  /// Outline width
+  OUTLINE_WIDTH:double;
+  /// Number of vertical lines
+  NUMBER_OF_VERTICAL_LINES:int;
+  /// Number of slices
+  SLICES:int;
+  /// Shadow mode
+  SHADOWS:string;
+}
+
+/// Ellipsoid (3D shape)
+table CZMEllipsoid {
+  /// Whether the ellipsoid is displayed
+  SHOW:bool;
+  /// X radius in meters
+  RADII_X:double;
+  /// Y radius in meters
+  RADII_Y:double;
+  /// Z radius in meters
+  RADII_Z:double;
+  /// Inner X radius
+  INNER_RADII_X:double;
+  /// Inner Y radius
+  INNER_RADII_Y:double;
+  /// Inner Z radius
+  INNER_RADII_Z:double;
+  /// Minimum clock angle in radians
+  MINIMUM_CLOCK:double;
+  /// Maximum clock angle in radians
+  MAXIMUM_CLOCK:double;
+  /// Minimum cone angle in radians
+  MINIMUM_CONE:double;
+  /// Maximum cone angle in radians
+  MAXIMUM_CONE:double;
+  /// Height reference
+  HEIGHT_REFERENCE:string;
+  /// Fill flag
+  FILL:bool;
+  /// Surface material
+  MATERIAL:CZMMaterial;
+  /// Outline flag
+  OUTLINE:bool;
+  /// Outline color
+  OUTLINE_COLOR:CZMColor;
+  /// Outline width
+  OUTLINE_WIDTH:double;
+  /// Stack partitions
+  STACK_PARTITIONS:int;
+  /// Slice partitions
+  SLICE_PARTITIONS:int;
+  /// Subdivisions
+  SUBDIVISIONS:int;
+  /// Shadow mode
+  SHADOWS:string;
+}
+
+/// Polyline volume (extruded 2D shape)
+table CZMPolylineVolume {
+  /// Whether displayed
+  SHOW:bool;
+  /// Positions as cartographic degrees
+  POSITIONS_CARTOGRAPHIC_DEGREES:[double];
+  /// Positions as Cartesian
+  POSITIONS_CARTESIAN:[double];
+  /// 2D shape [x, y, x, y, ...]
+  SHAPE:[double];
+  /// Corner type
+  CORNER_TYPE:string;
+  /// Granularity in radians
+  GRANULARITY:double;
+  /// Fill flag
+  FILL:bool;
+  /// Surface material
+  MATERIAL:CZMMaterial;
+  /// Outline flag
+  OUTLINE:bool;
+  /// Outline color
+  OUTLINE_COLOR:CZMColor;
+  /// Outline width
+  OUTLINE_WIDTH:double;
+  /// Shadow mode
+  SHADOWS:string;
+}
+
+/// Rectangle (cartographic rectangle)
+table CZMRectangle {
+  /// Whether the rectangle is displayed
+  SHOW:bool;
+  /// Coordinates [west, south, east, north] in degrees
+  COORDINATES_WSEN_DEGREES:[double];
+  /// Height in meters
+  HEIGHT:double;
+  /// Height reference
+  HEIGHT_REFERENCE:string;
+  /// Extruded height
+  EXTRUDED_HEIGHT:double;
+  /// Extruded height reference
+  EXTRUDED_HEIGHT_REFERENCE:string;
+  /// Rotation in radians
+  ROTATION:double;
+  /// Texture rotation in radians
+  ST_ROTATION:double;
+  /// Granularity in radians
+  GRANULARITY:double;
+  /// Fill flag
+  FILL:bool;
+  /// Surface material
+  MATERIAL:CZMMaterial;
+  /// Outline flag
+  OUTLINE:bool;
+  /// Outline color
+  OUTLINE_COLOR:CZMColor;
+  /// Outline width
+  OUTLINE_WIDTH:double;
+  /// Shadow mode
+  SHADOWS:string;
+  /// Classification type
+  CLASSIFICATION_TYPE:string;
+  /// Z-index for ordering
+  Z_INDEX:int;
+}
+
+/// 3D Tileset
+table CZMTileset {
+  /// Whether the tileset is displayed
+  SHOW:bool;
+  /// URI to the tileset
+  URI:string;
+  /// Maximum screen space error
+  MAXIMUM_SCREEN_SPACE_ERROR:double;
+}
+
+/// Wall (vertical curtain)
+table CZMWall {
+  /// Whether the wall is displayed
+  SHOW:bool;
+  /// Positions as cartographic degrees
+  POSITIONS_CARTOGRAPHIC_DEGREES:[double];
+  /// Positions as Cartesian
+  POSITIONS_CARTESIAN:[double];
+  /// Minimum heights per position
+  MINIMUM_HEIGHTS:[double];
+  /// Maximum heights per position
+  MAXIMUM_HEIGHTS:[double];
+  /// Granularity in radians
+  GRANULARITY:double;
+  /// Fill flag
+  FILL:bool;
+  /// Surface material
+  MATERIAL:CZMMaterial;
+  /// Outline flag
+  OUTLINE:bool;
+  /// Outline color
+  OUTLINE_COLOR:CZMColor;
+  /// Outline width
+  OUTLINE_WIDTH:double;
+  /// Shadow mode
+  SHADOWS:string;
 }
 
 /// A CZML Packet describing an entity and its properties
@@ -295,6 +961,44 @@ table CZMPacket {
   PATH:CZMPath;
   /// Ellipse properties
   ELLIPSE:CZMEllipse;
+  /// Orientation (quaternion)
+  ORIENTATION:CZMOrientation;
+  /// Suggested camera offset
+  VIEW_FROM:CZMViewFrom;
+  /// Whether to delete this object
+  DELETE:bool;
+  /// Box properties
+  BOX:CZMBox;
+  /// Corridor properties
+  CORRIDOR:CZMCorridor;
+  /// Cylinder properties
+  CYLINDER:CZMCylinder;
+  /// Ellipsoid properties
+  ELLIPSOID:CZMEllipsoid;
+  /// Polyline volume properties
+  POLYLINE_VOLUME:CZMPolylineVolume;
+  /// Rectangle properties
+  RECTANGLE:CZMRectangle;
+  /// 3D Tileset properties
+  TILESET:CZMTileset;
+  /// Wall properties
+  WALL:CZMWall;
+  /// Position interpolation settings
+  POSITION_INTERPOLATION:CZMInterpolation;
+  /// Position reference frame (FIXED or INERTIAL)
+  POSITION_REFERENCE_FRAME:string;
+  /// Position reference to another entity
+  POSITION_REFERENCE:string;
+  /// Orientation epoch (ISO 8601)
+  ORIENTATION_EPOCH:string;
+  /// Orientation sampled data [t, x, y, z, w, t, x, y, z, w, ...]
+  ORIENTATION_ARRAY:[double];
+  /// Orientation interpolation settings
+  ORIENTATION_INTERPOLATION:CZMInterpolation;
+  /// Orientation reference to another entity
+  ORIENTATION_REFERENCE:string;
+  /// Generic bag for all time-dynamic (non-static) properties
+  DYNAMIC_PROPERTIES:[CZMDynamicProperty];
 }
 
 /// CZML Document
@@ -309,6 +1013,10 @@ table CZM {
   CLOCK_INTERVAL:string;
   /// Clock settings - multiplier
   CLOCK_MULTIPLIER:double;
+  /// Clock range
+  CLOCK_RANGE:string;
+  /// Clock step
+  CLOCK_STEP:string;
   /// All packets in the document
   PACKETS:[CZMPacket];
 }

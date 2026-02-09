@@ -6,7 +6,9 @@
     "clock": {
       "interval": "2024-01-15T00:00:00Z/2024-01-16T00:00:00Z",
       "currentTime": "2024-01-15T12:00:00Z",
-      "multiplier": 60
+      "multiplier": 60,
+      "range": "LOOP_STOP",
+      "step": "SYSTEM_CLOCK_MULTIPLIER"
     }
   },
   {
@@ -23,6 +25,12 @@
         10800, -40.321, 3.119, 408000
       ]
     },
+    "orientation": {
+      "unitQuaternion": [0, 0, 0.707, 0.707]
+    },
+    "viewFrom": {
+      "cartesian": [-2000, -2000, 1000]
+    },
     "billboard": {
       "show": true,
       "image": "data:image/png;base64,iVBORw0KGgo=",
@@ -38,7 +46,19 @@
       "verticalOrigin": "BOTTOM",
       "translucencyByDistance": {
         "nearFarScalar": [1000, 1.0, 5000000, 0.2]
-      }
+      },
+      "rotation": 0,
+      "sizeInMeters": false,
+      "eyeOffset": {
+        "cartesian": [0, 0, 0]
+      },
+      "scaleByDistance": {
+        "nearFarScalar": [500, 2.0, 100000, 0.5]
+      },
+      "distanceDisplayCondition": {
+        "distanceDisplayCondition": [0, 10000000]
+      },
+      "disableDepthTestDistance": 5000
     },
     "label": {
       "show": true,
@@ -57,11 +77,33 @@
       "heightReference": "NONE",
       "pixelOffset": {
         "cartesian2": [12, 0]
+      },
+      "showBackground": true,
+      "backgroundColor": {
+        "rgba": [0, 0, 0, 180]
+      },
+      "backgroundPadding": {
+        "cartesian2": [8, 4]
+      },
+      "eyeOffset": {
+        "cartesian": [0, 0, -10]
+      },
+      "scaleByDistance": {
+        "nearFarScalar": [500, 1.5, 100000, 0.2]
+      },
+      "distanceDisplayCondition": {
+        "distanceDisplayCondition": [0, 5000000]
       }
     },
     "point": {
       "show": false,
-      "heightReference": "NONE"
+      "heightReference": "NONE",
+      "scaleByDistance": {
+        "nearFarScalar": [500, 2.0, 100000, 0.5]
+      },
+      "translucencyByDistance": {
+        "nearFarScalar": [500, 1.0, 100000, 0.1]
+      }
     },
     "path": {
       "show": true,
@@ -69,13 +111,32 @@
       "trailTime": 3600,
       "width": 2,
       "material": {
-        "solidColor": {
+        "polylineGlow": {
           "color": {
-            "rgba": [0, 255, 255, 128]
-          }
+            "rgba": [0, 255, 255, 255]
+          },
+          "glowPower": 0.25,
+          "taperPower": 1.0
         }
       },
       "resolution": 120
+    },
+    "model": {
+      "show": true,
+      "gltf": "models/iss.glb",
+      "scale": 1.0,
+      "minimumPixelSize": 128,
+      "maximumScale": 10000,
+      "heightReference": "NONE",
+      "incrementallyLoadTextures": true,
+      "runAnimations": true,
+      "shadows": "ENABLED",
+      "silhouetteColor": {
+        "rgba": [0, 255, 0, 255]
+      },
+      "silhouetteSize": 2,
+      "colorBlendMode": "HIGHLIGHT",
+      "colorBlendAmount": 0.5
     }
   },
   {
@@ -94,6 +155,8 @@
       "outline": true,
       "height": 0,
       "heightReference": "CLAMP_TO_GROUND",
+      "extrudedHeight": 100000,
+      "extrudedHeightReference": "RELATIVE_TO_GROUND",
       "material": {
         "solidColor": {
           "color": {
@@ -103,7 +166,12 @@
       },
       "outlineColor": {
         "rgba": [0, 128, 255, 255]
-      }
+      },
+      "outlineWidth": 2,
+      "numberOfVerticalLines": 16,
+      "shadows": "ENABLED",
+      "classificationType": "BOTH",
+      "zIndex": 0
     }
   },
   {
@@ -118,16 +186,11 @@
         "rgba": [255, 0, 0, 255]
       },
       "pixelSize": 10,
-      "heightReference": "CLAMP_TO_GROUND"
-    },
-    "model": {
-      "show": true,
-      "gltf": "models/antenna.glb",
-      "scale": 100,
       "heightReference": "CLAMP_TO_GROUND",
-      "color": {
-        "rgba": [200, 200, 200, 255]
-      }
+      "distanceDisplayCondition": {
+        "distanceDisplayCondition": [0, 500000]
+      },
+      "disableDepthTestDistance": 10000
     },
     "polygon": {
       "show": true,
@@ -139,17 +202,426 @@
           -95.1, 29.57, 0
         ]
       },
+      "holes": {
+        "cartographicDegrees": [
+          [-95.095, 29.555, 0, -95.085, 29.555, 0, -95.085, 29.565, 0, -95.095, 29.565, 0]
+        ]
+      },
       "fill": true,
       "outline": true,
       "heightReference": "CLAMP_TO_GROUND",
       "classificationType": "TERRAIN",
       "material": {
+        "stripe": {
+          "orientation": "HORIZONTAL",
+          "evenColor": {
+            "rgba": [255, 0, 0, 128]
+          },
+          "oddColor": {
+            "rgba": [255, 255, 255, 128]
+          },
+          "offset": 0,
+          "repeat": 5
+        }
+      },
+      "perPositionHeight": false,
+      "closeTop": true,
+      "closeBottom": true,
+      "arcType": "GEODESIC",
+      "shadows": "ENABLED",
+      "zIndex": 1
+    }
+  },
+  {
+    "id": "box-entity",
+    "name": "Sensor Box",
+    "position": {
+      "cartographicDegrees": [-95.0, 29.5, 100]
+    },
+    "box": {
+      "show": true,
+      "dimensions": {
+        "cartesian": [100, 200, 50]
+      },
+      "heightReference": "RELATIVE_TO_GROUND",
+      "fill": true,
+      "material": {
         "solidColor": {
           "color": {
-            "rgba": [255, 0, 0, 64]
+            "rgba": [0, 255, 0, 128]
+          }
+        }
+      },
+      "outline": true,
+      "outlineColor": {
+        "rgba": [0, 255, 0, 255]
+      },
+      "outlineWidth": 2,
+      "shadows": "ENABLED",
+      "distanceDisplayCondition": {
+        "distanceDisplayCondition": [0, 50000]
+      }
+    }
+  },
+  {
+    "id": "corridor-entity",
+    "name": "Flight Corridor",
+    "corridor": {
+      "show": true,
+      "positions": {
+        "cartographicDegrees": [
+          -100, 30, 10000,
+          -95, 32, 10000,
+          -90, 30, 10000
+        ]
+      },
+      "width": 100000,
+      "height": 10000,
+      "heightReference": "NONE",
+      "extrudedHeight": 15000,
+      "cornerType": "ROUNDED",
+      "granularity": 0.01,
+      "fill": true,
+      "material": {
+        "solidColor": {
+          "color": {
+            "rgba": [255, 128, 0, 100]
+          }
+        }
+      },
+      "outline": true,
+      "outlineColor": {
+        "rgba": [255, 128, 0, 255]
+      },
+      "outlineWidth": 1,
+      "shadows": "DISABLED",
+      "classificationType": "BOTH",
+      "zIndex": 0
+    }
+  },
+  {
+    "id": "cylinder-entity",
+    "name": "Comm Tower",
+    "position": {
+      "cartographicDegrees": [-94.5, 29.0, 0]
+    },
+    "cylinder": {
+      "show": true,
+      "length": 300,
+      "topRadius": 5,
+      "bottomRadius": 15,
+      "heightReference": "CLAMP_TO_GROUND",
+      "fill": true,
+      "material": {
+        "solidColor": {
+          "color": {
+            "rgba": [128, 128, 128, 255]
+          }
+        }
+      },
+      "outline": true,
+      "outlineColor": {
+        "rgba": [64, 64, 64, 255]
+      },
+      "outlineWidth": 1,
+      "numberOfVerticalLines": 16,
+      "slices": 64,
+      "shadows": "ENABLED"
+    }
+  },
+  {
+    "id": "ellipsoid-entity",
+    "name": "Radar Dome",
+    "position": {
+      "cartographicDegrees": [-94.0, 29.5, 0]
+    },
+    "ellipsoid": {
+      "show": true,
+      "radii": {
+        "cartesian": [500000, 500000, 300000]
+      },
+      "innerRadii": {
+        "cartesian": [400000, 400000, 200000]
+      },
+      "minimumClock": 0,
+      "maximumClock": 6.283185,
+      "minimumCone": 0,
+      "maximumCone": 3.141593,
+      "fill": true,
+      "material": {
+        "solidColor": {
+          "color": {
+            "rgba": [0, 0, 255, 64]
+          }
+        }
+      },
+      "outline": true,
+      "outlineColor": {
+        "rgba": [0, 0, 255, 255]
+      },
+      "outlineWidth": 1,
+      "stackPartitions": 32,
+      "slicePartitions": 32,
+      "subdivisions": 64,
+      "shadows": "ENABLED"
+    }
+  },
+  {
+    "id": "polyline-arrow",
+    "name": "Direction Arrow",
+    "polyline": {
+      "show": true,
+      "positions": {
+        "cartographicDegrees": [
+          -96, 28, 0,
+          -94, 30, 0
+        ]
+      },
+      "width": 10,
+      "material": {
+        "polylineArrow": {
+          "color": {
+            "rgba": [255, 0, 0, 255]
+          }
+        }
+      },
+      "arcType": "GEODESIC",
+      "shadows": "DISABLED",
+      "classificationType": "TERRAIN",
+      "zIndex": 0
+    }
+  },
+  {
+    "id": "polyline-outline",
+    "name": "Border Line",
+    "polyline": {
+      "show": true,
+      "positions": {
+        "cartographicDegrees": [
+          -97, 27, 0,
+          -93, 31, 0,
+          -89, 27, 0
+        ]
+      },
+      "width": 5,
+      "material": {
+        "polylineOutline": {
+          "color": {
+            "rgba": [255, 255, 0, 255]
+          },
+          "outlineColor": {
+            "rgba": [0, 0, 0, 255]
+          },
+          "outlineWidth": 2
+        }
+      },
+      "depthFailMaterial": {
+        "solidColor": {
+          "color": {
+            "rgba": [255, 255, 0, 128]
           }
         }
       }
+    }
+  },
+  {
+    "id": "rectangle-entity",
+    "name": "Restricted Zone",
+    "rectangle": {
+      "show": true,
+      "coordinates": {
+        "wsenDegrees": [-100, 25, -90, 35]
+      },
+      "height": 0,
+      "heightReference": "CLAMP_TO_GROUND",
+      "extrudedHeight": 50000,
+      "rotation": 0,
+      "stRotation": 0,
+      "fill": true,
+      "material": {
+        "checkerboard": {
+          "evenColor": {
+            "rgba": [255, 0, 0, 64]
+          },
+          "oddColor": {
+            "rgba": [255, 255, 0, 64]
+          },
+          "repeatX": 8,
+          "repeatY": 8
+        }
+      },
+      "outline": true,
+      "outlineColor": {
+        "rgba": [255, 0, 0, 255]
+      },
+      "outlineWidth": 2,
+      "shadows": "DISABLED",
+      "classificationType": "BOTH",
+      "zIndex": 0
+    }
+  },
+  {
+    "id": "wall-entity",
+    "name": "Boundary Wall",
+    "wall": {
+      "show": true,
+      "positions": {
+        "cartographicDegrees": [
+          -98, 28, 0,
+          -96, 30, 0,
+          -94, 28, 0,
+          -92, 30, 0
+        ]
+      },
+      "minimumHeights": [0, 0, 0, 0],
+      "maximumHeights": [100000, 150000, 100000, 150000],
+      "fill": true,
+      "material": {
+        "image": {
+          "image": "textures/wall.png",
+          "repeat": {
+            "cartesian2": [4, 2]
+          },
+          "transparent": true
+        }
+      },
+      "outline": true,
+      "outlineColor": {
+        "rgba": [128, 128, 128, 255]
+      },
+      "outlineWidth": 1,
+      "shadows": "ENABLED"
+    }
+  },
+  {
+    "id": "polyline-volume-entity",
+    "name": "Pipeline",
+    "polylineVolume": {
+      "show": true,
+      "positions": {
+        "cartographicDegrees": [
+          -96, 28, 0,
+          -95, 29, 0,
+          -94, 28, 0
+        ]
+      },
+      "shape": [-10000, -10000, 10000, -10000, 10000, 10000, -10000, 10000],
+      "cornerType": "BEVELED",
+      "fill": true,
+      "material": {
+        "solidColor": {
+          "color": {
+            "rgba": [128, 0, 255, 128]
+          }
+        }
+      },
+      "outline": true,
+      "outlineColor": {
+        "rgba": [128, 0, 255, 255]
+      },
+      "outlineWidth": 1,
+      "shadows": "ENABLED"
+    }
+  },
+  {
+    "id": "tileset-entity",
+    "name": "3D Buildings",
+    "tileset": {
+      "show": true,
+      "uri": "tilesets/buildings/tileset.json",
+      "maximumScreenSpaceError": 16
+    }
+  },
+  {
+    "id": "grid-polygon",
+    "name": "Grid Zone",
+    "polygon": {
+      "show": true,
+      "positions": {
+        "cartographicDegrees": [
+          -88, 26, 0,
+          -86, 26, 0,
+          -86, 28, 0,
+          -88, 28, 0
+        ]
+      },
+      "fill": true,
+      "material": {
+        "grid": {
+          "color": {
+            "rgba": [255, 255, 0, 200]
+          },
+          "cellAlpha": 0.1,
+          "lineCountX": 16,
+          "lineCountY": 16,
+          "lineThicknessX": 2,
+          "lineThicknessY": 2,
+          "lineOffsetX": 0,
+          "lineOffsetY": 0
+        }
+      },
+      "outline": false
+    }
+  },
+  {
+    "id": "delete-me",
+    "delete": true
+  },
+  {
+    "id": "sampled-sat",
+    "name": "Satellite with LAGRANGE interpolation",
+    "position": {
+      "epoch": "2024-01-15T00:00:00Z",
+      "cartographicDegrees": [
+        0, -120.0, 35.0, 500000,
+        900, -115.0, 37.0, 505000,
+        1800, -110.0, 39.0, 510000,
+        2700, -105.0, 41.0, 508000,
+        3600, -100.0, 43.0, 502000
+      ],
+      "interpolationAlgorithm": "LAGRANGE",
+      "interpolationDegree": 5,
+      "referenceFrame": "INERTIAL"
+    },
+    "orientation": {
+      "epoch": "2024-01-15T00:00:00Z",
+      "unitQuaternion": [
+        0, 0, 0, 0.707, 0.707,
+        1800, 0.1, 0, 0.7, 0.707,
+        3600, 0.2, 0, 0.68, 0.7
+      ],
+      "interpolationAlgorithm": "LINEAR",
+      "interpolationDegree": 1
+    },
+    "billboard": {
+      "show": [
+        {"interval": "2024-01-15T00:00:00Z/2024-01-15T06:00:00Z", "boolean": true},
+        {"interval": "2024-01-15T06:00:00Z/2024-01-15T12:00:00Z", "boolean": false},
+        {"interval": "2024-01-15T12:00:00Z/2024-01-16T00:00:00Z", "boolean": true}
+      ],
+      "image": "data:image/png;base64,iVBORw0KGgo=",
+      "scale": {
+        "epoch": "2024-01-15T00:00:00Z",
+        "number": [0, 1.0, 1800, 1.5, 3600, 2.0]
+      }
+    },
+    "point": {
+      "show": true,
+      "pixelSize": 8,
+      "color": {
+        "epoch": "2024-01-15T00:00:00Z",
+        "rgba": [0, 255, 0, 0, 255, 1800, 0, 255, 128, 255, 3600, 255, 255, 0, 255]
+      }
+    }
+  },
+  {
+    "id": "reference-follower",
+    "name": "Entity following another via reference",
+    "position": {
+      "reference": "sampled-sat#position"
+    },
+    "orientation": {
+      "reference": "sampled-sat#orientation"
     }
   }
 ]

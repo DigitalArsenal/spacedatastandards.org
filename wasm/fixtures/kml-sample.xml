@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<kml xmlns="http://www.opengis.net/kml/2.2">
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2">
+  <NetworkLinkControl>
+    <minRefreshPeriod>5</minRefreshPeriod>
+    <cookie>session=abc123</cookie>
+    <message>Welcome to the space data feed</message>
+    <linkName>Space Data Feed</linkName>
+    <expires>2025-12-31T23:59:59Z</expires>
+  </NetworkLinkControl>
   <Document>
     <name>Space Data Locations</name>
     <description>Key space tracking facilities</description>
     <open>1</open>
+    <Schema name="TrackSchema" id="TrackSchemaId">
+      <SimpleField name="speed" type="xsd:double">
+        <displayName>Speed (km/s)</displayName>
+      </SimpleField>
+      <SimpleField name="status" type="xsd:string">
+        <displayName>Status</displayName>
+      </SimpleField>
+    </Schema>
     <Style id="station-style">
       <IconStyle>
         <color>ff0000ff</color>
@@ -23,6 +38,10 @@
         <color>ff00ffff</color>
         <colorMode>normal</colorMode>
         <width>2</width>
+        <gx:outerColor>ff0000ff</gx:outerColor>
+        <gx:outerWidth>0.3</gx:outerWidth>
+        <gx:physicalWidth>50</gx:physicalWidth>
+        <gx:labelVisibility>1</gx:labelVisibility>
       </LineStyle>
       <PolyStyle>
         <color>7f00ff00</color>
@@ -30,6 +49,21 @@
         <fill>1</fill>
         <outline>1</outline>
       </PolyStyle>
+      <BalloonStyle>
+        <bgColor>ffffffcc</bgColor>
+        <textColor>ff000000</textColor>
+        <text>$[name]: $[description]</text>
+        <displayMode>default</displayMode>
+      </BalloonStyle>
+      <ListStyle>
+        <listItemType>check</listItemType>
+        <bgColor>ff00ff00</bgColor>
+        <maxSnippetLines>3</maxSnippetLines>
+        <ItemIcon>
+          <state>open</state>
+          <href>http://example.com/icon-open.png</href>
+        </ItemIcon>
+      </ListStyle>
     </Style>
     <StyleMap id="station-map">
       <Pair>
@@ -43,6 +77,9 @@
     </StyleMap>
     <NetworkLink>
       <name>Live TLE Data</name>
+      <description>Real-time TLE updates</description>
+      <refreshVisibility>1</refreshVisibility>
+      <flyToView>1</flyToView>
       <Link>
         <href>http://example.com/tle-updates.kml</href>
         <refreshMode>onInterval</refreshMode>
@@ -55,6 +92,18 @@
       <name>Ground Stations</name>
       <description>CCSDS-compatible ground stations</description>
       <open>1</open>
+      <Region>
+        <LatLonAltBox>
+          <north>60</north>
+          <south>-60</south>
+          <east>180</east>
+          <west>-180</west>
+        </LatLonAltBox>
+        <Lod>
+          <minLodPixels>128</minLodPixels>
+          <maxLodPixels>-1</maxLodPixels>
+        </Lod>
+      </Region>
       <NetworkLink>
         <name>Station Status Feed</name>
         <Link>
@@ -67,6 +116,8 @@
         <name>NASA Johnson Space Center</name>
         <description>Mission Control Center, Houston TX</description>
         <styleUrl>#station-style</styleUrl>
+        <open>1</open>
+        <address>2101 E NASA Pkwy, Houston, TX</address>
         <Point>
           <altitudeMode>clampToGround</altitudeMode>
           <coordinates>-95.0933,29.5593,0</coordinates>
@@ -79,6 +130,10 @@
           <tilt>45</tilt>
           <range>5000</range>
         </LookAt>
+        <TimeSpan>
+          <begin>1961-01-01T00:00:00Z</begin>
+          <end>2030-12-31T23:59:59Z</end>
+        </TimeSpan>
       </Placemark>
       <Placemark>
         <name>ESA ESOC</name>
@@ -96,17 +151,74 @@
           <roll>0</roll>
           <altitudeMode>absolute</altitudeMode>
         </Camera>
+        <ExtendedData>
+          <SchemaData schemaUrl="#TrackSchemaId">
+            <SimpleData name="speed">0</SimpleData>
+            <SimpleData name="status">operational</SimpleData>
+          </SchemaData>
+        </ExtendedData>
       </Placemark>
+      <ScreenOverlay>
+        <name>Station Legend</name>
+        <Icon><href>http://example.com/legend.png</href></Icon>
+        <overlayXY x="0" y="1" xunits="fraction" yunits="fraction"/>
+        <screenXY x="0" y="1" xunits="fraction" yunits="fraction"/>
+        <size x="200" y="100" xunits="pixels" yunits="pixels"/>
+      </ScreenOverlay>
     </Folder>
     <Placemark>
       <name>ISS Ground Track Segment</name>
       <styleUrl>#station-style</styleUrl>
       <LineString>
         <tessellate>1</tessellate>
+        <gx:drawOrder>5</gx:drawOrder>
         <coordinates>
           -95.364,29.7604,408000 -80.191,25.7617,408000 -60.025,15.4942,408000
         </coordinates>
       </LineString>
+    </Placemark>
+    <Placemark>
+      <name>ISS 3D Model</name>
+      <Model>
+        <altitudeMode>absolute</altitudeMode>
+        <Location>
+          <longitude>-95.364</longitude>
+          <latitude>29.7604</latitude>
+          <altitude>408000</altitude>
+        </Location>
+        <Orientation>
+          <heading>45</heading>
+          <tilt>0</tilt>
+          <roll>0</roll>
+        </Orientation>
+        <Scale>
+          <x>1</x>
+          <y>1</y>
+          <z>1</z>
+        </Scale>
+        <Link><href>models/iss.dae</href></Link>
+        <ResourceMap>
+          <Alias>
+            <targetHref>textures/solar_panel.png</targetHref>
+            <sourceHref>../images/solar_panel.png</sourceHref>
+          </Alias>
+        </ResourceMap>
+      </Model>
+    </Placemark>
+    <Placemark>
+      <name>ISS Orbit Track</name>
+      <gx:Track>
+        <altitudeMode>absolute</altitudeMode>
+        <when>2024-01-15T00:00:00Z</when>
+        <when>2024-01-15T00:15:00Z</when>
+        <when>2024-01-15T00:30:00Z</when>
+        <gx:coord>-95.364 29.7604 408000</gx:coord>
+        <gx:coord>-80.191 25.7617 408000</gx:coord>
+        <gx:coord>-60.025 15.4942 408000</gx:coord>
+        <gx:angles>0 0 0</gx:angles>
+        <gx:angles>10 5 0</gx:angles>
+        <gx:angles>20 10 0</gx:angles>
+      </gx:Track>
     </Placemark>
     <Placemark>
       <name>Observation Areas</name>
@@ -118,5 +230,66 @@
         </MultiGeometry>
       </MultiGeometry>
     </Placemark>
+    <GroundOverlay>
+      <name>Satellite Imagery</name>
+      <Icon><href>http://example.com/overlay.png</href></Icon>
+      <altitude>1000</altitude>
+      <altitudeMode>absolute</altitudeMode>
+      <drawOrder>3</drawOrder>
+      <LatLonBox>
+        <north>30</north>
+        <south>29</south>
+        <east>-94</east>
+        <west>-96</west>
+      </LatLonBox>
+    </GroundOverlay>
+    <PhotoOverlay>
+      <name>Launch Photo</name>
+      <Icon><href>http://example.com/launch.jpg</href></Icon>
+      <ViewVolume>
+        <leftFov>-60</leftFov>
+        <rightFov>60</rightFov>
+        <bottomFov>-45</bottomFov>
+        <topFov>45</topFov>
+        <near>1000</near>
+      </ViewVolume>
+      <Point><coordinates>-80.604,28.608,0</coordinates></Point>
+      <shape>rectangle</shape>
+    </PhotoOverlay>
+    <gx:Tour>
+      <name>Space Center Tour</name>
+      <gx:Playlist>
+        <gx:FlyTo>
+          <gx:duration>5</gx:duration>
+          <gx:flyToMode>smooth</gx:flyToMode>
+          <LookAt>
+            <longitude>-95.0933</longitude>
+            <latitude>29.5593</latitude>
+            <altitude>0</altitude>
+            <heading>0</heading>
+            <tilt>45</tilt>
+            <range>10000</range>
+          </LookAt>
+        </gx:FlyTo>
+        <gx:Wait><gx:duration>3</gx:duration></gx:Wait>
+        <gx:FlyTo>
+          <gx:duration>3</gx:duration>
+          <gx:flyToMode>bounce</gx:flyToMode>
+          <Camera>
+            <longitude>8.6724</longitude>
+            <latitude>49.8697</latitude>
+            <altitude>5000</altitude>
+            <heading>0</heading>
+            <tilt>60</tilt>
+            <roll>0</roll>
+          </Camera>
+        </gx:FlyTo>
+        <gx:TourControl><gx:playMode>pause</gx:playMode></gx:TourControl>
+        <gx:SoundCue>
+          <href>http://example.com/narration.mp3</href>
+          <gx:delayedStart>1</gx:delayedStart>
+        </gx:SoundCue>
+      </gx:Playlist>
+    </gx:Tour>
   </Document>
 </kml>
