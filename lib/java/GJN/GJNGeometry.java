@@ -69,6 +69,11 @@ public final class GJNGeometry extends Table {
   public int GEOMETRIESLength() { int o = __offset(14); return o != 0 ? __vector_len(o) : 0; }
   public GJNGeometry.Vector geometriesVector() { return geometriesVector(new GJNGeometry.Vector()); }
   public GJNGeometry.Vector geometriesVector(GJNGeometry.Vector obj) { int o = __offset(14); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Bounding box (optional, per RFC 7946 Section 5)
+   */
+  public GJNBoundingBox BBOX() { return BBOX(new GJNBoundingBox()); }
+  public GJNBoundingBox BBOX(GJNBoundingBox obj) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createGJNGeometry(FlatBufferBuilder builder,
       byte TYPE,
@@ -76,8 +81,10 @@ public final class GJNGeometry extends Table {
       int POSITIONSOffset,
       int RINGSOffset,
       int POLYGON_RINGSOffset,
-      int GEOMETRIESOffset) {
-    builder.startTable(6);
+      int GEOMETRIESOffset,
+      int BBOXOffset) {
+    builder.startTable(7);
+    GJNGeometry.addBbox(builder, BBOXOffset);
     GJNGeometry.addGeometries(builder, GEOMETRIESOffset);
     GJNGeometry.addPolygonRings(builder, POLYGON_RINGSOffset);
     GJNGeometry.addRings(builder, RINGSOffset);
@@ -87,7 +94,7 @@ public final class GJNGeometry extends Table {
     return GJNGeometry.endGJNGeometry(builder);
   }
 
-  public static void startGJNGeometry(FlatBufferBuilder builder) { builder.startTable(6); }
+  public static void startGJNGeometry(FlatBufferBuilder builder) { builder.startTable(7); }
   public static void addType(FlatBufferBuilder builder, byte TYPE) { builder.addByte(0, TYPE, 0); }
   public static void addPoint(FlatBufferBuilder builder, int POINTOffset) { builder.addOffset(1, POINTOffset, 0); }
   public static void addPositions(FlatBufferBuilder builder, int POSITIONSOffset) { builder.addOffset(2, POSITIONSOffset, 0); }
@@ -102,6 +109,7 @@ public final class GJNGeometry extends Table {
   public static void addGeometries(FlatBufferBuilder builder, int GEOMETRIESOffset) { builder.addOffset(5, GEOMETRIESOffset, 0); }
   public static int createGeometriesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startGeometriesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addBbox(FlatBufferBuilder builder, int BBOXOffset) { builder.addOffset(6, BBOXOffset, 0); }
   public static int endGJNGeometry(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

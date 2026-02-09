@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { GJNBoundingBox, GJNBoundingBoxT } from './GJNBoundingBox.js';
 import { GJNGeometry, GJNGeometryT } from './GJNGeometry.js';
 import { GJNProperty, GJNPropertyT } from './GJNProperty.js';
 
@@ -30,7 +31,7 @@ static getSizePrefixedRootAsGJNFeature(bb:flatbuffers.ByteBuffer, obj?:GJNFeatur
 }
 
 /**
- * Feature identifier (optional)
+ * Feature identifier (optional, string form)
  */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -60,8 +61,48 @@ propertiesLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Numeric feature identifier (use when ID_IS_NUMERIC is true)
+ */
+NUM_ID():number {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * True if the feature id is numeric rather than string
+ */
+ID_IS_NUMERIC():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * True if the feature has a geometry (false means geometry was JSON null)
+ */
+HAS_GEOMETRY():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * True if properties was JSON null (vs empty object)
+ */
+PROPERTIES_IS_NULL():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Bounding box (optional, per RFC 7946 Section 5)
+ */
+BBOX(obj?:GJNBoundingBox):GJNBoundingBox|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? (obj || new GJNBoundingBox()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startGJNFeature(builder:flatbuffers.Builder) {
-  builder.startObject(3);
+  builder.startObject(8);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -88,6 +129,26 @@ static startPropertiesVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addNumId(builder:flatbuffers.Builder, NUM_ID:number) {
+  builder.addFieldFloat64(3, NUM_ID, 0.0);
+}
+
+static addIdIsNumeric(builder:flatbuffers.Builder, ID_IS_NUMERIC:boolean) {
+  builder.addFieldInt8(4, +ID_IS_NUMERIC, +false);
+}
+
+static addHasGeometry(builder:flatbuffers.Builder, HAS_GEOMETRY:boolean) {
+  builder.addFieldInt8(5, +HAS_GEOMETRY, +false);
+}
+
+static addPropertiesIsNull(builder:flatbuffers.Builder, PROPERTIES_IS_NULL:boolean) {
+  builder.addFieldInt8(6, +PROPERTIES_IS_NULL, +false);
+}
+
+static addBbox(builder:flatbuffers.Builder, BBOXOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, BBOXOffset, 0);
+}
+
 static endGJNFeature(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -98,7 +159,12 @@ unpack(): GJNFeatureT {
   return new GJNFeatureT(
     this.ID(),
     (this.GEOMETRY() !== null ? this.GEOMETRY()!.unpack() : null),
-    this.bb!.createObjList<GJNProperty, GJNPropertyT>(this.PROPERTIES.bind(this), this.propertiesLength())
+    this.bb!.createObjList<GJNProperty, GJNPropertyT>(this.PROPERTIES.bind(this), this.propertiesLength()),
+    this.NUM_ID(),
+    this.ID_IS_NUMERIC(),
+    this.HAS_GEOMETRY(),
+    this.PROPERTIES_IS_NULL(),
+    (this.BBOX() !== null ? this.BBOX()!.unpack() : null)
   );
 }
 
@@ -107,6 +173,11 @@ unpackTo(_o: GJNFeatureT): void {
   _o.ID = this.ID();
   _o.GEOMETRY = (this.GEOMETRY() !== null ? this.GEOMETRY()!.unpack() : null);
   _o.PROPERTIES = this.bb!.createObjList<GJNProperty, GJNPropertyT>(this.PROPERTIES.bind(this), this.propertiesLength());
+  _o.NUM_ID = this.NUM_ID();
+  _o.ID_IS_NUMERIC = this.ID_IS_NUMERIC();
+  _o.HAS_GEOMETRY = this.HAS_GEOMETRY();
+  _o.PROPERTIES_IS_NULL = this.PROPERTIES_IS_NULL();
+  _o.BBOX = (this.BBOX() !== null ? this.BBOX()!.unpack() : null);
 }
 }
 
@@ -114,7 +185,12 @@ export class GJNFeatureT implements flatbuffers.IGeneratedObject {
 constructor(
   public ID: string|Uint8Array|null = null,
   public GEOMETRY: GJNGeometryT|null = null,
-  public PROPERTIES: (GJNPropertyT)[] = []
+  public PROPERTIES: (GJNPropertyT)[] = [],
+  public NUM_ID: number = 0.0,
+  public ID_IS_NUMERIC: boolean = false,
+  public HAS_GEOMETRY: boolean = false,
+  public PROPERTIES_IS_NULL: boolean = false,
+  public BBOX: GJNBoundingBoxT|null = null
 ){}
 
 
@@ -122,11 +198,17 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ID = (this.ID !== null ? builder.createString(this.ID!) : 0);
   const GEOMETRY = (this.GEOMETRY !== null ? this.GEOMETRY!.pack(builder) : 0);
   const PROPERTIES = GJNFeature.createPropertiesVector(builder, builder.createObjectOffsetList(this.PROPERTIES));
+  const BBOX = (this.BBOX !== null ? this.BBOX!.pack(builder) : 0);
 
   GJNFeature.startGJNFeature(builder);
   GJNFeature.addId(builder, ID);
   GJNFeature.addGeometry(builder, GEOMETRY);
   GJNFeature.addProperties(builder, PROPERTIES);
+  GJNFeature.addNumId(builder, this.NUM_ID);
+  GJNFeature.addIdIsNumeric(builder, this.ID_IS_NUMERIC);
+  GJNFeature.addHasGeometry(builder, this.HAS_GEOMETRY);
+  GJNFeature.addPropertiesIsNull(builder, this.PROPERTIES_IS_NULL);
+  GJNFeature.addBbox(builder, BBOX);
 
   return GJNFeature.endGJNFeature(builder);
 }

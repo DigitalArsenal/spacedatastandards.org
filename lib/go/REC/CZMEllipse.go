@@ -112,7 +112,7 @@ func (rcv *CZMEllipse) MutateFILL(n bool) bool {
 	return rcv._tab.MutateBoolSlot(12, n)
 }
 
-/// Fill color
+/// Fill color (legacy solid color)
 func (rcv *CZMEllipse) COLOR(obj *CZMColor) *CZMColor {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -126,7 +126,7 @@ func (rcv *CZMEllipse) COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
-/// Fill color
+/// Fill color (legacy solid color)
 /// Outline flag
 func (rcv *CZMEllipse) OUTLINE() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
@@ -184,8 +184,137 @@ func (rcv *CZMEllipse) MutateHEIGHT_REFERENCE(n CZMHeightReference) bool {
 	return rcv._tab.MutateInt8Slot(22, int8(n))
 }
 
+/// Extruded height in meters
+func (rcv *CZMEllipse) EXTRUDED_HEIGHT() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Extruded height in meters
+func (rcv *CZMEllipse) MutateEXTRUDED_HEIGHT(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+/// Extruded height reference
+func (rcv *CZMEllipse) EXTRUDED_HEIGHT_REFERENCE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Extruded height reference
+/// Texture rotation in radians
+func (rcv *CZMEllipse) ST_ROTATION() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Texture rotation in radians
+func (rcv *CZMEllipse) MutateST_ROTATION(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+/// Granularity in radians
+func (rcv *CZMEllipse) GRANULARITY() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Granularity in radians
+func (rcv *CZMEllipse) MutateGRANULARITY(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+/// Full surface material
+func (rcv *CZMEllipse) MATERIAL(obj *CZMMaterial) *CZMMaterial {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CZMMaterial)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// Full surface material
+/// Outline width in pixels
+func (rcv *CZMEllipse) OUTLINE_WIDTH() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Outline width in pixels
+func (rcv *CZMEllipse) MutateOUTLINE_WIDTH(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+/// Number of vertical lines
+func (rcv *CZMEllipse) NUMBER_OF_VERTICAL_LINES() int32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Number of vertical lines
+func (rcv *CZMEllipse) MutateNUMBER_OF_VERTICAL_LINES(n int32) bool {
+	return rcv._tab.MutateInt32Slot(36, n)
+}
+
+/// Shadow mode
+func (rcv *CZMEllipse) SHADOWS() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Shadow mode
+/// Classification type
+func (rcv *CZMEllipse) CLASSIFICATION_TYPE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Classification type
+/// Z-index for ordering
+func (rcv *CZMEllipse) Z_INDEX() int32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Z-index for ordering
+func (rcv *CZMEllipse) MutateZ_INDEX(n int32) bool {
+	return rcv._tab.MutateInt32Slot(42, n)
+}
+
 func CZMEllipseStart(builder *flatbuffers.Builder) {
-	builder.StartObject(10)
+	builder.StartObject(20)
 }
 func CZMEllipseAddSHOW(builder *flatbuffers.Builder, SHOW bool) {
 	builder.PrependBoolSlot(0, SHOW, false)
@@ -216,6 +345,36 @@ func CZMEllipseAddHEIGHT(builder *flatbuffers.Builder, HEIGHT float64) {
 }
 func CZMEllipseAddHEIGHT_REFERENCE(builder *flatbuffers.Builder, HEIGHT_REFERENCE CZMHeightReference) {
 	builder.PrependInt8Slot(9, int8(HEIGHT_REFERENCE), 0)
+}
+func CZMEllipseAddEXTRUDED_HEIGHT(builder *flatbuffers.Builder, EXTRUDED_HEIGHT float64) {
+	builder.PrependFloat64Slot(10, EXTRUDED_HEIGHT, 0.0)
+}
+func CZMEllipseAddEXTRUDED_HEIGHT_REFERENCE(builder *flatbuffers.Builder, EXTRUDED_HEIGHT_REFERENCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(EXTRUDED_HEIGHT_REFERENCE), 0)
+}
+func CZMEllipseAddST_ROTATION(builder *flatbuffers.Builder, ST_ROTATION float64) {
+	builder.PrependFloat64Slot(12, ST_ROTATION, 0.0)
+}
+func CZMEllipseAddGRANULARITY(builder *flatbuffers.Builder, GRANULARITY float64) {
+	builder.PrependFloat64Slot(13, GRANULARITY, 0.0)
+}
+func CZMEllipseAddMATERIAL(builder *flatbuffers.Builder, MATERIAL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(MATERIAL), 0)
+}
+func CZMEllipseAddOUTLINE_WIDTH(builder *flatbuffers.Builder, OUTLINE_WIDTH float64) {
+	builder.PrependFloat64Slot(15, OUTLINE_WIDTH, 0.0)
+}
+func CZMEllipseAddNUMBER_OF_VERTICAL_LINES(builder *flatbuffers.Builder, NUMBER_OF_VERTICAL_LINES int32) {
+	builder.PrependInt32Slot(16, NUMBER_OF_VERTICAL_LINES, 0)
+}
+func CZMEllipseAddSHADOWS(builder *flatbuffers.Builder, SHADOWS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(SHADOWS), 0)
+}
+func CZMEllipseAddCLASSIFICATION_TYPE(builder *flatbuffers.Builder, CLASSIFICATION_TYPE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(CLASSIFICATION_TYPE), 0)
+}
+func CZMEllipseAddZ_INDEX(builder *flatbuffers.Builder, Z_INDEX int32) {
+	builder.PrependInt32Slot(19, Z_INDEX, 0)
 }
 func CZMEllipseEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

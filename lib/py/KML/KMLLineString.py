@@ -79,8 +79,16 @@ class KMLLineString(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # gx:drawOrder
+    # KMLLineString
+    def GX_DRAW_ORDER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
 def KMLLineStringStart(builder):
-    builder.StartObject(4)
+    builder.StartObject(5)
 
 def Start(builder):
     KMLLineStringStart(builder)
@@ -115,6 +123,12 @@ def KMLLineStringAddTESSELLATE(builder, TESSELLATE):
 def AddTESSELLATE(builder, TESSELLATE):
     KMLLineStringAddTESSELLATE(builder, TESSELLATE)
 
+def KMLLineStringAddGX_DRAW_ORDER(builder, GX_DRAW_ORDER):
+    builder.PrependInt32Slot(4, GX_DRAW_ORDER, 0)
+
+def AddGX_DRAW_ORDER(builder, GX_DRAW_ORDER):
+    KMLLineStringAddGX_DRAW_ORDER(builder, GX_DRAW_ORDER)
+
 def KMLLineStringEnd(builder):
     return builder.EndObject()
 
@@ -135,6 +149,7 @@ class KMLLineStringT(object):
         self.ALTITUDE_MODE = 0  # type: int
         self.EXTRUDE = False  # type: bool
         self.TESSELLATE = False  # type: bool
+        self.GX_DRAW_ORDER = 0  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -168,6 +183,7 @@ class KMLLineStringT(object):
         self.ALTITUDE_MODE = kmllineString.ALTITUDE_MODE()
         self.EXTRUDE = kmllineString.EXTRUDE()
         self.TESSELLATE = kmllineString.TESSELLATE()
+        self.GX_DRAW_ORDER = kmllineString.GX_DRAW_ORDER()
 
     # KMLLineStringT
     def Pack(self, builder):
@@ -185,5 +201,6 @@ class KMLLineStringT(object):
         KMLLineStringAddALTITUDE_MODE(builder, self.ALTITUDE_MODE)
         KMLLineStringAddEXTRUDE(builder, self.EXTRUDE)
         KMLLineStringAddTESSELLATE(builder, self.TESSELLATE)
+        KMLLineStringAddGX_DRAW_ORDER(builder, self.GX_DRAW_ORDER)
         kmllineString = KMLLineStringEnd(builder)
         return kmllineString

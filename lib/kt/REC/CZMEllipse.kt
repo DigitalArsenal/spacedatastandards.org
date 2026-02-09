@@ -70,7 +70,7 @@ class CZMEllipse : Table() {
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     /**
-     * Fill color
+     * Fill color (legacy solid color)
      */
     val COLOR : CZMColor? get() = COLOR(CZMColor())
     fun COLOR(obj: CZMColor) : CZMColor? {
@@ -117,6 +117,108 @@ class CZMEllipse : Table() {
             val o = __offset(22)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
+    /**
+     * Extruded height in meters
+     */
+    val EXTRUDED_HEIGHT : Double
+        get() {
+            val o = __offset(24)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Extruded height reference
+     */
+    val EXTRUDED_HEIGHT_REFERENCE : String?
+        get() {
+            val o = __offset(26)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val EXTRUDED_HEIGHT_REFERENCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
+    fun EXTRUDED_HEIGHT_REFERENCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    /**
+     * Texture rotation in radians
+     */
+    val ST_ROTATION : Double
+        get() {
+            val o = __offset(28)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Granularity in radians
+     */
+    val GRANULARITY : Double
+        get() {
+            val o = __offset(30)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Full surface material
+     */
+    val MATERIAL : CZMMaterial? get() = MATERIAL(CZMMaterial())
+    fun MATERIAL(obj: CZMMaterial) : CZMMaterial? {
+        val o = __offset(32)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Outline width in pixels
+     */
+    val OUTLINE_WIDTH : Double
+        get() {
+            val o = __offset(34)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Number of vertical lines
+     */
+    val NUMBER_OF_VERTICAL_LINES : Int
+        get() {
+            val o = __offset(36)
+            return if(o != 0) bb.getInt(o + bb_pos) else 0
+        }
+    /**
+     * Shadow mode
+     */
+    val SHADOWS : String?
+        get() {
+            val o = __offset(38)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val SHADOWSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 1)
+    fun SHADOWSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 1)
+    /**
+     * Classification type
+     */
+    val CLASSIFICATION_TYPE : String?
+        get() {
+            val o = __offset(40)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val CLASSIFICATION_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(40, 1)
+    fun CLASSIFICATION_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 40, 1)
+    /**
+     * Z-index for ordering
+     */
+    val Z_INDEX : Int
+        get() {
+            val o = __offset(42)
+            return if(o != 0) bb.getInt(o + bb_pos) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsCZMEllipse(_bb: ByteBuffer): CZMEllipse = getRootAsCZMEllipse(_bb, CZMEllipse())
@@ -124,12 +226,22 @@ class CZMEllipse : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMEllipse(builder: FlatBufferBuilder, SHOW: Boolean, SEMI_MAJOR_AXIS: Double, SEMI_MINOR_AXIS: Double, ROTATION: Double, FILL: Boolean, COLOROffset: Int, OUTLINE: Boolean, OUTLINE_COLOROffset: Int, HEIGHT: Double, HEIGHT_REFERENCE: Byte) : Int {
-            builder.startTable(10)
+        fun createCZMEllipse(builder: FlatBufferBuilder, SHOW: Boolean, SEMI_MAJOR_AXIS: Double, SEMI_MINOR_AXIS: Double, ROTATION: Double, FILL: Boolean, COLOROffset: Int, OUTLINE: Boolean, OUTLINE_COLOROffset: Int, HEIGHT: Double, HEIGHT_REFERENCE: Byte, EXTRUDED_HEIGHT: Double, EXTRUDED_HEIGHT_REFERENCEOffset: Int, ST_ROTATION: Double, GRANULARITY: Double, MATERIALOffset: Int, OUTLINE_WIDTH: Double, NUMBER_OF_VERTICAL_LINES: Int, SHADOWSOffset: Int, CLASSIFICATION_TYPEOffset: Int, Z_INDEX: Int) : Int {
+            builder.startTable(20)
+            addOUTLINE_WIDTH(builder, OUTLINE_WIDTH)
+            addGRANULARITY(builder, GRANULARITY)
+            addST_ROTATION(builder, ST_ROTATION)
+            addEXTRUDED_HEIGHT(builder, EXTRUDED_HEIGHT)
             addHEIGHT(builder, HEIGHT)
             addROTATION(builder, ROTATION)
             addSEMI_MINOR_AXIS(builder, SEMI_MINOR_AXIS)
             addSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS)
+            addZ_INDEX(builder, Z_INDEX)
+            addCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPEOffset)
+            addSHADOWS(builder, SHADOWSOffset)
+            addNUMBER_OF_VERTICAL_LINES(builder, NUMBER_OF_VERTICAL_LINES)
+            addMATERIAL(builder, MATERIALOffset)
+            addEXTRUDED_HEIGHT_REFERENCE(builder, EXTRUDED_HEIGHT_REFERENCEOffset)
             addOUTLINE_COLOR(builder, OUTLINE_COLOROffset)
             addCOLOR(builder, COLOROffset)
             addHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE)
@@ -138,7 +250,7 @@ class CZMEllipse : Table() {
             addSHOW(builder, SHOW)
             return endCZMEllipse(builder)
         }
-        fun startCZMEllipse(builder: FlatBufferBuilder) = builder.startTable(10)
+        fun startCZMEllipse(builder: FlatBufferBuilder) = builder.startTable(20)
         fun addSHOW(builder: FlatBufferBuilder, SHOW: Boolean) = builder.addBoolean(0, SHOW, false)
         fun addSEMI_MAJOR_AXIS(builder: FlatBufferBuilder, SEMI_MAJOR_AXIS: Double) = builder.addDouble(1, SEMI_MAJOR_AXIS, 0.0)
         fun addSEMI_MINOR_AXIS(builder: FlatBufferBuilder, SEMI_MINOR_AXIS: Double) = builder.addDouble(2, SEMI_MINOR_AXIS, 0.0)
@@ -149,6 +261,16 @@ class CZMEllipse : Table() {
         fun addOUTLINE_COLOR(builder: FlatBufferBuilder, OUTLINE_COLOR: Int) = builder.addOffset(7, OUTLINE_COLOR, 0)
         fun addHEIGHT(builder: FlatBufferBuilder, HEIGHT: Double) = builder.addDouble(8, HEIGHT, 0.0)
         fun addHEIGHT_REFERENCE(builder: FlatBufferBuilder, HEIGHT_REFERENCE: Byte) = builder.addByte(9, HEIGHT_REFERENCE, 0)
+        fun addEXTRUDED_HEIGHT(builder: FlatBufferBuilder, EXTRUDED_HEIGHT: Double) = builder.addDouble(10, EXTRUDED_HEIGHT, 0.0)
+        fun addEXTRUDED_HEIGHT_REFERENCE(builder: FlatBufferBuilder, EXTRUDED_HEIGHT_REFERENCE: Int) = builder.addOffset(11, EXTRUDED_HEIGHT_REFERENCE, 0)
+        fun addST_ROTATION(builder: FlatBufferBuilder, ST_ROTATION: Double) = builder.addDouble(12, ST_ROTATION, 0.0)
+        fun addGRANULARITY(builder: FlatBufferBuilder, GRANULARITY: Double) = builder.addDouble(13, GRANULARITY, 0.0)
+        fun addMATERIAL(builder: FlatBufferBuilder, MATERIAL: Int) = builder.addOffset(14, MATERIAL, 0)
+        fun addOUTLINE_WIDTH(builder: FlatBufferBuilder, OUTLINE_WIDTH: Double) = builder.addDouble(15, OUTLINE_WIDTH, 0.0)
+        fun addNUMBER_OF_VERTICAL_LINES(builder: FlatBufferBuilder, NUMBER_OF_VERTICAL_LINES: Int) = builder.addInt(16, NUMBER_OF_VERTICAL_LINES, 0)
+        fun addSHADOWS(builder: FlatBufferBuilder, SHADOWS: Int) = builder.addOffset(17, SHADOWS, 0)
+        fun addCLASSIFICATION_TYPE(builder: FlatBufferBuilder, CLASSIFICATION_TYPE: Int) = builder.addOffset(18, CLASSIFICATION_TYPE, 0)
+        fun addZ_INDEX(builder: FlatBufferBuilder, Z_INDEX: Int) = builder.addInt(19, Z_INDEX, 0)
         fun endCZMEllipse(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

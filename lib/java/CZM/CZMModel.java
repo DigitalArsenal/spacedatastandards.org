@@ -59,6 +59,39 @@ public final class CZMModel extends Table {
    */
   public CZMColor COLOR() { return COLOR(new CZMColor()); }
   public CZMColor COLOR(CZMColor obj) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Whether to incrementally load textures
+   */
+  public boolean INCREMENTALLY_LOAD_TEXTURES() { int o = __offset(18); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Whether to run animations
+   */
+  public boolean RUN_ANIMATIONS() { int o = __offset(20); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Shadow mode
+   */
+  public String SHADOWS() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SHADOWSAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
+  public ByteBuffer SHADOWSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
+  /**
+   * Silhouette color
+   */
+  public CZMColor SILHOUETTE_COLOR() { return SILHOUETTE_COLOR(new CZMColor()); }
+  public CZMColor SILHOUETTE_COLOR(CZMColor obj) { int o = __offset(24); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Silhouette size in pixels
+   */
+  public double SILHOUETTE_SIZE() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Color blend mode
+   */
+  public String COLOR_BLEND_MODE() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer COLOR_BLEND_MODEAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
+  public ByteBuffer COLOR_BLEND_MODEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
+  /**
+   * Color blend amount (0-1)
+   */
+  public double COLOR_BLEND_AMOUNT() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createCZMModel(FlatBufferBuilder builder,
       boolean SHOW,
@@ -67,19 +100,33 @@ public final class CZMModel extends Table {
       double MINIMUM_PIXEL_SIZE,
       double MAXIMUM_SCALE,
       byte HEIGHT_REFERENCE,
-      int COLOROffset) {
-    builder.startTable(7);
+      int COLOROffset,
+      boolean INCREMENTALLY_LOAD_TEXTURES,
+      boolean RUN_ANIMATIONS,
+      int SHADOWSOffset,
+      int SILHOUETTE_COLOROffset,
+      double SILHOUETTE_SIZE,
+      int COLOR_BLEND_MODEOffset,
+      double COLOR_BLEND_AMOUNT) {
+    builder.startTable(14);
+    CZMModel.addColorBlendAmount(builder, COLOR_BLEND_AMOUNT);
+    CZMModel.addSilhouetteSize(builder, SILHOUETTE_SIZE);
     CZMModel.addMaximumScale(builder, MAXIMUM_SCALE);
     CZMModel.addMinimumPixelSize(builder, MINIMUM_PIXEL_SIZE);
     CZMModel.addScale(builder, SCALE);
+    CZMModel.addColorBlendMode(builder, COLOR_BLEND_MODEOffset);
+    CZMModel.addSilhouetteColor(builder, SILHOUETTE_COLOROffset);
+    CZMModel.addShadows(builder, SHADOWSOffset);
     CZMModel.addColor(builder, COLOROffset);
     CZMModel.addGltf(builder, GLTFOffset);
+    CZMModel.addRunAnimations(builder, RUN_ANIMATIONS);
+    CZMModel.addIncrementallyLoadTextures(builder, INCREMENTALLY_LOAD_TEXTURES);
     CZMModel.addHeightReference(builder, HEIGHT_REFERENCE);
     CZMModel.addShow(builder, SHOW);
     return CZMModel.endCZMModel(builder);
   }
 
-  public static void startCZMModel(FlatBufferBuilder builder) { builder.startTable(7); }
+  public static void startCZMModel(FlatBufferBuilder builder) { builder.startTable(14); }
   public static void addShow(FlatBufferBuilder builder, boolean SHOW) { builder.addBoolean(0, SHOW, false); }
   public static void addGltf(FlatBufferBuilder builder, int GLTFOffset) { builder.addOffset(1, GLTFOffset, 0); }
   public static void addScale(FlatBufferBuilder builder, double SCALE) { builder.addDouble(2, SCALE, 0.0); }
@@ -87,6 +134,13 @@ public final class CZMModel extends Table {
   public static void addMaximumScale(FlatBufferBuilder builder, double MAXIMUM_SCALE) { builder.addDouble(4, MAXIMUM_SCALE, 0.0); }
   public static void addHeightReference(FlatBufferBuilder builder, byte HEIGHT_REFERENCE) { builder.addByte(5, HEIGHT_REFERENCE, 0); }
   public static void addColor(FlatBufferBuilder builder, int COLOROffset) { builder.addOffset(6, COLOROffset, 0); }
+  public static void addIncrementallyLoadTextures(FlatBufferBuilder builder, boolean INCREMENTALLY_LOAD_TEXTURES) { builder.addBoolean(7, INCREMENTALLY_LOAD_TEXTURES, false); }
+  public static void addRunAnimations(FlatBufferBuilder builder, boolean RUN_ANIMATIONS) { builder.addBoolean(8, RUN_ANIMATIONS, false); }
+  public static void addShadows(FlatBufferBuilder builder, int SHADOWSOffset) { builder.addOffset(9, SHADOWSOffset, 0); }
+  public static void addSilhouetteColor(FlatBufferBuilder builder, int SILHOUETTE_COLOROffset) { builder.addOffset(10, SILHOUETTE_COLOROffset, 0); }
+  public static void addSilhouetteSize(FlatBufferBuilder builder, double SILHOUETTE_SIZE) { builder.addDouble(11, SILHOUETTE_SIZE, 0.0); }
+  public static void addColorBlendMode(FlatBufferBuilder builder, int COLOR_BLEND_MODEOffset) { builder.addOffset(12, COLOR_BLEND_MODEOffset, 0); }
+  public static void addColorBlendAmount(FlatBufferBuilder builder, double COLOR_BLEND_AMOUNT) { builder.addDouble(13, COLOR_BLEND_AMOUNT, 0.0); }
   public static int endCZMModel(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

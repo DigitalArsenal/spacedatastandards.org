@@ -126,7 +126,7 @@ func (rcv *CZMPolyline) MutateWIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
 }
 
-/// Line color (solid color material)
+/// Line color (solid color material, legacy)
 func (rcv *CZMPolyline) COLOR(obj *CZMColor) *CZMColor {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -140,7 +140,7 @@ func (rcv *CZMPolyline) COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
-/// Line color (solid color material)
+/// Line color (solid color material, legacy)
 /// Whether to clamp to ground
 func (rcv *CZMPolyline) CLAMP_TO_GROUND() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
@@ -155,8 +155,96 @@ func (rcv *CZMPolyline) MutateCLAMP_TO_GROUND(n bool) bool {
 	return rcv._tab.MutateBoolSlot(14, n)
 }
 
+/// Arc type
+func (rcv *CZMPolyline) ARC_TYPE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Arc type
+/// Granularity in radians
+func (rcv *CZMPolyline) GRANULARITY() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Granularity in radians
+func (rcv *CZMPolyline) MutateGRANULARITY(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+/// Full polyline material
+func (rcv *CZMPolyline) MATERIAL(obj *CZMPolylineMaterial) *CZMPolylineMaterial {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CZMPolylineMaterial)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// Full polyline material
+/// Shadow mode
+func (rcv *CZMPolyline) SHADOWS() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Shadow mode
+/// Depth fail material
+func (rcv *CZMPolyline) DEPTH_FAIL_MATERIAL(obj *CZMPolylineMaterial) *CZMPolylineMaterial {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CZMPolylineMaterial)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// Depth fail material
+/// Classification type
+func (rcv *CZMPolyline) CLASSIFICATION_TYPE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Classification type
+/// Z-index for ordering
+func (rcv *CZMPolyline) Z_INDEX() int32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Z-index for ordering
+func (rcv *CZMPolyline) MutateZ_INDEX(n int32) bool {
+	return rcv._tab.MutateInt32Slot(28, n)
+}
+
 func CZMPolylineStart(builder *flatbuffers.Builder) {
-	builder.StartObject(6)
+	builder.StartObject(13)
 }
 func CZMPolylineAddSHOW(builder *flatbuffers.Builder, SHOW bool) {
 	builder.PrependBoolSlot(0, SHOW, false)
@@ -181,6 +269,27 @@ func CZMPolylineAddCOLOR(builder *flatbuffers.Builder, COLOR flatbuffers.UOffset
 }
 func CZMPolylineAddCLAMP_TO_GROUND(builder *flatbuffers.Builder, CLAMP_TO_GROUND bool) {
 	builder.PrependBoolSlot(5, CLAMP_TO_GROUND, false)
+}
+func CZMPolylineAddARC_TYPE(builder *flatbuffers.Builder, ARC_TYPE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(ARC_TYPE), 0)
+}
+func CZMPolylineAddGRANULARITY(builder *flatbuffers.Builder, GRANULARITY float64) {
+	builder.PrependFloat64Slot(7, GRANULARITY, 0.0)
+}
+func CZMPolylineAddMATERIAL(builder *flatbuffers.Builder, MATERIAL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(MATERIAL), 0)
+}
+func CZMPolylineAddSHADOWS(builder *flatbuffers.Builder, SHADOWS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(SHADOWS), 0)
+}
+func CZMPolylineAddDEPTH_FAIL_MATERIAL(builder *flatbuffers.Builder, DEPTH_FAIL_MATERIAL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(DEPTH_FAIL_MATERIAL), 0)
+}
+func CZMPolylineAddCLASSIFICATION_TYPE(builder *flatbuffers.Builder, CLASSIFICATION_TYPE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(CLASSIFICATION_TYPE), 0)
+}
+func CZMPolylineAddZ_INDEX(builder *flatbuffers.Builder, Z_INDEX int32) {
+	builder.PrependInt32Slot(12, Z_INDEX, 0)
 }
 func CZMPolylineEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

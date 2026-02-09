@@ -41,7 +41,7 @@ class GJNFeature extends Table
         return $this;
     }
 
-    /// Feature identifier (optional)
+    /// Feature identifier (optional, string form)
     public function getID()
     {
         $o = $this->__offset(4);
@@ -76,25 +76,78 @@ class GJNFeature extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Numeric feature identifier (use when ID_IS_NUMERIC is true)
+    /**
+     * @return double
+     */
+    public function getNUM_ID()
+    {
+        $o = $this->__offset(10);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// True if the feature id is numeric rather than string
+    /**
+     * @return bool
+     */
+    public function getID_IS_NUMERIC()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// True if the feature has a geometry (false means geometry was JSON null)
+    /**
+     * @return bool
+     */
+    public function getHAS_GEOMETRY()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// True if properties was JSON null (vs empty object)
+    /**
+     * @return bool
+     */
+    public function getPROPERTIES_IS_NULL()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Bounding box (optional, per RFC 7946 Section 5)
+    public function getBBOX()
+    {
+        $obj = new GJNBoundingBox();
+        $o = $this->__offset(18);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startGJNFeature(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(3);
+        $builder->StartObject(8);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return GJNFeature
      */
-    public static function createGJNFeature(FlatBufferBuilder $builder, $ID, $GEOMETRY, $PROPERTIES)
+    public static function createGJNFeature(FlatBufferBuilder $builder, $ID, $GEOMETRY, $PROPERTIES, $NUM_ID, $ID_IS_NUMERIC, $HAS_GEOMETRY, $PROPERTIES_IS_NULL, $BBOX)
     {
-        $builder->startObject(3);
+        $builder->startObject(8);
         self::addID($builder, $ID);
         self::addGEOMETRY($builder, $GEOMETRY);
         self::addPROPERTIES($builder, $PROPERTIES);
+        self::addNUM_ID($builder, $NUM_ID);
+        self::addID_IS_NUMERIC($builder, $ID_IS_NUMERIC);
+        self::addHAS_GEOMETRY($builder, $HAS_GEOMETRY);
+        self::addPROPERTIES_IS_NULL($builder, $PROPERTIES_IS_NULL);
+        self::addBBOX($builder, $BBOX);
         $o = $builder->endObject();
         return $o;
     }
@@ -151,6 +204,56 @@ class GJNFeature extends Table
     public static function startPROPERTIESVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addNUM_ID(FlatBufferBuilder $builder, $NUM_ID)
+    {
+        $builder->addDoubleX(3, $NUM_ID, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addID_IS_NUMERIC(FlatBufferBuilder $builder, $ID_IS_NUMERIC)
+    {
+        $builder->addBoolX(4, $ID_IS_NUMERIC, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_GEOMETRY(FlatBufferBuilder $builder, $HAS_GEOMETRY)
+    {
+        $builder->addBoolX(5, $HAS_GEOMETRY, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addPROPERTIES_IS_NULL(FlatBufferBuilder $builder, $PROPERTIES_IS_NULL)
+    {
+        $builder->addBoolX(6, $PROPERTIES_IS_NULL, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addBBOX(FlatBufferBuilder $builder, $BBOX)
+    {
+        $builder->addOffsetX(7, $BBOX, 0);
     }
 
     /**

@@ -101,7 +101,7 @@ class CZMPolyline extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Line color (solid color material)
+    /// Line color (solid color material, legacy)
     public function getCOLOR()
     {
         $obj = new CZMColor();
@@ -119,28 +119,92 @@ class CZMPolyline extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Arc type
+    public function getARC_TYPE()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Granularity in radians
+    /**
+     * @return double
+     */
+    public function getGRANULARITY()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Full polyline material
+    public function getMATERIAL()
+    {
+        $obj = new CZMPolylineMaterial();
+        $o = $this->__offset(20);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Shadow mode
+    public function getSHADOWS()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Depth fail material
+    public function getDEPTH_FAIL_MATERIAL()
+    {
+        $obj = new CZMPolylineMaterial();
+        $o = $this->__offset(24);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Classification type
+    public function getCLASSIFICATION_TYPE()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Z-index for ordering
+    /**
+     * @return int
+     */
+    public function getZ_INDEX()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCZMPolyline(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(6);
+        $builder->StartObject(13);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CZMPolyline
      */
-    public static function createCZMPolyline(FlatBufferBuilder $builder, $SHOW, $POSITIONS_CARTOGRAPHIC_DEGREES, $POSITIONS_CARTESIAN, $WIDTH, $COLOR, $CLAMP_TO_GROUND)
+    public static function createCZMPolyline(FlatBufferBuilder $builder, $SHOW, $POSITIONS_CARTOGRAPHIC_DEGREES, $POSITIONS_CARTESIAN, $WIDTH, $COLOR, $CLAMP_TO_GROUND, $ARC_TYPE, $GRANULARITY, $MATERIAL, $SHADOWS, $DEPTH_FAIL_MATERIAL, $CLASSIFICATION_TYPE, $Z_INDEX)
     {
-        $builder->startObject(6);
+        $builder->startObject(13);
         self::addSHOW($builder, $SHOW);
         self::addPOSITIONS_CARTOGRAPHIC_DEGREES($builder, $POSITIONS_CARTOGRAPHIC_DEGREES);
         self::addPOSITIONS_CARTESIAN($builder, $POSITIONS_CARTESIAN);
         self::addWIDTH($builder, $WIDTH);
         self::addCOLOR($builder, $COLOR);
         self::addCLAMP_TO_GROUND($builder, $CLAMP_TO_GROUND);
+        self::addARC_TYPE($builder, $ARC_TYPE);
+        self::addGRANULARITY($builder, $GRANULARITY);
+        self::addMATERIAL($builder, $MATERIAL);
+        self::addSHADOWS($builder, $SHADOWS);
+        self::addDEPTH_FAIL_MATERIAL($builder, $DEPTH_FAIL_MATERIAL);
+        self::addCLASSIFICATION_TYPE($builder, $CLASSIFICATION_TYPE);
+        self::addZ_INDEX($builder, $Z_INDEX);
         $o = $builder->endObject();
         return $o;
     }
@@ -251,6 +315,76 @@ class CZMPolyline extends Table
     public static function addCLAMP_TO_GROUND(FlatBufferBuilder $builder, $CLAMP_TO_GROUND)
     {
         $builder->addBoolX(5, $CLAMP_TO_GROUND, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addARC_TYPE(FlatBufferBuilder $builder, $ARC_TYPE)
+    {
+        $builder->addOffsetX(6, $ARC_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addGRANULARITY(FlatBufferBuilder $builder, $GRANULARITY)
+    {
+        $builder->addDoubleX(7, $GRANULARITY, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addMATERIAL(FlatBufferBuilder $builder, $MATERIAL)
+    {
+        $builder->addOffsetX(8, $MATERIAL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSHADOWS(FlatBufferBuilder $builder, $SHADOWS)
+    {
+        $builder->addOffsetX(9, $SHADOWS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addDEPTH_FAIL_MATERIAL(FlatBufferBuilder $builder, $DEPTH_FAIL_MATERIAL)
+    {
+        $builder->addOffsetX(10, $DEPTH_FAIL_MATERIAL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCLASSIFICATION_TYPE(FlatBufferBuilder $builder, $CLASSIFICATION_TYPE)
+    {
+        $builder->addOffsetX(11, $CLASSIFICATION_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addZ_INDEX(FlatBufferBuilder $builder, $Z_INDEX)
+    {
+        $builder->addIntX(12, $Z_INDEX, 0);
     }
 
     /**

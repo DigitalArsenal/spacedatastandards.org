@@ -113,6 +113,18 @@ class GJNGeometry : Table() {
         get() {
             val o = __offset(14); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Bounding box (optional, per RFC 7946 Section 5)
+     */
+    val BBOX : GJNBoundingBox? get() = BBOX(GJNBoundingBox())
+    fun BBOX(obj: GJNBoundingBox) : GJNBoundingBox? {
+        val o = __offset(16)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsGJNGeometry(_bb: ByteBuffer): GJNGeometry = getRootAsGJNGeometry(_bb, GJNGeometry())
@@ -120,8 +132,9 @@ class GJNGeometry : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createGJNGeometry(builder: FlatBufferBuilder, TYPE: Byte, POINTOffset: Int, POSITIONSOffset: Int, RINGSOffset: Int, POLYGON_RINGSOffset: Int, GEOMETRIESOffset: Int) : Int {
-            builder.startTable(6)
+        fun createGJNGeometry(builder: FlatBufferBuilder, TYPE: Byte, POINTOffset: Int, POSITIONSOffset: Int, RINGSOffset: Int, POLYGON_RINGSOffset: Int, GEOMETRIESOffset: Int, BBOXOffset: Int) : Int {
+            builder.startTable(7)
+            addBBOX(builder, BBOXOffset)
             addGEOMETRIES(builder, GEOMETRIESOffset)
             addPOLYGON_RINGS(builder, POLYGON_RINGSOffset)
             addRINGS(builder, RINGSOffset)
@@ -130,7 +143,7 @@ class GJNGeometry : Table() {
             addTYPE(builder, TYPE)
             return endGJNGeometry(builder)
         }
-        fun startGJNGeometry(builder: FlatBufferBuilder) = builder.startTable(6)
+        fun startGJNGeometry(builder: FlatBufferBuilder) = builder.startTable(7)
         fun addTYPE(builder: FlatBufferBuilder, TYPE: Byte) = builder.addByte(0, TYPE, 0)
         fun addPOINT(builder: FlatBufferBuilder, POINT: Int) = builder.addOffset(1, POINT, 0)
         fun addPOSITIONS(builder: FlatBufferBuilder, POSITIONS: Int) = builder.addOffset(2, POSITIONS, 0)
@@ -169,6 +182,7 @@ class GJNGeometry : Table() {
             return builder.endVector()
         }
         fun startGeometriesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addBBOX(builder: FlatBufferBuilder, BBOX: Int) = builder.addOffset(6, BBOX, 0)
         fun endGJNGeometry(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

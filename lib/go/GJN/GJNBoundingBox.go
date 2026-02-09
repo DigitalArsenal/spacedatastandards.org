@@ -126,8 +126,22 @@ func (rcv *GJNBoundingBox) MutateMAX_ALTITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
 }
 
+/// True if the bbox includes altitude (6 values vs 4)
+func (rcv *GJNBoundingBox) HAS_ALTITUDE() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+/// True if the bbox includes altitude (6 values vs 4)
+func (rcv *GJNBoundingBox) MutateHAS_ALTITUDE(n bool) bool {
+	return rcv._tab.MutateBoolSlot(16, n)
+}
+
 func GJNBoundingBoxStart(builder *flatbuffers.Builder) {
-	builder.StartObject(6)
+	builder.StartObject(7)
 }
 func GJNBoundingBoxAddWEST(builder *flatbuffers.Builder, WEST float64) {
 	builder.PrependFloat64Slot(0, WEST, 0.0)
@@ -146,6 +160,9 @@ func GJNBoundingBoxAddMIN_ALTITUDE(builder *flatbuffers.Builder, MIN_ALTITUDE fl
 }
 func GJNBoundingBoxAddMAX_ALTITUDE(builder *flatbuffers.Builder, MAX_ALTITUDE float64) {
 	builder.PrependFloat64Slot(5, MAX_ALTITUDE, 0.0)
+}
+func GJNBoundingBoxAddHAS_ALTITUDE(builder *flatbuffers.Builder, HAS_ALTITUDE bool) {
+	builder.PrependBoolSlot(6, HAS_ALTITUDE, false)
 }
 func GJNBoundingBoxEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

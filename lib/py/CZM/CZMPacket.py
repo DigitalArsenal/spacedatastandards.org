@@ -253,8 +253,246 @@ class CZMPacket(object):
             return obj
         return None
 
+    # Orientation (quaternion)
+    # CZMPacket
+    def ORIENTATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMOrientation import CZMOrientation
+            obj = CZMOrientation()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Suggested camera offset
+    # CZMPacket
+    def VIEW_FROM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMViewFrom import CZMViewFrom
+            obj = CZMViewFrom()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Whether to delete this object
+    # CZMPacket
+    def DELETE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Box properties
+    # CZMPacket
+    def BOX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMBox import CZMBox
+            obj = CZMBox()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Corridor properties
+    # CZMPacket
+    def CORRIDOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMCorridor import CZMCorridor
+            obj = CZMCorridor()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Cylinder properties
+    # CZMPacket
+    def CYLINDER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMCylinder import CZMCylinder
+            obj = CZMCylinder()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Ellipsoid properties
+    # CZMPacket
+    def ELLIPSOID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMEllipsoid import CZMEllipsoid
+            obj = CZMEllipsoid()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Polyline volume properties
+    # CZMPacket
+    def POLYLINE_VOLUME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMPolylineVolume import CZMPolylineVolume
+            obj = CZMPolylineVolume()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Rectangle properties
+    # CZMPacket
+    def RECTANGLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMRectangle import CZMRectangle
+            obj = CZMRectangle()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # 3D Tileset properties
+    # CZMPacket
+    def TILESET(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMTileset import CZMTileset
+            obj = CZMTileset()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Wall properties
+    # CZMPacket
+    def WALL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMWall import CZMWall
+            obj = CZMWall()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Position interpolation settings
+    # CZMPacket
+    def POSITION_INTERPOLATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMInterpolation import CZMInterpolation
+            obj = CZMInterpolation()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Position reference frame (FIXED or INERTIAL)
+    # CZMPacket
+    def POSITION_REFERENCE_FRAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Position reference to another entity
+    # CZMPacket
+    def POSITION_REFERENCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Orientation epoch (ISO 8601)
+    # CZMPacket
+    def ORIENTATION_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Orientation sampled data [t, x, y, z, w, t, x, y, z, w, ...]
+    # CZMPacket
+    def ORIENTATION_ARRAY(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # CZMPacket
+    def ORIENTATION_ARRAYAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # CZMPacket
+    def ORIENTATION_ARRAYLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CZMPacket
+    def ORIENTATION_ARRAYIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        return o == 0
+
+    # Orientation interpolation settings
+    # CZMPacket
+    def ORIENTATION_INTERPOLATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMInterpolation import CZMInterpolation
+            obj = CZMInterpolation()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Orientation reference to another entity
+    # CZMPacket
+    def ORIENTATION_REFERENCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Generic bag for all time-dynamic (non-static) properties
+    # CZMPacket
+    def DYNAMIC_PROPERTIES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from CZMDynamicProperty import CZMDynamicProperty
+            obj = CZMDynamicProperty()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # CZMPacket
+    def DYNAMIC_PROPERTIESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CZMPacket
+    def DYNAMIC_PROPERTIESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        return o == 0
+
 def CZMPacketStart(builder):
-    builder.StartObject(18)
+    builder.StartObject(37)
 
 def Start(builder):
     CZMPacketStart(builder)
@@ -379,6 +617,132 @@ def CZMPacketAddELLIPSE(builder, ELLIPSE):
 def AddELLIPSE(builder, ELLIPSE):
     CZMPacketAddELLIPSE(builder, ELLIPSE)
 
+def CZMPacketAddORIENTATION(builder, ORIENTATION):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(ORIENTATION), 0)
+
+def AddORIENTATION(builder, ORIENTATION):
+    CZMPacketAddORIENTATION(builder, ORIENTATION)
+
+def CZMPacketAddVIEW_FROM(builder, VIEW_FROM):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(VIEW_FROM), 0)
+
+def AddVIEW_FROM(builder, VIEW_FROM):
+    CZMPacketAddVIEW_FROM(builder, VIEW_FROM)
+
+def CZMPacketAddDELETE(builder, DELETE):
+    builder.PrependBoolSlot(20, DELETE, 0)
+
+def AddDELETE(builder, DELETE):
+    CZMPacketAddDELETE(builder, DELETE)
+
+def CZMPacketAddBOX(builder, BOX):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(BOX), 0)
+
+def AddBOX(builder, BOX):
+    CZMPacketAddBOX(builder, BOX)
+
+def CZMPacketAddCORRIDOR(builder, CORRIDOR):
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(CORRIDOR), 0)
+
+def AddCORRIDOR(builder, CORRIDOR):
+    CZMPacketAddCORRIDOR(builder, CORRIDOR)
+
+def CZMPacketAddCYLINDER(builder, CYLINDER):
+    builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(CYLINDER), 0)
+
+def AddCYLINDER(builder, CYLINDER):
+    CZMPacketAddCYLINDER(builder, CYLINDER)
+
+def CZMPacketAddELLIPSOID(builder, ELLIPSOID):
+    builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(ELLIPSOID), 0)
+
+def AddELLIPSOID(builder, ELLIPSOID):
+    CZMPacketAddELLIPSOID(builder, ELLIPSOID)
+
+def CZMPacketAddPOLYLINE_VOLUME(builder, POLYLINE_VOLUME):
+    builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(POLYLINE_VOLUME), 0)
+
+def AddPOLYLINE_VOLUME(builder, POLYLINE_VOLUME):
+    CZMPacketAddPOLYLINE_VOLUME(builder, POLYLINE_VOLUME)
+
+def CZMPacketAddRECTANGLE(builder, RECTANGLE):
+    builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(RECTANGLE), 0)
+
+def AddRECTANGLE(builder, RECTANGLE):
+    CZMPacketAddRECTANGLE(builder, RECTANGLE)
+
+def CZMPacketAddTILESET(builder, TILESET):
+    builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(TILESET), 0)
+
+def AddTILESET(builder, TILESET):
+    CZMPacketAddTILESET(builder, TILESET)
+
+def CZMPacketAddWALL(builder, WALL):
+    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(WALL), 0)
+
+def AddWALL(builder, WALL):
+    CZMPacketAddWALL(builder, WALL)
+
+def CZMPacketAddPOSITION_INTERPOLATION(builder, POSITION_INTERPOLATION):
+    builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(POSITION_INTERPOLATION), 0)
+
+def AddPOSITION_INTERPOLATION(builder, POSITION_INTERPOLATION):
+    CZMPacketAddPOSITION_INTERPOLATION(builder, POSITION_INTERPOLATION)
+
+def CZMPacketAddPOSITION_REFERENCE_FRAME(builder, POSITION_REFERENCE_FRAME):
+    builder.PrependUOffsetTRelativeSlot(30, flatbuffers.number_types.UOffsetTFlags.py_type(POSITION_REFERENCE_FRAME), 0)
+
+def AddPOSITION_REFERENCE_FRAME(builder, POSITION_REFERENCE_FRAME):
+    CZMPacketAddPOSITION_REFERENCE_FRAME(builder, POSITION_REFERENCE_FRAME)
+
+def CZMPacketAddPOSITION_REFERENCE(builder, POSITION_REFERENCE):
+    builder.PrependUOffsetTRelativeSlot(31, flatbuffers.number_types.UOffsetTFlags.py_type(POSITION_REFERENCE), 0)
+
+def AddPOSITION_REFERENCE(builder, POSITION_REFERENCE):
+    CZMPacketAddPOSITION_REFERENCE(builder, POSITION_REFERENCE)
+
+def CZMPacketAddORIENTATION_EPOCH(builder, ORIENTATION_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(ORIENTATION_EPOCH), 0)
+
+def AddORIENTATION_EPOCH(builder, ORIENTATION_EPOCH):
+    CZMPacketAddORIENTATION_EPOCH(builder, ORIENTATION_EPOCH)
+
+def CZMPacketAddORIENTATION_ARRAY(builder, ORIENTATION_ARRAY):
+    builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(ORIENTATION_ARRAY), 0)
+
+def AddORIENTATION_ARRAY(builder, ORIENTATION_ARRAY):
+    CZMPacketAddORIENTATION_ARRAY(builder, ORIENTATION_ARRAY)
+
+def CZMPacketStartORIENTATION_ARRAYVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartORIENTATION_ARRAYVector(builder, numElems):
+    return CZMPacketStartORIENTATION_ARRAYVector(builder, numElems)
+
+def CZMPacketAddORIENTATION_INTERPOLATION(builder, ORIENTATION_INTERPOLATION):
+    builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(ORIENTATION_INTERPOLATION), 0)
+
+def AddORIENTATION_INTERPOLATION(builder, ORIENTATION_INTERPOLATION):
+    CZMPacketAddORIENTATION_INTERPOLATION(builder, ORIENTATION_INTERPOLATION)
+
+def CZMPacketAddORIENTATION_REFERENCE(builder, ORIENTATION_REFERENCE):
+    builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(ORIENTATION_REFERENCE), 0)
+
+def AddORIENTATION_REFERENCE(builder, ORIENTATION_REFERENCE):
+    CZMPacketAddORIENTATION_REFERENCE(builder, ORIENTATION_REFERENCE)
+
+def CZMPacketAddDYNAMIC_PROPERTIES(builder, DYNAMIC_PROPERTIES):
+    builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(DYNAMIC_PROPERTIES), 0)
+
+def AddDYNAMIC_PROPERTIES(builder, DYNAMIC_PROPERTIES):
+    CZMPacketAddDYNAMIC_PROPERTIES(builder, DYNAMIC_PROPERTIES)
+
+def CZMPacketStartDYNAMIC_PROPERTIESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartDYNAMIC_PROPERTIESVector(builder, numElems):
+    return CZMPacketStartDYNAMIC_PROPERTIESVector(builder, numElems)
+
 def CZMPacketEnd(builder):
     return builder.EndObject()
 
@@ -386,15 +750,27 @@ def End(builder):
     return CZMPacketEnd(builder)
 
 import CZMBillboard
+import CZMBox
 import CZMCartesian
 import CZMCartographicDegrees
+import CZMCorridor
+import CZMCylinder
+import CZMDynamicProperty
 import CZMEllipse
+import CZMEllipsoid
+import CZMInterpolation
 import CZMLabel
 import CZMModel
+import CZMOrientation
 import CZMPath
 import CZMPoint
 import CZMPolygon
 import CZMPolyline
+import CZMPolylineVolume
+import CZMRectangle
+import CZMTileset
+import CZMViewFrom
+import CZMWall
 try:
     from typing import List, Optional
 except:
@@ -422,6 +798,25 @@ class CZMPacketT(object):
         self.MODEL = None  # type: Optional[CZMModel.CZMModelT]
         self.PATH = None  # type: Optional[CZMPath.CZMPathT]
         self.ELLIPSE = None  # type: Optional[CZMEllipse.CZMEllipseT]
+        self.ORIENTATION = None  # type: Optional[CZMOrientation.CZMOrientationT]
+        self.VIEW_FROM = None  # type: Optional[CZMViewFrom.CZMViewFromT]
+        self.DELETE = False  # type: bool
+        self.BOX = None  # type: Optional[CZMBox.CZMBoxT]
+        self.CORRIDOR = None  # type: Optional[CZMCorridor.CZMCorridorT]
+        self.CYLINDER = None  # type: Optional[CZMCylinder.CZMCylinderT]
+        self.ELLIPSOID = None  # type: Optional[CZMEllipsoid.CZMEllipsoidT]
+        self.POLYLINE_VOLUME = None  # type: Optional[CZMPolylineVolume.CZMPolylineVolumeT]
+        self.RECTANGLE = None  # type: Optional[CZMRectangle.CZMRectangleT]
+        self.TILESET = None  # type: Optional[CZMTileset.CZMTilesetT]
+        self.WALL = None  # type: Optional[CZMWall.CZMWallT]
+        self.POSITION_INTERPOLATION = None  # type: Optional[CZMInterpolation.CZMInterpolationT]
+        self.POSITION_REFERENCE_FRAME = None  # type: str
+        self.POSITION_REFERENCE = None  # type: str
+        self.ORIENTATION_EPOCH = None  # type: str
+        self.ORIENTATION_ARRAY = None  # type: List[float]
+        self.ORIENTATION_INTERPOLATION = None  # type: Optional[CZMInterpolation.CZMInterpolationT]
+        self.ORIENTATION_REFERENCE = None  # type: str
+        self.DYNAMIC_PROPERTIES = None  # type: List[CZMDynamicProperty.CZMDynamicPropertyT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -484,6 +879,50 @@ class CZMPacketT(object):
             self.PATH = CZMPath.CZMPathT.InitFromObj(czmpacket.PATH())
         if czmpacket.ELLIPSE() is not None:
             self.ELLIPSE = CZMEllipse.CZMEllipseT.InitFromObj(czmpacket.ELLIPSE())
+        if czmpacket.ORIENTATION() is not None:
+            self.ORIENTATION = CZMOrientation.CZMOrientationT.InitFromObj(czmpacket.ORIENTATION())
+        if czmpacket.VIEW_FROM() is not None:
+            self.VIEW_FROM = CZMViewFrom.CZMViewFromT.InitFromObj(czmpacket.VIEW_FROM())
+        self.DELETE = czmpacket.DELETE()
+        if czmpacket.BOX() is not None:
+            self.BOX = CZMBox.CZMBoxT.InitFromObj(czmpacket.BOX())
+        if czmpacket.CORRIDOR() is not None:
+            self.CORRIDOR = CZMCorridor.CZMCorridorT.InitFromObj(czmpacket.CORRIDOR())
+        if czmpacket.CYLINDER() is not None:
+            self.CYLINDER = CZMCylinder.CZMCylinderT.InitFromObj(czmpacket.CYLINDER())
+        if czmpacket.ELLIPSOID() is not None:
+            self.ELLIPSOID = CZMEllipsoid.CZMEllipsoidT.InitFromObj(czmpacket.ELLIPSOID())
+        if czmpacket.POLYLINE_VOLUME() is not None:
+            self.POLYLINE_VOLUME = CZMPolylineVolume.CZMPolylineVolumeT.InitFromObj(czmpacket.POLYLINE_VOLUME())
+        if czmpacket.RECTANGLE() is not None:
+            self.RECTANGLE = CZMRectangle.CZMRectangleT.InitFromObj(czmpacket.RECTANGLE())
+        if czmpacket.TILESET() is not None:
+            self.TILESET = CZMTileset.CZMTilesetT.InitFromObj(czmpacket.TILESET())
+        if czmpacket.WALL() is not None:
+            self.WALL = CZMWall.CZMWallT.InitFromObj(czmpacket.WALL())
+        if czmpacket.POSITION_INTERPOLATION() is not None:
+            self.POSITION_INTERPOLATION = CZMInterpolation.CZMInterpolationT.InitFromObj(czmpacket.POSITION_INTERPOLATION())
+        self.POSITION_REFERENCE_FRAME = czmpacket.POSITION_REFERENCE_FRAME()
+        self.POSITION_REFERENCE = czmpacket.POSITION_REFERENCE()
+        self.ORIENTATION_EPOCH = czmpacket.ORIENTATION_EPOCH()
+        if not czmpacket.ORIENTATION_ARRAYIsNone():
+            if np is None:
+                self.ORIENTATION_ARRAY = []
+                for i in range(czmpacket.ORIENTATION_ARRAYLength()):
+                    self.ORIENTATION_ARRAY.append(czmpacket.ORIENTATION_ARRAY(i))
+            else:
+                self.ORIENTATION_ARRAY = czmpacket.ORIENTATION_ARRAYAsNumpy()
+        if czmpacket.ORIENTATION_INTERPOLATION() is not None:
+            self.ORIENTATION_INTERPOLATION = CZMInterpolation.CZMInterpolationT.InitFromObj(czmpacket.ORIENTATION_INTERPOLATION())
+        self.ORIENTATION_REFERENCE = czmpacket.ORIENTATION_REFERENCE()
+        if not czmpacket.DYNAMIC_PROPERTIESIsNone():
+            self.DYNAMIC_PROPERTIES = []
+            for i in range(czmpacket.DYNAMIC_PROPERTIESLength()):
+                if czmpacket.DYNAMIC_PROPERTIES(i) is None:
+                    self.DYNAMIC_PROPERTIES.append(None)
+                else:
+                    cZMDynamicProperty_ = CZMDynamicProperty.CZMDynamicPropertyT.InitFromObj(czmpacket.DYNAMIC_PROPERTIES(i))
+                    self.DYNAMIC_PROPERTIES.append(cZMDynamicProperty_)
 
     # CZMPacketT
     def Pack(self, builder):
@@ -535,6 +974,54 @@ class CZMPacketT(object):
             PATH = self.PATH.Pack(builder)
         if self.ELLIPSE is not None:
             ELLIPSE = self.ELLIPSE.Pack(builder)
+        if self.ORIENTATION is not None:
+            ORIENTATION = self.ORIENTATION.Pack(builder)
+        if self.VIEW_FROM is not None:
+            VIEW_FROM = self.VIEW_FROM.Pack(builder)
+        if self.BOX is not None:
+            BOX = self.BOX.Pack(builder)
+        if self.CORRIDOR is not None:
+            CORRIDOR = self.CORRIDOR.Pack(builder)
+        if self.CYLINDER is not None:
+            CYLINDER = self.CYLINDER.Pack(builder)
+        if self.ELLIPSOID is not None:
+            ELLIPSOID = self.ELLIPSOID.Pack(builder)
+        if self.POLYLINE_VOLUME is not None:
+            POLYLINE_VOLUME = self.POLYLINE_VOLUME.Pack(builder)
+        if self.RECTANGLE is not None:
+            RECTANGLE = self.RECTANGLE.Pack(builder)
+        if self.TILESET is not None:
+            TILESET = self.TILESET.Pack(builder)
+        if self.WALL is not None:
+            WALL = self.WALL.Pack(builder)
+        if self.POSITION_INTERPOLATION is not None:
+            POSITION_INTERPOLATION = self.POSITION_INTERPOLATION.Pack(builder)
+        if self.POSITION_REFERENCE_FRAME is not None:
+            POSITION_REFERENCE_FRAME = builder.CreateString(self.POSITION_REFERENCE_FRAME)
+        if self.POSITION_REFERENCE is not None:
+            POSITION_REFERENCE = builder.CreateString(self.POSITION_REFERENCE)
+        if self.ORIENTATION_EPOCH is not None:
+            ORIENTATION_EPOCH = builder.CreateString(self.ORIENTATION_EPOCH)
+        if self.ORIENTATION_ARRAY is not None:
+            if np is not None and type(self.ORIENTATION_ARRAY) is np.ndarray:
+                ORIENTATION_ARRAY = builder.CreateNumpyVector(self.ORIENTATION_ARRAY)
+            else:
+                CZMPacketStartORIENTATION_ARRAYVector(builder, len(self.ORIENTATION_ARRAY))
+                for i in reversed(range(len(self.ORIENTATION_ARRAY))):
+                    builder.PrependFloat64(self.ORIENTATION_ARRAY[i])
+                ORIENTATION_ARRAY = builder.EndVector()
+        if self.ORIENTATION_INTERPOLATION is not None:
+            ORIENTATION_INTERPOLATION = self.ORIENTATION_INTERPOLATION.Pack(builder)
+        if self.ORIENTATION_REFERENCE is not None:
+            ORIENTATION_REFERENCE = builder.CreateString(self.ORIENTATION_REFERENCE)
+        if self.DYNAMIC_PROPERTIES is not None:
+            DYNAMIC_PROPERTIESlist = []
+            for i in range(len(self.DYNAMIC_PROPERTIES)):
+                DYNAMIC_PROPERTIESlist.append(self.DYNAMIC_PROPERTIES[i].Pack(builder))
+            CZMPacketStartDYNAMIC_PROPERTIESVector(builder, len(self.DYNAMIC_PROPERTIES))
+            for i in reversed(range(len(self.DYNAMIC_PROPERTIES))):
+                builder.PrependUOffsetTRelative(DYNAMIC_PROPERTIESlist[i])
+            DYNAMIC_PROPERTIES = builder.EndVector()
         CZMPacketStart(builder)
         if self.ID is not None:
             CZMPacketAddID(builder, ID)
@@ -572,5 +1059,42 @@ class CZMPacketT(object):
             CZMPacketAddPATH(builder, PATH)
         if self.ELLIPSE is not None:
             CZMPacketAddELLIPSE(builder, ELLIPSE)
+        if self.ORIENTATION is not None:
+            CZMPacketAddORIENTATION(builder, ORIENTATION)
+        if self.VIEW_FROM is not None:
+            CZMPacketAddVIEW_FROM(builder, VIEW_FROM)
+        CZMPacketAddDELETE(builder, self.DELETE)
+        if self.BOX is not None:
+            CZMPacketAddBOX(builder, BOX)
+        if self.CORRIDOR is not None:
+            CZMPacketAddCORRIDOR(builder, CORRIDOR)
+        if self.CYLINDER is not None:
+            CZMPacketAddCYLINDER(builder, CYLINDER)
+        if self.ELLIPSOID is not None:
+            CZMPacketAddELLIPSOID(builder, ELLIPSOID)
+        if self.POLYLINE_VOLUME is not None:
+            CZMPacketAddPOLYLINE_VOLUME(builder, POLYLINE_VOLUME)
+        if self.RECTANGLE is not None:
+            CZMPacketAddRECTANGLE(builder, RECTANGLE)
+        if self.TILESET is not None:
+            CZMPacketAddTILESET(builder, TILESET)
+        if self.WALL is not None:
+            CZMPacketAddWALL(builder, WALL)
+        if self.POSITION_INTERPOLATION is not None:
+            CZMPacketAddPOSITION_INTERPOLATION(builder, POSITION_INTERPOLATION)
+        if self.POSITION_REFERENCE_FRAME is not None:
+            CZMPacketAddPOSITION_REFERENCE_FRAME(builder, POSITION_REFERENCE_FRAME)
+        if self.POSITION_REFERENCE is not None:
+            CZMPacketAddPOSITION_REFERENCE(builder, POSITION_REFERENCE)
+        if self.ORIENTATION_EPOCH is not None:
+            CZMPacketAddORIENTATION_EPOCH(builder, ORIENTATION_EPOCH)
+        if self.ORIENTATION_ARRAY is not None:
+            CZMPacketAddORIENTATION_ARRAY(builder, ORIENTATION_ARRAY)
+        if self.ORIENTATION_INTERPOLATION is not None:
+            CZMPacketAddORIENTATION_INTERPOLATION(builder, ORIENTATION_INTERPOLATION)
+        if self.ORIENTATION_REFERENCE is not None:
+            CZMPacketAddORIENTATION_REFERENCE(builder, ORIENTATION_REFERENCE)
+        if self.DYNAMIC_PROPERTIES is not None:
+            CZMPacketAddDYNAMIC_PROPERTIES(builder, DYNAMIC_PROPERTIES)
         czmpacket = CZMPacketEnd(builder)
         return czmpacket

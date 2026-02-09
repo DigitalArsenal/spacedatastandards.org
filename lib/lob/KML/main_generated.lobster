@@ -37,6 +37,29 @@ enum KMLViewRefreshMode:
     KMLViewRefreshMode_ON_REQUEST = 2
     KMLViewRefreshMode_ON_REGION = 3
 
+enum KMLListItemType:
+    KMLListItemType_CHECK = 0
+    KMLListItemType_CHECK_OFF_ONLY = 1
+    KMLListItemType_CHECK_HIDE_CHILDREN = 2
+    KMLListItemType_RADIO_FOLDER = 3
+
+enum KMLDisplayMode:
+    KMLDisplayMode_DEFAULT = 0
+    KMLDisplayMode_HIDE = 1
+
+enum KMLGridOrigin:
+    KMLGridOrigin_LOWER_LEFT = 0
+    KMLGridOrigin_UPPER_LEFT = 1
+
+enum KMLShape:
+    KMLShape_RECTANGLE = 0
+    KMLShape_CYLINDER = 1
+    KMLShape_SPHERE = 2
+
+enum KMLFlyToMode:
+    KMLFlyToMode_BOUNCE = 0
+    KMLFlyToMode_SMOOTH = 1
+
 class KMLCoordinate
 
 class KMLLookAt
@@ -53,6 +76,10 @@ class KMLLabelStyle
 
 class KMLBalloonStyle
 
+class KMLItemIcon
+
+class KMLListStyle
+
 class KMLStyle
 
 class KMLStyleMapPair
@@ -67,6 +94,14 @@ class KMLLinearRing
 
 class KMLPolygon
 
+class KMLResourceMapAlias
+
+class KMLModel
+
+class KMLTrack
+
+class KMLMultiTrack
+
 class KMLMultiGeometry
 
 class KMLTimeSpan
@@ -75,9 +110,55 @@ class KMLTimeStamp
 
 class KMLData
 
+class KMLSimpleField
+
+class KMLSchema
+
+class KMLSimpleData
+
+class KMLSchemaData
+
+class KMLLatLonQuad
+
+class KMLRegion
+
+class KMLLatLonAltBox
+
+class KMLLod
+
+class KMLLink
+
+class KMLViewVolume
+
+class KMLImagePyramid
+
 class KMLNetworkLink
 
+class KMLScreenOverlay
+
+class KMLPhotoOverlay
+
 class KMLGroundOverlay
+
+class KMLUpdate
+
+class KMLNetworkLinkControl
+
+class KMLFlyTo
+
+class KMLWait
+
+class KMLAnimatedUpdate
+
+class KMLTourControl
+
+class KMLSoundCue
+
+class KMLTourPrimitive
+
+class KMLPlaylist
+
+class KMLTour
 
 class KMLPlacemark
 
@@ -304,13 +385,25 @@ class KMLLineStyle : flatbuffers.handle
     /// Width in pixels
     def WIDTH() -> float:
         return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// gx:outerColor
+    def GX_OUTER_COLOR() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+    /// gx:outerWidth
+    def GX_OUTER_WIDTH() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    /// gx:physicalWidth
+    def GX_PHYSICAL_WIDTH() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// gx:labelVisibility
+    def GX_LABEL_VISIBILITY() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 16, 0))
 
 def GetRootAsKMLLineStyle(buf:string): return KMLLineStyle { buf, flatbuffers.indirect(buf, 0) }
 
 struct KMLLineStyleBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(3)
+        b_.StartObject(7)
         return this
     def add_COLOR(COLOR:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, COLOR)
@@ -320,6 +413,18 @@ struct KMLLineStyleBuilder:
         return this
     def add_WIDTH(WIDTH:float):
         b_.PrependFloat64Slot(2, WIDTH, 0.0)
+        return this
+    def add_GX_OUTER_COLOR(GX_OUTER_COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, GX_OUTER_COLOR)
+        return this
+    def add_GX_OUTER_WIDTH(GX_OUTER_WIDTH:float):
+        b_.PrependFloat64Slot(4, GX_OUTER_WIDTH, 0.0)
+        return this
+    def add_GX_PHYSICAL_WIDTH(GX_PHYSICAL_WIDTH:float):
+        b_.PrependFloat64Slot(5, GX_PHYSICAL_WIDTH, 0.0)
+        return this
+    def add_GX_LABEL_VISIBILITY(GX_LABEL_VISIBILITY:bool):
+        b_.PrependBoolSlot(6, GX_LABEL_VISIBILITY, 0)
         return this
     def end():
         return b_.EndObject()
@@ -403,13 +508,16 @@ class KMLBalloonStyle : flatbuffers.handle
     /// Balloon text template (supports $[name], $[description])
     def TEXT() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
+    /// Display mode
+    def DISPLAY_MODE() -> KMLDisplayMode:
+        return KMLDisplayMode(flatbuffers.field_int8(buf_, pos_, 10, 0))
 
 def GetRootAsKMLBalloonStyle(buf:string): return KMLBalloonStyle { buf, flatbuffers.indirect(buf, 0) }
 
 struct KMLBalloonStyleBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(3)
+        b_.StartObject(4)
         return this
     def add_BG_COLOR(BG_COLOR:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, BG_COLOR)
@@ -420,8 +528,82 @@ struct KMLBalloonStyleBuilder:
     def add_TEXT(TEXT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, TEXT)
         return this
+    def add_DISPLAY_MODE(DISPLAY_MODE:KMLDisplayMode):
+        b_.PrependInt8Slot(3, DISPLAY_MODE, 0)
+        return this
     def end():
         return b_.EndObject()
+
+/// Item icon for ListStyle
+class KMLItemIcon : flatbuffers.handle
+    /// State (open, closed, error, fetching0-2)
+    def STATE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Icon URL
+    def HREF() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+
+def GetRootAsKMLItemIcon(buf:string): return KMLItemIcon { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLItemIconBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(2)
+        return this
+    def add_STATE(STATE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, STATE)
+        return this
+    def add_HREF(HREF:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, HREF)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// List style
+class KMLListStyle : flatbuffers.handle
+    /// List item type
+    def LIST_ITEM_TYPE() -> KMLListItemType:
+        return KMLListItemType(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    /// Background color
+    def BG_COLOR() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// Item icons
+    def ITEM_ICONS(i:int) -> KMLItemIcon:
+        return KMLItemIcon { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 8) + i * 4) }
+    def ITEM_ICONS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 8)
+    /// Maximum snippet lines
+    def MAX_SNIPPET_LINES() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 10, 0)
+
+def GetRootAsKMLListStyle(buf:string): return KMLListStyle { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLListStyleBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(4)
+        return this
+    def add_LIST_ITEM_TYPE(LIST_ITEM_TYPE:KMLListItemType):
+        b_.PrependInt8Slot(0, LIST_ITEM_TYPE, 0)
+        return this
+    def add_BG_COLOR(BG_COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, BG_COLOR)
+        return this
+    def add_ITEM_ICONS(ITEM_ICONS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, ITEM_ICONS)
+        return this
+    def add_MAX_SNIPPET_LINES(MAX_SNIPPET_LINES:int):
+        b_.PrependInt32Slot(3, MAX_SNIPPET_LINES, 0)
+        return this
+    def end():
+        return b_.EndObject()
+
+def KMLListStyleStartITEM_ICONSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def KMLListStyleCreateITEM_ICONSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
 
 /// Style definition
 class KMLStyle : flatbuffers.handle
@@ -448,13 +630,17 @@ class KMLStyle : flatbuffers.handle
     def BALLOON_STYLE() -> KMLBalloonStyle?:
         let o = flatbuffers.field_table(buf_, pos_, 14)
         return if o: KMLBalloonStyle { buf_, o } else: nil
+    /// List style
+    def LIST_STYLE() -> KMLListStyle?:
+        let o = flatbuffers.field_table(buf_, pos_, 16)
+        return if o: KMLListStyle { buf_, o } else: nil
 
 def GetRootAsKMLStyle(buf:string): return KMLStyle { buf, flatbuffers.indirect(buf, 0) }
 
 struct KMLStyleBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(6)
+        b_.StartObject(7)
         return this
     def add_ID(ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ID)
@@ -473,6 +659,9 @@ struct KMLStyleBuilder:
         return this
     def add_BALLOON_STYLE(BALLOON_STYLE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(5, BALLOON_STYLE)
+        return this
+    def add_LIST_STYLE(LIST_STYLE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, LIST_STYLE)
         return this
     def end():
         return b_.EndObject()
@@ -584,13 +773,16 @@ class KMLLineString : flatbuffers.handle
     /// Whether to tessellate (follow terrain)
     def TESSELLATE() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 10, 0))
+    /// gx:drawOrder
+    def GX_DRAW_ORDER() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 12, 0)
 
 def GetRootAsKMLLineString(buf:string): return KMLLineString { buf, flatbuffers.indirect(buf, 0) }
 
 struct KMLLineStringBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(4)
+        b_.StartObject(5)
         return this
     def add_COORDINATES(COORDINATES:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, COORDINATES)
@@ -603,6 +795,9 @@ struct KMLLineStringBuilder:
         return this
     def add_TESSELLATE(TESSELLATE:bool):
         b_.PrependBoolSlot(3, TESSELLATE, 0)
+        return this
+    def add_GX_DRAW_ORDER(GX_DRAW_ORDER:int):
+        b_.PrependInt32Slot(4, GX_DRAW_ORDER, 0)
         return this
     def end():
         return b_.EndObject()
@@ -621,16 +816,34 @@ class KMLLinearRing : flatbuffers.handle
         return KMLCoordinate { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
     def COORDINATES_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 4)
+    /// Whether to extrude to ground
+    def EXTRUDE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 6, 0))
+    /// Whether to tessellate
+    def TESSELLATE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 8, 0))
+    /// Altitude mode
+    def ALTITUDE_MODE() -> KMLAltitudeMode:
+        return KMLAltitudeMode(flatbuffers.field_int8(buf_, pos_, 10, 0))
 
 def GetRootAsKMLLinearRing(buf:string): return KMLLinearRing { buf, flatbuffers.indirect(buf, 0) }
 
 struct KMLLinearRingBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(1)
+        b_.StartObject(4)
         return this
     def add_COORDINATES(COORDINATES:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, COORDINATES)
+        return this
+    def add_EXTRUDE(EXTRUDE:bool):
+        b_.PrependBoolSlot(1, EXTRUDE, 0)
+        return this
+    def add_TESSELLATE(TESSELLATE:bool):
+        b_.PrependBoolSlot(2, TESSELLATE, 0)
+        return this
+    def add_ALTITUDE_MODE(ALTITUDE_MODE:KMLAltitudeMode):
+        b_.PrependInt8Slot(3, ALTITUDE_MODE, 0)
         return this
     def end():
         return b_.EndObject()
@@ -695,6 +908,248 @@ def KMLPolygonCreateINNER_BOUNDARIESVector(b_:flatbuffers.builder, v_:[flatbuffe
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
+/// Resource map alias for Model
+class KMLResourceMapAlias : flatbuffers.handle
+    /// Target href
+    def TARGET_HREF() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Source href
+    def SOURCE_HREF() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+
+def GetRootAsKMLResourceMapAlias(buf:string): return KMLResourceMapAlias { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLResourceMapAliasBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(2)
+        return this
+    def add_TARGET_HREF(TARGET_HREF:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, TARGET_HREF)
+        return this
+    def add_SOURCE_HREF(SOURCE_HREF:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, SOURCE_HREF)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// 3D Model geometry
+class KMLModel : flatbuffers.handle
+    /// Altitude mode
+    def ALTITUDE_MODE() -> KMLAltitudeMode:
+        return KMLAltitudeMode(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    /// Location longitude
+    def LOCATION_LON() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    /// Location latitude
+    def LOCATION_LAT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// Location altitude
+    def LOCATION_ALT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    /// Orientation heading
+    def ORIENTATION_HEADING() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    /// Orientation tilt
+    def ORIENTATION_TILT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// Orientation roll
+    def ORIENTATION_ROLL() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+    /// Scale X
+    def SCALE_X() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
+    /// Scale Y
+    def SCALE_Y() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
+    /// Scale Z
+    def SCALE_Z() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
+    /// Link to 3D model file
+    def LINK_HREF() -> string:
+        return flatbuffers.field_string(buf_, pos_, 24)
+    /// Resource map aliases
+    def RESOURCE_MAP(i:int) -> KMLResourceMapAlias:
+        return KMLResourceMapAlias { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 26) + i * 4) }
+    def RESOURCE_MAP_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 26)
+
+def GetRootAsKMLModel(buf:string): return KMLModel { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLModelBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(12)
+        return this
+    def add_ALTITUDE_MODE(ALTITUDE_MODE:KMLAltitudeMode):
+        b_.PrependInt8Slot(0, ALTITUDE_MODE, 0)
+        return this
+    def add_LOCATION_LON(LOCATION_LON:float):
+        b_.PrependFloat64Slot(1, LOCATION_LON, 0.0)
+        return this
+    def add_LOCATION_LAT(LOCATION_LAT:float):
+        b_.PrependFloat64Slot(2, LOCATION_LAT, 0.0)
+        return this
+    def add_LOCATION_ALT(LOCATION_ALT:float):
+        b_.PrependFloat64Slot(3, LOCATION_ALT, 0.0)
+        return this
+    def add_ORIENTATION_HEADING(ORIENTATION_HEADING:float):
+        b_.PrependFloat64Slot(4, ORIENTATION_HEADING, 0.0)
+        return this
+    def add_ORIENTATION_TILT(ORIENTATION_TILT:float):
+        b_.PrependFloat64Slot(5, ORIENTATION_TILT, 0.0)
+        return this
+    def add_ORIENTATION_ROLL(ORIENTATION_ROLL:float):
+        b_.PrependFloat64Slot(6, ORIENTATION_ROLL, 0.0)
+        return this
+    def add_SCALE_X(SCALE_X:float):
+        b_.PrependFloat64Slot(7, SCALE_X, 0.0)
+        return this
+    def add_SCALE_Y(SCALE_Y:float):
+        b_.PrependFloat64Slot(8, SCALE_Y, 0.0)
+        return this
+    def add_SCALE_Z(SCALE_Z:float):
+        b_.PrependFloat64Slot(9, SCALE_Z, 0.0)
+        return this
+    def add_LINK_HREF(LINK_HREF:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, LINK_HREF)
+        return this
+    def add_RESOURCE_MAP(RESOURCE_MAP:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, RESOURCE_MAP)
+        return this
+    def end():
+        return b_.EndObject()
+
+def KMLModelStartRESOURCE_MAPVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def KMLModelCreateRESOURCE_MAPVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+/// gx:Track — time-stamped position track
+class KMLTrack : flatbuffers.handle
+    /// Whether to extrude
+    def EXTRUDE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    /// Whether to tessellate
+    def TESSELLATE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 6, 0))
+    /// Altitude mode
+    def ALTITUDE_MODE() -> KMLAltitudeMode:
+        return KMLAltitudeMode(flatbuffers.field_int8(buf_, pos_, 8, 0))
+    /// Time stamps (ISO 8601)
+    def WHEN(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 10) + i * 4)
+    def WHEN_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 10)
+    /// Coordinates (lon lat alt per entry)
+    def COORDS(i:int) -> KMLCoordinate:
+        return KMLCoordinate { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 12) + i * 4) }
+    def COORDS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 12)
+    /// Angles (heading tilt roll per entry)
+    def ANGLES(i:int) -> KMLCoordinate:
+        return KMLCoordinate { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 14) + i * 4) }
+    def ANGLES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 14)
+    /// Model for track visualization
+    def MODEL() -> KMLModel?:
+        let o = flatbuffers.field_table(buf_, pos_, 16)
+        return if o: KMLModel { buf_, o } else: nil
+
+def GetRootAsKMLTrack(buf:string): return KMLTrack { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLTrackBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(7)
+        return this
+    def add_EXTRUDE(EXTRUDE:bool):
+        b_.PrependBoolSlot(0, EXTRUDE, 0)
+        return this
+    def add_TESSELLATE(TESSELLATE:bool):
+        b_.PrependBoolSlot(1, TESSELLATE, 0)
+        return this
+    def add_ALTITUDE_MODE(ALTITUDE_MODE:KMLAltitudeMode):
+        b_.PrependInt8Slot(2, ALTITUDE_MODE, 0)
+        return this
+    def add_WHEN(WHEN:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, WHEN)
+        return this
+    def add_COORDS(COORDS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, COORDS)
+        return this
+    def add_ANGLES(ANGLES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, ANGLES)
+        return this
+    def add_MODEL(MODEL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, MODEL)
+        return this
+    def end():
+        return b_.EndObject()
+
+def KMLTrackStartWHENVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def KMLTrackCreateWHENVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def KMLTrackStartCOORDSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def KMLTrackCreateCOORDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def KMLTrackStartANGLESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def KMLTrackCreateANGLESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+/// gx:MultiTrack
+class KMLMultiTrack : flatbuffers.handle
+    /// Altitude mode
+    def ALTITUDE_MODE() -> KMLAltitudeMode:
+        return KMLAltitudeMode(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    /// Whether to interpolate between tracks
+    def INTERPOLATE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 6, 0))
+    /// Child tracks
+    def TRACKS(i:int) -> KMLTrack:
+        return KMLTrack { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 8) + i * 4) }
+    def TRACKS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 8)
+
+def GetRootAsKMLMultiTrack(buf:string): return KMLMultiTrack { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLMultiTrackBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(3)
+        return this
+    def add_ALTITUDE_MODE(ALTITUDE_MODE:KMLAltitudeMode):
+        b_.PrependInt8Slot(0, ALTITUDE_MODE, 0)
+        return this
+    def add_INTERPOLATE(INTERPOLATE:bool):
+        b_.PrependBoolSlot(1, INTERPOLATE, 0)
+        return this
+    def add_TRACKS(TRACKS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, TRACKS)
+        return this
+    def end():
+        return b_.EndObject()
+
+def KMLMultiTrackStartTRACKSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def KMLMultiTrackCreateTRACKSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
 /// MultiGeometry
 class KMLMultiGeometry : flatbuffers.handle
     /// Child points
@@ -717,13 +1172,33 @@ class KMLMultiGeometry : flatbuffers.handle
         return KMLMultiGeometry { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 10) + i * 4) }
     def MULTI_GEOMETRIES_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 10)
+    /// Child linear rings (standalone)
+    def LINEAR_RINGS(i:int) -> KMLLinearRing:
+        return KMLLinearRing { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 12) + i * 4) }
+    def LINEAR_RINGS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 12)
+    /// Child 3D models
+    def MODELS(i:int) -> KMLModel:
+        return KMLModel { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 14) + i * 4) }
+    def MODELS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 14)
+    /// Child tracks
+    def TRACKS(i:int) -> KMLTrack:
+        return KMLTrack { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 16) + i * 4) }
+    def TRACKS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 16)
+    /// Child multi-tracks
+    def MULTI_TRACKS(i:int) -> KMLMultiTrack:
+        return KMLMultiTrack { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 18) + i * 4) }
+    def MULTI_TRACKS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 18)
 
 def GetRootAsKMLMultiGeometry(buf:string): return KMLMultiGeometry { buf, flatbuffers.indirect(buf, 0) }
 
 struct KMLMultiGeometryBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(4)
+        b_.StartObject(8)
         return this
     def add_POINTS(POINTS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, POINTS)
@@ -736,6 +1211,18 @@ struct KMLMultiGeometryBuilder:
         return this
     def add_MULTI_GEOMETRIES(MULTI_GEOMETRIES:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(3, MULTI_GEOMETRIES)
+        return this
+    def add_LINEAR_RINGS(LINEAR_RINGS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, LINEAR_RINGS)
+        return this
+    def add_MODELS(MODELS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, MODELS)
+        return this
+    def add_TRACKS(TRACKS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, TRACKS)
+        return this
+    def add_MULTI_TRACKS(MULTI_TRACKS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, MULTI_TRACKS)
         return this
     def end():
         return b_.EndObject()
@@ -764,6 +1251,34 @@ def KMLMultiGeometryCreatePOLYGONSVector(b_:flatbuffers.builder, v_:[flatbuffers
 def KMLMultiGeometryStartMULTI_GEOMETRIESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
 def KMLMultiGeometryCreateMULTI_GEOMETRIESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def KMLMultiGeometryStartLINEAR_RINGSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def KMLMultiGeometryCreateLINEAR_RINGSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def KMLMultiGeometryStartMODELSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def KMLMultiGeometryCreateMODELSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def KMLMultiGeometryStartTRACKSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def KMLMultiGeometryCreateTRACKSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def KMLMultiGeometryStartMULTI_TRACKSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def KMLMultiGeometryCreateMULTI_TRACKSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -843,63 +1358,512 @@ struct KMLDataBuilder:
     def end():
         return b_.EndObject()
 
+/// Schema simple field definition
+class KMLSimpleField : flatbuffers.handle
+    /// Field name
+    def NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Field type (xsd:string, xsd:int, xsd:float, etc.)
+    def FIELD_TYPE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// Display name
+    def DISPLAY_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+
+def GetRootAsKMLSimpleField(buf:string): return KMLSimpleField { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLSimpleFieldBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(3)
+        return this
+    def add_NAME(NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, NAME)
+        return this
+    def add_FIELD_TYPE(FIELD_TYPE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, FIELD_TYPE)
+        return this
+    def add_DISPLAY_NAME(DISPLAY_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, DISPLAY_NAME)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Schema definition
+class KMLSchema : flatbuffers.handle
+    /// Schema name
+    def NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Schema ID
+    def ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// Simple field definitions
+    def SIMPLE_FIELDS(i:int) -> KMLSimpleField:
+        return KMLSimpleField { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 8) + i * 4) }
+    def SIMPLE_FIELDS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 8)
+
+def GetRootAsKMLSchema(buf:string): return KMLSchema { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLSchemaBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(3)
+        return this
+    def add_NAME(NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, NAME)
+        return this
+    def add_ID(ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, ID)
+        return this
+    def add_SIMPLE_FIELDS(SIMPLE_FIELDS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, SIMPLE_FIELDS)
+        return this
+    def end():
+        return b_.EndObject()
+
+def KMLSchemaStartSIMPLE_FIELDSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def KMLSchemaCreateSIMPLE_FIELDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+/// Simple data value for SchemaData
+class KMLSimpleData : flatbuffers.handle
+    /// Field name
+    def NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Field value
+    def VALUE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+
+def GetRootAsKMLSimpleData(buf:string): return KMLSimpleData { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLSimpleDataBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(2)
+        return this
+    def add_NAME(NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, NAME)
+        return this
+    def add_VALUE(VALUE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, VALUE)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Schema data reference
+class KMLSchemaData : flatbuffers.handle
+    /// Schema URL reference
+    def SCHEMA_URL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Simple data values
+    def SIMPLE_DATA(i:int) -> KMLSimpleData:
+        return KMLSimpleData { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 6) + i * 4) }
+    def SIMPLE_DATA_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 6)
+
+def GetRootAsKMLSchemaData(buf:string): return KMLSchemaData { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLSchemaDataBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(2)
+        return this
+    def add_SCHEMA_URL(SCHEMA_URL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, SCHEMA_URL)
+        return this
+    def add_SIMPLE_DATA(SIMPLE_DATA:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, SIMPLE_DATA)
+        return this
+    def end():
+        return b_.EndObject()
+
+def KMLSchemaDataStartSIMPLE_DATAVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def KMLSchemaDataCreateSIMPLE_DATAVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+/// LatLonQuad — four corner coordinates for ground overlay
+class KMLLatLonQuad : flatbuffers.handle
+    /// Four corner coordinates
+    def COORDINATES(i:int) -> KMLCoordinate:
+        return KMLCoordinate { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
+    def COORDINATES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
+
+def GetRootAsKMLLatLonQuad(buf:string): return KMLLatLonQuad { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLLatLonQuadBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(1)
+        return this
+    def add_COORDINATES(COORDINATES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, COORDINATES)
+        return this
+    def end():
+        return b_.EndObject()
+
+def KMLLatLonQuadStartCOORDINATESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def KMLLatLonQuadCreateCOORDINATESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+/// Region — Level of Detail bounding region
+class KMLRegion : flatbuffers.handle
+    /// LatLonAltBox
+    def LAT_LON_ALT_BOX() -> KMLLatLonAltBox?:
+        let o = flatbuffers.field_table(buf_, pos_, 4)
+        return if o: KMLLatLonAltBox { buf_, o } else: nil
+    /// Level of detail
+    def LOD() -> KMLLod?:
+        let o = flatbuffers.field_table(buf_, pos_, 6)
+        return if o: KMLLod { buf_, o } else: nil
+
+def GetRootAsKMLRegion(buf:string): return KMLRegion { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLRegionBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(2)
+        return this
+    def add_LAT_LON_ALT_BOX(LAT_LON_ALT_BOX:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, LAT_LON_ALT_BOX)
+        return this
+    def add_LOD(LOD:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, LOD)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// LatLonAltBox for Region
+class KMLLatLonAltBox : flatbuffers.handle
+    /// North latitude
+    def NORTH() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
+    /// South latitude
+    def SOUTH() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    /// East longitude
+    def EAST() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// West longitude
+    def WEST() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    /// Minimum altitude
+    def MIN_ALTITUDE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    /// Maximum altitude
+    def MAX_ALTITUDE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// Altitude mode
+    def ALTITUDE_MODE() -> KMLAltitudeMode:
+        return KMLAltitudeMode(flatbuffers.field_int8(buf_, pos_, 16, 0))
+
+def GetRootAsKMLLatLonAltBox(buf:string): return KMLLatLonAltBox { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLLatLonAltBoxBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(7)
+        return this
+    def add_NORTH(NORTH:float):
+        b_.PrependFloat64Slot(0, NORTH, 0.0)
+        return this
+    def add_SOUTH(SOUTH:float):
+        b_.PrependFloat64Slot(1, SOUTH, 0.0)
+        return this
+    def add_EAST(EAST:float):
+        b_.PrependFloat64Slot(2, EAST, 0.0)
+        return this
+    def add_WEST(WEST:float):
+        b_.PrependFloat64Slot(3, WEST, 0.0)
+        return this
+    def add_MIN_ALTITUDE(MIN_ALTITUDE:float):
+        b_.PrependFloat64Slot(4, MIN_ALTITUDE, 0.0)
+        return this
+    def add_MAX_ALTITUDE(MAX_ALTITUDE:float):
+        b_.PrependFloat64Slot(5, MAX_ALTITUDE, 0.0)
+        return this
+    def add_ALTITUDE_MODE(ALTITUDE_MODE:KMLAltitudeMode):
+        b_.PrependInt8Slot(6, ALTITUDE_MODE, 0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Level of Detail parameters
+class KMLLod : flatbuffers.handle
+    /// Minimum LOD pixels
+    def MIN_LOD_PIXELS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
+    /// Maximum LOD pixels (-1 = infinite)
+    def MAX_LOD_PIXELS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    /// Minimum fade extent
+    def MIN_FADE_EXTENT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// Maximum fade extent
+    def MAX_FADE_EXTENT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+
+def GetRootAsKMLLod(buf:string): return KMLLod { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLLodBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(4)
+        return this
+    def add_MIN_LOD_PIXELS(MIN_LOD_PIXELS:float):
+        b_.PrependFloat64Slot(0, MIN_LOD_PIXELS, 0.0)
+        return this
+    def add_MAX_LOD_PIXELS(MAX_LOD_PIXELS:float):
+        b_.PrependFloat64Slot(1, MAX_LOD_PIXELS, 0.0)
+        return this
+    def add_MIN_FADE_EXTENT(MIN_FADE_EXTENT:float):
+        b_.PrependFloat64Slot(2, MIN_FADE_EXTENT, 0.0)
+        return this
+    def add_MAX_FADE_EXTENT(MAX_FADE_EXTENT:float):
+        b_.PrependFloat64Slot(3, MAX_FADE_EXTENT, 0.0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Full Link element
+class KMLLink : flatbuffers.handle
+    /// URL
+    def HREF() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Refresh mode
+    def REFRESH_MODE() -> KMLRefreshMode:
+        return KMLRefreshMode(flatbuffers.field_int8(buf_, pos_, 6, 0))
+    /// Refresh interval in seconds
+    def REFRESH_INTERVAL() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// View refresh mode
+    def VIEW_REFRESH_MODE() -> KMLViewRefreshMode:
+        return KMLViewRefreshMode(flatbuffers.field_int8(buf_, pos_, 10, 0))
+    /// View refresh time in seconds
+    def VIEW_REFRESH_TIME() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    /// View bound scale
+    def VIEW_BOUND_SCALE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// View format string
+    def VIEW_FORMAT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 16)
+    /// HTTP query string
+    def HTTP_QUERY() -> string:
+        return flatbuffers.field_string(buf_, pos_, 18)
+
+def GetRootAsKMLLink(buf:string): return KMLLink { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLLinkBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(8)
+        return this
+    def add_HREF(HREF:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, HREF)
+        return this
+    def add_REFRESH_MODE(REFRESH_MODE:KMLRefreshMode):
+        b_.PrependInt8Slot(1, REFRESH_MODE, 0)
+        return this
+    def add_REFRESH_INTERVAL(REFRESH_INTERVAL:float):
+        b_.PrependFloat64Slot(2, REFRESH_INTERVAL, 0.0)
+        return this
+    def add_VIEW_REFRESH_MODE(VIEW_REFRESH_MODE:KMLViewRefreshMode):
+        b_.PrependInt8Slot(3, VIEW_REFRESH_MODE, 0)
+        return this
+    def add_VIEW_REFRESH_TIME(VIEW_REFRESH_TIME:float):
+        b_.PrependFloat64Slot(4, VIEW_REFRESH_TIME, 0.0)
+        return this
+    def add_VIEW_BOUND_SCALE(VIEW_BOUND_SCALE:float):
+        b_.PrependFloat64Slot(5, VIEW_BOUND_SCALE, 0.0)
+        return this
+    def add_VIEW_FORMAT(VIEW_FORMAT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, VIEW_FORMAT)
+        return this
+    def add_HTTP_QUERY(HTTP_QUERY:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, HTTP_QUERY)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// ViewVolume for PhotoOverlay
+class KMLViewVolume : flatbuffers.handle
+    /// Left field of view angle
+    def LEFT_FOV() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
+    /// Right field of view angle
+    def RIGHT_FOV() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    /// Bottom field of view angle
+    def BOTTOM_FOV() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// Top field of view angle
+    def TOP_FOV() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    /// Near clipping plane
+    def NEAR() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+
+def GetRootAsKMLViewVolume(buf:string): return KMLViewVolume { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLViewVolumeBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(5)
+        return this
+    def add_LEFT_FOV(LEFT_FOV:float):
+        b_.PrependFloat64Slot(0, LEFT_FOV, 0.0)
+        return this
+    def add_RIGHT_FOV(RIGHT_FOV:float):
+        b_.PrependFloat64Slot(1, RIGHT_FOV, 0.0)
+        return this
+    def add_BOTTOM_FOV(BOTTOM_FOV:float):
+        b_.PrependFloat64Slot(2, BOTTOM_FOV, 0.0)
+        return this
+    def add_TOP_FOV(TOP_FOV:float):
+        b_.PrependFloat64Slot(3, TOP_FOV, 0.0)
+        return this
+    def add_NEAR(NEAR:float):
+        b_.PrependFloat64Slot(4, NEAR, 0.0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// ImagePyramid for PhotoOverlay
+class KMLImagePyramid : flatbuffers.handle
+    /// Tile size in pixels
+    def TILE_SIZE() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 4, 0)
+    /// Maximum image width
+    def MAX_WIDTH() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 6, 0)
+    /// Maximum image height
+    def MAX_HEIGHT() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 8, 0)
+    /// Grid origin
+    def GRID_ORIGIN() -> KMLGridOrigin:
+        return KMLGridOrigin(flatbuffers.field_int8(buf_, pos_, 10, 0))
+
+def GetRootAsKMLImagePyramid(buf:string): return KMLImagePyramid { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLImagePyramidBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(4)
+        return this
+    def add_TILE_SIZE(TILE_SIZE:int):
+        b_.PrependInt32Slot(0, TILE_SIZE, 0)
+        return this
+    def add_MAX_WIDTH(MAX_WIDTH:int):
+        b_.PrependInt32Slot(1, MAX_WIDTH, 0)
+        return this
+    def add_MAX_HEIGHT(MAX_HEIGHT:int):
+        b_.PrependInt32Slot(2, MAX_HEIGHT, 0)
+        return this
+    def add_GRID_ORIGIN(GRID_ORIGIN:KMLGridOrigin):
+        b_.PrependInt8Slot(3, GRID_ORIGIN, 0)
+        return this
+    def end():
+        return b_.EndObject()
+
 /// Network link
 class KMLNetworkLink : flatbuffers.handle
     /// Name of the network link
     def NAME() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
+    /// Description
+    def DESCRIPTION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
     /// Whether the link is visible
     def VISIBILITY() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 6, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 8, 0))
+    /// Whether open in tree view
+    def OPEN() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 10, 0))
     /// Link URL
     def HREF() -> string:
-        return flatbuffers.field_string(buf_, pos_, 8)
+        return flatbuffers.field_string(buf_, pos_, 12)
     /// Refresh mode
     def REFRESH_MODE() -> KMLRefreshMode:
-        return KMLRefreshMode(flatbuffers.field_int8(buf_, pos_, 10, 0))
+        return KMLRefreshMode(flatbuffers.field_int8(buf_, pos_, 14, 0))
     /// Refresh interval in seconds
     def REFRESH_INTERVAL() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
     /// View refresh mode
     def VIEW_REFRESH_MODE() -> KMLViewRefreshMode:
-        return KMLViewRefreshMode(flatbuffers.field_int8(buf_, pos_, 14, 0))
+        return KMLViewRefreshMode(flatbuffers.field_int8(buf_, pos_, 18, 0))
     /// View refresh time in seconds
     def VIEW_REFRESH_TIME() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
+    /// Whether to refresh on visibility change
+    def REFRESH_VISIBILITY() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 22, 0))
+    /// Whether to fly to view on refresh
+    def FLY_TO_VIEW() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 24, 0))
+    /// Full link element
+    def LINK() -> KMLLink?:
+        let o = flatbuffers.field_table(buf_, pos_, 26)
+        return if o: KMLLink { buf_, o } else: nil
 
 def GetRootAsKMLNetworkLink(buf:string): return KMLNetworkLink { buf, flatbuffers.indirect(buf, 0) }
 
 struct KMLNetworkLinkBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(7)
+        b_.StartObject(12)
         return this
     def add_NAME(NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, NAME)
         return this
+    def add_DESCRIPTION(DESCRIPTION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, DESCRIPTION)
+        return this
     def add_VISIBILITY(VISIBILITY:bool):
-        b_.PrependBoolSlot(1, VISIBILITY, 0)
+        b_.PrependBoolSlot(2, VISIBILITY, 0)
+        return this
+    def add_OPEN(OPEN:bool):
+        b_.PrependBoolSlot(3, OPEN, 0)
         return this
     def add_HREF(HREF:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(2, HREF)
+        b_.PrependUOffsetTRelativeSlot(4, HREF)
         return this
     def add_REFRESH_MODE(REFRESH_MODE:KMLRefreshMode):
-        b_.PrependInt8Slot(3, REFRESH_MODE, 0)
+        b_.PrependInt8Slot(5, REFRESH_MODE, 0)
         return this
     def add_REFRESH_INTERVAL(REFRESH_INTERVAL:float):
-        b_.PrependFloat64Slot(4, REFRESH_INTERVAL, 0.0)
+        b_.PrependFloat64Slot(6, REFRESH_INTERVAL, 0.0)
         return this
     def add_VIEW_REFRESH_MODE(VIEW_REFRESH_MODE:KMLViewRefreshMode):
-        b_.PrependInt8Slot(5, VIEW_REFRESH_MODE, 0)
+        b_.PrependInt8Slot(7, VIEW_REFRESH_MODE, 0)
         return this
     def add_VIEW_REFRESH_TIME(VIEW_REFRESH_TIME:float):
-        b_.PrependFloat64Slot(6, VIEW_REFRESH_TIME, 0.0)
+        b_.PrependFloat64Slot(8, VIEW_REFRESH_TIME, 0.0)
+        return this
+    def add_REFRESH_VISIBILITY(REFRESH_VISIBILITY:bool):
+        b_.PrependBoolSlot(9, REFRESH_VISIBILITY, 0)
+        return this
+    def add_FLY_TO_VIEW(FLY_TO_VIEW:bool):
+        b_.PrependBoolSlot(10, FLY_TO_VIEW, 0)
+        return this
+    def add_LINK(LINK:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, LINK)
         return this
     def end():
         return b_.EndObject()
 
-/// Ground overlay
-class KMLGroundOverlay : flatbuffers.handle
+/// Screen overlay
+class KMLScreenOverlay : flatbuffers.handle
     /// Name
     def NAME() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
@@ -912,37 +1876,70 @@ class KMLGroundOverlay : flatbuffers.handle
     /// Icon/image URL
     def ICON_HREF() -> string:
         return flatbuffers.field_string(buf_, pos_, 10)
-    /// Color in aabbggrr hex format
+    /// Color
     def COLOR() -> string:
         return flatbuffers.field_string(buf_, pos_, 12)
-    /// North latitude of bounding box
-    def NORTH() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
-    /// South latitude of bounding box
-    def SOUTH() -> float:
+    /// Draw order
+    def DRAW_ORDER() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 14, 0)
+    /// Overlay X position
+    def OVERLAY_XY_X() -> float:
         return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
-    /// East longitude of bounding box
-    def EAST() -> float:
+    /// Overlay Y position
+    def OVERLAY_XY_Y() -> float:
         return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
-    /// West longitude of bounding box
-    def WEST() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
+    /// Overlay X units
+    def OVERLAY_XY_XUNITS() -> KMLUnits:
+        return KMLUnits(flatbuffers.field_int8(buf_, pos_, 20, 0))
+    /// Overlay Y units
+    def OVERLAY_XY_YUNITS() -> KMLUnits:
+        return KMLUnits(flatbuffers.field_int8(buf_, pos_, 22, 0))
+    /// Screen X position
+    def SCREEN_XY_X() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
+    /// Screen Y position
+    def SCREEN_XY_Y() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
+    /// Screen X units
+    def SCREEN_XY_XUNITS() -> KMLUnits:
+        return KMLUnits(flatbuffers.field_int8(buf_, pos_, 28, 0))
+    /// Screen Y units
+    def SCREEN_XY_YUNITS() -> KMLUnits:
+        return KMLUnits(flatbuffers.field_int8(buf_, pos_, 30, 0))
+    /// Rotation X
+    def ROTATION_XY_X() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 32, 0.0)
+    /// Rotation Y
+    def ROTATION_XY_Y() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 34, 0.0)
+    /// Rotation X units
+    def ROTATION_XY_XUNITS() -> KMLUnits:
+        return KMLUnits(flatbuffers.field_int8(buf_, pos_, 36, 0))
+    /// Rotation Y units
+    def ROTATION_XY_YUNITS() -> KMLUnits:
+        return KMLUnits(flatbuffers.field_int8(buf_, pos_, 38, 0))
+    /// Size X
+    def SIZE_X() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 40, 0.0)
+    /// Size Y
+    def SIZE_Y() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 42, 0.0)
+    /// Size X units
+    def SIZE_XUNITS() -> KMLUnits:
+        return KMLUnits(flatbuffers.field_int8(buf_, pos_, 44, 0))
+    /// Size Y units
+    def SIZE_YUNITS() -> KMLUnits:
+        return KMLUnits(flatbuffers.field_int8(buf_, pos_, 46, 0))
     /// Rotation in degrees
     def ROTATION() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
-    /// Altitude in meters
-    def ALTITUDE() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
-    /// Altitude mode
-    def ALTITUDE_MODE() -> KMLAltitudeMode:
-        return KMLAltitudeMode(flatbuffers.field_int8(buf_, pos_, 26, 0))
+        return flatbuffers.field_float64(buf_, pos_, 48, 0.0)
 
-def GetRootAsKMLGroundOverlay(buf:string): return KMLGroundOverlay { buf, flatbuffers.indirect(buf, 0) }
+def GetRootAsKMLScreenOverlay(buf:string): return KMLScreenOverlay { buf, flatbuffers.indirect(buf, 0) }
 
-struct KMLGroundOverlayBuilder:
+struct KMLScreenOverlayBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(12)
+        b_.StartObject(23)
         return this
     def add_NAME(NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, NAME)
@@ -959,26 +1956,625 @@ struct KMLGroundOverlayBuilder:
     def add_COLOR(COLOR:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(4, COLOR)
         return this
-    def add_NORTH(NORTH:float):
-        b_.PrependFloat64Slot(5, NORTH, 0.0)
+    def add_DRAW_ORDER(DRAW_ORDER:int):
+        b_.PrependInt32Slot(5, DRAW_ORDER, 0)
         return this
-    def add_SOUTH(SOUTH:float):
-        b_.PrependFloat64Slot(6, SOUTH, 0.0)
+    def add_OVERLAY_XY_X(OVERLAY_XY_X:float):
+        b_.PrependFloat64Slot(6, OVERLAY_XY_X, 0.0)
         return this
-    def add_EAST(EAST:float):
-        b_.PrependFloat64Slot(7, EAST, 0.0)
+    def add_OVERLAY_XY_Y(OVERLAY_XY_Y:float):
+        b_.PrependFloat64Slot(7, OVERLAY_XY_Y, 0.0)
         return this
-    def add_WEST(WEST:float):
-        b_.PrependFloat64Slot(8, WEST, 0.0)
+    def add_OVERLAY_XY_XUNITS(OVERLAY_XY_XUNITS:KMLUnits):
+        b_.PrependInt8Slot(8, OVERLAY_XY_XUNITS, 0)
+        return this
+    def add_OVERLAY_XY_YUNITS(OVERLAY_XY_YUNITS:KMLUnits):
+        b_.PrependInt8Slot(9, OVERLAY_XY_YUNITS, 0)
+        return this
+    def add_SCREEN_XY_X(SCREEN_XY_X:float):
+        b_.PrependFloat64Slot(10, SCREEN_XY_X, 0.0)
+        return this
+    def add_SCREEN_XY_Y(SCREEN_XY_Y:float):
+        b_.PrependFloat64Slot(11, SCREEN_XY_Y, 0.0)
+        return this
+    def add_SCREEN_XY_XUNITS(SCREEN_XY_XUNITS:KMLUnits):
+        b_.PrependInt8Slot(12, SCREEN_XY_XUNITS, 0)
+        return this
+    def add_SCREEN_XY_YUNITS(SCREEN_XY_YUNITS:KMLUnits):
+        b_.PrependInt8Slot(13, SCREEN_XY_YUNITS, 0)
+        return this
+    def add_ROTATION_XY_X(ROTATION_XY_X:float):
+        b_.PrependFloat64Slot(14, ROTATION_XY_X, 0.0)
+        return this
+    def add_ROTATION_XY_Y(ROTATION_XY_Y:float):
+        b_.PrependFloat64Slot(15, ROTATION_XY_Y, 0.0)
+        return this
+    def add_ROTATION_XY_XUNITS(ROTATION_XY_XUNITS:KMLUnits):
+        b_.PrependInt8Slot(16, ROTATION_XY_XUNITS, 0)
+        return this
+    def add_ROTATION_XY_YUNITS(ROTATION_XY_YUNITS:KMLUnits):
+        b_.PrependInt8Slot(17, ROTATION_XY_YUNITS, 0)
+        return this
+    def add_SIZE_X(SIZE_X:float):
+        b_.PrependFloat64Slot(18, SIZE_X, 0.0)
+        return this
+    def add_SIZE_Y(SIZE_Y:float):
+        b_.PrependFloat64Slot(19, SIZE_Y, 0.0)
+        return this
+    def add_SIZE_XUNITS(SIZE_XUNITS:KMLUnits):
+        b_.PrependInt8Slot(20, SIZE_XUNITS, 0)
+        return this
+    def add_SIZE_YUNITS(SIZE_YUNITS:KMLUnits):
+        b_.PrependInt8Slot(21, SIZE_YUNITS, 0)
         return this
     def add_ROTATION(ROTATION:float):
-        b_.PrependFloat64Slot(9, ROTATION, 0.0)
+        b_.PrependFloat64Slot(22, ROTATION, 0.0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Photo overlay
+class KMLPhotoOverlay : flatbuffers.handle
+    /// Name
+    def NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Description
+    def DESCRIPTION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// Visibility
+    def VISIBILITY() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 8, 0))
+    /// Icon/image URL
+    def ICON_HREF() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+    /// Color
+    def COLOR() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// Draw order
+    def DRAW_ORDER() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 14, 0)
+    /// Rotation
+    def ROTATION() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+    /// View volume
+    def VIEW_VOLUME() -> KMLViewVolume?:
+        let o = flatbuffers.field_table(buf_, pos_, 18)
+        return if o: KMLViewVolume { buf_, o } else: nil
+    /// Image pyramid
+    def IMAGE_PYRAMID() -> KMLImagePyramid?:
+        let o = flatbuffers.field_table(buf_, pos_, 20)
+        return if o: KMLImagePyramid { buf_, o } else: nil
+    /// Point for position
+    def POINT() -> KMLPoint?:
+        let o = flatbuffers.field_table(buf_, pos_, 22)
+        return if o: KMLPoint { buf_, o } else: nil
+    /// Shape
+    def SHAPE() -> KMLShape:
+        return KMLShape(flatbuffers.field_int8(buf_, pos_, 24, 0))
+
+def GetRootAsKMLPhotoOverlay(buf:string): return KMLPhotoOverlay { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLPhotoOverlayBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(11)
+        return this
+    def add_NAME(NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, NAME)
+        return this
+    def add_DESCRIPTION(DESCRIPTION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, DESCRIPTION)
+        return this
+    def add_VISIBILITY(VISIBILITY:bool):
+        b_.PrependBoolSlot(2, VISIBILITY, 0)
+        return this
+    def add_ICON_HREF(ICON_HREF:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, ICON_HREF)
+        return this
+    def add_COLOR(COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, COLOR)
+        return this
+    def add_DRAW_ORDER(DRAW_ORDER:int):
+        b_.PrependInt32Slot(5, DRAW_ORDER, 0)
+        return this
+    def add_ROTATION(ROTATION:float):
+        b_.PrependFloat64Slot(6, ROTATION, 0.0)
+        return this
+    def add_VIEW_VOLUME(VIEW_VOLUME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, VIEW_VOLUME)
+        return this
+    def add_IMAGE_PYRAMID(IMAGE_PYRAMID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, IMAGE_PYRAMID)
+        return this
+    def add_POINT(POINT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, POINT)
+        return this
+    def add_SHAPE(SHAPE:KMLShape):
+        b_.PrependInt8Slot(10, SHAPE, 0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Ground overlay
+class KMLGroundOverlay : flatbuffers.handle
+    /// Name
+    def NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Description
+    def DESCRIPTION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// Visibility
+    def VISIBILITY() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 8, 0))
+    /// Whether open in tree view
+    def OPEN() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 10, 0))
+    /// Icon/image URL
+    def ICON_HREF() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// Color in aabbggrr hex format
+    def COLOR() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+    /// North latitude of bounding box
+    def NORTH() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+    /// South latitude of bounding box
+    def SOUTH() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
+    /// East longitude of bounding box
+    def EAST() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
+    /// West longitude of bounding box
+    def WEST() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
+    /// Rotation in degrees
+    def ROTATION() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
+    /// Altitude in meters
+    def ALTITUDE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
+    /// Altitude mode
+    def ALTITUDE_MODE() -> KMLAltitudeMode:
+        return KMLAltitudeMode(flatbuffers.field_int8(buf_, pos_, 28, 0))
+    /// Draw order
+    def DRAW_ORDER() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 30, 0)
+    /// LatLonQuad (non-rectangular overlay)
+    def LAT_LON_QUAD() -> KMLLatLonQuad?:
+        let o = flatbuffers.field_table(buf_, pos_, 32)
+        return if o: KMLLatLonQuad { buf_, o } else: nil
+    /// Style URL reference
+    def STYLE_URL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 34)
+    /// Region
+    def REGION() -> KMLRegion?:
+        let o = flatbuffers.field_table(buf_, pos_, 36)
+        return if o: KMLRegion { buf_, o } else: nil
+
+def GetRootAsKMLGroundOverlay(buf:string): return KMLGroundOverlay { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLGroundOverlayBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(17)
+        return this
+    def add_NAME(NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, NAME)
+        return this
+    def add_DESCRIPTION(DESCRIPTION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, DESCRIPTION)
+        return this
+    def add_VISIBILITY(VISIBILITY:bool):
+        b_.PrependBoolSlot(2, VISIBILITY, 0)
+        return this
+    def add_OPEN(OPEN:bool):
+        b_.PrependBoolSlot(3, OPEN, 0)
+        return this
+    def add_ICON_HREF(ICON_HREF:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, ICON_HREF)
+        return this
+    def add_COLOR(COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, COLOR)
+        return this
+    def add_NORTH(NORTH:float):
+        b_.PrependFloat64Slot(6, NORTH, 0.0)
+        return this
+    def add_SOUTH(SOUTH:float):
+        b_.PrependFloat64Slot(7, SOUTH, 0.0)
+        return this
+    def add_EAST(EAST:float):
+        b_.PrependFloat64Slot(8, EAST, 0.0)
+        return this
+    def add_WEST(WEST:float):
+        b_.PrependFloat64Slot(9, WEST, 0.0)
+        return this
+    def add_ROTATION(ROTATION:float):
+        b_.PrependFloat64Slot(10, ROTATION, 0.0)
         return this
     def add_ALTITUDE(ALTITUDE:float):
-        b_.PrependFloat64Slot(10, ALTITUDE, 0.0)
+        b_.PrependFloat64Slot(11, ALTITUDE, 0.0)
         return this
     def add_ALTITUDE_MODE(ALTITUDE_MODE:KMLAltitudeMode):
-        b_.PrependInt8Slot(11, ALTITUDE_MODE, 0)
+        b_.PrependInt8Slot(12, ALTITUDE_MODE, 0)
+        return this
+    def add_DRAW_ORDER(DRAW_ORDER:int):
+        b_.PrependInt32Slot(13, DRAW_ORDER, 0)
+        return this
+    def add_LAT_LON_QUAD(LAT_LON_QUAD:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(14, LAT_LON_QUAD)
+        return this
+    def add_STYLE_URL(STYLE_URL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(15, STYLE_URL)
+        return this
+    def add_REGION(REGION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(16, REGION)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Update element for NetworkLinkControl
+class KMLUpdate : flatbuffers.handle
+    /// Target href
+    def TARGET_HREF() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Change KML (raw)
+    def CHANGE_KML() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// Create KML (raw)
+    def CREATE_KML() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    /// Delete KML (raw)
+    def DELETE_KML() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+
+def GetRootAsKMLUpdate(buf:string): return KMLUpdate { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLUpdateBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(4)
+        return this
+    def add_TARGET_HREF(TARGET_HREF:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, TARGET_HREF)
+        return this
+    def add_CHANGE_KML(CHANGE_KML:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, CHANGE_KML)
+        return this
+    def add_CREATE_KML(CREATE_KML:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, CREATE_KML)
+        return this
+    def add_DELETE_KML(DELETE_KML:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, DELETE_KML)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// NetworkLinkControl
+class KMLNetworkLinkControl : flatbuffers.handle
+    /// Minimum refresh period in seconds
+    def MIN_REFRESH_PERIOD() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
+    /// Maximum session length in seconds
+    def MAX_SESSION_LENGTH() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    /// Cookie
+    def COOKIE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    /// Message to display
+    def MESSAGE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+    /// Link name override
+    def LINK_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// Link description override
+    def LINK_DESCRIPTION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+    /// Link snippet override
+    def LINK_SNIPPET() -> string:
+        return flatbuffers.field_string(buf_, pos_, 16)
+    /// Expiration time (ISO 8601)
+    def EXPIRES() -> string:
+        return flatbuffers.field_string(buf_, pos_, 18)
+    /// Update
+    def UPDATE() -> KMLUpdate?:
+        let o = flatbuffers.field_table(buf_, pos_, 20)
+        return if o: KMLUpdate { buf_, o } else: nil
+    /// LookAt
+    def LOOK_AT() -> KMLLookAt?:
+        let o = flatbuffers.field_table(buf_, pos_, 22)
+        return if o: KMLLookAt { buf_, o } else: nil
+    /// Camera
+    def CAMERA() -> KMLCamera?:
+        let o = flatbuffers.field_table(buf_, pos_, 24)
+        return if o: KMLCamera { buf_, o } else: nil
+
+def GetRootAsKMLNetworkLinkControl(buf:string): return KMLNetworkLinkControl { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLNetworkLinkControlBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(11)
+        return this
+    def add_MIN_REFRESH_PERIOD(MIN_REFRESH_PERIOD:float):
+        b_.PrependFloat64Slot(0, MIN_REFRESH_PERIOD, 0.0)
+        return this
+    def add_MAX_SESSION_LENGTH(MAX_SESSION_LENGTH:float):
+        b_.PrependFloat64Slot(1, MAX_SESSION_LENGTH, 0.0)
+        return this
+    def add_COOKIE(COOKIE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, COOKIE)
+        return this
+    def add_MESSAGE(MESSAGE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, MESSAGE)
+        return this
+    def add_LINK_NAME(LINK_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, LINK_NAME)
+        return this
+    def add_LINK_DESCRIPTION(LINK_DESCRIPTION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, LINK_DESCRIPTION)
+        return this
+    def add_LINK_SNIPPET(LINK_SNIPPET:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, LINK_SNIPPET)
+        return this
+    def add_EXPIRES(EXPIRES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, EXPIRES)
+        return this
+    def add_UPDATE(UPDATE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, UPDATE)
+        return this
+    def add_LOOK_AT(LOOK_AT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, LOOK_AT)
+        return this
+    def add_CAMERA(CAMERA:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, CAMERA)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// gx:FlyTo tour primitive
+class KMLFlyTo : flatbuffers.handle
+    /// Duration in seconds
+    def DURATION() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
+    /// Fly-to mode
+    def FLY_TO_MODE() -> KMLFlyToMode:
+        return KMLFlyToMode(flatbuffers.field_int8(buf_, pos_, 6, 0))
+    /// LookAt viewpoint
+    def LOOK_AT() -> KMLLookAt?:
+        let o = flatbuffers.field_table(buf_, pos_, 8)
+        return if o: KMLLookAt { buf_, o } else: nil
+    /// Camera viewpoint
+    def CAMERA() -> KMLCamera?:
+        let o = flatbuffers.field_table(buf_, pos_, 10)
+        return if o: KMLCamera { buf_, o } else: nil
+
+def GetRootAsKMLFlyTo(buf:string): return KMLFlyTo { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLFlyToBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(4)
+        return this
+    def add_DURATION(DURATION:float):
+        b_.PrependFloat64Slot(0, DURATION, 0.0)
+        return this
+    def add_FLY_TO_MODE(FLY_TO_MODE:KMLFlyToMode):
+        b_.PrependInt8Slot(1, FLY_TO_MODE, 0)
+        return this
+    def add_LOOK_AT(LOOK_AT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, LOOK_AT)
+        return this
+    def add_CAMERA(CAMERA:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, CAMERA)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// gx:Wait tour primitive
+class KMLWait : flatbuffers.handle
+    /// Duration in seconds
+    def DURATION() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
+
+def GetRootAsKMLWait(buf:string): return KMLWait { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLWaitBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(1)
+        return this
+    def add_DURATION(DURATION:float):
+        b_.PrependFloat64Slot(0, DURATION, 0.0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// gx:AnimatedUpdate tour primitive
+class KMLAnimatedUpdate : flatbuffers.handle
+    /// Duration in seconds
+    def DURATION() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
+    /// Delayed start in seconds
+    def DELAYED_START() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    /// Update
+    def UPDATE() -> KMLUpdate?:
+        let o = flatbuffers.field_table(buf_, pos_, 8)
+        return if o: KMLUpdate { buf_, o } else: nil
+
+def GetRootAsKMLAnimatedUpdate(buf:string): return KMLAnimatedUpdate { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLAnimatedUpdateBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(3)
+        return this
+    def add_DURATION(DURATION:float):
+        b_.PrependFloat64Slot(0, DURATION, 0.0)
+        return this
+    def add_DELAYED_START(DELAYED_START:float):
+        b_.PrependFloat64Slot(1, DELAYED_START, 0.0)
+        return this
+    def add_UPDATE(UPDATE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, UPDATE)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// gx:TourControl tour primitive
+class KMLTourControl : flatbuffers.handle
+    /// Play mode (pause)
+    def PLAY_MODE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+
+def GetRootAsKMLTourControl(buf:string): return KMLTourControl { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLTourControlBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(1)
+        return this
+    def add_PLAY_MODE(PLAY_MODE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, PLAY_MODE)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// gx:SoundCue tour primitive
+class KMLSoundCue : flatbuffers.handle
+    /// Audio file URL
+    def HREF() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Delayed start in seconds
+    def DELAYED_START() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+
+def GetRootAsKMLSoundCue(buf:string): return KMLSoundCue { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLSoundCueBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(2)
+        return this
+    def add_HREF(HREF:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, HREF)
+        return this
+    def add_DELAYED_START(DELAYED_START:float):
+        b_.PrependFloat64Slot(1, DELAYED_START, 0.0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Tour primitive (union-like)
+class KMLTourPrimitive : flatbuffers.handle
+    /// FlyTo
+    def FLY_TO() -> KMLFlyTo?:
+        let o = flatbuffers.field_table(buf_, pos_, 4)
+        return if o: KMLFlyTo { buf_, o } else: nil
+    /// Wait
+    def WAIT() -> KMLWait?:
+        let o = flatbuffers.field_table(buf_, pos_, 6)
+        return if o: KMLWait { buf_, o } else: nil
+    /// AnimatedUpdate
+    def ANIMATED_UPDATE() -> KMLAnimatedUpdate?:
+        let o = flatbuffers.field_table(buf_, pos_, 8)
+        return if o: KMLAnimatedUpdate { buf_, o } else: nil
+    /// TourControl
+    def TOUR_CONTROL() -> KMLTourControl?:
+        let o = flatbuffers.field_table(buf_, pos_, 10)
+        return if o: KMLTourControl { buf_, o } else: nil
+    /// SoundCue
+    def SOUND_CUE() -> KMLSoundCue?:
+        let o = flatbuffers.field_table(buf_, pos_, 12)
+        return if o: KMLSoundCue { buf_, o } else: nil
+
+def GetRootAsKMLTourPrimitive(buf:string): return KMLTourPrimitive { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLTourPrimitiveBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(5)
+        return this
+    def add_FLY_TO(FLY_TO:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, FLY_TO)
+        return this
+    def add_WAIT(WAIT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, WAIT)
+        return this
+    def add_ANIMATED_UPDATE(ANIMATED_UPDATE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, ANIMATED_UPDATE)
+        return this
+    def add_TOUR_CONTROL(TOUR_CONTROL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, TOUR_CONTROL)
+        return this
+    def add_SOUND_CUE(SOUND_CUE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, SOUND_CUE)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// gx:Playlist
+class KMLPlaylist : flatbuffers.handle
+    /// Tour primitives
+    def PRIMITIVES(i:int) -> KMLTourPrimitive:
+        return KMLTourPrimitive { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
+    def PRIMITIVES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
+
+def GetRootAsKMLPlaylist(buf:string): return KMLPlaylist { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLPlaylistBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(1)
+        return this
+    def add_PRIMITIVES(PRIMITIVES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, PRIMITIVES)
+        return this
+    def end():
+        return b_.EndObject()
+
+def KMLPlaylistStartPRIMITIVESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def KMLPlaylistCreatePRIMITIVESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+/// gx:Tour
+class KMLTour : flatbuffers.handle
+    /// Tour name
+    def NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Description
+    def DESCRIPTION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// Visibility
+    def VISIBILITY() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 8, 0))
+    /// Playlist
+    def PLAYLIST() -> KMLPlaylist?:
+        let o = flatbuffers.field_table(buf_, pos_, 10)
+        return if o: KMLPlaylist { buf_, o } else: nil
+
+def GetRootAsKMLTour(buf:string): return KMLTour { buf, flatbuffers.indirect(buf, 0) }
+
+struct KMLTourBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(4)
+        return this
+    def add_NAME(NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, NAME)
+        return this
+    def add_DESCRIPTION(DESCRIPTION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, DESCRIPTION)
+        return this
+    def add_VISIBILITY(VISIBILITY:bool):
+        b_.PrependBoolSlot(2, VISIBILITY, 0)
+        return this
+    def add_PLAYLIST(PLAYLIST:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, PLAYLIST)
         return this
     def end():
         return b_.EndObject()
@@ -1004,50 +2600,84 @@ class KMLPlacemark : flatbuffers.handle
     /// Snippet (short description)
     def SNIPPET() -> string:
         return flatbuffers.field_string(buf_, pos_, 14)
+    /// Whether open in tree view
+    def OPEN() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 16, 0))
+    /// Address
+    def ADDRESS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 18)
     /// Point geometry
     def POINT() -> KMLPoint?:
-        let o = flatbuffers.field_table(buf_, pos_, 16)
+        let o = flatbuffers.field_table(buf_, pos_, 20)
         return if o: KMLPoint { buf_, o } else: nil
     /// LineString geometry
     def LINE_STRING() -> KMLLineString?:
-        let o = flatbuffers.field_table(buf_, pos_, 18)
+        let o = flatbuffers.field_table(buf_, pos_, 22)
         return if o: KMLLineString { buf_, o } else: nil
     /// Polygon geometry
     def POLYGON() -> KMLPolygon?:
-        let o = flatbuffers.field_table(buf_, pos_, 20)
+        let o = flatbuffers.field_table(buf_, pos_, 24)
         return if o: KMLPolygon { buf_, o } else: nil
+    /// LinearRing geometry (standalone)
+    def LINEAR_RING() -> KMLLinearRing?:
+        let o = flatbuffers.field_table(buf_, pos_, 26)
+        return if o: KMLLinearRing { buf_, o } else: nil
     /// MultiGeometry
     def MULTI_GEOMETRY() -> KMLMultiGeometry?:
-        let o = flatbuffers.field_table(buf_, pos_, 22)
+        let o = flatbuffers.field_table(buf_, pos_, 28)
         return if o: KMLMultiGeometry { buf_, o } else: nil
+    /// 3D Model
+    def MODEL() -> KMLModel?:
+        let o = flatbuffers.field_table(buf_, pos_, 30)
+        return if o: KMLModel { buf_, o } else: nil
+    /// gx:Track
+    def TRACK() -> KMLTrack?:
+        let o = flatbuffers.field_table(buf_, pos_, 32)
+        return if o: KMLTrack { buf_, o } else: nil
+    /// gx:MultiTrack
+    def MULTI_TRACK() -> KMLMultiTrack?:
+        let o = flatbuffers.field_table(buf_, pos_, 34)
+        return if o: KMLMultiTrack { buf_, o } else: nil
     /// LookAt viewpoint
     def LOOK_AT() -> KMLLookAt?:
-        let o = flatbuffers.field_table(buf_, pos_, 24)
+        let o = flatbuffers.field_table(buf_, pos_, 36)
         return if o: KMLLookAt { buf_, o } else: nil
     /// Camera viewpoint
     def CAMERA() -> KMLCamera?:
-        let o = flatbuffers.field_table(buf_, pos_, 26)
+        let o = flatbuffers.field_table(buf_, pos_, 38)
         return if o: KMLCamera { buf_, o } else: nil
     /// TimeSpan
     def TIME_SPAN() -> KMLTimeSpan?:
-        let o = flatbuffers.field_table(buf_, pos_, 28)
+        let o = flatbuffers.field_table(buf_, pos_, 40)
         return if o: KMLTimeSpan { buf_, o } else: nil
     /// TimeStamp
     def TIME_STAMP() -> KMLTimeStamp?:
-        let o = flatbuffers.field_table(buf_, pos_, 30)
+        let o = flatbuffers.field_table(buf_, pos_, 42)
         return if o: KMLTimeStamp { buf_, o } else: nil
     /// Extended data
     def EXTENDED_DATA(i:int) -> KMLData:
-        return KMLData { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 32) + i * 4) }
+        return KMLData { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 44) + i * 4) }
     def EXTENDED_DATA_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 32)
+        return flatbuffers.field_vector_len(buf_, pos_, 44)
+    /// Schema data
+    def SCHEMA_DATA() -> KMLSchemaData?:
+        let o = flatbuffers.field_table(buf_, pos_, 46)
+        return if o: KMLSchemaData { buf_, o } else: nil
+    /// Region
+    def REGION() -> KMLRegion?:
+        let o = flatbuffers.field_table(buf_, pos_, 48)
+        return if o: KMLRegion { buf_, o } else: nil
+    /// StyleMap (inline)
+    def STYLE_MAP() -> KMLStyleMap?:
+        let o = flatbuffers.field_table(buf_, pos_, 50)
+        return if o: KMLStyleMap { buf_, o } else: nil
 
 def GetRootAsKMLPlacemark(buf:string): return KMLPlacemark { buf, flatbuffers.indirect(buf, 0) }
 
 struct KMLPlacemarkBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(15)
+        b_.StartObject(24)
         return this
     def add_NAME(NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, NAME)
@@ -1067,32 +2697,59 @@ struct KMLPlacemarkBuilder:
     def add_SNIPPET(SNIPPET:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(5, SNIPPET)
         return this
+    def add_OPEN(OPEN:bool):
+        b_.PrependBoolSlot(6, OPEN, 0)
+        return this
+    def add_ADDRESS(ADDRESS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, ADDRESS)
+        return this
     def add_POINT(POINT:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(6, POINT)
+        b_.PrependUOffsetTRelativeSlot(8, POINT)
         return this
     def add_LINE_STRING(LINE_STRING:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(7, LINE_STRING)
+        b_.PrependUOffsetTRelativeSlot(9, LINE_STRING)
         return this
     def add_POLYGON(POLYGON:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(8, POLYGON)
+        b_.PrependUOffsetTRelativeSlot(10, POLYGON)
+        return this
+    def add_LINEAR_RING(LINEAR_RING:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, LINEAR_RING)
         return this
     def add_MULTI_GEOMETRY(MULTI_GEOMETRY:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(9, MULTI_GEOMETRY)
+        b_.PrependUOffsetTRelativeSlot(12, MULTI_GEOMETRY)
+        return this
+    def add_MODEL(MODEL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(13, MODEL)
+        return this
+    def add_TRACK(TRACK:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(14, TRACK)
+        return this
+    def add_MULTI_TRACK(MULTI_TRACK:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(15, MULTI_TRACK)
         return this
     def add_LOOK_AT(LOOK_AT:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(10, LOOK_AT)
+        b_.PrependUOffsetTRelativeSlot(16, LOOK_AT)
         return this
     def add_CAMERA(CAMERA:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(11, CAMERA)
+        b_.PrependUOffsetTRelativeSlot(17, CAMERA)
         return this
     def add_TIME_SPAN(TIME_SPAN:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(12, TIME_SPAN)
+        b_.PrependUOffsetTRelativeSlot(18, TIME_SPAN)
         return this
     def add_TIME_STAMP(TIME_STAMP:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(13, TIME_STAMP)
+        b_.PrependUOffsetTRelativeSlot(19, TIME_STAMP)
         return this
     def add_EXTENDED_DATA(EXTENDED_DATA:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(14, EXTENDED_DATA)
+        b_.PrependUOffsetTRelativeSlot(20, EXTENDED_DATA)
+        return this
+    def add_SCHEMA_DATA(SCHEMA_DATA:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(21, SCHEMA_DATA)
+        return this
+    def add_REGION(REGION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(22, REGION)
+        return this
+    def add_STYLE_MAP(STYLE_MAP:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(23, STYLE_MAP)
         return this
     def end():
         return b_.EndObject()
@@ -1138,13 +2795,66 @@ class KMLFolder : flatbuffers.handle
         return KMLGroundOverlay { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 18) + i * 4) }
     def GROUND_OVERLAYS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 18)
+    /// Shared styles
+    def STYLES(i:int) -> KMLStyle:
+        return KMLStyle { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 20) + i * 4) }
+    def STYLES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 20)
+    /// Style maps
+    def STYLE_MAPS(i:int) -> KMLStyleMap:
+        return KMLStyleMap { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 22) + i * 4) }
+    def STYLE_MAPS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 22)
+    /// Screen overlays
+    def SCREEN_OVERLAYS(i:int) -> KMLScreenOverlay:
+        return KMLScreenOverlay { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 24) + i * 4) }
+    def SCREEN_OVERLAYS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 24)
+    /// Photo overlays
+    def PHOTO_OVERLAYS(i:int) -> KMLPhotoOverlay:
+        return KMLPhotoOverlay { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 26) + i * 4) }
+    def PHOTO_OVERLAYS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 26)
+    /// Tours
+    def TOURS(i:int) -> KMLTour:
+        return KMLTour { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 28) + i * 4) }
+    def TOURS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 28)
+    /// Style URL reference
+    def STYLE_URL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 30)
+    /// Region
+    def REGION() -> KMLRegion?:
+        let o = flatbuffers.field_table(buf_, pos_, 32)
+        return if o: KMLRegion { buf_, o } else: nil
+    /// Extended data
+    def EXTENDED_DATA(i:int) -> KMLData:
+        return KMLData { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 34) + i * 4) }
+    def EXTENDED_DATA_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 34)
+    /// LookAt viewpoint
+    def LOOK_AT() -> KMLLookAt?:
+        let o = flatbuffers.field_table(buf_, pos_, 36)
+        return if o: KMLLookAt { buf_, o } else: nil
+    /// Camera viewpoint
+    def CAMERA() -> KMLCamera?:
+        let o = flatbuffers.field_table(buf_, pos_, 38)
+        return if o: KMLCamera { buf_, o } else: nil
+    /// TimeSpan
+    def TIME_SPAN() -> KMLTimeSpan?:
+        let o = flatbuffers.field_table(buf_, pos_, 40)
+        return if o: KMLTimeSpan { buf_, o } else: nil
+    /// TimeStamp
+    def TIME_STAMP() -> KMLTimeStamp?:
+        let o = flatbuffers.field_table(buf_, pos_, 42)
+        return if o: KMLTimeStamp { buf_, o } else: nil
 
 def GetRootAsKMLFolder(buf:string): return KMLFolder { buf, flatbuffers.indirect(buf, 0) }
 
 struct KMLFolderBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(8)
+        b_.StartObject(20)
         return this
     def add_NAME(NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, NAME)
@@ -1169,6 +2879,42 @@ struct KMLFolderBuilder:
         return this
     def add_GROUND_OVERLAYS(GROUND_OVERLAYS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(7, GROUND_OVERLAYS)
+        return this
+    def add_STYLES(STYLES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, STYLES)
+        return this
+    def add_STYLE_MAPS(STYLE_MAPS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, STYLE_MAPS)
+        return this
+    def add_SCREEN_OVERLAYS(SCREEN_OVERLAYS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, SCREEN_OVERLAYS)
+        return this
+    def add_PHOTO_OVERLAYS(PHOTO_OVERLAYS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, PHOTO_OVERLAYS)
+        return this
+    def add_TOURS(TOURS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(12, TOURS)
+        return this
+    def add_STYLE_URL(STYLE_URL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(13, STYLE_URL)
+        return this
+    def add_REGION(REGION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(14, REGION)
+        return this
+    def add_EXTENDED_DATA(EXTENDED_DATA:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(15, EXTENDED_DATA)
+        return this
+    def add_LOOK_AT(LOOK_AT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(16, LOOK_AT)
+        return this
+    def add_CAMERA(CAMERA:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(17, CAMERA)
+        return this
+    def add_TIME_SPAN(TIME_SPAN:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(18, TIME_SPAN)
+        return this
+    def add_TIME_STAMP(TIME_STAMP:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(19, TIME_STAMP)
         return this
     def end():
         return b_.EndObject()
@@ -1197,6 +2943,48 @@ def KMLFolderCreateNETWORK_LINKSVector(b_:flatbuffers.builder, v_:[flatbuffers.o
 def KMLFolderStartGROUND_OVERLAYSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
 def KMLFolderCreateGROUND_OVERLAYSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def KMLFolderStartSTYLESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def KMLFolderCreateSTYLESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def KMLFolderStartSTYLE_MAPSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def KMLFolderCreateSTYLE_MAPSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def KMLFolderStartSCREEN_OVERLAYSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def KMLFolderCreateSCREEN_OVERLAYSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def KMLFolderStartPHOTO_OVERLAYSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def KMLFolderCreatePHOTO_OVERLAYSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def KMLFolderStartTOURSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def KMLFolderCreateTOURSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def KMLFolderStartEXTENDED_DATAVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def KMLFolderCreateEXTENDED_DATAVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
@@ -1245,13 +3033,37 @@ class KML : flatbuffers.handle
         return KMLGroundOverlay { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 22) + i * 4) }
     def GROUND_OVERLAYS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 22)
+    /// Schemas
+    def SCHEMAS(i:int) -> KMLSchema:
+        return KMLSchema { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 24) + i * 4) }
+    def SCHEMAS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 24)
+    /// Screen overlays
+    def SCREEN_OVERLAYS(i:int) -> KMLScreenOverlay:
+        return KMLScreenOverlay { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 26) + i * 4) }
+    def SCREEN_OVERLAYS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 26)
+    /// Photo overlays
+    def PHOTO_OVERLAYS(i:int) -> KMLPhotoOverlay:
+        return KMLPhotoOverlay { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 28) + i * 4) }
+    def PHOTO_OVERLAYS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 28)
+    /// Tours
+    def TOURS(i:int) -> KMLTour:
+        return KMLTour { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 30) + i * 4) }
+    def TOURS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 30)
+    /// NetworkLinkControl
+    def NETWORK_LINK_CONTROL() -> KMLNetworkLinkControl?:
+        let o = flatbuffers.field_table(buf_, pos_, 32)
+        return if o: KMLNetworkLinkControl { buf_, o } else: nil
 
 def GetRootAsKML(buf:string): return KML { buf, flatbuffers.indirect(buf, 0) }
 
 struct KMLBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(10)
+        b_.StartObject(15)
         return this
     def add_NAME(NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, NAME)
@@ -1282,6 +3094,21 @@ struct KMLBuilder:
         return this
     def add_GROUND_OVERLAYS(GROUND_OVERLAYS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(9, GROUND_OVERLAYS)
+        return this
+    def add_SCHEMAS(SCHEMAS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, SCHEMAS)
+        return this
+    def add_SCREEN_OVERLAYS(SCREEN_OVERLAYS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, SCREEN_OVERLAYS)
+        return this
+    def add_PHOTO_OVERLAYS(PHOTO_OVERLAYS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(12, PHOTO_OVERLAYS)
+        return this
+    def add_TOURS(TOURS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(13, TOURS)
+        return this
+    def add_NETWORK_LINK_CONTROL(NETWORK_LINK_CONTROL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(14, NETWORK_LINK_CONTROL)
         return this
     def end():
         return b_.EndObject()
@@ -1324,6 +3151,34 @@ def KMLCreateNETWORK_LINKSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]
 def KMLStartGROUND_OVERLAYSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
 def KMLCreateGROUND_OVERLAYSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def KMLStartSCHEMASVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def KMLCreateSCHEMASVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def KMLStartSCREEN_OVERLAYSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def KMLCreateSCREEN_OVERLAYSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def KMLStartPHOTO_OVERLAYSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def KMLCreatePHOTO_OVERLAYSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def KMLStartTOURSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def KMLCreateTOURSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

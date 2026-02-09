@@ -54,8 +54,42 @@ WIDTH():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * gx:outerColor
+ */
+GX_OUTER_COLOR():string|null
+GX_OUTER_COLOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+GX_OUTER_COLOR(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * gx:outerWidth
+ */
+GX_OUTER_WIDTH():number {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * gx:physicalWidth
+ */
+GX_PHYSICAL_WIDTH():number {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * gx:labelVisibility
+ */
+GX_LABEL_VISIBILITY():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startKMLLineStyle(builder:flatbuffers.Builder) {
-  builder.startObject(3);
+  builder.startObject(7);
 }
 
 static addColor(builder:flatbuffers.Builder, COLOROffset:flatbuffers.Offset) {
@@ -70,16 +104,36 @@ static addWidth(builder:flatbuffers.Builder, WIDTH:number) {
   builder.addFieldFloat64(2, WIDTH, 0.0);
 }
 
+static addGxOuterColor(builder:flatbuffers.Builder, GX_OUTER_COLOROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(3, GX_OUTER_COLOROffset, 0);
+}
+
+static addGxOuterWidth(builder:flatbuffers.Builder, GX_OUTER_WIDTH:number) {
+  builder.addFieldFloat64(4, GX_OUTER_WIDTH, 0.0);
+}
+
+static addGxPhysicalWidth(builder:flatbuffers.Builder, GX_PHYSICAL_WIDTH:number) {
+  builder.addFieldFloat64(5, GX_PHYSICAL_WIDTH, 0.0);
+}
+
+static addGxLabelVisibility(builder:flatbuffers.Builder, GX_LABEL_VISIBILITY:boolean) {
+  builder.addFieldInt8(6, +GX_LABEL_VISIBILITY, +false);
+}
+
 static endKMLLineStyle(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createKMLLineStyle(builder:flatbuffers.Builder, COLOROffset:flatbuffers.Offset, COLOR_MODE:KMLColorMode, WIDTH:number):flatbuffers.Offset {
+static createKMLLineStyle(builder:flatbuffers.Builder, COLOROffset:flatbuffers.Offset, COLOR_MODE:KMLColorMode, WIDTH:number, GX_OUTER_COLOROffset:flatbuffers.Offset, GX_OUTER_WIDTH:number, GX_PHYSICAL_WIDTH:number, GX_LABEL_VISIBILITY:boolean):flatbuffers.Offset {
   KMLLineStyle.startKMLLineStyle(builder);
   KMLLineStyle.addColor(builder, COLOROffset);
   KMLLineStyle.addColorMode(builder, COLOR_MODE);
   KMLLineStyle.addWidth(builder, WIDTH);
+  KMLLineStyle.addGxOuterColor(builder, GX_OUTER_COLOROffset);
+  KMLLineStyle.addGxOuterWidth(builder, GX_OUTER_WIDTH);
+  KMLLineStyle.addGxPhysicalWidth(builder, GX_PHYSICAL_WIDTH);
+  KMLLineStyle.addGxLabelVisibility(builder, GX_LABEL_VISIBILITY);
   return KMLLineStyle.endKMLLineStyle(builder);
 }
 
@@ -87,7 +141,11 @@ unpack(): KMLLineStyleT {
   return new KMLLineStyleT(
     this.COLOR(),
     this.COLOR_MODE(),
-    this.WIDTH()
+    this.WIDTH(),
+    this.GX_OUTER_COLOR(),
+    this.GX_OUTER_WIDTH(),
+    this.GX_PHYSICAL_WIDTH(),
+    this.GX_LABEL_VISIBILITY()
   );
 }
 
@@ -96,6 +154,10 @@ unpackTo(_o: KMLLineStyleT): void {
   _o.COLOR = this.COLOR();
   _o.COLOR_MODE = this.COLOR_MODE();
   _o.WIDTH = this.WIDTH();
+  _o.GX_OUTER_COLOR = this.GX_OUTER_COLOR();
+  _o.GX_OUTER_WIDTH = this.GX_OUTER_WIDTH();
+  _o.GX_PHYSICAL_WIDTH = this.GX_PHYSICAL_WIDTH();
+  _o.GX_LABEL_VISIBILITY = this.GX_LABEL_VISIBILITY();
 }
 }
 
@@ -103,17 +165,26 @@ export class KMLLineStyleT implements flatbuffers.IGeneratedObject {
 constructor(
   public COLOR: string|Uint8Array|null = null,
   public COLOR_MODE: KMLColorMode = KMLColorMode.NORMAL,
-  public WIDTH: number = 0.0
+  public WIDTH: number = 0.0,
+  public GX_OUTER_COLOR: string|Uint8Array|null = null,
+  public GX_OUTER_WIDTH: number = 0.0,
+  public GX_PHYSICAL_WIDTH: number = 0.0,
+  public GX_LABEL_VISIBILITY: boolean = false
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const COLOR = (this.COLOR !== null ? builder.createString(this.COLOR!) : 0);
+  const GX_OUTER_COLOR = (this.GX_OUTER_COLOR !== null ? builder.createString(this.GX_OUTER_COLOR!) : 0);
 
   return KMLLineStyle.createKMLLineStyle(builder,
     COLOR,
     this.COLOR_MODE,
-    this.WIDTH
+    this.WIDTH,
+    GX_OUTER_COLOR,
+    this.GX_OUTER_WIDTH,
+    this.GX_PHYSICAL_WIDTH,
+    this.GX_LABEL_VISIBILITY
   );
 }
 }

@@ -35,59 +35,97 @@ public final class KMLNetworkLink extends Table {
   public ByteBuffer NAMEAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
   /**
+   * Description
+   */
+  public String DESCRIPTION() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DESCRIPTIONAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
+  public ByteBuffer DESCRIPTIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  /**
    * Whether the link is visible
    */
-  public boolean VISIBILITY() { int o = __offset(6); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean VISIBILITY() { int o = __offset(8); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Whether open in tree view
+   */
+  public boolean OPEN() { int o = __offset(10); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
    * Link URL
    */
-  public String HREF() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer HREFAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
-  public ByteBuffer HREFInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  public String HREF() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer HREFAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer HREFInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
   /**
    * Refresh mode
    */
-  public byte REFRESH_MODE() { int o = __offset(10); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public byte REFRESH_MODE() { int o = __offset(14); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
    * Refresh interval in seconds
    */
-  public double REFRESH_INTERVAL() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double REFRESH_INTERVAL() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * View refresh mode
    */
-  public byte VIEW_REFRESH_MODE() { int o = __offset(14); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public byte VIEW_REFRESH_MODE() { int o = __offset(18); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
    * View refresh time in seconds
    */
-  public double VIEW_REFRESH_TIME() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double VIEW_REFRESH_TIME() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Whether to refresh on visibility change
+   */
+  public boolean REFRESH_VISIBILITY() { int o = __offset(22); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Whether to fly to view on refresh
+   */
+  public boolean FLY_TO_VIEW() { int o = __offset(24); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Full link element
+   */
+  public KMLLink LINK() { return LINK(new KMLLink()); }
+  public KMLLink LINK(KMLLink obj) { int o = __offset(26); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createKMLNetworkLink(FlatBufferBuilder builder,
       int NAMEOffset,
+      int DESCRIPTIONOffset,
       boolean VISIBILITY,
+      boolean OPEN,
       int HREFOffset,
       byte REFRESH_MODE,
       double REFRESH_INTERVAL,
       byte VIEW_REFRESH_MODE,
-      double VIEW_REFRESH_TIME) {
-    builder.startTable(7);
+      double VIEW_REFRESH_TIME,
+      boolean REFRESH_VISIBILITY,
+      boolean FLY_TO_VIEW,
+      int LINKOffset) {
+    builder.startTable(12);
     KMLNetworkLink.addViewRefreshTime(builder, VIEW_REFRESH_TIME);
     KMLNetworkLink.addRefreshInterval(builder, REFRESH_INTERVAL);
+    KMLNetworkLink.addLink(builder, LINKOffset);
     KMLNetworkLink.addHref(builder, HREFOffset);
+    KMLNetworkLink.addDescription(builder, DESCRIPTIONOffset);
     KMLNetworkLink.addName(builder, NAMEOffset);
+    KMLNetworkLink.addFlyToView(builder, FLY_TO_VIEW);
+    KMLNetworkLink.addRefreshVisibility(builder, REFRESH_VISIBILITY);
     KMLNetworkLink.addViewRefreshMode(builder, VIEW_REFRESH_MODE);
     KMLNetworkLink.addRefreshMode(builder, REFRESH_MODE);
+    KMLNetworkLink.addOpen(builder, OPEN);
     KMLNetworkLink.addVisibility(builder, VISIBILITY);
     return KMLNetworkLink.endKMLNetworkLink(builder);
   }
 
-  public static void startKMLNetworkLink(FlatBufferBuilder builder) { builder.startTable(7); }
+  public static void startKMLNetworkLink(FlatBufferBuilder builder) { builder.startTable(12); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(0, NAMEOffset, 0); }
-  public static void addVisibility(FlatBufferBuilder builder, boolean VISIBILITY) { builder.addBoolean(1, VISIBILITY, false); }
-  public static void addHref(FlatBufferBuilder builder, int HREFOffset) { builder.addOffset(2, HREFOffset, 0); }
-  public static void addRefreshMode(FlatBufferBuilder builder, byte REFRESH_MODE) { builder.addByte(3, REFRESH_MODE, 0); }
-  public static void addRefreshInterval(FlatBufferBuilder builder, double REFRESH_INTERVAL) { builder.addDouble(4, REFRESH_INTERVAL, 0.0); }
-  public static void addViewRefreshMode(FlatBufferBuilder builder, byte VIEW_REFRESH_MODE) { builder.addByte(5, VIEW_REFRESH_MODE, 0); }
-  public static void addViewRefreshTime(FlatBufferBuilder builder, double VIEW_REFRESH_TIME) { builder.addDouble(6, VIEW_REFRESH_TIME, 0.0); }
+  public static void addDescription(FlatBufferBuilder builder, int DESCRIPTIONOffset) { builder.addOffset(1, DESCRIPTIONOffset, 0); }
+  public static void addVisibility(FlatBufferBuilder builder, boolean VISIBILITY) { builder.addBoolean(2, VISIBILITY, false); }
+  public static void addOpen(FlatBufferBuilder builder, boolean OPEN) { builder.addBoolean(3, OPEN, false); }
+  public static void addHref(FlatBufferBuilder builder, int HREFOffset) { builder.addOffset(4, HREFOffset, 0); }
+  public static void addRefreshMode(FlatBufferBuilder builder, byte REFRESH_MODE) { builder.addByte(5, REFRESH_MODE, 0); }
+  public static void addRefreshInterval(FlatBufferBuilder builder, double REFRESH_INTERVAL) { builder.addDouble(6, REFRESH_INTERVAL, 0.0); }
+  public static void addViewRefreshMode(FlatBufferBuilder builder, byte VIEW_REFRESH_MODE) { builder.addByte(7, VIEW_REFRESH_MODE, 0); }
+  public static void addViewRefreshTime(FlatBufferBuilder builder, double VIEW_REFRESH_TIME) { builder.addDouble(8, VIEW_REFRESH_TIME, 0.0); }
+  public static void addRefreshVisibility(FlatBufferBuilder builder, boolean REFRESH_VISIBILITY) { builder.addBoolean(9, REFRESH_VISIBILITY, false); }
+  public static void addFlyToView(FlatBufferBuilder builder, boolean FLY_TO_VIEW) { builder.addBoolean(10, FLY_TO_VIEW, false); }
+  public static void addLink(FlatBufferBuilder builder, int LINKOffset) { builder.addOffset(11, LINKOffset, 0); }
   public static int endKMLNetworkLink(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

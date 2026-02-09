@@ -37,6 +37,7 @@ public struct GJNPosition: FlatBufferObject, Verifiable {
     case LONGITUDE = 4
     case LATITUDE = 6
     case ALTITUDE = 8
+    case HAS_ALTITUDE = 10
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -47,21 +48,27 @@ public struct GJNPosition: FlatBufferObject, Verifiable {
   public var LATITUDE: Double { let o = _accessor.offset(VTOFFSET.LATITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Altitude in meters above WGS84 ellipsoid (optional)
   public var ALTITUDE: Double { let o = _accessor.offset(VTOFFSET.ALTITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startGJNPosition(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  ///  True if altitude was explicitly provided (distinguishes 0 from absent)
+  public var HAS_ALTITUDE: Bool { let o = _accessor.offset(VTOFFSET.HAS_ALTITUDE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startGJNPosition(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
   public static func add(LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE, def: 0.0, at: VTOFFSET.LONGITUDE.p) }
   public static func add(LATITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE, def: 0.0, at: VTOFFSET.LATITUDE.p) }
   public static func add(ALTITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE, def: 0.0, at: VTOFFSET.ALTITUDE.p) }
+  public static func add(HAS_ALTITUDE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_ALTITUDE, def: false,
+   at: VTOFFSET.HAS_ALTITUDE.p) }
   public static func endGJNPosition(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createGJNPosition(
     _ fbb: inout FlatBufferBuilder,
     LONGITUDE: Double = 0.0,
     LATITUDE: Double = 0.0,
-    ALTITUDE: Double = 0.0
+    ALTITUDE: Double = 0.0,
+    HAS_ALTITUDE: Bool = false
   ) -> Offset {
     let __start = GJNPosition.startGJNPosition(&fbb)
     GJNPosition.add(LONGITUDE: LONGITUDE, &fbb)
     GJNPosition.add(LATITUDE: LATITUDE, &fbb)
     GJNPosition.add(ALTITUDE: ALTITUDE, &fbb)
+    GJNPosition.add(HAS_ALTITUDE: HAS_ALTITUDE, &fbb)
     return GJNPosition.endGJNPosition(&fbb, start: __start)
   }
 
@@ -70,6 +77,7 @@ public struct GJNPosition: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.LONGITUDE.p, fieldName: "LONGITUDE", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.LATITUDE.p, fieldName: "LATITUDE", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.ALTITUDE.p, fieldName: "ALTITUDE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.HAS_ALTITUDE.p, fieldName: "HAS_ALTITUDE", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -175,6 +183,7 @@ public struct GJNGeometry: FlatBufferObject, Verifiable {
     case RINGS = 10
     case POLYGON_RINGS = 12
     case GEOMETRIES = 14
+    case BBOX = 16
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -199,13 +208,16 @@ public struct GJNGeometry: FlatBufferObject, Verifiable {
   public var hasGeometries: Bool { let o = _accessor.offset(VTOFFSET.GEOMETRIES.v); return o == 0 ? false : true }
   public var GEOMETRIESCount: Int32 { let o = _accessor.offset(VTOFFSET.GEOMETRIES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func GEOMETRIES(at index: Int32) -> GJNGeometry? { let o = _accessor.offset(VTOFFSET.GEOMETRIES.v); return o == 0 ? nil : GJNGeometry(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
-  public static func startGJNGeometry(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  ///  Bounding box (optional, per RFC 7946 Section 5)
+  public var BBOX: GJNBoundingBox? { let o = _accessor.offset(VTOFFSET.BBOX.v); return o == 0 ? nil : GJNBoundingBox(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public static func startGJNGeometry(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
   public static func add(TYPE: GJNGeometryType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TYPE.rawValue, def: 0, at: VTOFFSET.TYPE.p) }
   public static func add(POINT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POINT, at: VTOFFSET.POINT.p) }
   public static func addVectorOf(POSITIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITIONS, at: VTOFFSET.POSITIONS.p) }
   public static func addVectorOf(RINGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RINGS, at: VTOFFSET.RINGS.p) }
   public static func addVectorOf(POLYGON_RINGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYGON_RINGS, at: VTOFFSET.POLYGON_RINGS.p) }
   public static func addVectorOf(GEOMETRIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GEOMETRIES, at: VTOFFSET.GEOMETRIES.p) }
+  public static func add(BBOX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BBOX, at: VTOFFSET.BBOX.p) }
   public static func endGJNGeometry(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createGJNGeometry(
     _ fbb: inout FlatBufferBuilder,
@@ -214,7 +226,8 @@ public struct GJNGeometry: FlatBufferObject, Verifiable {
     POSITIONSVectorOffset POSITIONS: Offset = Offset(),
     RINGSVectorOffset RINGS: Offset = Offset(),
     POLYGON_RINGSVectorOffset POLYGON_RINGS: Offset = Offset(),
-    GEOMETRIESVectorOffset GEOMETRIES: Offset = Offset()
+    GEOMETRIESVectorOffset GEOMETRIES: Offset = Offset(),
+    BBOXOffset BBOX: Offset = Offset()
   ) -> Offset {
     let __start = GJNGeometry.startGJNGeometry(&fbb)
     GJNGeometry.add(TYPE: TYPE, &fbb)
@@ -223,6 +236,7 @@ public struct GJNGeometry: FlatBufferObject, Verifiable {
     GJNGeometry.addVectorOf(RINGS: RINGS, &fbb)
     GJNGeometry.addVectorOf(POLYGON_RINGS: POLYGON_RINGS, &fbb)
     GJNGeometry.addVectorOf(GEOMETRIES: GEOMETRIES, &fbb)
+    GJNGeometry.add(BBOX: BBOX, &fbb)
     return GJNGeometry.endGJNGeometry(&fbb, start: __start)
   }
 
@@ -234,6 +248,7 @@ public struct GJNGeometry: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.RINGS.p, fieldName: "RINGS", required: false, type: ForwardOffset<Vector<ForwardOffset<GJNLinearRing>, GJNLinearRing>>.self)
     try _v.visit(field: VTOFFSET.POLYGON_RINGS.p, fieldName: "POLYGON_RINGS", required: false, type: ForwardOffset<Vector<ForwardOffset<GJNPolygonRings>, GJNPolygonRings>>.self)
     try _v.visit(field: VTOFFSET.GEOMETRIES.p, fieldName: "GEOMETRIES", required: false, type: ForwardOffset<Vector<ForwardOffset<GJNGeometry>, GJNGeometry>>.self)
+    try _v.visit(field: VTOFFSET.BBOX.p, fieldName: "BBOX", required: false, type: ForwardOffset<GJNBoundingBox>.self)
     _v.finish()
   }
 }
@@ -255,6 +270,10 @@ public struct GJNProperty: FlatBufferObject, Verifiable {
     case VALUE = 6
     case NUM_VALUE = 8
     case IS_NUMERIC = 10
+    case IS_BOOL = 12
+    case BOOL_VALUE = 14
+    case IS_NULL = 16
+    case JSON_VALUE = 18
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -269,25 +288,49 @@ public struct GJNProperty: FlatBufferObject, Verifiable {
   public var NUM_VALUE: Double { let o = _accessor.offset(VTOFFSET.NUM_VALUE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  True if NUM_VALUE should be used instead of VALUE
   public var IS_NUMERIC: Bool { let o = _accessor.offset(VTOFFSET.IS_NUMERIC.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public static func startGJNProperty(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  ///  True if this property value is a boolean
+  public var IS_BOOL: Bool { let o = _accessor.offset(VTOFFSET.IS_BOOL.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Boolean value (use when IS_BOOL is true)
+  public var BOOL_VALUE: Bool { let o = _accessor.offset(VTOFFSET.BOOL_VALUE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  True if this property value is JSON null
+  public var IS_NULL: Bool { let o = _accessor.offset(VTOFFSET.IS_NULL.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Raw JSON string for complex values (objects, arrays)
+  public var JSON_VALUE: String? { let o = _accessor.offset(VTOFFSET.JSON_VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var JSON_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.JSON_VALUE.v) }
+  public static func startGJNProperty(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
   public static func add(KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEY, at: VTOFFSET.KEY.p) }
   public static func add(VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALUE, at: VTOFFSET.VALUE.p) }
   public static func add(NUM_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_VALUE, def: 0.0, at: VTOFFSET.NUM_VALUE.p) }
   public static func add(IS_NUMERIC: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IS_NUMERIC, def: false,
    at: VTOFFSET.IS_NUMERIC.p) }
+  public static func add(IS_BOOL: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IS_BOOL, def: false,
+   at: VTOFFSET.IS_BOOL.p) }
+  public static func add(BOOL_VALUE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BOOL_VALUE, def: false,
+   at: VTOFFSET.BOOL_VALUE.p) }
+  public static func add(IS_NULL: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IS_NULL, def: false,
+   at: VTOFFSET.IS_NULL.p) }
+  public static func add(JSON_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: JSON_VALUE, at: VTOFFSET.JSON_VALUE.p) }
   public static func endGJNProperty(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createGJNProperty(
     _ fbb: inout FlatBufferBuilder,
     KEYOffset KEY: Offset = Offset(),
     VALUEOffset VALUE: Offset = Offset(),
     NUM_VALUE: Double = 0.0,
-    IS_NUMERIC: Bool = false
+    IS_NUMERIC: Bool = false,
+    IS_BOOL: Bool = false,
+    BOOL_VALUE: Bool = false,
+    IS_NULL: Bool = false,
+    JSON_VALUEOffset JSON_VALUE: Offset = Offset()
   ) -> Offset {
     let __start = GJNProperty.startGJNProperty(&fbb)
     GJNProperty.add(KEY: KEY, &fbb)
     GJNProperty.add(VALUE: VALUE, &fbb)
     GJNProperty.add(NUM_VALUE: NUM_VALUE, &fbb)
     GJNProperty.add(IS_NUMERIC: IS_NUMERIC, &fbb)
+    GJNProperty.add(IS_BOOL: IS_BOOL, &fbb)
+    GJNProperty.add(BOOL_VALUE: BOOL_VALUE, &fbb)
+    GJNProperty.add(IS_NULL: IS_NULL, &fbb)
+    GJNProperty.add(JSON_VALUE: JSON_VALUE, &fbb)
     return GJNProperty.endGJNProperty(&fbb, start: __start)
   }
 
@@ -297,6 +340,10 @@ public struct GJNProperty: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.VALUE.p, fieldName: "VALUE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.NUM_VALUE.p, fieldName: "NUM_VALUE", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.IS_NUMERIC.p, fieldName: "IS_NUMERIC", required: false, type: Bool.self)
+    try _v.visit(field: VTOFFSET.IS_BOOL.p, fieldName: "IS_BOOL", required: false, type: Bool.self)
+    try _v.visit(field: VTOFFSET.BOOL_VALUE.p, fieldName: "BOOL_VALUE", required: false, type: Bool.self)
+    try _v.visit(field: VTOFFSET.IS_NULL.p, fieldName: "IS_NULL", required: false, type: Bool.self)
+    try _v.visit(field: VTOFFSET.JSON_VALUE.p, fieldName: "JSON_VALUE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -317,11 +364,16 @@ public struct GJNFeature: FlatBufferObject, Verifiable {
     case ID = 4
     case GEOMETRY = 6
     case PROPERTIES = 8
+    case NUM_ID = 10
+    case ID_IS_NUMERIC = 12
+    case HAS_GEOMETRY = 14
+    case PROPERTIES_IS_NULL = 16
+    case BBOX = 18
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
-  ///  Feature identifier (optional)
+  ///  Feature identifier (optional, string form)
   public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
   ///  Geometry of the feature
@@ -330,21 +382,49 @@ public struct GJNFeature: FlatBufferObject, Verifiable {
   public var hasProperties: Bool { let o = _accessor.offset(VTOFFSET.PROPERTIES.v); return o == 0 ? false : true }
   public var PROPERTIESCount: Int32 { let o = _accessor.offset(VTOFFSET.PROPERTIES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func PROPERTIES(at index: Int32) -> GJNProperty? { let o = _accessor.offset(VTOFFSET.PROPERTIES.v); return o == 0 ? nil : GJNProperty(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
-  public static func startGJNFeature(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  ///  Numeric feature identifier (use when ID_IS_NUMERIC is true)
+  public var NUM_ID: Double { let o = _accessor.offset(VTOFFSET.NUM_ID.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True if the feature id is numeric rather than string
+  public var ID_IS_NUMERIC: Bool { let o = _accessor.offset(VTOFFSET.ID_IS_NUMERIC.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  True if the feature has a geometry (false means geometry was JSON null)
+  public var HAS_GEOMETRY: Bool { let o = _accessor.offset(VTOFFSET.HAS_GEOMETRY.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  True if properties was JSON null (vs empty object)
+  public var PROPERTIES_IS_NULL: Bool { let o = _accessor.offset(VTOFFSET.PROPERTIES_IS_NULL.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Bounding box (optional, per RFC 7946 Section 5)
+  public var BBOX: GJNBoundingBox? { let o = _accessor.offset(VTOFFSET.BBOX.v); return o == 0 ? nil : GJNBoundingBox(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  public static func startGJNFeature(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(GEOMETRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GEOMETRY, at: VTOFFSET.GEOMETRY.p) }
   public static func addVectorOf(PROPERTIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROPERTIES, at: VTOFFSET.PROPERTIES.p) }
+  public static func add(NUM_ID: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_ID, def: 0.0, at: VTOFFSET.NUM_ID.p) }
+  public static func add(ID_IS_NUMERIC: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ID_IS_NUMERIC, def: false,
+   at: VTOFFSET.ID_IS_NUMERIC.p) }
+  public static func add(HAS_GEOMETRY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_GEOMETRY, def: false,
+   at: VTOFFSET.HAS_GEOMETRY.p) }
+  public static func add(PROPERTIES_IS_NULL: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PROPERTIES_IS_NULL, def: false,
+   at: VTOFFSET.PROPERTIES_IS_NULL.p) }
+  public static func add(BBOX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BBOX, at: VTOFFSET.BBOX.p) }
   public static func endGJNFeature(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createGJNFeature(
     _ fbb: inout FlatBufferBuilder,
     IDOffset ID: Offset = Offset(),
     GEOMETRYOffset GEOMETRY: Offset = Offset(),
-    PROPERTIESVectorOffset PROPERTIES: Offset = Offset()
+    PROPERTIESVectorOffset PROPERTIES: Offset = Offset(),
+    NUM_ID: Double = 0.0,
+    ID_IS_NUMERIC: Bool = false,
+    HAS_GEOMETRY: Bool = false,
+    PROPERTIES_IS_NULL: Bool = false,
+    BBOXOffset BBOX: Offset = Offset()
   ) -> Offset {
     let __start = GJNFeature.startGJNFeature(&fbb)
     GJNFeature.add(ID: ID, &fbb)
     GJNFeature.add(GEOMETRY: GEOMETRY, &fbb)
     GJNFeature.addVectorOf(PROPERTIES: PROPERTIES, &fbb)
+    GJNFeature.add(NUM_ID: NUM_ID, &fbb)
+    GJNFeature.add(ID_IS_NUMERIC: ID_IS_NUMERIC, &fbb)
+    GJNFeature.add(HAS_GEOMETRY: HAS_GEOMETRY, &fbb)
+    GJNFeature.add(PROPERTIES_IS_NULL: PROPERTIES_IS_NULL, &fbb)
+    GJNFeature.add(BBOX: BBOX, &fbb)
     return GJNFeature.endGJNFeature(&fbb, start: __start)
   }
 
@@ -353,6 +433,11 @@ public struct GJNFeature: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.GEOMETRY.p, fieldName: "GEOMETRY", required: false, type: ForwardOffset<GJNGeometry>.self)
     try _v.visit(field: VTOFFSET.PROPERTIES.p, fieldName: "PROPERTIES", required: false, type: ForwardOffset<Vector<ForwardOffset<GJNProperty>, GJNProperty>>.self)
+    try _v.visit(field: VTOFFSET.NUM_ID.p, fieldName: "NUM_ID", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.ID_IS_NUMERIC.p, fieldName: "ID_IS_NUMERIC", required: false, type: Bool.self)
+    try _v.visit(field: VTOFFSET.HAS_GEOMETRY.p, fieldName: "HAS_GEOMETRY", required: false, type: Bool.self)
+    try _v.visit(field: VTOFFSET.PROPERTIES_IS_NULL.p, fieldName: "PROPERTIES_IS_NULL", required: false, type: Bool.self)
+    try _v.visit(field: VTOFFSET.BBOX.p, fieldName: "BBOX", required: false, type: ForwardOffset<GJNBoundingBox>.self)
     _v.finish()
   }
 }
@@ -376,6 +461,7 @@ public struct GJNBoundingBox: FlatBufferObject, Verifiable {
     case NORTH = 10
     case MIN_ALTITUDE = 12
     case MAX_ALTITUDE = 14
+    case HAS_ALTITUDE = 16
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -392,13 +478,17 @@ public struct GJNBoundingBox: FlatBufferObject, Verifiable {
   public var MIN_ALTITUDE: Double { let o = _accessor.offset(VTOFFSET.MIN_ALTITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Maximum altitude (optional)
   public var MAX_ALTITUDE: Double { let o = _accessor.offset(VTOFFSET.MAX_ALTITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startGJNBoundingBox(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  ///  True if the bbox includes altitude (6 values vs 4)
+  public var HAS_ALTITUDE: Bool { let o = _accessor.offset(VTOFFSET.HAS_ALTITUDE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startGJNBoundingBox(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
   public static func add(WEST: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEST, def: 0.0, at: VTOFFSET.WEST.p) }
   public static func add(SOUTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOUTH, def: 0.0, at: VTOFFSET.SOUTH.p) }
   public static func add(EAST: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EAST, def: 0.0, at: VTOFFSET.EAST.p) }
   public static func add(NORTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORTH, def: 0.0, at: VTOFFSET.NORTH.p) }
   public static func add(MIN_ALTITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_ALTITUDE, def: 0.0, at: VTOFFSET.MIN_ALTITUDE.p) }
   public static func add(MAX_ALTITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_ALTITUDE, def: 0.0, at: VTOFFSET.MAX_ALTITUDE.p) }
+  public static func add(HAS_ALTITUDE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_ALTITUDE, def: false,
+   at: VTOFFSET.HAS_ALTITUDE.p) }
   public static func endGJNBoundingBox(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createGJNBoundingBox(
     _ fbb: inout FlatBufferBuilder,
@@ -407,7 +497,8 @@ public struct GJNBoundingBox: FlatBufferObject, Verifiable {
     EAST: Double = 0.0,
     NORTH: Double = 0.0,
     MIN_ALTITUDE: Double = 0.0,
-    MAX_ALTITUDE: Double = 0.0
+    MAX_ALTITUDE: Double = 0.0,
+    HAS_ALTITUDE: Bool = false
   ) -> Offset {
     let __start = GJNBoundingBox.startGJNBoundingBox(&fbb)
     GJNBoundingBox.add(WEST: WEST, &fbb)
@@ -416,6 +507,7 @@ public struct GJNBoundingBox: FlatBufferObject, Verifiable {
     GJNBoundingBox.add(NORTH: NORTH, &fbb)
     GJNBoundingBox.add(MIN_ALTITUDE: MIN_ALTITUDE, &fbb)
     GJNBoundingBox.add(MAX_ALTITUDE: MAX_ALTITUDE, &fbb)
+    GJNBoundingBox.add(HAS_ALTITUDE: HAS_ALTITUDE, &fbb)
     return GJNBoundingBox.endGJNBoundingBox(&fbb, start: __start)
   }
 
@@ -427,6 +519,7 @@ public struct GJNBoundingBox: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.NORTH.p, fieldName: "NORTH", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.MIN_ALTITUDE.p, fieldName: "MIN_ALTITUDE", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.MAX_ALTITUDE.p, fieldName: "MAX_ALTITUDE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.HAS_ALTITUDE.p, fieldName: "HAS_ALTITUDE", required: false, type: Bool.self)
     _v.finish()
   }
 }

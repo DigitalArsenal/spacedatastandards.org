@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { GJNBoundingBox, GJNBoundingBoxT } from './GJNBoundingBox.js';
 import { GJNGeometryType } from './GJNGeometryType.js';
 import { GJNLinearRing, GJNLinearRingT } from './GJNLinearRing.js';
 import { GJNPolygonRings, GJNPolygonRingsT } from './GJNPolygonRings.js';
@@ -99,8 +100,16 @@ geometriesLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Bounding box (optional, per RFC 7946 Section 5)
+ */
+BBOX(obj?:GJNBoundingBox):GJNBoundingBox|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? (obj || new GJNBoundingBox()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startGJNGeometry(builder:flatbuffers.Builder) {
-  builder.startObject(6);
+  builder.startObject(7);
 }
 
 static addType(builder:flatbuffers.Builder, TYPE:GJNGeometryType) {
@@ -175,6 +184,10 @@ static startGeometriesVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addBbox(builder:flatbuffers.Builder, BBOXOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, BBOXOffset, 0);
+}
+
 static endGJNGeometry(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -188,7 +201,8 @@ unpack(): GJNGeometryT {
     this.bb!.createObjList<GJNPosition, GJNPositionT>(this.POSITIONS.bind(this), this.positionsLength()),
     this.bb!.createObjList<GJNLinearRing, GJNLinearRingT>(this.RINGS.bind(this), this.ringsLength()),
     this.bb!.createObjList<GJNPolygonRings, GJNPolygonRingsT>(this.POLYGON_RINGS.bind(this), this.polygonRingsLength()),
-    this.bb!.createObjList<GJNGeometry, GJNGeometryT>(this.GEOMETRIES.bind(this), this.geometriesLength())
+    this.bb!.createObjList<GJNGeometry, GJNGeometryT>(this.GEOMETRIES.bind(this), this.geometriesLength()),
+    (this.BBOX() !== null ? this.BBOX()!.unpack() : null)
   );
 }
 
@@ -200,6 +214,7 @@ unpackTo(_o: GJNGeometryT): void {
   _o.RINGS = this.bb!.createObjList<GJNLinearRing, GJNLinearRingT>(this.RINGS.bind(this), this.ringsLength());
   _o.POLYGON_RINGS = this.bb!.createObjList<GJNPolygonRings, GJNPolygonRingsT>(this.POLYGON_RINGS.bind(this), this.polygonRingsLength());
   _o.GEOMETRIES = this.bb!.createObjList<GJNGeometry, GJNGeometryT>(this.GEOMETRIES.bind(this), this.geometriesLength());
+  _o.BBOX = (this.BBOX() !== null ? this.BBOX()!.unpack() : null);
 }
 }
 
@@ -210,7 +225,8 @@ constructor(
   public POSITIONS: (GJNPositionT)[] = [],
   public RINGS: (GJNLinearRingT)[] = [],
   public POLYGON_RINGS: (GJNPolygonRingsT)[] = [],
-  public GEOMETRIES: (GJNGeometryT)[] = []
+  public GEOMETRIES: (GJNGeometryT)[] = [],
+  public BBOX: GJNBoundingBoxT|null = null
 ){}
 
 
@@ -220,6 +236,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const RINGS = GJNGeometry.createRingsVector(builder, builder.createObjectOffsetList(this.RINGS));
   const POLYGON_RINGS = GJNGeometry.createPolygonRingsVector(builder, builder.createObjectOffsetList(this.POLYGON_RINGS));
   const GEOMETRIES = GJNGeometry.createGeometriesVector(builder, builder.createObjectOffsetList(this.GEOMETRIES));
+  const BBOX = (this.BBOX !== null ? this.BBOX!.pack(builder) : 0);
 
   GJNGeometry.startGJNGeometry(builder);
   GJNGeometry.addType(builder, this.TYPE);
@@ -228,6 +245,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   GJNGeometry.addRings(builder, RINGS);
   GJNGeometry.addPolygonRings(builder, POLYGON_RINGS);
   GJNGeometry.addGeometries(builder, GEOMETRIES);
+  GJNGeometry.addBbox(builder, BBOX);
 
   return GJNGeometry.endGJNGeometry(builder);
 }

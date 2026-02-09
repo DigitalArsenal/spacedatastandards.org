@@ -53,8 +53,40 @@ class KMLLineStyle(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # gx:outerColor
+    # KMLLineStyle
+    def GX_OUTER_COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # gx:outerWidth
+    # KMLLineStyle
+    def GX_OUTER_WIDTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # gx:physicalWidth
+    # KMLLineStyle
+    def GX_PHYSICAL_WIDTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # gx:labelVisibility
+    # KMLLineStyle
+    def GX_LABEL_VISIBILITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def KMLLineStyleStart(builder):
-    builder.StartObject(3)
+    builder.StartObject(7)
 
 def Start(builder):
     KMLLineStyleStart(builder)
@@ -77,6 +109,30 @@ def KMLLineStyleAddWIDTH(builder, WIDTH):
 def AddWIDTH(builder, WIDTH):
     KMLLineStyleAddWIDTH(builder, WIDTH)
 
+def KMLLineStyleAddGX_OUTER_COLOR(builder, GX_OUTER_COLOR):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(GX_OUTER_COLOR), 0)
+
+def AddGX_OUTER_COLOR(builder, GX_OUTER_COLOR):
+    KMLLineStyleAddGX_OUTER_COLOR(builder, GX_OUTER_COLOR)
+
+def KMLLineStyleAddGX_OUTER_WIDTH(builder, GX_OUTER_WIDTH):
+    builder.PrependFloat64Slot(4, GX_OUTER_WIDTH, 0.0)
+
+def AddGX_OUTER_WIDTH(builder, GX_OUTER_WIDTH):
+    KMLLineStyleAddGX_OUTER_WIDTH(builder, GX_OUTER_WIDTH)
+
+def KMLLineStyleAddGX_PHYSICAL_WIDTH(builder, GX_PHYSICAL_WIDTH):
+    builder.PrependFloat64Slot(5, GX_PHYSICAL_WIDTH, 0.0)
+
+def AddGX_PHYSICAL_WIDTH(builder, GX_PHYSICAL_WIDTH):
+    KMLLineStyleAddGX_PHYSICAL_WIDTH(builder, GX_PHYSICAL_WIDTH)
+
+def KMLLineStyleAddGX_LABEL_VISIBILITY(builder, GX_LABEL_VISIBILITY):
+    builder.PrependBoolSlot(6, GX_LABEL_VISIBILITY, 0)
+
+def AddGX_LABEL_VISIBILITY(builder, GX_LABEL_VISIBILITY):
+    KMLLineStyleAddGX_LABEL_VISIBILITY(builder, GX_LABEL_VISIBILITY)
+
 def KMLLineStyleEnd(builder):
     return builder.EndObject()
 
@@ -91,6 +147,10 @@ class KMLLineStyleT(object):
         self.COLOR = None  # type: str
         self.COLOR_MODE = 0  # type: int
         self.WIDTH = 0.0  # type: float
+        self.GX_OUTER_COLOR = None  # type: str
+        self.GX_OUTER_WIDTH = 0.0  # type: float
+        self.GX_PHYSICAL_WIDTH = 0.0  # type: float
+        self.GX_LABEL_VISIBILITY = False  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -116,15 +176,26 @@ class KMLLineStyleT(object):
         self.COLOR = kmllineStyle.COLOR()
         self.COLOR_MODE = kmllineStyle.COLOR_MODE()
         self.WIDTH = kmllineStyle.WIDTH()
+        self.GX_OUTER_COLOR = kmllineStyle.GX_OUTER_COLOR()
+        self.GX_OUTER_WIDTH = kmllineStyle.GX_OUTER_WIDTH()
+        self.GX_PHYSICAL_WIDTH = kmllineStyle.GX_PHYSICAL_WIDTH()
+        self.GX_LABEL_VISIBILITY = kmllineStyle.GX_LABEL_VISIBILITY()
 
     # KMLLineStyleT
     def Pack(self, builder):
         if self.COLOR is not None:
             COLOR = builder.CreateString(self.COLOR)
+        if self.GX_OUTER_COLOR is not None:
+            GX_OUTER_COLOR = builder.CreateString(self.GX_OUTER_COLOR)
         KMLLineStyleStart(builder)
         if self.COLOR is not None:
             KMLLineStyleAddCOLOR(builder, COLOR)
         KMLLineStyleAddCOLOR_MODE(builder, self.COLOR_MODE)
         KMLLineStyleAddWIDTH(builder, self.WIDTH)
+        if self.GX_OUTER_COLOR is not None:
+            KMLLineStyleAddGX_OUTER_COLOR(builder, GX_OUTER_COLOR)
+        KMLLineStyleAddGX_OUTER_WIDTH(builder, self.GX_OUTER_WIDTH)
+        KMLLineStyleAddGX_PHYSICAL_WIDTH(builder, self.GX_PHYSICAL_WIDTH)
+        KMLLineStyleAddGX_LABEL_VISIBILITY(builder, self.GX_LABEL_VISIBILITY)
         kmllineStyle = KMLLineStyleEnd(builder)
         return kmllineStyle

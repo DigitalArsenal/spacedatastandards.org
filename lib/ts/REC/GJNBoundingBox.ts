@@ -75,8 +75,16 @@ MAX_ALTITUDE():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * True if the bbox includes altitude (6 values vs 4)
+ */
+HAS_ALTITUDE():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startGJNBoundingBox(builder:flatbuffers.Builder) {
-  builder.startObject(6);
+  builder.startObject(7);
 }
 
 static addWest(builder:flatbuffers.Builder, WEST:number) {
@@ -103,12 +111,16 @@ static addMaxAltitude(builder:flatbuffers.Builder, MAX_ALTITUDE:number) {
   builder.addFieldFloat64(5, MAX_ALTITUDE, 0.0);
 }
 
+static addHasAltitude(builder:flatbuffers.Builder, HAS_ALTITUDE:boolean) {
+  builder.addFieldInt8(6, +HAS_ALTITUDE, +false);
+}
+
 static endGJNBoundingBox(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createGJNBoundingBox(builder:flatbuffers.Builder, WEST:number, SOUTH:number, EAST:number, NORTH:number, MIN_ALTITUDE:number, MAX_ALTITUDE:number):flatbuffers.Offset {
+static createGJNBoundingBox(builder:flatbuffers.Builder, WEST:number, SOUTH:number, EAST:number, NORTH:number, MIN_ALTITUDE:number, MAX_ALTITUDE:number, HAS_ALTITUDE:boolean):flatbuffers.Offset {
   GJNBoundingBox.startGJNBoundingBox(builder);
   GJNBoundingBox.addWest(builder, WEST);
   GJNBoundingBox.addSouth(builder, SOUTH);
@@ -116,6 +128,7 @@ static createGJNBoundingBox(builder:flatbuffers.Builder, WEST:number, SOUTH:numb
   GJNBoundingBox.addNorth(builder, NORTH);
   GJNBoundingBox.addMinAltitude(builder, MIN_ALTITUDE);
   GJNBoundingBox.addMaxAltitude(builder, MAX_ALTITUDE);
+  GJNBoundingBox.addHasAltitude(builder, HAS_ALTITUDE);
   return GJNBoundingBox.endGJNBoundingBox(builder);
 }
 
@@ -126,7 +139,8 @@ unpack(): GJNBoundingBoxT {
     this.EAST(),
     this.NORTH(),
     this.MIN_ALTITUDE(),
-    this.MAX_ALTITUDE()
+    this.MAX_ALTITUDE(),
+    this.HAS_ALTITUDE()
   );
 }
 
@@ -138,6 +152,7 @@ unpackTo(_o: GJNBoundingBoxT): void {
   _o.NORTH = this.NORTH();
   _o.MIN_ALTITUDE = this.MIN_ALTITUDE();
   _o.MAX_ALTITUDE = this.MAX_ALTITUDE();
+  _o.HAS_ALTITUDE = this.HAS_ALTITUDE();
 }
 }
 
@@ -148,7 +163,8 @@ constructor(
   public EAST: number = 0.0,
   public NORTH: number = 0.0,
   public MIN_ALTITUDE: number = 0.0,
-  public MAX_ALTITUDE: number = 0.0
+  public MAX_ALTITUDE: number = 0.0,
+  public HAS_ALTITUDE: boolean = false
 ){}
 
 
@@ -159,7 +175,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.EAST,
     this.NORTH,
     this.MIN_ALTITUDE,
-    this.MAX_ALTITUDE
+    this.MAX_ALTITUDE,
+    this.HAS_ALTITUDE
   );
 }
 }

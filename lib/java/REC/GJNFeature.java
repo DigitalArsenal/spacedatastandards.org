@@ -29,7 +29,7 @@ public final class GJNFeature extends Table {
   public GJNFeature __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /**
-   * Feature identifier (optional)
+   * Feature identifier (optional, string form)
    */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
@@ -47,24 +47,60 @@ public final class GJNFeature extends Table {
   public int PROPERTIESLength() { int o = __offset(8); return o != 0 ? __vector_len(o) : 0; }
   public GJNProperty.Vector propertiesVector() { return propertiesVector(new GJNProperty.Vector()); }
   public GJNProperty.Vector propertiesVector(GJNProperty.Vector obj) { int o = __offset(8); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Numeric feature identifier (use when ID_IS_NUMERIC is true)
+   */
+  public double NUM_ID() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * True if the feature id is numeric rather than string
+   */
+  public boolean ID_IS_NUMERIC() { int o = __offset(12); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * True if the feature has a geometry (false means geometry was JSON null)
+   */
+  public boolean HAS_GEOMETRY() { int o = __offset(14); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * True if properties was JSON null (vs empty object)
+   */
+  public boolean PROPERTIES_IS_NULL() { int o = __offset(16); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Bounding box (optional, per RFC 7946 Section 5)
+   */
+  public GJNBoundingBox BBOX() { return BBOX(new GJNBoundingBox()); }
+  public GJNBoundingBox BBOX(GJNBoundingBox obj) { int o = __offset(18); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createGJNFeature(FlatBufferBuilder builder,
       int IDOffset,
       int GEOMETRYOffset,
-      int PROPERTIESOffset) {
-    builder.startTable(3);
+      int PROPERTIESOffset,
+      double NUM_ID,
+      boolean ID_IS_NUMERIC,
+      boolean HAS_GEOMETRY,
+      boolean PROPERTIES_IS_NULL,
+      int BBOXOffset) {
+    builder.startTable(8);
+    GJNFeature.addNumId(builder, NUM_ID);
+    GJNFeature.addBbox(builder, BBOXOffset);
     GJNFeature.addProperties(builder, PROPERTIESOffset);
     GJNFeature.addGeometry(builder, GEOMETRYOffset);
     GJNFeature.addId(builder, IDOffset);
+    GJNFeature.addPropertiesIsNull(builder, PROPERTIES_IS_NULL);
+    GJNFeature.addHasGeometry(builder, HAS_GEOMETRY);
+    GJNFeature.addIdIsNumeric(builder, ID_IS_NUMERIC);
     return GJNFeature.endGJNFeature(builder);
   }
 
-  public static void startGJNFeature(FlatBufferBuilder builder) { builder.startTable(3); }
+  public static void startGJNFeature(FlatBufferBuilder builder) { builder.startTable(8); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addGeometry(FlatBufferBuilder builder, int GEOMETRYOffset) { builder.addOffset(1, GEOMETRYOffset, 0); }
   public static void addProperties(FlatBufferBuilder builder, int PROPERTIESOffset) { builder.addOffset(2, PROPERTIESOffset, 0); }
   public static int createPropertiesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startPropertiesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addNumId(FlatBufferBuilder builder, double NUM_ID) { builder.addDouble(3, NUM_ID, 0.0); }
+  public static void addIdIsNumeric(FlatBufferBuilder builder, boolean ID_IS_NUMERIC) { builder.addBoolean(4, ID_IS_NUMERIC, false); }
+  public static void addHasGeometry(FlatBufferBuilder builder, boolean HAS_GEOMETRY) { builder.addBoolean(5, HAS_GEOMETRY, false); }
+  public static void addPropertiesIsNull(FlatBufferBuilder builder, boolean PROPERTIES_IS_NULL) { builder.addBoolean(6, PROPERTIES_IS_NULL, false); }
+  public static void addBbox(FlatBufferBuilder builder, int BBOXOffset) { builder.addOffset(7, BBOXOffset, 0); }
   public static int endGJNFeature(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

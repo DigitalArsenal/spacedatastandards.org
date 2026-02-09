@@ -5,8 +5,12 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { KMLLineString, KMLLineStringT } from './KMLLineString.js';
+import { KMLLinearRing, KMLLinearRingT } from './KMLLinearRing.js';
+import { KMLModel, KMLModelT } from './KMLModel.js';
+import { KMLMultiTrack, KMLMultiTrackT } from './KMLMultiTrack.js';
 import { KMLPoint, KMLPointT } from './KMLPoint.js';
 import { KMLPolygon, KMLPolygonT } from './KMLPolygon.js';
+import { KMLTrack, KMLTrackT } from './KMLTrack.js';
 
 
 /**
@@ -82,8 +86,60 @@ multiGeometriesLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Child linear rings (standalone)
+ */
+LINEAR_RINGS(index: number, obj?:KMLLinearRing):KMLLinearRing|null {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? (obj || new KMLLinearRing()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+linearRingsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Child 3D models
+ */
+MODELS(index: number, obj?:KMLModel):KMLModel|null {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? (obj || new KMLModel()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+modelsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Child tracks
+ */
+TRACKS(index: number, obj?:KMLTrack):KMLTrack|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? (obj || new KMLTrack()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+tracksLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Child multi-tracks
+ */
+MULTI_TRACKS(index: number, obj?:KMLMultiTrack):KMLMultiTrack|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? (obj || new KMLMultiTrack()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+multiTracksLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startKMLMultiGeometry(builder:flatbuffers.Builder) {
-  builder.startObject(4);
+  builder.startObject(8);
 }
 
 static addPoints(builder:flatbuffers.Builder, POINTSOffset:flatbuffers.Offset) {
@@ -150,17 +206,85 @@ static startMultiGeometriesVector(builder:flatbuffers.Builder, numElems:number) 
   builder.startVector(4, numElems, 4);
 }
 
+static addLinearRings(builder:flatbuffers.Builder, LINEAR_RINGSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(4, LINEAR_RINGSOffset, 0);
+}
+
+static createLinearRingsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startLinearRingsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addModels(builder:flatbuffers.Builder, MODELSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, MODELSOffset, 0);
+}
+
+static createModelsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startModelsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addTracks(builder:flatbuffers.Builder, TRACKSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, TRACKSOffset, 0);
+}
+
+static createTracksVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startTracksVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addMultiTracks(builder:flatbuffers.Builder, MULTI_TRACKSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, MULTI_TRACKSOffset, 0);
+}
+
+static createMultiTracksVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startMultiTracksVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endKMLMultiGeometry(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createKMLMultiGeometry(builder:flatbuffers.Builder, POINTSOffset:flatbuffers.Offset, LINE_STRINGSOffset:flatbuffers.Offset, POLYGONSOffset:flatbuffers.Offset, MULTI_GEOMETRIESOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createKMLMultiGeometry(builder:flatbuffers.Builder, POINTSOffset:flatbuffers.Offset, LINE_STRINGSOffset:flatbuffers.Offset, POLYGONSOffset:flatbuffers.Offset, MULTI_GEOMETRIESOffset:flatbuffers.Offset, LINEAR_RINGSOffset:flatbuffers.Offset, MODELSOffset:flatbuffers.Offset, TRACKSOffset:flatbuffers.Offset, MULTI_TRACKSOffset:flatbuffers.Offset):flatbuffers.Offset {
   KMLMultiGeometry.startKMLMultiGeometry(builder);
   KMLMultiGeometry.addPoints(builder, POINTSOffset);
   KMLMultiGeometry.addLineStrings(builder, LINE_STRINGSOffset);
   KMLMultiGeometry.addPolygons(builder, POLYGONSOffset);
   KMLMultiGeometry.addMultiGeometries(builder, MULTI_GEOMETRIESOffset);
+  KMLMultiGeometry.addLinearRings(builder, LINEAR_RINGSOffset);
+  KMLMultiGeometry.addModels(builder, MODELSOffset);
+  KMLMultiGeometry.addTracks(builder, TRACKSOffset);
+  KMLMultiGeometry.addMultiTracks(builder, MULTI_TRACKSOffset);
   return KMLMultiGeometry.endKMLMultiGeometry(builder);
 }
 
@@ -169,7 +293,11 @@ unpack(): KMLMultiGeometryT {
     this.bb!.createObjList<KMLPoint, KMLPointT>(this.POINTS.bind(this), this.pointsLength()),
     this.bb!.createObjList<KMLLineString, KMLLineStringT>(this.LINE_STRINGS.bind(this), this.lineStringsLength()),
     this.bb!.createObjList<KMLPolygon, KMLPolygonT>(this.POLYGONS.bind(this), this.polygonsLength()),
-    this.bb!.createObjList<KMLMultiGeometry, KMLMultiGeometryT>(this.MULTI_GEOMETRIES.bind(this), this.multiGeometriesLength())
+    this.bb!.createObjList<KMLMultiGeometry, KMLMultiGeometryT>(this.MULTI_GEOMETRIES.bind(this), this.multiGeometriesLength()),
+    this.bb!.createObjList<KMLLinearRing, KMLLinearRingT>(this.LINEAR_RINGS.bind(this), this.linearRingsLength()),
+    this.bb!.createObjList<KMLModel, KMLModelT>(this.MODELS.bind(this), this.modelsLength()),
+    this.bb!.createObjList<KMLTrack, KMLTrackT>(this.TRACKS.bind(this), this.tracksLength()),
+    this.bb!.createObjList<KMLMultiTrack, KMLMultiTrackT>(this.MULTI_TRACKS.bind(this), this.multiTracksLength())
   );
 }
 
@@ -179,6 +307,10 @@ unpackTo(_o: KMLMultiGeometryT): void {
   _o.LINE_STRINGS = this.bb!.createObjList<KMLLineString, KMLLineStringT>(this.LINE_STRINGS.bind(this), this.lineStringsLength());
   _o.POLYGONS = this.bb!.createObjList<KMLPolygon, KMLPolygonT>(this.POLYGONS.bind(this), this.polygonsLength());
   _o.MULTI_GEOMETRIES = this.bb!.createObjList<KMLMultiGeometry, KMLMultiGeometryT>(this.MULTI_GEOMETRIES.bind(this), this.multiGeometriesLength());
+  _o.LINEAR_RINGS = this.bb!.createObjList<KMLLinearRing, KMLLinearRingT>(this.LINEAR_RINGS.bind(this), this.linearRingsLength());
+  _o.MODELS = this.bb!.createObjList<KMLModel, KMLModelT>(this.MODELS.bind(this), this.modelsLength());
+  _o.TRACKS = this.bb!.createObjList<KMLTrack, KMLTrackT>(this.TRACKS.bind(this), this.tracksLength());
+  _o.MULTI_TRACKS = this.bb!.createObjList<KMLMultiTrack, KMLMultiTrackT>(this.MULTI_TRACKS.bind(this), this.multiTracksLength());
 }
 }
 
@@ -187,7 +319,11 @@ constructor(
   public POINTS: (KMLPointT)[] = [],
   public LINE_STRINGS: (KMLLineStringT)[] = [],
   public POLYGONS: (KMLPolygonT)[] = [],
-  public MULTI_GEOMETRIES: (KMLMultiGeometryT)[] = []
+  public MULTI_GEOMETRIES: (KMLMultiGeometryT)[] = [],
+  public LINEAR_RINGS: (KMLLinearRingT)[] = [],
+  public MODELS: (KMLModelT)[] = [],
+  public TRACKS: (KMLTrackT)[] = [],
+  public MULTI_TRACKS: (KMLMultiTrackT)[] = []
 ){}
 
 
@@ -196,12 +332,20 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const LINE_STRINGS = KMLMultiGeometry.createLineStringsVector(builder, builder.createObjectOffsetList(this.LINE_STRINGS));
   const POLYGONS = KMLMultiGeometry.createPolygonsVector(builder, builder.createObjectOffsetList(this.POLYGONS));
   const MULTI_GEOMETRIES = KMLMultiGeometry.createMultiGeometriesVector(builder, builder.createObjectOffsetList(this.MULTI_GEOMETRIES));
+  const LINEAR_RINGS = KMLMultiGeometry.createLinearRingsVector(builder, builder.createObjectOffsetList(this.LINEAR_RINGS));
+  const MODELS = KMLMultiGeometry.createModelsVector(builder, builder.createObjectOffsetList(this.MODELS));
+  const TRACKS = KMLMultiGeometry.createTracksVector(builder, builder.createObjectOffsetList(this.TRACKS));
+  const MULTI_TRACKS = KMLMultiGeometry.createMultiTracksVector(builder, builder.createObjectOffsetList(this.MULTI_TRACKS));
 
   return KMLMultiGeometry.createKMLMultiGeometry(builder,
     POINTS,
     LINE_STRINGS,
     POLYGONS,
-    MULTI_GEOMETRIES
+    MULTI_GEOMETRIES,
+    LINEAR_RINGS,
+    MODELS,
+    TRACKS,
+    MULTI_TRACKS
   );
 }
 }

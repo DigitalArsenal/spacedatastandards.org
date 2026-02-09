@@ -153,6 +153,126 @@ class CZMLabel : Table() {
             val o = __offset(28)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
+    /**
+     * Whether to show background
+     */
+    val SHOW_BACKGROUND : Boolean
+        get() {
+            val o = __offset(30)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Background color
+     */
+    val BACKGROUND_COLOR : CZMColor? get() = BACKGROUND_COLOR(CZMColor())
+    fun BACKGROUND_COLOR(obj: CZMColor) : CZMColor? {
+        val o = __offset(32)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Background padding X
+     */
+    val BACKGROUND_PADDING_X : Double
+        get() {
+            val o = __offset(34)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Background padding Y
+     */
+    val BACKGROUND_PADDING_Y : Double
+        get() {
+            val o = __offset(36)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Eye offset X in meters
+     */
+    val EYE_OFFSET_X : Double
+        get() {
+            val o = __offset(38)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Eye offset Y in meters
+     */
+    val EYE_OFFSET_Y : Double
+        get() {
+            val o = __offset(40)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Eye offset Z in meters
+     */
+    val EYE_OFFSET_Z : Double
+        get() {
+            val o = __offset(42)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Translucency by distance
+     */
+    val TRANSLUCENCY_BY_DISTANCE : CZMNearFarScalar? get() = TRANSLUCENCY_BY_DISTANCE(CZMNearFarScalar())
+    fun TRANSLUCENCY_BY_DISTANCE(obj: CZMNearFarScalar) : CZMNearFarScalar? {
+        val o = __offset(44)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Pixel offset scale by distance
+     */
+    val PIXEL_OFFSET_SCALE_BY_DISTANCE : CZMNearFarScalar? get() = PIXEL_OFFSET_SCALE_BY_DISTANCE(CZMNearFarScalar())
+    fun PIXEL_OFFSET_SCALE_BY_DISTANCE(obj: CZMNearFarScalar) : CZMNearFarScalar? {
+        val o = __offset(46)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Scale by distance
+     */
+    val SCALE_BY_DISTANCE : CZMNearFarScalar? get() = SCALE_BY_DISTANCE(CZMNearFarScalar())
+    fun SCALE_BY_DISTANCE(obj: CZMNearFarScalar) : CZMNearFarScalar? {
+        val o = __offset(48)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Distance display condition near
+     */
+    val DISTANCE_DISPLAY_CONDITION_NEAR : Double
+        get() {
+            val o = __offset(50)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Distance display condition far
+     */
+    val DISTANCE_DISPLAY_CONDITION_FAR : Double
+        get() {
+            val o = __offset(52)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Disable depth test distance
+     */
+    val DISABLE_DEPTH_TEST_DISTANCE : Double
+        get() {
+            val o = __offset(54)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsCZMLabel(_bb: ByteBuffer): CZMLabel = getRootAsCZMLabel(_bb, CZMLabel())
@@ -160,16 +280,29 @@ class CZMLabel : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMLabel(builder: FlatBufferBuilder, SHOW: Boolean, TEXTOffset: Int, FONTOffset: Int, STYLE: Byte, FILL_COLOROffset: Int, OUTLINE_COLOROffset: Int, OUTLINE_WIDTH: Double, PIXEL_OFFSET_X: Double, PIXEL_OFFSET_Y: Double, SCALE: Double, HORIZONTAL_ORIGIN: Byte, VERTICAL_ORIGIN: Byte, HEIGHT_REFERENCE: Byte) : Int {
-            builder.startTable(13)
+        fun createCZMLabel(builder: FlatBufferBuilder, SHOW: Boolean, TEXTOffset: Int, FONTOffset: Int, STYLE: Byte, FILL_COLOROffset: Int, OUTLINE_COLOROffset: Int, OUTLINE_WIDTH: Double, PIXEL_OFFSET_X: Double, PIXEL_OFFSET_Y: Double, SCALE: Double, HORIZONTAL_ORIGIN: Byte, VERTICAL_ORIGIN: Byte, HEIGHT_REFERENCE: Byte, SHOW_BACKGROUND: Boolean, BACKGROUND_COLOROffset: Int, BACKGROUND_PADDING_X: Double, BACKGROUND_PADDING_Y: Double, EYE_OFFSET_X: Double, EYE_OFFSET_Y: Double, EYE_OFFSET_Z: Double, TRANSLUCENCY_BY_DISTANCEOffset: Int, PIXEL_OFFSET_SCALE_BY_DISTANCEOffset: Int, SCALE_BY_DISTANCEOffset: Int, DISTANCE_DISPLAY_CONDITION_NEAR: Double, DISTANCE_DISPLAY_CONDITION_FAR: Double, DISABLE_DEPTH_TEST_DISTANCE: Double) : Int {
+            builder.startTable(26)
+            addDISABLE_DEPTH_TEST_DISTANCE(builder, DISABLE_DEPTH_TEST_DISTANCE)
+            addDISTANCE_DISPLAY_CONDITION_FAR(builder, DISTANCE_DISPLAY_CONDITION_FAR)
+            addDISTANCE_DISPLAY_CONDITION_NEAR(builder, DISTANCE_DISPLAY_CONDITION_NEAR)
+            addEYE_OFFSET_Z(builder, EYE_OFFSET_Z)
+            addEYE_OFFSET_Y(builder, EYE_OFFSET_Y)
+            addEYE_OFFSET_X(builder, EYE_OFFSET_X)
+            addBACKGROUND_PADDING_Y(builder, BACKGROUND_PADDING_Y)
+            addBACKGROUND_PADDING_X(builder, BACKGROUND_PADDING_X)
             addSCALE(builder, SCALE)
             addPIXEL_OFFSET_Y(builder, PIXEL_OFFSET_Y)
             addPIXEL_OFFSET_X(builder, PIXEL_OFFSET_X)
             addOUTLINE_WIDTH(builder, OUTLINE_WIDTH)
+            addSCALE_BY_DISTANCE(builder, SCALE_BY_DISTANCEOffset)
+            addPIXEL_OFFSET_SCALE_BY_DISTANCE(builder, PIXEL_OFFSET_SCALE_BY_DISTANCEOffset)
+            addTRANSLUCENCY_BY_DISTANCE(builder, TRANSLUCENCY_BY_DISTANCEOffset)
+            addBACKGROUND_COLOR(builder, BACKGROUND_COLOROffset)
             addOUTLINE_COLOR(builder, OUTLINE_COLOROffset)
             addFILL_COLOR(builder, FILL_COLOROffset)
             addFONT(builder, FONTOffset)
             addTEXT(builder, TEXTOffset)
+            addSHOW_BACKGROUND(builder, SHOW_BACKGROUND)
             addHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE)
             addVERTICAL_ORIGIN(builder, VERTICAL_ORIGIN)
             addHORIZONTAL_ORIGIN(builder, HORIZONTAL_ORIGIN)
@@ -177,7 +310,7 @@ class CZMLabel : Table() {
             addSHOW(builder, SHOW)
             return endCZMLabel(builder)
         }
-        fun startCZMLabel(builder: FlatBufferBuilder) = builder.startTable(13)
+        fun startCZMLabel(builder: FlatBufferBuilder) = builder.startTable(26)
         fun addSHOW(builder: FlatBufferBuilder, SHOW: Boolean) = builder.addBoolean(0, SHOW, false)
         fun addTEXT(builder: FlatBufferBuilder, TEXT: Int) = builder.addOffset(1, TEXT, 0)
         fun addFONT(builder: FlatBufferBuilder, FONT: Int) = builder.addOffset(2, FONT, 0)
@@ -191,6 +324,19 @@ class CZMLabel : Table() {
         fun addHORIZONTAL_ORIGIN(builder: FlatBufferBuilder, HORIZONTAL_ORIGIN: Byte) = builder.addByte(10, HORIZONTAL_ORIGIN, 0)
         fun addVERTICAL_ORIGIN(builder: FlatBufferBuilder, VERTICAL_ORIGIN: Byte) = builder.addByte(11, VERTICAL_ORIGIN, 0)
         fun addHEIGHT_REFERENCE(builder: FlatBufferBuilder, HEIGHT_REFERENCE: Byte) = builder.addByte(12, HEIGHT_REFERENCE, 0)
+        fun addSHOW_BACKGROUND(builder: FlatBufferBuilder, SHOW_BACKGROUND: Boolean) = builder.addBoolean(13, SHOW_BACKGROUND, false)
+        fun addBACKGROUND_COLOR(builder: FlatBufferBuilder, BACKGROUND_COLOR: Int) = builder.addOffset(14, BACKGROUND_COLOR, 0)
+        fun addBACKGROUND_PADDING_X(builder: FlatBufferBuilder, BACKGROUND_PADDING_X: Double) = builder.addDouble(15, BACKGROUND_PADDING_X, 0.0)
+        fun addBACKGROUND_PADDING_Y(builder: FlatBufferBuilder, BACKGROUND_PADDING_Y: Double) = builder.addDouble(16, BACKGROUND_PADDING_Y, 0.0)
+        fun addEYE_OFFSET_X(builder: FlatBufferBuilder, EYE_OFFSET_X: Double) = builder.addDouble(17, EYE_OFFSET_X, 0.0)
+        fun addEYE_OFFSET_Y(builder: FlatBufferBuilder, EYE_OFFSET_Y: Double) = builder.addDouble(18, EYE_OFFSET_Y, 0.0)
+        fun addEYE_OFFSET_Z(builder: FlatBufferBuilder, EYE_OFFSET_Z: Double) = builder.addDouble(19, EYE_OFFSET_Z, 0.0)
+        fun addTRANSLUCENCY_BY_DISTANCE(builder: FlatBufferBuilder, TRANSLUCENCY_BY_DISTANCE: Int) = builder.addOffset(20, TRANSLUCENCY_BY_DISTANCE, 0)
+        fun addPIXEL_OFFSET_SCALE_BY_DISTANCE(builder: FlatBufferBuilder, PIXEL_OFFSET_SCALE_BY_DISTANCE: Int) = builder.addOffset(21, PIXEL_OFFSET_SCALE_BY_DISTANCE, 0)
+        fun addSCALE_BY_DISTANCE(builder: FlatBufferBuilder, SCALE_BY_DISTANCE: Int) = builder.addOffset(22, SCALE_BY_DISTANCE, 0)
+        fun addDISTANCE_DISPLAY_CONDITION_NEAR(builder: FlatBufferBuilder, DISTANCE_DISPLAY_CONDITION_NEAR: Double) = builder.addDouble(23, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0)
+        fun addDISTANCE_DISPLAY_CONDITION_FAR(builder: FlatBufferBuilder, DISTANCE_DISPLAY_CONDITION_FAR: Double) = builder.addDouble(24, DISTANCE_DISPLAY_CONDITION_FAR, 0.0)
+        fun addDISABLE_DEPTH_TEST_DISTANCE(builder: FlatBufferBuilder, DISABLE_DEPTH_TEST_DISTANCE: Double) = builder.addDouble(25, DISABLE_DEPTH_TEST_DISTANCE, 0.0)
         fun endCZMLabel(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -5,6 +5,8 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { KMLAltitudeMode } from './KMLAltitudeMode.js';
+import { KMLLatLonQuad, KMLLatLonQuadT } from './KMLLatLonQuad.js';
+import { KMLRegion, KMLRegionT } from './KMLRegion.js';
 
 
 /**
@@ -57,12 +59,20 @@ VISIBILITY():boolean {
 }
 
 /**
+ * Whether open in tree view
+ */
+OPEN():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
  * Icon/image URL
  */
 ICON_HREF():string|null
 ICON_HREF(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ICON_HREF(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 10);
+  const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -72,7 +82,7 @@ ICON_HREF(optionalEncoding?:any):string|Uint8Array|null {
 COLOR():string|null
 COLOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 COLOR(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 12);
+  const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -80,7 +90,7 @@ COLOR(optionalEncoding?:any):string|Uint8Array|null {
  * North latitude of bounding box
  */
 NORTH():number {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
+  const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -88,7 +98,7 @@ NORTH():number {
  * South latitude of bounding box
  */
 SOUTH():number {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -96,7 +106,7 @@ SOUTH():number {
  * East longitude of bounding box
  */
 EAST():number {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -104,7 +114,7 @@ EAST():number {
  * West longitude of bounding box
  */
 WEST():number {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
+  const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -112,7 +122,7 @@ WEST():number {
  * Rotation in degrees
  */
 ROTATION():number {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
+  const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -120,7 +130,7 @@ ROTATION():number {
  * Altitude in meters
  */
 ALTITUDE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
+  const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -128,12 +138,46 @@ ALTITUDE():number {
  * Altitude mode
  */
 ALTITUDE_MODE():KMLAltitudeMode {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
+  const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : KMLAltitudeMode.CLAMP_TO_GROUND;
 }
 
+/**
+ * Draw order
+ */
+DRAW_ORDER():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * LatLonQuad (non-rectangular overlay)
+ */
+LAT_LON_QUAD(obj?:KMLLatLonQuad):KMLLatLonQuad|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? (obj || new KMLLatLonQuad()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Style URL reference
+ */
+STYLE_URL():string|null
+STYLE_URL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+STYLE_URL(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Region
+ */
+REGION(obj?:KMLRegion):KMLRegion|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? (obj || new KMLRegion()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startKMLGroundOverlay(builder:flatbuffers.Builder) {
-  builder.startObject(12);
+  builder.startObject(17);
 }
 
 static addName(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset) {
@@ -148,40 +192,60 @@ static addVisibility(builder:flatbuffers.Builder, VISIBILITY:boolean) {
   builder.addFieldInt8(2, +VISIBILITY, +false);
 }
 
+static addOpen(builder:flatbuffers.Builder, OPEN:boolean) {
+  builder.addFieldInt8(3, +OPEN, +false);
+}
+
 static addIconHref(builder:flatbuffers.Builder, ICON_HREFOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, ICON_HREFOffset, 0);
+  builder.addFieldOffset(4, ICON_HREFOffset, 0);
 }
 
 static addColor(builder:flatbuffers.Builder, COLOROffset:flatbuffers.Offset) {
-  builder.addFieldOffset(4, COLOROffset, 0);
+  builder.addFieldOffset(5, COLOROffset, 0);
 }
 
 static addNorth(builder:flatbuffers.Builder, NORTH:number) {
-  builder.addFieldFloat64(5, NORTH, 0.0);
+  builder.addFieldFloat64(6, NORTH, 0.0);
 }
 
 static addSouth(builder:flatbuffers.Builder, SOUTH:number) {
-  builder.addFieldFloat64(6, SOUTH, 0.0);
+  builder.addFieldFloat64(7, SOUTH, 0.0);
 }
 
 static addEast(builder:flatbuffers.Builder, EAST:number) {
-  builder.addFieldFloat64(7, EAST, 0.0);
+  builder.addFieldFloat64(8, EAST, 0.0);
 }
 
 static addWest(builder:flatbuffers.Builder, WEST:number) {
-  builder.addFieldFloat64(8, WEST, 0.0);
+  builder.addFieldFloat64(9, WEST, 0.0);
 }
 
 static addRotation(builder:flatbuffers.Builder, ROTATION:number) {
-  builder.addFieldFloat64(9, ROTATION, 0.0);
+  builder.addFieldFloat64(10, ROTATION, 0.0);
 }
 
 static addAltitude(builder:flatbuffers.Builder, ALTITUDE:number) {
-  builder.addFieldFloat64(10, ALTITUDE, 0.0);
+  builder.addFieldFloat64(11, ALTITUDE, 0.0);
 }
 
 static addAltitudeMode(builder:flatbuffers.Builder, ALTITUDE_MODE:KMLAltitudeMode) {
-  builder.addFieldInt8(11, ALTITUDE_MODE, KMLAltitudeMode.CLAMP_TO_GROUND);
+  builder.addFieldInt8(12, ALTITUDE_MODE, KMLAltitudeMode.CLAMP_TO_GROUND);
+}
+
+static addDrawOrder(builder:flatbuffers.Builder, DRAW_ORDER:number) {
+  builder.addFieldInt32(13, DRAW_ORDER, 0);
+}
+
+static addLatLonQuad(builder:flatbuffers.Builder, LAT_LON_QUADOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, LAT_LON_QUADOffset, 0);
+}
+
+static addStyleUrl(builder:flatbuffers.Builder, STYLE_URLOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(15, STYLE_URLOffset, 0);
+}
+
+static addRegion(builder:flatbuffers.Builder, REGIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, REGIONOffset, 0);
 }
 
 static endKMLGroundOverlay(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -189,28 +253,13 @@ static endKMLGroundOverlay(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createKMLGroundOverlay(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, VISIBILITY:boolean, ICON_HREFOffset:flatbuffers.Offset, COLOROffset:flatbuffers.Offset, NORTH:number, SOUTH:number, EAST:number, WEST:number, ROTATION:number, ALTITUDE:number, ALTITUDE_MODE:KMLAltitudeMode):flatbuffers.Offset {
-  KMLGroundOverlay.startKMLGroundOverlay(builder);
-  KMLGroundOverlay.addName(builder, NAMEOffset);
-  KMLGroundOverlay.addDescription(builder, DESCRIPTIONOffset);
-  KMLGroundOverlay.addVisibility(builder, VISIBILITY);
-  KMLGroundOverlay.addIconHref(builder, ICON_HREFOffset);
-  KMLGroundOverlay.addColor(builder, COLOROffset);
-  KMLGroundOverlay.addNorth(builder, NORTH);
-  KMLGroundOverlay.addSouth(builder, SOUTH);
-  KMLGroundOverlay.addEast(builder, EAST);
-  KMLGroundOverlay.addWest(builder, WEST);
-  KMLGroundOverlay.addRotation(builder, ROTATION);
-  KMLGroundOverlay.addAltitude(builder, ALTITUDE);
-  KMLGroundOverlay.addAltitudeMode(builder, ALTITUDE_MODE);
-  return KMLGroundOverlay.endKMLGroundOverlay(builder);
-}
 
 unpack(): KMLGroundOverlayT {
   return new KMLGroundOverlayT(
     this.NAME(),
     this.DESCRIPTION(),
     this.VISIBILITY(),
+    this.OPEN(),
     this.ICON_HREF(),
     this.COLOR(),
     this.NORTH(),
@@ -219,7 +268,11 @@ unpack(): KMLGroundOverlayT {
     this.WEST(),
     this.ROTATION(),
     this.ALTITUDE(),
-    this.ALTITUDE_MODE()
+    this.ALTITUDE_MODE(),
+    this.DRAW_ORDER(),
+    (this.LAT_LON_QUAD() !== null ? this.LAT_LON_QUAD()!.unpack() : null),
+    this.STYLE_URL(),
+    (this.REGION() !== null ? this.REGION()!.unpack() : null)
   );
 }
 
@@ -228,6 +281,7 @@ unpackTo(_o: KMLGroundOverlayT): void {
   _o.NAME = this.NAME();
   _o.DESCRIPTION = this.DESCRIPTION();
   _o.VISIBILITY = this.VISIBILITY();
+  _o.OPEN = this.OPEN();
   _o.ICON_HREF = this.ICON_HREF();
   _o.COLOR = this.COLOR();
   _o.NORTH = this.NORTH();
@@ -237,6 +291,10 @@ unpackTo(_o: KMLGroundOverlayT): void {
   _o.ROTATION = this.ROTATION();
   _o.ALTITUDE = this.ALTITUDE();
   _o.ALTITUDE_MODE = this.ALTITUDE_MODE();
+  _o.DRAW_ORDER = this.DRAW_ORDER();
+  _o.LAT_LON_QUAD = (this.LAT_LON_QUAD() !== null ? this.LAT_LON_QUAD()!.unpack() : null);
+  _o.STYLE_URL = this.STYLE_URL();
+  _o.REGION = (this.REGION() !== null ? this.REGION()!.unpack() : null);
 }
 }
 
@@ -245,6 +303,7 @@ constructor(
   public NAME: string|Uint8Array|null = null,
   public DESCRIPTION: string|Uint8Array|null = null,
   public VISIBILITY: boolean = false,
+  public OPEN: boolean = false,
   public ICON_HREF: string|Uint8Array|null = null,
   public COLOR: string|Uint8Array|null = null,
   public NORTH: number = 0.0,
@@ -253,7 +312,11 @@ constructor(
   public WEST: number = 0.0,
   public ROTATION: number = 0.0,
   public ALTITUDE: number = 0.0,
-  public ALTITUDE_MODE: KMLAltitudeMode = KMLAltitudeMode.CLAMP_TO_GROUND
+  public ALTITUDE_MODE: KMLAltitudeMode = KMLAltitudeMode.CLAMP_TO_GROUND,
+  public DRAW_ORDER: number = 0,
+  public LAT_LON_QUAD: KMLLatLonQuadT|null = null,
+  public STYLE_URL: string|Uint8Array|null = null,
+  public REGION: KMLRegionT|null = null
 ){}
 
 
@@ -262,20 +325,29 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const DESCRIPTION = (this.DESCRIPTION !== null ? builder.createString(this.DESCRIPTION!) : 0);
   const ICON_HREF = (this.ICON_HREF !== null ? builder.createString(this.ICON_HREF!) : 0);
   const COLOR = (this.COLOR !== null ? builder.createString(this.COLOR!) : 0);
+  const LAT_LON_QUAD = (this.LAT_LON_QUAD !== null ? this.LAT_LON_QUAD!.pack(builder) : 0);
+  const STYLE_URL = (this.STYLE_URL !== null ? builder.createString(this.STYLE_URL!) : 0);
+  const REGION = (this.REGION !== null ? this.REGION!.pack(builder) : 0);
 
-  return KMLGroundOverlay.createKMLGroundOverlay(builder,
-    NAME,
-    DESCRIPTION,
-    this.VISIBILITY,
-    ICON_HREF,
-    COLOR,
-    this.NORTH,
-    this.SOUTH,
-    this.EAST,
-    this.WEST,
-    this.ROTATION,
-    this.ALTITUDE,
-    this.ALTITUDE_MODE
-  );
+  KMLGroundOverlay.startKMLGroundOverlay(builder);
+  KMLGroundOverlay.addName(builder, NAME);
+  KMLGroundOverlay.addDescription(builder, DESCRIPTION);
+  KMLGroundOverlay.addVisibility(builder, this.VISIBILITY);
+  KMLGroundOverlay.addOpen(builder, this.OPEN);
+  KMLGroundOverlay.addIconHref(builder, ICON_HREF);
+  KMLGroundOverlay.addColor(builder, COLOR);
+  KMLGroundOverlay.addNorth(builder, this.NORTH);
+  KMLGroundOverlay.addSouth(builder, this.SOUTH);
+  KMLGroundOverlay.addEast(builder, this.EAST);
+  KMLGroundOverlay.addWest(builder, this.WEST);
+  KMLGroundOverlay.addRotation(builder, this.ROTATION);
+  KMLGroundOverlay.addAltitude(builder, this.ALTITUDE);
+  KMLGroundOverlay.addAltitudeMode(builder, this.ALTITUDE_MODE);
+  KMLGroundOverlay.addDrawOrder(builder, this.DRAW_ORDER);
+  KMLGroundOverlay.addLatLonQuad(builder, LAT_LON_QUAD);
+  KMLGroundOverlay.addStyleUrl(builder, STYLE_URL);
+  KMLGroundOverlay.addRegion(builder, REGION);
+
+  return KMLGroundOverlay.endKMLGroundOverlay(builder);
 }
 }

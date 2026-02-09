@@ -80,6 +80,85 @@ public final class KMLFolder extends Table {
   public int GROUND_OVERLAYSLength() { int o = __offset(18); return o != 0 ? __vector_len(o) : 0; }
   public KMLGroundOverlay.Vector groundOverlaysVector() { return groundOverlaysVector(new KMLGroundOverlay.Vector()); }
   public KMLGroundOverlay.Vector groundOverlaysVector(KMLGroundOverlay.Vector obj) { int o = __offset(18); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Shared styles
+   */
+  public KMLStyle STYLES(int j) { return STYLES(new KMLStyle(), j); }
+  public KMLStyle STYLES(KMLStyle obj, int j) { int o = __offset(20); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int STYLESLength() { int o = __offset(20); return o != 0 ? __vector_len(o) : 0; }
+  public KMLStyle.Vector stylesVector() { return stylesVector(new KMLStyle.Vector()); }
+  public KMLStyle.Vector stylesVector(KMLStyle.Vector obj) { int o = __offset(20); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Style maps
+   */
+  public KMLStyleMap STYLE_MAPS(int j) { return STYLE_MAPS(new KMLStyleMap(), j); }
+  public KMLStyleMap STYLE_MAPS(KMLStyleMap obj, int j) { int o = __offset(22); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int STYLE_MAPSLength() { int o = __offset(22); return o != 0 ? __vector_len(o) : 0; }
+  public KMLStyleMap.Vector styleMapsVector() { return styleMapsVector(new KMLStyleMap.Vector()); }
+  public KMLStyleMap.Vector styleMapsVector(KMLStyleMap.Vector obj) { int o = __offset(22); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Screen overlays
+   */
+  public KMLScreenOverlay SCREEN_OVERLAYS(int j) { return SCREEN_OVERLAYS(new KMLScreenOverlay(), j); }
+  public KMLScreenOverlay SCREEN_OVERLAYS(KMLScreenOverlay obj, int j) { int o = __offset(24); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int SCREEN_OVERLAYSLength() { int o = __offset(24); return o != 0 ? __vector_len(o) : 0; }
+  public KMLScreenOverlay.Vector screenOverlaysVector() { return screenOverlaysVector(new KMLScreenOverlay.Vector()); }
+  public KMLScreenOverlay.Vector screenOverlaysVector(KMLScreenOverlay.Vector obj) { int o = __offset(24); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Photo overlays
+   */
+  public KMLPhotoOverlay PHOTO_OVERLAYS(int j) { return PHOTO_OVERLAYS(new KMLPhotoOverlay(), j); }
+  public KMLPhotoOverlay PHOTO_OVERLAYS(KMLPhotoOverlay obj, int j) { int o = __offset(26); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int PHOTO_OVERLAYSLength() { int o = __offset(26); return o != 0 ? __vector_len(o) : 0; }
+  public KMLPhotoOverlay.Vector photoOverlaysVector() { return photoOverlaysVector(new KMLPhotoOverlay.Vector()); }
+  public KMLPhotoOverlay.Vector photoOverlaysVector(KMLPhotoOverlay.Vector obj) { int o = __offset(26); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Tours
+   */
+  public KMLTour TOURS(int j) { return TOURS(new KMLTour(), j); }
+  public KMLTour TOURS(KMLTour obj, int j) { int o = __offset(28); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int TOURSLength() { int o = __offset(28); return o != 0 ? __vector_len(o) : 0; }
+  public KMLTour.Vector toursVector() { return toursVector(new KMLTour.Vector()); }
+  public KMLTour.Vector toursVector(KMLTour.Vector obj) { int o = __offset(28); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Style URL reference
+   */
+  public String STYLE_URL() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer STYLE_URLAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
+  public ByteBuffer STYLE_URLInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
+  /**
+   * Region
+   */
+  public KMLRegion REGION() { return REGION(new KMLRegion()); }
+  public KMLRegion REGION(KMLRegion obj) { int o = __offset(32); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Extended data
+   */
+  public KMLData EXTENDED_DATA(int j) { return EXTENDED_DATA(new KMLData(), j); }
+  public KMLData EXTENDED_DATA(KMLData obj, int j) { int o = __offset(34); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int EXTENDED_DATALength() { int o = __offset(34); return o != 0 ? __vector_len(o) : 0; }
+  public KMLData.Vector extendedDataVector() { return extendedDataVector(new KMLData.Vector()); }
+  public KMLData.Vector extendedDataVector(KMLData.Vector obj) { int o = __offset(34); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * LookAt viewpoint
+   */
+  public KMLLookAt LOOK_AT() { return LOOK_AT(new KMLLookAt()); }
+  public KMLLookAt LOOK_AT(KMLLookAt obj) { int o = __offset(36); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Camera viewpoint
+   */
+  public KMLCamera CAMERA() { return CAMERA(new KMLCamera()); }
+  public KMLCamera CAMERA(KMLCamera obj) { int o = __offset(38); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * TimeSpan
+   */
+  public KMLTimeSpan TIME_SPAN() { return TIME_SPAN(new KMLTimeSpan()); }
+  public KMLTimeSpan TIME_SPAN(KMLTimeSpan obj) { int o = __offset(40); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * TimeStamp
+   */
+  public KMLTimeStamp TIME_STAMP() { return TIME_STAMP(new KMLTimeStamp()); }
+  public KMLTimeStamp TIME_STAMP(KMLTimeStamp obj) { int o = __offset(42); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createKMLFolder(FlatBufferBuilder builder,
       int NAMEOffset,
@@ -89,8 +168,32 @@ public final class KMLFolder extends Table {
       int PLACEMARKSOffset,
       int FOLDERSOffset,
       int NETWORK_LINKSOffset,
-      int GROUND_OVERLAYSOffset) {
-    builder.startTable(8);
+      int GROUND_OVERLAYSOffset,
+      int STYLESOffset,
+      int STYLE_MAPSOffset,
+      int SCREEN_OVERLAYSOffset,
+      int PHOTO_OVERLAYSOffset,
+      int TOURSOffset,
+      int STYLE_URLOffset,
+      int REGIONOffset,
+      int EXTENDED_DATAOffset,
+      int LOOK_ATOffset,
+      int CAMERAOffset,
+      int TIME_SPANOffset,
+      int TIME_STAMPOffset) {
+    builder.startTable(20);
+    KMLFolder.addTimeStamp(builder, TIME_STAMPOffset);
+    KMLFolder.addTimeSpan(builder, TIME_SPANOffset);
+    KMLFolder.addCamera(builder, CAMERAOffset);
+    KMLFolder.addLookAt(builder, LOOK_ATOffset);
+    KMLFolder.addExtendedData(builder, EXTENDED_DATAOffset);
+    KMLFolder.addRegion(builder, REGIONOffset);
+    KMLFolder.addStyleUrl(builder, STYLE_URLOffset);
+    KMLFolder.addTours(builder, TOURSOffset);
+    KMLFolder.addPhotoOverlays(builder, PHOTO_OVERLAYSOffset);
+    KMLFolder.addScreenOverlays(builder, SCREEN_OVERLAYSOffset);
+    KMLFolder.addStyleMaps(builder, STYLE_MAPSOffset);
+    KMLFolder.addStyles(builder, STYLESOffset);
     KMLFolder.addGroundOverlays(builder, GROUND_OVERLAYSOffset);
     KMLFolder.addNetworkLinks(builder, NETWORK_LINKSOffset);
     KMLFolder.addFolders(builder, FOLDERSOffset);
@@ -102,7 +205,7 @@ public final class KMLFolder extends Table {
     return KMLFolder.endKMLFolder(builder);
   }
 
-  public static void startKMLFolder(FlatBufferBuilder builder) { builder.startTable(8); }
+  public static void startKMLFolder(FlatBufferBuilder builder) { builder.startTable(20); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(0, NAMEOffset, 0); }
   public static void addDescription(FlatBufferBuilder builder, int DESCRIPTIONOffset) { builder.addOffset(1, DESCRIPTIONOffset, 0); }
   public static void addVisibility(FlatBufferBuilder builder, boolean VISIBILITY) { builder.addBoolean(2, VISIBILITY, false); }
@@ -119,6 +222,30 @@ public final class KMLFolder extends Table {
   public static void addGroundOverlays(FlatBufferBuilder builder, int GROUND_OVERLAYSOffset) { builder.addOffset(7, GROUND_OVERLAYSOffset, 0); }
   public static int createGroundOverlaysVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startGroundOverlaysVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addStyles(FlatBufferBuilder builder, int STYLESOffset) { builder.addOffset(8, STYLESOffset, 0); }
+  public static int createStylesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startStylesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addStyleMaps(FlatBufferBuilder builder, int STYLE_MAPSOffset) { builder.addOffset(9, STYLE_MAPSOffset, 0); }
+  public static int createStyleMapsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startStyleMapsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addScreenOverlays(FlatBufferBuilder builder, int SCREEN_OVERLAYSOffset) { builder.addOffset(10, SCREEN_OVERLAYSOffset, 0); }
+  public static int createScreenOverlaysVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startScreenOverlaysVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addPhotoOverlays(FlatBufferBuilder builder, int PHOTO_OVERLAYSOffset) { builder.addOffset(11, PHOTO_OVERLAYSOffset, 0); }
+  public static int createPhotoOverlaysVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startPhotoOverlaysVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addTours(FlatBufferBuilder builder, int TOURSOffset) { builder.addOffset(12, TOURSOffset, 0); }
+  public static int createToursVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startToursVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addStyleUrl(FlatBufferBuilder builder, int STYLE_URLOffset) { builder.addOffset(13, STYLE_URLOffset, 0); }
+  public static void addRegion(FlatBufferBuilder builder, int REGIONOffset) { builder.addOffset(14, REGIONOffset, 0); }
+  public static void addExtendedData(FlatBufferBuilder builder, int EXTENDED_DATAOffset) { builder.addOffset(15, EXTENDED_DATAOffset, 0); }
+  public static int createExtendedDataVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startExtendedDataVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addLookAt(FlatBufferBuilder builder, int LOOK_ATOffset) { builder.addOffset(16, LOOK_ATOffset, 0); }
+  public static void addCamera(FlatBufferBuilder builder, int CAMERAOffset) { builder.addOffset(17, CAMERAOffset, 0); }
+  public static void addTimeSpan(FlatBufferBuilder builder, int TIME_SPANOffset) { builder.addOffset(18, TIME_SPANOffset, 0); }
+  public static void addTimeStamp(FlatBufferBuilder builder, int TIME_STAMPOffset) { builder.addOffset(19, TIME_STAMPOffset, 0); }
   public static int endKMLFolder(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

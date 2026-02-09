@@ -97,6 +97,43 @@ public final class KML extends Table {
   public int GROUND_OVERLAYSLength() { int o = __offset(22); return o != 0 ? __vector_len(o) : 0; }
   public KMLGroundOverlay.Vector groundOverlaysVector() { return groundOverlaysVector(new KMLGroundOverlay.Vector()); }
   public KMLGroundOverlay.Vector groundOverlaysVector(KMLGroundOverlay.Vector obj) { int o = __offset(22); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Schemas
+   */
+  public KMLSchema SCHEMAS(int j) { return SCHEMAS(new KMLSchema(), j); }
+  public KMLSchema SCHEMAS(KMLSchema obj, int j) { int o = __offset(24); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int SCHEMASLength() { int o = __offset(24); return o != 0 ? __vector_len(o) : 0; }
+  public KMLSchema.Vector schemasVector() { return schemasVector(new KMLSchema.Vector()); }
+  public KMLSchema.Vector schemasVector(KMLSchema.Vector obj) { int o = __offset(24); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Screen overlays
+   */
+  public KMLScreenOverlay SCREEN_OVERLAYS(int j) { return SCREEN_OVERLAYS(new KMLScreenOverlay(), j); }
+  public KMLScreenOverlay SCREEN_OVERLAYS(KMLScreenOverlay obj, int j) { int o = __offset(26); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int SCREEN_OVERLAYSLength() { int o = __offset(26); return o != 0 ? __vector_len(o) : 0; }
+  public KMLScreenOverlay.Vector screenOverlaysVector() { return screenOverlaysVector(new KMLScreenOverlay.Vector()); }
+  public KMLScreenOverlay.Vector screenOverlaysVector(KMLScreenOverlay.Vector obj) { int o = __offset(26); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Photo overlays
+   */
+  public KMLPhotoOverlay PHOTO_OVERLAYS(int j) { return PHOTO_OVERLAYS(new KMLPhotoOverlay(), j); }
+  public KMLPhotoOverlay PHOTO_OVERLAYS(KMLPhotoOverlay obj, int j) { int o = __offset(28); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int PHOTO_OVERLAYSLength() { int o = __offset(28); return o != 0 ? __vector_len(o) : 0; }
+  public KMLPhotoOverlay.Vector photoOverlaysVector() { return photoOverlaysVector(new KMLPhotoOverlay.Vector()); }
+  public KMLPhotoOverlay.Vector photoOverlaysVector(KMLPhotoOverlay.Vector obj) { int o = __offset(28); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Tours
+   */
+  public KMLTour TOURS(int j) { return TOURS(new KMLTour(), j); }
+  public KMLTour TOURS(KMLTour obj, int j) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int TOURSLength() { int o = __offset(30); return o != 0 ? __vector_len(o) : 0; }
+  public KMLTour.Vector toursVector() { return toursVector(new KMLTour.Vector()); }
+  public KMLTour.Vector toursVector(KMLTour.Vector obj) { int o = __offset(30); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * NetworkLinkControl
+   */
+  public KMLNetworkLinkControl NETWORK_LINK_CONTROL() { return NETWORK_LINK_CONTROL(new KMLNetworkLinkControl()); }
+  public KMLNetworkLinkControl NETWORK_LINK_CONTROL(KMLNetworkLinkControl obj) { int o = __offset(32); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createKML(FlatBufferBuilder builder,
       int NAMEOffset,
@@ -108,8 +145,18 @@ public final class KML extends Table {
       int PLACEMARKSOffset,
       int FOLDERSOffset,
       int NETWORK_LINKSOffset,
-      int GROUND_OVERLAYSOffset) {
-    builder.startTable(10);
+      int GROUND_OVERLAYSOffset,
+      int SCHEMASOffset,
+      int SCREEN_OVERLAYSOffset,
+      int PHOTO_OVERLAYSOffset,
+      int TOURSOffset,
+      int NETWORK_LINK_CONTROLOffset) {
+    builder.startTable(15);
+    KML.addNetworkLinkControl(builder, NETWORK_LINK_CONTROLOffset);
+    KML.addTours(builder, TOURSOffset);
+    KML.addPhotoOverlays(builder, PHOTO_OVERLAYSOffset);
+    KML.addScreenOverlays(builder, SCREEN_OVERLAYSOffset);
+    KML.addSchemas(builder, SCHEMASOffset);
     KML.addGroundOverlays(builder, GROUND_OVERLAYSOffset);
     KML.addNetworkLinks(builder, NETWORK_LINKSOffset);
     KML.addFolders(builder, FOLDERSOffset);
@@ -123,7 +170,7 @@ public final class KML extends Table {
     return KML.endKML(builder);
   }
 
-  public static void startKML(FlatBufferBuilder builder) { builder.startTable(10); }
+  public static void startKML(FlatBufferBuilder builder) { builder.startTable(15); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(0, NAMEOffset, 0); }
   public static void addDescription(FlatBufferBuilder builder, int DESCRIPTIONOffset) { builder.addOffset(1, DESCRIPTIONOffset, 0); }
   public static void addVisibility(FlatBufferBuilder builder, boolean VISIBILITY) { builder.addBoolean(2, VISIBILITY, false); }
@@ -146,6 +193,19 @@ public final class KML extends Table {
   public static void addGroundOverlays(FlatBufferBuilder builder, int GROUND_OVERLAYSOffset) { builder.addOffset(9, GROUND_OVERLAYSOffset, 0); }
   public static int createGroundOverlaysVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startGroundOverlaysVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addSchemas(FlatBufferBuilder builder, int SCHEMASOffset) { builder.addOffset(10, SCHEMASOffset, 0); }
+  public static int createSchemasVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startSchemasVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addScreenOverlays(FlatBufferBuilder builder, int SCREEN_OVERLAYSOffset) { builder.addOffset(11, SCREEN_OVERLAYSOffset, 0); }
+  public static int createScreenOverlaysVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startScreenOverlaysVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addPhotoOverlays(FlatBufferBuilder builder, int PHOTO_OVERLAYSOffset) { builder.addOffset(12, PHOTO_OVERLAYSOffset, 0); }
+  public static int createPhotoOverlaysVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startPhotoOverlaysVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addTours(FlatBufferBuilder builder, int TOURSOffset) { builder.addOffset(13, TOURSOffset, 0); }
+  public static int createToursVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startToursVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addNetworkLinkControl(FlatBufferBuilder builder, int NETWORK_LINK_CONTROLOffset) { builder.addOffset(14, NETWORK_LINK_CONTROLOffset, 0); }
   public static int endKML(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

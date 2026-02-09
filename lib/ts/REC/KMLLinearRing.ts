@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { KMLAltitudeMode } from './KMLAltitudeMode.js';
 import { KMLCoordinate, KMLCoordinateT } from './KMLCoordinate.js';
 
 
@@ -41,8 +42,32 @@ coordinatesLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Whether to extrude to ground
+ */
+EXTRUDE():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Whether to tessellate
+ */
+TESSELLATE():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Altitude mode
+ */
+ALTITUDE_MODE():KMLAltitudeMode {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : KMLAltitudeMode.CLAMP_TO_GROUND;
+}
+
 static startKMLLinearRing(builder:flatbuffers.Builder) {
-  builder.startObject(1);
+  builder.startObject(4);
 }
 
 static addCoordinates(builder:flatbuffers.Builder, COORDINATESOffset:flatbuffers.Offset) {
@@ -61,32 +86,56 @@ static startCoordinatesVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addExtrude(builder:flatbuffers.Builder, EXTRUDE:boolean) {
+  builder.addFieldInt8(1, +EXTRUDE, +false);
+}
+
+static addTessellate(builder:flatbuffers.Builder, TESSELLATE:boolean) {
+  builder.addFieldInt8(2, +TESSELLATE, +false);
+}
+
+static addAltitudeMode(builder:flatbuffers.Builder, ALTITUDE_MODE:KMLAltitudeMode) {
+  builder.addFieldInt8(3, ALTITUDE_MODE, KMLAltitudeMode.CLAMP_TO_GROUND);
+}
+
 static endKMLLinearRing(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createKMLLinearRing(builder:flatbuffers.Builder, COORDINATESOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createKMLLinearRing(builder:flatbuffers.Builder, COORDINATESOffset:flatbuffers.Offset, EXTRUDE:boolean, TESSELLATE:boolean, ALTITUDE_MODE:KMLAltitudeMode):flatbuffers.Offset {
   KMLLinearRing.startKMLLinearRing(builder);
   KMLLinearRing.addCoordinates(builder, COORDINATESOffset);
+  KMLLinearRing.addExtrude(builder, EXTRUDE);
+  KMLLinearRing.addTessellate(builder, TESSELLATE);
+  KMLLinearRing.addAltitudeMode(builder, ALTITUDE_MODE);
   return KMLLinearRing.endKMLLinearRing(builder);
 }
 
 unpack(): KMLLinearRingT {
   return new KMLLinearRingT(
-    this.bb!.createObjList<KMLCoordinate, KMLCoordinateT>(this.COORDINATES.bind(this), this.coordinatesLength())
+    this.bb!.createObjList<KMLCoordinate, KMLCoordinateT>(this.COORDINATES.bind(this), this.coordinatesLength()),
+    this.EXTRUDE(),
+    this.TESSELLATE(),
+    this.ALTITUDE_MODE()
   );
 }
 
 
 unpackTo(_o: KMLLinearRingT): void {
   _o.COORDINATES = this.bb!.createObjList<KMLCoordinate, KMLCoordinateT>(this.COORDINATES.bind(this), this.coordinatesLength());
+  _o.EXTRUDE = this.EXTRUDE();
+  _o.TESSELLATE = this.TESSELLATE();
+  _o.ALTITUDE_MODE = this.ALTITUDE_MODE();
 }
 }
 
 export class KMLLinearRingT implements flatbuffers.IGeneratedObject {
 constructor(
-  public COORDINATES: (KMLCoordinateT)[] = []
+  public COORDINATES: (KMLCoordinateT)[] = [],
+  public EXTRUDE: boolean = false,
+  public TESSELLATE: boolean = false,
+  public ALTITUDE_MODE: KMLAltitudeMode = KMLAltitudeMode.CLAMP_TO_GROUND
 ){}
 
 
@@ -94,7 +143,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const COORDINATES = KMLLinearRing.createCoordinatesVector(builder, builder.createObjectOffsetList(this.COORDINATES));
 
   return KMLLinearRing.createKMLLinearRing(builder,
-    COORDINATES
+    COORDINATES,
+    this.EXTRUDE,
+    this.TESSELLATE,
+    this.ALTITUDE_MODE
   );
 }
 }

@@ -53,8 +53,16 @@ class KMLBalloonStyle(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Display mode
+    # KMLBalloonStyle
+    def DISPLAY_MODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
 def KMLBalloonStyleStart(builder):
-    builder.StartObject(3)
+    builder.StartObject(4)
 
 def Start(builder):
     KMLBalloonStyleStart(builder)
@@ -77,6 +85,12 @@ def KMLBalloonStyleAddTEXT(builder, TEXT):
 def AddTEXT(builder, TEXT):
     KMLBalloonStyleAddTEXT(builder, TEXT)
 
+def KMLBalloonStyleAddDISPLAY_MODE(builder, DISPLAY_MODE):
+    builder.PrependInt8Slot(3, DISPLAY_MODE, 0)
+
+def AddDISPLAY_MODE(builder, DISPLAY_MODE):
+    KMLBalloonStyleAddDISPLAY_MODE(builder, DISPLAY_MODE)
+
 def KMLBalloonStyleEnd(builder):
     return builder.EndObject()
 
@@ -91,6 +105,7 @@ class KMLBalloonStyleT(object):
         self.BG_COLOR = None  # type: str
         self.TEXT_COLOR = None  # type: str
         self.TEXT = None  # type: str
+        self.DISPLAY_MODE = 0  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -116,6 +131,7 @@ class KMLBalloonStyleT(object):
         self.BG_COLOR = kmlballoonStyle.BG_COLOR()
         self.TEXT_COLOR = kmlballoonStyle.TEXT_COLOR()
         self.TEXT = kmlballoonStyle.TEXT()
+        self.DISPLAY_MODE = kmlballoonStyle.DISPLAY_MODE()
 
     # KMLBalloonStyleT
     def Pack(self, builder):
@@ -132,5 +148,6 @@ class KMLBalloonStyleT(object):
             KMLBalloonStyleAddTEXT_COLOR(builder, TEXT_COLOR)
         if self.TEXT is not None:
             KMLBalloonStyleAddTEXT(builder, TEXT)
+        KMLBalloonStyleAddDISPLAY_MODE(builder, self.DISPLAY_MODE)
         kmlballoonStyle = KMLBalloonStyleEnd(builder)
         return kmlballoonStyle

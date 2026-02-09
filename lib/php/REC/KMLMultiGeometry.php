@@ -121,26 +121,110 @@ class KMLMultiGeometry extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Child linear rings (standalone)
+    /**
+     * @returnVectorOffset
+     */
+    public function getLINEAR_RINGS($j)
+    {
+        $o = $this->__offset(12);
+        $obj = new KMLLinearRing();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLINEAR_RINGSLength()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Child 3D models
+    /**
+     * @returnVectorOffset
+     */
+    public function getMODELS($j)
+    {
+        $o = $this->__offset(14);
+        $obj = new KMLModel();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMODELSLength()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Child tracks
+    /**
+     * @returnVectorOffset
+     */
+    public function getTRACKS($j)
+    {
+        $o = $this->__offset(16);
+        $obj = new KMLTrack();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTRACKSLength()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Child multi-tracks
+    /**
+     * @returnVectorOffset
+     */
+    public function getMULTI_TRACKS($j)
+    {
+        $o = $this->__offset(18);
+        $obj = new KMLMultiTrack();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMULTI_TRACKSLength()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startKMLMultiGeometry(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(4);
+        $builder->StartObject(8);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return KMLMultiGeometry
      */
-    public static function createKMLMultiGeometry(FlatBufferBuilder $builder, $POINTS, $LINE_STRINGS, $POLYGONS, $MULTI_GEOMETRIES)
+    public static function createKMLMultiGeometry(FlatBufferBuilder $builder, $POINTS, $LINE_STRINGS, $POLYGONS, $MULTI_GEOMETRIES, $LINEAR_RINGS, $MODELS, $TRACKS, $MULTI_TRACKS)
     {
-        $builder->startObject(4);
+        $builder->startObject(8);
         self::addPOINTS($builder, $POINTS);
         self::addLINE_STRINGS($builder, $LINE_STRINGS);
         self::addPOLYGONS($builder, $POLYGONS);
         self::addMULTI_GEOMETRIES($builder, $MULTI_GEOMETRIES);
+        self::addLINEAR_RINGS($builder, $LINEAR_RINGS);
+        self::addMODELS($builder, $MODELS);
+        self::addTRACKS($builder, $TRACKS);
+        self::addMULTI_TRACKS($builder, $MULTI_TRACKS);
         $o = $builder->endObject();
         return $o;
     }
@@ -277,6 +361,142 @@ class KMLMultiGeometry extends Table
      * @return void
      */
     public static function startMULTI_GEOMETRIESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addLINEAR_RINGS(FlatBufferBuilder $builder, $LINEAR_RINGS)
+    {
+        $builder->addOffsetX(4, $LINEAR_RINGS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createLINEAR_RINGSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startLINEAR_RINGSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addMODELS(FlatBufferBuilder $builder, $MODELS)
+    {
+        $builder->addOffsetX(5, $MODELS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createMODELSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startMODELSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addTRACKS(FlatBufferBuilder $builder, $TRACKS)
+    {
+        $builder->addOffsetX(6, $TRACKS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createTRACKSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startTRACKSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addMULTI_TRACKS(FlatBufferBuilder $builder, $MULTI_TRACKS)
+    {
+        $builder->addOffsetX(7, $MULTI_TRACKS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createMULTI_TRACKSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startMULTI_TRACKSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
     }

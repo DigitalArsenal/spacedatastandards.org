@@ -106,22 +106,84 @@ class CZMModel extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Whether to incrementally load textures
+    /**
+     * @return bool
+     */
+    public function getINCREMENTALLY_LOAD_TEXTURES()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Whether to run animations
+    /**
+     * @return bool
+     */
+    public function getRUN_ANIMATIONS()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Shadow mode
+    public function getSHADOWS()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Silhouette color
+    public function getSILHOUETTE_COLOR()
+    {
+        $obj = new CZMColor();
+        $o = $this->__offset(24);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Silhouette size in pixels
+    /**
+     * @return double
+     */
+    public function getSILHOUETTE_SIZE()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Color blend mode
+    public function getCOLOR_BLEND_MODE()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Color blend amount (0-1)
+    /**
+     * @return double
+     */
+    public function getCOLOR_BLEND_AMOUNT()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCZMModel(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(7);
+        $builder->StartObject(14);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CZMModel
      */
-    public static function createCZMModel(FlatBufferBuilder $builder, $SHOW, $GLTF, $SCALE, $MINIMUM_PIXEL_SIZE, $MAXIMUM_SCALE, $HEIGHT_REFERENCE, $COLOR)
+    public static function createCZMModel(FlatBufferBuilder $builder, $SHOW, $GLTF, $SCALE, $MINIMUM_PIXEL_SIZE, $MAXIMUM_SCALE, $HEIGHT_REFERENCE, $COLOR, $INCREMENTALLY_LOAD_TEXTURES, $RUN_ANIMATIONS, $SHADOWS, $SILHOUETTE_COLOR, $SILHOUETTE_SIZE, $COLOR_BLEND_MODE, $COLOR_BLEND_AMOUNT)
     {
-        $builder->startObject(7);
+        $builder->startObject(14);
         self::addSHOW($builder, $SHOW);
         self::addGLTF($builder, $GLTF);
         self::addSCALE($builder, $SCALE);
@@ -129,6 +191,13 @@ class CZMModel extends Table
         self::addMAXIMUM_SCALE($builder, $MAXIMUM_SCALE);
         self::addHEIGHT_REFERENCE($builder, $HEIGHT_REFERENCE);
         self::addCOLOR($builder, $COLOR);
+        self::addINCREMENTALLY_LOAD_TEXTURES($builder, $INCREMENTALLY_LOAD_TEXTURES);
+        self::addRUN_ANIMATIONS($builder, $RUN_ANIMATIONS);
+        self::addSHADOWS($builder, $SHADOWS);
+        self::addSILHOUETTE_COLOR($builder, $SILHOUETTE_COLOR);
+        self::addSILHOUETTE_SIZE($builder, $SILHOUETTE_SIZE);
+        self::addCOLOR_BLEND_MODE($builder, $COLOR_BLEND_MODE);
+        self::addCOLOR_BLEND_AMOUNT($builder, $COLOR_BLEND_AMOUNT);
         $o = $builder->endObject();
         return $o;
     }
@@ -201,6 +270,76 @@ class CZMModel extends Table
     public static function addCOLOR(FlatBufferBuilder $builder, $COLOR)
     {
         $builder->addOffsetX(6, $COLOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addINCREMENTALLY_LOAD_TEXTURES(FlatBufferBuilder $builder, $INCREMENTALLY_LOAD_TEXTURES)
+    {
+        $builder->addBoolX(7, $INCREMENTALLY_LOAD_TEXTURES, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addRUN_ANIMATIONS(FlatBufferBuilder $builder, $RUN_ANIMATIONS)
+    {
+        $builder->addBoolX(8, $RUN_ANIMATIONS, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSHADOWS(FlatBufferBuilder $builder, $SHADOWS)
+    {
+        $builder->addOffsetX(9, $SHADOWS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSILHOUETTE_COLOR(FlatBufferBuilder $builder, $SILHOUETTE_COLOR)
+    {
+        $builder->addOffsetX(10, $SILHOUETTE_COLOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addSILHOUETTE_SIZE(FlatBufferBuilder $builder, $SILHOUETTE_SIZE)
+    {
+        $builder->addDoubleX(11, $SILHOUETTE_SIZE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCOLOR_BLEND_MODE(FlatBufferBuilder $builder, $COLOR_BLEND_MODE)
+    {
+        $builder->addOffsetX(12, $COLOR_BLEND_MODE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCOLOR_BLEND_AMOUNT(FlatBufferBuilder $builder, $COLOR_BLEND_AMOUNT)
+    {
+        $builder->addDoubleX(13, $COLOR_BLEND_AMOUNT, 0.0);
     }
 
     /**

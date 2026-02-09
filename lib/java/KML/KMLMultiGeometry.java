@@ -60,13 +60,53 @@ public final class KMLMultiGeometry extends Table {
   public int MULTI_GEOMETRIESLength() { int o = __offset(10); return o != 0 ? __vector_len(o) : 0; }
   public KMLMultiGeometry.Vector multiGeometriesVector() { return multiGeometriesVector(new KMLMultiGeometry.Vector()); }
   public KMLMultiGeometry.Vector multiGeometriesVector(KMLMultiGeometry.Vector obj) { int o = __offset(10); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Child linear rings (standalone)
+   */
+  public KMLLinearRing LINEAR_RINGS(int j) { return LINEAR_RINGS(new KMLLinearRing(), j); }
+  public KMLLinearRing LINEAR_RINGS(KMLLinearRing obj, int j) { int o = __offset(12); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int LINEAR_RINGSLength() { int o = __offset(12); return o != 0 ? __vector_len(o) : 0; }
+  public KMLLinearRing.Vector linearRingsVector() { return linearRingsVector(new KMLLinearRing.Vector()); }
+  public KMLLinearRing.Vector linearRingsVector(KMLLinearRing.Vector obj) { int o = __offset(12); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Child 3D models
+   */
+  public KMLModel MODELS(int j) { return MODELS(new KMLModel(), j); }
+  public KMLModel MODELS(KMLModel obj, int j) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int MODELSLength() { int o = __offset(14); return o != 0 ? __vector_len(o) : 0; }
+  public KMLModel.Vector modelsVector() { return modelsVector(new KMLModel.Vector()); }
+  public KMLModel.Vector modelsVector(KMLModel.Vector obj) { int o = __offset(14); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Child tracks
+   */
+  public KMLTrack TRACKS(int j) { return TRACKS(new KMLTrack(), j); }
+  public KMLTrack TRACKS(KMLTrack obj, int j) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int TRACKSLength() { int o = __offset(16); return o != 0 ? __vector_len(o) : 0; }
+  public KMLTrack.Vector tracksVector() { return tracksVector(new KMLTrack.Vector()); }
+  public KMLTrack.Vector tracksVector(KMLTrack.Vector obj) { int o = __offset(16); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Child multi-tracks
+   */
+  public KMLMultiTrack MULTI_TRACKS(int j) { return MULTI_TRACKS(new KMLMultiTrack(), j); }
+  public KMLMultiTrack MULTI_TRACKS(KMLMultiTrack obj, int j) { int o = __offset(18); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int MULTI_TRACKSLength() { int o = __offset(18); return o != 0 ? __vector_len(o) : 0; }
+  public KMLMultiTrack.Vector multiTracksVector() { return multiTracksVector(new KMLMultiTrack.Vector()); }
+  public KMLMultiTrack.Vector multiTracksVector(KMLMultiTrack.Vector obj) { int o = __offset(18); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createKMLMultiGeometry(FlatBufferBuilder builder,
       int POINTSOffset,
       int LINE_STRINGSOffset,
       int POLYGONSOffset,
-      int MULTI_GEOMETRIESOffset) {
-    builder.startTable(4);
+      int MULTI_GEOMETRIESOffset,
+      int LINEAR_RINGSOffset,
+      int MODELSOffset,
+      int TRACKSOffset,
+      int MULTI_TRACKSOffset) {
+    builder.startTable(8);
+    KMLMultiGeometry.addMultiTracks(builder, MULTI_TRACKSOffset);
+    KMLMultiGeometry.addTracks(builder, TRACKSOffset);
+    KMLMultiGeometry.addModels(builder, MODELSOffset);
+    KMLMultiGeometry.addLinearRings(builder, LINEAR_RINGSOffset);
     KMLMultiGeometry.addMultiGeometries(builder, MULTI_GEOMETRIESOffset);
     KMLMultiGeometry.addPolygons(builder, POLYGONSOffset);
     KMLMultiGeometry.addLineStrings(builder, LINE_STRINGSOffset);
@@ -74,7 +114,7 @@ public final class KMLMultiGeometry extends Table {
     return KMLMultiGeometry.endKMLMultiGeometry(builder);
   }
 
-  public static void startKMLMultiGeometry(FlatBufferBuilder builder) { builder.startTable(4); }
+  public static void startKMLMultiGeometry(FlatBufferBuilder builder) { builder.startTable(8); }
   public static void addPoints(FlatBufferBuilder builder, int POINTSOffset) { builder.addOffset(0, POINTSOffset, 0); }
   public static int createPointsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startPointsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
@@ -87,6 +127,18 @@ public final class KMLMultiGeometry extends Table {
   public static void addMultiGeometries(FlatBufferBuilder builder, int MULTI_GEOMETRIESOffset) { builder.addOffset(3, MULTI_GEOMETRIESOffset, 0); }
   public static int createMultiGeometriesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startMultiGeometriesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addLinearRings(FlatBufferBuilder builder, int LINEAR_RINGSOffset) { builder.addOffset(4, LINEAR_RINGSOffset, 0); }
+  public static int createLinearRingsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startLinearRingsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addModels(FlatBufferBuilder builder, int MODELSOffset) { builder.addOffset(5, MODELSOffset, 0); }
+  public static int createModelsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startModelsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addTracks(FlatBufferBuilder builder, int TRACKSOffset) { builder.addOffset(6, TRACKSOffset, 0); }
+  public static int createTracksVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startTracksVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addMultiTracks(FlatBufferBuilder builder, int MULTI_TRACKSOffset) { builder.addOffset(7, MULTI_TRACKSOffset, 0); }
+  public static int createMultiTracksVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startMultiTracksVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endKMLMultiGeometry(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

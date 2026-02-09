@@ -77,8 +77,16 @@ class GJNBoundingBox(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # True if the bbox includes altitude (6 values vs 4)
+    # GJNBoundingBox
+    def HAS_ALTITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def GJNBoundingBoxStart(builder):
-    builder.StartObject(6)
+    builder.StartObject(7)
 
 def Start(builder):
     GJNBoundingBoxStart(builder)
@@ -119,6 +127,12 @@ def GJNBoundingBoxAddMAX_ALTITUDE(builder, MAX_ALTITUDE):
 def AddMAX_ALTITUDE(builder, MAX_ALTITUDE):
     GJNBoundingBoxAddMAX_ALTITUDE(builder, MAX_ALTITUDE)
 
+def GJNBoundingBoxAddHAS_ALTITUDE(builder, HAS_ALTITUDE):
+    builder.PrependBoolSlot(6, HAS_ALTITUDE, 0)
+
+def AddHAS_ALTITUDE(builder, HAS_ALTITUDE):
+    GJNBoundingBoxAddHAS_ALTITUDE(builder, HAS_ALTITUDE)
+
 def GJNBoundingBoxEnd(builder):
     return builder.EndObject()
 
@@ -136,6 +150,7 @@ class GJNBoundingBoxT(object):
         self.NORTH = 0.0  # type: float
         self.MIN_ALTITUDE = 0.0  # type: float
         self.MAX_ALTITUDE = 0.0  # type: float
+        self.HAS_ALTITUDE = False  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -164,6 +179,7 @@ class GJNBoundingBoxT(object):
         self.NORTH = gjnboundingBox.NORTH()
         self.MIN_ALTITUDE = gjnboundingBox.MIN_ALTITUDE()
         self.MAX_ALTITUDE = gjnboundingBox.MAX_ALTITUDE()
+        self.HAS_ALTITUDE = gjnboundingBox.HAS_ALTITUDE()
 
     # GJNBoundingBoxT
     def Pack(self, builder):
@@ -174,5 +190,6 @@ class GJNBoundingBoxT(object):
         GJNBoundingBoxAddNORTH(builder, self.NORTH)
         GJNBoundingBoxAddMIN_ALTITUDE(builder, self.MIN_ALTITUDE)
         GJNBoundingBoxAddMAX_ALTITUDE(builder, self.MAX_ALTITUDE)
+        GJNBoundingBoxAddHAS_ALTITUDE(builder, self.HAS_ALTITUDE)
         gjnboundingBox = GJNBoundingBoxEnd(builder)
         return gjnboundingBox

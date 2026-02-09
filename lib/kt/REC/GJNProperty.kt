@@ -73,6 +73,44 @@ class GJNProperty : Table() {
             val o = __offset(10)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * True if this property value is a boolean
+     */
+    val IS_BOOL : Boolean
+        get() {
+            val o = __offset(12)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Boolean value (use when IS_BOOL is true)
+     */
+    val BOOL_VALUE : Boolean
+        get() {
+            val o = __offset(14)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * True if this property value is JSON null
+     */
+    val IS_NULL : Boolean
+        get() {
+            val o = __offset(16)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Raw JSON string for complex values (objects, arrays)
+     */
+    val JSON_VALUE : String?
+        get() {
+            val o = __offset(18)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val JSON_VALUEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
+    fun JSON_VALUEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsGJNProperty(_bb: ByteBuffer): GJNProperty = getRootAsGJNProperty(_bb, GJNProperty())
@@ -80,19 +118,27 @@ class GJNProperty : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createGJNProperty(builder: FlatBufferBuilder, KEYOffset: Int, VALUEOffset: Int, NUM_VALUE: Double, IS_NUMERIC: Boolean) : Int {
-            builder.startTable(4)
+        fun createGJNProperty(builder: FlatBufferBuilder, KEYOffset: Int, VALUEOffset: Int, NUM_VALUE: Double, IS_NUMERIC: Boolean, IS_BOOL: Boolean, BOOL_VALUE: Boolean, IS_NULL: Boolean, JSON_VALUEOffset: Int) : Int {
+            builder.startTable(8)
             addNUM_VALUE(builder, NUM_VALUE)
+            addJSON_VALUE(builder, JSON_VALUEOffset)
             addVALUE(builder, VALUEOffset)
             addKEY(builder, KEYOffset)
+            addIS_NULL(builder, IS_NULL)
+            addBOOL_VALUE(builder, BOOL_VALUE)
+            addIS_BOOL(builder, IS_BOOL)
             addIS_NUMERIC(builder, IS_NUMERIC)
             return endGJNProperty(builder)
         }
-        fun startGJNProperty(builder: FlatBufferBuilder) = builder.startTable(4)
+        fun startGJNProperty(builder: FlatBufferBuilder) = builder.startTable(8)
         fun addKEY(builder: FlatBufferBuilder, KEY: Int) = builder.addOffset(0, KEY, 0)
         fun addVALUE(builder: FlatBufferBuilder, VALUE: Int) = builder.addOffset(1, VALUE, 0)
         fun addNUM_VALUE(builder: FlatBufferBuilder, NUM_VALUE: Double) = builder.addDouble(2, NUM_VALUE, 0.0)
         fun addIS_NUMERIC(builder: FlatBufferBuilder, IS_NUMERIC: Boolean) = builder.addBoolean(3, IS_NUMERIC, false)
+        fun addIS_BOOL(builder: FlatBufferBuilder, IS_BOOL: Boolean) = builder.addBoolean(4, IS_BOOL, false)
+        fun addBOOL_VALUE(builder: FlatBufferBuilder, BOOL_VALUE: Boolean) = builder.addBoolean(5, BOOL_VALUE, false)
+        fun addIS_NULL(builder: FlatBufferBuilder, IS_NULL: Boolean) = builder.addBoolean(6, IS_NULL, false)
+        fun addJSON_VALUE(builder: FlatBufferBuilder, JSON_VALUE: Int) = builder.addOffset(7, JSON_VALUE, 0)
         fun endGJNProperty(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

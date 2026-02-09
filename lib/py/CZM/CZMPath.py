@@ -61,7 +61,7 @@ class CZMPath(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Path color
+    # Path color (legacy solid color)
     # CZMPath
     def COLOR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -81,8 +81,20 @@ class CZMPath(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Full polyline material
+    # CZMPath
+    def MATERIAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMPolylineMaterial import CZMPolylineMaterial
+            obj = CZMPolylineMaterial()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def CZMPathStart(builder):
-    builder.StartObject(6)
+    builder.StartObject(7)
 
 def Start(builder):
     CZMPathStart(builder)
@@ -123,6 +135,12 @@ def CZMPathAddRESOLUTION(builder, RESOLUTION):
 def AddRESOLUTION(builder, RESOLUTION):
     CZMPathAddRESOLUTION(builder, RESOLUTION)
 
+def CZMPathAddMATERIAL(builder, MATERIAL):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(MATERIAL), 0)
+
+def AddMATERIAL(builder, MATERIAL):
+    CZMPathAddMATERIAL(builder, MATERIAL)
+
 def CZMPathEnd(builder):
     return builder.EndObject()
 
@@ -130,6 +148,7 @@ def End(builder):
     return CZMPathEnd(builder)
 
 import CZMColor
+import CZMPolylineMaterial
 try:
     from typing import Optional
 except:
@@ -145,6 +164,7 @@ class CZMPathT(object):
         self.WIDTH = 0.0  # type: float
         self.COLOR = None  # type: Optional[CZMColor.CZMColorT]
         self.RESOLUTION = 0.0  # type: float
+        self.MATERIAL = None  # type: Optional[CZMPolylineMaterial.CZMPolylineMaterialT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -174,11 +194,15 @@ class CZMPathT(object):
         if czmpath.COLOR() is not None:
             self.COLOR = CZMColor.CZMColorT.InitFromObj(czmpath.COLOR())
         self.RESOLUTION = czmpath.RESOLUTION()
+        if czmpath.MATERIAL() is not None:
+            self.MATERIAL = CZMPolylineMaterial.CZMPolylineMaterialT.InitFromObj(czmpath.MATERIAL())
 
     # CZMPathT
     def Pack(self, builder):
         if self.COLOR is not None:
             COLOR = self.COLOR.Pack(builder)
+        if self.MATERIAL is not None:
+            MATERIAL = self.MATERIAL.Pack(builder)
         CZMPathStart(builder)
         CZMPathAddSHOW(builder, self.SHOW)
         CZMPathAddLEAD_TIME(builder, self.LEAD_TIME)
@@ -187,5 +211,7 @@ class CZMPathT(object):
         if self.COLOR is not None:
             CZMPathAddCOLOR(builder, COLOR)
         CZMPathAddRESOLUTION(builder, self.RESOLUTION)
+        if self.MATERIAL is not None:
+            CZMPathAddMATERIAL(builder, MATERIAL)
         czmpath = CZMPathEnd(builder)
         return czmpath

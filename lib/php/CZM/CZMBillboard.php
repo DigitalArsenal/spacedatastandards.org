@@ -134,22 +134,138 @@ class CZMBillboard extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Rotation in radians
+    /**
+     * @return double
+     */
+    public function getROTATION()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Whether size is in meters
+    /**
+     * @return bool
+     */
+    public function getSIZE_IN_METERS()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Width in pixels
+    /**
+     * @return double
+     */
+    public function getWIDTH()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Height in pixels
+    /**
+     * @return double
+     */
+    public function getHEIGHT()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Eye offset X in meters
+    /**
+     * @return double
+     */
+    public function getEYE_OFFSET_X()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Eye offset Y in meters
+    /**
+     * @return double
+     */
+    public function getEYE_OFFSET_Y()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Eye offset Z in meters
+    /**
+     * @return double
+     */
+    public function getEYE_OFFSET_Z()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Scale by distance
+    public function getSCALE_BY_DISTANCE()
+    {
+        $obj = new CZMNearFarScalar();
+        $o = $this->__offset(38);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Pixel offset scale by distance
+    public function getPIXEL_OFFSET_SCALE_BY_DISTANCE()
+    {
+        $obj = new CZMNearFarScalar();
+        $o = $this->__offset(40);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Distance display condition near
+    /**
+     * @return double
+     */
+    public function getDISTANCE_DISPLAY_CONDITION_NEAR()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Distance display condition far
+    /**
+     * @return double
+     */
+    public function getDISTANCE_DISPLAY_CONDITION_FAR()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Disable depth test distance
+    /**
+     * @return double
+     */
+    public function getDISABLE_DEPTH_TEST_DISTANCE()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCZMBillboard(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(10);
+        $builder->StartObject(22);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CZMBillboard
      */
-    public static function createCZMBillboard(FlatBufferBuilder $builder, $SHOW, $IMAGE, $SCALE, $COLOR, $HEIGHT_REFERENCE, $PIXEL_OFFSET_X, $PIXEL_OFFSET_Y, $HORIZONTAL_ORIGIN, $VERTICAL_ORIGIN, $TRANSLUCENCY_BY_DISTANCE)
+    public static function createCZMBillboard(FlatBufferBuilder $builder, $SHOW, $IMAGE, $SCALE, $COLOR, $HEIGHT_REFERENCE, $PIXEL_OFFSET_X, $PIXEL_OFFSET_Y, $HORIZONTAL_ORIGIN, $VERTICAL_ORIGIN, $TRANSLUCENCY_BY_DISTANCE, $ROTATION, $SIZE_IN_METERS, $WIDTH, $HEIGHT, $EYE_OFFSET_X, $EYE_OFFSET_Y, $EYE_OFFSET_Z, $SCALE_BY_DISTANCE, $PIXEL_OFFSET_SCALE_BY_DISTANCE, $DISTANCE_DISPLAY_CONDITION_NEAR, $DISTANCE_DISPLAY_CONDITION_FAR, $DISABLE_DEPTH_TEST_DISTANCE)
     {
-        $builder->startObject(10);
+        $builder->startObject(22);
         self::addSHOW($builder, $SHOW);
         self::addIMAGE($builder, $IMAGE);
         self::addSCALE($builder, $SCALE);
@@ -160,6 +276,18 @@ class CZMBillboard extends Table
         self::addHORIZONTAL_ORIGIN($builder, $HORIZONTAL_ORIGIN);
         self::addVERTICAL_ORIGIN($builder, $VERTICAL_ORIGIN);
         self::addTRANSLUCENCY_BY_DISTANCE($builder, $TRANSLUCENCY_BY_DISTANCE);
+        self::addROTATION($builder, $ROTATION);
+        self::addSIZE_IN_METERS($builder, $SIZE_IN_METERS);
+        self::addWIDTH($builder, $WIDTH);
+        self::addHEIGHT($builder, $HEIGHT);
+        self::addEYE_OFFSET_X($builder, $EYE_OFFSET_X);
+        self::addEYE_OFFSET_Y($builder, $EYE_OFFSET_Y);
+        self::addEYE_OFFSET_Z($builder, $EYE_OFFSET_Z);
+        self::addSCALE_BY_DISTANCE($builder, $SCALE_BY_DISTANCE);
+        self::addPIXEL_OFFSET_SCALE_BY_DISTANCE($builder, $PIXEL_OFFSET_SCALE_BY_DISTANCE);
+        self::addDISTANCE_DISPLAY_CONDITION_NEAR($builder, $DISTANCE_DISPLAY_CONDITION_NEAR);
+        self::addDISTANCE_DISPLAY_CONDITION_FAR($builder, $DISTANCE_DISPLAY_CONDITION_FAR);
+        self::addDISABLE_DEPTH_TEST_DISTANCE($builder, $DISABLE_DEPTH_TEST_DISTANCE);
         $o = $builder->endObject();
         return $o;
     }
@@ -262,6 +390,126 @@ class CZMBillboard extends Table
     public static function addTRANSLUCENCY_BY_DISTANCE(FlatBufferBuilder $builder, $TRANSLUCENCY_BY_DISTANCE)
     {
         $builder->addOffsetX(9, $TRANSLUCENCY_BY_DISTANCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addROTATION(FlatBufferBuilder $builder, $ROTATION)
+    {
+        $builder->addDoubleX(10, $ROTATION, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addSIZE_IN_METERS(FlatBufferBuilder $builder, $SIZE_IN_METERS)
+    {
+        $builder->addBoolX(11, $SIZE_IN_METERS, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addWIDTH(FlatBufferBuilder $builder, $WIDTH)
+    {
+        $builder->addDoubleX(12, $WIDTH, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addHEIGHT(FlatBufferBuilder $builder, $HEIGHT)
+    {
+        $builder->addDoubleX(13, $HEIGHT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addEYE_OFFSET_X(FlatBufferBuilder $builder, $EYE_OFFSET_X)
+    {
+        $builder->addDoubleX(14, $EYE_OFFSET_X, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addEYE_OFFSET_Y(FlatBufferBuilder $builder, $EYE_OFFSET_Y)
+    {
+        $builder->addDoubleX(15, $EYE_OFFSET_Y, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addEYE_OFFSET_Z(FlatBufferBuilder $builder, $EYE_OFFSET_Z)
+    {
+        $builder->addDoubleX(16, $EYE_OFFSET_Z, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSCALE_BY_DISTANCE(FlatBufferBuilder $builder, $SCALE_BY_DISTANCE)
+    {
+        $builder->addOffsetX(17, $SCALE_BY_DISTANCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPIXEL_OFFSET_SCALE_BY_DISTANCE(FlatBufferBuilder $builder, $PIXEL_OFFSET_SCALE_BY_DISTANCE)
+    {
+        $builder->addOffsetX(18, $PIXEL_OFFSET_SCALE_BY_DISTANCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDISTANCE_DISPLAY_CONDITION_NEAR(FlatBufferBuilder $builder, $DISTANCE_DISPLAY_CONDITION_NEAR)
+    {
+        $builder->addDoubleX(19, $DISTANCE_DISPLAY_CONDITION_NEAR, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDISTANCE_DISPLAY_CONDITION_FAR(FlatBufferBuilder $builder, $DISTANCE_DISPLAY_CONDITION_FAR)
+    {
+        $builder->addDoubleX(20, $DISTANCE_DISPLAY_CONDITION_FAR, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDISABLE_DEPTH_TEST_DISTANCE(FlatBufferBuilder $builder, $DISABLE_DEPTH_TEST_DISTANCE)
+    {
+        $builder->addDoubleX(21, $DISABLE_DEPTH_TEST_DISTANCE, 0.0);
     }
 
     /**

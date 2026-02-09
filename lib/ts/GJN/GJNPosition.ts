@@ -51,8 +51,16 @@ ALTITUDE():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * True if altitude was explicitly provided (distinguishes 0 from absent)
+ */
+HAS_ALTITUDE():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startGJNPosition(builder:flatbuffers.Builder) {
-  builder.startObject(3);
+  builder.startObject(4);
 }
 
 static addLongitude(builder:flatbuffers.Builder, LONGITUDE:number) {
@@ -67,16 +75,21 @@ static addAltitude(builder:flatbuffers.Builder, ALTITUDE:number) {
   builder.addFieldFloat64(2, ALTITUDE, 0.0);
 }
 
+static addHasAltitude(builder:flatbuffers.Builder, HAS_ALTITUDE:boolean) {
+  builder.addFieldInt8(3, +HAS_ALTITUDE, +false);
+}
+
 static endGJNPosition(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createGJNPosition(builder:flatbuffers.Builder, LONGITUDE:number, LATITUDE:number, ALTITUDE:number):flatbuffers.Offset {
+static createGJNPosition(builder:flatbuffers.Builder, LONGITUDE:number, LATITUDE:number, ALTITUDE:number, HAS_ALTITUDE:boolean):flatbuffers.Offset {
   GJNPosition.startGJNPosition(builder);
   GJNPosition.addLongitude(builder, LONGITUDE);
   GJNPosition.addLatitude(builder, LATITUDE);
   GJNPosition.addAltitude(builder, ALTITUDE);
+  GJNPosition.addHasAltitude(builder, HAS_ALTITUDE);
   return GJNPosition.endGJNPosition(builder);
 }
 
@@ -84,7 +97,8 @@ unpack(): GJNPositionT {
   return new GJNPositionT(
     this.LONGITUDE(),
     this.LATITUDE(),
-    this.ALTITUDE()
+    this.ALTITUDE(),
+    this.HAS_ALTITUDE()
   );
 }
 
@@ -93,6 +107,7 @@ unpackTo(_o: GJNPositionT): void {
   _o.LONGITUDE = this.LONGITUDE();
   _o.LATITUDE = this.LATITUDE();
   _o.ALTITUDE = this.ALTITUDE();
+  _o.HAS_ALTITUDE = this.HAS_ALTITUDE();
 }
 }
 
@@ -100,7 +115,8 @@ export class GJNPositionT implements flatbuffers.IGeneratedObject {
 constructor(
   public LONGITUDE: number = 0.0,
   public LATITUDE: number = 0.0,
-  public ALTITUDE: number = 0.0
+  public ALTITUDE: number = 0.0,
+  public HAS_ALTITUDE: boolean = false
 ){}
 
 
@@ -108,7 +124,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   return GJNPosition.createGJNPosition(builder,
     this.LONGITUDE,
     this.LATITUDE,
-    this.ALTITUDE
+    this.ALTITUDE,
+    this.HAS_ALTITUDE
   );
 }
 }

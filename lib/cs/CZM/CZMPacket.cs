@@ -103,6 +103,76 @@ public struct CZMPacket : IFlatbufferObject
   public CZMPath? PATH { get { int o = __p.__offset(36); return o != 0 ? (CZMPath?)(new CZMPath()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Ellipse properties
   public CZMEllipse? ELLIPSE { get { int o = __p.__offset(38); return o != 0 ? (CZMEllipse?)(new CZMEllipse()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Orientation (quaternion)
+  public CZMOrientation? ORIENTATION { get { int o = __p.__offset(40); return o != 0 ? (CZMOrientation?)(new CZMOrientation()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Suggested camera offset
+  public CZMViewFrom? VIEW_FROM { get { int o = __p.__offset(42); return o != 0 ? (CZMViewFrom?)(new CZMViewFrom()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Whether to delete this object
+  public bool DELETE { get { int o = __p.__offset(44); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Box properties
+  public CZMBox? BOX { get { int o = __p.__offset(46); return o != 0 ? (CZMBox?)(new CZMBox()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Corridor properties
+  public CZMCorridor? CORRIDOR { get { int o = __p.__offset(48); return o != 0 ? (CZMCorridor?)(new CZMCorridor()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Cylinder properties
+  public CZMCylinder? CYLINDER { get { int o = __p.__offset(50); return o != 0 ? (CZMCylinder?)(new CZMCylinder()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Ellipsoid properties
+  public CZMEllipsoid? ELLIPSOID { get { int o = __p.__offset(52); return o != 0 ? (CZMEllipsoid?)(new CZMEllipsoid()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Polyline volume properties
+  public CZMPolylineVolume? POLYLINE_VOLUME { get { int o = __p.__offset(54); return o != 0 ? (CZMPolylineVolume?)(new CZMPolylineVolume()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Rectangle properties
+  public CZMRectangle? RECTANGLE { get { int o = __p.__offset(56); return o != 0 ? (CZMRectangle?)(new CZMRectangle()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// 3D Tileset properties
+  public CZMTileset? TILESET { get { int o = __p.__offset(58); return o != 0 ? (CZMTileset?)(new CZMTileset()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Wall properties
+  public CZMWall? WALL { get { int o = __p.__offset(60); return o != 0 ? (CZMWall?)(new CZMWall()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Position interpolation settings
+  public CZMInterpolation? POSITION_INTERPOLATION { get { int o = __p.__offset(62); return o != 0 ? (CZMInterpolation?)(new CZMInterpolation()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Position reference frame (FIXED or INERTIAL)
+  public string POSITION_REFERENCE_FRAME { get { int o = __p.__offset(64); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPOSITION_REFERENCE_FRAMEBytes() { return __p.__vector_as_span<byte>(64, 1); }
+#else
+  public ArraySegment<byte>? GetPOSITION_REFERENCE_FRAMEBytes() { return __p.__vector_as_arraysegment(64); }
+#endif
+  public byte[] GetPOSITION_REFERENCE_FRAMEArray() { return __p.__vector_as_array<byte>(64); }
+  /// Position reference to another entity
+  public string POSITION_REFERENCE { get { int o = __p.__offset(66); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPOSITION_REFERENCEBytes() { return __p.__vector_as_span<byte>(66, 1); }
+#else
+  public ArraySegment<byte>? GetPOSITION_REFERENCEBytes() { return __p.__vector_as_arraysegment(66); }
+#endif
+  public byte[] GetPOSITION_REFERENCEArray() { return __p.__vector_as_array<byte>(66); }
+  /// Orientation epoch (ISO 8601)
+  public string ORIENTATION_EPOCH { get { int o = __p.__offset(68); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetORIENTATION_EPOCHBytes() { return __p.__vector_as_span<byte>(68, 1); }
+#else
+  public ArraySegment<byte>? GetORIENTATION_EPOCHBytes() { return __p.__vector_as_arraysegment(68); }
+#endif
+  public byte[] GetORIENTATION_EPOCHArray() { return __p.__vector_as_array<byte>(68); }
+  /// Orientation sampled data [t, x, y, z, w, t, x, y, z, w, ...]
+  public double ORIENTATION_ARRAY(int j) { int o = __p.__offset(70); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int ORIENTATION_ARRAYLength { get { int o = __p.__offset(70); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetORIENTATION_ARRAYBytes() { return __p.__vector_as_span<double>(70, 8); }
+#else
+  public ArraySegment<byte>? GetORIENTATION_ARRAYBytes() { return __p.__vector_as_arraysegment(70); }
+#endif
+  public double[] GetORIENTATION_ARRAYArray() { return __p.__vector_as_array<double>(70); }
+  /// Orientation interpolation settings
+  public CZMInterpolation? ORIENTATION_INTERPOLATION { get { int o = __p.__offset(72); return o != 0 ? (CZMInterpolation?)(new CZMInterpolation()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Orientation reference to another entity
+  public string ORIENTATION_REFERENCE { get { int o = __p.__offset(74); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetORIENTATION_REFERENCEBytes() { return __p.__vector_as_span<byte>(74, 1); }
+#else
+  public ArraySegment<byte>? GetORIENTATION_REFERENCEBytes() { return __p.__vector_as_arraysegment(74); }
+#endif
+  public byte[] GetORIENTATION_REFERENCEArray() { return __p.__vector_as_array<byte>(74); }
+  /// Generic bag for all time-dynamic (non-static) properties
+  public CZMDynamicProperty? DYNAMIC_PROPERTIES(int j) { int o = __p.__offset(76); return o != 0 ? (CZMDynamicProperty?)(new CZMDynamicProperty()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int DYNAMIC_PROPERTIESLength { get { int o = __p.__offset(76); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<CZMPacket> CreateCZMPacket(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
@@ -122,8 +192,45 @@ public struct CZMPacket : IFlatbufferObject
       Offset<CZMPolygon> POLYGONOffset = default(Offset<CZMPolygon>),
       Offset<CZMModel> MODELOffset = default(Offset<CZMModel>),
       Offset<CZMPath> PATHOffset = default(Offset<CZMPath>),
-      Offset<CZMEllipse> ELLIPSEOffset = default(Offset<CZMEllipse>)) {
-    builder.StartTable(18);
+      Offset<CZMEllipse> ELLIPSEOffset = default(Offset<CZMEllipse>),
+      Offset<CZMOrientation> ORIENTATIONOffset = default(Offset<CZMOrientation>),
+      Offset<CZMViewFrom> VIEW_FROMOffset = default(Offset<CZMViewFrom>),
+      bool DELETE = false,
+      Offset<CZMBox> BOXOffset = default(Offset<CZMBox>),
+      Offset<CZMCorridor> CORRIDOROffset = default(Offset<CZMCorridor>),
+      Offset<CZMCylinder> CYLINDEROffset = default(Offset<CZMCylinder>),
+      Offset<CZMEllipsoid> ELLIPSOIDOffset = default(Offset<CZMEllipsoid>),
+      Offset<CZMPolylineVolume> POLYLINE_VOLUMEOffset = default(Offset<CZMPolylineVolume>),
+      Offset<CZMRectangle> RECTANGLEOffset = default(Offset<CZMRectangle>),
+      Offset<CZMTileset> TILESETOffset = default(Offset<CZMTileset>),
+      Offset<CZMWall> WALLOffset = default(Offset<CZMWall>),
+      Offset<CZMInterpolation> POSITION_INTERPOLATIONOffset = default(Offset<CZMInterpolation>),
+      StringOffset POSITION_REFERENCE_FRAMEOffset = default(StringOffset),
+      StringOffset POSITION_REFERENCEOffset = default(StringOffset),
+      StringOffset ORIENTATION_EPOCHOffset = default(StringOffset),
+      VectorOffset ORIENTATION_ARRAYOffset = default(VectorOffset),
+      Offset<CZMInterpolation> ORIENTATION_INTERPOLATIONOffset = default(Offset<CZMInterpolation>),
+      StringOffset ORIENTATION_REFERENCEOffset = default(StringOffset),
+      VectorOffset DYNAMIC_PROPERTIESOffset = default(VectorOffset)) {
+    builder.StartTable(37);
+    CZMPacket.AddDYNAMIC_PROPERTIES(builder, DYNAMIC_PROPERTIESOffset);
+    CZMPacket.AddORIENTATION_REFERENCE(builder, ORIENTATION_REFERENCEOffset);
+    CZMPacket.AddORIENTATION_INTERPOLATION(builder, ORIENTATION_INTERPOLATIONOffset);
+    CZMPacket.AddORIENTATION_ARRAY(builder, ORIENTATION_ARRAYOffset);
+    CZMPacket.AddORIENTATION_EPOCH(builder, ORIENTATION_EPOCHOffset);
+    CZMPacket.AddPOSITION_REFERENCE(builder, POSITION_REFERENCEOffset);
+    CZMPacket.AddPOSITION_REFERENCE_FRAME(builder, POSITION_REFERENCE_FRAMEOffset);
+    CZMPacket.AddPOSITION_INTERPOLATION(builder, POSITION_INTERPOLATIONOffset);
+    CZMPacket.AddWALL(builder, WALLOffset);
+    CZMPacket.AddTILESET(builder, TILESETOffset);
+    CZMPacket.AddRECTANGLE(builder, RECTANGLEOffset);
+    CZMPacket.AddPOLYLINE_VOLUME(builder, POLYLINE_VOLUMEOffset);
+    CZMPacket.AddELLIPSOID(builder, ELLIPSOIDOffset);
+    CZMPacket.AddCYLINDER(builder, CYLINDEROffset);
+    CZMPacket.AddCORRIDOR(builder, CORRIDOROffset);
+    CZMPacket.AddBOX(builder, BOXOffset);
+    CZMPacket.AddVIEW_FROM(builder, VIEW_FROMOffset);
+    CZMPacket.AddORIENTATION(builder, ORIENTATIONOffset);
     CZMPacket.AddELLIPSE(builder, ELLIPSEOffset);
     CZMPacket.AddPATH(builder, PATHOffset);
     CZMPacket.AddMODEL(builder, MODELOffset);
@@ -142,10 +249,11 @@ public struct CZMPacket : IFlatbufferObject
     CZMPacket.AddPARENT(builder, PARENTOffset);
     CZMPacket.AddNAME(builder, NAMEOffset);
     CZMPacket.AddID(builder, IDOffset);
+    CZMPacket.AddDELETE(builder, DELETE);
     return CZMPacket.EndCZMPacket(builder);
   }
 
-  public static void StartCZMPacket(FlatBufferBuilder builder) { builder.StartTable(18); }
+  public static void StartCZMPacket(FlatBufferBuilder builder) { builder.StartTable(37); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(1, NAMEOffset.Value, 0); }
   public static void AddPARENT(FlatBufferBuilder builder, StringOffset PARENTOffset) { builder.AddOffset(2, PARENTOffset.Value, 0); }
@@ -174,6 +282,35 @@ public struct CZMPacket : IFlatbufferObject
   public static void AddMODEL(FlatBufferBuilder builder, Offset<CZMModel> MODELOffset) { builder.AddOffset(15, MODELOffset.Value, 0); }
   public static void AddPATH(FlatBufferBuilder builder, Offset<CZMPath> PATHOffset) { builder.AddOffset(16, PATHOffset.Value, 0); }
   public static void AddELLIPSE(FlatBufferBuilder builder, Offset<CZMEllipse> ELLIPSEOffset) { builder.AddOffset(17, ELLIPSEOffset.Value, 0); }
+  public static void AddORIENTATION(FlatBufferBuilder builder, Offset<CZMOrientation> ORIENTATIONOffset) { builder.AddOffset(18, ORIENTATIONOffset.Value, 0); }
+  public static void AddVIEW_FROM(FlatBufferBuilder builder, Offset<CZMViewFrom> VIEW_FROMOffset) { builder.AddOffset(19, VIEW_FROMOffset.Value, 0); }
+  public static void AddDELETE(FlatBufferBuilder builder, bool DELETE) { builder.AddBool(20, DELETE, false); }
+  public static void AddBOX(FlatBufferBuilder builder, Offset<CZMBox> BOXOffset) { builder.AddOffset(21, BOXOffset.Value, 0); }
+  public static void AddCORRIDOR(FlatBufferBuilder builder, Offset<CZMCorridor> CORRIDOROffset) { builder.AddOffset(22, CORRIDOROffset.Value, 0); }
+  public static void AddCYLINDER(FlatBufferBuilder builder, Offset<CZMCylinder> CYLINDEROffset) { builder.AddOffset(23, CYLINDEROffset.Value, 0); }
+  public static void AddELLIPSOID(FlatBufferBuilder builder, Offset<CZMEllipsoid> ELLIPSOIDOffset) { builder.AddOffset(24, ELLIPSOIDOffset.Value, 0); }
+  public static void AddPOLYLINE_VOLUME(FlatBufferBuilder builder, Offset<CZMPolylineVolume> POLYLINE_VOLUMEOffset) { builder.AddOffset(25, POLYLINE_VOLUMEOffset.Value, 0); }
+  public static void AddRECTANGLE(FlatBufferBuilder builder, Offset<CZMRectangle> RECTANGLEOffset) { builder.AddOffset(26, RECTANGLEOffset.Value, 0); }
+  public static void AddTILESET(FlatBufferBuilder builder, Offset<CZMTileset> TILESETOffset) { builder.AddOffset(27, TILESETOffset.Value, 0); }
+  public static void AddWALL(FlatBufferBuilder builder, Offset<CZMWall> WALLOffset) { builder.AddOffset(28, WALLOffset.Value, 0); }
+  public static void AddPOSITION_INTERPOLATION(FlatBufferBuilder builder, Offset<CZMInterpolation> POSITION_INTERPOLATIONOffset) { builder.AddOffset(29, POSITION_INTERPOLATIONOffset.Value, 0); }
+  public static void AddPOSITION_REFERENCE_FRAME(FlatBufferBuilder builder, StringOffset POSITION_REFERENCE_FRAMEOffset) { builder.AddOffset(30, POSITION_REFERENCE_FRAMEOffset.Value, 0); }
+  public static void AddPOSITION_REFERENCE(FlatBufferBuilder builder, StringOffset POSITION_REFERENCEOffset) { builder.AddOffset(31, POSITION_REFERENCEOffset.Value, 0); }
+  public static void AddORIENTATION_EPOCH(FlatBufferBuilder builder, StringOffset ORIENTATION_EPOCHOffset) { builder.AddOffset(32, ORIENTATION_EPOCHOffset.Value, 0); }
+  public static void AddORIENTATION_ARRAY(FlatBufferBuilder builder, VectorOffset ORIENTATION_ARRAYOffset) { builder.AddOffset(33, ORIENTATION_ARRAYOffset.Value, 0); }
+  public static VectorOffset CreateORIENTATION_ARRAYVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateORIENTATION_ARRAYVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateORIENTATION_ARRAYVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateORIENTATION_ARRAYVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartORIENTATION_ARRAYVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddORIENTATION_INTERPOLATION(FlatBufferBuilder builder, Offset<CZMInterpolation> ORIENTATION_INTERPOLATIONOffset) { builder.AddOffset(34, ORIENTATION_INTERPOLATIONOffset.Value, 0); }
+  public static void AddORIENTATION_REFERENCE(FlatBufferBuilder builder, StringOffset ORIENTATION_REFERENCEOffset) { builder.AddOffset(35, ORIENTATION_REFERENCEOffset.Value, 0); }
+  public static void AddDYNAMIC_PROPERTIES(FlatBufferBuilder builder, VectorOffset DYNAMIC_PROPERTIESOffset) { builder.AddOffset(36, DYNAMIC_PROPERTIESOffset.Value, 0); }
+  public static VectorOffset CreateDYNAMIC_PROPERTIESVector(FlatBufferBuilder builder, Offset<CZMDynamicProperty>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateDYNAMIC_PROPERTIESVectorBlock(FlatBufferBuilder builder, Offset<CZMDynamicProperty>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDYNAMIC_PROPERTIESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<CZMDynamicProperty>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDYNAMIC_PROPERTIESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<CZMDynamicProperty>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartDYNAMIC_PROPERTIESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<CZMPacket> EndCZMPacket(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CZMPacket>(o);
@@ -204,6 +341,27 @@ public struct CZMPacket : IFlatbufferObject
     _o.MODEL = this.MODEL.HasValue ? this.MODEL.Value.UnPack() : null;
     _o.PATH = this.PATH.HasValue ? this.PATH.Value.UnPack() : null;
     _o.ELLIPSE = this.ELLIPSE.HasValue ? this.ELLIPSE.Value.UnPack() : null;
+    _o.ORIENTATION = this.ORIENTATION.HasValue ? this.ORIENTATION.Value.UnPack() : null;
+    _o.VIEW_FROM = this.VIEW_FROM.HasValue ? this.VIEW_FROM.Value.UnPack() : null;
+    _o.DELETE = this.DELETE;
+    _o.BOX = this.BOX.HasValue ? this.BOX.Value.UnPack() : null;
+    _o.CORRIDOR = this.CORRIDOR.HasValue ? this.CORRIDOR.Value.UnPack() : null;
+    _o.CYLINDER = this.CYLINDER.HasValue ? this.CYLINDER.Value.UnPack() : null;
+    _o.ELLIPSOID = this.ELLIPSOID.HasValue ? this.ELLIPSOID.Value.UnPack() : null;
+    _o.POLYLINE_VOLUME = this.POLYLINE_VOLUME.HasValue ? this.POLYLINE_VOLUME.Value.UnPack() : null;
+    _o.RECTANGLE = this.RECTANGLE.HasValue ? this.RECTANGLE.Value.UnPack() : null;
+    _o.TILESET = this.TILESET.HasValue ? this.TILESET.Value.UnPack() : null;
+    _o.WALL = this.WALL.HasValue ? this.WALL.Value.UnPack() : null;
+    _o.POSITION_INTERPOLATION = this.POSITION_INTERPOLATION.HasValue ? this.POSITION_INTERPOLATION.Value.UnPack() : null;
+    _o.POSITION_REFERENCE_FRAME = this.POSITION_REFERENCE_FRAME;
+    _o.POSITION_REFERENCE = this.POSITION_REFERENCE;
+    _o.ORIENTATION_EPOCH = this.ORIENTATION_EPOCH;
+    _o.ORIENTATION_ARRAY = new List<double>();
+    for (var _j = 0; _j < this.ORIENTATION_ARRAYLength; ++_j) {_o.ORIENTATION_ARRAY.Add(this.ORIENTATION_ARRAY(_j));}
+    _o.ORIENTATION_INTERPOLATION = this.ORIENTATION_INTERPOLATION.HasValue ? this.ORIENTATION_INTERPOLATION.Value.UnPack() : null;
+    _o.ORIENTATION_REFERENCE = this.ORIENTATION_REFERENCE;
+    _o.DYNAMIC_PROPERTIES = new List<CZMDynamicPropertyT>();
+    for (var _j = 0; _j < this.DYNAMIC_PROPERTIESLength; ++_j) {_o.DYNAMIC_PROPERTIES.Add(this.DYNAMIC_PROPERTIES(_j).HasValue ? this.DYNAMIC_PROPERTIES(_j).Value.UnPack() : null);}
   }
   public static Offset<CZMPacket> Pack(FlatBufferBuilder builder, CZMPacketT _o) {
     if (_o == null) return default(Offset<CZMPacket>);
@@ -233,6 +391,33 @@ public struct CZMPacket : IFlatbufferObject
     var _MODEL = _o.MODEL == null ? default(Offset<CZMModel>) : CZMModel.Pack(builder, _o.MODEL);
     var _PATH = _o.PATH == null ? default(Offset<CZMPath>) : CZMPath.Pack(builder, _o.PATH);
     var _ELLIPSE = _o.ELLIPSE == null ? default(Offset<CZMEllipse>) : CZMEllipse.Pack(builder, _o.ELLIPSE);
+    var _ORIENTATION = _o.ORIENTATION == null ? default(Offset<CZMOrientation>) : CZMOrientation.Pack(builder, _o.ORIENTATION);
+    var _VIEW_FROM = _o.VIEW_FROM == null ? default(Offset<CZMViewFrom>) : CZMViewFrom.Pack(builder, _o.VIEW_FROM);
+    var _BOX = _o.BOX == null ? default(Offset<CZMBox>) : CZMBox.Pack(builder, _o.BOX);
+    var _CORRIDOR = _o.CORRIDOR == null ? default(Offset<CZMCorridor>) : CZMCorridor.Pack(builder, _o.CORRIDOR);
+    var _CYLINDER = _o.CYLINDER == null ? default(Offset<CZMCylinder>) : CZMCylinder.Pack(builder, _o.CYLINDER);
+    var _ELLIPSOID = _o.ELLIPSOID == null ? default(Offset<CZMEllipsoid>) : CZMEllipsoid.Pack(builder, _o.ELLIPSOID);
+    var _POLYLINE_VOLUME = _o.POLYLINE_VOLUME == null ? default(Offset<CZMPolylineVolume>) : CZMPolylineVolume.Pack(builder, _o.POLYLINE_VOLUME);
+    var _RECTANGLE = _o.RECTANGLE == null ? default(Offset<CZMRectangle>) : CZMRectangle.Pack(builder, _o.RECTANGLE);
+    var _TILESET = _o.TILESET == null ? default(Offset<CZMTileset>) : CZMTileset.Pack(builder, _o.TILESET);
+    var _WALL = _o.WALL == null ? default(Offset<CZMWall>) : CZMWall.Pack(builder, _o.WALL);
+    var _POSITION_INTERPOLATION = _o.POSITION_INTERPOLATION == null ? default(Offset<CZMInterpolation>) : CZMInterpolation.Pack(builder, _o.POSITION_INTERPOLATION);
+    var _POSITION_REFERENCE_FRAME = _o.POSITION_REFERENCE_FRAME == null ? default(StringOffset) : builder.CreateString(_o.POSITION_REFERENCE_FRAME);
+    var _POSITION_REFERENCE = _o.POSITION_REFERENCE == null ? default(StringOffset) : builder.CreateString(_o.POSITION_REFERENCE);
+    var _ORIENTATION_EPOCH = _o.ORIENTATION_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.ORIENTATION_EPOCH);
+    var _ORIENTATION_ARRAY = default(VectorOffset);
+    if (_o.ORIENTATION_ARRAY != null) {
+      var __ORIENTATION_ARRAY = _o.ORIENTATION_ARRAY.ToArray();
+      _ORIENTATION_ARRAY = CreateORIENTATION_ARRAYVector(builder, __ORIENTATION_ARRAY);
+    }
+    var _ORIENTATION_INTERPOLATION = _o.ORIENTATION_INTERPOLATION == null ? default(Offset<CZMInterpolation>) : CZMInterpolation.Pack(builder, _o.ORIENTATION_INTERPOLATION);
+    var _ORIENTATION_REFERENCE = _o.ORIENTATION_REFERENCE == null ? default(StringOffset) : builder.CreateString(_o.ORIENTATION_REFERENCE);
+    var _DYNAMIC_PROPERTIES = default(VectorOffset);
+    if (_o.DYNAMIC_PROPERTIES != null) {
+      var __DYNAMIC_PROPERTIES = new Offset<CZMDynamicProperty>[_o.DYNAMIC_PROPERTIES.Count];
+      for (var _j = 0; _j < __DYNAMIC_PROPERTIES.Length; ++_j) { __DYNAMIC_PROPERTIES[_j] = CZMDynamicProperty.Pack(builder, _o.DYNAMIC_PROPERTIES[_j]); }
+      _DYNAMIC_PROPERTIES = CreateDYNAMIC_PROPERTIESVector(builder, __DYNAMIC_PROPERTIES);
+    }
     return CreateCZMPacket(
       builder,
       _ID,
@@ -252,7 +437,26 @@ public struct CZMPacket : IFlatbufferObject
       _POLYGON,
       _MODEL,
       _PATH,
-      _ELLIPSE);
+      _ELLIPSE,
+      _ORIENTATION,
+      _VIEW_FROM,
+      _o.DELETE,
+      _BOX,
+      _CORRIDOR,
+      _CYLINDER,
+      _ELLIPSOID,
+      _POLYLINE_VOLUME,
+      _RECTANGLE,
+      _TILESET,
+      _WALL,
+      _POSITION_INTERPOLATION,
+      _POSITION_REFERENCE_FRAME,
+      _POSITION_REFERENCE,
+      _ORIENTATION_EPOCH,
+      _ORIENTATION_ARRAY,
+      _ORIENTATION_INTERPOLATION,
+      _ORIENTATION_REFERENCE,
+      _DYNAMIC_PROPERTIES);
   }
 }
 
@@ -276,6 +480,25 @@ public class CZMPacketT
   public CZMModelT MODEL { get; set; }
   public CZMPathT PATH { get; set; }
   public CZMEllipseT ELLIPSE { get; set; }
+  public CZMOrientationT ORIENTATION { get; set; }
+  public CZMViewFromT VIEW_FROM { get; set; }
+  public bool DELETE { get; set; }
+  public CZMBoxT BOX { get; set; }
+  public CZMCorridorT CORRIDOR { get; set; }
+  public CZMCylinderT CYLINDER { get; set; }
+  public CZMEllipsoidT ELLIPSOID { get; set; }
+  public CZMPolylineVolumeT POLYLINE_VOLUME { get; set; }
+  public CZMRectangleT RECTANGLE { get; set; }
+  public CZMTilesetT TILESET { get; set; }
+  public CZMWallT WALL { get; set; }
+  public CZMInterpolationT POSITION_INTERPOLATION { get; set; }
+  public string POSITION_REFERENCE_FRAME { get; set; }
+  public string POSITION_REFERENCE { get; set; }
+  public string ORIENTATION_EPOCH { get; set; }
+  public List<double> ORIENTATION_ARRAY { get; set; }
+  public CZMInterpolationT ORIENTATION_INTERPOLATION { get; set; }
+  public string ORIENTATION_REFERENCE { get; set; }
+  public List<CZMDynamicPropertyT> DYNAMIC_PROPERTIES { get; set; }
 
   public CZMPacketT() {
     this.ID = null;
@@ -296,6 +519,25 @@ public class CZMPacketT
     this.MODEL = null;
     this.PATH = null;
     this.ELLIPSE = null;
+    this.ORIENTATION = null;
+    this.VIEW_FROM = null;
+    this.DELETE = false;
+    this.BOX = null;
+    this.CORRIDOR = null;
+    this.CYLINDER = null;
+    this.ELLIPSOID = null;
+    this.POLYLINE_VOLUME = null;
+    this.RECTANGLE = null;
+    this.TILESET = null;
+    this.WALL = null;
+    this.POSITION_INTERPOLATION = null;
+    this.POSITION_REFERENCE_FRAME = null;
+    this.POSITION_REFERENCE = null;
+    this.ORIENTATION_EPOCH = null;
+    this.ORIENTATION_ARRAY = null;
+    this.ORIENTATION_INTERPOLATION = null;
+    this.ORIENTATION_REFERENCE = null;
+    this.DYNAMIC_PROPERTIES = null;
   }
 }
 
@@ -323,6 +565,25 @@ static public class CZMPacketVerify
       && verifier.VerifyTable(tablePos, 34 /*MODEL*/, CZMModelVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 36 /*PATH*/, CZMPathVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 38 /*ELLIPSE*/, CZMEllipseVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 40 /*ORIENTATION*/, CZMOrientationVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 42 /*VIEW_FROM*/, CZMViewFromVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 44 /*DELETE*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyTable(tablePos, 46 /*BOX*/, CZMBoxVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 48 /*CORRIDOR*/, CZMCorridorVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 50 /*CYLINDER*/, CZMCylinderVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 52 /*ELLIPSOID*/, CZMEllipsoidVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 54 /*POLYLINE_VOLUME*/, CZMPolylineVolumeVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 56 /*RECTANGLE*/, CZMRectangleVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 58 /*TILESET*/, CZMTilesetVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 60 /*WALL*/, CZMWallVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 62 /*POSITION_INTERPOLATION*/, CZMInterpolationVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 64 /*POSITION_REFERENCE_FRAME*/, false)
+      && verifier.VerifyString(tablePos, 66 /*POSITION_REFERENCE*/, false)
+      && verifier.VerifyString(tablePos, 68 /*ORIENTATION_EPOCH*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 70 /*ORIENTATION_ARRAY*/, 8 /*double*/, false)
+      && verifier.VerifyTable(tablePos, 72 /*ORIENTATION_INTERPOLATION*/, CZMInterpolationVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 74 /*ORIENTATION_REFERENCE*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 76 /*DYNAMIC_PROPERTIES*/, CZMDynamicPropertyVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

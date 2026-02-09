@@ -59,6 +59,11 @@ public final class KMLStyle extends Table {
    */
   public KMLBalloonStyle BALLOON_STYLE() { return BALLOON_STYLE(new KMLBalloonStyle()); }
   public KMLBalloonStyle BALLOON_STYLE(KMLBalloonStyle obj) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * List style
+   */
+  public KMLListStyle LIST_STYLE() { return LIST_STYLE(new KMLListStyle()); }
+  public KMLListStyle LIST_STYLE(KMLListStyle obj) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createKMLStyle(FlatBufferBuilder builder,
       int IDOffset,
@@ -66,8 +71,10 @@ public final class KMLStyle extends Table {
       int LABEL_STYLEOffset,
       int LINE_STYLEOffset,
       int POLY_STYLEOffset,
-      int BALLOON_STYLEOffset) {
-    builder.startTable(6);
+      int BALLOON_STYLEOffset,
+      int LIST_STYLEOffset) {
+    builder.startTable(7);
+    KMLStyle.addListStyle(builder, LIST_STYLEOffset);
     KMLStyle.addBalloonStyle(builder, BALLOON_STYLEOffset);
     KMLStyle.addPolyStyle(builder, POLY_STYLEOffset);
     KMLStyle.addLineStyle(builder, LINE_STYLEOffset);
@@ -77,13 +84,14 @@ public final class KMLStyle extends Table {
     return KMLStyle.endKMLStyle(builder);
   }
 
-  public static void startKMLStyle(FlatBufferBuilder builder) { builder.startTable(6); }
+  public static void startKMLStyle(FlatBufferBuilder builder) { builder.startTable(7); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addIconStyle(FlatBufferBuilder builder, int ICON_STYLEOffset) { builder.addOffset(1, ICON_STYLEOffset, 0); }
   public static void addLabelStyle(FlatBufferBuilder builder, int LABEL_STYLEOffset) { builder.addOffset(2, LABEL_STYLEOffset, 0); }
   public static void addLineStyle(FlatBufferBuilder builder, int LINE_STYLEOffset) { builder.addOffset(3, LINE_STYLEOffset, 0); }
   public static void addPolyStyle(FlatBufferBuilder builder, int POLY_STYLEOffset) { builder.addOffset(4, POLY_STYLEOffset, 0); }
   public static void addBalloonStyle(FlatBufferBuilder builder, int BALLOON_STYLEOffset) { builder.addOffset(5, BALLOON_STYLEOffset, 0); }
+  public static void addListStyle(FlatBufferBuilder builder, int LIST_STYLEOffset) { builder.addOffset(6, LIST_STYLEOffset, 0); }
   public static int endKMLStyle(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

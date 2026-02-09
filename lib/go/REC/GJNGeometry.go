@@ -159,8 +159,23 @@ func (rcv *GJNGeometry) GEOMETRIESLength() int {
 }
 
 /// Child geometries (for GeometryCollection)
+/// Bounding box (optional, per RFC 7946 Section 5)
+func (rcv *GJNGeometry) BBOX(obj *GJNBoundingBox) *GJNBoundingBox {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(GJNBoundingBox)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// Bounding box (optional, per RFC 7946 Section 5)
 func GJNGeometryStart(builder *flatbuffers.Builder) {
-	builder.StartObject(6)
+	builder.StartObject(7)
 }
 func GJNGeometryAddTYPE(builder *flatbuffers.Builder, TYPE GJNGeometryType) {
 	builder.PrependInt8Slot(0, int8(TYPE), 0)
@@ -191,6 +206,9 @@ func GJNGeometryAddGEOMETRIES(builder *flatbuffers.Builder, GEOMETRIES flatbuffe
 }
 func GJNGeometryStartGEOMETRIESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func GJNGeometryAddBBOX(builder *flatbuffers.Builder, BBOX flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(BBOX), 0)
 }
 func GJNGeometryEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

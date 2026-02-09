@@ -87,11 +87,28 @@ class KMLPlacemark extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Whether open in tree view
+    /**
+     * @return bool
+     */
+    public function getOPEN()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Address
+    public function getADDRESS()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /// Point geometry
     public function getPOINT()
     {
         $obj = new KMLPoint();
-        $o = $this->__offset(16);
+        $o = $this->__offset(20);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
@@ -99,7 +116,7 @@ class KMLPlacemark extends Table
     public function getLINE_STRING()
     {
         $obj = new KMLLineString();
-        $o = $this->__offset(18);
+        $o = $this->__offset(22);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
@@ -107,7 +124,15 @@ class KMLPlacemark extends Table
     public function getPOLYGON()
     {
         $obj = new KMLPolygon();
-        $o = $this->__offset(20);
+        $o = $this->__offset(24);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// LinearRing geometry (standalone)
+    public function getLINEAR_RING()
+    {
+        $obj = new KMLLinearRing();
+        $o = $this->__offset(26);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
@@ -115,7 +140,31 @@ class KMLPlacemark extends Table
     public function getMULTI_GEOMETRY()
     {
         $obj = new KMLMultiGeometry();
-        $o = $this->__offset(22);
+        $o = $this->__offset(28);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// 3D Model
+    public function getMODEL()
+    {
+        $obj = new KMLModel();
+        $o = $this->__offset(30);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// gx:Track
+    public function getTRACK()
+    {
+        $obj = new KMLTrack();
+        $o = $this->__offset(32);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// gx:MultiTrack
+    public function getMULTI_TRACK()
+    {
+        $obj = new KMLMultiTrack();
+        $o = $this->__offset(34);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
@@ -123,7 +172,7 @@ class KMLPlacemark extends Table
     public function getLOOK_AT()
     {
         $obj = new KMLLookAt();
-        $o = $this->__offset(24);
+        $o = $this->__offset(36);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
@@ -131,7 +180,7 @@ class KMLPlacemark extends Table
     public function getCAMERA()
     {
         $obj = new KMLCamera();
-        $o = $this->__offset(26);
+        $o = $this->__offset(38);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
@@ -139,7 +188,7 @@ class KMLPlacemark extends Table
     public function getTIME_SPAN()
     {
         $obj = new KMLTimeSpan();
-        $o = $this->__offset(28);
+        $o = $this->__offset(40);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
@@ -147,7 +196,7 @@ class KMLPlacemark extends Table
     public function getTIME_STAMP()
     {
         $obj = new KMLTimeStamp();
-        $o = $this->__offset(30);
+        $o = $this->__offset(42);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
@@ -157,7 +206,7 @@ class KMLPlacemark extends Table
      */
     public function getEXTENDED_DATA($j)
     {
-        $o = $this->__offset(32);
+        $o = $this->__offset(44);
         $obj = new KMLData();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -167,8 +216,32 @@ class KMLPlacemark extends Table
      */
     public function getEXTENDED_DATALength()
     {
-        $o = $this->__offset(32);
+        $o = $this->__offset(44);
         return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Schema data
+    public function getSCHEMA_DATA()
+    {
+        $obj = new KMLSchemaData();
+        $o = $this->__offset(46);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Region
+    public function getREGION()
+    {
+        $obj = new KMLRegion();
+        $o = $this->__offset(48);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// StyleMap (inline)
+    public function getSTYLE_MAP()
+    {
+        $obj = new KMLStyleMap();
+        $o = $this->__offset(50);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     /**
@@ -177,31 +250,40 @@ class KMLPlacemark extends Table
      */
     public static function startKMLPlacemark(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(15);
+        $builder->StartObject(24);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return KMLPlacemark
      */
-    public static function createKMLPlacemark(FlatBufferBuilder $builder, $NAME, $DESCRIPTION, $VISIBILITY, $STYLE_URL, $STYLE, $SNIPPET, $POINT, $LINE_STRING, $POLYGON, $MULTI_GEOMETRY, $LOOK_AT, $CAMERA, $TIME_SPAN, $TIME_STAMP, $EXTENDED_DATA)
+    public static function createKMLPlacemark(FlatBufferBuilder $builder, $NAME, $DESCRIPTION, $VISIBILITY, $STYLE_URL, $STYLE, $SNIPPET, $OPEN, $ADDRESS, $POINT, $LINE_STRING, $POLYGON, $LINEAR_RING, $MULTI_GEOMETRY, $MODEL, $TRACK, $MULTI_TRACK, $LOOK_AT, $CAMERA, $TIME_SPAN, $TIME_STAMP, $EXTENDED_DATA, $SCHEMA_DATA, $REGION, $STYLE_MAP)
     {
-        $builder->startObject(15);
+        $builder->startObject(24);
         self::addNAME($builder, $NAME);
         self::addDESCRIPTION($builder, $DESCRIPTION);
         self::addVISIBILITY($builder, $VISIBILITY);
         self::addSTYLE_URL($builder, $STYLE_URL);
         self::addSTYLE($builder, $STYLE);
         self::addSNIPPET($builder, $SNIPPET);
+        self::addOPEN($builder, $OPEN);
+        self::addADDRESS($builder, $ADDRESS);
         self::addPOINT($builder, $POINT);
         self::addLINE_STRING($builder, $LINE_STRING);
         self::addPOLYGON($builder, $POLYGON);
+        self::addLINEAR_RING($builder, $LINEAR_RING);
         self::addMULTI_GEOMETRY($builder, $MULTI_GEOMETRY);
+        self::addMODEL($builder, $MODEL);
+        self::addTRACK($builder, $TRACK);
+        self::addMULTI_TRACK($builder, $MULTI_TRACK);
         self::addLOOK_AT($builder, $LOOK_AT);
         self::addCAMERA($builder, $CAMERA);
         self::addTIME_SPAN($builder, $TIME_SPAN);
         self::addTIME_STAMP($builder, $TIME_STAMP);
         self::addEXTENDED_DATA($builder, $EXTENDED_DATA);
+        self::addSCHEMA_DATA($builder, $SCHEMA_DATA);
+        self::addREGION($builder, $REGION);
+        self::addSTYLE_MAP($builder, $STYLE_MAP);
         $o = $builder->endObject();
         return $o;
     }
@@ -268,12 +350,32 @@ class KMLPlacemark extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addOPEN(FlatBufferBuilder $builder, $OPEN)
+    {
+        $builder->addBoolX(6, $OPEN, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addADDRESS(FlatBufferBuilder $builder, $ADDRESS)
+    {
+        $builder->addOffsetX(7, $ADDRESS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param VectorOffset
      * @return void
      */
     public static function addPOINT(FlatBufferBuilder $builder, $POINT)
     {
-        $builder->addOffsetX(6, $POINT, 0);
+        $builder->addOffsetX(8, $POINT, 0);
     }
 
     /**
@@ -283,7 +385,7 @@ class KMLPlacemark extends Table
      */
     public static function addLINE_STRING(FlatBufferBuilder $builder, $LINE_STRING)
     {
-        $builder->addOffsetX(7, $LINE_STRING, 0);
+        $builder->addOffsetX(9, $LINE_STRING, 0);
     }
 
     /**
@@ -293,7 +395,17 @@ class KMLPlacemark extends Table
      */
     public static function addPOLYGON(FlatBufferBuilder $builder, $POLYGON)
     {
-        $builder->addOffsetX(8, $POLYGON, 0);
+        $builder->addOffsetX(10, $POLYGON, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addLINEAR_RING(FlatBufferBuilder $builder, $LINEAR_RING)
+    {
+        $builder->addOffsetX(11, $LINEAR_RING, 0);
     }
 
     /**
@@ -303,7 +415,37 @@ class KMLPlacemark extends Table
      */
     public static function addMULTI_GEOMETRY(FlatBufferBuilder $builder, $MULTI_GEOMETRY)
     {
-        $builder->addOffsetX(9, $MULTI_GEOMETRY, 0);
+        $builder->addOffsetX(12, $MULTI_GEOMETRY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addMODEL(FlatBufferBuilder $builder, $MODEL)
+    {
+        $builder->addOffsetX(13, $MODEL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addTRACK(FlatBufferBuilder $builder, $TRACK)
+    {
+        $builder->addOffsetX(14, $TRACK, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addMULTI_TRACK(FlatBufferBuilder $builder, $MULTI_TRACK)
+    {
+        $builder->addOffsetX(15, $MULTI_TRACK, 0);
     }
 
     /**
@@ -313,7 +455,7 @@ class KMLPlacemark extends Table
      */
     public static function addLOOK_AT(FlatBufferBuilder $builder, $LOOK_AT)
     {
-        $builder->addOffsetX(10, $LOOK_AT, 0);
+        $builder->addOffsetX(16, $LOOK_AT, 0);
     }
 
     /**
@@ -323,7 +465,7 @@ class KMLPlacemark extends Table
      */
     public static function addCAMERA(FlatBufferBuilder $builder, $CAMERA)
     {
-        $builder->addOffsetX(11, $CAMERA, 0);
+        $builder->addOffsetX(17, $CAMERA, 0);
     }
 
     /**
@@ -333,7 +475,7 @@ class KMLPlacemark extends Table
      */
     public static function addTIME_SPAN(FlatBufferBuilder $builder, $TIME_SPAN)
     {
-        $builder->addOffsetX(12, $TIME_SPAN, 0);
+        $builder->addOffsetX(18, $TIME_SPAN, 0);
     }
 
     /**
@@ -343,7 +485,7 @@ class KMLPlacemark extends Table
      */
     public static function addTIME_STAMP(FlatBufferBuilder $builder, $TIME_STAMP)
     {
-        $builder->addOffsetX(13, $TIME_STAMP, 0);
+        $builder->addOffsetX(19, $TIME_STAMP, 0);
     }
 
     /**
@@ -353,7 +495,7 @@ class KMLPlacemark extends Table
      */
     public static function addEXTENDED_DATA(FlatBufferBuilder $builder, $EXTENDED_DATA)
     {
-        $builder->addOffsetX(14, $EXTENDED_DATA, 0);
+        $builder->addOffsetX(20, $EXTENDED_DATA, 0);
     }
 
     /**
@@ -378,6 +520,36 @@ class KMLPlacemark extends Table
     public static function startEXTENDED_DATAVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSCHEMA_DATA(FlatBufferBuilder $builder, $SCHEMA_DATA)
+    {
+        $builder->addOffsetX(21, $SCHEMA_DATA, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addREGION(FlatBufferBuilder $builder, $REGION)
+    {
+        $builder->addOffsetX(22, $REGION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSTYLE_MAP(FlatBufferBuilder $builder, $STYLE_MAP)
+    {
+        $builder->addOffsetX(23, $STYLE_MAP, 0);
     }
 
     /**

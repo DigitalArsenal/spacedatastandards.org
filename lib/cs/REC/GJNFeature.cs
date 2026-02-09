@@ -17,7 +17,7 @@ public struct GJNFeature : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public GJNFeature __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  /// Feature identifier (optional)
+  /// Feature identifier (optional, string form)
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -30,19 +30,39 @@ public struct GJNFeature : IFlatbufferObject
   /// Properties as key-value pairs
   public GJNProperty? PROPERTIES(int j) { int o = __p.__offset(8); return o != 0 ? (GJNProperty?)(new GJNProperty()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int PROPERTIESLength { get { int o = __p.__offset(8); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Numeric feature identifier (use when ID_IS_NUMERIC is true)
+  public double NUM_ID { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// True if the feature id is numeric rather than string
+  public bool ID_IS_NUMERIC { get { int o = __p.__offset(12); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// True if the feature has a geometry (false means geometry was JSON null)
+  public bool HAS_GEOMETRY { get { int o = __p.__offset(14); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// True if properties was JSON null (vs empty object)
+  public bool PROPERTIES_IS_NULL { get { int o = __p.__offset(16); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Bounding box (optional, per RFC 7946 Section 5)
+  public GJNBoundingBox? BBOX { get { int o = __p.__offset(18); return o != 0 ? (GJNBoundingBox?)(new GJNBoundingBox()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<GJNFeature> CreateGJNFeature(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
       Offset<GJNGeometry> GEOMETRYOffset = default(Offset<GJNGeometry>),
-      VectorOffset PROPERTIESOffset = default(VectorOffset)) {
-    builder.StartTable(3);
+      VectorOffset PROPERTIESOffset = default(VectorOffset),
+      double NUM_ID = 0.0,
+      bool ID_IS_NUMERIC = false,
+      bool HAS_GEOMETRY = false,
+      bool PROPERTIES_IS_NULL = false,
+      Offset<GJNBoundingBox> BBOXOffset = default(Offset<GJNBoundingBox>)) {
+    builder.StartTable(8);
+    GJNFeature.AddNUM_ID(builder, NUM_ID);
+    GJNFeature.AddBBOX(builder, BBOXOffset);
     GJNFeature.AddPROPERTIES(builder, PROPERTIESOffset);
     GJNFeature.AddGEOMETRY(builder, GEOMETRYOffset);
     GJNFeature.AddID(builder, IDOffset);
+    GJNFeature.AddPROPERTIES_IS_NULL(builder, PROPERTIES_IS_NULL);
+    GJNFeature.AddHAS_GEOMETRY(builder, HAS_GEOMETRY);
+    GJNFeature.AddID_IS_NUMERIC(builder, ID_IS_NUMERIC);
     return GJNFeature.EndGJNFeature(builder);
   }
 
-  public static void StartGJNFeature(FlatBufferBuilder builder) { builder.StartTable(3); }
+  public static void StartGJNFeature(FlatBufferBuilder builder) { builder.StartTable(8); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddGEOMETRY(FlatBufferBuilder builder, Offset<GJNGeometry> GEOMETRYOffset) { builder.AddOffset(1, GEOMETRYOffset.Value, 0); }
   public static void AddPROPERTIES(FlatBufferBuilder builder, VectorOffset PROPERTIESOffset) { builder.AddOffset(2, PROPERTIESOffset.Value, 0); }
@@ -51,6 +71,11 @@ public struct GJNFeature : IFlatbufferObject
   public static VectorOffset CreatePROPERTIESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<GJNProperty>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreatePROPERTIESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<GJNProperty>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartPROPERTIESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddNUM_ID(FlatBufferBuilder builder, double NUM_ID) { builder.AddDouble(3, NUM_ID, 0.0); }
+  public static void AddID_IS_NUMERIC(FlatBufferBuilder builder, bool ID_IS_NUMERIC) { builder.AddBool(4, ID_IS_NUMERIC, false); }
+  public static void AddHAS_GEOMETRY(FlatBufferBuilder builder, bool HAS_GEOMETRY) { builder.AddBool(5, HAS_GEOMETRY, false); }
+  public static void AddPROPERTIES_IS_NULL(FlatBufferBuilder builder, bool PROPERTIES_IS_NULL) { builder.AddBool(6, PROPERTIES_IS_NULL, false); }
+  public static void AddBBOX(FlatBufferBuilder builder, Offset<GJNBoundingBox> BBOXOffset) { builder.AddOffset(7, BBOXOffset.Value, 0); }
   public static Offset<GJNFeature> EndGJNFeature(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<GJNFeature>(o);
@@ -65,6 +90,11 @@ public struct GJNFeature : IFlatbufferObject
     _o.GEOMETRY = this.GEOMETRY.HasValue ? this.GEOMETRY.Value.UnPack() : null;
     _o.PROPERTIES = new List<GJNPropertyT>();
     for (var _j = 0; _j < this.PROPERTIESLength; ++_j) {_o.PROPERTIES.Add(this.PROPERTIES(_j).HasValue ? this.PROPERTIES(_j).Value.UnPack() : null);}
+    _o.NUM_ID = this.NUM_ID;
+    _o.ID_IS_NUMERIC = this.ID_IS_NUMERIC;
+    _o.HAS_GEOMETRY = this.HAS_GEOMETRY;
+    _o.PROPERTIES_IS_NULL = this.PROPERTIES_IS_NULL;
+    _o.BBOX = this.BBOX.HasValue ? this.BBOX.Value.UnPack() : null;
   }
   public static Offset<GJNFeature> Pack(FlatBufferBuilder builder, GJNFeatureT _o) {
     if (_o == null) return default(Offset<GJNFeature>);
@@ -76,11 +106,17 @@ public struct GJNFeature : IFlatbufferObject
       for (var _j = 0; _j < __PROPERTIES.Length; ++_j) { __PROPERTIES[_j] = GJNProperty.Pack(builder, _o.PROPERTIES[_j]); }
       _PROPERTIES = CreatePROPERTIESVector(builder, __PROPERTIES);
     }
+    var _BBOX = _o.BBOX == null ? default(Offset<GJNBoundingBox>) : GJNBoundingBox.Pack(builder, _o.BBOX);
     return CreateGJNFeature(
       builder,
       _ID,
       _GEOMETRY,
-      _PROPERTIES);
+      _PROPERTIES,
+      _o.NUM_ID,
+      _o.ID_IS_NUMERIC,
+      _o.HAS_GEOMETRY,
+      _o.PROPERTIES_IS_NULL,
+      _BBOX);
   }
 }
 
@@ -89,11 +125,21 @@ public class GJNFeatureT
   public string ID { get; set; }
   public GJNGeometryT GEOMETRY { get; set; }
   public List<GJNPropertyT> PROPERTIES { get; set; }
+  public double NUM_ID { get; set; }
+  public bool ID_IS_NUMERIC { get; set; }
+  public bool HAS_GEOMETRY { get; set; }
+  public bool PROPERTIES_IS_NULL { get; set; }
+  public GJNBoundingBoxT BBOX { get; set; }
 
   public GJNFeatureT() {
     this.ID = null;
     this.GEOMETRY = null;
     this.PROPERTIES = null;
+    this.NUM_ID = 0.0;
+    this.ID_IS_NUMERIC = false;
+    this.HAS_GEOMETRY = false;
+    this.PROPERTIES_IS_NULL = false;
+    this.BBOX = null;
   }
 }
 
@@ -106,6 +152,11 @@ static public class GJNFeatureVerify
       && verifier.VerifyString(tablePos, 4 /*ID*/, false)
       && verifier.VerifyTable(tablePos, 6 /*GEOMETRY*/, GJNGeometryVerify.Verify, false)
       && verifier.VerifyVectorOfTables(tablePos, 8 /*PROPERTIES*/, GJNPropertyVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 10 /*NUM_ID*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 12 /*ID_IS_NUMERIC*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 14 /*HAS_GEOMETRY*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 16 /*PROPERTIES_IS_NULL*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyTable(tablePos, 18 /*BBOX*/, GJNBoundingBoxVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

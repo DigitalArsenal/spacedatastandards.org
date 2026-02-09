@@ -91,26 +91,37 @@ class KMLLineString extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// gx:drawOrder
+    /**
+     * @return int
+     */
+    public function getGX_DRAW_ORDER()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startKMLLineString(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(4);
+        $builder->StartObject(5);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return KMLLineString
      */
-    public static function createKMLLineString(FlatBufferBuilder $builder, $COORDINATES, $ALTITUDE_MODE, $EXTRUDE, $TESSELLATE)
+    public static function createKMLLineString(FlatBufferBuilder $builder, $COORDINATES, $ALTITUDE_MODE, $EXTRUDE, $TESSELLATE, $GX_DRAW_ORDER)
     {
-        $builder->startObject(4);
+        $builder->startObject(5);
         self::addCOORDINATES($builder, $COORDINATES);
         self::addALTITUDE_MODE($builder, $ALTITUDE_MODE);
         self::addEXTRUDE($builder, $EXTRUDE);
         self::addTESSELLATE($builder, $TESSELLATE);
+        self::addGX_DRAW_ORDER($builder, $GX_DRAW_ORDER);
         $o = $builder->endObject();
         return $o;
     }
@@ -177,6 +188,16 @@ class KMLLineString extends Table
     public static function addTESSELLATE(FlatBufferBuilder $builder, $TESSELLATE)
     {
         $builder->addBoolX(3, $TESSELLATE, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addGX_DRAW_ORDER(FlatBufferBuilder $builder, $GX_DRAW_ORDER)
+    {
+        $builder->addIntX(4, $GX_DRAW_ORDER, 0);
     }
 
     /**

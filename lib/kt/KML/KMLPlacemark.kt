@@ -106,11 +106,33 @@ class KMLPlacemark : Table() {
     val SNIPPETAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
     fun SNIPPETInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
     /**
+     * Whether open in tree view
+     */
+    val OPEN : Boolean
+        get() {
+            val o = __offset(16)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Address
+     */
+    val ADDRESS : String?
+        get() {
+            val o = __offset(18)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val ADDRESSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
+    fun ADDRESSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    /**
      * Point geometry
      */
     val POINT : KMLPoint? get() = POINT(KMLPoint())
     fun POINT(obj: KMLPoint) : KMLPoint? {
-        val o = __offset(16)
+        val o = __offset(20)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -122,7 +144,7 @@ class KMLPlacemark : Table() {
      */
     val LINE_STRING : KMLLineString? get() = LINE_STRING(KMLLineString())
     fun LINE_STRING(obj: KMLLineString) : KMLLineString? {
-        val o = __offset(18)
+        val o = __offset(22)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -134,7 +156,19 @@ class KMLPlacemark : Table() {
      */
     val POLYGON : KMLPolygon? get() = POLYGON(KMLPolygon())
     fun POLYGON(obj: KMLPolygon) : KMLPolygon? {
-        val o = __offset(20)
+        val o = __offset(24)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * LinearRing geometry (standalone)
+     */
+    val LINEAR_RING : KMLLinearRing? get() = LINEAR_RING(KMLLinearRing())
+    fun LINEAR_RING(obj: KMLLinearRing) : KMLLinearRing? {
+        val o = __offset(26)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -146,7 +180,43 @@ class KMLPlacemark : Table() {
      */
     val MULTI_GEOMETRY : KMLMultiGeometry? get() = MULTI_GEOMETRY(KMLMultiGeometry())
     fun MULTI_GEOMETRY(obj: KMLMultiGeometry) : KMLMultiGeometry? {
-        val o = __offset(22)
+        val o = __offset(28)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * 3D Model
+     */
+    val MODEL : KMLModel? get() = MODEL(KMLModel())
+    fun MODEL(obj: KMLModel) : KMLModel? {
+        val o = __offset(30)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * gx:Track
+     */
+    val TRACK : KMLTrack? get() = TRACK(KMLTrack())
+    fun TRACK(obj: KMLTrack) : KMLTrack? {
+        val o = __offset(32)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * gx:MultiTrack
+     */
+    val MULTI_TRACK : KMLMultiTrack? get() = MULTI_TRACK(KMLMultiTrack())
+    fun MULTI_TRACK(obj: KMLMultiTrack) : KMLMultiTrack? {
+        val o = __offset(34)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -158,7 +228,7 @@ class KMLPlacemark : Table() {
      */
     val LOOK_AT : KMLLookAt? get() = LOOK_AT(KMLLookAt())
     fun LOOK_AT(obj: KMLLookAt) : KMLLookAt? {
-        val o = __offset(24)
+        val o = __offset(36)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -170,7 +240,7 @@ class KMLPlacemark : Table() {
      */
     val CAMERA : KMLCamera? get() = CAMERA(KMLCamera())
     fun CAMERA(obj: KMLCamera) : KMLCamera? {
-        val o = __offset(26)
+        val o = __offset(38)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -182,7 +252,7 @@ class KMLPlacemark : Table() {
      */
     val TIME_SPAN : KMLTimeSpan? get() = TIME_SPAN(KMLTimeSpan())
     fun TIME_SPAN(obj: KMLTimeSpan) : KMLTimeSpan? {
-        val o = __offset(28)
+        val o = __offset(40)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -194,7 +264,7 @@ class KMLPlacemark : Table() {
      */
     val TIME_STAMP : KMLTimeStamp? get() = TIME_STAMP(KMLTimeStamp())
     fun TIME_STAMP(obj: KMLTimeStamp) : KMLTimeStamp? {
-        val o = __offset(30)
+        val o = __offset(42)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -206,7 +276,7 @@ class KMLPlacemark : Table() {
      */
     fun EXTENDED_DATA(j: Int) : KMLData? = EXTENDED_DATA(KMLData(), j)
     fun EXTENDED_DATA(obj: KMLData, j: Int) : KMLData? {
-        val o = __offset(32)
+        val o = __offset(44)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
@@ -215,8 +285,44 @@ class KMLPlacemark : Table() {
     }
     val EXTENDED_DATALength : Int
         get() {
-            val o = __offset(32); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(44); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Schema data
+     */
+    val SCHEMA_DATA : KMLSchemaData? get() = SCHEMA_DATA(KMLSchemaData())
+    fun SCHEMA_DATA(obj: KMLSchemaData) : KMLSchemaData? {
+        val o = __offset(46)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Region
+     */
+    val REGION : KMLRegion? get() = REGION(KMLRegion())
+    fun REGION(obj: KMLRegion) : KMLRegion? {
+        val o = __offset(48)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * StyleMap (inline)
+     */
+    val STYLE_MAP : KMLStyleMap? get() = STYLE_MAP(KMLStyleMap())
+    fun STYLE_MAP(obj: KMLStyleMap) : KMLStyleMap? {
+        val o = __offset(50)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsKMLPlacemark(_bb: ByteBuffer): KMLPlacemark = getRootAsKMLPlacemark(_bb, KMLPlacemark())
@@ -224,41 +330,56 @@ class KMLPlacemark : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLPlacemark(builder: FlatBufferBuilder, NAMEOffset: Int, DESCRIPTIONOffset: Int, VISIBILITY: Boolean, STYLE_URLOffset: Int, STYLEOffset: Int, SNIPPETOffset: Int, POINTOffset: Int, LINE_STRINGOffset: Int, POLYGONOffset: Int, MULTI_GEOMETRYOffset: Int, LOOK_ATOffset: Int, CAMERAOffset: Int, TIME_SPANOffset: Int, TIME_STAMPOffset: Int, EXTENDED_DATAOffset: Int) : Int {
-            builder.startTable(15)
+        fun createKMLPlacemark(builder: FlatBufferBuilder, NAMEOffset: Int, DESCRIPTIONOffset: Int, VISIBILITY: Boolean, STYLE_URLOffset: Int, STYLEOffset: Int, SNIPPETOffset: Int, OPEN: Boolean, ADDRESSOffset: Int, POINTOffset: Int, LINE_STRINGOffset: Int, POLYGONOffset: Int, LINEAR_RINGOffset: Int, MULTI_GEOMETRYOffset: Int, MODELOffset: Int, TRACKOffset: Int, MULTI_TRACKOffset: Int, LOOK_ATOffset: Int, CAMERAOffset: Int, TIME_SPANOffset: Int, TIME_STAMPOffset: Int, EXTENDED_DATAOffset: Int, SCHEMA_DATAOffset: Int, REGIONOffset: Int, STYLE_MAPOffset: Int) : Int {
+            builder.startTable(24)
+            addSTYLE_MAP(builder, STYLE_MAPOffset)
+            addREGION(builder, REGIONOffset)
+            addSCHEMA_DATA(builder, SCHEMA_DATAOffset)
             addEXTENDED_DATA(builder, EXTENDED_DATAOffset)
             addTIME_STAMP(builder, TIME_STAMPOffset)
             addTIME_SPAN(builder, TIME_SPANOffset)
             addCAMERA(builder, CAMERAOffset)
             addLOOK_AT(builder, LOOK_ATOffset)
+            addMULTI_TRACK(builder, MULTI_TRACKOffset)
+            addTRACK(builder, TRACKOffset)
+            addMODEL(builder, MODELOffset)
             addMULTI_GEOMETRY(builder, MULTI_GEOMETRYOffset)
+            addLINEAR_RING(builder, LINEAR_RINGOffset)
             addPOLYGON(builder, POLYGONOffset)
             addLINE_STRING(builder, LINE_STRINGOffset)
             addPOINT(builder, POINTOffset)
+            addADDRESS(builder, ADDRESSOffset)
             addSNIPPET(builder, SNIPPETOffset)
             addSTYLE(builder, STYLEOffset)
             addSTYLE_URL(builder, STYLE_URLOffset)
             addDESCRIPTION(builder, DESCRIPTIONOffset)
             addNAME(builder, NAMEOffset)
+            addOPEN(builder, OPEN)
             addVISIBILITY(builder, VISIBILITY)
             return endKMLPlacemark(builder)
         }
-        fun startKMLPlacemark(builder: FlatBufferBuilder) = builder.startTable(15)
+        fun startKMLPlacemark(builder: FlatBufferBuilder) = builder.startTable(24)
         fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
         fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(1, DESCRIPTION, 0)
         fun addVISIBILITY(builder: FlatBufferBuilder, VISIBILITY: Boolean) = builder.addBoolean(2, VISIBILITY, false)
         fun addSTYLE_URL(builder: FlatBufferBuilder, STYLE_URL: Int) = builder.addOffset(3, STYLE_URL, 0)
         fun addSTYLE(builder: FlatBufferBuilder, STYLE: Int) = builder.addOffset(4, STYLE, 0)
         fun addSNIPPET(builder: FlatBufferBuilder, SNIPPET: Int) = builder.addOffset(5, SNIPPET, 0)
-        fun addPOINT(builder: FlatBufferBuilder, POINT: Int) = builder.addOffset(6, POINT, 0)
-        fun addLINE_STRING(builder: FlatBufferBuilder, LINE_STRING: Int) = builder.addOffset(7, LINE_STRING, 0)
-        fun addPOLYGON(builder: FlatBufferBuilder, POLYGON: Int) = builder.addOffset(8, POLYGON, 0)
-        fun addMULTI_GEOMETRY(builder: FlatBufferBuilder, MULTI_GEOMETRY: Int) = builder.addOffset(9, MULTI_GEOMETRY, 0)
-        fun addLOOK_AT(builder: FlatBufferBuilder, LOOK_AT: Int) = builder.addOffset(10, LOOK_AT, 0)
-        fun addCAMERA(builder: FlatBufferBuilder, CAMERA: Int) = builder.addOffset(11, CAMERA, 0)
-        fun addTIME_SPAN(builder: FlatBufferBuilder, TIME_SPAN: Int) = builder.addOffset(12, TIME_SPAN, 0)
-        fun addTIME_STAMP(builder: FlatBufferBuilder, TIME_STAMP: Int) = builder.addOffset(13, TIME_STAMP, 0)
-        fun addEXTENDED_DATA(builder: FlatBufferBuilder, EXTENDED_DATA: Int) = builder.addOffset(14, EXTENDED_DATA, 0)
+        fun addOPEN(builder: FlatBufferBuilder, OPEN: Boolean) = builder.addBoolean(6, OPEN, false)
+        fun addADDRESS(builder: FlatBufferBuilder, ADDRESS: Int) = builder.addOffset(7, ADDRESS, 0)
+        fun addPOINT(builder: FlatBufferBuilder, POINT: Int) = builder.addOffset(8, POINT, 0)
+        fun addLINE_STRING(builder: FlatBufferBuilder, LINE_STRING: Int) = builder.addOffset(9, LINE_STRING, 0)
+        fun addPOLYGON(builder: FlatBufferBuilder, POLYGON: Int) = builder.addOffset(10, POLYGON, 0)
+        fun addLINEAR_RING(builder: FlatBufferBuilder, LINEAR_RING: Int) = builder.addOffset(11, LINEAR_RING, 0)
+        fun addMULTI_GEOMETRY(builder: FlatBufferBuilder, MULTI_GEOMETRY: Int) = builder.addOffset(12, MULTI_GEOMETRY, 0)
+        fun addMODEL(builder: FlatBufferBuilder, MODEL: Int) = builder.addOffset(13, MODEL, 0)
+        fun addTRACK(builder: FlatBufferBuilder, TRACK: Int) = builder.addOffset(14, TRACK, 0)
+        fun addMULTI_TRACK(builder: FlatBufferBuilder, MULTI_TRACK: Int) = builder.addOffset(15, MULTI_TRACK, 0)
+        fun addLOOK_AT(builder: FlatBufferBuilder, LOOK_AT: Int) = builder.addOffset(16, LOOK_AT, 0)
+        fun addCAMERA(builder: FlatBufferBuilder, CAMERA: Int) = builder.addOffset(17, CAMERA, 0)
+        fun addTIME_SPAN(builder: FlatBufferBuilder, TIME_SPAN: Int) = builder.addOffset(18, TIME_SPAN, 0)
+        fun addTIME_STAMP(builder: FlatBufferBuilder, TIME_STAMP: Int) = builder.addOffset(19, TIME_STAMP, 0)
+        fun addEXTENDED_DATA(builder: FlatBufferBuilder, EXTENDED_DATA: Int) = builder.addOffset(20, EXTENDED_DATA, 0)
         fun createExtendedDataVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -267,6 +388,9 @@ class KMLPlacemark : Table() {
             return builder.endVector()
         }
         fun startExtendedDataVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addSCHEMA_DATA(builder: FlatBufferBuilder, SCHEMA_DATA: Int) = builder.addOffset(21, SCHEMA_DATA, 0)
+        fun addREGION(builder: FlatBufferBuilder, REGION: Int) = builder.addOffset(22, REGION, 0)
+        fun addSTYLE_MAP(builder: FlatBufferBuilder, STYLE_MAP: Int) = builder.addOffset(23, STYLE_MAP, 0)
         fun endKMLPlacemark(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

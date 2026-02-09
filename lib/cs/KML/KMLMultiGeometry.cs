@@ -29,13 +29,33 @@ public struct KMLMultiGeometry : IFlatbufferObject
   /// Nested multi-geometries
   public KMLMultiGeometry? MULTI_GEOMETRIES(int j) { int o = __p.__offset(10); return o != 0 ? (KMLMultiGeometry?)(new KMLMultiGeometry()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int MULTI_GEOMETRIESLength { get { int o = __p.__offset(10); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Child linear rings (standalone)
+  public KMLLinearRing? LINEAR_RINGS(int j) { int o = __p.__offset(12); return o != 0 ? (KMLLinearRing?)(new KMLLinearRing()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int LINEAR_RINGSLength { get { int o = __p.__offset(12); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Child 3D models
+  public KMLModel? MODELS(int j) { int o = __p.__offset(14); return o != 0 ? (KMLModel?)(new KMLModel()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int MODELSLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Child tracks
+  public KMLTrack? TRACKS(int j) { int o = __p.__offset(16); return o != 0 ? (KMLTrack?)(new KMLTrack()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int TRACKSLength { get { int o = __p.__offset(16); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Child multi-tracks
+  public KMLMultiTrack? MULTI_TRACKS(int j) { int o = __p.__offset(18); return o != 0 ? (KMLMultiTrack?)(new KMLMultiTrack()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int MULTI_TRACKSLength { get { int o = __p.__offset(18); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<KMLMultiGeometry> CreateKMLMultiGeometry(FlatBufferBuilder builder,
       VectorOffset POINTSOffset = default(VectorOffset),
       VectorOffset LINE_STRINGSOffset = default(VectorOffset),
       VectorOffset POLYGONSOffset = default(VectorOffset),
-      VectorOffset MULTI_GEOMETRIESOffset = default(VectorOffset)) {
-    builder.StartTable(4);
+      VectorOffset MULTI_GEOMETRIESOffset = default(VectorOffset),
+      VectorOffset LINEAR_RINGSOffset = default(VectorOffset),
+      VectorOffset MODELSOffset = default(VectorOffset),
+      VectorOffset TRACKSOffset = default(VectorOffset),
+      VectorOffset MULTI_TRACKSOffset = default(VectorOffset)) {
+    builder.StartTable(8);
+    KMLMultiGeometry.AddMULTI_TRACKS(builder, MULTI_TRACKSOffset);
+    KMLMultiGeometry.AddTRACKS(builder, TRACKSOffset);
+    KMLMultiGeometry.AddMODELS(builder, MODELSOffset);
+    KMLMultiGeometry.AddLINEAR_RINGS(builder, LINEAR_RINGSOffset);
     KMLMultiGeometry.AddMULTI_GEOMETRIES(builder, MULTI_GEOMETRIESOffset);
     KMLMultiGeometry.AddPOLYGONS(builder, POLYGONSOffset);
     KMLMultiGeometry.AddLINE_STRINGS(builder, LINE_STRINGSOffset);
@@ -43,7 +63,7 @@ public struct KMLMultiGeometry : IFlatbufferObject
     return KMLMultiGeometry.EndKMLMultiGeometry(builder);
   }
 
-  public static void StartKMLMultiGeometry(FlatBufferBuilder builder) { builder.StartTable(4); }
+  public static void StartKMLMultiGeometry(FlatBufferBuilder builder) { builder.StartTable(8); }
   public static void AddPOINTS(FlatBufferBuilder builder, VectorOffset POINTSOffset) { builder.AddOffset(0, POINTSOffset.Value, 0); }
   public static VectorOffset CreatePOINTSVector(FlatBufferBuilder builder, Offset<KMLPoint>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreatePOINTSVectorBlock(FlatBufferBuilder builder, Offset<KMLPoint>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
@@ -68,6 +88,30 @@ public struct KMLMultiGeometry : IFlatbufferObject
   public static VectorOffset CreateMULTI_GEOMETRIESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<KMLMultiGeometry>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateMULTI_GEOMETRIESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<KMLMultiGeometry>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartMULTI_GEOMETRIESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddLINEAR_RINGS(FlatBufferBuilder builder, VectorOffset LINEAR_RINGSOffset) { builder.AddOffset(4, LINEAR_RINGSOffset.Value, 0); }
+  public static VectorOffset CreateLINEAR_RINGSVector(FlatBufferBuilder builder, Offset<KMLLinearRing>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateLINEAR_RINGSVectorBlock(FlatBufferBuilder builder, Offset<KMLLinearRing>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateLINEAR_RINGSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<KMLLinearRing>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateLINEAR_RINGSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<KMLLinearRing>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartLINEAR_RINGSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddMODELS(FlatBufferBuilder builder, VectorOffset MODELSOffset) { builder.AddOffset(5, MODELSOffset.Value, 0); }
+  public static VectorOffset CreateMODELSVector(FlatBufferBuilder builder, Offset<KMLModel>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateMODELSVectorBlock(FlatBufferBuilder builder, Offset<KMLModel>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateMODELSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<KMLModel>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateMODELSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<KMLModel>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartMODELSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddTRACKS(FlatBufferBuilder builder, VectorOffset TRACKSOffset) { builder.AddOffset(6, TRACKSOffset.Value, 0); }
+  public static VectorOffset CreateTRACKSVector(FlatBufferBuilder builder, Offset<KMLTrack>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateTRACKSVectorBlock(FlatBufferBuilder builder, Offset<KMLTrack>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTRACKSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<KMLTrack>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTRACKSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<KMLTrack>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartTRACKSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddMULTI_TRACKS(FlatBufferBuilder builder, VectorOffset MULTI_TRACKSOffset) { builder.AddOffset(7, MULTI_TRACKSOffset.Value, 0); }
+  public static VectorOffset CreateMULTI_TRACKSVector(FlatBufferBuilder builder, Offset<KMLMultiTrack>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateMULTI_TRACKSVectorBlock(FlatBufferBuilder builder, Offset<KMLMultiTrack>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateMULTI_TRACKSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<KMLMultiTrack>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateMULTI_TRACKSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<KMLMultiTrack>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartMULTI_TRACKSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<KMLMultiGeometry> EndKMLMultiGeometry(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<KMLMultiGeometry>(o);
@@ -86,6 +130,14 @@ public struct KMLMultiGeometry : IFlatbufferObject
     for (var _j = 0; _j < this.POLYGONSLength; ++_j) {_o.POLYGONS.Add(this.POLYGONS(_j).HasValue ? this.POLYGONS(_j).Value.UnPack() : null);}
     _o.MULTI_GEOMETRIES = new List<KMLMultiGeometryT>();
     for (var _j = 0; _j < this.MULTI_GEOMETRIESLength; ++_j) {_o.MULTI_GEOMETRIES.Add(this.MULTI_GEOMETRIES(_j).HasValue ? this.MULTI_GEOMETRIES(_j).Value.UnPack() : null);}
+    _o.LINEAR_RINGS = new List<KMLLinearRingT>();
+    for (var _j = 0; _j < this.LINEAR_RINGSLength; ++_j) {_o.LINEAR_RINGS.Add(this.LINEAR_RINGS(_j).HasValue ? this.LINEAR_RINGS(_j).Value.UnPack() : null);}
+    _o.MODELS = new List<KMLModelT>();
+    for (var _j = 0; _j < this.MODELSLength; ++_j) {_o.MODELS.Add(this.MODELS(_j).HasValue ? this.MODELS(_j).Value.UnPack() : null);}
+    _o.TRACKS = new List<KMLTrackT>();
+    for (var _j = 0; _j < this.TRACKSLength; ++_j) {_o.TRACKS.Add(this.TRACKS(_j).HasValue ? this.TRACKS(_j).Value.UnPack() : null);}
+    _o.MULTI_TRACKS = new List<KMLMultiTrackT>();
+    for (var _j = 0; _j < this.MULTI_TRACKSLength; ++_j) {_o.MULTI_TRACKS.Add(this.MULTI_TRACKS(_j).HasValue ? this.MULTI_TRACKS(_j).Value.UnPack() : null);}
   }
   public static Offset<KMLMultiGeometry> Pack(FlatBufferBuilder builder, KMLMultiGeometryT _o) {
     if (_o == null) return default(Offset<KMLMultiGeometry>);
@@ -113,12 +165,40 @@ public struct KMLMultiGeometry : IFlatbufferObject
       for (var _j = 0; _j < __MULTI_GEOMETRIES.Length; ++_j) { __MULTI_GEOMETRIES[_j] = KMLMultiGeometry.Pack(builder, _o.MULTI_GEOMETRIES[_j]); }
       _MULTI_GEOMETRIES = CreateMULTI_GEOMETRIESVector(builder, __MULTI_GEOMETRIES);
     }
+    var _LINEAR_RINGS = default(VectorOffset);
+    if (_o.LINEAR_RINGS != null) {
+      var __LINEAR_RINGS = new Offset<KMLLinearRing>[_o.LINEAR_RINGS.Count];
+      for (var _j = 0; _j < __LINEAR_RINGS.Length; ++_j) { __LINEAR_RINGS[_j] = KMLLinearRing.Pack(builder, _o.LINEAR_RINGS[_j]); }
+      _LINEAR_RINGS = CreateLINEAR_RINGSVector(builder, __LINEAR_RINGS);
+    }
+    var _MODELS = default(VectorOffset);
+    if (_o.MODELS != null) {
+      var __MODELS = new Offset<KMLModel>[_o.MODELS.Count];
+      for (var _j = 0; _j < __MODELS.Length; ++_j) { __MODELS[_j] = KMLModel.Pack(builder, _o.MODELS[_j]); }
+      _MODELS = CreateMODELSVector(builder, __MODELS);
+    }
+    var _TRACKS = default(VectorOffset);
+    if (_o.TRACKS != null) {
+      var __TRACKS = new Offset<KMLTrack>[_o.TRACKS.Count];
+      for (var _j = 0; _j < __TRACKS.Length; ++_j) { __TRACKS[_j] = KMLTrack.Pack(builder, _o.TRACKS[_j]); }
+      _TRACKS = CreateTRACKSVector(builder, __TRACKS);
+    }
+    var _MULTI_TRACKS = default(VectorOffset);
+    if (_o.MULTI_TRACKS != null) {
+      var __MULTI_TRACKS = new Offset<KMLMultiTrack>[_o.MULTI_TRACKS.Count];
+      for (var _j = 0; _j < __MULTI_TRACKS.Length; ++_j) { __MULTI_TRACKS[_j] = KMLMultiTrack.Pack(builder, _o.MULTI_TRACKS[_j]); }
+      _MULTI_TRACKS = CreateMULTI_TRACKSVector(builder, __MULTI_TRACKS);
+    }
     return CreateKMLMultiGeometry(
       builder,
       _POINTS,
       _LINE_STRINGS,
       _POLYGONS,
-      _MULTI_GEOMETRIES);
+      _MULTI_GEOMETRIES,
+      _LINEAR_RINGS,
+      _MODELS,
+      _TRACKS,
+      _MULTI_TRACKS);
   }
 }
 
@@ -128,12 +208,20 @@ public class KMLMultiGeometryT
   public List<KMLLineStringT> LINE_STRINGS { get; set; }
   public List<KMLPolygonT> POLYGONS { get; set; }
   public List<KMLMultiGeometryT> MULTI_GEOMETRIES { get; set; }
+  public List<KMLLinearRingT> LINEAR_RINGS { get; set; }
+  public List<KMLModelT> MODELS { get; set; }
+  public List<KMLTrackT> TRACKS { get; set; }
+  public List<KMLMultiTrackT> MULTI_TRACKS { get; set; }
 
   public KMLMultiGeometryT() {
     this.POINTS = null;
     this.LINE_STRINGS = null;
     this.POLYGONS = null;
     this.MULTI_GEOMETRIES = null;
+    this.LINEAR_RINGS = null;
+    this.MODELS = null;
+    this.TRACKS = null;
+    this.MULTI_TRACKS = null;
   }
 }
 
@@ -147,6 +235,10 @@ static public class KMLMultiGeometryVerify
       && verifier.VerifyVectorOfTables(tablePos, 6 /*LINE_STRINGS*/, KMLLineStringVerify.Verify, false)
       && verifier.VerifyVectorOfTables(tablePos, 8 /*POLYGONS*/, KMLPolygonVerify.Verify, false)
       && verifier.VerifyVectorOfTables(tablePos, 10 /*MULTI_GEOMETRIES*/, KMLMultiGeometryVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 12 /*LINEAR_RINGS*/, KMLLinearRingVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 14 /*MODELS*/, KMLModelVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 16 /*TRACKS*/, KMLTrackVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 18 /*MULTI_TRACKS*/, KMLMultiTrackVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

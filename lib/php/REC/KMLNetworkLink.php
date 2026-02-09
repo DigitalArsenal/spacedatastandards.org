@@ -48,20 +48,37 @@ class KMLNetworkLink extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Description
+    public function getDESCRIPTION()
+    {
+        $o = $this->__offset(6);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /// Whether the link is visible
     /**
      * @return bool
      */
     public function getVISIBILITY()
     {
-        $o = $this->__offset(6);
+        $o = $this->__offset(8);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Whether open in tree view
+    /**
+     * @return bool
+     */
+    public function getOPEN()
+    {
+        $o = $this->__offset(10);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
     /// Link URL
     public function getHREF()
     {
-        $o = $this->__offset(8);
+        $o = $this->__offset(12);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -71,7 +88,7 @@ class KMLNetworkLink extends Table
      */
     public function getREFRESH_MODE()
     {
-        $o = $this->__offset(10);
+        $o = $this->__offset(14);
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \KMLRefreshMode::ON_CHANGE;
     }
 
@@ -81,7 +98,7 @@ class KMLNetworkLink extends Table
      */
     public function getREFRESH_INTERVAL()
     {
-        $o = $this->__offset(12);
+        $o = $this->__offset(16);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -91,7 +108,7 @@ class KMLNetworkLink extends Table
      */
     public function getVIEW_REFRESH_MODE()
     {
-        $o = $this->__offset(14);
+        $o = $this->__offset(18);
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \KMLViewRefreshMode::NEVER;
     }
 
@@ -101,8 +118,36 @@ class KMLNetworkLink extends Table
      */
     public function getVIEW_REFRESH_TIME()
     {
-        $o = $this->__offset(16);
+        $o = $this->__offset(20);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Whether to refresh on visibility change
+    /**
+     * @return bool
+     */
+    public function getREFRESH_VISIBILITY()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Whether to fly to view on refresh
+    /**
+     * @return bool
+     */
+    public function getFLY_TO_VIEW()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Full link element
+    public function getLINK()
+    {
+        $obj = new KMLLink();
+        $o = $this->__offset(26);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     /**
@@ -111,23 +156,28 @@ class KMLNetworkLink extends Table
      */
     public static function startKMLNetworkLink(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(7);
+        $builder->StartObject(12);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return KMLNetworkLink
      */
-    public static function createKMLNetworkLink(FlatBufferBuilder $builder, $NAME, $VISIBILITY, $HREF, $REFRESH_MODE, $REFRESH_INTERVAL, $VIEW_REFRESH_MODE, $VIEW_REFRESH_TIME)
+    public static function createKMLNetworkLink(FlatBufferBuilder $builder, $NAME, $DESCRIPTION, $VISIBILITY, $OPEN, $HREF, $REFRESH_MODE, $REFRESH_INTERVAL, $VIEW_REFRESH_MODE, $VIEW_REFRESH_TIME, $REFRESH_VISIBILITY, $FLY_TO_VIEW, $LINK)
     {
-        $builder->startObject(7);
+        $builder->startObject(12);
         self::addNAME($builder, $NAME);
+        self::addDESCRIPTION($builder, $DESCRIPTION);
         self::addVISIBILITY($builder, $VISIBILITY);
+        self::addOPEN($builder, $OPEN);
         self::addHREF($builder, $HREF);
         self::addREFRESH_MODE($builder, $REFRESH_MODE);
         self::addREFRESH_INTERVAL($builder, $REFRESH_INTERVAL);
         self::addVIEW_REFRESH_MODE($builder, $VIEW_REFRESH_MODE);
         self::addVIEW_REFRESH_TIME($builder, $VIEW_REFRESH_TIME);
+        self::addREFRESH_VISIBILITY($builder, $REFRESH_VISIBILITY);
+        self::addFLY_TO_VIEW($builder, $FLY_TO_VIEW);
+        self::addLINK($builder, $LINK);
         $o = $builder->endObject();
         return $o;
     }
@@ -144,12 +194,32 @@ class KMLNetworkLink extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDESCRIPTION(FlatBufferBuilder $builder, $DESCRIPTION)
+    {
+        $builder->addOffsetX(1, $DESCRIPTION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param bool
      * @return void
      */
     public static function addVISIBILITY(FlatBufferBuilder $builder, $VISIBILITY)
     {
-        $builder->addBoolX(1, $VISIBILITY, false);
+        $builder->addBoolX(2, $VISIBILITY, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addOPEN(FlatBufferBuilder $builder, $OPEN)
+    {
+        $builder->addBoolX(3, $OPEN, false);
     }
 
     /**
@@ -159,7 +229,7 @@ class KMLNetworkLink extends Table
      */
     public static function addHREF(FlatBufferBuilder $builder, $HREF)
     {
-        $builder->addOffsetX(2, $HREF, 0);
+        $builder->addOffsetX(4, $HREF, 0);
     }
 
     /**
@@ -169,7 +239,7 @@ class KMLNetworkLink extends Table
      */
     public static function addREFRESH_MODE(FlatBufferBuilder $builder, $REFRESH_MODE)
     {
-        $builder->addSbyteX(3, $REFRESH_MODE, 0);
+        $builder->addSbyteX(5, $REFRESH_MODE, 0);
     }
 
     /**
@@ -179,7 +249,7 @@ class KMLNetworkLink extends Table
      */
     public static function addREFRESH_INTERVAL(FlatBufferBuilder $builder, $REFRESH_INTERVAL)
     {
-        $builder->addDoubleX(4, $REFRESH_INTERVAL, 0.0);
+        $builder->addDoubleX(6, $REFRESH_INTERVAL, 0.0);
     }
 
     /**
@@ -189,7 +259,7 @@ class KMLNetworkLink extends Table
      */
     public static function addVIEW_REFRESH_MODE(FlatBufferBuilder $builder, $VIEW_REFRESH_MODE)
     {
-        $builder->addSbyteX(5, $VIEW_REFRESH_MODE, 0);
+        $builder->addSbyteX(7, $VIEW_REFRESH_MODE, 0);
     }
 
     /**
@@ -199,7 +269,37 @@ class KMLNetworkLink extends Table
      */
     public static function addVIEW_REFRESH_TIME(FlatBufferBuilder $builder, $VIEW_REFRESH_TIME)
     {
-        $builder->addDoubleX(6, $VIEW_REFRESH_TIME, 0.0);
+        $builder->addDoubleX(8, $VIEW_REFRESH_TIME, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addREFRESH_VISIBILITY(FlatBufferBuilder $builder, $REFRESH_VISIBILITY)
+    {
+        $builder->addBoolX(9, $REFRESH_VISIBILITY, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addFLY_TO_VIEW(FlatBufferBuilder $builder, $FLY_TO_VIEW)
+    {
+        $builder->addBoolX(10, $FLY_TO_VIEW, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addLINK(FlatBufferBuilder $builder, $LINK)
+    {
+        $builder->addOffsetX(11, $LINK, 0);
     }
 
     /**

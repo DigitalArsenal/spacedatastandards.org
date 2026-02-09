@@ -1,5 +1,7 @@
 import * as flatbuffers from 'flatbuffers';
 import { KMLAltitudeMode } from './KMLAltitudeMode.js';
+import { KMLLatLonQuad, KMLLatLonQuadT } from './KMLLatLonQuad.js';
+import { KMLRegion, KMLRegionT } from './KMLRegion.js';
 /**
  * Ground overlay
  */
@@ -23,6 +25,10 @@ export declare class KMLGroundOverlay implements flatbuffers.IUnpackableObject<K
      * Visibility
      */
     VISIBILITY(): boolean;
+    /**
+     * Whether open in tree view
+     */
+    OPEN(): boolean;
     /**
      * Icon/image URL
      */
@@ -61,10 +67,28 @@ export declare class KMLGroundOverlay implements flatbuffers.IUnpackableObject<K
      * Altitude mode
      */
     ALTITUDE_MODE(): KMLAltitudeMode;
+    /**
+     * Draw order
+     */
+    DRAW_ORDER(): number;
+    /**
+     * LatLonQuad (non-rectangular overlay)
+     */
+    LAT_LON_QUAD(obj?: KMLLatLonQuad): KMLLatLonQuad | null;
+    /**
+     * Style URL reference
+     */
+    STYLE_URL(): string | null;
+    STYLE_URL(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Region
+     */
+    REGION(obj?: KMLRegion): KMLRegion | null;
     static startKMLGroundOverlay(builder: flatbuffers.Builder): void;
     static addName(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset): void;
     static addDescription(builder: flatbuffers.Builder, DESCRIPTIONOffset: flatbuffers.Offset): void;
     static addVisibility(builder: flatbuffers.Builder, VISIBILITY: boolean): void;
+    static addOpen(builder: flatbuffers.Builder, OPEN: boolean): void;
     static addIconHref(builder: flatbuffers.Builder, ICON_HREFOffset: flatbuffers.Offset): void;
     static addColor(builder: flatbuffers.Builder, COLOROffset: flatbuffers.Offset): void;
     static addNorth(builder: flatbuffers.Builder, NORTH: number): void;
@@ -74,8 +98,11 @@ export declare class KMLGroundOverlay implements flatbuffers.IUnpackableObject<K
     static addRotation(builder: flatbuffers.Builder, ROTATION: number): void;
     static addAltitude(builder: flatbuffers.Builder, ALTITUDE: number): void;
     static addAltitudeMode(builder: flatbuffers.Builder, ALTITUDE_MODE: KMLAltitudeMode): void;
+    static addDrawOrder(builder: flatbuffers.Builder, DRAW_ORDER: number): void;
+    static addLatLonQuad(builder: flatbuffers.Builder, LAT_LON_QUADOffset: flatbuffers.Offset): void;
+    static addStyleUrl(builder: flatbuffers.Builder, STYLE_URLOffset: flatbuffers.Offset): void;
+    static addRegion(builder: flatbuffers.Builder, REGIONOffset: flatbuffers.Offset): void;
     static endKMLGroundOverlay(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createKMLGroundOverlay(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset, DESCRIPTIONOffset: flatbuffers.Offset, VISIBILITY: boolean, ICON_HREFOffset: flatbuffers.Offset, COLOROffset: flatbuffers.Offset, NORTH: number, SOUTH: number, EAST: number, WEST: number, ROTATION: number, ALTITUDE: number, ALTITUDE_MODE: KMLAltitudeMode): flatbuffers.Offset;
     unpack(): KMLGroundOverlayT;
     unpackTo(_o: KMLGroundOverlayT): void;
 }
@@ -83,6 +110,7 @@ export declare class KMLGroundOverlayT implements flatbuffers.IGeneratedObject {
     NAME: string | Uint8Array | null;
     DESCRIPTION: string | Uint8Array | null;
     VISIBILITY: boolean;
+    OPEN: boolean;
     ICON_HREF: string | Uint8Array | null;
     COLOR: string | Uint8Array | null;
     NORTH: number;
@@ -92,7 +120,11 @@ export declare class KMLGroundOverlayT implements flatbuffers.IGeneratedObject {
     ROTATION: number;
     ALTITUDE: number;
     ALTITUDE_MODE: KMLAltitudeMode;
-    constructor(NAME?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, VISIBILITY?: boolean, ICON_HREF?: string | Uint8Array | null, COLOR?: string | Uint8Array | null, NORTH?: number, SOUTH?: number, EAST?: number, WEST?: number, ROTATION?: number, ALTITUDE?: number, ALTITUDE_MODE?: KMLAltitudeMode);
+    DRAW_ORDER: number;
+    LAT_LON_QUAD: KMLLatLonQuadT | null;
+    STYLE_URL: string | Uint8Array | null;
+    REGION: KMLRegionT | null;
+    constructor(NAME?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, VISIBILITY?: boolean, OPEN?: boolean, ICON_HREF?: string | Uint8Array | null, COLOR?: string | Uint8Array | null, NORTH?: number, SOUTH?: number, EAST?: number, WEST?: number, ROTATION?: number, ALTITUDE?: number, ALTITUDE_MODE?: KMLAltitudeMode, DRAW_ORDER?: number, LAT_LON_QUAD?: KMLLatLonQuadT | null, STYLE_URL?: string | Uint8Array | null, REGION?: KMLRegionT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=KMLGroundOverlay.d.ts.map

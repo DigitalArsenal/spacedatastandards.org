@@ -75,26 +75,67 @@ class GJNProperty extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// True if this property value is a boolean
+    /**
+     * @return bool
+     */
+    public function getIS_BOOL()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Boolean value (use when IS_BOOL is true)
+    /**
+     * @return bool
+     */
+    public function getBOOL_VALUE()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// True if this property value is JSON null
+    /**
+     * @return bool
+     */
+    public function getIS_NULL()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Raw JSON string for complex values (objects, arrays)
+    public function getJSON_VALUE()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startGJNProperty(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(4);
+        $builder->StartObject(8);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return GJNProperty
      */
-    public static function createGJNProperty(FlatBufferBuilder $builder, $KEY, $VALUE, $NUM_VALUE, $IS_NUMERIC)
+    public static function createGJNProperty(FlatBufferBuilder $builder, $KEY, $VALUE, $NUM_VALUE, $IS_NUMERIC, $IS_BOOL, $BOOL_VALUE, $IS_NULL, $JSON_VALUE)
     {
-        $builder->startObject(4);
+        $builder->startObject(8);
         self::addKEY($builder, $KEY);
         self::addVALUE($builder, $VALUE);
         self::addNUM_VALUE($builder, $NUM_VALUE);
         self::addIS_NUMERIC($builder, $IS_NUMERIC);
+        self::addIS_BOOL($builder, $IS_BOOL);
+        self::addBOOL_VALUE($builder, $BOOL_VALUE);
+        self::addIS_NULL($builder, $IS_NULL);
+        self::addJSON_VALUE($builder, $JSON_VALUE);
         $o = $builder->endObject();
         return $o;
     }
@@ -137,6 +178,46 @@ class GJNProperty extends Table
     public static function addIS_NUMERIC(FlatBufferBuilder $builder, $IS_NUMERIC)
     {
         $builder->addBoolX(3, $IS_NUMERIC, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addIS_BOOL(FlatBufferBuilder $builder, $IS_BOOL)
+    {
+        $builder->addBoolX(4, $IS_BOOL, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addBOOL_VALUE(FlatBufferBuilder $builder, $BOOL_VALUE)
+    {
+        $builder->addBoolX(5, $BOOL_VALUE, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addIS_NULL(FlatBufferBuilder $builder, $IS_NULL)
+    {
+        $builder->addBoolX(6, $IS_NULL, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addJSON_VALUE(FlatBufferBuilder $builder, $JSON_VALUE)
+    {
+        $builder->addOffsetX(7, $JSON_VALUE, 0);
     }
 
     /**

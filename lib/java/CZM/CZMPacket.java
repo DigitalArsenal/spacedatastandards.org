@@ -132,6 +132,111 @@ public final class CZMPacket extends Table {
    */
   public CZMEllipse ELLIPSE() { return ELLIPSE(new CZMEllipse()); }
   public CZMEllipse ELLIPSE(CZMEllipse obj) { int o = __offset(38); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Orientation (quaternion)
+   */
+  public CZMOrientation ORIENTATION() { return ORIENTATION(new CZMOrientation()); }
+  public CZMOrientation ORIENTATION(CZMOrientation obj) { int o = __offset(40); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Suggested camera offset
+   */
+  public CZMViewFrom VIEW_FROM() { return VIEW_FROM(new CZMViewFrom()); }
+  public CZMViewFrom VIEW_FROM(CZMViewFrom obj) { int o = __offset(42); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Whether to delete this object
+   */
+  public boolean DELETE() { int o = __offset(44); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Box properties
+   */
+  public CZMBox BOX() { return BOX(new CZMBox()); }
+  public CZMBox BOX(CZMBox obj) { int o = __offset(46); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Corridor properties
+   */
+  public CZMCorridor CORRIDOR() { return CORRIDOR(new CZMCorridor()); }
+  public CZMCorridor CORRIDOR(CZMCorridor obj) { int o = __offset(48); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Cylinder properties
+   */
+  public CZMCylinder CYLINDER() { return CYLINDER(new CZMCylinder()); }
+  public CZMCylinder CYLINDER(CZMCylinder obj) { int o = __offset(50); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Ellipsoid properties
+   */
+  public CZMEllipsoid ELLIPSOID() { return ELLIPSOID(new CZMEllipsoid()); }
+  public CZMEllipsoid ELLIPSOID(CZMEllipsoid obj) { int o = __offset(52); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Polyline volume properties
+   */
+  public CZMPolylineVolume POLYLINE_VOLUME() { return POLYLINE_VOLUME(new CZMPolylineVolume()); }
+  public CZMPolylineVolume POLYLINE_VOLUME(CZMPolylineVolume obj) { int o = __offset(54); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Rectangle properties
+   */
+  public CZMRectangle RECTANGLE() { return RECTANGLE(new CZMRectangle()); }
+  public CZMRectangle RECTANGLE(CZMRectangle obj) { int o = __offset(56); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * 3D Tileset properties
+   */
+  public CZMTileset TILESET() { return TILESET(new CZMTileset()); }
+  public CZMTileset TILESET(CZMTileset obj) { int o = __offset(58); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Wall properties
+   */
+  public CZMWall WALL() { return WALL(new CZMWall()); }
+  public CZMWall WALL(CZMWall obj) { int o = __offset(60); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Position interpolation settings
+   */
+  public CZMInterpolation POSITION_INTERPOLATION() { return POSITION_INTERPOLATION(new CZMInterpolation()); }
+  public CZMInterpolation POSITION_INTERPOLATION(CZMInterpolation obj) { int o = __offset(62); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Position reference frame (FIXED or INERTIAL)
+   */
+  public String POSITION_REFERENCE_FRAME() { int o = __offset(64); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer POSITION_REFERENCE_FRAMEAsByteBuffer() { return __vector_as_bytebuffer(64, 1); }
+  public ByteBuffer POSITION_REFERENCE_FRAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 64, 1); }
+  /**
+   * Position reference to another entity
+   */
+  public String POSITION_REFERENCE() { int o = __offset(66); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer POSITION_REFERENCEAsByteBuffer() { return __vector_as_bytebuffer(66, 1); }
+  public ByteBuffer POSITION_REFERENCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 66, 1); }
+  /**
+   * Orientation epoch (ISO 8601)
+   */
+  public String ORIENTATION_EPOCH() { int o = __offset(68); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ORIENTATION_EPOCHAsByteBuffer() { return __vector_as_bytebuffer(68, 1); }
+  public ByteBuffer ORIENTATION_EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 68, 1); }
+  /**
+   * Orientation sampled data [t, x, y, z, w, t, x, y, z, w, ...]
+   */
+  public double ORIENTATION_ARRAY(int j) { int o = __offset(70); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int ORIENTATION_ARRAYLength() { int o = __offset(70); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector orientationArrayVector() { return orientationArrayVector(new DoubleVector()); }
+  public DoubleVector orientationArrayVector(DoubleVector obj) { int o = __offset(70); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer ORIENTATION_ARRAYAsByteBuffer() { return __vector_as_bytebuffer(70, 8); }
+  public ByteBuffer ORIENTATION_ARRAYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 70, 8); }
+  /**
+   * Orientation interpolation settings
+   */
+  public CZMInterpolation ORIENTATION_INTERPOLATION() { return ORIENTATION_INTERPOLATION(new CZMInterpolation()); }
+  public CZMInterpolation ORIENTATION_INTERPOLATION(CZMInterpolation obj) { int o = __offset(72); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Orientation reference to another entity
+   */
+  public String ORIENTATION_REFERENCE() { int o = __offset(74); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ORIENTATION_REFERENCEAsByteBuffer() { return __vector_as_bytebuffer(74, 1); }
+  public ByteBuffer ORIENTATION_REFERENCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 74, 1); }
+  /**
+   * Generic bag for all time-dynamic (non-static) properties
+   */
+  public CZMDynamicProperty DYNAMIC_PROPERTIES(int j) { return DYNAMIC_PROPERTIES(new CZMDynamicProperty(), j); }
+  public CZMDynamicProperty DYNAMIC_PROPERTIES(CZMDynamicProperty obj, int j) { int o = __offset(76); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int DYNAMIC_PROPERTIESLength() { int o = __offset(76); return o != 0 ? __vector_len(o) : 0; }
+  public CZMDynamicProperty.Vector dynamicPropertiesVector() { return dynamicPropertiesVector(new CZMDynamicProperty.Vector()); }
+  public CZMDynamicProperty.Vector dynamicPropertiesVector(CZMDynamicProperty.Vector obj) { int o = __offset(76); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createCZMPacket(FlatBufferBuilder builder,
       int IDOffset,
@@ -151,8 +256,45 @@ public final class CZMPacket extends Table {
       int POLYGONOffset,
       int MODELOffset,
       int PATHOffset,
-      int ELLIPSEOffset) {
-    builder.startTable(18);
+      int ELLIPSEOffset,
+      int ORIENTATIONOffset,
+      int VIEW_FROMOffset,
+      boolean DELETE,
+      int BOXOffset,
+      int CORRIDOROffset,
+      int CYLINDEROffset,
+      int ELLIPSOIDOffset,
+      int POLYLINE_VOLUMEOffset,
+      int RECTANGLEOffset,
+      int TILESETOffset,
+      int WALLOffset,
+      int POSITION_INTERPOLATIONOffset,
+      int POSITION_REFERENCE_FRAMEOffset,
+      int POSITION_REFERENCEOffset,
+      int ORIENTATION_EPOCHOffset,
+      int ORIENTATION_ARRAYOffset,
+      int ORIENTATION_INTERPOLATIONOffset,
+      int ORIENTATION_REFERENCEOffset,
+      int DYNAMIC_PROPERTIESOffset) {
+    builder.startTable(37);
+    CZMPacket.addDynamicProperties(builder, DYNAMIC_PROPERTIESOffset);
+    CZMPacket.addOrientationReference(builder, ORIENTATION_REFERENCEOffset);
+    CZMPacket.addOrientationInterpolation(builder, ORIENTATION_INTERPOLATIONOffset);
+    CZMPacket.addOrientationArray(builder, ORIENTATION_ARRAYOffset);
+    CZMPacket.addOrientationEpoch(builder, ORIENTATION_EPOCHOffset);
+    CZMPacket.addPositionReference(builder, POSITION_REFERENCEOffset);
+    CZMPacket.addPositionReferenceFrame(builder, POSITION_REFERENCE_FRAMEOffset);
+    CZMPacket.addPositionInterpolation(builder, POSITION_INTERPOLATIONOffset);
+    CZMPacket.addWall(builder, WALLOffset);
+    CZMPacket.addTileset(builder, TILESETOffset);
+    CZMPacket.addRectangle(builder, RECTANGLEOffset);
+    CZMPacket.addPolylineVolume(builder, POLYLINE_VOLUMEOffset);
+    CZMPacket.addEllipsoid(builder, ELLIPSOIDOffset);
+    CZMPacket.addCylinder(builder, CYLINDEROffset);
+    CZMPacket.addCorridor(builder, CORRIDOROffset);
+    CZMPacket.addBox(builder, BOXOffset);
+    CZMPacket.addViewFrom(builder, VIEW_FROMOffset);
+    CZMPacket.addOrientation(builder, ORIENTATIONOffset);
     CZMPacket.addEllipse(builder, ELLIPSEOffset);
     CZMPacket.addPath(builder, PATHOffset);
     CZMPacket.addModel(builder, MODELOffset);
@@ -171,10 +313,11 @@ public final class CZMPacket extends Table {
     CZMPacket.addParent(builder, PARENTOffset);
     CZMPacket.addName(builder, NAMEOffset);
     CZMPacket.addId(builder, IDOffset);
+    CZMPacket.addDelete(builder, DELETE);
     return CZMPacket.endCZMPacket(builder);
   }
 
-  public static void startCZMPacket(FlatBufferBuilder builder) { builder.startTable(18); }
+  public static void startCZMPacket(FlatBufferBuilder builder) { builder.startTable(37); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(1, NAMEOffset, 0); }
   public static void addParent(FlatBufferBuilder builder, int PARENTOffset) { builder.addOffset(2, PARENTOffset, 0); }
@@ -197,6 +340,29 @@ public final class CZMPacket extends Table {
   public static void addModel(FlatBufferBuilder builder, int MODELOffset) { builder.addOffset(15, MODELOffset, 0); }
   public static void addPath(FlatBufferBuilder builder, int PATHOffset) { builder.addOffset(16, PATHOffset, 0); }
   public static void addEllipse(FlatBufferBuilder builder, int ELLIPSEOffset) { builder.addOffset(17, ELLIPSEOffset, 0); }
+  public static void addOrientation(FlatBufferBuilder builder, int ORIENTATIONOffset) { builder.addOffset(18, ORIENTATIONOffset, 0); }
+  public static void addViewFrom(FlatBufferBuilder builder, int VIEW_FROMOffset) { builder.addOffset(19, VIEW_FROMOffset, 0); }
+  public static void addDelete(FlatBufferBuilder builder, boolean DELETE) { builder.addBoolean(20, DELETE, false); }
+  public static void addBox(FlatBufferBuilder builder, int BOXOffset) { builder.addOffset(21, BOXOffset, 0); }
+  public static void addCorridor(FlatBufferBuilder builder, int CORRIDOROffset) { builder.addOffset(22, CORRIDOROffset, 0); }
+  public static void addCylinder(FlatBufferBuilder builder, int CYLINDEROffset) { builder.addOffset(23, CYLINDEROffset, 0); }
+  public static void addEllipsoid(FlatBufferBuilder builder, int ELLIPSOIDOffset) { builder.addOffset(24, ELLIPSOIDOffset, 0); }
+  public static void addPolylineVolume(FlatBufferBuilder builder, int POLYLINE_VOLUMEOffset) { builder.addOffset(25, POLYLINE_VOLUMEOffset, 0); }
+  public static void addRectangle(FlatBufferBuilder builder, int RECTANGLEOffset) { builder.addOffset(26, RECTANGLEOffset, 0); }
+  public static void addTileset(FlatBufferBuilder builder, int TILESETOffset) { builder.addOffset(27, TILESETOffset, 0); }
+  public static void addWall(FlatBufferBuilder builder, int WALLOffset) { builder.addOffset(28, WALLOffset, 0); }
+  public static void addPositionInterpolation(FlatBufferBuilder builder, int POSITION_INTERPOLATIONOffset) { builder.addOffset(29, POSITION_INTERPOLATIONOffset, 0); }
+  public static void addPositionReferenceFrame(FlatBufferBuilder builder, int POSITION_REFERENCE_FRAMEOffset) { builder.addOffset(30, POSITION_REFERENCE_FRAMEOffset, 0); }
+  public static void addPositionReference(FlatBufferBuilder builder, int POSITION_REFERENCEOffset) { builder.addOffset(31, POSITION_REFERENCEOffset, 0); }
+  public static void addOrientationEpoch(FlatBufferBuilder builder, int ORIENTATION_EPOCHOffset) { builder.addOffset(32, ORIENTATION_EPOCHOffset, 0); }
+  public static void addOrientationArray(FlatBufferBuilder builder, int ORIENTATION_ARRAYOffset) { builder.addOffset(33, ORIENTATION_ARRAYOffset, 0); }
+  public static int createOrientationArrayVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startOrientationArrayVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addOrientationInterpolation(FlatBufferBuilder builder, int ORIENTATION_INTERPOLATIONOffset) { builder.addOffset(34, ORIENTATION_INTERPOLATIONOffset, 0); }
+  public static void addOrientationReference(FlatBufferBuilder builder, int ORIENTATION_REFERENCEOffset) { builder.addOffset(35, ORIENTATION_REFERENCEOffset, 0); }
+  public static void addDynamicProperties(FlatBufferBuilder builder, int DYNAMIC_PROPERTIESOffset) { builder.addOffset(36, DYNAMIC_PROPERTIESOffset, 0); }
+  public static int createDynamicPropertiesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startDynamicPropertiesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endCZMPacket(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

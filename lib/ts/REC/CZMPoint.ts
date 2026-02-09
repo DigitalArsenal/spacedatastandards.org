@@ -6,6 +6,7 @@ import * as flatbuffers from 'flatbuffers';
 
 import { CZMColor, CZMColorT } from './CZMColor.js';
 import { CZMHeightReference } from './CZMHeightReference.js';
+import { CZMNearFarScalar, CZMNearFarScalarT } from './CZMNearFarScalar.js';
 
 
 /**
@@ -77,8 +78,48 @@ HEIGHT_REFERENCE():CZMHeightReference {
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : CZMHeightReference.NONE;
 }
 
+/**
+ * Scale by distance
+ */
+SCALE_BY_DISTANCE(obj?:CZMNearFarScalar):CZMNearFarScalar|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? (obj || new CZMNearFarScalar()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Translucency by distance
+ */
+TRANSLUCENCY_BY_DISTANCE(obj?:CZMNearFarScalar):CZMNearFarScalar|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? (obj || new CZMNearFarScalar()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Distance display condition near
+ */
+DISTANCE_DISPLAY_CONDITION_NEAR():number {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Distance display condition far
+ */
+DISTANCE_DISPLAY_CONDITION_FAR():number {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Disable depth test distance
+ */
+DISABLE_DEPTH_TEST_DISTANCE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
 static startCZMPoint(builder:flatbuffers.Builder) {
-  builder.startObject(6);
+  builder.startObject(11);
 }
 
 static addShow(builder:flatbuffers.Builder, SHOW:boolean) {
@@ -105,6 +146,26 @@ static addHeightReference(builder:flatbuffers.Builder, HEIGHT_REFERENCE:CZMHeigh
   builder.addFieldInt8(5, HEIGHT_REFERENCE, CZMHeightReference.NONE);
 }
 
+static addScaleByDistance(builder:flatbuffers.Builder, SCALE_BY_DISTANCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, SCALE_BY_DISTANCEOffset, 0);
+}
+
+static addTranslucencyByDistance(builder:flatbuffers.Builder, TRANSLUCENCY_BY_DISTANCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, TRANSLUCENCY_BY_DISTANCEOffset, 0);
+}
+
+static addDistanceDisplayConditionNear(builder:flatbuffers.Builder, DISTANCE_DISPLAY_CONDITION_NEAR:number) {
+  builder.addFieldFloat64(8, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0);
+}
+
+static addDistanceDisplayConditionFar(builder:flatbuffers.Builder, DISTANCE_DISPLAY_CONDITION_FAR:number) {
+  builder.addFieldFloat64(9, DISTANCE_DISPLAY_CONDITION_FAR, 0.0);
+}
+
+static addDisableDepthTestDistance(builder:flatbuffers.Builder, DISABLE_DEPTH_TEST_DISTANCE:number) {
+  builder.addFieldFloat64(10, DISABLE_DEPTH_TEST_DISTANCE, 0.0);
+}
+
 static endCZMPoint(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -118,7 +179,12 @@ unpack(): CZMPointT {
     (this.OUTLINE_COLOR() !== null ? this.OUTLINE_COLOR()!.unpack() : null),
     this.OUTLINE_WIDTH(),
     this.PIXEL_SIZE(),
-    this.HEIGHT_REFERENCE()
+    this.HEIGHT_REFERENCE(),
+    (this.SCALE_BY_DISTANCE() !== null ? this.SCALE_BY_DISTANCE()!.unpack() : null),
+    (this.TRANSLUCENCY_BY_DISTANCE() !== null ? this.TRANSLUCENCY_BY_DISTANCE()!.unpack() : null),
+    this.DISTANCE_DISPLAY_CONDITION_NEAR(),
+    this.DISTANCE_DISPLAY_CONDITION_FAR(),
+    this.DISABLE_DEPTH_TEST_DISTANCE()
   );
 }
 
@@ -130,6 +196,11 @@ unpackTo(_o: CZMPointT): void {
   _o.OUTLINE_WIDTH = this.OUTLINE_WIDTH();
   _o.PIXEL_SIZE = this.PIXEL_SIZE();
   _o.HEIGHT_REFERENCE = this.HEIGHT_REFERENCE();
+  _o.SCALE_BY_DISTANCE = (this.SCALE_BY_DISTANCE() !== null ? this.SCALE_BY_DISTANCE()!.unpack() : null);
+  _o.TRANSLUCENCY_BY_DISTANCE = (this.TRANSLUCENCY_BY_DISTANCE() !== null ? this.TRANSLUCENCY_BY_DISTANCE()!.unpack() : null);
+  _o.DISTANCE_DISPLAY_CONDITION_NEAR = this.DISTANCE_DISPLAY_CONDITION_NEAR();
+  _o.DISTANCE_DISPLAY_CONDITION_FAR = this.DISTANCE_DISPLAY_CONDITION_FAR();
+  _o.DISABLE_DEPTH_TEST_DISTANCE = this.DISABLE_DEPTH_TEST_DISTANCE();
 }
 }
 
@@ -140,13 +211,20 @@ constructor(
   public OUTLINE_COLOR: CZMColorT|null = null,
   public OUTLINE_WIDTH: number = 0.0,
   public PIXEL_SIZE: number = 0.0,
-  public HEIGHT_REFERENCE: CZMHeightReference = CZMHeightReference.NONE
+  public HEIGHT_REFERENCE: CZMHeightReference = CZMHeightReference.NONE,
+  public SCALE_BY_DISTANCE: CZMNearFarScalarT|null = null,
+  public TRANSLUCENCY_BY_DISTANCE: CZMNearFarScalarT|null = null,
+  public DISTANCE_DISPLAY_CONDITION_NEAR: number = 0.0,
+  public DISTANCE_DISPLAY_CONDITION_FAR: number = 0.0,
+  public DISABLE_DEPTH_TEST_DISTANCE: number = 0.0
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const COLOR = (this.COLOR !== null ? this.COLOR!.pack(builder) : 0);
   const OUTLINE_COLOR = (this.OUTLINE_COLOR !== null ? this.OUTLINE_COLOR!.pack(builder) : 0);
+  const SCALE_BY_DISTANCE = (this.SCALE_BY_DISTANCE !== null ? this.SCALE_BY_DISTANCE!.pack(builder) : 0);
+  const TRANSLUCENCY_BY_DISTANCE = (this.TRANSLUCENCY_BY_DISTANCE !== null ? this.TRANSLUCENCY_BY_DISTANCE!.pack(builder) : 0);
 
   CZMPoint.startCZMPoint(builder);
   CZMPoint.addShow(builder, this.SHOW);
@@ -155,6 +233,11 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   CZMPoint.addOutlineWidth(builder, this.OUTLINE_WIDTH);
   CZMPoint.addPixelSize(builder, this.PIXEL_SIZE);
   CZMPoint.addHeightReference(builder, this.HEIGHT_REFERENCE);
+  CZMPoint.addScaleByDistance(builder, SCALE_BY_DISTANCE);
+  CZMPoint.addTranslucencyByDistance(builder, TRANSLUCENCY_BY_DISTANCE);
+  CZMPoint.addDistanceDisplayConditionNear(builder, this.DISTANCE_DISPLAY_CONDITION_NEAR);
+  CZMPoint.addDistanceDisplayConditionFar(builder, this.DISTANCE_DISPLAY_CONDITION_FAR);
+  CZMPoint.addDisableDepthTestDistance(builder, this.DISABLE_DEPTH_TEST_DISTANCE);
 
   return CZMPoint.endCZMPoint(builder);
 }

@@ -117,8 +117,112 @@ class CZMBillboard(object):
             return obj
         return None
 
+    # Rotation in radians
+    # CZMBillboard
+    def ROTATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Whether size is in meters
+    # CZMBillboard
+    def SIZE_IN_METERS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Width in pixels
+    # CZMBillboard
+    def WIDTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Height in pixels
+    # CZMBillboard
+    def HEIGHT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Eye offset X in meters
+    # CZMBillboard
+    def EYE_OFFSET_X(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Eye offset Y in meters
+    # CZMBillboard
+    def EYE_OFFSET_Y(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Eye offset Z in meters
+    # CZMBillboard
+    def EYE_OFFSET_Z(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Scale by distance
+    # CZMBillboard
+    def SCALE_BY_DISTANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMNearFarScalar import CZMNearFarScalar
+            obj = CZMNearFarScalar()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Pixel offset scale by distance
+    # CZMBillboard
+    def PIXEL_OFFSET_SCALE_BY_DISTANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMNearFarScalar import CZMNearFarScalar
+            obj = CZMNearFarScalar()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Distance display condition near
+    # CZMBillboard
+    def DISTANCE_DISPLAY_CONDITION_NEAR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Distance display condition far
+    # CZMBillboard
+    def DISTANCE_DISPLAY_CONDITION_FAR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Disable depth test distance
+    # CZMBillboard
+    def DISABLE_DEPTH_TEST_DISTANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
 def CZMBillboardStart(builder):
-    builder.StartObject(10)
+    builder.StartObject(22)
 
 def Start(builder):
     CZMBillboardStart(builder)
@@ -183,6 +287,78 @@ def CZMBillboardAddTRANSLUCENCY_BY_DISTANCE(builder, TRANSLUCENCY_BY_DISTANCE):
 def AddTRANSLUCENCY_BY_DISTANCE(builder, TRANSLUCENCY_BY_DISTANCE):
     CZMBillboardAddTRANSLUCENCY_BY_DISTANCE(builder, TRANSLUCENCY_BY_DISTANCE)
 
+def CZMBillboardAddROTATION(builder, ROTATION):
+    builder.PrependFloat64Slot(10, ROTATION, 0.0)
+
+def AddROTATION(builder, ROTATION):
+    CZMBillboardAddROTATION(builder, ROTATION)
+
+def CZMBillboardAddSIZE_IN_METERS(builder, SIZE_IN_METERS):
+    builder.PrependBoolSlot(11, SIZE_IN_METERS, 0)
+
+def AddSIZE_IN_METERS(builder, SIZE_IN_METERS):
+    CZMBillboardAddSIZE_IN_METERS(builder, SIZE_IN_METERS)
+
+def CZMBillboardAddWIDTH(builder, WIDTH):
+    builder.PrependFloat64Slot(12, WIDTH, 0.0)
+
+def AddWIDTH(builder, WIDTH):
+    CZMBillboardAddWIDTH(builder, WIDTH)
+
+def CZMBillboardAddHEIGHT(builder, HEIGHT):
+    builder.PrependFloat64Slot(13, HEIGHT, 0.0)
+
+def AddHEIGHT(builder, HEIGHT):
+    CZMBillboardAddHEIGHT(builder, HEIGHT)
+
+def CZMBillboardAddEYE_OFFSET_X(builder, EYE_OFFSET_X):
+    builder.PrependFloat64Slot(14, EYE_OFFSET_X, 0.0)
+
+def AddEYE_OFFSET_X(builder, EYE_OFFSET_X):
+    CZMBillboardAddEYE_OFFSET_X(builder, EYE_OFFSET_X)
+
+def CZMBillboardAddEYE_OFFSET_Y(builder, EYE_OFFSET_Y):
+    builder.PrependFloat64Slot(15, EYE_OFFSET_Y, 0.0)
+
+def AddEYE_OFFSET_Y(builder, EYE_OFFSET_Y):
+    CZMBillboardAddEYE_OFFSET_Y(builder, EYE_OFFSET_Y)
+
+def CZMBillboardAddEYE_OFFSET_Z(builder, EYE_OFFSET_Z):
+    builder.PrependFloat64Slot(16, EYE_OFFSET_Z, 0.0)
+
+def AddEYE_OFFSET_Z(builder, EYE_OFFSET_Z):
+    CZMBillboardAddEYE_OFFSET_Z(builder, EYE_OFFSET_Z)
+
+def CZMBillboardAddSCALE_BY_DISTANCE(builder, SCALE_BY_DISTANCE):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(SCALE_BY_DISTANCE), 0)
+
+def AddSCALE_BY_DISTANCE(builder, SCALE_BY_DISTANCE):
+    CZMBillboardAddSCALE_BY_DISTANCE(builder, SCALE_BY_DISTANCE)
+
+def CZMBillboardAddPIXEL_OFFSET_SCALE_BY_DISTANCE(builder, PIXEL_OFFSET_SCALE_BY_DISTANCE):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(PIXEL_OFFSET_SCALE_BY_DISTANCE), 0)
+
+def AddPIXEL_OFFSET_SCALE_BY_DISTANCE(builder, PIXEL_OFFSET_SCALE_BY_DISTANCE):
+    CZMBillboardAddPIXEL_OFFSET_SCALE_BY_DISTANCE(builder, PIXEL_OFFSET_SCALE_BY_DISTANCE)
+
+def CZMBillboardAddDISTANCE_DISPLAY_CONDITION_NEAR(builder, DISTANCE_DISPLAY_CONDITION_NEAR):
+    builder.PrependFloat64Slot(19, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0)
+
+def AddDISTANCE_DISPLAY_CONDITION_NEAR(builder, DISTANCE_DISPLAY_CONDITION_NEAR):
+    CZMBillboardAddDISTANCE_DISPLAY_CONDITION_NEAR(builder, DISTANCE_DISPLAY_CONDITION_NEAR)
+
+def CZMBillboardAddDISTANCE_DISPLAY_CONDITION_FAR(builder, DISTANCE_DISPLAY_CONDITION_FAR):
+    builder.PrependFloat64Slot(20, DISTANCE_DISPLAY_CONDITION_FAR, 0.0)
+
+def AddDISTANCE_DISPLAY_CONDITION_FAR(builder, DISTANCE_DISPLAY_CONDITION_FAR):
+    CZMBillboardAddDISTANCE_DISPLAY_CONDITION_FAR(builder, DISTANCE_DISPLAY_CONDITION_FAR)
+
+def CZMBillboardAddDISABLE_DEPTH_TEST_DISTANCE(builder, DISABLE_DEPTH_TEST_DISTANCE):
+    builder.PrependFloat64Slot(21, DISABLE_DEPTH_TEST_DISTANCE, 0.0)
+
+def AddDISABLE_DEPTH_TEST_DISTANCE(builder, DISABLE_DEPTH_TEST_DISTANCE):
+    CZMBillboardAddDISABLE_DEPTH_TEST_DISTANCE(builder, DISABLE_DEPTH_TEST_DISTANCE)
+
 def CZMBillboardEnd(builder):
     return builder.EndObject()
 
@@ -210,6 +386,18 @@ class CZMBillboardT(object):
         self.HORIZONTAL_ORIGIN = 0  # type: int
         self.VERTICAL_ORIGIN = 0  # type: int
         self.TRANSLUCENCY_BY_DISTANCE = None  # type: Optional[CZMNearFarScalar.CZMNearFarScalarT]
+        self.ROTATION = 0.0  # type: float
+        self.SIZE_IN_METERS = False  # type: bool
+        self.WIDTH = 0.0  # type: float
+        self.HEIGHT = 0.0  # type: float
+        self.EYE_OFFSET_X = 0.0  # type: float
+        self.EYE_OFFSET_Y = 0.0  # type: float
+        self.EYE_OFFSET_Z = 0.0  # type: float
+        self.SCALE_BY_DISTANCE = None  # type: Optional[CZMNearFarScalar.CZMNearFarScalarT]
+        self.PIXEL_OFFSET_SCALE_BY_DISTANCE = None  # type: Optional[CZMNearFarScalar.CZMNearFarScalarT]
+        self.DISTANCE_DISPLAY_CONDITION_NEAR = 0.0  # type: float
+        self.DISTANCE_DISPLAY_CONDITION_FAR = 0.0  # type: float
+        self.DISABLE_DEPTH_TEST_DISTANCE = 0.0  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -244,6 +432,20 @@ class CZMBillboardT(object):
         self.VERTICAL_ORIGIN = czmbillboard.VERTICAL_ORIGIN()
         if czmbillboard.TRANSLUCENCY_BY_DISTANCE() is not None:
             self.TRANSLUCENCY_BY_DISTANCE = CZMNearFarScalar.CZMNearFarScalarT.InitFromObj(czmbillboard.TRANSLUCENCY_BY_DISTANCE())
+        self.ROTATION = czmbillboard.ROTATION()
+        self.SIZE_IN_METERS = czmbillboard.SIZE_IN_METERS()
+        self.WIDTH = czmbillboard.WIDTH()
+        self.HEIGHT = czmbillboard.HEIGHT()
+        self.EYE_OFFSET_X = czmbillboard.EYE_OFFSET_X()
+        self.EYE_OFFSET_Y = czmbillboard.EYE_OFFSET_Y()
+        self.EYE_OFFSET_Z = czmbillboard.EYE_OFFSET_Z()
+        if czmbillboard.SCALE_BY_DISTANCE() is not None:
+            self.SCALE_BY_DISTANCE = CZMNearFarScalar.CZMNearFarScalarT.InitFromObj(czmbillboard.SCALE_BY_DISTANCE())
+        if czmbillboard.PIXEL_OFFSET_SCALE_BY_DISTANCE() is not None:
+            self.PIXEL_OFFSET_SCALE_BY_DISTANCE = CZMNearFarScalar.CZMNearFarScalarT.InitFromObj(czmbillboard.PIXEL_OFFSET_SCALE_BY_DISTANCE())
+        self.DISTANCE_DISPLAY_CONDITION_NEAR = czmbillboard.DISTANCE_DISPLAY_CONDITION_NEAR()
+        self.DISTANCE_DISPLAY_CONDITION_FAR = czmbillboard.DISTANCE_DISPLAY_CONDITION_FAR()
+        self.DISABLE_DEPTH_TEST_DISTANCE = czmbillboard.DISABLE_DEPTH_TEST_DISTANCE()
 
     # CZMBillboardT
     def Pack(self, builder):
@@ -253,6 +455,10 @@ class CZMBillboardT(object):
             COLOR = self.COLOR.Pack(builder)
         if self.TRANSLUCENCY_BY_DISTANCE is not None:
             TRANSLUCENCY_BY_DISTANCE = self.TRANSLUCENCY_BY_DISTANCE.Pack(builder)
+        if self.SCALE_BY_DISTANCE is not None:
+            SCALE_BY_DISTANCE = self.SCALE_BY_DISTANCE.Pack(builder)
+        if self.PIXEL_OFFSET_SCALE_BY_DISTANCE is not None:
+            PIXEL_OFFSET_SCALE_BY_DISTANCE = self.PIXEL_OFFSET_SCALE_BY_DISTANCE.Pack(builder)
         CZMBillboardStart(builder)
         CZMBillboardAddSHOW(builder, self.SHOW)
         if self.IMAGE is not None:
@@ -267,5 +473,19 @@ class CZMBillboardT(object):
         CZMBillboardAddVERTICAL_ORIGIN(builder, self.VERTICAL_ORIGIN)
         if self.TRANSLUCENCY_BY_DISTANCE is not None:
             CZMBillboardAddTRANSLUCENCY_BY_DISTANCE(builder, TRANSLUCENCY_BY_DISTANCE)
+        CZMBillboardAddROTATION(builder, self.ROTATION)
+        CZMBillboardAddSIZE_IN_METERS(builder, self.SIZE_IN_METERS)
+        CZMBillboardAddWIDTH(builder, self.WIDTH)
+        CZMBillboardAddHEIGHT(builder, self.HEIGHT)
+        CZMBillboardAddEYE_OFFSET_X(builder, self.EYE_OFFSET_X)
+        CZMBillboardAddEYE_OFFSET_Y(builder, self.EYE_OFFSET_Y)
+        CZMBillboardAddEYE_OFFSET_Z(builder, self.EYE_OFFSET_Z)
+        if self.SCALE_BY_DISTANCE is not None:
+            CZMBillboardAddSCALE_BY_DISTANCE(builder, SCALE_BY_DISTANCE)
+        if self.PIXEL_OFFSET_SCALE_BY_DISTANCE is not None:
+            CZMBillboardAddPIXEL_OFFSET_SCALE_BY_DISTANCE(builder, PIXEL_OFFSET_SCALE_BY_DISTANCE)
+        CZMBillboardAddDISTANCE_DISPLAY_CONDITION_NEAR(builder, self.DISTANCE_DISPLAY_CONDITION_NEAR)
+        CZMBillboardAddDISTANCE_DISPLAY_CONDITION_FAR(builder, self.DISTANCE_DISPLAY_CONDITION_FAR)
+        CZMBillboardAddDISABLE_DEPTH_TEST_DISTANCE(builder, self.DISABLE_DEPTH_TEST_DISTANCE)
         czmbillboard = CZMBillboardEnd(builder)
         return czmbillboard

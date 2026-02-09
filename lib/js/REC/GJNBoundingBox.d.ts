@@ -32,6 +32,10 @@ export declare class GJNBoundingBox implements flatbuffers.IUnpackableObject<GJN
      * Maximum altitude (optional)
      */
     MAX_ALTITUDE(): number;
+    /**
+     * True if the bbox includes altitude (6 values vs 4)
+     */
+    HAS_ALTITUDE(): boolean;
     static startGJNBoundingBox(builder: flatbuffers.Builder): void;
     static addWest(builder: flatbuffers.Builder, WEST: number): void;
     static addSouth(builder: flatbuffers.Builder, SOUTH: number): void;
@@ -39,8 +43,9 @@ export declare class GJNBoundingBox implements flatbuffers.IUnpackableObject<GJN
     static addNorth(builder: flatbuffers.Builder, NORTH: number): void;
     static addMinAltitude(builder: flatbuffers.Builder, MIN_ALTITUDE: number): void;
     static addMaxAltitude(builder: flatbuffers.Builder, MAX_ALTITUDE: number): void;
+    static addHasAltitude(builder: flatbuffers.Builder, HAS_ALTITUDE: boolean): void;
     static endGJNBoundingBox(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createGJNBoundingBox(builder: flatbuffers.Builder, WEST: number, SOUTH: number, EAST: number, NORTH: number, MIN_ALTITUDE: number, MAX_ALTITUDE: number): flatbuffers.Offset;
+    static createGJNBoundingBox(builder: flatbuffers.Builder, WEST: number, SOUTH: number, EAST: number, NORTH: number, MIN_ALTITUDE: number, MAX_ALTITUDE: number, HAS_ALTITUDE: boolean): flatbuffers.Offset;
     unpack(): GJNBoundingBoxT;
     unpackTo(_o: GJNBoundingBoxT): void;
 }
@@ -51,7 +56,8 @@ export declare class GJNBoundingBoxT implements flatbuffers.IGeneratedObject {
     NORTH: number;
     MIN_ALTITUDE: number;
     MAX_ALTITUDE: number;
-    constructor(WEST?: number, SOUTH?: number, EAST?: number, NORTH?: number, MIN_ALTITUDE?: number, MAX_ALTITUDE?: number);
+    HAS_ALTITUDE: boolean;
+    constructor(WEST?: number, SOUTH?: number, EAST?: number, NORTH?: number, MIN_ALTITUDE?: number, MAX_ALTITUDE?: number, HAS_ALTITUDE?: boolean);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=GJNBoundingBox.d.ts.map

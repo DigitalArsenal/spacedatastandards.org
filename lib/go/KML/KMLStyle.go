@@ -127,8 +127,23 @@ func (rcv *KMLStyle) BALLOON_STYLE(obj *KMLBalloonStyle) *KMLBalloonStyle {
 }
 
 /// Balloon style
+/// List style
+func (rcv *KMLStyle) LIST_STYLE(obj *KMLListStyle) *KMLListStyle {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(KMLListStyle)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// List style
 func KMLStyleStart(builder *flatbuffers.Builder) {
-	builder.StartObject(6)
+	builder.StartObject(7)
 }
 func KMLStyleAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
@@ -147,6 +162,9 @@ func KMLStyleAddPOLY_STYLE(builder *flatbuffers.Builder, POLY_STYLE flatbuffers.
 }
 func KMLStyleAddBALLOON_STYLE(builder *flatbuffers.Builder, BALLOON_STYLE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(BALLOON_STYLE), 0)
+}
+func KMLStyleAddLIST_STYLE(builder *flatbuffers.Builder, LIST_STYLE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(LIST_STYLE), 0)
 }
 func KMLStyleEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

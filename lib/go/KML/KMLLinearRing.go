@@ -64,14 +64,65 @@ func (rcv *KMLLinearRing) COORDINATESLength() int {
 }
 
 /// Coordinates (first = last to close the ring)
+/// Whether to extrude to ground
+func (rcv *KMLLinearRing) EXTRUDE() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+/// Whether to extrude to ground
+func (rcv *KMLLinearRing) MutateEXTRUDE(n bool) bool {
+	return rcv._tab.MutateBoolSlot(6, n)
+}
+
+/// Whether to tessellate
+func (rcv *KMLLinearRing) TESSELLATE() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+/// Whether to tessellate
+func (rcv *KMLLinearRing) MutateTESSELLATE(n bool) bool {
+	return rcv._tab.MutateBoolSlot(8, n)
+}
+
+/// Altitude mode
+func (rcv *KMLLinearRing) ALTITUDE_MODE() KMLAltitudeMode {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	if o != 0 {
+		return KMLAltitudeMode(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// Altitude mode
+func (rcv *KMLLinearRing) MutateALTITUDE_MODE(n KMLAltitudeMode) bool {
+	return rcv._tab.MutateInt8Slot(10, int8(n))
+}
+
 func KMLLinearRingStart(builder *flatbuffers.Builder) {
-	builder.StartObject(1)
+	builder.StartObject(4)
 }
 func KMLLinearRingAddCOORDINATES(builder *flatbuffers.Builder, COORDINATES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COORDINATES), 0)
 }
 func KMLLinearRingStartCOORDINATESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLLinearRingAddEXTRUDE(builder *flatbuffers.Builder, EXTRUDE bool) {
+	builder.PrependBoolSlot(1, EXTRUDE, false)
+}
+func KMLLinearRingAddTESSELLATE(builder *flatbuffers.Builder, TESSELLATE bool) {
+	builder.PrependBoolSlot(2, TESSELLATE, false)
+}
+func KMLLinearRingAddALTITUDE_MODE(builder *flatbuffers.Builder, ALTITUDE_MODE KMLAltitudeMode) {
+	builder.PrependInt8Slot(3, int8(ALTITUDE_MODE), 0)
 }
 func KMLLinearRingEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

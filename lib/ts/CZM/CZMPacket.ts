@@ -5,15 +5,27 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { CZMBillboard, CZMBillboardT } from './CZMBillboard.js';
+import { CZMBox, CZMBoxT } from './CZMBox.js';
 import { CZMCartesian, CZMCartesianT } from './CZMCartesian.js';
 import { CZMCartographicDegrees, CZMCartographicDegreesT } from './CZMCartographicDegrees.js';
+import { CZMCorridor, CZMCorridorT } from './CZMCorridor.js';
+import { CZMCylinder, CZMCylinderT } from './CZMCylinder.js';
+import { CZMDynamicProperty, CZMDynamicPropertyT } from './CZMDynamicProperty.js';
 import { CZMEllipse, CZMEllipseT } from './CZMEllipse.js';
+import { CZMEllipsoid, CZMEllipsoidT } from './CZMEllipsoid.js';
+import { CZMInterpolation, CZMInterpolationT } from './CZMInterpolation.js';
 import { CZMLabel, CZMLabelT } from './CZMLabel.js';
 import { CZMModel, CZMModelT } from './CZMModel.js';
+import { CZMOrientation, CZMOrientationT } from './CZMOrientation.js';
 import { CZMPath, CZMPathT } from './CZMPath.js';
 import { CZMPoint, CZMPointT } from './CZMPoint.js';
 import { CZMPolygon, CZMPolygonT } from './CZMPolygon.js';
 import { CZMPolyline, CZMPolylineT } from './CZMPolyline.js';
+import { CZMPolylineVolume, CZMPolylineVolumeT } from './CZMPolylineVolume.js';
+import { CZMRectangle, CZMRectangleT } from './CZMRectangle.js';
+import { CZMTileset, CZMTilesetT } from './CZMTileset.js';
+import { CZMViewFrom, CZMViewFromT } from './CZMViewFrom.js';
+import { CZMWall, CZMWallT } from './CZMWall.js';
 
 
 /**
@@ -213,8 +225,183 @@ ELLIPSE(obj?:CZMEllipse):CZMEllipse|null {
   return offset ? (obj || new CZMEllipse()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Orientation (quaternion)
+ */
+ORIENTATION(obj?:CZMOrientation):CZMOrientation|null {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? (obj || new CZMOrientation()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Suggested camera offset
+ */
+VIEW_FROM(obj?:CZMViewFrom):CZMViewFrom|null {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? (obj || new CZMViewFrom()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Whether to delete this object
+ */
+DELETE():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Box properties
+ */
+BOX(obj?:CZMBox):CZMBox|null {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? (obj || new CZMBox()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Corridor properties
+ */
+CORRIDOR(obj?:CZMCorridor):CZMCorridor|null {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? (obj || new CZMCorridor()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Cylinder properties
+ */
+CYLINDER(obj?:CZMCylinder):CZMCylinder|null {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? (obj || new CZMCylinder()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Ellipsoid properties
+ */
+ELLIPSOID(obj?:CZMEllipsoid):CZMEllipsoid|null {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? (obj || new CZMEllipsoid()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Polyline volume properties
+ */
+POLYLINE_VOLUME(obj?:CZMPolylineVolume):CZMPolylineVolume|null {
+  const offset = this.bb!.__offset(this.bb_pos, 54);
+  return offset ? (obj || new CZMPolylineVolume()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Rectangle properties
+ */
+RECTANGLE(obj?:CZMRectangle):CZMRectangle|null {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? (obj || new CZMRectangle()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * 3D Tileset properties
+ */
+TILESET(obj?:CZMTileset):CZMTileset|null {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? (obj || new CZMTileset()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Wall properties
+ */
+WALL(obj?:CZMWall):CZMWall|null {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? (obj || new CZMWall()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Position interpolation settings
+ */
+POSITION_INTERPOLATION(obj?:CZMInterpolation):CZMInterpolation|null {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? (obj || new CZMInterpolation()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Position reference frame (FIXED or INERTIAL)
+ */
+POSITION_REFERENCE_FRAME():string|null
+POSITION_REFERENCE_FRAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+POSITION_REFERENCE_FRAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Position reference to another entity
+ */
+POSITION_REFERENCE():string|null
+POSITION_REFERENCE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+POSITION_REFERENCE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 66);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Orientation epoch (ISO 8601)
+ */
+ORIENTATION_EPOCH():string|null
+ORIENTATION_EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ORIENTATION_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 68);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Orientation sampled data [t, x, y, z, w, t, x, y, z, w, ...]
+ */
+ORIENTATION_ARRAY(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 70);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+orientationArrayLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 70);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+orientationArrayArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 70);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Orientation interpolation settings
+ */
+ORIENTATION_INTERPOLATION(obj?:CZMInterpolation):CZMInterpolation|null {
+  const offset = this.bb!.__offset(this.bb_pos, 72);
+  return offset ? (obj || new CZMInterpolation()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Orientation reference to another entity
+ */
+ORIENTATION_REFERENCE():string|null
+ORIENTATION_REFERENCE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ORIENTATION_REFERENCE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 74);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Generic bag for all time-dynamic (non-static) properties
+ */
+DYNAMIC_PROPERTIES(index: number, obj?:CZMDynamicProperty):CZMDynamicProperty|null {
+  const offset = this.bb!.__offset(this.bb_pos, 76);
+  return offset ? (obj || new CZMDynamicProperty()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+dynamicPropertiesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 76);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startCZMPacket(builder:flatbuffers.Builder) {
-  builder.startObject(18);
+  builder.startObject(37);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -323,6 +510,111 @@ static addEllipse(builder:flatbuffers.Builder, ELLIPSEOffset:flatbuffers.Offset)
   builder.addFieldOffset(17, ELLIPSEOffset, 0);
 }
 
+static addOrientation(builder:flatbuffers.Builder, ORIENTATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(18, ORIENTATIONOffset, 0);
+}
+
+static addViewFrom(builder:flatbuffers.Builder, VIEW_FROMOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(19, VIEW_FROMOffset, 0);
+}
+
+static addDelete(builder:flatbuffers.Builder, DELETE:boolean) {
+  builder.addFieldInt8(20, +DELETE, +false);
+}
+
+static addBox(builder:flatbuffers.Builder, BOXOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(21, BOXOffset, 0);
+}
+
+static addCorridor(builder:flatbuffers.Builder, CORRIDOROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(22, CORRIDOROffset, 0);
+}
+
+static addCylinder(builder:flatbuffers.Builder, CYLINDEROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(23, CYLINDEROffset, 0);
+}
+
+static addEllipsoid(builder:flatbuffers.Builder, ELLIPSOIDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(24, ELLIPSOIDOffset, 0);
+}
+
+static addPolylineVolume(builder:flatbuffers.Builder, POLYLINE_VOLUMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(25, POLYLINE_VOLUMEOffset, 0);
+}
+
+static addRectangle(builder:flatbuffers.Builder, RECTANGLEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(26, RECTANGLEOffset, 0);
+}
+
+static addTileset(builder:flatbuffers.Builder, TILESETOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(27, TILESETOffset, 0);
+}
+
+static addWall(builder:flatbuffers.Builder, WALLOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(28, WALLOffset, 0);
+}
+
+static addPositionInterpolation(builder:flatbuffers.Builder, POSITION_INTERPOLATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(29, POSITION_INTERPOLATIONOffset, 0);
+}
+
+static addPositionReferenceFrame(builder:flatbuffers.Builder, POSITION_REFERENCE_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(30, POSITION_REFERENCE_FRAMEOffset, 0);
+}
+
+static addPositionReference(builder:flatbuffers.Builder, POSITION_REFERENCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(31, POSITION_REFERENCEOffset, 0);
+}
+
+static addOrientationEpoch(builder:flatbuffers.Builder, ORIENTATION_EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(32, ORIENTATION_EPOCHOffset, 0);
+}
+
+static addOrientationArray(builder:flatbuffers.Builder, ORIENTATION_ARRAYOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(33, ORIENTATION_ARRAYOffset, 0);
+}
+
+static createOrientationArrayVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createOrientationArrayVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createOrientationArrayVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startOrientationArrayVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addOrientationInterpolation(builder:flatbuffers.Builder, ORIENTATION_INTERPOLATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(34, ORIENTATION_INTERPOLATIONOffset, 0);
+}
+
+static addOrientationReference(builder:flatbuffers.Builder, ORIENTATION_REFERENCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(35, ORIENTATION_REFERENCEOffset, 0);
+}
+
+static addDynamicProperties(builder:flatbuffers.Builder, DYNAMIC_PROPERTIESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(36, DYNAMIC_PROPERTIESOffset, 0);
+}
+
+static createDynamicPropertiesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startDynamicPropertiesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endCZMPacket(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -348,7 +640,26 @@ unpack(): CZMPacketT {
     (this.POLYGON() !== null ? this.POLYGON()!.unpack() : null),
     (this.MODEL() !== null ? this.MODEL()!.unpack() : null),
     (this.PATH() !== null ? this.PATH()!.unpack() : null),
-    (this.ELLIPSE() !== null ? this.ELLIPSE()!.unpack() : null)
+    (this.ELLIPSE() !== null ? this.ELLIPSE()!.unpack() : null),
+    (this.ORIENTATION() !== null ? this.ORIENTATION()!.unpack() : null),
+    (this.VIEW_FROM() !== null ? this.VIEW_FROM()!.unpack() : null),
+    this.DELETE(),
+    (this.BOX() !== null ? this.BOX()!.unpack() : null),
+    (this.CORRIDOR() !== null ? this.CORRIDOR()!.unpack() : null),
+    (this.CYLINDER() !== null ? this.CYLINDER()!.unpack() : null),
+    (this.ELLIPSOID() !== null ? this.ELLIPSOID()!.unpack() : null),
+    (this.POLYLINE_VOLUME() !== null ? this.POLYLINE_VOLUME()!.unpack() : null),
+    (this.RECTANGLE() !== null ? this.RECTANGLE()!.unpack() : null),
+    (this.TILESET() !== null ? this.TILESET()!.unpack() : null),
+    (this.WALL() !== null ? this.WALL()!.unpack() : null),
+    (this.POSITION_INTERPOLATION() !== null ? this.POSITION_INTERPOLATION()!.unpack() : null),
+    this.POSITION_REFERENCE_FRAME(),
+    this.POSITION_REFERENCE(),
+    this.ORIENTATION_EPOCH(),
+    this.bb!.createScalarList<number>(this.ORIENTATION_ARRAY.bind(this), this.orientationArrayLength()),
+    (this.ORIENTATION_INTERPOLATION() !== null ? this.ORIENTATION_INTERPOLATION()!.unpack() : null),
+    this.ORIENTATION_REFERENCE(),
+    this.bb!.createObjList<CZMDynamicProperty, CZMDynamicPropertyT>(this.DYNAMIC_PROPERTIES.bind(this), this.dynamicPropertiesLength())
   );
 }
 
@@ -372,6 +683,25 @@ unpackTo(_o: CZMPacketT): void {
   _o.MODEL = (this.MODEL() !== null ? this.MODEL()!.unpack() : null);
   _o.PATH = (this.PATH() !== null ? this.PATH()!.unpack() : null);
   _o.ELLIPSE = (this.ELLIPSE() !== null ? this.ELLIPSE()!.unpack() : null);
+  _o.ORIENTATION = (this.ORIENTATION() !== null ? this.ORIENTATION()!.unpack() : null);
+  _o.VIEW_FROM = (this.VIEW_FROM() !== null ? this.VIEW_FROM()!.unpack() : null);
+  _o.DELETE = this.DELETE();
+  _o.BOX = (this.BOX() !== null ? this.BOX()!.unpack() : null);
+  _o.CORRIDOR = (this.CORRIDOR() !== null ? this.CORRIDOR()!.unpack() : null);
+  _o.CYLINDER = (this.CYLINDER() !== null ? this.CYLINDER()!.unpack() : null);
+  _o.ELLIPSOID = (this.ELLIPSOID() !== null ? this.ELLIPSOID()!.unpack() : null);
+  _o.POLYLINE_VOLUME = (this.POLYLINE_VOLUME() !== null ? this.POLYLINE_VOLUME()!.unpack() : null);
+  _o.RECTANGLE = (this.RECTANGLE() !== null ? this.RECTANGLE()!.unpack() : null);
+  _o.TILESET = (this.TILESET() !== null ? this.TILESET()!.unpack() : null);
+  _o.WALL = (this.WALL() !== null ? this.WALL()!.unpack() : null);
+  _o.POSITION_INTERPOLATION = (this.POSITION_INTERPOLATION() !== null ? this.POSITION_INTERPOLATION()!.unpack() : null);
+  _o.POSITION_REFERENCE_FRAME = this.POSITION_REFERENCE_FRAME();
+  _o.POSITION_REFERENCE = this.POSITION_REFERENCE();
+  _o.ORIENTATION_EPOCH = this.ORIENTATION_EPOCH();
+  _o.ORIENTATION_ARRAY = this.bb!.createScalarList<number>(this.ORIENTATION_ARRAY.bind(this), this.orientationArrayLength());
+  _o.ORIENTATION_INTERPOLATION = (this.ORIENTATION_INTERPOLATION() !== null ? this.ORIENTATION_INTERPOLATION()!.unpack() : null);
+  _o.ORIENTATION_REFERENCE = this.ORIENTATION_REFERENCE();
+  _o.DYNAMIC_PROPERTIES = this.bb!.createObjList<CZMDynamicProperty, CZMDynamicPropertyT>(this.DYNAMIC_PROPERTIES.bind(this), this.dynamicPropertiesLength());
 }
 }
 
@@ -394,7 +724,26 @@ constructor(
   public POLYGON: CZMPolygonT|null = null,
   public MODEL: CZMModelT|null = null,
   public PATH: CZMPathT|null = null,
-  public ELLIPSE: CZMEllipseT|null = null
+  public ELLIPSE: CZMEllipseT|null = null,
+  public ORIENTATION: CZMOrientationT|null = null,
+  public VIEW_FROM: CZMViewFromT|null = null,
+  public DELETE: boolean = false,
+  public BOX: CZMBoxT|null = null,
+  public CORRIDOR: CZMCorridorT|null = null,
+  public CYLINDER: CZMCylinderT|null = null,
+  public ELLIPSOID: CZMEllipsoidT|null = null,
+  public POLYLINE_VOLUME: CZMPolylineVolumeT|null = null,
+  public RECTANGLE: CZMRectangleT|null = null,
+  public TILESET: CZMTilesetT|null = null,
+  public WALL: CZMWallT|null = null,
+  public POSITION_INTERPOLATION: CZMInterpolationT|null = null,
+  public POSITION_REFERENCE_FRAME: string|Uint8Array|null = null,
+  public POSITION_REFERENCE: string|Uint8Array|null = null,
+  public ORIENTATION_EPOCH: string|Uint8Array|null = null,
+  public ORIENTATION_ARRAY: (number)[] = [],
+  public ORIENTATION_INTERPOLATION: CZMInterpolationT|null = null,
+  public ORIENTATION_REFERENCE: string|Uint8Array|null = null,
+  public DYNAMIC_PROPERTIES: (CZMDynamicPropertyT)[] = []
 ){}
 
 
@@ -417,6 +766,24 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const MODEL = (this.MODEL !== null ? this.MODEL!.pack(builder) : 0);
   const PATH = (this.PATH !== null ? this.PATH!.pack(builder) : 0);
   const ELLIPSE = (this.ELLIPSE !== null ? this.ELLIPSE!.pack(builder) : 0);
+  const ORIENTATION = (this.ORIENTATION !== null ? this.ORIENTATION!.pack(builder) : 0);
+  const VIEW_FROM = (this.VIEW_FROM !== null ? this.VIEW_FROM!.pack(builder) : 0);
+  const BOX = (this.BOX !== null ? this.BOX!.pack(builder) : 0);
+  const CORRIDOR = (this.CORRIDOR !== null ? this.CORRIDOR!.pack(builder) : 0);
+  const CYLINDER = (this.CYLINDER !== null ? this.CYLINDER!.pack(builder) : 0);
+  const ELLIPSOID = (this.ELLIPSOID !== null ? this.ELLIPSOID!.pack(builder) : 0);
+  const POLYLINE_VOLUME = (this.POLYLINE_VOLUME !== null ? this.POLYLINE_VOLUME!.pack(builder) : 0);
+  const RECTANGLE = (this.RECTANGLE !== null ? this.RECTANGLE!.pack(builder) : 0);
+  const TILESET = (this.TILESET !== null ? this.TILESET!.pack(builder) : 0);
+  const WALL = (this.WALL !== null ? this.WALL!.pack(builder) : 0);
+  const POSITION_INTERPOLATION = (this.POSITION_INTERPOLATION !== null ? this.POSITION_INTERPOLATION!.pack(builder) : 0);
+  const POSITION_REFERENCE_FRAME = (this.POSITION_REFERENCE_FRAME !== null ? builder.createString(this.POSITION_REFERENCE_FRAME!) : 0);
+  const POSITION_REFERENCE = (this.POSITION_REFERENCE !== null ? builder.createString(this.POSITION_REFERENCE!) : 0);
+  const ORIENTATION_EPOCH = (this.ORIENTATION_EPOCH !== null ? builder.createString(this.ORIENTATION_EPOCH!) : 0);
+  const ORIENTATION_ARRAY = CZMPacket.createOrientationArrayVector(builder, this.ORIENTATION_ARRAY);
+  const ORIENTATION_INTERPOLATION = (this.ORIENTATION_INTERPOLATION !== null ? this.ORIENTATION_INTERPOLATION!.pack(builder) : 0);
+  const ORIENTATION_REFERENCE = (this.ORIENTATION_REFERENCE !== null ? builder.createString(this.ORIENTATION_REFERENCE!) : 0);
+  const DYNAMIC_PROPERTIES = CZMPacket.createDynamicPropertiesVector(builder, builder.createObjectOffsetList(this.DYNAMIC_PROPERTIES));
 
   CZMPacket.startCZMPacket(builder);
   CZMPacket.addId(builder, ID);
@@ -437,6 +804,25 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   CZMPacket.addModel(builder, MODEL);
   CZMPacket.addPath(builder, PATH);
   CZMPacket.addEllipse(builder, ELLIPSE);
+  CZMPacket.addOrientation(builder, ORIENTATION);
+  CZMPacket.addViewFrom(builder, VIEW_FROM);
+  CZMPacket.addDelete(builder, this.DELETE);
+  CZMPacket.addBox(builder, BOX);
+  CZMPacket.addCorridor(builder, CORRIDOR);
+  CZMPacket.addCylinder(builder, CYLINDER);
+  CZMPacket.addEllipsoid(builder, ELLIPSOID);
+  CZMPacket.addPolylineVolume(builder, POLYLINE_VOLUME);
+  CZMPacket.addRectangle(builder, RECTANGLE);
+  CZMPacket.addTileset(builder, TILESET);
+  CZMPacket.addWall(builder, WALL);
+  CZMPacket.addPositionInterpolation(builder, POSITION_INTERPOLATION);
+  CZMPacket.addPositionReferenceFrame(builder, POSITION_REFERENCE_FRAME);
+  CZMPacket.addPositionReference(builder, POSITION_REFERENCE);
+  CZMPacket.addOrientationEpoch(builder, ORIENTATION_EPOCH);
+  CZMPacket.addOrientationArray(builder, ORIENTATION_ARRAY);
+  CZMPacket.addOrientationInterpolation(builder, ORIENTATION_INTERPOLATION);
+  CZMPacket.addOrientationReference(builder, ORIENTATION_REFERENCE);
+  CZMPacket.addDynamicProperties(builder, DYNAMIC_PROPERTIES);
 
   return CZMPacket.endCZMPacket(builder);
 }

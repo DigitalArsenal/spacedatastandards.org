@@ -69,6 +69,14 @@ class KMLLineString : Table() {
             val o = __offset(10)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * gx:drawOrder
+     */
+    val GX_DRAW_ORDER : Int
+        get() {
+            val o = __offset(12)
+            return if(o != 0) bb.getInt(o + bb_pos) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsKMLLineString(_bb: ByteBuffer): KMLLineString = getRootAsKMLLineString(_bb, KMLLineString())
@@ -76,15 +84,16 @@ class KMLLineString : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLLineString(builder: FlatBufferBuilder, COORDINATESOffset: Int, ALTITUDE_MODE: Byte, EXTRUDE: Boolean, TESSELLATE: Boolean) : Int {
-            builder.startTable(4)
+        fun createKMLLineString(builder: FlatBufferBuilder, COORDINATESOffset: Int, ALTITUDE_MODE: Byte, EXTRUDE: Boolean, TESSELLATE: Boolean, GX_DRAW_ORDER: Int) : Int {
+            builder.startTable(5)
+            addGX_DRAW_ORDER(builder, GX_DRAW_ORDER)
             addCOORDINATES(builder, COORDINATESOffset)
             addTESSELLATE(builder, TESSELLATE)
             addEXTRUDE(builder, EXTRUDE)
             addALTITUDE_MODE(builder, ALTITUDE_MODE)
             return endKMLLineString(builder)
         }
-        fun startKMLLineString(builder: FlatBufferBuilder) = builder.startTable(4)
+        fun startKMLLineString(builder: FlatBufferBuilder) = builder.startTable(5)
         fun addCOORDINATES(builder: FlatBufferBuilder, COORDINATES: Int) = builder.addOffset(0, COORDINATES, 0)
         fun createCoordinatesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
@@ -97,6 +106,7 @@ class KMLLineString : Table() {
         fun addALTITUDE_MODE(builder: FlatBufferBuilder, ALTITUDE_MODE: Byte) = builder.addByte(1, ALTITUDE_MODE, 0)
         fun addEXTRUDE(builder: FlatBufferBuilder, EXTRUDE: Boolean) = builder.addBoolean(2, EXTRUDE, false)
         fun addTESSELLATE(builder: FlatBufferBuilder, TESSELLATE: Boolean) = builder.addBoolean(3, TESSELLATE, false)
+        fun addGX_DRAW_ORDER(builder: FlatBufferBuilder, GX_DRAW_ORDER: Int) = builder.addInt(4, GX_DRAW_ORDER, 0)
         fun endKMLLineString(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

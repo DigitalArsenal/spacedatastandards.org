@@ -21,6 +21,38 @@
       "type" : "string",
       "enum": ["BASELINE", "BOTTOM", "CENTER", "TOP"]
     },
+    "CZMShadowMode" : {
+      "type" : "string",
+      "enum": ["DISABLED", "ENABLED", "CAST_ONLY", "RECEIVE_ONLY"]
+    },
+    "CZMColorBlendMode" : {
+      "type" : "string",
+      "enum": ["HIGHLIGHT", "REPLACE", "MIX"]
+    },
+    "CZMCornerType" : {
+      "type" : "string",
+      "enum": ["ROUNDED", "MITERED", "BEVELED"]
+    },
+    "CZMArcType" : {
+      "type" : "string",
+      "enum": ["NONE", "GEODESIC", "RHUMB"]
+    },
+    "CZMStripeOrientation" : {
+      "type" : "string",
+      "enum": ["HORIZONTAL", "VERTICAL"]
+    },
+    "CZMClockRange" : {
+      "type" : "string",
+      "enum": ["UNBOUNDED", "CLAMPED", "LOOP_STOP"]
+    },
+    "CZMClockStep" : {
+      "type" : "string",
+      "enum": ["TICK_DEPENDENT", "SYSTEM_CLOCK_MULTIPLIER", "SYSTEM_CLOCK"]
+    },
+    "CZMDynValueType" : {
+      "type" : "string",
+      "enum": ["NUMBER", "BOOLEAN", "STRING", "COLOR", "CARTESIAN3", "CARTESIAN2", "NEAR_FAR_SCALAR", "UNIT_QUATERNION"]
+    },
     "CZMInterval" : {
       "type" : "object",
       "description" : "Time interval for time-dynamic properties",
@@ -28,6 +60,102 @@
         "INTERVAL" : {
                 "type" : "string",
                 "description" : "ISO 8601 interval string (e.g. \"2012-03-15T10:00:00Z/2012-03-16T10:00:00Z\")"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMInterpolation" : {
+      "type" : "object",
+      "description" : "Interpolation settings for sampled data",
+      "properties" : {
+        "ALGORITHM" : {
+                "type" : "string",
+                "description" : "Algorithm: LINEAR, LAGRANGE, HERMITE"
+              },
+        "DEGREE" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Polynomial degree (1=linear, 5=typical Lagrange)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMDynInterval" : {
+      "type" : "object",
+      "description" : "A single interval in a time-varying property",
+      "properties" : {
+        "INTERVAL" : {
+                "type" : "string",
+                "description" : "ISO 8601 interval string"
+              },
+        "VALUE_TYPE" : {
+                "$ref" : "#/definitions/CZMDynValueType",
+                "description" : "Value type"
+              },
+        "NUMBER_VALUE" : {
+                "type" : "number",
+                "description" : "Numeric value (when VALUE_TYPE is NUMBER)"
+              },
+        "BOOLEAN_VALUE" : {
+                "type" : "boolean",
+                "description" : "Boolean value (when VALUE_TYPE is BOOLEAN)"
+              },
+        "STRING_VALUE" : {
+                "type" : "string",
+                "description" : "String value (when VALUE_TYPE is STRING)"
+              },
+        "COLOR_VALUE" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Color value (when VALUE_TYPE is COLOR)"
+              },
+        "ARRAY_VALUE" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Array value for cartesian/nearFarScalar types"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMDynSampled" : {
+      "type" : "object",
+      "description" : "Sampled time-varying data",
+      "properties" : {
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Reference epoch (ISO 8601)"
+              },
+        "VALUE_TYPE" : {
+                "$ref" : "#/definitions/CZMDynValueType",
+                "description" : "Value type determines stride through DATA"
+              },
+        "DATA" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Interleaved [time, value(s), ...] — stride depends on VALUE_TYPE"
+              },
+        "INTERPOLATION" : {
+                "$ref" : "#/definitions/CZMInterpolation",
+                "description" : "Interpolation settings"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMDynamicProperty" : {
+      "type" : "object",
+      "description" : "A single time-dynamic property (non-static value)",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Dotted path name, e.g. \"billboard.scale\", \"point.color\""
+              },
+        "SAMPLED" : {
+                "$ref" : "#/definitions/CZMDynSampled",
+                "description" : "Sampled data (when property uses epoch + data array)"
+              },
+        "INTERVALS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CZMDynInterval"},
+                "description" : "Interval-based values"
+              },
+        "REFERENCE" : {
+                "type" : "string",
+                "description" : "Reference to another entity's property"
               }
       },
       "additionalProperties" : false
@@ -116,6 +244,316 @@
       },
       "additionalProperties" : false
     },
+    "CZMDistanceDisplayCondition" : {
+      "type" : "object",
+      "description" : "Distance display condition",
+      "properties" : {
+        "NEAR_DISTANCE" : {
+                "type" : "number",
+                "description" : "Near distance in meters"
+              },
+        "FAR_DISTANCE" : {
+                "type" : "number",
+                "description" : "Far distance in meters"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMOrientation" : {
+      "type" : "object",
+      "description" : "Orientation as unit quaternion",
+      "properties" : {
+        "UNIT_QUATERNION_X" : {
+                "type" : "number",
+                "description" : "X component"
+              },
+        "UNIT_QUATERNION_Y" : {
+                "type" : "number",
+                "description" : "Y component"
+              },
+        "UNIT_QUATERNION_Z" : {
+                "type" : "number",
+                "description" : "Z component"
+              },
+        "UNIT_QUATERNION_W" : {
+                "type" : "number",
+                "description" : "W component"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMViewFrom" : {
+      "type" : "object",
+      "description" : "Suggested camera offset from entity",
+      "properties" : {
+        "X" : {
+                "type" : "number",
+                "description" : "X offset in meters"
+              },
+        "Y" : {
+                "type" : "number",
+                "description" : "Y offset in meters"
+              },
+        "Z" : {
+                "type" : "number",
+                "description" : "Z offset in meters"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMSolidColorMaterial" : {
+      "type" : "object",
+      "description" : "Solid color material",
+      "properties" : {
+        "COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Color"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMImageMaterial" : {
+      "type" : "object",
+      "description" : "Image material",
+      "properties" : {
+        "IMAGE" : {
+                "type" : "string",
+                "description" : "Image URI"
+              },
+        "REPEAT_X" : {
+                "type" : "number",
+                "description" : "Repeat X"
+              },
+        "REPEAT_Y" : {
+                "type" : "number",
+                "description" : "Repeat Y"
+              },
+        "COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Color tint"
+              },
+        "TRANSPARENT" : {
+                "type" : "boolean",
+                "description" : "Whether the image has transparency"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMGridMaterial" : {
+      "type" : "object",
+      "description" : "Grid material",
+      "properties" : {
+        "COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Grid line color"
+              },
+        "CELL_ALPHA" : {
+                "type" : "number",
+                "description" : "Cell alpha"
+              },
+        "LINE_COUNT_X" : {
+                "type" : "number",
+                "description" : "Number of grid lines along X"
+              },
+        "LINE_COUNT_Y" : {
+                "type" : "number",
+                "description" : "Number of grid lines along Y"
+              },
+        "LINE_THICKNESS_X" : {
+                "type" : "number",
+                "description" : "Thickness of grid lines along X"
+              },
+        "LINE_THICKNESS_Y" : {
+                "type" : "number",
+                "description" : "Thickness of grid lines along Y"
+              },
+        "LINE_OFFSET_X" : {
+                "type" : "number",
+                "description" : "Offset of grid lines along X"
+              },
+        "LINE_OFFSET_Y" : {
+                "type" : "number",
+                "description" : "Offset of grid lines along Y"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMStripeMaterial" : {
+      "type" : "object",
+      "description" : "Stripe material",
+      "properties" : {
+        "ORIENTATION" : {
+                "type" : "string",
+                "description" : "Stripe orientation"
+              },
+        "EVEN_COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Even color"
+              },
+        "ODD_COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Odd color"
+              },
+        "OFFSET" : {
+                "type" : "number",
+                "description" : "Offset"
+              },
+        "REPEAT_COUNT" : {
+                "type" : "number",
+                "description" : "Number of times to repeat"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMCheckerboardMaterial" : {
+      "type" : "object",
+      "description" : "Checkerboard material",
+      "properties" : {
+        "EVEN_COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Even color"
+              },
+        "ODD_COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Odd color"
+              },
+        "REPEAT_X" : {
+                "type" : "number",
+                "description" : "Repeat X"
+              },
+        "REPEAT_Y" : {
+                "type" : "number",
+                "description" : "Repeat Y"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMMaterial" : {
+      "type" : "object",
+      "description" : "Surface material (used by polygon, ellipse, box, etc.)",
+      "properties" : {
+        "SOLID_COLOR" : {
+                "$ref" : "#/definitions/CZMSolidColorMaterial",
+                "description" : "Solid color material"
+              },
+        "IMAGE" : {
+                "$ref" : "#/definitions/CZMImageMaterial",
+                "description" : "Image material"
+              },
+        "GRID" : {
+                "$ref" : "#/definitions/CZMGridMaterial",
+                "description" : "Grid material"
+              },
+        "STRIPE" : {
+                "$ref" : "#/definitions/CZMStripeMaterial",
+                "description" : "Stripe material"
+              },
+        "CHECKERBOARD" : {
+                "$ref" : "#/definitions/CZMCheckerboardMaterial",
+                "description" : "Checkerboard material"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMPolylineOutlineMaterial" : {
+      "type" : "object",
+      "description" : "Polyline outline material",
+      "properties" : {
+        "COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Line color"
+              },
+        "OUTLINE_COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Outline color"
+              },
+        "OUTLINE_WIDTH" : {
+                "type" : "number",
+                "description" : "Outline width"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMPolylineArrowMaterial" : {
+      "type" : "object",
+      "description" : "Polyline arrow material",
+      "properties" : {
+        "COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Arrow color"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMPolylineDashMaterial" : {
+      "type" : "object",
+      "description" : "Polyline dash material",
+      "properties" : {
+        "COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Dash color"
+              },
+        "GAP_COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Gap color"
+              },
+        "DASH_LENGTH" : {
+                "type" : "number",
+                "description" : "Dash length in pixels"
+              },
+        "DASH_PATTERN" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Dash pattern (bitmask)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMPolylineGlowMaterial" : {
+      "type" : "object",
+      "description" : "Polyline glow material",
+      "properties" : {
+        "COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Glow color"
+              },
+        "GLOW_POWER" : {
+                "type" : "number",
+                "description" : "Glow power"
+              },
+        "TAPER_POWER" : {
+                "type" : "number",
+                "description" : "Taper power"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMPolylineMaterial" : {
+      "type" : "object",
+      "description" : "Polyline material (used by polyline, path)",
+      "properties" : {
+        "SOLID_COLOR" : {
+                "$ref" : "#/definitions/CZMSolidColorMaterial",
+                "description" : "Solid color material"
+              },
+        "POLYLINE_OUTLINE" : {
+                "$ref" : "#/definitions/CZMPolylineOutlineMaterial",
+                "description" : "Polyline outline material"
+              },
+        "POLYLINE_ARROW" : {
+                "$ref" : "#/definitions/CZMPolylineArrowMaterial",
+                "description" : "Polyline arrow material"
+              },
+        "POLYLINE_DASH" : {
+                "$ref" : "#/definitions/CZMPolylineDashMaterial",
+                "description" : "Polyline dash material"
+              },
+        "POLYLINE_GLOW" : {
+                "$ref" : "#/definitions/CZMPolylineGlowMaterial",
+                "description" : "Polyline glow material"
+              }
+      },
+      "additionalProperties" : false
+    },
     "CZMBillboard" : {
       "type" : "object",
       "description" : "Billboard (icon) properties",
@@ -159,6 +597,54 @@
         "TRANSLUCENCY_BY_DISTANCE" : {
                 "$ref" : "#/definitions/CZMNearFarScalar",
                 "description" : "Translucency by distance"
+              },
+        "ROTATION" : {
+                "type" : "number",
+                "description" : "Rotation in radians"
+              },
+        "SIZE_IN_METERS" : {
+                "type" : "boolean",
+                "description" : "Whether size is in meters"
+              },
+        "WIDTH" : {
+                "type" : "number",
+                "description" : "Width in pixels"
+              },
+        "HEIGHT" : {
+                "type" : "number",
+                "description" : "Height in pixels"
+              },
+        "EYE_OFFSET_X" : {
+                "type" : "number",
+                "description" : "Eye offset X in meters"
+              },
+        "EYE_OFFSET_Y" : {
+                "type" : "number",
+                "description" : "Eye offset Y in meters"
+              },
+        "EYE_OFFSET_Z" : {
+                "type" : "number",
+                "description" : "Eye offset Z in meters"
+              },
+        "SCALE_BY_DISTANCE" : {
+                "$ref" : "#/definitions/CZMNearFarScalar",
+                "description" : "Scale by distance"
+              },
+        "PIXEL_OFFSET_SCALE_BY_DISTANCE" : {
+                "$ref" : "#/definitions/CZMNearFarScalar",
+                "description" : "Pixel offset scale by distance"
+              },
+        "DISTANCE_DISPLAY_CONDITION_NEAR" : {
+                "type" : "number",
+                "description" : "Distance display condition near"
+              },
+        "DISTANCE_DISPLAY_CONDITION_FAR" : {
+                "type" : "number",
+                "description" : "Distance display condition far"
+              },
+        "DISABLE_DEPTH_TEST_DISTANCE" : {
+                "type" : "number",
+                "description" : "Disable depth test distance"
               }
       },
       "additionalProperties" : false
@@ -218,6 +704,58 @@
         "HEIGHT_REFERENCE" : {
                 "$ref" : "#/definitions/CZMHeightReference",
                 "description" : "Height reference"
+              },
+        "SHOW_BACKGROUND" : {
+                "type" : "boolean",
+                "description" : "Whether to show background"
+              },
+        "BACKGROUND_COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Background color"
+              },
+        "BACKGROUND_PADDING_X" : {
+                "type" : "number",
+                "description" : "Background padding X"
+              },
+        "BACKGROUND_PADDING_Y" : {
+                "type" : "number",
+                "description" : "Background padding Y"
+              },
+        "EYE_OFFSET_X" : {
+                "type" : "number",
+                "description" : "Eye offset X in meters"
+              },
+        "EYE_OFFSET_Y" : {
+                "type" : "number",
+                "description" : "Eye offset Y in meters"
+              },
+        "EYE_OFFSET_Z" : {
+                "type" : "number",
+                "description" : "Eye offset Z in meters"
+              },
+        "TRANSLUCENCY_BY_DISTANCE" : {
+                "$ref" : "#/definitions/CZMNearFarScalar",
+                "description" : "Translucency by distance"
+              },
+        "PIXEL_OFFSET_SCALE_BY_DISTANCE" : {
+                "$ref" : "#/definitions/CZMNearFarScalar",
+                "description" : "Pixel offset scale by distance"
+              },
+        "SCALE_BY_DISTANCE" : {
+                "$ref" : "#/definitions/CZMNearFarScalar",
+                "description" : "Scale by distance"
+              },
+        "DISTANCE_DISPLAY_CONDITION_NEAR" : {
+                "type" : "number",
+                "description" : "Distance display condition near"
+              },
+        "DISTANCE_DISPLAY_CONDITION_FAR" : {
+                "type" : "number",
+                "description" : "Distance display condition far"
+              },
+        "DISABLE_DEPTH_TEST_DISTANCE" : {
+                "type" : "number",
+                "description" : "Disable depth test distance"
               }
       },
       "additionalProperties" : false
@@ -249,6 +787,26 @@
         "HEIGHT_REFERENCE" : {
                 "$ref" : "#/definitions/CZMHeightReference",
                 "description" : "Height reference"
+              },
+        "SCALE_BY_DISTANCE" : {
+                "$ref" : "#/definitions/CZMNearFarScalar",
+                "description" : "Scale by distance"
+              },
+        "TRANSLUCENCY_BY_DISTANCE" : {
+                "$ref" : "#/definitions/CZMNearFarScalar",
+                "description" : "Translucency by distance"
+              },
+        "DISTANCE_DISPLAY_CONDITION_NEAR" : {
+                "type" : "number",
+                "description" : "Distance display condition near"
+              },
+        "DISTANCE_DISPLAY_CONDITION_FAR" : {
+                "type" : "number",
+                "description" : "Distance display condition far"
+              },
+        "DISABLE_DEPTH_TEST_DISTANCE" : {
+                "type" : "number",
+                "description" : "Disable depth test distance"
               }
       },
       "additionalProperties" : false
@@ -275,11 +833,39 @@
               },
         "COLOR" : {
                 "$ref" : "#/definitions/CZMColor",
-                "description" : "Line color (solid color material)"
+                "description" : "Line color (solid color material, legacy)"
               },
         "CLAMP_TO_GROUND" : {
                 "type" : "boolean",
                 "description" : "Whether to clamp to ground"
+              },
+        "ARC_TYPE" : {
+                "type" : "string",
+                "description" : "Arc type"
+              },
+        "GRANULARITY" : {
+                "type" : "number",
+                "description" : "Granularity in radians"
+              },
+        "MATERIAL" : {
+                "$ref" : "#/definitions/CZMPolylineMaterial",
+                "description" : "Full polyline material"
+              },
+        "SHADOWS" : {
+                "type" : "string",
+                "description" : "Shadow mode"
+              },
+        "DEPTH_FAIL_MATERIAL" : {
+                "$ref" : "#/definitions/CZMPolylineMaterial",
+                "description" : "Depth fail material"
+              },
+        "CLASSIFICATION_TYPE" : {
+                "type" : "string",
+                "description" : "Classification type"
+              },
+        "Z_INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Z-index for ordering"
               }
       },
       "additionalProperties" : false
@@ -306,7 +892,7 @@
               },
         "COLOR" : {
                 "$ref" : "#/definitions/CZMColor",
-                "description" : "Fill color (solid color material)"
+                "description" : "Fill color (solid color material, legacy)"
               },
         "OUTLINE" : {
                 "type" : "boolean",
@@ -327,6 +913,73 @@
         "CLASSIFICATION_TYPE" : {
                 "$ref" : "#/definitions/CZMClassificationType",
                 "description" : "Classification type"
+              },
+        "HOLES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CZMPolygonHole"},
+                "description" : "Holes (position lists: each hole is [lon,lat,h,...])"
+              },
+        "ARC_TYPE" : {
+                "type" : "string",
+                "description" : "Arc type"
+              },
+        "HEIGHT" : {
+                "type" : "number",
+                "description" : "Height in meters"
+              },
+        "EXTRUDED_HEIGHT_REFERENCE" : {
+                "type" : "string",
+                "description" : "Extruded height reference"
+              },
+        "ST_ROTATION" : {
+                "type" : "number",
+                "description" : "Texture rotation in radians"
+              },
+        "GRANULARITY" : {
+                "type" : "number",
+                "description" : "Granularity in radians"
+              },
+        "MATERIAL" : {
+                "$ref" : "#/definitions/CZMMaterial",
+                "description" : "Full surface material"
+              },
+        "OUTLINE_WIDTH" : {
+                "type" : "number",
+                "description" : "Outline width in pixels"
+              },
+        "PER_POSITION_HEIGHT" : {
+                "type" : "boolean",
+                "description" : "Whether to use per-position heights"
+              },
+        "CLOSE_TOP" : {
+                "type" : "boolean",
+                "description" : "Whether to close the top of extruded polygon"
+              },
+        "CLOSE_BOTTOM" : {
+                "type" : "boolean",
+                "description" : "Whether to close the bottom of extruded polygon"
+              },
+        "SHADOWS" : {
+                "type" : "string",
+                "description" : "Shadow mode"
+              },
+        "Z_INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Z-index for ordering"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMPolygonHole" : {
+      "type" : "object",
+      "description" : "Polygon hole position list",
+      "properties" : {
+        "POSITIONS_CARTOGRAPHIC_DEGREES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Positions as cartographic degrees [lon, lat, height, ...]"
+              },
+        "POSITIONS_CARTESIAN" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Positions as Cartesian [X, Y, Z, ...]"
               }
       },
       "additionalProperties" : false
@@ -362,6 +1015,34 @@
         "COLOR" : {
                 "$ref" : "#/definitions/CZMColor",
                 "description" : "Color tint"
+              },
+        "INCREMENTALLY_LOAD_TEXTURES" : {
+                "type" : "boolean",
+                "description" : "Whether to incrementally load textures"
+              },
+        "RUN_ANIMATIONS" : {
+                "type" : "boolean",
+                "description" : "Whether to run animations"
+              },
+        "SHADOWS" : {
+                "type" : "string",
+                "description" : "Shadow mode"
+              },
+        "SILHOUETTE_COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Silhouette color"
+              },
+        "SILHOUETTE_SIZE" : {
+                "type" : "number",
+                "description" : "Silhouette size in pixels"
+              },
+        "COLOR_BLEND_MODE" : {
+                "type" : "string",
+                "description" : "Color blend mode"
+              },
+        "COLOR_BLEND_AMOUNT" : {
+                "type" : "number",
+                "description" : "Color blend amount (0-1)"
               }
       },
       "additionalProperties" : false
@@ -388,11 +1069,15 @@
               },
         "COLOR" : {
                 "$ref" : "#/definitions/CZMColor",
-                "description" : "Path color"
+                "description" : "Path color (legacy solid color)"
               },
         "RESOLUTION" : {
                 "type" : "number",
                 "description" : "Resolution in seconds"
+              },
+        "MATERIAL" : {
+                "$ref" : "#/definitions/CZMPolylineMaterial",
+                "description" : "Full polyline material"
               }
       },
       "additionalProperties" : false
@@ -423,7 +1108,7 @@
               },
         "COLOR" : {
                 "$ref" : "#/definitions/CZMColor",
-                "description" : "Fill color"
+                "description" : "Fill color (legacy solid color)"
               },
         "OUTLINE" : {
                 "type" : "boolean",
@@ -440,6 +1125,538 @@
         "HEIGHT_REFERENCE" : {
                 "$ref" : "#/definitions/CZMHeightReference",
                 "description" : "Height reference"
+              },
+        "EXTRUDED_HEIGHT" : {
+                "type" : "number",
+                "description" : "Extruded height in meters"
+              },
+        "EXTRUDED_HEIGHT_REFERENCE" : {
+                "type" : "string",
+                "description" : "Extruded height reference"
+              },
+        "ST_ROTATION" : {
+                "type" : "number",
+                "description" : "Texture rotation in radians"
+              },
+        "GRANULARITY" : {
+                "type" : "number",
+                "description" : "Granularity in radians"
+              },
+        "MATERIAL" : {
+                "$ref" : "#/definitions/CZMMaterial",
+                "description" : "Full surface material"
+              },
+        "OUTLINE_WIDTH" : {
+                "type" : "number",
+                "description" : "Outline width in pixels"
+              },
+        "NUMBER_OF_VERTICAL_LINES" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Number of vertical lines"
+              },
+        "SHADOWS" : {
+                "type" : "string",
+                "description" : "Shadow mode"
+              },
+        "CLASSIFICATION_TYPE" : {
+                "type" : "string",
+                "description" : "Classification type"
+              },
+        "Z_INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Z-index for ordering"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMBox" : {
+      "type" : "object",
+      "description" : "Box (rectangular cuboid)",
+      "properties" : {
+        "SHOW" : {
+                "type" : "boolean",
+                "description" : "Whether the box is displayed"
+              },
+        "DIMENSIONS_X" : {
+                "type" : "number",
+                "description" : "Width (X) in meters"
+              },
+        "DIMENSIONS_Y" : {
+                "type" : "number",
+                "description" : "Depth (Y) in meters"
+              },
+        "DIMENSIONS_Z" : {
+                "type" : "number",
+                "description" : "Height (Z) in meters"
+              },
+        "HEIGHT_REFERENCE" : {
+                "type" : "string",
+                "description" : "Height reference"
+              },
+        "FILL" : {
+                "type" : "boolean",
+                "description" : "Fill flag"
+              },
+        "MATERIAL" : {
+                "$ref" : "#/definitions/CZMMaterial",
+                "description" : "Surface material"
+              },
+        "OUTLINE" : {
+                "type" : "boolean",
+                "description" : "Outline flag"
+              },
+        "OUTLINE_COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Outline color"
+              },
+        "OUTLINE_WIDTH" : {
+                "type" : "number",
+                "description" : "Outline width"
+              },
+        "SHADOWS" : {
+                "type" : "string",
+                "description" : "Shadow mode"
+              },
+        "DISTANCE_DISPLAY_CONDITION_NEAR" : {
+                "type" : "number",
+                "description" : "Distance display condition near"
+              },
+        "DISTANCE_DISPLAY_CONDITION_FAR" : {
+                "type" : "number",
+                "description" : "Distance display condition far"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMCorridor" : {
+      "type" : "object",
+      "description" : "Corridor (centerline + width shape)",
+      "properties" : {
+        "SHOW" : {
+                "type" : "boolean",
+                "description" : "Whether the corridor is displayed"
+              },
+        "POSITIONS_CARTOGRAPHIC_DEGREES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Positions as cartographic degrees"
+              },
+        "POSITIONS_CARTESIAN" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Positions as Cartesian"
+              },
+        "WIDTH" : {
+                "type" : "number",
+                "description" : "Width in meters"
+              },
+        "HEIGHT" : {
+                "type" : "number",
+                "description" : "Height in meters"
+              },
+        "HEIGHT_REFERENCE" : {
+                "type" : "string",
+                "description" : "Height reference"
+              },
+        "EXTRUDED_HEIGHT" : {
+                "type" : "number",
+                "description" : "Extruded height"
+              },
+        "EXTRUDED_HEIGHT_REFERENCE" : {
+                "type" : "string",
+                "description" : "Extruded height reference"
+              },
+        "CORNER_TYPE" : {
+                "type" : "string",
+                "description" : "Corner type"
+              },
+        "GRANULARITY" : {
+                "type" : "number",
+                "description" : "Granularity in radians"
+              },
+        "FILL" : {
+                "type" : "boolean",
+                "description" : "Fill flag"
+              },
+        "MATERIAL" : {
+                "$ref" : "#/definitions/CZMMaterial",
+                "description" : "Surface material"
+              },
+        "OUTLINE" : {
+                "type" : "boolean",
+                "description" : "Outline flag"
+              },
+        "OUTLINE_COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Outline color"
+              },
+        "OUTLINE_WIDTH" : {
+                "type" : "number",
+                "description" : "Outline width"
+              },
+        "SHADOWS" : {
+                "type" : "string",
+                "description" : "Shadow mode"
+              },
+        "CLASSIFICATION_TYPE" : {
+                "type" : "string",
+                "description" : "Classification type"
+              },
+        "Z_INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Z-index for ordering"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMCylinder" : {
+      "type" : "object",
+      "description" : "Cylinder or cone",
+      "properties" : {
+        "SHOW" : {
+                "type" : "boolean",
+                "description" : "Whether the cylinder is displayed"
+              },
+        "LENGTH" : {
+                "type" : "number",
+                "description" : "Length in meters"
+              },
+        "TOP_RADIUS" : {
+                "type" : "number",
+                "description" : "Top radius in meters"
+              },
+        "BOTTOM_RADIUS" : {
+                "type" : "number",
+                "description" : "Bottom radius in meters"
+              },
+        "HEIGHT_REFERENCE" : {
+                "type" : "string",
+                "description" : "Height reference"
+              },
+        "FILL" : {
+                "type" : "boolean",
+                "description" : "Fill flag"
+              },
+        "MATERIAL" : {
+                "$ref" : "#/definitions/CZMMaterial",
+                "description" : "Surface material"
+              },
+        "OUTLINE" : {
+                "type" : "boolean",
+                "description" : "Outline flag"
+              },
+        "OUTLINE_COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Outline color"
+              },
+        "OUTLINE_WIDTH" : {
+                "type" : "number",
+                "description" : "Outline width"
+              },
+        "NUMBER_OF_VERTICAL_LINES" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Number of vertical lines"
+              },
+        "SLICES" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Number of slices"
+              },
+        "SHADOWS" : {
+                "type" : "string",
+                "description" : "Shadow mode"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMEllipsoid" : {
+      "type" : "object",
+      "description" : "Ellipsoid (3D shape)",
+      "properties" : {
+        "SHOW" : {
+                "type" : "boolean",
+                "description" : "Whether the ellipsoid is displayed"
+              },
+        "RADII_X" : {
+                "type" : "number",
+                "description" : "X radius in meters"
+              },
+        "RADII_Y" : {
+                "type" : "number",
+                "description" : "Y radius in meters"
+              },
+        "RADII_Z" : {
+                "type" : "number",
+                "description" : "Z radius in meters"
+              },
+        "INNER_RADII_X" : {
+                "type" : "number",
+                "description" : "Inner X radius"
+              },
+        "INNER_RADII_Y" : {
+                "type" : "number",
+                "description" : "Inner Y radius"
+              },
+        "INNER_RADII_Z" : {
+                "type" : "number",
+                "description" : "Inner Z radius"
+              },
+        "MINIMUM_CLOCK" : {
+                "type" : "number",
+                "description" : "Minimum clock angle in radians"
+              },
+        "MAXIMUM_CLOCK" : {
+                "type" : "number",
+                "description" : "Maximum clock angle in radians"
+              },
+        "MINIMUM_CONE" : {
+                "type" : "number",
+                "description" : "Minimum cone angle in radians"
+              },
+        "MAXIMUM_CONE" : {
+                "type" : "number",
+                "description" : "Maximum cone angle in radians"
+              },
+        "HEIGHT_REFERENCE" : {
+                "type" : "string",
+                "description" : "Height reference"
+              },
+        "FILL" : {
+                "type" : "boolean",
+                "description" : "Fill flag"
+              },
+        "MATERIAL" : {
+                "$ref" : "#/definitions/CZMMaterial",
+                "description" : "Surface material"
+              },
+        "OUTLINE" : {
+                "type" : "boolean",
+                "description" : "Outline flag"
+              },
+        "OUTLINE_COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Outline color"
+              },
+        "OUTLINE_WIDTH" : {
+                "type" : "number",
+                "description" : "Outline width"
+              },
+        "STACK_PARTITIONS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Stack partitions"
+              },
+        "SLICE_PARTITIONS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Slice partitions"
+              },
+        "SUBDIVISIONS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Subdivisions"
+              },
+        "SHADOWS" : {
+                "type" : "string",
+                "description" : "Shadow mode"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMPolylineVolume" : {
+      "type" : "object",
+      "description" : "Polyline volume (extruded 2D shape)",
+      "properties" : {
+        "SHOW" : {
+                "type" : "boolean",
+                "description" : "Whether displayed"
+              },
+        "POSITIONS_CARTOGRAPHIC_DEGREES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Positions as cartographic degrees"
+              },
+        "POSITIONS_CARTESIAN" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Positions as Cartesian"
+              },
+        "SHAPE" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "2D shape [x, y, x, y, ...]"
+              },
+        "CORNER_TYPE" : {
+                "type" : "string",
+                "description" : "Corner type"
+              },
+        "GRANULARITY" : {
+                "type" : "number",
+                "description" : "Granularity in radians"
+              },
+        "FILL" : {
+                "type" : "boolean",
+                "description" : "Fill flag"
+              },
+        "MATERIAL" : {
+                "$ref" : "#/definitions/CZMMaterial",
+                "description" : "Surface material"
+              },
+        "OUTLINE" : {
+                "type" : "boolean",
+                "description" : "Outline flag"
+              },
+        "OUTLINE_COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Outline color"
+              },
+        "OUTLINE_WIDTH" : {
+                "type" : "number",
+                "description" : "Outline width"
+              },
+        "SHADOWS" : {
+                "type" : "string",
+                "description" : "Shadow mode"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMRectangle" : {
+      "type" : "object",
+      "description" : "Rectangle (cartographic rectangle)",
+      "properties" : {
+        "SHOW" : {
+                "type" : "boolean",
+                "description" : "Whether the rectangle is displayed"
+              },
+        "COORDINATES_WSEN_DEGREES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Coordinates [west, south, east, north] in degrees"
+              },
+        "HEIGHT" : {
+                "type" : "number",
+                "description" : "Height in meters"
+              },
+        "HEIGHT_REFERENCE" : {
+                "type" : "string",
+                "description" : "Height reference"
+              },
+        "EXTRUDED_HEIGHT" : {
+                "type" : "number",
+                "description" : "Extruded height"
+              },
+        "EXTRUDED_HEIGHT_REFERENCE" : {
+                "type" : "string",
+                "description" : "Extruded height reference"
+              },
+        "ROTATION" : {
+                "type" : "number",
+                "description" : "Rotation in radians"
+              },
+        "ST_ROTATION" : {
+                "type" : "number",
+                "description" : "Texture rotation in radians"
+              },
+        "GRANULARITY" : {
+                "type" : "number",
+                "description" : "Granularity in radians"
+              },
+        "FILL" : {
+                "type" : "boolean",
+                "description" : "Fill flag"
+              },
+        "MATERIAL" : {
+                "$ref" : "#/definitions/CZMMaterial",
+                "description" : "Surface material"
+              },
+        "OUTLINE" : {
+                "type" : "boolean",
+                "description" : "Outline flag"
+              },
+        "OUTLINE_COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Outline color"
+              },
+        "OUTLINE_WIDTH" : {
+                "type" : "number",
+                "description" : "Outline width"
+              },
+        "SHADOWS" : {
+                "type" : "string",
+                "description" : "Shadow mode"
+              },
+        "CLASSIFICATION_TYPE" : {
+                "type" : "string",
+                "description" : "Classification type"
+              },
+        "Z_INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Z-index for ordering"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMTileset" : {
+      "type" : "object",
+      "description" : "3D Tileset",
+      "properties" : {
+        "SHOW" : {
+                "type" : "boolean",
+                "description" : "Whether the tileset is displayed"
+              },
+        "URI" : {
+                "type" : "string",
+                "description" : "URI to the tileset"
+              },
+        "MAXIMUM_SCREEN_SPACE_ERROR" : {
+                "type" : "number",
+                "description" : "Maximum screen space error"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CZMWall" : {
+      "type" : "object",
+      "description" : "Wall (vertical curtain)",
+      "properties" : {
+        "SHOW" : {
+                "type" : "boolean",
+                "description" : "Whether the wall is displayed"
+              },
+        "POSITIONS_CARTOGRAPHIC_DEGREES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Positions as cartographic degrees"
+              },
+        "POSITIONS_CARTESIAN" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Positions as Cartesian"
+              },
+        "MINIMUM_HEIGHTS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Minimum heights per position"
+              },
+        "MAXIMUM_HEIGHTS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Maximum heights per position"
+              },
+        "GRANULARITY" : {
+                "type" : "number",
+                "description" : "Granularity in radians"
+              },
+        "FILL" : {
+                "type" : "boolean",
+                "description" : "Fill flag"
+              },
+        "MATERIAL" : {
+                "$ref" : "#/definitions/CZMMaterial",
+                "description" : "Surface material"
+              },
+        "OUTLINE" : {
+                "type" : "boolean",
+                "description" : "Outline flag"
+              },
+        "OUTLINE_COLOR" : {
+                "$ref" : "#/definitions/CZMColor",
+                "description" : "Outline color"
+              },
+        "OUTLINE_WIDTH" : {
+                "type" : "number",
+                "description" : "Outline width"
+              },
+        "SHADOWS" : {
+                "type" : "string",
+                "description" : "Shadow mode"
               }
       },
       "additionalProperties" : false
@@ -519,6 +1736,82 @@
         "ELLIPSE" : {
                 "$ref" : "#/definitions/CZMEllipse",
                 "description" : "Ellipse properties"
+              },
+        "ORIENTATION" : {
+                "$ref" : "#/definitions/CZMOrientation",
+                "description" : "Orientation (quaternion)"
+              },
+        "VIEW_FROM" : {
+                "$ref" : "#/definitions/CZMViewFrom",
+                "description" : "Suggested camera offset"
+              },
+        "DELETE" : {
+                "type" : "boolean",
+                "description" : "Whether to delete this object"
+              },
+        "BOX" : {
+                "$ref" : "#/definitions/CZMBox",
+                "description" : "Box properties"
+              },
+        "CORRIDOR" : {
+                "$ref" : "#/definitions/CZMCorridor",
+                "description" : "Corridor properties"
+              },
+        "CYLINDER" : {
+                "$ref" : "#/definitions/CZMCylinder",
+                "description" : "Cylinder properties"
+              },
+        "ELLIPSOID" : {
+                "$ref" : "#/definitions/CZMEllipsoid",
+                "description" : "Ellipsoid properties"
+              },
+        "POLYLINE_VOLUME" : {
+                "$ref" : "#/definitions/CZMPolylineVolume",
+                "description" : "Polyline volume properties"
+              },
+        "RECTANGLE" : {
+                "$ref" : "#/definitions/CZMRectangle",
+                "description" : "Rectangle properties"
+              },
+        "TILESET" : {
+                "$ref" : "#/definitions/CZMTileset",
+                "description" : "3D Tileset properties"
+              },
+        "WALL" : {
+                "$ref" : "#/definitions/CZMWall",
+                "description" : "Wall properties"
+              },
+        "POSITION_INTERPOLATION" : {
+                "$ref" : "#/definitions/CZMInterpolation",
+                "description" : "Position interpolation settings"
+              },
+        "POSITION_REFERENCE_FRAME" : {
+                "type" : "string",
+                "description" : "Position reference frame (FIXED or INERTIAL)"
+              },
+        "POSITION_REFERENCE" : {
+                "type" : "string",
+                "description" : "Position reference to another entity"
+              },
+        "ORIENTATION_EPOCH" : {
+                "type" : "string",
+                "description" : "Orientation epoch (ISO 8601)"
+              },
+        "ORIENTATION_ARRAY" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Orientation sampled data [t, x, y, z, w, t, x, y, z, w, ...]"
+              },
+        "ORIENTATION_INTERPOLATION" : {
+                "$ref" : "#/definitions/CZMInterpolation",
+                "description" : "Orientation interpolation settings"
+              },
+        "ORIENTATION_REFERENCE" : {
+                "type" : "string",
+                "description" : "Orientation reference to another entity"
+              },
+        "DYNAMIC_PROPERTIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CZMDynamicProperty"},
+                "description" : "Generic bag for all time-dynamic (non-static) properties"
               }
       },
       "additionalProperties" : false
@@ -546,6 +1839,14 @@
         "CLOCK_MULTIPLIER" : {
                 "type" : "number",
                 "description" : "Clock settings - multiplier"
+              },
+        "CLOCK_RANGE" : {
+                "type" : "string",
+                "description" : "Clock range"
+              },
+        "CLOCK_STEP" : {
+                "type" : "string",
+                "description" : "Clock step"
               },
         "PACKETS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/CZMPacket"},

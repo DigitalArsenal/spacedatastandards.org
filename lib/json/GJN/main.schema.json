@@ -20,6 +20,10 @@
         "ALTITUDE" : {
                 "type" : "number",
                 "description" : "Altitude in meters above WGS84 ellipsoid (optional)"
+              },
+        "HAS_ALTITUDE" : {
+                "type" : "boolean",
+                "description" : "True if altitude was explicitly provided (distinguishes 0 from absent)"
               }
       },
       "additionalProperties" : false
@@ -73,6 +77,10 @@
         "GEOMETRIES" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/GJNGeometry"},
                 "description" : "Child geometries (for GeometryCollection)"
+              },
+        "BBOX" : {
+                "$ref" : "#/definitions/GJNBoundingBox",
+                "description" : "Bounding box (optional, per RFC 7946 Section 5)"
               }
       },
       "additionalProperties" : false
@@ -96,6 +104,22 @@
         "IS_NUMERIC" : {
                 "type" : "boolean",
                 "description" : "True if NUM_VALUE should be used instead of VALUE"
+              },
+        "IS_BOOL" : {
+                "type" : "boolean",
+                "description" : "True if this property value is a boolean"
+              },
+        "BOOL_VALUE" : {
+                "type" : "boolean",
+                "description" : "Boolean value (use when IS_BOOL is true)"
+              },
+        "IS_NULL" : {
+                "type" : "boolean",
+                "description" : "True if this property value is JSON null"
+              },
+        "JSON_VALUE" : {
+                "type" : "string",
+                "description" : "Raw JSON string for complex values (objects, arrays)"
               }
       },
       "additionalProperties" : false
@@ -106,7 +130,7 @@
       "properties" : {
         "ID" : {
                 "type" : "string",
-                "description" : "Feature identifier (optional)"
+                "description" : "Feature identifier (optional, string form)"
               },
         "GEOMETRY" : {
                 "$ref" : "#/definitions/GJNGeometry",
@@ -115,6 +139,26 @@
         "PROPERTIES" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/GJNProperty"},
                 "description" : "Properties as key-value pairs"
+              },
+        "NUM_ID" : {
+                "type" : "number",
+                "description" : "Numeric feature identifier (use when ID_IS_NUMERIC is true)"
+              },
+        "ID_IS_NUMERIC" : {
+                "type" : "boolean",
+                "description" : "True if the feature id is numeric rather than string"
+              },
+        "HAS_GEOMETRY" : {
+                "type" : "boolean",
+                "description" : "True if the feature has a geometry (false means geometry was JSON null)"
+              },
+        "PROPERTIES_IS_NULL" : {
+                "type" : "boolean",
+                "description" : "True if properties was JSON null (vs empty object)"
+              },
+        "BBOX" : {
+                "$ref" : "#/definitions/GJNBoundingBox",
+                "description" : "Bounding box (optional, per RFC 7946 Section 5)"
               }
       },
       "additionalProperties" : false
@@ -146,6 +190,10 @@
         "MAX_ALTITUDE" : {
                 "type" : "number",
                 "description" : "Maximum altitude (optional)"
+              },
+        "HAS_ALTITUDE" : {
+                "type" : "boolean",
+                "description" : "True if the bbox includes altitude (6 values vs 4)"
               }
       },
       "additionalProperties" : false

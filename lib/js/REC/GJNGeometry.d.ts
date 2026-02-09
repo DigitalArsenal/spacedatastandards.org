@@ -1,4 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
+import { GJNBoundingBox, GJNBoundingBoxT } from './GJNBoundingBox.js';
 import { GJNGeometryType } from './GJNGeometryType.js';
 import { GJNLinearRing, GJNLinearRingT } from './GJNLinearRing.js';
 import { GJNPolygonRings, GJNPolygonRingsT } from './GJNPolygonRings.js';
@@ -40,6 +41,10 @@ export declare class GJNGeometry implements flatbuffers.IUnpackableObject<GJNGeo
      */
     GEOMETRIES(index: number, obj?: GJNGeometry): GJNGeometry | null;
     geometriesLength(): number;
+    /**
+     * Bounding box (optional, per RFC 7946 Section 5)
+     */
+    BBOX(obj?: GJNBoundingBox): GJNBoundingBox | null;
     static startGJNGeometry(builder: flatbuffers.Builder): void;
     static addType(builder: flatbuffers.Builder, TYPE: GJNGeometryType): void;
     static addPoint(builder: flatbuffers.Builder, POINTOffset: flatbuffers.Offset): void;
@@ -55,6 +60,7 @@ export declare class GJNGeometry implements flatbuffers.IUnpackableObject<GJNGeo
     static addGeometries(builder: flatbuffers.Builder, GEOMETRIESOffset: flatbuffers.Offset): void;
     static createGeometriesVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startGeometriesVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addBbox(builder: flatbuffers.Builder, BBOXOffset: flatbuffers.Offset): void;
     static endGJNGeometry(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): GJNGeometryT;
     unpackTo(_o: GJNGeometryT): void;
@@ -66,7 +72,8 @@ export declare class GJNGeometryT implements flatbuffers.IGeneratedObject {
     RINGS: (GJNLinearRingT)[];
     POLYGON_RINGS: (GJNPolygonRingsT)[];
     GEOMETRIES: (GJNGeometryT)[];
-    constructor(TYPE?: GJNGeometryType, POINT?: GJNPositionT | null, POSITIONS?: (GJNPositionT)[], RINGS?: (GJNLinearRingT)[], POLYGON_RINGS?: (GJNPolygonRingsT)[], GEOMETRIES?: (GJNGeometryT)[]);
+    BBOX: GJNBoundingBoxT | null;
+    constructor(TYPE?: GJNGeometryType, POINT?: GJNPositionT | null, POSITIONS?: (GJNPositionT)[], RINGS?: (GJNLinearRingT)[], POLYGON_RINGS?: (GJNPolygonRingsT)[], GEOMETRIES?: (GJNGeometryT)[], BBOX?: GJNBoundingBoxT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=GJNGeometry.d.ts.map

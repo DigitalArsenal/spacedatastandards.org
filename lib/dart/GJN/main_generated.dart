@@ -78,10 +78,12 @@ class Gjnposition {
   double get LATITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
   ///  Altitude in meters above WGS84 ellipsoid (optional)
   double get ALTITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  True if altitude was explicitly provided (distinguishes 0 from absent)
+  bool get HAS_ALTITUDE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
 
   @override
   String toString() {
-    return 'Gjnposition{LONGITUDE: ${LONGITUDE}, LATITUDE: ${LATITUDE}, ALTITUDE: ${ALTITUDE}}';
+    return 'Gjnposition{LONGITUDE: ${LONGITUDE}, LATITUDE: ${LATITUDE}, ALTITUDE: ${ALTITUDE}, HAS_ALTITUDE: ${HAS_ALTITUDE}}';
   }
 }
 
@@ -99,7 +101,7 @@ class GjnpositionBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(3);
+    fbBuilder.startTable(4);
   }
 
   int addLongitude(double? LONGITUDE) {
@@ -114,6 +116,10 @@ class GjnpositionBuilder {
     fbBuilder.addFloat64(2, ALTITUDE);
     return fbBuilder.offset;
   }
+  int addHasAltitude(bool? HAS_ALTITUDE) {
+    fbBuilder.addBool(3, HAS_ALTITUDE);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -124,23 +130,27 @@ class GjnpositionObjectBuilder extends fb.ObjectBuilder {
   final double? _LONGITUDE;
   final double? _LATITUDE;
   final double? _ALTITUDE;
+  final bool? _HAS_ALTITUDE;
 
   GjnpositionObjectBuilder({
     double? LONGITUDE,
     double? LATITUDE,
     double? ALTITUDE,
+    bool? HAS_ALTITUDE,
   })
       : _LONGITUDE = LONGITUDE,
         _LATITUDE = LATITUDE,
-        _ALTITUDE = ALTITUDE;
+        _ALTITUDE = ALTITUDE,
+        _HAS_ALTITUDE = HAS_ALTITUDE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(3);
+    fbBuilder.startTable(4);
     fbBuilder.addFloat64(0, _LONGITUDE);
     fbBuilder.addFloat64(1, _LATITUDE);
     fbBuilder.addFloat64(2, _ALTITUDE);
+    fbBuilder.addBool(3, _HAS_ALTITUDE);
     return fbBuilder.endTable();
   }
 
@@ -327,10 +337,12 @@ class Gjngeometry {
   List<GjnpolygonRings>? get POLYGON_RINGS => const fb.ListReader<GjnpolygonRings>(GjnpolygonRings.reader).vTableGetNullable(_bc, _bcOffset, 12);
   ///  Child geometries (for GeometryCollection)
   List<Gjngeometry>? get GEOMETRIES => const fb.ListReader<Gjngeometry>(Gjngeometry.reader).vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Bounding box (optional, per RFC 7946 Section 5)
+  GjnboundingBox? get BBOX => GjnboundingBox.reader.vTableGetNullable(_bc, _bcOffset, 16);
 
   @override
   String toString() {
-    return 'Gjngeometry{TYPE: ${TYPE}, POINT: ${POINT}, POSITIONS: ${POSITIONS}, RINGS: ${RINGS}, POLYGON_RINGS: ${POLYGON_RINGS}, GEOMETRIES: ${GEOMETRIES}}';
+    return 'Gjngeometry{TYPE: ${TYPE}, POINT: ${POINT}, POSITIONS: ${POSITIONS}, RINGS: ${RINGS}, POLYGON_RINGS: ${POLYGON_RINGS}, GEOMETRIES: ${GEOMETRIES}, BBOX: ${BBOX}}';
   }
 }
 
@@ -348,7 +360,7 @@ class GjngeometryBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(6);
+    fbBuilder.startTable(7);
   }
 
   int addType(GjngeometryType? TYPE) {
@@ -375,6 +387,10 @@ class GjngeometryBuilder {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
+  int addBboxOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -388,6 +404,7 @@ class GjngeometryObjectBuilder extends fb.ObjectBuilder {
   final List<GjnlinearRingObjectBuilder>? _RINGS;
   final List<GjnpolygonRingsObjectBuilder>? _POLYGON_RINGS;
   final List<GjngeometryObjectBuilder>? _GEOMETRIES;
+  final GjnboundingBoxObjectBuilder? _BBOX;
 
   GjngeometryObjectBuilder({
     GjngeometryType? TYPE,
@@ -396,13 +413,15 @@ class GjngeometryObjectBuilder extends fb.ObjectBuilder {
     List<GjnlinearRingObjectBuilder>? RINGS,
     List<GjnpolygonRingsObjectBuilder>? POLYGON_RINGS,
     List<GjngeometryObjectBuilder>? GEOMETRIES,
+    GjnboundingBoxObjectBuilder? BBOX,
   })
       : _TYPE = TYPE,
         _POINT = POINT,
         _POSITIONS = POSITIONS,
         _RINGS = RINGS,
         _POLYGON_RINGS = POLYGON_RINGS,
-        _GEOMETRIES = GEOMETRIES;
+        _GEOMETRIES = GEOMETRIES,
+        _BBOX = BBOX;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -416,13 +435,15 @@ class GjngeometryObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_POLYGON_RINGS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? GEOMETRIESOffset = _GEOMETRIES == null ? null
         : fbBuilder.writeList(_GEOMETRIES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(6);
+    final int? BBOXOffset = _BBOX?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(7);
     fbBuilder.addInt8(0, _TYPE?.value);
     fbBuilder.addOffset(1, POINTOffset);
     fbBuilder.addOffset(2, POSITIONSOffset);
     fbBuilder.addOffset(3, RINGSOffset);
     fbBuilder.addOffset(4, POLYGON_RINGSOffset);
     fbBuilder.addOffset(5, GEOMETRIESOffset);
+    fbBuilder.addOffset(6, BBOXOffset);
     return fbBuilder.endTable();
   }
 
@@ -455,10 +476,18 @@ class Gjnproperty {
   double get NUM_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
   ///  True if NUM_VALUE should be used instead of VALUE
   bool get IS_NUMERIC => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
+  ///  True if this property value is a boolean
+  bool get IS_BOOL => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
+  ///  Boolean value (use when IS_BOOL is true)
+  bool get BOOL_VALUE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
+  ///  True if this property value is JSON null
+  bool get IS_NULL => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
+  ///  Raw JSON string for complex values (objects, arrays)
+  String? get JSON_VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
 
   @override
   String toString() {
-    return 'Gjnproperty{KEY: ${KEY}, VALUE: ${VALUE}, NUM_VALUE: ${NUM_VALUE}, IS_NUMERIC: ${IS_NUMERIC}}';
+    return 'Gjnproperty{KEY: ${KEY}, VALUE: ${VALUE}, NUM_VALUE: ${NUM_VALUE}, IS_NUMERIC: ${IS_NUMERIC}, IS_BOOL: ${IS_BOOL}, BOOL_VALUE: ${BOOL_VALUE}, IS_NULL: ${IS_NULL}, JSON_VALUE: ${JSON_VALUE}}';
   }
 }
 
@@ -476,7 +505,7 @@ class GjnpropertyBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(8);
   }
 
   int addKeyOffset(int? offset) {
@@ -495,6 +524,22 @@ class GjnpropertyBuilder {
     fbBuilder.addBool(3, IS_NUMERIC);
     return fbBuilder.offset;
   }
+  int addIsBool(bool? IS_BOOL) {
+    fbBuilder.addBool(4, IS_BOOL);
+    return fbBuilder.offset;
+  }
+  int addBoolValue(bool? BOOL_VALUE) {
+    fbBuilder.addBool(5, BOOL_VALUE);
+    return fbBuilder.offset;
+  }
+  int addIsNull(bool? IS_NULL) {
+    fbBuilder.addBool(6, IS_NULL);
+    return fbBuilder.offset;
+  }
+  int addJsonValueOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -506,17 +551,29 @@ class GjnpropertyObjectBuilder extends fb.ObjectBuilder {
   final String? _VALUE;
   final double? _NUM_VALUE;
   final bool? _IS_NUMERIC;
+  final bool? _IS_BOOL;
+  final bool? _BOOL_VALUE;
+  final bool? _IS_NULL;
+  final String? _JSON_VALUE;
 
   GjnpropertyObjectBuilder({
     String? KEY,
     String? VALUE,
     double? NUM_VALUE,
     bool? IS_NUMERIC,
+    bool? IS_BOOL,
+    bool? BOOL_VALUE,
+    bool? IS_NULL,
+    String? JSON_VALUE,
   })
       : _KEY = KEY,
         _VALUE = VALUE,
         _NUM_VALUE = NUM_VALUE,
-        _IS_NUMERIC = IS_NUMERIC;
+        _IS_NUMERIC = IS_NUMERIC,
+        _IS_BOOL = IS_BOOL,
+        _BOOL_VALUE = BOOL_VALUE,
+        _IS_NULL = IS_NULL,
+        _JSON_VALUE = JSON_VALUE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -525,11 +582,17 @@ class GjnpropertyObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_KEY!);
     final int? VALUEOffset = _VALUE == null ? null
         : fbBuilder.writeString(_VALUE!);
-    fbBuilder.startTable(4);
+    final int? JSON_VALUEOffset = _JSON_VALUE == null ? null
+        : fbBuilder.writeString(_JSON_VALUE!);
+    fbBuilder.startTable(8);
     fbBuilder.addOffset(0, KEYOffset);
     fbBuilder.addOffset(1, VALUEOffset);
     fbBuilder.addFloat64(2, _NUM_VALUE);
     fbBuilder.addBool(3, _IS_NUMERIC);
+    fbBuilder.addBool(4, _IS_BOOL);
+    fbBuilder.addBool(5, _BOOL_VALUE);
+    fbBuilder.addBool(6, _IS_NULL);
+    fbBuilder.addOffset(7, JSON_VALUEOffset);
     return fbBuilder.endTable();
   }
 
@@ -554,16 +617,26 @@ class Gjnfeature {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Feature identifier (optional)
+  ///  Feature identifier (optional, string form)
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
   ///  Geometry of the feature
   Gjngeometry? get GEOMETRY => Gjngeometry.reader.vTableGetNullable(_bc, _bcOffset, 6);
   ///  Properties as key-value pairs
   List<Gjnproperty>? get PROPERTIES => const fb.ListReader<Gjnproperty>(Gjnproperty.reader).vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Numeric feature identifier (use when ID_IS_NUMERIC is true)
+  double get NUM_ID => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  True if the feature id is numeric rather than string
+  bool get ID_IS_NUMERIC => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
+  ///  True if the feature has a geometry (false means geometry was JSON null)
+  bool get HAS_GEOMETRY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
+  ///  True if properties was JSON null (vs empty object)
+  bool get PROPERTIES_IS_NULL => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
+  ///  Bounding box (optional, per RFC 7946 Section 5)
+  GjnboundingBox? get BBOX => GjnboundingBox.reader.vTableGetNullable(_bc, _bcOffset, 18);
 
   @override
   String toString() {
-    return 'Gjnfeature{ID: ${ID}, GEOMETRY: ${GEOMETRY}, PROPERTIES: ${PROPERTIES}}';
+    return 'Gjnfeature{ID: ${ID}, GEOMETRY: ${GEOMETRY}, PROPERTIES: ${PROPERTIES}, NUM_ID: ${NUM_ID}, ID_IS_NUMERIC: ${ID_IS_NUMERIC}, HAS_GEOMETRY: ${HAS_GEOMETRY}, PROPERTIES_IS_NULL: ${PROPERTIES_IS_NULL}, BBOX: ${BBOX}}';
   }
 }
 
@@ -581,7 +654,7 @@ class GjnfeatureBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(3);
+    fbBuilder.startTable(8);
   }
 
   int addIdOffset(int? offset) {
@@ -596,6 +669,26 @@ class GjnfeatureBuilder {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
+  int addNumId(double? NUM_ID) {
+    fbBuilder.addFloat64(3, NUM_ID);
+    return fbBuilder.offset;
+  }
+  int addIdIsNumeric(bool? ID_IS_NUMERIC) {
+    fbBuilder.addBool(4, ID_IS_NUMERIC);
+    return fbBuilder.offset;
+  }
+  int addHasGeometry(bool? HAS_GEOMETRY) {
+    fbBuilder.addBool(5, HAS_GEOMETRY);
+    return fbBuilder.offset;
+  }
+  int addPropertiesIsNull(bool? PROPERTIES_IS_NULL) {
+    fbBuilder.addBool(6, PROPERTIES_IS_NULL);
+    return fbBuilder.offset;
+  }
+  int addBboxOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -606,15 +699,30 @@ class GjnfeatureObjectBuilder extends fb.ObjectBuilder {
   final String? _ID;
   final GjngeometryObjectBuilder? _GEOMETRY;
   final List<GjnpropertyObjectBuilder>? _PROPERTIES;
+  final double? _NUM_ID;
+  final bool? _ID_IS_NUMERIC;
+  final bool? _HAS_GEOMETRY;
+  final bool? _PROPERTIES_IS_NULL;
+  final GjnboundingBoxObjectBuilder? _BBOX;
 
   GjnfeatureObjectBuilder({
     String? ID,
     GjngeometryObjectBuilder? GEOMETRY,
     List<GjnpropertyObjectBuilder>? PROPERTIES,
+    double? NUM_ID,
+    bool? ID_IS_NUMERIC,
+    bool? HAS_GEOMETRY,
+    bool? PROPERTIES_IS_NULL,
+    GjnboundingBoxObjectBuilder? BBOX,
   })
       : _ID = ID,
         _GEOMETRY = GEOMETRY,
-        _PROPERTIES = PROPERTIES;
+        _PROPERTIES = PROPERTIES,
+        _NUM_ID = NUM_ID,
+        _ID_IS_NUMERIC = ID_IS_NUMERIC,
+        _HAS_GEOMETRY = HAS_GEOMETRY,
+        _PROPERTIES_IS_NULL = PROPERTIES_IS_NULL,
+        _BBOX = BBOX;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -624,10 +732,16 @@ class GjnfeatureObjectBuilder extends fb.ObjectBuilder {
     final int? GEOMETRYOffset = _GEOMETRY?.getOrCreateOffset(fbBuilder);
     final int? PROPERTIESOffset = _PROPERTIES == null ? null
         : fbBuilder.writeList(_PROPERTIES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(3);
+    final int? BBOXOffset = _BBOX?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(8);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, GEOMETRYOffset);
     fbBuilder.addOffset(2, PROPERTIESOffset);
+    fbBuilder.addFloat64(3, _NUM_ID);
+    fbBuilder.addBool(4, _ID_IS_NUMERIC);
+    fbBuilder.addBool(5, _HAS_GEOMETRY);
+    fbBuilder.addBool(6, _PROPERTIES_IS_NULL);
+    fbBuilder.addOffset(7, BBOXOffset);
     return fbBuilder.endTable();
   }
 
@@ -664,10 +778,12 @@ class GjnboundingBox {
   double get MIN_ALTITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
   ///  Maximum altitude (optional)
   double get MAX_ALTITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  ///  True if the bbox includes altitude (6 values vs 4)
+  bool get HAS_ALTITUDE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
 
   @override
   String toString() {
-    return 'GjnboundingBox{WEST: ${WEST}, SOUTH: ${SOUTH}, EAST: ${EAST}, NORTH: ${NORTH}, MIN_ALTITUDE: ${MIN_ALTITUDE}, MAX_ALTITUDE: ${MAX_ALTITUDE}}';
+    return 'GjnboundingBox{WEST: ${WEST}, SOUTH: ${SOUTH}, EAST: ${EAST}, NORTH: ${NORTH}, MIN_ALTITUDE: ${MIN_ALTITUDE}, MAX_ALTITUDE: ${MAX_ALTITUDE}, HAS_ALTITUDE: ${HAS_ALTITUDE}}';
   }
 }
 
@@ -685,7 +801,7 @@ class GjnboundingBoxBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(6);
+    fbBuilder.startTable(7);
   }
 
   int addWest(double? WEST) {
@@ -712,6 +828,10 @@ class GjnboundingBoxBuilder {
     fbBuilder.addFloat64(5, MAX_ALTITUDE);
     return fbBuilder.offset;
   }
+  int addHasAltitude(bool? HAS_ALTITUDE) {
+    fbBuilder.addBool(6, HAS_ALTITUDE);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -725,6 +845,7 @@ class GjnboundingBoxObjectBuilder extends fb.ObjectBuilder {
   final double? _NORTH;
   final double? _MIN_ALTITUDE;
   final double? _MAX_ALTITUDE;
+  final bool? _HAS_ALTITUDE;
 
   GjnboundingBoxObjectBuilder({
     double? WEST,
@@ -733,24 +854,27 @@ class GjnboundingBoxObjectBuilder extends fb.ObjectBuilder {
     double? NORTH,
     double? MIN_ALTITUDE,
     double? MAX_ALTITUDE,
+    bool? HAS_ALTITUDE,
   })
       : _WEST = WEST,
         _SOUTH = SOUTH,
         _EAST = EAST,
         _NORTH = NORTH,
         _MIN_ALTITUDE = MIN_ALTITUDE,
-        _MAX_ALTITUDE = MAX_ALTITUDE;
+        _MAX_ALTITUDE = MAX_ALTITUDE,
+        _HAS_ALTITUDE = HAS_ALTITUDE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(6);
+    fbBuilder.startTable(7);
     fbBuilder.addFloat64(0, _WEST);
     fbBuilder.addFloat64(1, _SOUTH);
     fbBuilder.addFloat64(2, _EAST);
     fbBuilder.addFloat64(3, _NORTH);
     fbBuilder.addFloat64(4, _MIN_ALTITUDE);
     fbBuilder.addFloat64(5, _MAX_ALTITUDE);
+    fbBuilder.addBool(6, _HAS_ALTITUDE);
     return fbBuilder.endTable();
   }
 

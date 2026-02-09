@@ -308,8 +308,292 @@ func (rcv *CZMPacket) ELLIPSE(obj *CZMEllipse) *CZMEllipse {
 }
 
 /// Ellipse properties
+/// Orientation (quaternion)
+func (rcv *CZMPacket) ORIENTATION(obj *CZMOrientation) *CZMOrientation {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CZMOrientation)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// Orientation (quaternion)
+/// Suggested camera offset
+func (rcv *CZMPacket) VIEW_FROM(obj *CZMViewFrom) *CZMViewFrom {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CZMViewFrom)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// Suggested camera offset
+/// Whether to delete this object
+func (rcv *CZMPacket) DELETE() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+/// Whether to delete this object
+func (rcv *CZMPacket) MutateDELETE(n bool) bool {
+	return rcv._tab.MutateBoolSlot(44, n)
+}
+
+/// Box properties
+func (rcv *CZMPacket) BOX(obj *CZMBox) *CZMBox {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CZMBox)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// Box properties
+/// Corridor properties
+func (rcv *CZMPacket) CORRIDOR(obj *CZMCorridor) *CZMCorridor {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CZMCorridor)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// Corridor properties
+/// Cylinder properties
+func (rcv *CZMPacket) CYLINDER(obj *CZMCylinder) *CZMCylinder {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CZMCylinder)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// Cylinder properties
+/// Ellipsoid properties
+func (rcv *CZMPacket) ELLIPSOID(obj *CZMEllipsoid) *CZMEllipsoid {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CZMEllipsoid)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// Ellipsoid properties
+/// Polyline volume properties
+func (rcv *CZMPacket) POLYLINE_VOLUME(obj *CZMPolylineVolume) *CZMPolylineVolume {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CZMPolylineVolume)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// Polyline volume properties
+/// Rectangle properties
+func (rcv *CZMPacket) RECTANGLE(obj *CZMRectangle) *CZMRectangle {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CZMRectangle)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// Rectangle properties
+/// 3D Tileset properties
+func (rcv *CZMPacket) TILESET(obj *CZMTileset) *CZMTileset {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CZMTileset)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// 3D Tileset properties
+/// Wall properties
+func (rcv *CZMPacket) WALL(obj *CZMWall) *CZMWall {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CZMWall)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// Wall properties
+/// Position interpolation settings
+func (rcv *CZMPacket) POSITION_INTERPOLATION(obj *CZMInterpolation) *CZMInterpolation {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CZMInterpolation)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// Position interpolation settings
+/// Position reference frame (FIXED or INERTIAL)
+func (rcv *CZMPacket) POSITION_REFERENCE_FRAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Position reference frame (FIXED or INERTIAL)
+/// Position reference to another entity
+func (rcv *CZMPacket) POSITION_REFERENCE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Position reference to another entity
+/// Orientation epoch (ISO 8601)
+func (rcv *CZMPacket) ORIENTATION_EPOCH() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Orientation epoch (ISO 8601)
+/// Orientation sampled data [t, x, y, z, w, t, x, y, z, w, ...]
+func (rcv *CZMPacket) ORIENTATION_ARRAY(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *CZMPacket) ORIENTATION_ARRAYLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Orientation sampled data [t, x, y, z, w, t, x, y, z, w, ...]
+func (rcv *CZMPacket) MutateORIENTATION_ARRAY(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// Orientation interpolation settings
+func (rcv *CZMPacket) ORIENTATION_INTERPOLATION(obj *CZMInterpolation) *CZMInterpolation {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CZMInterpolation)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// Orientation interpolation settings
+/// Orientation reference to another entity
+func (rcv *CZMPacket) ORIENTATION_REFERENCE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Orientation reference to another entity
+/// Generic bag for all time-dynamic (non-static) properties
+func (rcv *CZMPacket) DYNAMIC_PROPERTIES(obj *CZMDynamicProperty, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *CZMPacket) DYNAMIC_PROPERTIESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Generic bag for all time-dynamic (non-static) properties
 func CZMPacketStart(builder *flatbuffers.Builder) {
-	builder.StartObject(18)
+	builder.StartObject(37)
 }
 func CZMPacketAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
@@ -370,6 +654,69 @@ func CZMPacketAddPATH(builder *flatbuffers.Builder, PATH flatbuffers.UOffsetT) {
 }
 func CZMPacketAddELLIPSE(builder *flatbuffers.Builder, ELLIPSE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(ELLIPSE), 0)
+}
+func CZMPacketAddORIENTATION(builder *flatbuffers.Builder, ORIENTATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(ORIENTATION), 0)
+}
+func CZMPacketAddVIEW_FROM(builder *flatbuffers.Builder, VIEW_FROM flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(VIEW_FROM), 0)
+}
+func CZMPacketAddDELETE(builder *flatbuffers.Builder, DELETE bool) {
+	builder.PrependBoolSlot(20, DELETE, false)
+}
+func CZMPacketAddBOX(builder *flatbuffers.Builder, BOX flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(BOX), 0)
+}
+func CZMPacketAddCORRIDOR(builder *flatbuffers.Builder, CORRIDOR flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(CORRIDOR), 0)
+}
+func CZMPacketAddCYLINDER(builder *flatbuffers.Builder, CYLINDER flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(CYLINDER), 0)
+}
+func CZMPacketAddELLIPSOID(builder *flatbuffers.Builder, ELLIPSOID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(24, flatbuffers.UOffsetT(ELLIPSOID), 0)
+}
+func CZMPacketAddPOLYLINE_VOLUME(builder *flatbuffers.Builder, POLYLINE_VOLUME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(25, flatbuffers.UOffsetT(POLYLINE_VOLUME), 0)
+}
+func CZMPacketAddRECTANGLE(builder *flatbuffers.Builder, RECTANGLE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(RECTANGLE), 0)
+}
+func CZMPacketAddTILESET(builder *flatbuffers.Builder, TILESET flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(27, flatbuffers.UOffsetT(TILESET), 0)
+}
+func CZMPacketAddWALL(builder *flatbuffers.Builder, WALL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(WALL), 0)
+}
+func CZMPacketAddPOSITION_INTERPOLATION(builder *flatbuffers.Builder, POSITION_INTERPOLATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(POSITION_INTERPOLATION), 0)
+}
+func CZMPacketAddPOSITION_REFERENCE_FRAME(builder *flatbuffers.Builder, POSITION_REFERENCE_FRAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(30, flatbuffers.UOffsetT(POSITION_REFERENCE_FRAME), 0)
+}
+func CZMPacketAddPOSITION_REFERENCE(builder *flatbuffers.Builder, POSITION_REFERENCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(31, flatbuffers.UOffsetT(POSITION_REFERENCE), 0)
+}
+func CZMPacketAddORIENTATION_EPOCH(builder *flatbuffers.Builder, ORIENTATION_EPOCH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(32, flatbuffers.UOffsetT(ORIENTATION_EPOCH), 0)
+}
+func CZMPacketAddORIENTATION_ARRAY(builder *flatbuffers.Builder, ORIENTATION_ARRAY flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(33, flatbuffers.UOffsetT(ORIENTATION_ARRAY), 0)
+}
+func CZMPacketStartORIENTATION_ARRAYVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func CZMPacketAddORIENTATION_INTERPOLATION(builder *flatbuffers.Builder, ORIENTATION_INTERPOLATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(ORIENTATION_INTERPOLATION), 0)
+}
+func CZMPacketAddORIENTATION_REFERENCE(builder *flatbuffers.Builder, ORIENTATION_REFERENCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(35, flatbuffers.UOffsetT(ORIENTATION_REFERENCE), 0)
+}
+func CZMPacketAddDYNAMIC_PROPERTIES(builder *flatbuffers.Builder, DYNAMIC_PROPERTIES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(36, flatbuffers.UOffsetT(DYNAMIC_PROPERTIES), 0)
+}
+func CZMPacketStartDYNAMIC_PROPERTIESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
 }
 func CZMPacketEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

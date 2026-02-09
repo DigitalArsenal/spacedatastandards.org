@@ -103,6 +103,18 @@ class KMLStyle : Table() {
             null
         }
     }
+    /**
+     * List style
+     */
+    val LIST_STYLE : KMLListStyle? get() = LIST_STYLE(KMLListStyle())
+    fun LIST_STYLE(obj: KMLListStyle) : KMLListStyle? {
+        val o = __offset(16)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsKMLStyle(_bb: ByteBuffer): KMLStyle = getRootAsKMLStyle(_bb, KMLStyle())
@@ -110,8 +122,9 @@ class KMLStyle : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLStyle(builder: FlatBufferBuilder, IDOffset: Int, ICON_STYLEOffset: Int, LABEL_STYLEOffset: Int, LINE_STYLEOffset: Int, POLY_STYLEOffset: Int, BALLOON_STYLEOffset: Int) : Int {
-            builder.startTable(6)
+        fun createKMLStyle(builder: FlatBufferBuilder, IDOffset: Int, ICON_STYLEOffset: Int, LABEL_STYLEOffset: Int, LINE_STYLEOffset: Int, POLY_STYLEOffset: Int, BALLOON_STYLEOffset: Int, LIST_STYLEOffset: Int) : Int {
+            builder.startTable(7)
+            addLIST_STYLE(builder, LIST_STYLEOffset)
             addBALLOON_STYLE(builder, BALLOON_STYLEOffset)
             addPOLY_STYLE(builder, POLY_STYLEOffset)
             addLINE_STYLE(builder, LINE_STYLEOffset)
@@ -120,13 +133,14 @@ class KMLStyle : Table() {
             addID(builder, IDOffset)
             return endKMLStyle(builder)
         }
-        fun startKMLStyle(builder: FlatBufferBuilder) = builder.startTable(6)
+        fun startKMLStyle(builder: FlatBufferBuilder) = builder.startTable(7)
         fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
         fun addICON_STYLE(builder: FlatBufferBuilder, ICON_STYLE: Int) = builder.addOffset(1, ICON_STYLE, 0)
         fun addLABEL_STYLE(builder: FlatBufferBuilder, LABEL_STYLE: Int) = builder.addOffset(2, LABEL_STYLE, 0)
         fun addLINE_STYLE(builder: FlatBufferBuilder, LINE_STYLE: Int) = builder.addOffset(3, LINE_STYLE, 0)
         fun addPOLY_STYLE(builder: FlatBufferBuilder, POLY_STYLE: Int) = builder.addOffset(4, POLY_STYLE, 0)
         fun addBALLOON_STYLE(builder: FlatBufferBuilder, BALLOON_STYLE: Int) = builder.addOffset(5, BALLOON_STYLE, 0)
+        fun addLIST_STYLE(builder: FlatBufferBuilder, LIST_STYLE: Int) = builder.addOffset(6, LIST_STYLE, 0)
         fun endKMLStyle(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

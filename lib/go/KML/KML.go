@@ -234,8 +234,111 @@ func (rcv *KML) GROUND_OVERLAYSLength() int {
 }
 
 /// Ground overlays
+/// Schemas
+func (rcv *KML) SCHEMAS(obj *KMLSchema, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *KML) SCHEMASLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Schemas
+/// Screen overlays
+func (rcv *KML) SCREEN_OVERLAYS(obj *KMLScreenOverlay, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *KML) SCREEN_OVERLAYSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Screen overlays
+/// Photo overlays
+func (rcv *KML) PHOTO_OVERLAYS(obj *KMLPhotoOverlay, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *KML) PHOTO_OVERLAYSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Photo overlays
+/// Tours
+func (rcv *KML) TOURS(obj *KMLTour, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *KML) TOURSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Tours
+/// NetworkLinkControl
+func (rcv *KML) NETWORK_LINK_CONTROL(obj *KMLNetworkLinkControl) *KMLNetworkLinkControl {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(KMLNetworkLinkControl)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// NetworkLinkControl
 func KMLStart(builder *flatbuffers.Builder) {
-	builder.StartObject(10)
+	builder.StartObject(15)
 }
 func KMLAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
@@ -284,6 +387,33 @@ func KMLAddGROUND_OVERLAYS(builder *flatbuffers.Builder, GROUND_OVERLAYS flatbuf
 }
 func KMLStartGROUND_OVERLAYSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLAddSCHEMAS(builder *flatbuffers.Builder, SCHEMAS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(SCHEMAS), 0)
+}
+func KMLStartSCHEMASVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func KMLAddSCREEN_OVERLAYS(builder *flatbuffers.Builder, SCREEN_OVERLAYS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(SCREEN_OVERLAYS), 0)
+}
+func KMLStartSCREEN_OVERLAYSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func KMLAddPHOTO_OVERLAYS(builder *flatbuffers.Builder, PHOTO_OVERLAYS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(PHOTO_OVERLAYS), 0)
+}
+func KMLStartPHOTO_OVERLAYSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func KMLAddTOURS(builder *flatbuffers.Builder, TOURS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(TOURS), 0)
+}
+func KMLStartTOURSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func KMLAddNETWORK_LINK_CONTROL(builder *flatbuffers.Builder, NETWORK_LINK_CONTROL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(NETWORK_LINK_CONTROL), 0)
 }
 func KMLEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

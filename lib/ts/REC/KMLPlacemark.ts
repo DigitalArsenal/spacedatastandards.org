@@ -7,13 +7,20 @@ import * as flatbuffers from 'flatbuffers';
 import { KMLCamera, KMLCameraT } from './KMLCamera.js';
 import { KMLData, KMLDataT } from './KMLData.js';
 import { KMLLineString, KMLLineStringT } from './KMLLineString.js';
+import { KMLLinearRing, KMLLinearRingT } from './KMLLinearRing.js';
 import { KMLLookAt, KMLLookAtT } from './KMLLookAt.js';
+import { KMLModel, KMLModelT } from './KMLModel.js';
 import { KMLMultiGeometry, KMLMultiGeometryT } from './KMLMultiGeometry.js';
+import { KMLMultiTrack, KMLMultiTrackT } from './KMLMultiTrack.js';
 import { KMLPoint, KMLPointT } from './KMLPoint.js';
 import { KMLPolygon, KMLPolygonT } from './KMLPolygon.js';
+import { KMLRegion, KMLRegionT } from './KMLRegion.js';
+import { KMLSchemaData, KMLSchemaDataT } from './KMLSchemaData.js';
 import { KMLStyle, KMLStyleT } from './KMLStyle.js';
+import { KMLStyleMap, KMLStyleMapT } from './KMLStyleMap.js';
 import { KMLTimeSpan, KMLTimeSpanT } from './KMLTimeSpan.js';
 import { KMLTimeStamp, KMLTimeStampT } from './KMLTimeStamp.js';
+import { KMLTrack, KMLTrackT } from './KMLTrack.js';
 
 
 /**
@@ -94,10 +101,28 @@ SNIPPET(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
+ * Whether open in tree view
+ */
+OPEN():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Address
+ */
+ADDRESS():string|null
+ADDRESS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ADDRESS(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
  * Point geometry
  */
 POINT(obj?:KMLPoint):KMLPoint|null {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? (obj || new KMLPoint()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
@@ -105,7 +130,7 @@ POINT(obj?:KMLPoint):KMLPoint|null {
  * LineString geometry
  */
 LINE_STRING(obj?:KMLLineString):KMLLineString|null {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
+  const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? (obj || new KMLLineString()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
@@ -113,23 +138,55 @@ LINE_STRING(obj?:KMLLineString):KMLLineString|null {
  * Polygon geometry
  */
 POLYGON(obj?:KMLPolygon):KMLPolygon|null {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
+  const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? (obj || new KMLPolygon()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * LinearRing geometry (standalone)
+ */
+LINEAR_RING(obj?:KMLLinearRing):KMLLinearRing|null {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? (obj || new KMLLinearRing()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 /**
  * MultiGeometry
  */
 MULTI_GEOMETRY(obj?:KMLMultiGeometry):KMLMultiGeometry|null {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
+  const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? (obj || new KMLMultiGeometry()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * 3D Model
+ */
+MODEL(obj?:KMLModel):KMLModel|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? (obj || new KMLModel()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * gx:Track
+ */
+TRACK(obj?:KMLTrack):KMLTrack|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? (obj || new KMLTrack()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * gx:MultiTrack
+ */
+MULTI_TRACK(obj?:KMLMultiTrack):KMLMultiTrack|null {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? (obj || new KMLMultiTrack()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 /**
  * LookAt viewpoint
  */
 LOOK_AT(obj?:KMLLookAt):KMLLookAt|null {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
+  const offset = this.bb!.__offset(this.bb_pos, 36);
   return offset ? (obj || new KMLLookAt()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
@@ -137,7 +194,7 @@ LOOK_AT(obj?:KMLLookAt):KMLLookAt|null {
  * Camera viewpoint
  */
 CAMERA(obj?:KMLCamera):KMLCamera|null {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
+  const offset = this.bb!.__offset(this.bb_pos, 38);
   return offset ? (obj || new KMLCamera()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
@@ -145,7 +202,7 @@ CAMERA(obj?:KMLCamera):KMLCamera|null {
  * TimeSpan
  */
 TIME_SPAN(obj?:KMLTimeSpan):KMLTimeSpan|null {
-  const offset = this.bb!.__offset(this.bb_pos, 28);
+  const offset = this.bb!.__offset(this.bb_pos, 40);
   return offset ? (obj || new KMLTimeSpan()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
@@ -153,7 +210,7 @@ TIME_SPAN(obj?:KMLTimeSpan):KMLTimeSpan|null {
  * TimeStamp
  */
 TIME_STAMP(obj?:KMLTimeStamp):KMLTimeStamp|null {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
+  const offset = this.bb!.__offset(this.bb_pos, 42);
   return offset ? (obj || new KMLTimeStamp()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
@@ -161,17 +218,41 @@ TIME_STAMP(obj?:KMLTimeStamp):KMLTimeStamp|null {
  * Extended data
  */
 EXTENDED_DATA(index: number, obj?:KMLData):KMLData|null {
-  const offset = this.bb!.__offset(this.bb_pos, 32);
+  const offset = this.bb!.__offset(this.bb_pos, 44);
   return offset ? (obj || new KMLData()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 extendedDataLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 32);
+  const offset = this.bb!.__offset(this.bb_pos, 44);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Schema data
+ */
+SCHEMA_DATA(obj?:KMLSchemaData):KMLSchemaData|null {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? (obj || new KMLSchemaData()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Region
+ */
+REGION(obj?:KMLRegion):KMLRegion|null {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? (obj || new KMLRegion()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * StyleMap (inline)
+ */
+STYLE_MAP(obj?:KMLStyleMap):KMLStyleMap|null {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? (obj || new KMLStyleMap()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startKMLPlacemark(builder:flatbuffers.Builder) {
-  builder.startObject(15);
+  builder.startObject(24);
 }
 
 static addName(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset) {
@@ -198,40 +279,64 @@ static addSnippet(builder:flatbuffers.Builder, SNIPPETOffset:flatbuffers.Offset)
   builder.addFieldOffset(5, SNIPPETOffset, 0);
 }
 
+static addOpen(builder:flatbuffers.Builder, OPEN:boolean) {
+  builder.addFieldInt8(6, +OPEN, +false);
+}
+
+static addAddress(builder:flatbuffers.Builder, ADDRESSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, ADDRESSOffset, 0);
+}
+
 static addPoint(builder:flatbuffers.Builder, POINTOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(6, POINTOffset, 0);
+  builder.addFieldOffset(8, POINTOffset, 0);
 }
 
 static addLineString(builder:flatbuffers.Builder, LINE_STRINGOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(7, LINE_STRINGOffset, 0);
+  builder.addFieldOffset(9, LINE_STRINGOffset, 0);
 }
 
 static addPolygon(builder:flatbuffers.Builder, POLYGONOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(8, POLYGONOffset, 0);
+  builder.addFieldOffset(10, POLYGONOffset, 0);
+}
+
+static addLinearRing(builder:flatbuffers.Builder, LINEAR_RINGOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, LINEAR_RINGOffset, 0);
 }
 
 static addMultiGeometry(builder:flatbuffers.Builder, MULTI_GEOMETRYOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(9, MULTI_GEOMETRYOffset, 0);
+  builder.addFieldOffset(12, MULTI_GEOMETRYOffset, 0);
+}
+
+static addModel(builder:flatbuffers.Builder, MODELOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, MODELOffset, 0);
+}
+
+static addTrack(builder:flatbuffers.Builder, TRACKOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, TRACKOffset, 0);
+}
+
+static addMultiTrack(builder:flatbuffers.Builder, MULTI_TRACKOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(15, MULTI_TRACKOffset, 0);
 }
 
 static addLookAt(builder:flatbuffers.Builder, LOOK_ATOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(10, LOOK_ATOffset, 0);
+  builder.addFieldOffset(16, LOOK_ATOffset, 0);
 }
 
 static addCamera(builder:flatbuffers.Builder, CAMERAOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(11, CAMERAOffset, 0);
+  builder.addFieldOffset(17, CAMERAOffset, 0);
 }
 
 static addTimeSpan(builder:flatbuffers.Builder, TIME_SPANOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(12, TIME_SPANOffset, 0);
+  builder.addFieldOffset(18, TIME_SPANOffset, 0);
 }
 
 static addTimeStamp(builder:flatbuffers.Builder, TIME_STAMPOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(13, TIME_STAMPOffset, 0);
+  builder.addFieldOffset(19, TIME_STAMPOffset, 0);
 }
 
 static addExtendedData(builder:flatbuffers.Builder, EXTENDED_DATAOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(14, EXTENDED_DATAOffset, 0);
+  builder.addFieldOffset(20, EXTENDED_DATAOffset, 0);
 }
 
 static createExtendedDataVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -244,6 +349,18 @@ static createExtendedDataVector(builder:flatbuffers.Builder, data:flatbuffers.Of
 
 static startExtendedDataVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
+}
+
+static addSchemaData(builder:flatbuffers.Builder, SCHEMA_DATAOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(21, SCHEMA_DATAOffset, 0);
+}
+
+static addRegion(builder:flatbuffers.Builder, REGIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(22, REGIONOffset, 0);
+}
+
+static addStyleMap(builder:flatbuffers.Builder, STYLE_MAPOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(23, STYLE_MAPOffset, 0);
 }
 
 static endKMLPlacemark(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -260,15 +377,24 @@ unpack(): KMLPlacemarkT {
     this.STYLE_URL(),
     (this.STYLE() !== null ? this.STYLE()!.unpack() : null),
     this.SNIPPET(),
+    this.OPEN(),
+    this.ADDRESS(),
     (this.POINT() !== null ? this.POINT()!.unpack() : null),
     (this.LINE_STRING() !== null ? this.LINE_STRING()!.unpack() : null),
     (this.POLYGON() !== null ? this.POLYGON()!.unpack() : null),
+    (this.LINEAR_RING() !== null ? this.LINEAR_RING()!.unpack() : null),
     (this.MULTI_GEOMETRY() !== null ? this.MULTI_GEOMETRY()!.unpack() : null),
+    (this.MODEL() !== null ? this.MODEL()!.unpack() : null),
+    (this.TRACK() !== null ? this.TRACK()!.unpack() : null),
+    (this.MULTI_TRACK() !== null ? this.MULTI_TRACK()!.unpack() : null),
     (this.LOOK_AT() !== null ? this.LOOK_AT()!.unpack() : null),
     (this.CAMERA() !== null ? this.CAMERA()!.unpack() : null),
     (this.TIME_SPAN() !== null ? this.TIME_SPAN()!.unpack() : null),
     (this.TIME_STAMP() !== null ? this.TIME_STAMP()!.unpack() : null),
-    this.bb!.createObjList<KMLData, KMLDataT>(this.EXTENDED_DATA.bind(this), this.extendedDataLength())
+    this.bb!.createObjList<KMLData, KMLDataT>(this.EXTENDED_DATA.bind(this), this.extendedDataLength()),
+    (this.SCHEMA_DATA() !== null ? this.SCHEMA_DATA()!.unpack() : null),
+    (this.REGION() !== null ? this.REGION()!.unpack() : null),
+    (this.STYLE_MAP() !== null ? this.STYLE_MAP()!.unpack() : null)
   );
 }
 
@@ -280,15 +406,24 @@ unpackTo(_o: KMLPlacemarkT): void {
   _o.STYLE_URL = this.STYLE_URL();
   _o.STYLE = (this.STYLE() !== null ? this.STYLE()!.unpack() : null);
   _o.SNIPPET = this.SNIPPET();
+  _o.OPEN = this.OPEN();
+  _o.ADDRESS = this.ADDRESS();
   _o.POINT = (this.POINT() !== null ? this.POINT()!.unpack() : null);
   _o.LINE_STRING = (this.LINE_STRING() !== null ? this.LINE_STRING()!.unpack() : null);
   _o.POLYGON = (this.POLYGON() !== null ? this.POLYGON()!.unpack() : null);
+  _o.LINEAR_RING = (this.LINEAR_RING() !== null ? this.LINEAR_RING()!.unpack() : null);
   _o.MULTI_GEOMETRY = (this.MULTI_GEOMETRY() !== null ? this.MULTI_GEOMETRY()!.unpack() : null);
+  _o.MODEL = (this.MODEL() !== null ? this.MODEL()!.unpack() : null);
+  _o.TRACK = (this.TRACK() !== null ? this.TRACK()!.unpack() : null);
+  _o.MULTI_TRACK = (this.MULTI_TRACK() !== null ? this.MULTI_TRACK()!.unpack() : null);
   _o.LOOK_AT = (this.LOOK_AT() !== null ? this.LOOK_AT()!.unpack() : null);
   _o.CAMERA = (this.CAMERA() !== null ? this.CAMERA()!.unpack() : null);
   _o.TIME_SPAN = (this.TIME_SPAN() !== null ? this.TIME_SPAN()!.unpack() : null);
   _o.TIME_STAMP = (this.TIME_STAMP() !== null ? this.TIME_STAMP()!.unpack() : null);
   _o.EXTENDED_DATA = this.bb!.createObjList<KMLData, KMLDataT>(this.EXTENDED_DATA.bind(this), this.extendedDataLength());
+  _o.SCHEMA_DATA = (this.SCHEMA_DATA() !== null ? this.SCHEMA_DATA()!.unpack() : null);
+  _o.REGION = (this.REGION() !== null ? this.REGION()!.unpack() : null);
+  _o.STYLE_MAP = (this.STYLE_MAP() !== null ? this.STYLE_MAP()!.unpack() : null);
 }
 }
 
@@ -300,15 +435,24 @@ constructor(
   public STYLE_URL: string|Uint8Array|null = null,
   public STYLE: KMLStyleT|null = null,
   public SNIPPET: string|Uint8Array|null = null,
+  public OPEN: boolean = false,
+  public ADDRESS: string|Uint8Array|null = null,
   public POINT: KMLPointT|null = null,
   public LINE_STRING: KMLLineStringT|null = null,
   public POLYGON: KMLPolygonT|null = null,
+  public LINEAR_RING: KMLLinearRingT|null = null,
   public MULTI_GEOMETRY: KMLMultiGeometryT|null = null,
+  public MODEL: KMLModelT|null = null,
+  public TRACK: KMLTrackT|null = null,
+  public MULTI_TRACK: KMLMultiTrackT|null = null,
   public LOOK_AT: KMLLookAtT|null = null,
   public CAMERA: KMLCameraT|null = null,
   public TIME_SPAN: KMLTimeSpanT|null = null,
   public TIME_STAMP: KMLTimeStampT|null = null,
-  public EXTENDED_DATA: (KMLDataT)[] = []
+  public EXTENDED_DATA: (KMLDataT)[] = [],
+  public SCHEMA_DATA: KMLSchemaDataT|null = null,
+  public REGION: KMLRegionT|null = null,
+  public STYLE_MAP: KMLStyleMapT|null = null
 ){}
 
 
@@ -318,15 +462,23 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const STYLE_URL = (this.STYLE_URL !== null ? builder.createString(this.STYLE_URL!) : 0);
   const STYLE = (this.STYLE !== null ? this.STYLE!.pack(builder) : 0);
   const SNIPPET = (this.SNIPPET !== null ? builder.createString(this.SNIPPET!) : 0);
+  const ADDRESS = (this.ADDRESS !== null ? builder.createString(this.ADDRESS!) : 0);
   const POINT = (this.POINT !== null ? this.POINT!.pack(builder) : 0);
   const LINE_STRING = (this.LINE_STRING !== null ? this.LINE_STRING!.pack(builder) : 0);
   const POLYGON = (this.POLYGON !== null ? this.POLYGON!.pack(builder) : 0);
+  const LINEAR_RING = (this.LINEAR_RING !== null ? this.LINEAR_RING!.pack(builder) : 0);
   const MULTI_GEOMETRY = (this.MULTI_GEOMETRY !== null ? this.MULTI_GEOMETRY!.pack(builder) : 0);
+  const MODEL = (this.MODEL !== null ? this.MODEL!.pack(builder) : 0);
+  const TRACK = (this.TRACK !== null ? this.TRACK!.pack(builder) : 0);
+  const MULTI_TRACK = (this.MULTI_TRACK !== null ? this.MULTI_TRACK!.pack(builder) : 0);
   const LOOK_AT = (this.LOOK_AT !== null ? this.LOOK_AT!.pack(builder) : 0);
   const CAMERA = (this.CAMERA !== null ? this.CAMERA!.pack(builder) : 0);
   const TIME_SPAN = (this.TIME_SPAN !== null ? this.TIME_SPAN!.pack(builder) : 0);
   const TIME_STAMP = (this.TIME_STAMP !== null ? this.TIME_STAMP!.pack(builder) : 0);
   const EXTENDED_DATA = KMLPlacemark.createExtendedDataVector(builder, builder.createObjectOffsetList(this.EXTENDED_DATA));
+  const SCHEMA_DATA = (this.SCHEMA_DATA !== null ? this.SCHEMA_DATA!.pack(builder) : 0);
+  const REGION = (this.REGION !== null ? this.REGION!.pack(builder) : 0);
+  const STYLE_MAP = (this.STYLE_MAP !== null ? this.STYLE_MAP!.pack(builder) : 0);
 
   KMLPlacemark.startKMLPlacemark(builder);
   KMLPlacemark.addName(builder, NAME);
@@ -335,15 +487,24 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   KMLPlacemark.addStyleUrl(builder, STYLE_URL);
   KMLPlacemark.addStyle(builder, STYLE);
   KMLPlacemark.addSnippet(builder, SNIPPET);
+  KMLPlacemark.addOpen(builder, this.OPEN);
+  KMLPlacemark.addAddress(builder, ADDRESS);
   KMLPlacemark.addPoint(builder, POINT);
   KMLPlacemark.addLineString(builder, LINE_STRING);
   KMLPlacemark.addPolygon(builder, POLYGON);
+  KMLPlacemark.addLinearRing(builder, LINEAR_RING);
   KMLPlacemark.addMultiGeometry(builder, MULTI_GEOMETRY);
+  KMLPlacemark.addModel(builder, MODEL);
+  KMLPlacemark.addTrack(builder, TRACK);
+  KMLPlacemark.addMultiTrack(builder, MULTI_TRACK);
   KMLPlacemark.addLookAt(builder, LOOK_AT);
   KMLPlacemark.addCamera(builder, CAMERA);
   KMLPlacemark.addTimeSpan(builder, TIME_SPAN);
   KMLPlacemark.addTimeStamp(builder, TIME_STAMP);
   KMLPlacemark.addExtendedData(builder, EXTENDED_DATA);
+  KMLPlacemark.addSchemaData(builder, SCHEMA_DATA);
+  KMLPlacemark.addRegion(builder, REGION);
+  KMLPlacemark.addStyleMap(builder, STYLE_MAP);
 
   return KMLPlacemark.endKMLPlacemark(builder);
 }

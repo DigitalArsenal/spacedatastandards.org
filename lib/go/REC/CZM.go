@@ -108,9 +108,29 @@ func (rcv *CZM) MutateCLOCK_MULTIPLIER(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
 }
 
+/// Clock range
+func (rcv *CZM) CLOCK_RANGE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Clock range
+/// Clock step
+func (rcv *CZM) CLOCK_STEP() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Clock step
 /// All packets in the document
 func (rcv *CZM) PACKETS(obj *CZMPacket, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -122,7 +142,7 @@ func (rcv *CZM) PACKETS(obj *CZMPacket, j int) bool {
 }
 
 func (rcv *CZM) PACKETSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -131,7 +151,7 @@ func (rcv *CZM) PACKETSLength() int {
 
 /// All packets in the document
 func CZMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(6)
+	builder.StartObject(8)
 }
 func CZMAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
@@ -148,8 +168,14 @@ func CZMAddCLOCK_INTERVAL(builder *flatbuffers.Builder, CLOCK_INTERVAL flatbuffe
 func CZMAddCLOCK_MULTIPLIER(builder *flatbuffers.Builder, CLOCK_MULTIPLIER float64) {
 	builder.PrependFloat64Slot(4, CLOCK_MULTIPLIER, 0.0)
 }
+func CZMAddCLOCK_RANGE(builder *flatbuffers.Builder, CLOCK_RANGE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(CLOCK_RANGE), 0)
+}
+func CZMAddCLOCK_STEP(builder *flatbuffers.Builder, CLOCK_STEP flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(CLOCK_STEP), 0)
+}
 func CZMAddPACKETS(builder *flatbuffers.Builder, PACKETS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(PACKETS), 0)
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(PACKETS), 0)
 }
 func CZMStartPACKETSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)

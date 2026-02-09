@@ -134,6 +134,7 @@ impl<'a> GJNPosition<'a> {
   pub const VT_LONGITUDE: flatbuffers::VOffsetT = 4;
   pub const VT_LATITUDE: flatbuffers::VOffsetT = 6;
   pub const VT_ALTITUDE: flatbuffers::VOffsetT = 8;
+  pub const VT_HAS_ALTITUDE: flatbuffers::VOffsetT = 10;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -148,6 +149,7 @@ impl<'a> GJNPosition<'a> {
     builder.add_ALTITUDE(args.ALTITUDE);
     builder.add_LATITUDE(args.LATITUDE);
     builder.add_LONGITUDE(args.LONGITUDE);
+    builder.add_HAS_ALTITUDE(args.HAS_ALTITUDE);
     builder.finish()
   }
 
@@ -155,10 +157,12 @@ impl<'a> GJNPosition<'a> {
     let LONGITUDE = self.LONGITUDE();
     let LATITUDE = self.LATITUDE();
     let ALTITUDE = self.ALTITUDE();
+    let HAS_ALTITUDE = self.HAS_ALTITUDE();
     GJNPositionT {
       LONGITUDE,
       LATITUDE,
       ALTITUDE,
+      HAS_ALTITUDE,
     }
   }
 
@@ -186,6 +190,14 @@ impl<'a> GJNPosition<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(GJNPosition::VT_ALTITUDE, Some(0.0)).unwrap()}
   }
+  /// True if altitude was explicitly provided (distinguishes 0 from absent)
+  #[inline]
+  pub fn HAS_ALTITUDE(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(GJNPosition::VT_HAS_ALTITUDE, Some(false)).unwrap()}
+  }
 }
 
 impl flatbuffers::Verifiable for GJNPosition<'_> {
@@ -198,6 +210,7 @@ impl flatbuffers::Verifiable for GJNPosition<'_> {
      .visit_field::<f64>("LONGITUDE", Self::VT_LONGITUDE, false)?
      .visit_field::<f64>("LATITUDE", Self::VT_LATITUDE, false)?
      .visit_field::<f64>("ALTITUDE", Self::VT_ALTITUDE, false)?
+     .visit_field::<bool>("HAS_ALTITUDE", Self::VT_HAS_ALTITUDE, false)?
      .finish();
     Ok(())
   }
@@ -206,6 +219,7 @@ pub struct GJNPositionArgs {
     pub LONGITUDE: f64,
     pub LATITUDE: f64,
     pub ALTITUDE: f64,
+    pub HAS_ALTITUDE: bool,
 }
 impl<'a> Default for GJNPositionArgs {
   #[inline]
@@ -214,6 +228,7 @@ impl<'a> Default for GJNPositionArgs {
       LONGITUDE: 0.0,
       LATITUDE: 0.0,
       ALTITUDE: 0.0,
+      HAS_ALTITUDE: false,
     }
   }
 }
@@ -236,6 +251,10 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> GJNPositionBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(GJNPosition::VT_ALTITUDE, ALTITUDE, 0.0);
   }
   #[inline]
+  pub fn add_HAS_ALTITUDE(&mut self, HAS_ALTITUDE: bool) {
+    self.fbb_.push_slot::<bool>(GJNPosition::VT_HAS_ALTITUDE, HAS_ALTITUDE, false);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> GJNPositionBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     GJNPositionBuilder {
@@ -256,6 +275,7 @@ impl core::fmt::Debug for GJNPosition<'_> {
       ds.field("LONGITUDE", &self.LONGITUDE());
       ds.field("LATITUDE", &self.LATITUDE());
       ds.field("ALTITUDE", &self.ALTITUDE());
+      ds.field("HAS_ALTITUDE", &self.HAS_ALTITUDE());
       ds.finish()
   }
 }
@@ -265,6 +285,7 @@ pub struct GJNPositionT {
   pub LONGITUDE: f64,
   pub LATITUDE: f64,
   pub ALTITUDE: f64,
+  pub HAS_ALTITUDE: bool,
 }
 impl Default for GJNPositionT {
   fn default() -> Self {
@@ -272,6 +293,7 @@ impl Default for GJNPositionT {
       LONGITUDE: 0.0,
       LATITUDE: 0.0,
       ALTITUDE: 0.0,
+      HAS_ALTITUDE: false,
     }
   }
 }
@@ -283,10 +305,12 @@ impl GJNPositionT {
     let LONGITUDE = self.LONGITUDE;
     let LATITUDE = self.LATITUDE;
     let ALTITUDE = self.ALTITUDE;
+    let HAS_ALTITUDE = self.HAS_ALTITUDE;
     GJNPosition::create(_fbb, &GJNPositionArgs{
       LONGITUDE,
       LATITUDE,
       ALTITUDE,
+      HAS_ALTITUDE,
     })
   }
 }
@@ -577,6 +601,7 @@ impl<'a> GJNGeometry<'a> {
   pub const VT_RINGS: flatbuffers::VOffsetT = 10;
   pub const VT_POLYGON_RINGS: flatbuffers::VOffsetT = 12;
   pub const VT_GEOMETRIES: flatbuffers::VOffsetT = 14;
+  pub const VT_BBOX: flatbuffers::VOffsetT = 16;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -588,6 +613,7 @@ impl<'a> GJNGeometry<'a> {
     args: &'args GJNGeometryArgs<'args>
   ) -> flatbuffers::WIPOffset<GJNGeometry<'bldr>> {
     let mut builder = GJNGeometryBuilder::new(_fbb);
+    if let Some(x) = args.BBOX { builder.add_BBOX(x); }
     if let Some(x) = args.GEOMETRIES { builder.add_GEOMETRIES(x); }
     if let Some(x) = args.POLYGON_RINGS { builder.add_POLYGON_RINGS(x); }
     if let Some(x) = args.RINGS { builder.add_RINGS(x); }
@@ -614,6 +640,9 @@ impl<'a> GJNGeometry<'a> {
     let GEOMETRIES = self.GEOMETRIES().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
+    let BBOX = self.BBOX().map(|x| {
+      Box::new(x.unpack())
+    });
     GJNGeometryT {
       TYPE,
       POINT,
@@ -621,6 +650,7 @@ impl<'a> GJNGeometry<'a> {
       RINGS,
       POLYGON_RINGS,
       GEOMETRIES,
+      BBOX,
     }
   }
 
@@ -672,6 +702,14 @@ impl<'a> GJNGeometry<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<GJNGeometry>>>>(GJNGeometry::VT_GEOMETRIES, None)}
   }
+  /// Bounding box (optional, per RFC 7946 Section 5)
+  #[inline]
+  pub fn BBOX(&self) -> Option<GJNBoundingBox<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<GJNBoundingBox>>(GJNGeometry::VT_BBOX, None)}
+  }
 }
 
 impl flatbuffers::Verifiable for GJNGeometry<'_> {
@@ -687,6 +725,7 @@ impl flatbuffers::Verifiable for GJNGeometry<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<GJNLinearRing>>>>("RINGS", Self::VT_RINGS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<GJNPolygonRings>>>>("POLYGON_RINGS", Self::VT_POLYGON_RINGS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<GJNGeometry>>>>("GEOMETRIES", Self::VT_GEOMETRIES, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<GJNBoundingBox>>("BBOX", Self::VT_BBOX, false)?
      .finish();
     Ok(())
   }
@@ -698,6 +737,7 @@ pub struct GJNGeometryArgs<'a> {
     pub RINGS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<GJNLinearRing<'a>>>>>,
     pub POLYGON_RINGS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<GJNPolygonRings<'a>>>>>,
     pub GEOMETRIES: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<GJNGeometry<'a>>>>>,
+    pub BBOX: Option<flatbuffers::WIPOffset<GJNBoundingBox<'a>>>,
 }
 impl<'a> Default for GJNGeometryArgs<'a> {
   #[inline]
@@ -709,6 +749,7 @@ impl<'a> Default for GJNGeometryArgs<'a> {
       RINGS: None,
       POLYGON_RINGS: None,
       GEOMETRIES: None,
+      BBOX: None,
     }
   }
 }
@@ -743,6 +784,10 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> GJNGeometryBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GJNGeometry::VT_GEOMETRIES, GEOMETRIES);
   }
   #[inline]
+  pub fn add_BBOX(&mut self, BBOX: flatbuffers::WIPOffset<GJNBoundingBox<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<GJNBoundingBox>>(GJNGeometry::VT_BBOX, BBOX);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> GJNGeometryBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     GJNGeometryBuilder {
@@ -766,6 +811,7 @@ impl core::fmt::Debug for GJNGeometry<'_> {
       ds.field("RINGS", &self.RINGS());
       ds.field("POLYGON_RINGS", &self.POLYGON_RINGS());
       ds.field("GEOMETRIES", &self.GEOMETRIES());
+      ds.field("BBOX", &self.BBOX());
       ds.finish()
   }
 }
@@ -778,6 +824,7 @@ pub struct GJNGeometryT {
   pub RINGS: Option<Vec<GJNLinearRingT>>,
   pub POLYGON_RINGS: Option<Vec<GJNPolygonRingsT>>,
   pub GEOMETRIES: Option<Vec<GJNGeometryT>>,
+  pub BBOX: Option<Box<GJNBoundingBoxT>>,
 }
 impl Default for GJNGeometryT {
   fn default() -> Self {
@@ -788,6 +835,7 @@ impl Default for GJNGeometryT {
       RINGS: None,
       POLYGON_RINGS: None,
       GEOMETRIES: None,
+      BBOX: None,
     }
   }
 }
@@ -812,6 +860,9 @@ impl GJNGeometryT {
     let GEOMETRIES = self.GEOMETRIES.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
+    let BBOX = self.BBOX.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     GJNGeometry::create(_fbb, &GJNGeometryArgs{
       TYPE,
       POINT,
@@ -819,6 +870,7 @@ impl GJNGeometryT {
       RINGS,
       POLYGON_RINGS,
       GEOMETRIES,
+      BBOX,
     })
   }
 }
@@ -843,6 +895,10 @@ impl<'a> GJNProperty<'a> {
   pub const VT_VALUE: flatbuffers::VOffsetT = 6;
   pub const VT_NUM_VALUE: flatbuffers::VOffsetT = 8;
   pub const VT_IS_NUMERIC: flatbuffers::VOffsetT = 10;
+  pub const VT_IS_BOOL: flatbuffers::VOffsetT = 12;
+  pub const VT_BOOL_VALUE: flatbuffers::VOffsetT = 14;
+  pub const VT_IS_NULL: flatbuffers::VOffsetT = 16;
+  pub const VT_JSON_VALUE: flatbuffers::VOffsetT = 18;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -855,8 +911,12 @@ impl<'a> GJNProperty<'a> {
   ) -> flatbuffers::WIPOffset<GJNProperty<'bldr>> {
     let mut builder = GJNPropertyBuilder::new(_fbb);
     builder.add_NUM_VALUE(args.NUM_VALUE);
+    if let Some(x) = args.JSON_VALUE { builder.add_JSON_VALUE(x); }
     if let Some(x) = args.VALUE { builder.add_VALUE(x); }
     if let Some(x) = args.KEY { builder.add_KEY(x); }
+    builder.add_IS_NULL(args.IS_NULL);
+    builder.add_BOOL_VALUE(args.BOOL_VALUE);
+    builder.add_IS_BOOL(args.IS_BOOL);
     builder.add_IS_NUMERIC(args.IS_NUMERIC);
     builder.finish()
   }
@@ -870,11 +930,21 @@ impl<'a> GJNProperty<'a> {
     });
     let NUM_VALUE = self.NUM_VALUE();
     let IS_NUMERIC = self.IS_NUMERIC();
+    let IS_BOOL = self.IS_BOOL();
+    let BOOL_VALUE = self.BOOL_VALUE();
+    let IS_NULL = self.IS_NULL();
+    let JSON_VALUE = self.JSON_VALUE().map(|x| {
+      x.to_string()
+    });
     GJNPropertyT {
       KEY,
       VALUE,
       NUM_VALUE,
       IS_NUMERIC,
+      IS_BOOL,
+      BOOL_VALUE,
+      IS_NULL,
+      JSON_VALUE,
     }
   }
 
@@ -910,6 +980,38 @@ impl<'a> GJNProperty<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(GJNProperty::VT_IS_NUMERIC, Some(false)).unwrap()}
   }
+  /// True if this property value is a boolean
+  #[inline]
+  pub fn IS_BOOL(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(GJNProperty::VT_IS_BOOL, Some(false)).unwrap()}
+  }
+  /// Boolean value (use when IS_BOOL is true)
+  #[inline]
+  pub fn BOOL_VALUE(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(GJNProperty::VT_BOOL_VALUE, Some(false)).unwrap()}
+  }
+  /// True if this property value is JSON null
+  #[inline]
+  pub fn IS_NULL(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(GJNProperty::VT_IS_NULL, Some(false)).unwrap()}
+  }
+  /// Raw JSON string for complex values (objects, arrays)
+  #[inline]
+  pub fn JSON_VALUE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GJNProperty::VT_JSON_VALUE, None)}
+  }
 }
 
 impl flatbuffers::Verifiable for GJNProperty<'_> {
@@ -923,6 +1025,10 @@ impl flatbuffers::Verifiable for GJNProperty<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("VALUE", Self::VT_VALUE, false)?
      .visit_field::<f64>("NUM_VALUE", Self::VT_NUM_VALUE, false)?
      .visit_field::<bool>("IS_NUMERIC", Self::VT_IS_NUMERIC, false)?
+     .visit_field::<bool>("IS_BOOL", Self::VT_IS_BOOL, false)?
+     .visit_field::<bool>("BOOL_VALUE", Self::VT_BOOL_VALUE, false)?
+     .visit_field::<bool>("IS_NULL", Self::VT_IS_NULL, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("JSON_VALUE", Self::VT_JSON_VALUE, false)?
      .finish();
     Ok(())
   }
@@ -932,6 +1038,10 @@ pub struct GJNPropertyArgs<'a> {
     pub VALUE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub NUM_VALUE: f64,
     pub IS_NUMERIC: bool,
+    pub IS_BOOL: bool,
+    pub BOOL_VALUE: bool,
+    pub IS_NULL: bool,
+    pub JSON_VALUE: Option<flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for GJNPropertyArgs<'a> {
   #[inline]
@@ -941,6 +1051,10 @@ impl<'a> Default for GJNPropertyArgs<'a> {
       VALUE: None,
       NUM_VALUE: 0.0,
       IS_NUMERIC: false,
+      IS_BOOL: false,
+      BOOL_VALUE: false,
+      IS_NULL: false,
+      JSON_VALUE: None,
     }
   }
 }
@@ -967,6 +1081,22 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> GJNPropertyBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<bool>(GJNProperty::VT_IS_NUMERIC, IS_NUMERIC, false);
   }
   #[inline]
+  pub fn add_IS_BOOL(&mut self, IS_BOOL: bool) {
+    self.fbb_.push_slot::<bool>(GJNProperty::VT_IS_BOOL, IS_BOOL, false);
+  }
+  #[inline]
+  pub fn add_BOOL_VALUE(&mut self, BOOL_VALUE: bool) {
+    self.fbb_.push_slot::<bool>(GJNProperty::VT_BOOL_VALUE, BOOL_VALUE, false);
+  }
+  #[inline]
+  pub fn add_IS_NULL(&mut self, IS_NULL: bool) {
+    self.fbb_.push_slot::<bool>(GJNProperty::VT_IS_NULL, IS_NULL, false);
+  }
+  #[inline]
+  pub fn add_JSON_VALUE(&mut self, JSON_VALUE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GJNProperty::VT_JSON_VALUE, JSON_VALUE);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> GJNPropertyBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     GJNPropertyBuilder {
@@ -988,6 +1118,10 @@ impl core::fmt::Debug for GJNProperty<'_> {
       ds.field("VALUE", &self.VALUE());
       ds.field("NUM_VALUE", &self.NUM_VALUE());
       ds.field("IS_NUMERIC", &self.IS_NUMERIC());
+      ds.field("IS_BOOL", &self.IS_BOOL());
+      ds.field("BOOL_VALUE", &self.BOOL_VALUE());
+      ds.field("IS_NULL", &self.IS_NULL());
+      ds.field("JSON_VALUE", &self.JSON_VALUE());
       ds.finish()
   }
 }
@@ -998,6 +1132,10 @@ pub struct GJNPropertyT {
   pub VALUE: Option<String>,
   pub NUM_VALUE: f64,
   pub IS_NUMERIC: bool,
+  pub IS_BOOL: bool,
+  pub BOOL_VALUE: bool,
+  pub IS_NULL: bool,
+  pub JSON_VALUE: Option<String>,
 }
 impl Default for GJNPropertyT {
   fn default() -> Self {
@@ -1006,6 +1144,10 @@ impl Default for GJNPropertyT {
       VALUE: None,
       NUM_VALUE: 0.0,
       IS_NUMERIC: false,
+      IS_BOOL: false,
+      BOOL_VALUE: false,
+      IS_NULL: false,
+      JSON_VALUE: None,
     }
   }
 }
@@ -1022,11 +1164,21 @@ impl GJNPropertyT {
     });
     let NUM_VALUE = self.NUM_VALUE;
     let IS_NUMERIC = self.IS_NUMERIC;
+    let IS_BOOL = self.IS_BOOL;
+    let BOOL_VALUE = self.BOOL_VALUE;
+    let IS_NULL = self.IS_NULL;
+    let JSON_VALUE = self.JSON_VALUE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     GJNProperty::create(_fbb, &GJNPropertyArgs{
       KEY,
       VALUE,
       NUM_VALUE,
       IS_NUMERIC,
+      IS_BOOL,
+      BOOL_VALUE,
+      IS_NULL,
+      JSON_VALUE,
     })
   }
 }
@@ -1050,6 +1202,11 @@ impl<'a> GJNFeature<'a> {
   pub const VT_ID: flatbuffers::VOffsetT = 4;
   pub const VT_GEOMETRY: flatbuffers::VOffsetT = 6;
   pub const VT_PROPERTIES: flatbuffers::VOffsetT = 8;
+  pub const VT_NUM_ID: flatbuffers::VOffsetT = 10;
+  pub const VT_ID_IS_NUMERIC: flatbuffers::VOffsetT = 12;
+  pub const VT_HAS_GEOMETRY: flatbuffers::VOffsetT = 14;
+  pub const VT_PROPERTIES_IS_NULL: flatbuffers::VOffsetT = 16;
+  pub const VT_BBOX: flatbuffers::VOffsetT = 18;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -1061,9 +1218,14 @@ impl<'a> GJNFeature<'a> {
     args: &'args GJNFeatureArgs<'args>
   ) -> flatbuffers::WIPOffset<GJNFeature<'bldr>> {
     let mut builder = GJNFeatureBuilder::new(_fbb);
+    builder.add_NUM_ID(args.NUM_ID);
+    if let Some(x) = args.BBOX { builder.add_BBOX(x); }
     if let Some(x) = args.PROPERTIES { builder.add_PROPERTIES(x); }
     if let Some(x) = args.GEOMETRY { builder.add_GEOMETRY(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_PROPERTIES_IS_NULL(args.PROPERTIES_IS_NULL);
+    builder.add_HAS_GEOMETRY(args.HAS_GEOMETRY);
+    builder.add_ID_IS_NUMERIC(args.ID_IS_NUMERIC);
     builder.finish()
   }
 
@@ -1077,14 +1239,26 @@ impl<'a> GJNFeature<'a> {
     let PROPERTIES = self.PROPERTIES().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
+    let NUM_ID = self.NUM_ID();
+    let ID_IS_NUMERIC = self.ID_IS_NUMERIC();
+    let HAS_GEOMETRY = self.HAS_GEOMETRY();
+    let PROPERTIES_IS_NULL = self.PROPERTIES_IS_NULL();
+    let BBOX = self.BBOX().map(|x| {
+      Box::new(x.unpack())
+    });
     GJNFeatureT {
       ID,
       GEOMETRY,
       PROPERTIES,
+      NUM_ID,
+      ID_IS_NUMERIC,
+      HAS_GEOMETRY,
+      PROPERTIES_IS_NULL,
+      BBOX,
     }
   }
 
-  /// Feature identifier (optional)
+  /// Feature identifier (optional, string form)
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -1108,6 +1282,46 @@ impl<'a> GJNFeature<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<GJNProperty>>>>(GJNFeature::VT_PROPERTIES, None)}
   }
+  /// Numeric feature identifier (use when ID_IS_NUMERIC is true)
+  #[inline]
+  pub fn NUM_ID(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GJNFeature::VT_NUM_ID, Some(0.0)).unwrap()}
+  }
+  /// True if the feature id is numeric rather than string
+  #[inline]
+  pub fn ID_IS_NUMERIC(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(GJNFeature::VT_ID_IS_NUMERIC, Some(false)).unwrap()}
+  }
+  /// True if the feature has a geometry (false means geometry was JSON null)
+  #[inline]
+  pub fn HAS_GEOMETRY(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(GJNFeature::VT_HAS_GEOMETRY, Some(false)).unwrap()}
+  }
+  /// True if properties was JSON null (vs empty object)
+  #[inline]
+  pub fn PROPERTIES_IS_NULL(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(GJNFeature::VT_PROPERTIES_IS_NULL, Some(false)).unwrap()}
+  }
+  /// Bounding box (optional, per RFC 7946 Section 5)
+  #[inline]
+  pub fn BBOX(&self) -> Option<GJNBoundingBox<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<GJNBoundingBox>>(GJNFeature::VT_BBOX, None)}
+  }
 }
 
 impl flatbuffers::Verifiable for GJNFeature<'_> {
@@ -1120,6 +1334,11 @@ impl flatbuffers::Verifiable for GJNFeature<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<GJNGeometry>>("GEOMETRY", Self::VT_GEOMETRY, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<GJNProperty>>>>("PROPERTIES", Self::VT_PROPERTIES, false)?
+     .visit_field::<f64>("NUM_ID", Self::VT_NUM_ID, false)?
+     .visit_field::<bool>("ID_IS_NUMERIC", Self::VT_ID_IS_NUMERIC, false)?
+     .visit_field::<bool>("HAS_GEOMETRY", Self::VT_HAS_GEOMETRY, false)?
+     .visit_field::<bool>("PROPERTIES_IS_NULL", Self::VT_PROPERTIES_IS_NULL, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<GJNBoundingBox>>("BBOX", Self::VT_BBOX, false)?
      .finish();
     Ok(())
   }
@@ -1128,6 +1347,11 @@ pub struct GJNFeatureArgs<'a> {
     pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub GEOMETRY: Option<flatbuffers::WIPOffset<GJNGeometry<'a>>>,
     pub PROPERTIES: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<GJNProperty<'a>>>>>,
+    pub NUM_ID: f64,
+    pub ID_IS_NUMERIC: bool,
+    pub HAS_GEOMETRY: bool,
+    pub PROPERTIES_IS_NULL: bool,
+    pub BBOX: Option<flatbuffers::WIPOffset<GJNBoundingBox<'a>>>,
 }
 impl<'a> Default for GJNFeatureArgs<'a> {
   #[inline]
@@ -1136,6 +1360,11 @@ impl<'a> Default for GJNFeatureArgs<'a> {
       ID: None,
       GEOMETRY: None,
       PROPERTIES: None,
+      NUM_ID: 0.0,
+      ID_IS_NUMERIC: false,
+      HAS_GEOMETRY: false,
+      PROPERTIES_IS_NULL: false,
+      BBOX: None,
     }
   }
 }
@@ -1158,6 +1387,26 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> GJNFeatureBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GJNFeature::VT_PROPERTIES, PROPERTIES);
   }
   #[inline]
+  pub fn add_NUM_ID(&mut self, NUM_ID: f64) {
+    self.fbb_.push_slot::<f64>(GJNFeature::VT_NUM_ID, NUM_ID, 0.0);
+  }
+  #[inline]
+  pub fn add_ID_IS_NUMERIC(&mut self, ID_IS_NUMERIC: bool) {
+    self.fbb_.push_slot::<bool>(GJNFeature::VT_ID_IS_NUMERIC, ID_IS_NUMERIC, false);
+  }
+  #[inline]
+  pub fn add_HAS_GEOMETRY(&mut self, HAS_GEOMETRY: bool) {
+    self.fbb_.push_slot::<bool>(GJNFeature::VT_HAS_GEOMETRY, HAS_GEOMETRY, false);
+  }
+  #[inline]
+  pub fn add_PROPERTIES_IS_NULL(&mut self, PROPERTIES_IS_NULL: bool) {
+    self.fbb_.push_slot::<bool>(GJNFeature::VT_PROPERTIES_IS_NULL, PROPERTIES_IS_NULL, false);
+  }
+  #[inline]
+  pub fn add_BBOX(&mut self, BBOX: flatbuffers::WIPOffset<GJNBoundingBox<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<GJNBoundingBox>>(GJNFeature::VT_BBOX, BBOX);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> GJNFeatureBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     GJNFeatureBuilder {
@@ -1178,6 +1427,11 @@ impl core::fmt::Debug for GJNFeature<'_> {
       ds.field("ID", &self.ID());
       ds.field("GEOMETRY", &self.GEOMETRY());
       ds.field("PROPERTIES", &self.PROPERTIES());
+      ds.field("NUM_ID", &self.NUM_ID());
+      ds.field("ID_IS_NUMERIC", &self.ID_IS_NUMERIC());
+      ds.field("HAS_GEOMETRY", &self.HAS_GEOMETRY());
+      ds.field("PROPERTIES_IS_NULL", &self.PROPERTIES_IS_NULL());
+      ds.field("BBOX", &self.BBOX());
       ds.finish()
   }
 }
@@ -1187,6 +1441,11 @@ pub struct GJNFeatureT {
   pub ID: Option<String>,
   pub GEOMETRY: Option<Box<GJNGeometryT>>,
   pub PROPERTIES: Option<Vec<GJNPropertyT>>,
+  pub NUM_ID: f64,
+  pub ID_IS_NUMERIC: bool,
+  pub HAS_GEOMETRY: bool,
+  pub PROPERTIES_IS_NULL: bool,
+  pub BBOX: Option<Box<GJNBoundingBoxT>>,
 }
 impl Default for GJNFeatureT {
   fn default() -> Self {
@@ -1194,6 +1453,11 @@ impl Default for GJNFeatureT {
       ID: None,
       GEOMETRY: None,
       PROPERTIES: None,
+      NUM_ID: 0.0,
+      ID_IS_NUMERIC: false,
+      HAS_GEOMETRY: false,
+      PROPERTIES_IS_NULL: false,
+      BBOX: None,
     }
   }
 }
@@ -1211,10 +1475,22 @@ impl GJNFeatureT {
     let PROPERTIES = self.PROPERTIES.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
+    let NUM_ID = self.NUM_ID;
+    let ID_IS_NUMERIC = self.ID_IS_NUMERIC;
+    let HAS_GEOMETRY = self.HAS_GEOMETRY;
+    let PROPERTIES_IS_NULL = self.PROPERTIES_IS_NULL;
+    let BBOX = self.BBOX.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     GJNFeature::create(_fbb, &GJNFeatureArgs{
       ID,
       GEOMETRY,
       PROPERTIES,
+      NUM_ID,
+      ID_IS_NUMERIC,
+      HAS_GEOMETRY,
+      PROPERTIES_IS_NULL,
+      BBOX,
     })
   }
 }
@@ -1241,6 +1517,7 @@ impl<'a> GJNBoundingBox<'a> {
   pub const VT_NORTH: flatbuffers::VOffsetT = 10;
   pub const VT_MIN_ALTITUDE: flatbuffers::VOffsetT = 12;
   pub const VT_MAX_ALTITUDE: flatbuffers::VOffsetT = 14;
+  pub const VT_HAS_ALTITUDE: flatbuffers::VOffsetT = 16;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -1258,6 +1535,7 @@ impl<'a> GJNBoundingBox<'a> {
     builder.add_EAST(args.EAST);
     builder.add_SOUTH(args.SOUTH);
     builder.add_WEST(args.WEST);
+    builder.add_HAS_ALTITUDE(args.HAS_ALTITUDE);
     builder.finish()
   }
 
@@ -1268,6 +1546,7 @@ impl<'a> GJNBoundingBox<'a> {
     let NORTH = self.NORTH();
     let MIN_ALTITUDE = self.MIN_ALTITUDE();
     let MAX_ALTITUDE = self.MAX_ALTITUDE();
+    let HAS_ALTITUDE = self.HAS_ALTITUDE();
     GJNBoundingBoxT {
       WEST,
       SOUTH,
@@ -1275,6 +1554,7 @@ impl<'a> GJNBoundingBox<'a> {
       NORTH,
       MIN_ALTITUDE,
       MAX_ALTITUDE,
+      HAS_ALTITUDE,
     }
   }
 
@@ -1326,6 +1606,14 @@ impl<'a> GJNBoundingBox<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(GJNBoundingBox::VT_MAX_ALTITUDE, Some(0.0)).unwrap()}
   }
+  /// True if the bbox includes altitude (6 values vs 4)
+  #[inline]
+  pub fn HAS_ALTITUDE(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(GJNBoundingBox::VT_HAS_ALTITUDE, Some(false)).unwrap()}
+  }
 }
 
 impl flatbuffers::Verifiable for GJNBoundingBox<'_> {
@@ -1341,6 +1629,7 @@ impl flatbuffers::Verifiable for GJNBoundingBox<'_> {
      .visit_field::<f64>("NORTH", Self::VT_NORTH, false)?
      .visit_field::<f64>("MIN_ALTITUDE", Self::VT_MIN_ALTITUDE, false)?
      .visit_field::<f64>("MAX_ALTITUDE", Self::VT_MAX_ALTITUDE, false)?
+     .visit_field::<bool>("HAS_ALTITUDE", Self::VT_HAS_ALTITUDE, false)?
      .finish();
     Ok(())
   }
@@ -1352,6 +1641,7 @@ pub struct GJNBoundingBoxArgs {
     pub NORTH: f64,
     pub MIN_ALTITUDE: f64,
     pub MAX_ALTITUDE: f64,
+    pub HAS_ALTITUDE: bool,
 }
 impl<'a> Default for GJNBoundingBoxArgs {
   #[inline]
@@ -1363,6 +1653,7 @@ impl<'a> Default for GJNBoundingBoxArgs {
       NORTH: 0.0,
       MIN_ALTITUDE: 0.0,
       MAX_ALTITUDE: 0.0,
+      HAS_ALTITUDE: false,
     }
   }
 }
@@ -1397,6 +1688,10 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> GJNBoundingBoxBuilder<'a, 'b, A
     self.fbb_.push_slot::<f64>(GJNBoundingBox::VT_MAX_ALTITUDE, MAX_ALTITUDE, 0.0);
   }
   #[inline]
+  pub fn add_HAS_ALTITUDE(&mut self, HAS_ALTITUDE: bool) {
+    self.fbb_.push_slot::<bool>(GJNBoundingBox::VT_HAS_ALTITUDE, HAS_ALTITUDE, false);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> GJNBoundingBoxBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     GJNBoundingBoxBuilder {
@@ -1420,6 +1715,7 @@ impl core::fmt::Debug for GJNBoundingBox<'_> {
       ds.field("NORTH", &self.NORTH());
       ds.field("MIN_ALTITUDE", &self.MIN_ALTITUDE());
       ds.field("MAX_ALTITUDE", &self.MAX_ALTITUDE());
+      ds.field("HAS_ALTITUDE", &self.HAS_ALTITUDE());
       ds.finish()
   }
 }
@@ -1432,6 +1728,7 @@ pub struct GJNBoundingBoxT {
   pub NORTH: f64,
   pub MIN_ALTITUDE: f64,
   pub MAX_ALTITUDE: f64,
+  pub HAS_ALTITUDE: bool,
 }
 impl Default for GJNBoundingBoxT {
   fn default() -> Self {
@@ -1442,6 +1739,7 @@ impl Default for GJNBoundingBoxT {
       NORTH: 0.0,
       MIN_ALTITUDE: 0.0,
       MAX_ALTITUDE: 0.0,
+      HAS_ALTITUDE: false,
     }
   }
 }
@@ -1456,6 +1754,7 @@ impl GJNBoundingBoxT {
     let NORTH = self.NORTH;
     let MIN_ALTITUDE = self.MIN_ALTITUDE;
     let MAX_ALTITUDE = self.MAX_ALTITUDE;
+    let HAS_ALTITUDE = self.HAS_ALTITUDE;
     GJNBoundingBox::create(_fbb, &GJNBoundingBoxArgs{
       WEST,
       SOUTH,
@@ -1463,6 +1762,7 @@ impl GJNBoundingBoxT {
       NORTH,
       MIN_ALTITUDE,
       MAX_ALTITUDE,
+      HAS_ALTITUDE,
     })
   }
 }

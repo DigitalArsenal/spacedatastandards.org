@@ -58,13 +58,25 @@ public final class CZM extends Table {
    */
   public double CLOCK_MULTIPLIER() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
+   * Clock range
+   */
+  public String CLOCK_RANGE() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CLOCK_RANGEAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer CLOCK_RANGEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * Clock step
+   */
+  public String CLOCK_STEP() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CLOCK_STEPAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
+  public ByteBuffer CLOCK_STEPInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  /**
    * All packets in the document
    */
   public CZMPacket PACKETS(int j) { return PACKETS(new CZMPacket(), j); }
-  public CZMPacket PACKETS(CZMPacket obj, int j) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int PACKETSLength() { int o = __offset(14); return o != 0 ? __vector_len(o) : 0; }
+  public CZMPacket PACKETS(CZMPacket obj, int j) { int o = __offset(18); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int PACKETSLength() { int o = __offset(18); return o != 0 ? __vector_len(o) : 0; }
   public CZMPacket.Vector packetsVector() { return packetsVector(new CZMPacket.Vector()); }
-  public CZMPacket.Vector packetsVector(CZMPacket.Vector obj) { int o = __offset(14); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public CZMPacket.Vector packetsVector(CZMPacket.Vector obj) { int o = __offset(18); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createCZM(FlatBufferBuilder builder,
       int NAMEOffset,
@@ -72,10 +84,14 @@ public final class CZM extends Table {
       int CLOCK_CURRENT_TIMEOffset,
       int CLOCK_INTERVALOffset,
       double CLOCK_MULTIPLIER,
+      int CLOCK_RANGEOffset,
+      int CLOCK_STEPOffset,
       int PACKETSOffset) {
-    builder.startTable(6);
+    builder.startTable(8);
     CZM.addClockMultiplier(builder, CLOCK_MULTIPLIER);
     CZM.addPackets(builder, PACKETSOffset);
+    CZM.addClockStep(builder, CLOCK_STEPOffset);
+    CZM.addClockRange(builder, CLOCK_RANGEOffset);
     CZM.addClockInterval(builder, CLOCK_INTERVALOffset);
     CZM.addClockCurrentTime(builder, CLOCK_CURRENT_TIMEOffset);
     CZM.addVersion(builder, VERSIONOffset);
@@ -83,13 +99,15 @@ public final class CZM extends Table {
     return CZM.endCZM(builder);
   }
 
-  public static void startCZM(FlatBufferBuilder builder) { builder.startTable(6); }
+  public static void startCZM(FlatBufferBuilder builder) { builder.startTable(8); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(0, NAMEOffset, 0); }
   public static void addVersion(FlatBufferBuilder builder, int VERSIONOffset) { builder.addOffset(1, VERSIONOffset, 0); }
   public static void addClockCurrentTime(FlatBufferBuilder builder, int CLOCK_CURRENT_TIMEOffset) { builder.addOffset(2, CLOCK_CURRENT_TIMEOffset, 0); }
   public static void addClockInterval(FlatBufferBuilder builder, int CLOCK_INTERVALOffset) { builder.addOffset(3, CLOCK_INTERVALOffset, 0); }
   public static void addClockMultiplier(FlatBufferBuilder builder, double CLOCK_MULTIPLIER) { builder.addDouble(4, CLOCK_MULTIPLIER, 0.0); }
-  public static void addPackets(FlatBufferBuilder builder, int PACKETSOffset) { builder.addOffset(5, PACKETSOffset, 0); }
+  public static void addClockRange(FlatBufferBuilder builder, int CLOCK_RANGEOffset) { builder.addOffset(5, CLOCK_RANGEOffset, 0); }
+  public static void addClockStep(FlatBufferBuilder builder, int CLOCK_STEPOffset) { builder.addOffset(6, CLOCK_STEPOffset, 0); }
+  public static void addPackets(FlatBufferBuilder builder, int PACKETSOffset) { builder.addOffset(7, PACKETSOffset, 0); }
   public static int createPacketsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startPacketsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endCZM(FlatBufferBuilder builder) {

@@ -37,6 +37,32 @@ public struct CZMModel : IFlatbufferObject
   public CZMHeightReference HEIGHT_REFERENCE { get { int o = __p.__offset(14); return o != 0 ? (CZMHeightReference)__p.bb.GetSbyte(o + __p.bb_pos) : CZMHeightReference.NONE; } }
   /// Color tint
   public CZMColor? COLOR { get { int o = __p.__offset(16); return o != 0 ? (CZMColor?)(new CZMColor()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Whether to incrementally load textures
+  public bool INCREMENTALLY_LOAD_TEXTURES { get { int o = __p.__offset(18); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Whether to run animations
+  public bool RUN_ANIMATIONS { get { int o = __p.__offset(20); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Shadow mode
+  public string SHADOWS { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSHADOWSBytes() { return __p.__vector_as_span<byte>(22, 1); }
+#else
+  public ArraySegment<byte>? GetSHADOWSBytes() { return __p.__vector_as_arraysegment(22); }
+#endif
+  public byte[] GetSHADOWSArray() { return __p.__vector_as_array<byte>(22); }
+  /// Silhouette color
+  public CZMColor? SILHOUETTE_COLOR { get { int o = __p.__offset(24); return o != 0 ? (CZMColor?)(new CZMColor()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Silhouette size in pixels
+  public double SILHOUETTE_SIZE { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Color blend mode
+  public string COLOR_BLEND_MODE { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCOLOR_BLEND_MODEBytes() { return __p.__vector_as_span<byte>(28, 1); }
+#else
+  public ArraySegment<byte>? GetCOLOR_BLEND_MODEBytes() { return __p.__vector_as_arraysegment(28); }
+#endif
+  public byte[] GetCOLOR_BLEND_MODEArray() { return __p.__vector_as_array<byte>(28); }
+  /// Color blend amount (0-1)
+  public double COLOR_BLEND_AMOUNT { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<CZMModel> CreateCZMModel(FlatBufferBuilder builder,
       bool SHOW = false,
@@ -45,19 +71,33 @@ public struct CZMModel : IFlatbufferObject
       double MINIMUM_PIXEL_SIZE = 0.0,
       double MAXIMUM_SCALE = 0.0,
       CZMHeightReference HEIGHT_REFERENCE = CZMHeightReference.NONE,
-      Offset<CZMColor> COLOROffset = default(Offset<CZMColor>)) {
-    builder.StartTable(7);
+      Offset<CZMColor> COLOROffset = default(Offset<CZMColor>),
+      bool INCREMENTALLY_LOAD_TEXTURES = false,
+      bool RUN_ANIMATIONS = false,
+      StringOffset SHADOWSOffset = default(StringOffset),
+      Offset<CZMColor> SILHOUETTE_COLOROffset = default(Offset<CZMColor>),
+      double SILHOUETTE_SIZE = 0.0,
+      StringOffset COLOR_BLEND_MODEOffset = default(StringOffset),
+      double COLOR_BLEND_AMOUNT = 0.0) {
+    builder.StartTable(14);
+    CZMModel.AddCOLOR_BLEND_AMOUNT(builder, COLOR_BLEND_AMOUNT);
+    CZMModel.AddSILHOUETTE_SIZE(builder, SILHOUETTE_SIZE);
     CZMModel.AddMAXIMUM_SCALE(builder, MAXIMUM_SCALE);
     CZMModel.AddMINIMUM_PIXEL_SIZE(builder, MINIMUM_PIXEL_SIZE);
     CZMModel.AddSCALE(builder, SCALE);
+    CZMModel.AddCOLOR_BLEND_MODE(builder, COLOR_BLEND_MODEOffset);
+    CZMModel.AddSILHOUETTE_COLOR(builder, SILHOUETTE_COLOROffset);
+    CZMModel.AddSHADOWS(builder, SHADOWSOffset);
     CZMModel.AddCOLOR(builder, COLOROffset);
     CZMModel.AddGLTF(builder, GLTFOffset);
+    CZMModel.AddRUN_ANIMATIONS(builder, RUN_ANIMATIONS);
+    CZMModel.AddINCREMENTALLY_LOAD_TEXTURES(builder, INCREMENTALLY_LOAD_TEXTURES);
     CZMModel.AddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE);
     CZMModel.AddSHOW(builder, SHOW);
     return CZMModel.EndCZMModel(builder);
   }
 
-  public static void StartCZMModel(FlatBufferBuilder builder) { builder.StartTable(7); }
+  public static void StartCZMModel(FlatBufferBuilder builder) { builder.StartTable(14); }
   public static void AddSHOW(FlatBufferBuilder builder, bool SHOW) { builder.AddBool(0, SHOW, false); }
   public static void AddGLTF(FlatBufferBuilder builder, StringOffset GLTFOffset) { builder.AddOffset(1, GLTFOffset.Value, 0); }
   public static void AddSCALE(FlatBufferBuilder builder, double SCALE) { builder.AddDouble(2, SCALE, 0.0); }
@@ -65,6 +105,13 @@ public struct CZMModel : IFlatbufferObject
   public static void AddMAXIMUM_SCALE(FlatBufferBuilder builder, double MAXIMUM_SCALE) { builder.AddDouble(4, MAXIMUM_SCALE, 0.0); }
   public static void AddHEIGHT_REFERENCE(FlatBufferBuilder builder, CZMHeightReference HEIGHT_REFERENCE) { builder.AddSbyte(5, (sbyte)HEIGHT_REFERENCE, 0); }
   public static void AddCOLOR(FlatBufferBuilder builder, Offset<CZMColor> COLOROffset) { builder.AddOffset(6, COLOROffset.Value, 0); }
+  public static void AddINCREMENTALLY_LOAD_TEXTURES(FlatBufferBuilder builder, bool INCREMENTALLY_LOAD_TEXTURES) { builder.AddBool(7, INCREMENTALLY_LOAD_TEXTURES, false); }
+  public static void AddRUN_ANIMATIONS(FlatBufferBuilder builder, bool RUN_ANIMATIONS) { builder.AddBool(8, RUN_ANIMATIONS, false); }
+  public static void AddSHADOWS(FlatBufferBuilder builder, StringOffset SHADOWSOffset) { builder.AddOffset(9, SHADOWSOffset.Value, 0); }
+  public static void AddSILHOUETTE_COLOR(FlatBufferBuilder builder, Offset<CZMColor> SILHOUETTE_COLOROffset) { builder.AddOffset(10, SILHOUETTE_COLOROffset.Value, 0); }
+  public static void AddSILHOUETTE_SIZE(FlatBufferBuilder builder, double SILHOUETTE_SIZE) { builder.AddDouble(11, SILHOUETTE_SIZE, 0.0); }
+  public static void AddCOLOR_BLEND_MODE(FlatBufferBuilder builder, StringOffset COLOR_BLEND_MODEOffset) { builder.AddOffset(12, COLOR_BLEND_MODEOffset.Value, 0); }
+  public static void AddCOLOR_BLEND_AMOUNT(FlatBufferBuilder builder, double COLOR_BLEND_AMOUNT) { builder.AddDouble(13, COLOR_BLEND_AMOUNT, 0.0); }
   public static Offset<CZMModel> EndCZMModel(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CZMModel>(o);
@@ -82,11 +129,21 @@ public struct CZMModel : IFlatbufferObject
     _o.MAXIMUM_SCALE = this.MAXIMUM_SCALE;
     _o.HEIGHT_REFERENCE = this.HEIGHT_REFERENCE;
     _o.COLOR = this.COLOR.HasValue ? this.COLOR.Value.UnPack() : null;
+    _o.INCREMENTALLY_LOAD_TEXTURES = this.INCREMENTALLY_LOAD_TEXTURES;
+    _o.RUN_ANIMATIONS = this.RUN_ANIMATIONS;
+    _o.SHADOWS = this.SHADOWS;
+    _o.SILHOUETTE_COLOR = this.SILHOUETTE_COLOR.HasValue ? this.SILHOUETTE_COLOR.Value.UnPack() : null;
+    _o.SILHOUETTE_SIZE = this.SILHOUETTE_SIZE;
+    _o.COLOR_BLEND_MODE = this.COLOR_BLEND_MODE;
+    _o.COLOR_BLEND_AMOUNT = this.COLOR_BLEND_AMOUNT;
   }
   public static Offset<CZMModel> Pack(FlatBufferBuilder builder, CZMModelT _o) {
     if (_o == null) return default(Offset<CZMModel>);
     var _GLTF = _o.GLTF == null ? default(StringOffset) : builder.CreateString(_o.GLTF);
     var _COLOR = _o.COLOR == null ? default(Offset<CZMColor>) : CZMColor.Pack(builder, _o.COLOR);
+    var _SHADOWS = _o.SHADOWS == null ? default(StringOffset) : builder.CreateString(_o.SHADOWS);
+    var _SILHOUETTE_COLOR = _o.SILHOUETTE_COLOR == null ? default(Offset<CZMColor>) : CZMColor.Pack(builder, _o.SILHOUETTE_COLOR);
+    var _COLOR_BLEND_MODE = _o.COLOR_BLEND_MODE == null ? default(StringOffset) : builder.CreateString(_o.COLOR_BLEND_MODE);
     return CreateCZMModel(
       builder,
       _o.SHOW,
@@ -95,7 +152,14 @@ public struct CZMModel : IFlatbufferObject
       _o.MINIMUM_PIXEL_SIZE,
       _o.MAXIMUM_SCALE,
       _o.HEIGHT_REFERENCE,
-      _COLOR);
+      _COLOR,
+      _o.INCREMENTALLY_LOAD_TEXTURES,
+      _o.RUN_ANIMATIONS,
+      _SHADOWS,
+      _SILHOUETTE_COLOR,
+      _o.SILHOUETTE_SIZE,
+      _COLOR_BLEND_MODE,
+      _o.COLOR_BLEND_AMOUNT);
   }
 }
 
@@ -108,6 +172,13 @@ public class CZMModelT
   public double MAXIMUM_SCALE { get; set; }
   public CZMHeightReference HEIGHT_REFERENCE { get; set; }
   public CZMColorT COLOR { get; set; }
+  public bool INCREMENTALLY_LOAD_TEXTURES { get; set; }
+  public bool RUN_ANIMATIONS { get; set; }
+  public string SHADOWS { get; set; }
+  public CZMColorT SILHOUETTE_COLOR { get; set; }
+  public double SILHOUETTE_SIZE { get; set; }
+  public string COLOR_BLEND_MODE { get; set; }
+  public double COLOR_BLEND_AMOUNT { get; set; }
 
   public CZMModelT() {
     this.SHOW = false;
@@ -117,6 +188,13 @@ public class CZMModelT
     this.MAXIMUM_SCALE = 0.0;
     this.HEIGHT_REFERENCE = CZMHeightReference.NONE;
     this.COLOR = null;
+    this.INCREMENTALLY_LOAD_TEXTURES = false;
+    this.RUN_ANIMATIONS = false;
+    this.SHADOWS = null;
+    this.SILHOUETTE_COLOR = null;
+    this.SILHOUETTE_SIZE = 0.0;
+    this.COLOR_BLEND_MODE = null;
+    this.COLOR_BLEND_AMOUNT = 0.0;
   }
 }
 
@@ -133,6 +211,13 @@ static public class CZMModelVerify
       && verifier.VerifyField(tablePos, 12 /*MAXIMUM_SCALE*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 14 /*HEIGHT_REFERENCE*/, 1 /*CZMHeightReference*/, 1, false)
       && verifier.VerifyTable(tablePos, 16 /*COLOR*/, CZMColorVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 18 /*INCREMENTALLY_LOAD_TEXTURES*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 20 /*RUN_ANIMATIONS*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyString(tablePos, 22 /*SHADOWS*/, false)
+      && verifier.VerifyTable(tablePos, 24 /*SILHOUETTE_COLOR*/, CZMColorVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 26 /*SILHOUETTE_SIZE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 28 /*COLOR_BLEND_MODE*/, false)
+      && verifier.VerifyField(tablePos, 30 /*COLOR_BLEND_AMOUNT*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

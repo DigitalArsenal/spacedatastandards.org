@@ -84,8 +84,22 @@ func (rcv *GJNPosition) MutateALTITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
 }
 
+/// True if altitude was explicitly provided (distinguishes 0 from absent)
+func (rcv *GJNPosition) HAS_ALTITUDE() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+/// True if altitude was explicitly provided (distinguishes 0 from absent)
+func (rcv *GJNPosition) MutateHAS_ALTITUDE(n bool) bool {
+	return rcv._tab.MutateBoolSlot(10, n)
+}
+
 func GJNPositionStart(builder *flatbuffers.Builder) {
-	builder.StartObject(3)
+	builder.StartObject(4)
 }
 func GJNPositionAddLONGITUDE(builder *flatbuffers.Builder, LONGITUDE float64) {
 	builder.PrependFloat64Slot(0, LONGITUDE, 0.0)
@@ -95,6 +109,9 @@ func GJNPositionAddLATITUDE(builder *flatbuffers.Builder, LATITUDE float64) {
 }
 func GJNPositionAddALTITUDE(builder *flatbuffers.Builder, ALTITUDE float64) {
 	builder.PrependFloat64Slot(2, ALTITUDE, 0.0)
+}
+func GJNPositionAddHAS_ALTITUDE(builder *flatbuffers.Builder, HAS_ALTITUDE bool) {
+	builder.PrependBoolSlot(3, HAS_ALTITUDE, false)
 }
 func GJNPositionEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

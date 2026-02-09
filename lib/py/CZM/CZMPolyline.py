@@ -101,7 +101,7 @@ class CZMPolyline(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Line color (solid color material)
+    # Line color (solid color material, legacy)
     # CZMPolyline
     def COLOR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -121,8 +121,72 @@ class CZMPolyline(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # Arc type
+    # CZMPolyline
+    def ARC_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Granularity in radians
+    # CZMPolyline
+    def GRANULARITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Full polyline material
+    # CZMPolyline
+    def MATERIAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMPolylineMaterial import CZMPolylineMaterial
+            obj = CZMPolylineMaterial()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Shadow mode
+    # CZMPolyline
+    def SHADOWS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Depth fail material
+    # CZMPolyline
+    def DEPTH_FAIL_MATERIAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMPolylineMaterial import CZMPolylineMaterial
+            obj = CZMPolylineMaterial()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Classification type
+    # CZMPolyline
+    def CLASSIFICATION_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Z-index for ordering
+    # CZMPolyline
+    def Z_INDEX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
 def CZMPolylineStart(builder):
-    builder.StartObject(6)
+    builder.StartObject(13)
 
 def Start(builder):
     CZMPolylineStart(builder)
@@ -175,6 +239,48 @@ def CZMPolylineAddCLAMP_TO_GROUND(builder, CLAMP_TO_GROUND):
 def AddCLAMP_TO_GROUND(builder, CLAMP_TO_GROUND):
     CZMPolylineAddCLAMP_TO_GROUND(builder, CLAMP_TO_GROUND)
 
+def CZMPolylineAddARC_TYPE(builder, ARC_TYPE):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(ARC_TYPE), 0)
+
+def AddARC_TYPE(builder, ARC_TYPE):
+    CZMPolylineAddARC_TYPE(builder, ARC_TYPE)
+
+def CZMPolylineAddGRANULARITY(builder, GRANULARITY):
+    builder.PrependFloat64Slot(7, GRANULARITY, 0.0)
+
+def AddGRANULARITY(builder, GRANULARITY):
+    CZMPolylineAddGRANULARITY(builder, GRANULARITY)
+
+def CZMPolylineAddMATERIAL(builder, MATERIAL):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(MATERIAL), 0)
+
+def AddMATERIAL(builder, MATERIAL):
+    CZMPolylineAddMATERIAL(builder, MATERIAL)
+
+def CZMPolylineAddSHADOWS(builder, SHADOWS):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(SHADOWS), 0)
+
+def AddSHADOWS(builder, SHADOWS):
+    CZMPolylineAddSHADOWS(builder, SHADOWS)
+
+def CZMPolylineAddDEPTH_FAIL_MATERIAL(builder, DEPTH_FAIL_MATERIAL):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(DEPTH_FAIL_MATERIAL), 0)
+
+def AddDEPTH_FAIL_MATERIAL(builder, DEPTH_FAIL_MATERIAL):
+    CZMPolylineAddDEPTH_FAIL_MATERIAL(builder, DEPTH_FAIL_MATERIAL)
+
+def CZMPolylineAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(CLASSIFICATION_TYPE), 0)
+
+def AddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE):
+    CZMPolylineAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE)
+
+def CZMPolylineAddZ_INDEX(builder, Z_INDEX):
+    builder.PrependInt32Slot(12, Z_INDEX, 0)
+
+def AddZ_INDEX(builder, Z_INDEX):
+    CZMPolylineAddZ_INDEX(builder, Z_INDEX)
+
 def CZMPolylineEnd(builder):
     return builder.EndObject()
 
@@ -182,6 +288,7 @@ def End(builder):
     return CZMPolylineEnd(builder)
 
 import CZMColor
+import CZMPolylineMaterial
 try:
     from typing import List, Optional
 except:
@@ -197,6 +304,13 @@ class CZMPolylineT(object):
         self.WIDTH = 0.0  # type: float
         self.COLOR = None  # type: Optional[CZMColor.CZMColorT]
         self.CLAMP_TO_GROUND = False  # type: bool
+        self.ARC_TYPE = None  # type: str
+        self.GRANULARITY = 0.0  # type: float
+        self.MATERIAL = None  # type: Optional[CZMPolylineMaterial.CZMPolylineMaterialT]
+        self.SHADOWS = None  # type: str
+        self.DEPTH_FAIL_MATERIAL = None  # type: Optional[CZMPolylineMaterial.CZMPolylineMaterialT]
+        self.CLASSIFICATION_TYPE = None  # type: str
+        self.Z_INDEX = 0  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -238,6 +352,15 @@ class CZMPolylineT(object):
         if czmpolyline.COLOR() is not None:
             self.COLOR = CZMColor.CZMColorT.InitFromObj(czmpolyline.COLOR())
         self.CLAMP_TO_GROUND = czmpolyline.CLAMP_TO_GROUND()
+        self.ARC_TYPE = czmpolyline.ARC_TYPE()
+        self.GRANULARITY = czmpolyline.GRANULARITY()
+        if czmpolyline.MATERIAL() is not None:
+            self.MATERIAL = CZMPolylineMaterial.CZMPolylineMaterialT.InitFromObj(czmpolyline.MATERIAL())
+        self.SHADOWS = czmpolyline.SHADOWS()
+        if czmpolyline.DEPTH_FAIL_MATERIAL() is not None:
+            self.DEPTH_FAIL_MATERIAL = CZMPolylineMaterial.CZMPolylineMaterialT.InitFromObj(czmpolyline.DEPTH_FAIL_MATERIAL())
+        self.CLASSIFICATION_TYPE = czmpolyline.CLASSIFICATION_TYPE()
+        self.Z_INDEX = czmpolyline.Z_INDEX()
 
     # CZMPolylineT
     def Pack(self, builder):
@@ -259,6 +382,16 @@ class CZMPolylineT(object):
                 POSITIONS_CARTESIAN = builder.EndVector()
         if self.COLOR is not None:
             COLOR = self.COLOR.Pack(builder)
+        if self.ARC_TYPE is not None:
+            ARC_TYPE = builder.CreateString(self.ARC_TYPE)
+        if self.MATERIAL is not None:
+            MATERIAL = self.MATERIAL.Pack(builder)
+        if self.SHADOWS is not None:
+            SHADOWS = builder.CreateString(self.SHADOWS)
+        if self.DEPTH_FAIL_MATERIAL is not None:
+            DEPTH_FAIL_MATERIAL = self.DEPTH_FAIL_MATERIAL.Pack(builder)
+        if self.CLASSIFICATION_TYPE is not None:
+            CLASSIFICATION_TYPE = builder.CreateString(self.CLASSIFICATION_TYPE)
         CZMPolylineStart(builder)
         CZMPolylineAddSHOW(builder, self.SHOW)
         if self.POSITIONS_CARTOGRAPHIC_DEGREES is not None:
@@ -269,5 +402,17 @@ class CZMPolylineT(object):
         if self.COLOR is not None:
             CZMPolylineAddCOLOR(builder, COLOR)
         CZMPolylineAddCLAMP_TO_GROUND(builder, self.CLAMP_TO_GROUND)
+        if self.ARC_TYPE is not None:
+            CZMPolylineAddARC_TYPE(builder, ARC_TYPE)
+        CZMPolylineAddGRANULARITY(builder, self.GRANULARITY)
+        if self.MATERIAL is not None:
+            CZMPolylineAddMATERIAL(builder, MATERIAL)
+        if self.SHADOWS is not None:
+            CZMPolylineAddSHADOWS(builder, SHADOWS)
+        if self.DEPTH_FAIL_MATERIAL is not None:
+            CZMPolylineAddDEPTH_FAIL_MATERIAL(builder, DEPTH_FAIL_MATERIAL)
+        if self.CLASSIFICATION_TYPE is not None:
+            CZMPolylineAddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE)
+        CZMPolylineAddZ_INDEX(builder, self.Z_INDEX)
         czmpolyline = CZMPolylineEnd(builder)
         return czmpolyline

@@ -106,8 +106,22 @@ func (rcv *KMLLineString) MutateTESSELLATE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(10, n)
 }
 
+/// gx:drawOrder
+func (rcv *KMLLineString) GX_DRAW_ORDER() int32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// gx:drawOrder
+func (rcv *KMLLineString) MutateGX_DRAW_ORDER(n int32) bool {
+	return rcv._tab.MutateInt32Slot(12, n)
+}
+
 func KMLLineStringStart(builder *flatbuffers.Builder) {
-	builder.StartObject(4)
+	builder.StartObject(5)
 }
 func KMLLineStringAddCOORDINATES(builder *flatbuffers.Builder, COORDINATES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COORDINATES), 0)
@@ -123,6 +137,9 @@ func KMLLineStringAddEXTRUDE(builder *flatbuffers.Builder, EXTRUDE bool) {
 }
 func KMLLineStringAddTESSELLATE(builder *flatbuffers.Builder, TESSELLATE bool) {
 	builder.PrependBoolSlot(3, TESSELLATE, false)
+}
+func KMLLineStringAddGX_DRAW_ORDER(builder *flatbuffers.Builder, GX_DRAW_ORDER int32) {
+	builder.PrependInt32Slot(4, GX_DRAW_ORDER, 0)
 }
 func KMLLineStringEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

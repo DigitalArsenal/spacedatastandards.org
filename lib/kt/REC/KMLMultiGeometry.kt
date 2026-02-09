@@ -93,6 +93,70 @@ class KMLMultiGeometry : Table() {
         get() {
             val o = __offset(10); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Child linear rings (standalone)
+     */
+    fun LINEAR_RINGS(j: Int) : KMLLinearRing? = LINEAR_RINGS(KMLLinearRing(), j)
+    fun LINEAR_RINGS(obj: KMLLinearRing, j: Int) : KMLLinearRing? {
+        val o = __offset(12)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val LINEAR_RINGSLength : Int
+        get() {
+            val o = __offset(12); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Child 3D models
+     */
+    fun MODELS(j: Int) : KMLModel? = MODELS(KMLModel(), j)
+    fun MODELS(obj: KMLModel, j: Int) : KMLModel? {
+        val o = __offset(14)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val MODELSLength : Int
+        get() {
+            val o = __offset(14); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Child tracks
+     */
+    fun TRACKS(j: Int) : KMLTrack? = TRACKS(KMLTrack(), j)
+    fun TRACKS(obj: KMLTrack, j: Int) : KMLTrack? {
+        val o = __offset(16)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val TRACKSLength : Int
+        get() {
+            val o = __offset(16); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Child multi-tracks
+     */
+    fun MULTI_TRACKS(j: Int) : KMLMultiTrack? = MULTI_TRACKS(KMLMultiTrack(), j)
+    fun MULTI_TRACKS(obj: KMLMultiTrack, j: Int) : KMLMultiTrack? {
+        val o = __offset(18)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val MULTI_TRACKSLength : Int
+        get() {
+            val o = __offset(18); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsKMLMultiGeometry(_bb: ByteBuffer): KMLMultiGeometry = getRootAsKMLMultiGeometry(_bb, KMLMultiGeometry())
@@ -100,15 +164,19 @@ class KMLMultiGeometry : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLMultiGeometry(builder: FlatBufferBuilder, POINTSOffset: Int, LINE_STRINGSOffset: Int, POLYGONSOffset: Int, MULTI_GEOMETRIESOffset: Int) : Int {
-            builder.startTable(4)
+        fun createKMLMultiGeometry(builder: FlatBufferBuilder, POINTSOffset: Int, LINE_STRINGSOffset: Int, POLYGONSOffset: Int, MULTI_GEOMETRIESOffset: Int, LINEAR_RINGSOffset: Int, MODELSOffset: Int, TRACKSOffset: Int, MULTI_TRACKSOffset: Int) : Int {
+            builder.startTable(8)
+            addMULTI_TRACKS(builder, MULTI_TRACKSOffset)
+            addTRACKS(builder, TRACKSOffset)
+            addMODELS(builder, MODELSOffset)
+            addLINEAR_RINGS(builder, LINEAR_RINGSOffset)
             addMULTI_GEOMETRIES(builder, MULTI_GEOMETRIESOffset)
             addPOLYGONS(builder, POLYGONSOffset)
             addLINE_STRINGS(builder, LINE_STRINGSOffset)
             addPOINTS(builder, POINTSOffset)
             return endKMLMultiGeometry(builder)
         }
-        fun startKMLMultiGeometry(builder: FlatBufferBuilder) = builder.startTable(4)
+        fun startKMLMultiGeometry(builder: FlatBufferBuilder) = builder.startTable(8)
         fun addPOINTS(builder: FlatBufferBuilder, POINTS: Int) = builder.addOffset(0, POINTS, 0)
         fun createPointsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
@@ -145,6 +213,42 @@ class KMLMultiGeometry : Table() {
             return builder.endVector()
         }
         fun startMultiGeometriesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addLINEAR_RINGS(builder: FlatBufferBuilder, LINEAR_RINGS: Int) = builder.addOffset(4, LINEAR_RINGS, 0)
+        fun createLinearRingsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startLinearRingsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addMODELS(builder: FlatBufferBuilder, MODELS: Int) = builder.addOffset(5, MODELS, 0)
+        fun createModelsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startModelsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addTRACKS(builder: FlatBufferBuilder, TRACKS: Int) = builder.addOffset(6, TRACKS, 0)
+        fun createTracksVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startTracksVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addMULTI_TRACKS(builder: FlatBufferBuilder, MULTI_TRACKS: Int) = builder.addOffset(7, MULTI_TRACKS, 0)
+        fun createMultiTracksVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startMultiTracksVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endKMLMultiGeometry(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

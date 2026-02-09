@@ -42,22 +42,52 @@ public final class KMLLineStyle extends Table {
    * Width in pixels
    */
   public double WIDTH() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * gx:outerColor
+   */
+  public String GX_OUTER_COLOR() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer GX_OUTER_COLORAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer GX_OUTER_COLORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * gx:outerWidth
+   */
+  public double GX_OUTER_WIDTH() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * gx:physicalWidth
+   */
+  public double GX_PHYSICAL_WIDTH() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * gx:labelVisibility
+   */
+  public boolean GX_LABEL_VISIBILITY() { int o = __offset(16); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createKMLLineStyle(FlatBufferBuilder builder,
       int COLOROffset,
       byte COLOR_MODE,
-      double WIDTH) {
-    builder.startTable(3);
+      double WIDTH,
+      int GX_OUTER_COLOROffset,
+      double GX_OUTER_WIDTH,
+      double GX_PHYSICAL_WIDTH,
+      boolean GX_LABEL_VISIBILITY) {
+    builder.startTable(7);
+    KMLLineStyle.addGxPhysicalWidth(builder, GX_PHYSICAL_WIDTH);
+    KMLLineStyle.addGxOuterWidth(builder, GX_OUTER_WIDTH);
     KMLLineStyle.addWidth(builder, WIDTH);
+    KMLLineStyle.addGxOuterColor(builder, GX_OUTER_COLOROffset);
     KMLLineStyle.addColor(builder, COLOROffset);
+    KMLLineStyle.addGxLabelVisibility(builder, GX_LABEL_VISIBILITY);
     KMLLineStyle.addColorMode(builder, COLOR_MODE);
     return KMLLineStyle.endKMLLineStyle(builder);
   }
 
-  public static void startKMLLineStyle(FlatBufferBuilder builder) { builder.startTable(3); }
+  public static void startKMLLineStyle(FlatBufferBuilder builder) { builder.startTable(7); }
   public static void addColor(FlatBufferBuilder builder, int COLOROffset) { builder.addOffset(0, COLOROffset, 0); }
   public static void addColorMode(FlatBufferBuilder builder, byte COLOR_MODE) { builder.addByte(1, COLOR_MODE, 0); }
   public static void addWidth(FlatBufferBuilder builder, double WIDTH) { builder.addDouble(2, WIDTH, 0.0); }
+  public static void addGxOuterColor(FlatBufferBuilder builder, int GX_OUTER_COLOROffset) { builder.addOffset(3, GX_OUTER_COLOROffset, 0); }
+  public static void addGxOuterWidth(FlatBufferBuilder builder, double GX_OUTER_WIDTH) { builder.addDouble(4, GX_OUTER_WIDTH, 0.0); }
+  public static void addGxPhysicalWidth(FlatBufferBuilder builder, double GX_PHYSICAL_WIDTH) { builder.addDouble(5, GX_PHYSICAL_WIDTH, 0.0); }
+  public static void addGxLabelVisibility(FlatBufferBuilder builder, boolean GX_LABEL_VISIBILITY) { builder.addBoolean(6, GX_LABEL_VISIBILITY, false); }
   public static int endKMLLineStyle(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

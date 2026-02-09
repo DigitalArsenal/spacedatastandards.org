@@ -36,18 +36,39 @@ public final class KMLLinearRing extends Table {
   public int COORDINATESLength() { int o = __offset(4); return o != 0 ? __vector_len(o) : 0; }
   public KMLCoordinate.Vector coordinatesVector() { return coordinatesVector(new KMLCoordinate.Vector()); }
   public KMLCoordinate.Vector coordinatesVector(KMLCoordinate.Vector obj) { int o = __offset(4); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Whether to extrude to ground
+   */
+  public boolean EXTRUDE() { int o = __offset(6); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Whether to tessellate
+   */
+  public boolean TESSELLATE() { int o = __offset(8); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Altitude mode
+   */
+  public byte ALTITUDE_MODE() { int o = __offset(10); return o != 0 ? bb.get(o + bb_pos) : 0; }
 
   public static int createKMLLinearRing(FlatBufferBuilder builder,
-      int COORDINATESOffset) {
-    builder.startTable(1);
+      int COORDINATESOffset,
+      boolean EXTRUDE,
+      boolean TESSELLATE,
+      byte ALTITUDE_MODE) {
+    builder.startTable(4);
     KMLLinearRing.addCoordinates(builder, COORDINATESOffset);
+    KMLLinearRing.addAltitudeMode(builder, ALTITUDE_MODE);
+    KMLLinearRing.addTessellate(builder, TESSELLATE);
+    KMLLinearRing.addExtrude(builder, EXTRUDE);
     return KMLLinearRing.endKMLLinearRing(builder);
   }
 
-  public static void startKMLLinearRing(FlatBufferBuilder builder) { builder.startTable(1); }
+  public static void startKMLLinearRing(FlatBufferBuilder builder) { builder.startTable(4); }
   public static void addCoordinates(FlatBufferBuilder builder, int COORDINATESOffset) { builder.addOffset(0, COORDINATESOffset, 0); }
   public static int createCoordinatesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startCoordinatesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addExtrude(FlatBufferBuilder builder, boolean EXTRUDE) { builder.addBoolean(1, EXTRUDE, false); }
+  public static void addTessellate(FlatBufferBuilder builder, boolean TESSELLATE) { builder.addBoolean(2, TESSELLATE, false); }
+  public static void addAltitudeMode(FlatBufferBuilder builder, byte ALTITUDE_MODE) { builder.addByte(3, ALTITUDE_MODE, 0); }
   public static int endKMLLinearRing(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

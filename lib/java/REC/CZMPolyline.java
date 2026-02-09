@@ -55,7 +55,7 @@ public final class CZMPolyline extends Table {
    */
   public double WIDTH() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Line color (solid color material)
+   * Line color (solid color material, legacy)
    */
   public CZMColor COLOR() { return COLOR(new CZMColor()); }
   public CZMColor COLOR(CZMColor obj) { int o = __offset(12); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
@@ -63,6 +63,42 @@ public final class CZMPolyline extends Table {
    * Whether to clamp to ground
    */
   public boolean CLAMP_TO_GROUND() { int o = __offset(14); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Arc type
+   */
+  public String ARC_TYPE() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ARC_TYPEAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
+  public ByteBuffer ARC_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  /**
+   * Granularity in radians
+   */
+  public double GRANULARITY() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Full polyline material
+   */
+  public CZMPolylineMaterial MATERIAL() { return MATERIAL(new CZMPolylineMaterial()); }
+  public CZMPolylineMaterial MATERIAL(CZMPolylineMaterial obj) { int o = __offset(20); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Shadow mode
+   */
+  public String SHADOWS() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SHADOWSAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
+  public ByteBuffer SHADOWSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
+  /**
+   * Depth fail material
+   */
+  public CZMPolylineMaterial DEPTH_FAIL_MATERIAL() { return DEPTH_FAIL_MATERIAL(new CZMPolylineMaterial()); }
+  public CZMPolylineMaterial DEPTH_FAIL_MATERIAL(CZMPolylineMaterial obj) { int o = __offset(24); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Classification type
+   */
+  public String CLASSIFICATION_TYPE() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CLASSIFICATION_TYPEAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
+  public ByteBuffer CLASSIFICATION_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
+  /**
+   * Z-index for ordering
+   */
+  public int Z_INDEX() { int o = __offset(28); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
 
   public static int createCZMPolyline(FlatBufferBuilder builder,
       boolean SHOW,
@@ -70,9 +106,23 @@ public final class CZMPolyline extends Table {
       int POSITIONS_CARTESIANOffset,
       double WIDTH,
       int COLOROffset,
-      boolean CLAMP_TO_GROUND) {
-    builder.startTable(6);
+      boolean CLAMP_TO_GROUND,
+      int ARC_TYPEOffset,
+      double GRANULARITY,
+      int MATERIALOffset,
+      int SHADOWSOffset,
+      int DEPTH_FAIL_MATERIALOffset,
+      int CLASSIFICATION_TYPEOffset,
+      int Z_INDEX) {
+    builder.startTable(13);
+    CZMPolyline.addGranularity(builder, GRANULARITY);
     CZMPolyline.addWidth(builder, WIDTH);
+    CZMPolyline.addZIndex(builder, Z_INDEX);
+    CZMPolyline.addClassificationType(builder, CLASSIFICATION_TYPEOffset);
+    CZMPolyline.addDepthFailMaterial(builder, DEPTH_FAIL_MATERIALOffset);
+    CZMPolyline.addShadows(builder, SHADOWSOffset);
+    CZMPolyline.addMaterial(builder, MATERIALOffset);
+    CZMPolyline.addArcType(builder, ARC_TYPEOffset);
     CZMPolyline.addColor(builder, COLOROffset);
     CZMPolyline.addPositionsCartesian(builder, POSITIONS_CARTESIANOffset);
     CZMPolyline.addPositionsCartographicDegrees(builder, POSITIONS_CARTOGRAPHIC_DEGREESOffset);
@@ -81,7 +131,7 @@ public final class CZMPolyline extends Table {
     return CZMPolyline.endCZMPolyline(builder);
   }
 
-  public static void startCZMPolyline(FlatBufferBuilder builder) { builder.startTable(6); }
+  public static void startCZMPolyline(FlatBufferBuilder builder) { builder.startTable(13); }
   public static void addShow(FlatBufferBuilder builder, boolean SHOW) { builder.addBoolean(0, SHOW, false); }
   public static void addPositionsCartographicDegrees(FlatBufferBuilder builder, int POSITIONS_CARTOGRAPHIC_DEGREESOffset) { builder.addOffset(1, POSITIONS_CARTOGRAPHIC_DEGREESOffset, 0); }
   public static int createPositionsCartographicDegreesVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
@@ -92,6 +142,13 @@ public final class CZMPolyline extends Table {
   public static void addWidth(FlatBufferBuilder builder, double WIDTH) { builder.addDouble(3, WIDTH, 0.0); }
   public static void addColor(FlatBufferBuilder builder, int COLOROffset) { builder.addOffset(4, COLOROffset, 0); }
   public static void addClampToGround(FlatBufferBuilder builder, boolean CLAMP_TO_GROUND) { builder.addBoolean(5, CLAMP_TO_GROUND, false); }
+  public static void addArcType(FlatBufferBuilder builder, int ARC_TYPEOffset) { builder.addOffset(6, ARC_TYPEOffset, 0); }
+  public static void addGranularity(FlatBufferBuilder builder, double GRANULARITY) { builder.addDouble(7, GRANULARITY, 0.0); }
+  public static void addMaterial(FlatBufferBuilder builder, int MATERIALOffset) { builder.addOffset(8, MATERIALOffset, 0); }
+  public static void addShadows(FlatBufferBuilder builder, int SHADOWSOffset) { builder.addOffset(9, SHADOWSOffset, 0); }
+  public static void addDepthFailMaterial(FlatBufferBuilder builder, int DEPTH_FAIL_MATERIALOffset) { builder.addOffset(10, DEPTH_FAIL_MATERIALOffset, 0); }
+  public static void addClassificationType(FlatBufferBuilder builder, int CLASSIFICATION_TYPEOffset) { builder.addOffset(11, CLASSIFICATION_TYPEOffset, 0); }
+  public static void addZIndex(FlatBufferBuilder builder, int Z_INDEX) { builder.addInt(12, Z_INDEX, 0); }
   public static int endCZMPolyline(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

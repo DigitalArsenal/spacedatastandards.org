@@ -29,6 +29,16 @@ public struct CZMPoint : IFlatbufferObject
   public double PIXEL_SIZE { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Height reference
   public CZMHeightReference HEIGHT_REFERENCE { get { int o = __p.__offset(14); return o != 0 ? (CZMHeightReference)__p.bb.GetSbyte(o + __p.bb_pos) : CZMHeightReference.NONE; } }
+  /// Scale by distance
+  public CZMNearFarScalar? SCALE_BY_DISTANCE { get { int o = __p.__offset(16); return o != 0 ? (CZMNearFarScalar?)(new CZMNearFarScalar()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Translucency by distance
+  public CZMNearFarScalar? TRANSLUCENCY_BY_DISTANCE { get { int o = __p.__offset(18); return o != 0 ? (CZMNearFarScalar?)(new CZMNearFarScalar()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Distance display condition near
+  public double DISTANCE_DISPLAY_CONDITION_NEAR { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Distance display condition far
+  public double DISTANCE_DISPLAY_CONDITION_FAR { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Disable depth test distance
+  public double DISABLE_DEPTH_TEST_DISTANCE { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<CZMPoint> CreateCZMPoint(FlatBufferBuilder builder,
       bool SHOW = false,
@@ -36,10 +46,20 @@ public struct CZMPoint : IFlatbufferObject
       Offset<CZMColor> OUTLINE_COLOROffset = default(Offset<CZMColor>),
       double OUTLINE_WIDTH = 0.0,
       double PIXEL_SIZE = 0.0,
-      CZMHeightReference HEIGHT_REFERENCE = CZMHeightReference.NONE) {
-    builder.StartTable(6);
+      CZMHeightReference HEIGHT_REFERENCE = CZMHeightReference.NONE,
+      Offset<CZMNearFarScalar> SCALE_BY_DISTANCEOffset = default(Offset<CZMNearFarScalar>),
+      Offset<CZMNearFarScalar> TRANSLUCENCY_BY_DISTANCEOffset = default(Offset<CZMNearFarScalar>),
+      double DISTANCE_DISPLAY_CONDITION_NEAR = 0.0,
+      double DISTANCE_DISPLAY_CONDITION_FAR = 0.0,
+      double DISABLE_DEPTH_TEST_DISTANCE = 0.0) {
+    builder.StartTable(11);
+    CZMPoint.AddDISABLE_DEPTH_TEST_DISTANCE(builder, DISABLE_DEPTH_TEST_DISTANCE);
+    CZMPoint.AddDISTANCE_DISPLAY_CONDITION_FAR(builder, DISTANCE_DISPLAY_CONDITION_FAR);
+    CZMPoint.AddDISTANCE_DISPLAY_CONDITION_NEAR(builder, DISTANCE_DISPLAY_CONDITION_NEAR);
     CZMPoint.AddPIXEL_SIZE(builder, PIXEL_SIZE);
     CZMPoint.AddOUTLINE_WIDTH(builder, OUTLINE_WIDTH);
+    CZMPoint.AddTRANSLUCENCY_BY_DISTANCE(builder, TRANSLUCENCY_BY_DISTANCEOffset);
+    CZMPoint.AddSCALE_BY_DISTANCE(builder, SCALE_BY_DISTANCEOffset);
     CZMPoint.AddOUTLINE_COLOR(builder, OUTLINE_COLOROffset);
     CZMPoint.AddCOLOR(builder, COLOROffset);
     CZMPoint.AddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE);
@@ -47,13 +67,18 @@ public struct CZMPoint : IFlatbufferObject
     return CZMPoint.EndCZMPoint(builder);
   }
 
-  public static void StartCZMPoint(FlatBufferBuilder builder) { builder.StartTable(6); }
+  public static void StartCZMPoint(FlatBufferBuilder builder) { builder.StartTable(11); }
   public static void AddSHOW(FlatBufferBuilder builder, bool SHOW) { builder.AddBool(0, SHOW, false); }
   public static void AddCOLOR(FlatBufferBuilder builder, Offset<CZMColor> COLOROffset) { builder.AddOffset(1, COLOROffset.Value, 0); }
   public static void AddOUTLINE_COLOR(FlatBufferBuilder builder, Offset<CZMColor> OUTLINE_COLOROffset) { builder.AddOffset(2, OUTLINE_COLOROffset.Value, 0); }
   public static void AddOUTLINE_WIDTH(FlatBufferBuilder builder, double OUTLINE_WIDTH) { builder.AddDouble(3, OUTLINE_WIDTH, 0.0); }
   public static void AddPIXEL_SIZE(FlatBufferBuilder builder, double PIXEL_SIZE) { builder.AddDouble(4, PIXEL_SIZE, 0.0); }
   public static void AddHEIGHT_REFERENCE(FlatBufferBuilder builder, CZMHeightReference HEIGHT_REFERENCE) { builder.AddSbyte(5, (sbyte)HEIGHT_REFERENCE, 0); }
+  public static void AddSCALE_BY_DISTANCE(FlatBufferBuilder builder, Offset<CZMNearFarScalar> SCALE_BY_DISTANCEOffset) { builder.AddOffset(6, SCALE_BY_DISTANCEOffset.Value, 0); }
+  public static void AddTRANSLUCENCY_BY_DISTANCE(FlatBufferBuilder builder, Offset<CZMNearFarScalar> TRANSLUCENCY_BY_DISTANCEOffset) { builder.AddOffset(7, TRANSLUCENCY_BY_DISTANCEOffset.Value, 0); }
+  public static void AddDISTANCE_DISPLAY_CONDITION_NEAR(FlatBufferBuilder builder, double DISTANCE_DISPLAY_CONDITION_NEAR) { builder.AddDouble(8, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0); }
+  public static void AddDISTANCE_DISPLAY_CONDITION_FAR(FlatBufferBuilder builder, double DISTANCE_DISPLAY_CONDITION_FAR) { builder.AddDouble(9, DISTANCE_DISPLAY_CONDITION_FAR, 0.0); }
+  public static void AddDISABLE_DEPTH_TEST_DISTANCE(FlatBufferBuilder builder, double DISABLE_DEPTH_TEST_DISTANCE) { builder.AddDouble(10, DISABLE_DEPTH_TEST_DISTANCE, 0.0); }
   public static Offset<CZMPoint> EndCZMPoint(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CZMPoint>(o);
@@ -70,11 +95,18 @@ public struct CZMPoint : IFlatbufferObject
     _o.OUTLINE_WIDTH = this.OUTLINE_WIDTH;
     _o.PIXEL_SIZE = this.PIXEL_SIZE;
     _o.HEIGHT_REFERENCE = this.HEIGHT_REFERENCE;
+    _o.SCALE_BY_DISTANCE = this.SCALE_BY_DISTANCE.HasValue ? this.SCALE_BY_DISTANCE.Value.UnPack() : null;
+    _o.TRANSLUCENCY_BY_DISTANCE = this.TRANSLUCENCY_BY_DISTANCE.HasValue ? this.TRANSLUCENCY_BY_DISTANCE.Value.UnPack() : null;
+    _o.DISTANCE_DISPLAY_CONDITION_NEAR = this.DISTANCE_DISPLAY_CONDITION_NEAR;
+    _o.DISTANCE_DISPLAY_CONDITION_FAR = this.DISTANCE_DISPLAY_CONDITION_FAR;
+    _o.DISABLE_DEPTH_TEST_DISTANCE = this.DISABLE_DEPTH_TEST_DISTANCE;
   }
   public static Offset<CZMPoint> Pack(FlatBufferBuilder builder, CZMPointT _o) {
     if (_o == null) return default(Offset<CZMPoint>);
     var _COLOR = _o.COLOR == null ? default(Offset<CZMColor>) : CZMColor.Pack(builder, _o.COLOR);
     var _OUTLINE_COLOR = _o.OUTLINE_COLOR == null ? default(Offset<CZMColor>) : CZMColor.Pack(builder, _o.OUTLINE_COLOR);
+    var _SCALE_BY_DISTANCE = _o.SCALE_BY_DISTANCE == null ? default(Offset<CZMNearFarScalar>) : CZMNearFarScalar.Pack(builder, _o.SCALE_BY_DISTANCE);
+    var _TRANSLUCENCY_BY_DISTANCE = _o.TRANSLUCENCY_BY_DISTANCE == null ? default(Offset<CZMNearFarScalar>) : CZMNearFarScalar.Pack(builder, _o.TRANSLUCENCY_BY_DISTANCE);
     return CreateCZMPoint(
       builder,
       _o.SHOW,
@@ -82,7 +114,12 @@ public struct CZMPoint : IFlatbufferObject
       _OUTLINE_COLOR,
       _o.OUTLINE_WIDTH,
       _o.PIXEL_SIZE,
-      _o.HEIGHT_REFERENCE);
+      _o.HEIGHT_REFERENCE,
+      _SCALE_BY_DISTANCE,
+      _TRANSLUCENCY_BY_DISTANCE,
+      _o.DISTANCE_DISPLAY_CONDITION_NEAR,
+      _o.DISTANCE_DISPLAY_CONDITION_FAR,
+      _o.DISABLE_DEPTH_TEST_DISTANCE);
   }
 }
 
@@ -94,6 +131,11 @@ public class CZMPointT
   public double OUTLINE_WIDTH { get; set; }
   public double PIXEL_SIZE { get; set; }
   public CZMHeightReference HEIGHT_REFERENCE { get; set; }
+  public CZMNearFarScalarT SCALE_BY_DISTANCE { get; set; }
+  public CZMNearFarScalarT TRANSLUCENCY_BY_DISTANCE { get; set; }
+  public double DISTANCE_DISPLAY_CONDITION_NEAR { get; set; }
+  public double DISTANCE_DISPLAY_CONDITION_FAR { get; set; }
+  public double DISABLE_DEPTH_TEST_DISTANCE { get; set; }
 
   public CZMPointT() {
     this.SHOW = false;
@@ -102,6 +144,11 @@ public class CZMPointT
     this.OUTLINE_WIDTH = 0.0;
     this.PIXEL_SIZE = 0.0;
     this.HEIGHT_REFERENCE = CZMHeightReference.NONE;
+    this.SCALE_BY_DISTANCE = null;
+    this.TRANSLUCENCY_BY_DISTANCE = null;
+    this.DISTANCE_DISPLAY_CONDITION_NEAR = 0.0;
+    this.DISTANCE_DISPLAY_CONDITION_FAR = 0.0;
+    this.DISABLE_DEPTH_TEST_DISTANCE = 0.0;
   }
 }
 
@@ -117,6 +164,11 @@ static public class CZMPointVerify
       && verifier.VerifyField(tablePos, 10 /*OUTLINE_WIDTH*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 12 /*PIXEL_SIZE*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 14 /*HEIGHT_REFERENCE*/, 1 /*CZMHeightReference*/, 1, false)
+      && verifier.VerifyTable(tablePos, 16 /*SCALE_BY_DISTANCE*/, CZMNearFarScalarVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 18 /*TRANSLUCENCY_BY_DISTANCE*/, CZMNearFarScalarVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 20 /*DISTANCE_DISPLAY_CONDITION_NEAR*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 22 /*DISTANCE_DISPLAY_CONDITION_FAR*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 24 /*DISABLE_DEPTH_TEST_DISTANCE*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -88,7 +88,8 @@ struct GJNPosition FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_LONGITUDE = 4,
     VT_LATITUDE = 6,
-    VT_ALTITUDE = 8
+    VT_ALTITUDE = 8,
+    VT_HAS_ALTITUDE = 10
   };
   /// Longitude in decimal degrees (WGS84)
   double LONGITUDE() const {
@@ -102,11 +103,16 @@ struct GJNPosition FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double ALTITUDE() const {
     return GetField<double>(VT_ALTITUDE, 0.0);
   }
+  /// True if altitude was explicitly provided (distinguishes 0 from absent)
+  bool HAS_ALTITUDE() const {
+    return GetField<uint8_t>(VT_HAS_ALTITUDE, 0) != 0;
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_LONGITUDE, 8) &&
            VerifyField<double>(verifier, VT_LATITUDE, 8) &&
            VerifyField<double>(verifier, VT_ALTITUDE, 8) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_ALTITUDE, 1) &&
            verifier.EndTable();
   }
 };
@@ -124,6 +130,9 @@ struct GJNPositionBuilder {
   void add_ALTITUDE(double ALTITUDE) {
     fbb_.AddElement<double>(GJNPosition::VT_ALTITUDE, ALTITUDE, 0.0);
   }
+  void add_HAS_ALTITUDE(bool HAS_ALTITUDE) {
+    fbb_.AddElement<uint8_t>(GJNPosition::VT_HAS_ALTITUDE, static_cast<uint8_t>(HAS_ALTITUDE), 0);
+  }
   explicit GJNPositionBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -139,11 +148,13 @@ inline ::flatbuffers::Offset<GJNPosition> CreateGJNPosition(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     double LONGITUDE = 0.0,
     double LATITUDE = 0.0,
-    double ALTITUDE = 0.0) {
+    double ALTITUDE = 0.0,
+    bool HAS_ALTITUDE = false) {
   GJNPositionBuilder builder_(_fbb);
   builder_.add_ALTITUDE(ALTITUDE);
   builder_.add_LATITUDE(LATITUDE);
   builder_.add_LONGITUDE(LONGITUDE);
+  builder_.add_HAS_ALTITUDE(HAS_ALTITUDE);
   return builder_.Finish();
 }
 
@@ -264,7 +275,8 @@ struct GJNGeometry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_POSITIONS = 8,
     VT_RINGS = 10,
     VT_POLYGON_RINGS = 12,
-    VT_GEOMETRIES = 14
+    VT_GEOMETRIES = 14,
+    VT_BBOX = 16
   };
   /// Geometry type
   GJNGeometryType TYPE() const {
@@ -290,6 +302,10 @@ struct GJNGeometry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<GJNGeometry>> *GEOMETRIES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<GJNGeometry>> *>(VT_GEOMETRIES);
   }
+  /// Bounding box (optional, per RFC 7946 Section 5)
+  const GJNBoundingBox *BBOX() const {
+    return GetPointer<const GJNBoundingBox *>(VT_BBOX);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int8_t>(verifier, VT_TYPE, 1) &&
@@ -307,6 +323,8 @@ struct GJNGeometry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_GEOMETRIES) &&
            verifier.VerifyVector(GEOMETRIES()) &&
            verifier.VerifyVectorOfTables(GEOMETRIES()) &&
+           VerifyOffset(verifier, VT_BBOX) &&
+           verifier.VerifyTable(BBOX()) &&
            verifier.EndTable();
   }
 };
@@ -333,6 +351,9 @@ struct GJNGeometryBuilder {
   void add_GEOMETRIES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GJNGeometry>>> GEOMETRIES) {
     fbb_.AddOffset(GJNGeometry::VT_GEOMETRIES, GEOMETRIES);
   }
+  void add_BBOX(::flatbuffers::Offset<GJNBoundingBox> BBOX) {
+    fbb_.AddOffset(GJNGeometry::VT_BBOX, BBOX);
+  }
   explicit GJNGeometryBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -351,8 +372,10 @@ inline ::flatbuffers::Offset<GJNGeometry> CreateGJNGeometry(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GJNPosition>>> POSITIONS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GJNLinearRing>>> RINGS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GJNPolygonRings>>> POLYGON_RINGS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GJNGeometry>>> GEOMETRIES = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GJNGeometry>>> GEOMETRIES = 0,
+    ::flatbuffers::Offset<GJNBoundingBox> BBOX = 0) {
   GJNGeometryBuilder builder_(_fbb);
+  builder_.add_BBOX(BBOX);
   builder_.add_GEOMETRIES(GEOMETRIES);
   builder_.add_POLYGON_RINGS(POLYGON_RINGS);
   builder_.add_RINGS(RINGS);
@@ -369,7 +392,8 @@ inline ::flatbuffers::Offset<GJNGeometry> CreateGJNGeometryDirect(
     const std::vector<::flatbuffers::Offset<GJNPosition>> *POSITIONS = nullptr,
     const std::vector<::flatbuffers::Offset<GJNLinearRing>> *RINGS = nullptr,
     const std::vector<::flatbuffers::Offset<GJNPolygonRings>> *POLYGON_RINGS = nullptr,
-    const std::vector<::flatbuffers::Offset<GJNGeometry>> *GEOMETRIES = nullptr) {
+    const std::vector<::flatbuffers::Offset<GJNGeometry>> *GEOMETRIES = nullptr,
+    ::flatbuffers::Offset<GJNBoundingBox> BBOX = 0) {
   auto POSITIONS__ = POSITIONS ? _fbb.CreateVector<::flatbuffers::Offset<GJNPosition>>(*POSITIONS) : 0;
   auto RINGS__ = RINGS ? _fbb.CreateVector<::flatbuffers::Offset<GJNLinearRing>>(*RINGS) : 0;
   auto POLYGON_RINGS__ = POLYGON_RINGS ? _fbb.CreateVector<::flatbuffers::Offset<GJNPolygonRings>>(*POLYGON_RINGS) : 0;
@@ -381,7 +405,8 @@ inline ::flatbuffers::Offset<GJNGeometry> CreateGJNGeometryDirect(
       POSITIONS__,
       RINGS__,
       POLYGON_RINGS__,
-      GEOMETRIES__);
+      GEOMETRIES__,
+      BBOX);
 }
 
 /// A key-value property entry for Feature properties
@@ -391,7 +416,11 @@ struct GJNProperty FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_KEY = 4,
     VT_VALUE = 6,
     VT_NUM_VALUE = 8,
-    VT_IS_NUMERIC = 10
+    VT_IS_NUMERIC = 10,
+    VT_IS_BOOL = 12,
+    VT_BOOL_VALUE = 14,
+    VT_IS_NULL = 16,
+    VT_JSON_VALUE = 18
   };
   /// Property key
   const ::flatbuffers::String *KEY() const {
@@ -409,6 +438,22 @@ struct GJNProperty FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool IS_NUMERIC() const {
     return GetField<uint8_t>(VT_IS_NUMERIC, 0) != 0;
   }
+  /// True if this property value is a boolean
+  bool IS_BOOL() const {
+    return GetField<uint8_t>(VT_IS_BOOL, 0) != 0;
+  }
+  /// Boolean value (use when IS_BOOL is true)
+  bool BOOL_VALUE() const {
+    return GetField<uint8_t>(VT_BOOL_VALUE, 0) != 0;
+  }
+  /// True if this property value is JSON null
+  bool IS_NULL() const {
+    return GetField<uint8_t>(VT_IS_NULL, 0) != 0;
+  }
+  /// Raw JSON string for complex values (objects, arrays)
+  const ::flatbuffers::String *JSON_VALUE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_JSON_VALUE);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_KEY) &&
@@ -417,6 +462,11 @@ struct GJNProperty FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(VALUE()) &&
            VerifyField<double>(verifier, VT_NUM_VALUE, 8) &&
            VerifyField<uint8_t>(verifier, VT_IS_NUMERIC, 1) &&
+           VerifyField<uint8_t>(verifier, VT_IS_BOOL, 1) &&
+           VerifyField<uint8_t>(verifier, VT_BOOL_VALUE, 1) &&
+           VerifyField<uint8_t>(verifier, VT_IS_NULL, 1) &&
+           VerifyOffset(verifier, VT_JSON_VALUE) &&
+           verifier.VerifyString(JSON_VALUE()) &&
            verifier.EndTable();
   }
 };
@@ -437,6 +487,18 @@ struct GJNPropertyBuilder {
   void add_IS_NUMERIC(bool IS_NUMERIC) {
     fbb_.AddElement<uint8_t>(GJNProperty::VT_IS_NUMERIC, static_cast<uint8_t>(IS_NUMERIC), 0);
   }
+  void add_IS_BOOL(bool IS_BOOL) {
+    fbb_.AddElement<uint8_t>(GJNProperty::VT_IS_BOOL, static_cast<uint8_t>(IS_BOOL), 0);
+  }
+  void add_BOOL_VALUE(bool BOOL_VALUE) {
+    fbb_.AddElement<uint8_t>(GJNProperty::VT_BOOL_VALUE, static_cast<uint8_t>(BOOL_VALUE), 0);
+  }
+  void add_IS_NULL(bool IS_NULL) {
+    fbb_.AddElement<uint8_t>(GJNProperty::VT_IS_NULL, static_cast<uint8_t>(IS_NULL), 0);
+  }
+  void add_JSON_VALUE(::flatbuffers::Offset<::flatbuffers::String> JSON_VALUE) {
+    fbb_.AddOffset(GJNProperty::VT_JSON_VALUE, JSON_VALUE);
+  }
   explicit GJNPropertyBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -453,11 +515,19 @@ inline ::flatbuffers::Offset<GJNProperty> CreateGJNProperty(
     ::flatbuffers::Offset<::flatbuffers::String> KEY = 0,
     ::flatbuffers::Offset<::flatbuffers::String> VALUE = 0,
     double NUM_VALUE = 0.0,
-    bool IS_NUMERIC = false) {
+    bool IS_NUMERIC = false,
+    bool IS_BOOL = false,
+    bool BOOL_VALUE = false,
+    bool IS_NULL = false,
+    ::flatbuffers::Offset<::flatbuffers::String> JSON_VALUE = 0) {
   GJNPropertyBuilder builder_(_fbb);
   builder_.add_NUM_VALUE(NUM_VALUE);
+  builder_.add_JSON_VALUE(JSON_VALUE);
   builder_.add_VALUE(VALUE);
   builder_.add_KEY(KEY);
+  builder_.add_IS_NULL(IS_NULL);
+  builder_.add_BOOL_VALUE(BOOL_VALUE);
+  builder_.add_IS_BOOL(IS_BOOL);
   builder_.add_IS_NUMERIC(IS_NUMERIC);
   return builder_.Finish();
 }
@@ -467,15 +537,24 @@ inline ::flatbuffers::Offset<GJNProperty> CreateGJNPropertyDirect(
     const char *KEY = nullptr,
     const char *VALUE = nullptr,
     double NUM_VALUE = 0.0,
-    bool IS_NUMERIC = false) {
+    bool IS_NUMERIC = false,
+    bool IS_BOOL = false,
+    bool BOOL_VALUE = false,
+    bool IS_NULL = false,
+    const char *JSON_VALUE = nullptr) {
   auto KEY__ = KEY ? _fbb.CreateString(KEY) : 0;
   auto VALUE__ = VALUE ? _fbb.CreateString(VALUE) : 0;
+  auto JSON_VALUE__ = JSON_VALUE ? _fbb.CreateString(JSON_VALUE) : 0;
   return CreateGJNProperty(
       _fbb,
       KEY__,
       VALUE__,
       NUM_VALUE,
-      IS_NUMERIC);
+      IS_NUMERIC,
+      IS_BOOL,
+      BOOL_VALUE,
+      IS_NULL,
+      JSON_VALUE__);
 }
 
 /// GeoJSON Feature object
@@ -484,9 +563,14 @@ struct GJNFeature FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
     VT_GEOMETRY = 6,
-    VT_PROPERTIES = 8
+    VT_PROPERTIES = 8,
+    VT_NUM_ID = 10,
+    VT_ID_IS_NUMERIC = 12,
+    VT_HAS_GEOMETRY = 14,
+    VT_PROPERTIES_IS_NULL = 16,
+    VT_BBOX = 18
   };
-  /// Feature identifier (optional)
+  /// Feature identifier (optional, string form)
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
@@ -498,6 +582,26 @@ struct GJNFeature FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<GJNProperty>> *PROPERTIES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<GJNProperty>> *>(VT_PROPERTIES);
   }
+  /// Numeric feature identifier (use when ID_IS_NUMERIC is true)
+  double NUM_ID() const {
+    return GetField<double>(VT_NUM_ID, 0.0);
+  }
+  /// True if the feature id is numeric rather than string
+  bool ID_IS_NUMERIC() const {
+    return GetField<uint8_t>(VT_ID_IS_NUMERIC, 0) != 0;
+  }
+  /// True if the feature has a geometry (false means geometry was JSON null)
+  bool HAS_GEOMETRY() const {
+    return GetField<uint8_t>(VT_HAS_GEOMETRY, 0) != 0;
+  }
+  /// True if properties was JSON null (vs empty object)
+  bool PROPERTIES_IS_NULL() const {
+    return GetField<uint8_t>(VT_PROPERTIES_IS_NULL, 0) != 0;
+  }
+  /// Bounding box (optional, per RFC 7946 Section 5)
+  const GJNBoundingBox *BBOX() const {
+    return GetPointer<const GJNBoundingBox *>(VT_BBOX);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
@@ -507,6 +611,12 @@ struct GJNFeature FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_PROPERTIES) &&
            verifier.VerifyVector(PROPERTIES()) &&
            verifier.VerifyVectorOfTables(PROPERTIES()) &&
+           VerifyField<double>(verifier, VT_NUM_ID, 8) &&
+           VerifyField<uint8_t>(verifier, VT_ID_IS_NUMERIC, 1) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_GEOMETRY, 1) &&
+           VerifyField<uint8_t>(verifier, VT_PROPERTIES_IS_NULL, 1) &&
+           VerifyOffset(verifier, VT_BBOX) &&
+           verifier.VerifyTable(BBOX()) &&
            verifier.EndTable();
   }
 };
@@ -524,6 +634,21 @@ struct GJNFeatureBuilder {
   void add_PROPERTIES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GJNProperty>>> PROPERTIES) {
     fbb_.AddOffset(GJNFeature::VT_PROPERTIES, PROPERTIES);
   }
+  void add_NUM_ID(double NUM_ID) {
+    fbb_.AddElement<double>(GJNFeature::VT_NUM_ID, NUM_ID, 0.0);
+  }
+  void add_ID_IS_NUMERIC(bool ID_IS_NUMERIC) {
+    fbb_.AddElement<uint8_t>(GJNFeature::VT_ID_IS_NUMERIC, static_cast<uint8_t>(ID_IS_NUMERIC), 0);
+  }
+  void add_HAS_GEOMETRY(bool HAS_GEOMETRY) {
+    fbb_.AddElement<uint8_t>(GJNFeature::VT_HAS_GEOMETRY, static_cast<uint8_t>(HAS_GEOMETRY), 0);
+  }
+  void add_PROPERTIES_IS_NULL(bool PROPERTIES_IS_NULL) {
+    fbb_.AddElement<uint8_t>(GJNFeature::VT_PROPERTIES_IS_NULL, static_cast<uint8_t>(PROPERTIES_IS_NULL), 0);
+  }
+  void add_BBOX(::flatbuffers::Offset<GJNBoundingBox> BBOX) {
+    fbb_.AddOffset(GJNFeature::VT_BBOX, BBOX);
+  }
   explicit GJNFeatureBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -539,11 +664,21 @@ inline ::flatbuffers::Offset<GJNFeature> CreateGJNFeature(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
     ::flatbuffers::Offset<GJNGeometry> GEOMETRY = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GJNProperty>>> PROPERTIES = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GJNProperty>>> PROPERTIES = 0,
+    double NUM_ID = 0.0,
+    bool ID_IS_NUMERIC = false,
+    bool HAS_GEOMETRY = false,
+    bool PROPERTIES_IS_NULL = false,
+    ::flatbuffers::Offset<GJNBoundingBox> BBOX = 0) {
   GJNFeatureBuilder builder_(_fbb);
+  builder_.add_NUM_ID(NUM_ID);
+  builder_.add_BBOX(BBOX);
   builder_.add_PROPERTIES(PROPERTIES);
   builder_.add_GEOMETRY(GEOMETRY);
   builder_.add_ID(ID);
+  builder_.add_PROPERTIES_IS_NULL(PROPERTIES_IS_NULL);
+  builder_.add_HAS_GEOMETRY(HAS_GEOMETRY);
+  builder_.add_ID_IS_NUMERIC(ID_IS_NUMERIC);
   return builder_.Finish();
 }
 
@@ -551,14 +686,24 @@ inline ::flatbuffers::Offset<GJNFeature> CreateGJNFeatureDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *ID = nullptr,
     ::flatbuffers::Offset<GJNGeometry> GEOMETRY = 0,
-    const std::vector<::flatbuffers::Offset<GJNProperty>> *PROPERTIES = nullptr) {
+    const std::vector<::flatbuffers::Offset<GJNProperty>> *PROPERTIES = nullptr,
+    double NUM_ID = 0.0,
+    bool ID_IS_NUMERIC = false,
+    bool HAS_GEOMETRY = false,
+    bool PROPERTIES_IS_NULL = false,
+    ::flatbuffers::Offset<GJNBoundingBox> BBOX = 0) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto PROPERTIES__ = PROPERTIES ? _fbb.CreateVector<::flatbuffers::Offset<GJNProperty>>(*PROPERTIES) : 0;
   return CreateGJNFeature(
       _fbb,
       ID__,
       GEOMETRY,
-      PROPERTIES__);
+      PROPERTIES__,
+      NUM_ID,
+      ID_IS_NUMERIC,
+      HAS_GEOMETRY,
+      PROPERTIES_IS_NULL,
+      BBOX);
 }
 
 /// GeoJSON Bounding Box [west, south, east, north] or [west, south, min-alt, east, north, max-alt]
@@ -570,7 +715,8 @@ struct GJNBoundingBox FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_EAST = 8,
     VT_NORTH = 10,
     VT_MIN_ALTITUDE = 12,
-    VT_MAX_ALTITUDE = 14
+    VT_MAX_ALTITUDE = 14,
+    VT_HAS_ALTITUDE = 16
   };
   /// Western longitude
   double WEST() const {
@@ -596,6 +742,10 @@ struct GJNBoundingBox FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double MAX_ALTITUDE() const {
     return GetField<double>(VT_MAX_ALTITUDE, 0.0);
   }
+  /// True if the bbox includes altitude (6 values vs 4)
+  bool HAS_ALTITUDE() const {
+    return GetField<uint8_t>(VT_HAS_ALTITUDE, 0) != 0;
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<double>(verifier, VT_WEST, 8) &&
@@ -604,6 +754,7 @@ struct GJNBoundingBox FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_NORTH, 8) &&
            VerifyField<double>(verifier, VT_MIN_ALTITUDE, 8) &&
            VerifyField<double>(verifier, VT_MAX_ALTITUDE, 8) &&
+           VerifyField<uint8_t>(verifier, VT_HAS_ALTITUDE, 1) &&
            verifier.EndTable();
   }
 };
@@ -630,6 +781,9 @@ struct GJNBoundingBoxBuilder {
   void add_MAX_ALTITUDE(double MAX_ALTITUDE) {
     fbb_.AddElement<double>(GJNBoundingBox::VT_MAX_ALTITUDE, MAX_ALTITUDE, 0.0);
   }
+  void add_HAS_ALTITUDE(bool HAS_ALTITUDE) {
+    fbb_.AddElement<uint8_t>(GJNBoundingBox::VT_HAS_ALTITUDE, static_cast<uint8_t>(HAS_ALTITUDE), 0);
+  }
   explicit GJNBoundingBoxBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -648,7 +802,8 @@ inline ::flatbuffers::Offset<GJNBoundingBox> CreateGJNBoundingBox(
     double EAST = 0.0,
     double NORTH = 0.0,
     double MIN_ALTITUDE = 0.0,
-    double MAX_ALTITUDE = 0.0) {
+    double MAX_ALTITUDE = 0.0,
+    bool HAS_ALTITUDE = false) {
   GJNBoundingBoxBuilder builder_(_fbb);
   builder_.add_MAX_ALTITUDE(MAX_ALTITUDE);
   builder_.add_MIN_ALTITUDE(MIN_ALTITUDE);
@@ -656,6 +811,7 @@ inline ::flatbuffers::Offset<GJNBoundingBox> CreateGJNBoundingBox(
   builder_.add_EAST(EAST);
   builder_.add_SOUTH(SOUTH);
   builder_.add_WEST(WEST);
+  builder_.add_HAS_ALTITUDE(HAS_ALTITUDE);
   return builder_.Finish();
 }
 

@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { KMLLink, KMLLinkT } from './KMLLink.js';
 import { KMLRefreshMode } from './KMLRefreshMode.js';
 import { KMLViewRefreshMode } from './KMLViewRefreshMode.js';
 
@@ -40,10 +41,28 @@ NAME(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
+ * Description
+ */
+DESCRIPTION():string|null
+DESCRIPTION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DESCRIPTION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
  * Whether the link is visible
  */
 VISIBILITY():boolean {
-  const offset = this.bb!.__offset(this.bb_pos, 6);
+  const offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Whether open in tree view
+ */
+OPEN():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
@@ -53,7 +72,7 @@ VISIBILITY():boolean {
 HREF():string|null
 HREF(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 HREF(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 8);
+  const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -61,7 +80,7 @@ HREF(optionalEncoding?:any):string|Uint8Array|null {
  * Refresh mode
  */
 REFRESH_MODE():KMLRefreshMode {
-  const offset = this.bb!.__offset(this.bb_pos, 10);
+  const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : KMLRefreshMode.ON_CHANGE;
 }
 
@@ -69,7 +88,7 @@ REFRESH_MODE():KMLRefreshMode {
  * Refresh interval in seconds
  */
 REFRESH_INTERVAL():number {
-  const offset = this.bb!.__offset(this.bb_pos, 12);
+  const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -77,7 +96,7 @@ REFRESH_INTERVAL():number {
  * View refresh mode
  */
 VIEW_REFRESH_MODE():KMLViewRefreshMode {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : KMLViewRefreshMode.NEVER;
 }
 
@@ -85,40 +104,84 @@ VIEW_REFRESH_MODE():KMLViewRefreshMode {
  * View refresh time in seconds
  */
 VIEW_REFRESH_TIME():number {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Whether to refresh on visibility change
+ */
+REFRESH_VISIBILITY():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Whether to fly to view on refresh
+ */
+FLY_TO_VIEW():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Full link element
+ */
+LINK(obj?:KMLLink):KMLLink|null {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? (obj || new KMLLink()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startKMLNetworkLink(builder:flatbuffers.Builder) {
-  builder.startObject(7);
+  builder.startObject(12);
 }
 
 static addName(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset) {
   builder.addFieldOffset(0, NAMEOffset, 0);
 }
 
+static addDescription(builder:flatbuffers.Builder, DESCRIPTIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, DESCRIPTIONOffset, 0);
+}
+
 static addVisibility(builder:flatbuffers.Builder, VISIBILITY:boolean) {
-  builder.addFieldInt8(1, +VISIBILITY, +false);
+  builder.addFieldInt8(2, +VISIBILITY, +false);
+}
+
+static addOpen(builder:flatbuffers.Builder, OPEN:boolean) {
+  builder.addFieldInt8(3, +OPEN, +false);
 }
 
 static addHref(builder:flatbuffers.Builder, HREFOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, HREFOffset, 0);
+  builder.addFieldOffset(4, HREFOffset, 0);
 }
 
 static addRefreshMode(builder:flatbuffers.Builder, REFRESH_MODE:KMLRefreshMode) {
-  builder.addFieldInt8(3, REFRESH_MODE, KMLRefreshMode.ON_CHANGE);
+  builder.addFieldInt8(5, REFRESH_MODE, KMLRefreshMode.ON_CHANGE);
 }
 
 static addRefreshInterval(builder:flatbuffers.Builder, REFRESH_INTERVAL:number) {
-  builder.addFieldFloat64(4, REFRESH_INTERVAL, 0.0);
+  builder.addFieldFloat64(6, REFRESH_INTERVAL, 0.0);
 }
 
 static addViewRefreshMode(builder:flatbuffers.Builder, VIEW_REFRESH_MODE:KMLViewRefreshMode) {
-  builder.addFieldInt8(5, VIEW_REFRESH_MODE, KMLViewRefreshMode.NEVER);
+  builder.addFieldInt8(7, VIEW_REFRESH_MODE, KMLViewRefreshMode.NEVER);
 }
 
 static addViewRefreshTime(builder:flatbuffers.Builder, VIEW_REFRESH_TIME:number) {
-  builder.addFieldFloat64(6, VIEW_REFRESH_TIME, 0.0);
+  builder.addFieldFloat64(8, VIEW_REFRESH_TIME, 0.0);
+}
+
+static addRefreshVisibility(builder:flatbuffers.Builder, REFRESH_VISIBILITY:boolean) {
+  builder.addFieldInt8(9, +REFRESH_VISIBILITY, +false);
+}
+
+static addFlyToView(builder:flatbuffers.Builder, FLY_TO_VIEW:boolean) {
+  builder.addFieldInt8(10, +FLY_TO_VIEW, +false);
+}
+
+static addLink(builder:flatbuffers.Builder, LINKOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, LINKOffset, 0);
 }
 
 static endKMLNetworkLink(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -126,66 +189,78 @@ static endKMLNetworkLink(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createKMLNetworkLink(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset, VISIBILITY:boolean, HREFOffset:flatbuffers.Offset, REFRESH_MODE:KMLRefreshMode, REFRESH_INTERVAL:number, VIEW_REFRESH_MODE:KMLViewRefreshMode, VIEW_REFRESH_TIME:number):flatbuffers.Offset {
-  KMLNetworkLink.startKMLNetworkLink(builder);
-  KMLNetworkLink.addName(builder, NAMEOffset);
-  KMLNetworkLink.addVisibility(builder, VISIBILITY);
-  KMLNetworkLink.addHref(builder, HREFOffset);
-  KMLNetworkLink.addRefreshMode(builder, REFRESH_MODE);
-  KMLNetworkLink.addRefreshInterval(builder, REFRESH_INTERVAL);
-  KMLNetworkLink.addViewRefreshMode(builder, VIEW_REFRESH_MODE);
-  KMLNetworkLink.addViewRefreshTime(builder, VIEW_REFRESH_TIME);
-  return KMLNetworkLink.endKMLNetworkLink(builder);
-}
 
 unpack(): KMLNetworkLinkT {
   return new KMLNetworkLinkT(
     this.NAME(),
+    this.DESCRIPTION(),
     this.VISIBILITY(),
+    this.OPEN(),
     this.HREF(),
     this.REFRESH_MODE(),
     this.REFRESH_INTERVAL(),
     this.VIEW_REFRESH_MODE(),
-    this.VIEW_REFRESH_TIME()
+    this.VIEW_REFRESH_TIME(),
+    this.REFRESH_VISIBILITY(),
+    this.FLY_TO_VIEW(),
+    (this.LINK() !== null ? this.LINK()!.unpack() : null)
   );
 }
 
 
 unpackTo(_o: KMLNetworkLinkT): void {
   _o.NAME = this.NAME();
+  _o.DESCRIPTION = this.DESCRIPTION();
   _o.VISIBILITY = this.VISIBILITY();
+  _o.OPEN = this.OPEN();
   _o.HREF = this.HREF();
   _o.REFRESH_MODE = this.REFRESH_MODE();
   _o.REFRESH_INTERVAL = this.REFRESH_INTERVAL();
   _o.VIEW_REFRESH_MODE = this.VIEW_REFRESH_MODE();
   _o.VIEW_REFRESH_TIME = this.VIEW_REFRESH_TIME();
+  _o.REFRESH_VISIBILITY = this.REFRESH_VISIBILITY();
+  _o.FLY_TO_VIEW = this.FLY_TO_VIEW();
+  _o.LINK = (this.LINK() !== null ? this.LINK()!.unpack() : null);
 }
 }
 
 export class KMLNetworkLinkT implements flatbuffers.IGeneratedObject {
 constructor(
   public NAME: string|Uint8Array|null = null,
+  public DESCRIPTION: string|Uint8Array|null = null,
   public VISIBILITY: boolean = false,
+  public OPEN: boolean = false,
   public HREF: string|Uint8Array|null = null,
   public REFRESH_MODE: KMLRefreshMode = KMLRefreshMode.ON_CHANGE,
   public REFRESH_INTERVAL: number = 0.0,
   public VIEW_REFRESH_MODE: KMLViewRefreshMode = KMLViewRefreshMode.NEVER,
-  public VIEW_REFRESH_TIME: number = 0.0
+  public VIEW_REFRESH_TIME: number = 0.0,
+  public REFRESH_VISIBILITY: boolean = false,
+  public FLY_TO_VIEW: boolean = false,
+  public LINK: KMLLinkT|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const NAME = (this.NAME !== null ? builder.createString(this.NAME!) : 0);
+  const DESCRIPTION = (this.DESCRIPTION !== null ? builder.createString(this.DESCRIPTION!) : 0);
   const HREF = (this.HREF !== null ? builder.createString(this.HREF!) : 0);
+  const LINK = (this.LINK !== null ? this.LINK!.pack(builder) : 0);
 
-  return KMLNetworkLink.createKMLNetworkLink(builder,
-    NAME,
-    this.VISIBILITY,
-    HREF,
-    this.REFRESH_MODE,
-    this.REFRESH_INTERVAL,
-    this.VIEW_REFRESH_MODE,
-    this.VIEW_REFRESH_TIME
-  );
+  KMLNetworkLink.startKMLNetworkLink(builder);
+  KMLNetworkLink.addName(builder, NAME);
+  KMLNetworkLink.addDescription(builder, DESCRIPTION);
+  KMLNetworkLink.addVisibility(builder, this.VISIBILITY);
+  KMLNetworkLink.addOpen(builder, this.OPEN);
+  KMLNetworkLink.addHref(builder, HREF);
+  KMLNetworkLink.addRefreshMode(builder, this.REFRESH_MODE);
+  KMLNetworkLink.addRefreshInterval(builder, this.REFRESH_INTERVAL);
+  KMLNetworkLink.addViewRefreshMode(builder, this.VIEW_REFRESH_MODE);
+  KMLNetworkLink.addViewRefreshTime(builder, this.VIEW_REFRESH_TIME);
+  KMLNetworkLink.addRefreshVisibility(builder, this.REFRESH_VISIBILITY);
+  KMLNetworkLink.addFlyToView(builder, this.FLY_TO_VIEW);
+  KMLNetworkLink.addLink(builder, LINK);
+
+  return KMLNetworkLink.endKMLNetworkLink(builder);
 }
 }

@@ -39,7 +39,7 @@ public struct CZMPolygon : IFlatbufferObject
   public double[] GetPOSITIONS_CARTESIANArray() { return __p.__vector_as_array<double>(8); }
   /// Fill flag
   public bool FILL { get { int o = __p.__offset(10); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  /// Fill color (solid color material)
+  /// Fill color (solid color material, legacy)
   public CZMColor? COLOR { get { int o = __p.__offset(12); return o != 0 ? (CZMColor?)(new CZMColor()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Outline flag
   public bool OUTLINE { get { int o = __p.__offset(14); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
@@ -51,6 +51,51 @@ public struct CZMPolygon : IFlatbufferObject
   public CZMHeightReference HEIGHT_REFERENCE { get { int o = __p.__offset(20); return o != 0 ? (CZMHeightReference)__p.bb.GetSbyte(o + __p.bb_pos) : CZMHeightReference.NONE; } }
   /// Classification type
   public CZMClassificationType CLASSIFICATION_TYPE { get { int o = __p.__offset(22); return o != 0 ? (CZMClassificationType)__p.bb.GetSbyte(o + __p.bb_pos) : CZMClassificationType.TERRAIN; } }
+  /// Holes (position lists: each hole is [lon,lat,h,...])
+  public CZMPolygonHole? HOLES(int j) { int o = __p.__offset(24); return o != 0 ? (CZMPolygonHole?)(new CZMPolygonHole()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int HOLESLength { get { int o = __p.__offset(24); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Arc type
+  public string ARC_TYPE { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetARC_TYPEBytes() { return __p.__vector_as_span<byte>(26, 1); }
+#else
+  public ArraySegment<byte>? GetARC_TYPEBytes() { return __p.__vector_as_arraysegment(26); }
+#endif
+  public byte[] GetARC_TYPEArray() { return __p.__vector_as_array<byte>(26); }
+  /// Height in meters
+  public double HEIGHT { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Extruded height reference
+  public string EXTRUDED_HEIGHT_REFERENCE { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetEXTRUDED_HEIGHT_REFERENCEBytes() { return __p.__vector_as_span<byte>(30, 1); }
+#else
+  public ArraySegment<byte>? GetEXTRUDED_HEIGHT_REFERENCEBytes() { return __p.__vector_as_arraysegment(30); }
+#endif
+  public byte[] GetEXTRUDED_HEIGHT_REFERENCEArray() { return __p.__vector_as_array<byte>(30); }
+  /// Texture rotation in radians
+  public double ST_ROTATION { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Granularity in radians
+  public double GRANULARITY { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Full surface material
+  public CZMMaterial? MATERIAL { get { int o = __p.__offset(36); return o != 0 ? (CZMMaterial?)(new CZMMaterial()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Outline width in pixels
+  public double OUTLINE_WIDTH { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Whether to use per-position heights
+  public bool PER_POSITION_HEIGHT { get { int o = __p.__offset(40); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Whether to close the top of extruded polygon
+  public bool CLOSE_TOP { get { int o = __p.__offset(42); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Whether to close the bottom of extruded polygon
+  public bool CLOSE_BOTTOM { get { int o = __p.__offset(44); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Shadow mode
+  public string SHADOWS { get { int o = __p.__offset(46); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSHADOWSBytes() { return __p.__vector_as_span<byte>(46, 1); }
+#else
+  public ArraySegment<byte>? GetSHADOWSBytes() { return __p.__vector_as_arraysegment(46); }
+#endif
+  public byte[] GetSHADOWSArray() { return __p.__vector_as_array<byte>(46); }
+  /// Z-index for ordering
+  public int Z_INDEX { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
 
   public static Offset<CZMPolygon> CreateCZMPolygon(FlatBufferBuilder builder,
       bool SHOW = false,
@@ -62,13 +107,39 @@ public struct CZMPolygon : IFlatbufferObject
       Offset<CZMColor> OUTLINE_COLOROffset = default(Offset<CZMColor>),
       double EXTRUDED_HEIGHT = 0.0,
       CZMHeightReference HEIGHT_REFERENCE = CZMHeightReference.NONE,
-      CZMClassificationType CLASSIFICATION_TYPE = CZMClassificationType.TERRAIN) {
-    builder.StartTable(10);
+      CZMClassificationType CLASSIFICATION_TYPE = CZMClassificationType.TERRAIN,
+      VectorOffset HOLESOffset = default(VectorOffset),
+      StringOffset ARC_TYPEOffset = default(StringOffset),
+      double HEIGHT = 0.0,
+      StringOffset EXTRUDED_HEIGHT_REFERENCEOffset = default(StringOffset),
+      double ST_ROTATION = 0.0,
+      double GRANULARITY = 0.0,
+      Offset<CZMMaterial> MATERIALOffset = default(Offset<CZMMaterial>),
+      double OUTLINE_WIDTH = 0.0,
+      bool PER_POSITION_HEIGHT = false,
+      bool CLOSE_TOP = false,
+      bool CLOSE_BOTTOM = false,
+      StringOffset SHADOWSOffset = default(StringOffset),
+      int Z_INDEX = 0) {
+    builder.StartTable(23);
+    CZMPolygon.AddOUTLINE_WIDTH(builder, OUTLINE_WIDTH);
+    CZMPolygon.AddGRANULARITY(builder, GRANULARITY);
+    CZMPolygon.AddST_ROTATION(builder, ST_ROTATION);
+    CZMPolygon.AddHEIGHT(builder, HEIGHT);
     CZMPolygon.AddEXTRUDED_HEIGHT(builder, EXTRUDED_HEIGHT);
+    CZMPolygon.AddZ_INDEX(builder, Z_INDEX);
+    CZMPolygon.AddSHADOWS(builder, SHADOWSOffset);
+    CZMPolygon.AddMATERIAL(builder, MATERIALOffset);
+    CZMPolygon.AddEXTRUDED_HEIGHT_REFERENCE(builder, EXTRUDED_HEIGHT_REFERENCEOffset);
+    CZMPolygon.AddARC_TYPE(builder, ARC_TYPEOffset);
+    CZMPolygon.AddHOLES(builder, HOLESOffset);
     CZMPolygon.AddOUTLINE_COLOR(builder, OUTLINE_COLOROffset);
     CZMPolygon.AddCOLOR(builder, COLOROffset);
     CZMPolygon.AddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIANOffset);
     CZMPolygon.AddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREESOffset);
+    CZMPolygon.AddCLOSE_BOTTOM(builder, CLOSE_BOTTOM);
+    CZMPolygon.AddCLOSE_TOP(builder, CLOSE_TOP);
+    CZMPolygon.AddPER_POSITION_HEIGHT(builder, PER_POSITION_HEIGHT);
     CZMPolygon.AddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPE);
     CZMPolygon.AddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE);
     CZMPolygon.AddOUTLINE(builder, OUTLINE);
@@ -77,7 +148,7 @@ public struct CZMPolygon : IFlatbufferObject
     return CZMPolygon.EndCZMPolygon(builder);
   }
 
-  public static void StartCZMPolygon(FlatBufferBuilder builder) { builder.StartTable(10); }
+  public static void StartCZMPolygon(FlatBufferBuilder builder) { builder.StartTable(23); }
   public static void AddSHOW(FlatBufferBuilder builder, bool SHOW) { builder.AddBool(0, SHOW, false); }
   public static void AddPOSITIONS_CARTOGRAPHIC_DEGREES(FlatBufferBuilder builder, VectorOffset POSITIONS_CARTOGRAPHIC_DEGREESOffset) { builder.AddOffset(1, POSITIONS_CARTOGRAPHIC_DEGREESOffset.Value, 0); }
   public static VectorOffset CreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
@@ -98,6 +169,24 @@ public struct CZMPolygon : IFlatbufferObject
   public static void AddEXTRUDED_HEIGHT(FlatBufferBuilder builder, double EXTRUDED_HEIGHT) { builder.AddDouble(7, EXTRUDED_HEIGHT, 0.0); }
   public static void AddHEIGHT_REFERENCE(FlatBufferBuilder builder, CZMHeightReference HEIGHT_REFERENCE) { builder.AddSbyte(8, (sbyte)HEIGHT_REFERENCE, 0); }
   public static void AddCLASSIFICATION_TYPE(FlatBufferBuilder builder, CZMClassificationType CLASSIFICATION_TYPE) { builder.AddSbyte(9, (sbyte)CLASSIFICATION_TYPE, 0); }
+  public static void AddHOLES(FlatBufferBuilder builder, VectorOffset HOLESOffset) { builder.AddOffset(10, HOLESOffset.Value, 0); }
+  public static VectorOffset CreateHOLESVector(FlatBufferBuilder builder, Offset<CZMPolygonHole>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateHOLESVectorBlock(FlatBufferBuilder builder, Offset<CZMPolygonHole>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateHOLESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<CZMPolygonHole>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateHOLESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<CZMPolygonHole>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartHOLESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddARC_TYPE(FlatBufferBuilder builder, StringOffset ARC_TYPEOffset) { builder.AddOffset(11, ARC_TYPEOffset.Value, 0); }
+  public static void AddHEIGHT(FlatBufferBuilder builder, double HEIGHT) { builder.AddDouble(12, HEIGHT, 0.0); }
+  public static void AddEXTRUDED_HEIGHT_REFERENCE(FlatBufferBuilder builder, StringOffset EXTRUDED_HEIGHT_REFERENCEOffset) { builder.AddOffset(13, EXTRUDED_HEIGHT_REFERENCEOffset.Value, 0); }
+  public static void AddST_ROTATION(FlatBufferBuilder builder, double ST_ROTATION) { builder.AddDouble(14, ST_ROTATION, 0.0); }
+  public static void AddGRANULARITY(FlatBufferBuilder builder, double GRANULARITY) { builder.AddDouble(15, GRANULARITY, 0.0); }
+  public static void AddMATERIAL(FlatBufferBuilder builder, Offset<CZMMaterial> MATERIALOffset) { builder.AddOffset(16, MATERIALOffset.Value, 0); }
+  public static void AddOUTLINE_WIDTH(FlatBufferBuilder builder, double OUTLINE_WIDTH) { builder.AddDouble(17, OUTLINE_WIDTH, 0.0); }
+  public static void AddPER_POSITION_HEIGHT(FlatBufferBuilder builder, bool PER_POSITION_HEIGHT) { builder.AddBool(18, PER_POSITION_HEIGHT, false); }
+  public static void AddCLOSE_TOP(FlatBufferBuilder builder, bool CLOSE_TOP) { builder.AddBool(19, CLOSE_TOP, false); }
+  public static void AddCLOSE_BOTTOM(FlatBufferBuilder builder, bool CLOSE_BOTTOM) { builder.AddBool(20, CLOSE_BOTTOM, false); }
+  public static void AddSHADOWS(FlatBufferBuilder builder, StringOffset SHADOWSOffset) { builder.AddOffset(21, SHADOWSOffset.Value, 0); }
+  public static void AddZ_INDEX(FlatBufferBuilder builder, int Z_INDEX) { builder.AddInt(22, Z_INDEX, 0); }
   public static Offset<CZMPolygon> EndCZMPolygon(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CZMPolygon>(o);
@@ -120,6 +209,20 @@ public struct CZMPolygon : IFlatbufferObject
     _o.EXTRUDED_HEIGHT = this.EXTRUDED_HEIGHT;
     _o.HEIGHT_REFERENCE = this.HEIGHT_REFERENCE;
     _o.CLASSIFICATION_TYPE = this.CLASSIFICATION_TYPE;
+    _o.HOLES = new List<CZMPolygonHoleT>();
+    for (var _j = 0; _j < this.HOLESLength; ++_j) {_o.HOLES.Add(this.HOLES(_j).HasValue ? this.HOLES(_j).Value.UnPack() : null);}
+    _o.ARC_TYPE = this.ARC_TYPE;
+    _o.HEIGHT = this.HEIGHT;
+    _o.EXTRUDED_HEIGHT_REFERENCE = this.EXTRUDED_HEIGHT_REFERENCE;
+    _o.ST_ROTATION = this.ST_ROTATION;
+    _o.GRANULARITY = this.GRANULARITY;
+    _o.MATERIAL = this.MATERIAL.HasValue ? this.MATERIAL.Value.UnPack() : null;
+    _o.OUTLINE_WIDTH = this.OUTLINE_WIDTH;
+    _o.PER_POSITION_HEIGHT = this.PER_POSITION_HEIGHT;
+    _o.CLOSE_TOP = this.CLOSE_TOP;
+    _o.CLOSE_BOTTOM = this.CLOSE_BOTTOM;
+    _o.SHADOWS = this.SHADOWS;
+    _o.Z_INDEX = this.Z_INDEX;
   }
   public static Offset<CZMPolygon> Pack(FlatBufferBuilder builder, CZMPolygonT _o) {
     if (_o == null) return default(Offset<CZMPolygon>);
@@ -135,6 +238,16 @@ public struct CZMPolygon : IFlatbufferObject
     }
     var _COLOR = _o.COLOR == null ? default(Offset<CZMColor>) : CZMColor.Pack(builder, _o.COLOR);
     var _OUTLINE_COLOR = _o.OUTLINE_COLOR == null ? default(Offset<CZMColor>) : CZMColor.Pack(builder, _o.OUTLINE_COLOR);
+    var _HOLES = default(VectorOffset);
+    if (_o.HOLES != null) {
+      var __HOLES = new Offset<CZMPolygonHole>[_o.HOLES.Count];
+      for (var _j = 0; _j < __HOLES.Length; ++_j) { __HOLES[_j] = CZMPolygonHole.Pack(builder, _o.HOLES[_j]); }
+      _HOLES = CreateHOLESVector(builder, __HOLES);
+    }
+    var _ARC_TYPE = _o.ARC_TYPE == null ? default(StringOffset) : builder.CreateString(_o.ARC_TYPE);
+    var _EXTRUDED_HEIGHT_REFERENCE = _o.EXTRUDED_HEIGHT_REFERENCE == null ? default(StringOffset) : builder.CreateString(_o.EXTRUDED_HEIGHT_REFERENCE);
+    var _MATERIAL = _o.MATERIAL == null ? default(Offset<CZMMaterial>) : CZMMaterial.Pack(builder, _o.MATERIAL);
+    var _SHADOWS = _o.SHADOWS == null ? default(StringOffset) : builder.CreateString(_o.SHADOWS);
     return CreateCZMPolygon(
       builder,
       _o.SHOW,
@@ -146,7 +259,20 @@ public struct CZMPolygon : IFlatbufferObject
       _OUTLINE_COLOR,
       _o.EXTRUDED_HEIGHT,
       _o.HEIGHT_REFERENCE,
-      _o.CLASSIFICATION_TYPE);
+      _o.CLASSIFICATION_TYPE,
+      _HOLES,
+      _ARC_TYPE,
+      _o.HEIGHT,
+      _EXTRUDED_HEIGHT_REFERENCE,
+      _o.ST_ROTATION,
+      _o.GRANULARITY,
+      _MATERIAL,
+      _o.OUTLINE_WIDTH,
+      _o.PER_POSITION_HEIGHT,
+      _o.CLOSE_TOP,
+      _o.CLOSE_BOTTOM,
+      _SHADOWS,
+      _o.Z_INDEX);
   }
 }
 
@@ -162,6 +288,19 @@ public class CZMPolygonT
   public double EXTRUDED_HEIGHT { get; set; }
   public CZMHeightReference HEIGHT_REFERENCE { get; set; }
   public CZMClassificationType CLASSIFICATION_TYPE { get; set; }
+  public List<CZMPolygonHoleT> HOLES { get; set; }
+  public string ARC_TYPE { get; set; }
+  public double HEIGHT { get; set; }
+  public string EXTRUDED_HEIGHT_REFERENCE { get; set; }
+  public double ST_ROTATION { get; set; }
+  public double GRANULARITY { get; set; }
+  public CZMMaterialT MATERIAL { get; set; }
+  public double OUTLINE_WIDTH { get; set; }
+  public bool PER_POSITION_HEIGHT { get; set; }
+  public bool CLOSE_TOP { get; set; }
+  public bool CLOSE_BOTTOM { get; set; }
+  public string SHADOWS { get; set; }
+  public int Z_INDEX { get; set; }
 
   public CZMPolygonT() {
     this.SHOW = false;
@@ -174,6 +313,19 @@ public class CZMPolygonT
     this.EXTRUDED_HEIGHT = 0.0;
     this.HEIGHT_REFERENCE = CZMHeightReference.NONE;
     this.CLASSIFICATION_TYPE = CZMClassificationType.TERRAIN;
+    this.HOLES = null;
+    this.ARC_TYPE = null;
+    this.HEIGHT = 0.0;
+    this.EXTRUDED_HEIGHT_REFERENCE = null;
+    this.ST_ROTATION = 0.0;
+    this.GRANULARITY = 0.0;
+    this.MATERIAL = null;
+    this.OUTLINE_WIDTH = 0.0;
+    this.PER_POSITION_HEIGHT = false;
+    this.CLOSE_TOP = false;
+    this.CLOSE_BOTTOM = false;
+    this.SHADOWS = null;
+    this.Z_INDEX = 0;
   }
 }
 
@@ -193,6 +345,19 @@ static public class CZMPolygonVerify
       && verifier.VerifyField(tablePos, 18 /*EXTRUDED_HEIGHT*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 20 /*HEIGHT_REFERENCE*/, 1 /*CZMHeightReference*/, 1, false)
       && verifier.VerifyField(tablePos, 22 /*CLASSIFICATION_TYPE*/, 1 /*CZMClassificationType*/, 1, false)
+      && verifier.VerifyVectorOfTables(tablePos, 24 /*HOLES*/, CZMPolygonHoleVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 26 /*ARC_TYPE*/, false)
+      && verifier.VerifyField(tablePos, 28 /*HEIGHT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 30 /*EXTRUDED_HEIGHT_REFERENCE*/, false)
+      && verifier.VerifyField(tablePos, 32 /*ST_ROTATION*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 34 /*GRANULARITY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyTable(tablePos, 36 /*MATERIAL*/, CZMMaterialVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 38 /*OUTLINE_WIDTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 40 /*PER_POSITION_HEIGHT*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 42 /*CLOSE_TOP*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 44 /*CLOSE_BOTTOM*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyString(tablePos, 46 /*SHADOWS*/, false)
+      && verifier.VerifyField(tablePos, 48 /*Z_INDEX*/, 4 /*int*/, 4, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

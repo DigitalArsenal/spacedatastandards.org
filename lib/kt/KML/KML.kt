@@ -169,6 +169,82 @@ class KML : Table() {
         get() {
             val o = __offset(22); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Schemas
+     */
+    fun SCHEMAS(j: Int) : KMLSchema? = SCHEMAS(KMLSchema(), j)
+    fun SCHEMAS(obj: KMLSchema, j: Int) : KMLSchema? {
+        val o = __offset(24)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val SCHEMASLength : Int
+        get() {
+            val o = __offset(24); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Screen overlays
+     */
+    fun SCREEN_OVERLAYS(j: Int) : KMLScreenOverlay? = SCREEN_OVERLAYS(KMLScreenOverlay(), j)
+    fun SCREEN_OVERLAYS(obj: KMLScreenOverlay, j: Int) : KMLScreenOverlay? {
+        val o = __offset(26)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val SCREEN_OVERLAYSLength : Int
+        get() {
+            val o = __offset(26); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Photo overlays
+     */
+    fun PHOTO_OVERLAYS(j: Int) : KMLPhotoOverlay? = PHOTO_OVERLAYS(KMLPhotoOverlay(), j)
+    fun PHOTO_OVERLAYS(obj: KMLPhotoOverlay, j: Int) : KMLPhotoOverlay? {
+        val o = __offset(28)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val PHOTO_OVERLAYSLength : Int
+        get() {
+            val o = __offset(28); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Tours
+     */
+    fun TOURS(j: Int) : KMLTour? = TOURS(KMLTour(), j)
+    fun TOURS(obj: KMLTour, j: Int) : KMLTour? {
+        val o = __offset(30)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val TOURSLength : Int
+        get() {
+            val o = __offset(30); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * NetworkLinkControl
+     */
+    val NETWORK_LINK_CONTROL : KMLNetworkLinkControl? get() = NETWORK_LINK_CONTROL(KMLNetworkLinkControl())
+    fun NETWORK_LINK_CONTROL(obj: KMLNetworkLinkControl) : KMLNetworkLinkControl? {
+        val o = __offset(32)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsKML(_bb: ByteBuffer): KML = getRootAsKML(_bb, KML())
@@ -177,8 +253,13 @@ class KML : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun KMLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$KML")
-        fun createKML(builder: FlatBufferBuilder, NAMEOffset: Int, DESCRIPTIONOffset: Int, VISIBILITY: Boolean, OPEN: Boolean, STYLESOffset: Int, STYLE_MAPSOffset: Int, PLACEMARKSOffset: Int, FOLDERSOffset: Int, NETWORK_LINKSOffset: Int, GROUND_OVERLAYSOffset: Int) : Int {
-            builder.startTable(10)
+        fun createKML(builder: FlatBufferBuilder, NAMEOffset: Int, DESCRIPTIONOffset: Int, VISIBILITY: Boolean, OPEN: Boolean, STYLESOffset: Int, STYLE_MAPSOffset: Int, PLACEMARKSOffset: Int, FOLDERSOffset: Int, NETWORK_LINKSOffset: Int, GROUND_OVERLAYSOffset: Int, SCHEMASOffset: Int, SCREEN_OVERLAYSOffset: Int, PHOTO_OVERLAYSOffset: Int, TOURSOffset: Int, NETWORK_LINK_CONTROLOffset: Int) : Int {
+            builder.startTable(15)
+            addNETWORK_LINK_CONTROL(builder, NETWORK_LINK_CONTROLOffset)
+            addTOURS(builder, TOURSOffset)
+            addPHOTO_OVERLAYS(builder, PHOTO_OVERLAYSOffset)
+            addSCREEN_OVERLAYS(builder, SCREEN_OVERLAYSOffset)
+            addSCHEMAS(builder, SCHEMASOffset)
             addGROUND_OVERLAYS(builder, GROUND_OVERLAYSOffset)
             addNETWORK_LINKS(builder, NETWORK_LINKSOffset)
             addFOLDERS(builder, FOLDERSOffset)
@@ -191,7 +272,7 @@ class KML : Table() {
             addVISIBILITY(builder, VISIBILITY)
             return endKML(builder)
         }
-        fun startKML(builder: FlatBufferBuilder) = builder.startTable(10)
+        fun startKML(builder: FlatBufferBuilder) = builder.startTable(15)
         fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
         fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(1, DESCRIPTION, 0)
         fun addVISIBILITY(builder: FlatBufferBuilder, VISIBILITY: Boolean) = builder.addBoolean(2, VISIBILITY, false)
@@ -250,6 +331,43 @@ class KML : Table() {
             return builder.endVector()
         }
         fun startGroundOverlaysVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addSCHEMAS(builder: FlatBufferBuilder, SCHEMAS: Int) = builder.addOffset(10, SCHEMAS, 0)
+        fun createSchemasVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startSchemasVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addSCREEN_OVERLAYS(builder: FlatBufferBuilder, SCREEN_OVERLAYS: Int) = builder.addOffset(11, SCREEN_OVERLAYS, 0)
+        fun createScreenOverlaysVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startScreenOverlaysVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addPHOTO_OVERLAYS(builder: FlatBufferBuilder, PHOTO_OVERLAYS: Int) = builder.addOffset(12, PHOTO_OVERLAYS, 0)
+        fun createPhotoOverlaysVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startPhotoOverlaysVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addTOURS(builder: FlatBufferBuilder, TOURS: Int) = builder.addOffset(13, TOURS, 0)
+        fun createToursVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startToursVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addNETWORK_LINK_CONTROL(builder: FlatBufferBuilder, NETWORK_LINK_CONTROL: Int) = builder.addOffset(14, NETWORK_LINK_CONTROL, 0)
         fun endKML(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -55,7 +55,7 @@ public final class CZMPolygon extends Table {
    */
   public boolean FILL() { int o = __offset(10); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
-   * Fill color (solid color material)
+   * Fill color (solid color material, legacy)
    */
   public CZMColor COLOR() { return COLOR(new CZMColor()); }
   public CZMColor COLOR(CZMColor obj) { int o = __offset(12); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
@@ -80,6 +80,69 @@ public final class CZMPolygon extends Table {
    * Classification type
    */
   public byte CLASSIFICATION_TYPE() { int o = __offset(22); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Holes (position lists: each hole is [lon,lat,h,...])
+   */
+  public CZMPolygonHole HOLES(int j) { return HOLES(new CZMPolygonHole(), j); }
+  public CZMPolygonHole HOLES(CZMPolygonHole obj, int j) { int o = __offset(24); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int HOLESLength() { int o = __offset(24); return o != 0 ? __vector_len(o) : 0; }
+  public CZMPolygonHole.Vector holesVector() { return holesVector(new CZMPolygonHole.Vector()); }
+  public CZMPolygonHole.Vector holesVector(CZMPolygonHole.Vector obj) { int o = __offset(24); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Arc type
+   */
+  public String ARC_TYPE() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ARC_TYPEAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
+  public ByteBuffer ARC_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
+  /**
+   * Height in meters
+   */
+  public double HEIGHT() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Extruded height reference
+   */
+  public String EXTRUDED_HEIGHT_REFERENCE() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EXTRUDED_HEIGHT_REFERENCEAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
+  public ByteBuffer EXTRUDED_HEIGHT_REFERENCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
+  /**
+   * Texture rotation in radians
+   */
+  public double ST_ROTATION() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Granularity in radians
+   */
+  public double GRANULARITY() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Full surface material
+   */
+  public CZMMaterial MATERIAL() { return MATERIAL(new CZMMaterial()); }
+  public CZMMaterial MATERIAL(CZMMaterial obj) { int o = __offset(36); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Outline width in pixels
+   */
+  public double OUTLINE_WIDTH() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Whether to use per-position heights
+   */
+  public boolean PER_POSITION_HEIGHT() { int o = __offset(40); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Whether to close the top of extruded polygon
+   */
+  public boolean CLOSE_TOP() { int o = __offset(42); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Whether to close the bottom of extruded polygon
+   */
+  public boolean CLOSE_BOTTOM() { int o = __offset(44); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Shadow mode
+   */
+  public String SHADOWS() { int o = __offset(46); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SHADOWSAsByteBuffer() { return __vector_as_bytebuffer(46, 1); }
+  public ByteBuffer SHADOWSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 46, 1); }
+  /**
+   * Z-index for ordering
+   */
+  public int Z_INDEX() { int o = __offset(48); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
 
   public static int createCZMPolygon(FlatBufferBuilder builder,
       boolean SHOW,
@@ -91,13 +154,39 @@ public final class CZMPolygon extends Table {
       int OUTLINE_COLOROffset,
       double EXTRUDED_HEIGHT,
       byte HEIGHT_REFERENCE,
-      byte CLASSIFICATION_TYPE) {
-    builder.startTable(10);
+      byte CLASSIFICATION_TYPE,
+      int HOLESOffset,
+      int ARC_TYPEOffset,
+      double HEIGHT,
+      int EXTRUDED_HEIGHT_REFERENCEOffset,
+      double ST_ROTATION,
+      double GRANULARITY,
+      int MATERIALOffset,
+      double OUTLINE_WIDTH,
+      boolean PER_POSITION_HEIGHT,
+      boolean CLOSE_TOP,
+      boolean CLOSE_BOTTOM,
+      int SHADOWSOffset,
+      int Z_INDEX) {
+    builder.startTable(23);
+    CZMPolygon.addOutlineWidth(builder, OUTLINE_WIDTH);
+    CZMPolygon.addGranularity(builder, GRANULARITY);
+    CZMPolygon.addStRotation(builder, ST_ROTATION);
+    CZMPolygon.addHeight(builder, HEIGHT);
     CZMPolygon.addExtrudedHeight(builder, EXTRUDED_HEIGHT);
+    CZMPolygon.addZIndex(builder, Z_INDEX);
+    CZMPolygon.addShadows(builder, SHADOWSOffset);
+    CZMPolygon.addMaterial(builder, MATERIALOffset);
+    CZMPolygon.addExtrudedHeightReference(builder, EXTRUDED_HEIGHT_REFERENCEOffset);
+    CZMPolygon.addArcType(builder, ARC_TYPEOffset);
+    CZMPolygon.addHoles(builder, HOLESOffset);
     CZMPolygon.addOutlineColor(builder, OUTLINE_COLOROffset);
     CZMPolygon.addColor(builder, COLOROffset);
     CZMPolygon.addPositionsCartesian(builder, POSITIONS_CARTESIANOffset);
     CZMPolygon.addPositionsCartographicDegrees(builder, POSITIONS_CARTOGRAPHIC_DEGREESOffset);
+    CZMPolygon.addCloseBottom(builder, CLOSE_BOTTOM);
+    CZMPolygon.addCloseTop(builder, CLOSE_TOP);
+    CZMPolygon.addPerPositionHeight(builder, PER_POSITION_HEIGHT);
     CZMPolygon.addClassificationType(builder, CLASSIFICATION_TYPE);
     CZMPolygon.addHeightReference(builder, HEIGHT_REFERENCE);
     CZMPolygon.addOutline(builder, OUTLINE);
@@ -106,7 +195,7 @@ public final class CZMPolygon extends Table {
     return CZMPolygon.endCZMPolygon(builder);
   }
 
-  public static void startCZMPolygon(FlatBufferBuilder builder) { builder.startTable(10); }
+  public static void startCZMPolygon(FlatBufferBuilder builder) { builder.startTable(23); }
   public static void addShow(FlatBufferBuilder builder, boolean SHOW) { builder.addBoolean(0, SHOW, false); }
   public static void addPositionsCartographicDegrees(FlatBufferBuilder builder, int POSITIONS_CARTOGRAPHIC_DEGREESOffset) { builder.addOffset(1, POSITIONS_CARTOGRAPHIC_DEGREESOffset, 0); }
   public static int createPositionsCartographicDegreesVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
@@ -121,6 +210,21 @@ public final class CZMPolygon extends Table {
   public static void addExtrudedHeight(FlatBufferBuilder builder, double EXTRUDED_HEIGHT) { builder.addDouble(7, EXTRUDED_HEIGHT, 0.0); }
   public static void addHeightReference(FlatBufferBuilder builder, byte HEIGHT_REFERENCE) { builder.addByte(8, HEIGHT_REFERENCE, 0); }
   public static void addClassificationType(FlatBufferBuilder builder, byte CLASSIFICATION_TYPE) { builder.addByte(9, CLASSIFICATION_TYPE, 0); }
+  public static void addHoles(FlatBufferBuilder builder, int HOLESOffset) { builder.addOffset(10, HOLESOffset, 0); }
+  public static int createHolesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startHolesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addArcType(FlatBufferBuilder builder, int ARC_TYPEOffset) { builder.addOffset(11, ARC_TYPEOffset, 0); }
+  public static void addHeight(FlatBufferBuilder builder, double HEIGHT) { builder.addDouble(12, HEIGHT, 0.0); }
+  public static void addExtrudedHeightReference(FlatBufferBuilder builder, int EXTRUDED_HEIGHT_REFERENCEOffset) { builder.addOffset(13, EXTRUDED_HEIGHT_REFERENCEOffset, 0); }
+  public static void addStRotation(FlatBufferBuilder builder, double ST_ROTATION) { builder.addDouble(14, ST_ROTATION, 0.0); }
+  public static void addGranularity(FlatBufferBuilder builder, double GRANULARITY) { builder.addDouble(15, GRANULARITY, 0.0); }
+  public static void addMaterial(FlatBufferBuilder builder, int MATERIALOffset) { builder.addOffset(16, MATERIALOffset, 0); }
+  public static void addOutlineWidth(FlatBufferBuilder builder, double OUTLINE_WIDTH) { builder.addDouble(17, OUTLINE_WIDTH, 0.0); }
+  public static void addPerPositionHeight(FlatBufferBuilder builder, boolean PER_POSITION_HEIGHT) { builder.addBoolean(18, PER_POSITION_HEIGHT, false); }
+  public static void addCloseTop(FlatBufferBuilder builder, boolean CLOSE_TOP) { builder.addBoolean(19, CLOSE_TOP, false); }
+  public static void addCloseBottom(FlatBufferBuilder builder, boolean CLOSE_BOTTOM) { builder.addBoolean(20, CLOSE_BOTTOM, false); }
+  public static void addShadows(FlatBufferBuilder builder, int SHADOWSOffset) { builder.addOffset(21, SHADOWSOffset, 0); }
+  public static void addZIndex(FlatBufferBuilder builder, int Z_INDEX) { builder.addInt(22, Z_INDEX, 0); }
   public static int endCZMPolygon(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

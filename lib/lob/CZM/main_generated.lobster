@@ -27,7 +27,61 @@ enum CZMVerticalOrigin:
     CZMVerticalOrigin_CENTER = 2
     CZMVerticalOrigin_TOP = 3
 
+enum CZMShadowMode:
+    CZMShadowMode_DISABLED = 0
+    CZMShadowMode_ENABLED = 1
+    CZMShadowMode_CAST_ONLY = 2
+    CZMShadowMode_RECEIVE_ONLY = 3
+
+enum CZMColorBlendMode:
+    CZMColorBlendMode_HIGHLIGHT = 0
+    CZMColorBlendMode_REPLACE = 1
+    CZMColorBlendMode_MIX = 2
+
+enum CZMCornerType:
+    CZMCornerType_ROUNDED = 0
+    CZMCornerType_MITERED = 1
+    CZMCornerType_BEVELED = 2
+
+enum CZMArcType:
+    CZMArcType_NONE = 0
+    CZMArcType_GEODESIC = 1
+    CZMArcType_RHUMB = 2
+
+enum CZMStripeOrientation:
+    CZMStripeOrientation_HORIZONTAL = 0
+    CZMStripeOrientation_VERTICAL = 1
+
+enum CZMClockRange:
+    CZMClockRange_UNBOUNDED = 0
+    CZMClockRange_CLAMPED = 1
+    CZMClockRange_LOOP_STOP = 2
+
+enum CZMClockStep:
+    CZMClockStep_TICK_DEPENDENT = 0
+    CZMClockStep_SYSTEM_CLOCK_MULTIPLIER = 1
+    CZMClockStep_SYSTEM_CLOCK = 2
+
+/// Dynamic value types for time-varying properties
+enum CZMDynValueType:
+    CZMDynValueType_NUMBER = 0
+    CZMDynValueType_BOOLEAN = 1
+    CZMDynValueType_STRING = 2
+    CZMDynValueType_COLOR = 3
+    CZMDynValueType_CARTESIAN3 = 4
+    CZMDynValueType_CARTESIAN2 = 5
+    CZMDynValueType_NEAR_FAR_SCALAR = 6
+    CZMDynValueType_UNIT_QUATERNION = 7
+
 class CZMInterval
+
+class CZMInterpolation
+
+class CZMDynInterval
+
+class CZMDynSampled
+
+class CZMDynamicProperty
 
 class CZMCartographicDegrees
 
@@ -36,6 +90,34 @@ class CZMCartesian
 class CZMColor
 
 class CZMNearFarScalar
+
+class CZMDistanceDisplayCondition
+
+class CZMOrientation
+
+class CZMViewFrom
+
+class CZMSolidColorMaterial
+
+class CZMImageMaterial
+
+class CZMGridMaterial
+
+class CZMStripeMaterial
+
+class CZMCheckerboardMaterial
+
+class CZMMaterial
+
+class CZMPolylineOutlineMaterial
+
+class CZMPolylineArrowMaterial
+
+class CZMPolylineDashMaterial
+
+class CZMPolylineGlowMaterial
+
+class CZMPolylineMaterial
 
 class CZMBillboard
 
@@ -47,11 +129,29 @@ class CZMPolyline
 
 class CZMPolygon
 
+class CZMPolygonHole
+
 class CZMModel
 
 class CZMPath
 
 class CZMEllipse
+
+class CZMBox
+
+class CZMCorridor
+
+class CZMCylinder
+
+class CZMEllipsoid
+
+class CZMPolylineVolume
+
+class CZMRectangle
+
+class CZMTileset
+
+class CZMWall
 
 class CZMPacket
 
@@ -75,6 +175,190 @@ struct CZMIntervalBuilder:
         return this
     def end():
         return b_.EndObject()
+
+/// Interpolation settings for sampled data
+class CZMInterpolation : flatbuffers.handle
+    /// Algorithm: LINEAR, LAGRANGE, HERMITE
+    def ALGORITHM() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Polynomial degree (1=linear, 5=typical Lagrange)
+    def DEGREE() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 6, 0)
+
+def GetRootAsCZMInterpolation(buf:string): return CZMInterpolation { buf, flatbuffers.indirect(buf, 0) }
+
+struct CZMInterpolationBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(2)
+        return this
+    def add_ALGORITHM(ALGORITHM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, ALGORITHM)
+        return this
+    def add_DEGREE(DEGREE:int):
+        b_.PrependInt32Slot(1, DEGREE, 0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// A single interval in a time-varying property
+class CZMDynInterval : flatbuffers.handle
+    /// ISO 8601 interval string
+    def INTERVAL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Value type
+    def VALUE_TYPE() -> CZMDynValueType:
+        return CZMDynValueType(flatbuffers.field_int8(buf_, pos_, 6, 0))
+    /// Numeric value (when VALUE_TYPE is NUMBER)
+    def NUMBER_VALUE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// Boolean value (when VALUE_TYPE is BOOLEAN)
+    def BOOLEAN_VALUE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 10, 0))
+    /// String value (when VALUE_TYPE is STRING)
+    def STRING_VALUE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// Color value (when VALUE_TYPE is COLOR)
+    def COLOR_VALUE() -> CZMColor?:
+        let o = flatbuffers.field_table(buf_, pos_, 14)
+        return if o: CZMColor { buf_, o } else: nil
+    /// Array value for cartesian/nearFarScalar types
+    def ARRAY_VALUE(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 16) + i * 8)
+    def ARRAY_VALUE_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 16)
+
+def GetRootAsCZMDynInterval(buf:string): return CZMDynInterval { buf, flatbuffers.indirect(buf, 0) }
+
+struct CZMDynIntervalBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(7)
+        return this
+    def add_INTERVAL(INTERVAL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, INTERVAL)
+        return this
+    def add_VALUE_TYPE(VALUE_TYPE:CZMDynValueType):
+        b_.PrependInt8Slot(1, VALUE_TYPE, 0)
+        return this
+    def add_NUMBER_VALUE(NUMBER_VALUE:float):
+        b_.PrependFloat64Slot(2, NUMBER_VALUE, 0.0)
+        return this
+    def add_BOOLEAN_VALUE(BOOLEAN_VALUE:bool):
+        b_.PrependBoolSlot(3, BOOLEAN_VALUE, 0)
+        return this
+    def add_STRING_VALUE(STRING_VALUE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, STRING_VALUE)
+        return this
+    def add_COLOR_VALUE(COLOR_VALUE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, COLOR_VALUE)
+        return this
+    def add_ARRAY_VALUE(ARRAY_VALUE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, ARRAY_VALUE)
+        return this
+    def end():
+        return b_.EndObject()
+
+def CZMDynIntervalStartARRAY_VALUEVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def CZMDynIntervalCreateARRAY_VALUEVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+/// Sampled time-varying data
+class CZMDynSampled : flatbuffers.handle
+    /// Reference epoch (ISO 8601)
+    def EPOCH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Value type determines stride through DATA
+    def VALUE_TYPE() -> CZMDynValueType:
+        return CZMDynValueType(flatbuffers.field_int8(buf_, pos_, 6, 0))
+    /// Interleaved [time, value(s), ...] — stride depends on VALUE_TYPE
+    def DATA(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 8) + i * 8)
+    def DATA_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 8)
+    /// Interpolation settings
+    def INTERPOLATION() -> CZMInterpolation?:
+        let o = flatbuffers.field_table(buf_, pos_, 10)
+        return if o: CZMInterpolation { buf_, o } else: nil
+
+def GetRootAsCZMDynSampled(buf:string): return CZMDynSampled { buf, flatbuffers.indirect(buf, 0) }
+
+struct CZMDynSampledBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(4)
+        return this
+    def add_EPOCH(EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, EPOCH)
+        return this
+    def add_VALUE_TYPE(VALUE_TYPE:CZMDynValueType):
+        b_.PrependInt8Slot(1, VALUE_TYPE, 0)
+        return this
+    def add_DATA(DATA:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, DATA)
+        return this
+    def add_INTERPOLATION(INTERPOLATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, INTERPOLATION)
+        return this
+    def end():
+        return b_.EndObject()
+
+def CZMDynSampledStartDATAVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def CZMDynSampledCreateDATAVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+/// A single time-dynamic property (non-static value)
+class CZMDynamicProperty : flatbuffers.handle
+    /// Dotted path name, e.g. "billboard.scale", "point.color"
+    def NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Sampled data (when property uses epoch + data array)
+    def SAMPLED() -> CZMDynSampled?:
+        let o = flatbuffers.field_table(buf_, pos_, 6)
+        return if o: CZMDynSampled { buf_, o } else: nil
+    /// Interval-based values
+    def INTERVALS(i:int) -> CZMDynInterval:
+        return CZMDynInterval { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 8) + i * 4) }
+    def INTERVALS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 8)
+    /// Reference to another entity's property
+    def REFERENCE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+
+def GetRootAsCZMDynamicProperty(buf:string): return CZMDynamicProperty { buf, flatbuffers.indirect(buf, 0) }
+
+struct CZMDynamicPropertyBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(4)
+        return this
+    def add_NAME(NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, NAME)
+        return this
+    def add_SAMPLED(SAMPLED:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, SAMPLED)
+        return this
+    def add_INTERVALS(INTERVALS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, INTERVALS)
+        return this
+    def add_REFERENCE(REFERENCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, REFERENCE)
+        return this
+    def end():
+        return b_.EndObject()
+
+def CZMDynamicPropertyStartINTERVALSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def CZMDynamicPropertyCreateINTERVALSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
 
 /// Cartographic position (longitude, latitude, height in radians/meters)
 class CZMCartographicDegrees : flatbuffers.handle
@@ -212,6 +496,529 @@ struct CZMNearFarScalarBuilder:
     def end():
         return b_.EndObject()
 
+/// Distance display condition
+class CZMDistanceDisplayCondition : flatbuffers.handle
+    /// Near distance in meters
+    def NEAR_DISTANCE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
+    /// Far distance in meters
+    def FAR_DISTANCE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+
+def GetRootAsCZMDistanceDisplayCondition(buf:string): return CZMDistanceDisplayCondition { buf, flatbuffers.indirect(buf, 0) }
+
+struct CZMDistanceDisplayConditionBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(2)
+        return this
+    def add_NEAR_DISTANCE(NEAR_DISTANCE:float):
+        b_.PrependFloat64Slot(0, NEAR_DISTANCE, 0.0)
+        return this
+    def add_FAR_DISTANCE(FAR_DISTANCE:float):
+        b_.PrependFloat64Slot(1, FAR_DISTANCE, 0.0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Orientation as unit quaternion
+class CZMOrientation : flatbuffers.handle
+    /// X component
+    def UNIT_QUATERNION_X() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
+    /// Y component
+    def UNIT_QUATERNION_Y() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    /// Z component
+    def UNIT_QUATERNION_Z() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// W component
+    def UNIT_QUATERNION_W() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+
+def GetRootAsCZMOrientation(buf:string): return CZMOrientation { buf, flatbuffers.indirect(buf, 0) }
+
+struct CZMOrientationBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(4)
+        return this
+    def add_UNIT_QUATERNION_X(UNIT_QUATERNION_X:float):
+        b_.PrependFloat64Slot(0, UNIT_QUATERNION_X, 0.0)
+        return this
+    def add_UNIT_QUATERNION_Y(UNIT_QUATERNION_Y:float):
+        b_.PrependFloat64Slot(1, UNIT_QUATERNION_Y, 0.0)
+        return this
+    def add_UNIT_QUATERNION_Z(UNIT_QUATERNION_Z:float):
+        b_.PrependFloat64Slot(2, UNIT_QUATERNION_Z, 0.0)
+        return this
+    def add_UNIT_QUATERNION_W(UNIT_QUATERNION_W:float):
+        b_.PrependFloat64Slot(3, UNIT_QUATERNION_W, 0.0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Suggested camera offset from entity
+class CZMViewFrom : flatbuffers.handle
+    /// X offset in meters
+    def X() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
+    /// Y offset in meters
+    def Y() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    /// Z offset in meters
+    def Z() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+
+def GetRootAsCZMViewFrom(buf:string): return CZMViewFrom { buf, flatbuffers.indirect(buf, 0) }
+
+struct CZMViewFromBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(3)
+        return this
+    def add_X(X:float):
+        b_.PrependFloat64Slot(0, X, 0.0)
+        return this
+    def add_Y(Y:float):
+        b_.PrependFloat64Slot(1, Y, 0.0)
+        return this
+    def add_Z(Z:float):
+        b_.PrependFloat64Slot(2, Z, 0.0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Solid color material
+class CZMSolidColorMaterial : flatbuffers.handle
+    /// Color
+    def COLOR() -> CZMColor?:
+        let o = flatbuffers.field_table(buf_, pos_, 4)
+        return if o: CZMColor { buf_, o } else: nil
+
+def GetRootAsCZMSolidColorMaterial(buf:string): return CZMSolidColorMaterial { buf, flatbuffers.indirect(buf, 0) }
+
+struct CZMSolidColorMaterialBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(1)
+        return this
+    def add_COLOR(COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, COLOR)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Image material
+class CZMImageMaterial : flatbuffers.handle
+    /// Image URI
+    def IMAGE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Repeat X
+    def REPEAT_X() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    /// Repeat Y
+    def REPEAT_Y() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// Color tint
+    def COLOR() -> CZMColor?:
+        let o = flatbuffers.field_table(buf_, pos_, 10)
+        return if o: CZMColor { buf_, o } else: nil
+    /// Whether the image has transparency
+    def TRANSPARENT() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 12, 0))
+
+def GetRootAsCZMImageMaterial(buf:string): return CZMImageMaterial { buf, flatbuffers.indirect(buf, 0) }
+
+struct CZMImageMaterialBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(5)
+        return this
+    def add_IMAGE(IMAGE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, IMAGE)
+        return this
+    def add_REPEAT_X(REPEAT_X:float):
+        b_.PrependFloat64Slot(1, REPEAT_X, 0.0)
+        return this
+    def add_REPEAT_Y(REPEAT_Y:float):
+        b_.PrependFloat64Slot(2, REPEAT_Y, 0.0)
+        return this
+    def add_COLOR(COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, COLOR)
+        return this
+    def add_TRANSPARENT(TRANSPARENT:bool):
+        b_.PrependBoolSlot(4, TRANSPARENT, 0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Grid material
+class CZMGridMaterial : flatbuffers.handle
+    /// Grid line color
+    def COLOR() -> CZMColor?:
+        let o = flatbuffers.field_table(buf_, pos_, 4)
+        return if o: CZMColor { buf_, o } else: nil
+    /// Cell alpha
+    def CELL_ALPHA() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    /// Number of grid lines along X
+    def LINE_COUNT_X() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// Number of grid lines along Y
+    def LINE_COUNT_Y() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    /// Thickness of grid lines along X
+    def LINE_THICKNESS_X() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    /// Thickness of grid lines along Y
+    def LINE_THICKNESS_Y() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// Offset of grid lines along X
+    def LINE_OFFSET_X() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+    /// Offset of grid lines along Y
+    def LINE_OFFSET_Y() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
+
+def GetRootAsCZMGridMaterial(buf:string): return CZMGridMaterial { buf, flatbuffers.indirect(buf, 0) }
+
+struct CZMGridMaterialBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(8)
+        return this
+    def add_COLOR(COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, COLOR)
+        return this
+    def add_CELL_ALPHA(CELL_ALPHA:float):
+        b_.PrependFloat64Slot(1, CELL_ALPHA, 0.0)
+        return this
+    def add_LINE_COUNT_X(LINE_COUNT_X:float):
+        b_.PrependFloat64Slot(2, LINE_COUNT_X, 0.0)
+        return this
+    def add_LINE_COUNT_Y(LINE_COUNT_Y:float):
+        b_.PrependFloat64Slot(3, LINE_COUNT_Y, 0.0)
+        return this
+    def add_LINE_THICKNESS_X(LINE_THICKNESS_X:float):
+        b_.PrependFloat64Slot(4, LINE_THICKNESS_X, 0.0)
+        return this
+    def add_LINE_THICKNESS_Y(LINE_THICKNESS_Y:float):
+        b_.PrependFloat64Slot(5, LINE_THICKNESS_Y, 0.0)
+        return this
+    def add_LINE_OFFSET_X(LINE_OFFSET_X:float):
+        b_.PrependFloat64Slot(6, LINE_OFFSET_X, 0.0)
+        return this
+    def add_LINE_OFFSET_Y(LINE_OFFSET_Y:float):
+        b_.PrependFloat64Slot(7, LINE_OFFSET_Y, 0.0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Stripe material
+class CZMStripeMaterial : flatbuffers.handle
+    /// Stripe orientation
+    def ORIENTATION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Even color
+    def EVEN_COLOR() -> CZMColor?:
+        let o = flatbuffers.field_table(buf_, pos_, 6)
+        return if o: CZMColor { buf_, o } else: nil
+    /// Odd color
+    def ODD_COLOR() -> CZMColor?:
+        let o = flatbuffers.field_table(buf_, pos_, 8)
+        return if o: CZMColor { buf_, o } else: nil
+    /// Offset
+    def OFFSET() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    /// Number of times to repeat
+    def REPEAT_COUNT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+
+def GetRootAsCZMStripeMaterial(buf:string): return CZMStripeMaterial { buf, flatbuffers.indirect(buf, 0) }
+
+struct CZMStripeMaterialBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(5)
+        return this
+    def add_ORIENTATION(ORIENTATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, ORIENTATION)
+        return this
+    def add_EVEN_COLOR(EVEN_COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, EVEN_COLOR)
+        return this
+    def add_ODD_COLOR(ODD_COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, ODD_COLOR)
+        return this
+    def add_OFFSET(OFFSET:float):
+        b_.PrependFloat64Slot(3, OFFSET, 0.0)
+        return this
+    def add_REPEAT_COUNT(REPEAT_COUNT:float):
+        b_.PrependFloat64Slot(4, REPEAT_COUNT, 0.0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Checkerboard material
+class CZMCheckerboardMaterial : flatbuffers.handle
+    /// Even color
+    def EVEN_COLOR() -> CZMColor?:
+        let o = flatbuffers.field_table(buf_, pos_, 4)
+        return if o: CZMColor { buf_, o } else: nil
+    /// Odd color
+    def ODD_COLOR() -> CZMColor?:
+        let o = flatbuffers.field_table(buf_, pos_, 6)
+        return if o: CZMColor { buf_, o } else: nil
+    /// Repeat X
+    def REPEAT_X() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// Repeat Y
+    def REPEAT_Y() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+
+def GetRootAsCZMCheckerboardMaterial(buf:string): return CZMCheckerboardMaterial { buf, flatbuffers.indirect(buf, 0) }
+
+struct CZMCheckerboardMaterialBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(4)
+        return this
+    def add_EVEN_COLOR(EVEN_COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, EVEN_COLOR)
+        return this
+    def add_ODD_COLOR(ODD_COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, ODD_COLOR)
+        return this
+    def add_REPEAT_X(REPEAT_X:float):
+        b_.PrependFloat64Slot(2, REPEAT_X, 0.0)
+        return this
+    def add_REPEAT_Y(REPEAT_Y:float):
+        b_.PrependFloat64Slot(3, REPEAT_Y, 0.0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Surface material (used by polygon, ellipse, box, etc.)
+class CZMMaterial : flatbuffers.handle
+    /// Solid color material
+    def SOLID_COLOR() -> CZMSolidColorMaterial?:
+        let o = flatbuffers.field_table(buf_, pos_, 4)
+        return if o: CZMSolidColorMaterial { buf_, o } else: nil
+    /// Image material
+    def IMAGE() -> CZMImageMaterial?:
+        let o = flatbuffers.field_table(buf_, pos_, 6)
+        return if o: CZMImageMaterial { buf_, o } else: nil
+    /// Grid material
+    def GRID() -> CZMGridMaterial?:
+        let o = flatbuffers.field_table(buf_, pos_, 8)
+        return if o: CZMGridMaterial { buf_, o } else: nil
+    /// Stripe material
+    def STRIPE() -> CZMStripeMaterial?:
+        let o = flatbuffers.field_table(buf_, pos_, 10)
+        return if o: CZMStripeMaterial { buf_, o } else: nil
+    /// Checkerboard material
+    def CHECKERBOARD() -> CZMCheckerboardMaterial?:
+        let o = flatbuffers.field_table(buf_, pos_, 12)
+        return if o: CZMCheckerboardMaterial { buf_, o } else: nil
+
+def GetRootAsCZMMaterial(buf:string): return CZMMaterial { buf, flatbuffers.indirect(buf, 0) }
+
+struct CZMMaterialBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(5)
+        return this
+    def add_SOLID_COLOR(SOLID_COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, SOLID_COLOR)
+        return this
+    def add_IMAGE(IMAGE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, IMAGE)
+        return this
+    def add_GRID(GRID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, GRID)
+        return this
+    def add_STRIPE(STRIPE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, STRIPE)
+        return this
+    def add_CHECKERBOARD(CHECKERBOARD:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, CHECKERBOARD)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Polyline outline material
+class CZMPolylineOutlineMaterial : flatbuffers.handle
+    /// Line color
+    def COLOR() -> CZMColor?:
+        let o = flatbuffers.field_table(buf_, pos_, 4)
+        return if o: CZMColor { buf_, o } else: nil
+    /// Outline color
+    def OUTLINE_COLOR() -> CZMColor?:
+        let o = flatbuffers.field_table(buf_, pos_, 6)
+        return if o: CZMColor { buf_, o } else: nil
+    /// Outline width
+    def OUTLINE_WIDTH() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+
+def GetRootAsCZMPolylineOutlineMaterial(buf:string): return CZMPolylineOutlineMaterial { buf, flatbuffers.indirect(buf, 0) }
+
+struct CZMPolylineOutlineMaterialBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(3)
+        return this
+    def add_COLOR(COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, COLOR)
+        return this
+    def add_OUTLINE_COLOR(OUTLINE_COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, OUTLINE_COLOR)
+        return this
+    def add_OUTLINE_WIDTH(OUTLINE_WIDTH:float):
+        b_.PrependFloat64Slot(2, OUTLINE_WIDTH, 0.0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Polyline arrow material
+class CZMPolylineArrowMaterial : flatbuffers.handle
+    /// Arrow color
+    def COLOR() -> CZMColor?:
+        let o = flatbuffers.field_table(buf_, pos_, 4)
+        return if o: CZMColor { buf_, o } else: nil
+
+def GetRootAsCZMPolylineArrowMaterial(buf:string): return CZMPolylineArrowMaterial { buf, flatbuffers.indirect(buf, 0) }
+
+struct CZMPolylineArrowMaterialBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(1)
+        return this
+    def add_COLOR(COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, COLOR)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Polyline dash material
+class CZMPolylineDashMaterial : flatbuffers.handle
+    /// Dash color
+    def COLOR() -> CZMColor?:
+        let o = flatbuffers.field_table(buf_, pos_, 4)
+        return if o: CZMColor { buf_, o } else: nil
+    /// Gap color
+    def GAP_COLOR() -> CZMColor?:
+        let o = flatbuffers.field_table(buf_, pos_, 6)
+        return if o: CZMColor { buf_, o } else: nil
+    /// Dash length in pixels
+    def DASH_LENGTH() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// Dash pattern (bitmask)
+    def DASH_PATTERN() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 10, 0)
+
+def GetRootAsCZMPolylineDashMaterial(buf:string): return CZMPolylineDashMaterial { buf, flatbuffers.indirect(buf, 0) }
+
+struct CZMPolylineDashMaterialBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(4)
+        return this
+    def add_COLOR(COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, COLOR)
+        return this
+    def add_GAP_COLOR(GAP_COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, GAP_COLOR)
+        return this
+    def add_DASH_LENGTH(DASH_LENGTH:float):
+        b_.PrependFloat64Slot(2, DASH_LENGTH, 0.0)
+        return this
+    def add_DASH_PATTERN(DASH_PATTERN:int):
+        b_.PrependInt32Slot(3, DASH_PATTERN, 0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Polyline glow material
+class CZMPolylineGlowMaterial : flatbuffers.handle
+    /// Glow color
+    def COLOR() -> CZMColor?:
+        let o = flatbuffers.field_table(buf_, pos_, 4)
+        return if o: CZMColor { buf_, o } else: nil
+    /// Glow power
+    def GLOW_POWER() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    /// Taper power
+    def TAPER_POWER() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+
+def GetRootAsCZMPolylineGlowMaterial(buf:string): return CZMPolylineGlowMaterial { buf, flatbuffers.indirect(buf, 0) }
+
+struct CZMPolylineGlowMaterialBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(3)
+        return this
+    def add_COLOR(COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, COLOR)
+        return this
+    def add_GLOW_POWER(GLOW_POWER:float):
+        b_.PrependFloat64Slot(1, GLOW_POWER, 0.0)
+        return this
+    def add_TAPER_POWER(TAPER_POWER:float):
+        b_.PrependFloat64Slot(2, TAPER_POWER, 0.0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Polyline material (used by polyline, path)
+class CZMPolylineMaterial : flatbuffers.handle
+    /// Solid color material
+    def SOLID_COLOR() -> CZMSolidColorMaterial?:
+        let o = flatbuffers.field_table(buf_, pos_, 4)
+        return if o: CZMSolidColorMaterial { buf_, o } else: nil
+    /// Polyline outline material
+    def POLYLINE_OUTLINE() -> CZMPolylineOutlineMaterial?:
+        let o = flatbuffers.field_table(buf_, pos_, 6)
+        return if o: CZMPolylineOutlineMaterial { buf_, o } else: nil
+    /// Polyline arrow material
+    def POLYLINE_ARROW() -> CZMPolylineArrowMaterial?:
+        let o = flatbuffers.field_table(buf_, pos_, 8)
+        return if o: CZMPolylineArrowMaterial { buf_, o } else: nil
+    /// Polyline dash material
+    def POLYLINE_DASH() -> CZMPolylineDashMaterial?:
+        let o = flatbuffers.field_table(buf_, pos_, 10)
+        return if o: CZMPolylineDashMaterial { buf_, o } else: nil
+    /// Polyline glow material
+    def POLYLINE_GLOW() -> CZMPolylineGlowMaterial?:
+        let o = flatbuffers.field_table(buf_, pos_, 12)
+        return if o: CZMPolylineGlowMaterial { buf_, o } else: nil
+
+def GetRootAsCZMPolylineMaterial(buf:string): return CZMPolylineMaterial { buf, flatbuffers.indirect(buf, 0) }
+
+struct CZMPolylineMaterialBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(5)
+        return this
+    def add_SOLID_COLOR(SOLID_COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, SOLID_COLOR)
+        return this
+    def add_POLYLINE_OUTLINE(POLYLINE_OUTLINE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, POLYLINE_OUTLINE)
+        return this
+    def add_POLYLINE_ARROW(POLYLINE_ARROW:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, POLYLINE_ARROW)
+        return this
+    def add_POLYLINE_DASH(POLYLINE_DASH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, POLYLINE_DASH)
+        return this
+    def add_POLYLINE_GLOW(POLYLINE_GLOW:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, POLYLINE_GLOW)
+        return this
+    def end():
+        return b_.EndObject()
+
 /// Billboard (icon) properties
 class CZMBillboard : flatbuffers.handle
     /// Whether the billboard is displayed
@@ -246,13 +1053,51 @@ class CZMBillboard : flatbuffers.handle
     def TRANSLUCENCY_BY_DISTANCE() -> CZMNearFarScalar?:
         let o = flatbuffers.field_table(buf_, pos_, 22)
         return if o: CZMNearFarScalar { buf_, o } else: nil
+    /// Rotation in radians
+    def ROTATION() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
+    /// Whether size is in meters
+    def SIZE_IN_METERS() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 26, 0))
+    /// Width in pixels
+    def WIDTH() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 28, 0.0)
+    /// Height in pixels
+    def HEIGHT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 30, 0.0)
+    /// Eye offset X in meters
+    def EYE_OFFSET_X() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 32, 0.0)
+    /// Eye offset Y in meters
+    def EYE_OFFSET_Y() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 34, 0.0)
+    /// Eye offset Z in meters
+    def EYE_OFFSET_Z() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 36, 0.0)
+    /// Scale by distance
+    def SCALE_BY_DISTANCE() -> CZMNearFarScalar?:
+        let o = flatbuffers.field_table(buf_, pos_, 38)
+        return if o: CZMNearFarScalar { buf_, o } else: nil
+    /// Pixel offset scale by distance
+    def PIXEL_OFFSET_SCALE_BY_DISTANCE() -> CZMNearFarScalar?:
+        let o = flatbuffers.field_table(buf_, pos_, 40)
+        return if o: CZMNearFarScalar { buf_, o } else: nil
+    /// Distance display condition near
+    def DISTANCE_DISPLAY_CONDITION_NEAR() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 42, 0.0)
+    /// Distance display condition far
+    def DISTANCE_DISPLAY_CONDITION_FAR() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 44, 0.0)
+    /// Disable depth test distance
+    def DISABLE_DEPTH_TEST_DISTANCE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 46, 0.0)
 
 def GetRootAsCZMBillboard(buf:string): return CZMBillboard { buf, flatbuffers.indirect(buf, 0) }
 
 struct CZMBillboardBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(10)
+        b_.StartObject(22)
         return this
     def add_SHOW(SHOW:bool):
         b_.PrependBoolSlot(0, SHOW, 0)
@@ -283,6 +1128,42 @@ struct CZMBillboardBuilder:
         return this
     def add_TRANSLUCENCY_BY_DISTANCE(TRANSLUCENCY_BY_DISTANCE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(9, TRANSLUCENCY_BY_DISTANCE)
+        return this
+    def add_ROTATION(ROTATION:float):
+        b_.PrependFloat64Slot(10, ROTATION, 0.0)
+        return this
+    def add_SIZE_IN_METERS(SIZE_IN_METERS:bool):
+        b_.PrependBoolSlot(11, SIZE_IN_METERS, 0)
+        return this
+    def add_WIDTH(WIDTH:float):
+        b_.PrependFloat64Slot(12, WIDTH, 0.0)
+        return this
+    def add_HEIGHT(HEIGHT:float):
+        b_.PrependFloat64Slot(13, HEIGHT, 0.0)
+        return this
+    def add_EYE_OFFSET_X(EYE_OFFSET_X:float):
+        b_.PrependFloat64Slot(14, EYE_OFFSET_X, 0.0)
+        return this
+    def add_EYE_OFFSET_Y(EYE_OFFSET_Y:float):
+        b_.PrependFloat64Slot(15, EYE_OFFSET_Y, 0.0)
+        return this
+    def add_EYE_OFFSET_Z(EYE_OFFSET_Z:float):
+        b_.PrependFloat64Slot(16, EYE_OFFSET_Z, 0.0)
+        return this
+    def add_SCALE_BY_DISTANCE(SCALE_BY_DISTANCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(17, SCALE_BY_DISTANCE)
+        return this
+    def add_PIXEL_OFFSET_SCALE_BY_DISTANCE(PIXEL_OFFSET_SCALE_BY_DISTANCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(18, PIXEL_OFFSET_SCALE_BY_DISTANCE)
+        return this
+    def add_DISTANCE_DISPLAY_CONDITION_NEAR(DISTANCE_DISPLAY_CONDITION_NEAR:float):
+        b_.PrependFloat64Slot(19, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0)
+        return this
+    def add_DISTANCE_DISPLAY_CONDITION_FAR(DISTANCE_DISPLAY_CONDITION_FAR:float):
+        b_.PrependFloat64Slot(20, DISTANCE_DISPLAY_CONDITION_FAR, 0.0)
+        return this
+    def add_DISABLE_DEPTH_TEST_DISTANCE(DISABLE_DEPTH_TEST_DISTANCE:float):
+        b_.PrependFloat64Slot(21, DISABLE_DEPTH_TEST_DISTANCE, 0.0)
         return this
     def end():
         return b_.EndObject()
@@ -330,13 +1211,56 @@ class CZMLabel : flatbuffers.handle
     /// Height reference
     def HEIGHT_REFERENCE() -> CZMHeightReference:
         return CZMHeightReference(flatbuffers.field_int8(buf_, pos_, 28, 0))
+    /// Whether to show background
+    def SHOW_BACKGROUND() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 30, 0))
+    /// Background color
+    def BACKGROUND_COLOR() -> CZMColor?:
+        let o = flatbuffers.field_table(buf_, pos_, 32)
+        return if o: CZMColor { buf_, o } else: nil
+    /// Background padding X
+    def BACKGROUND_PADDING_X() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 34, 0.0)
+    /// Background padding Y
+    def BACKGROUND_PADDING_Y() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 36, 0.0)
+    /// Eye offset X in meters
+    def EYE_OFFSET_X() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 38, 0.0)
+    /// Eye offset Y in meters
+    def EYE_OFFSET_Y() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 40, 0.0)
+    /// Eye offset Z in meters
+    def EYE_OFFSET_Z() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 42, 0.0)
+    /// Translucency by distance
+    def TRANSLUCENCY_BY_DISTANCE() -> CZMNearFarScalar?:
+        let o = flatbuffers.field_table(buf_, pos_, 44)
+        return if o: CZMNearFarScalar { buf_, o } else: nil
+    /// Pixel offset scale by distance
+    def PIXEL_OFFSET_SCALE_BY_DISTANCE() -> CZMNearFarScalar?:
+        let o = flatbuffers.field_table(buf_, pos_, 46)
+        return if o: CZMNearFarScalar { buf_, o } else: nil
+    /// Scale by distance
+    def SCALE_BY_DISTANCE() -> CZMNearFarScalar?:
+        let o = flatbuffers.field_table(buf_, pos_, 48)
+        return if o: CZMNearFarScalar { buf_, o } else: nil
+    /// Distance display condition near
+    def DISTANCE_DISPLAY_CONDITION_NEAR() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 50, 0.0)
+    /// Distance display condition far
+    def DISTANCE_DISPLAY_CONDITION_FAR() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 52, 0.0)
+    /// Disable depth test distance
+    def DISABLE_DEPTH_TEST_DISTANCE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 54, 0.0)
 
 def GetRootAsCZMLabel(buf:string): return CZMLabel { buf, flatbuffers.indirect(buf, 0) }
 
 struct CZMLabelBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(13)
+        b_.StartObject(26)
         return this
     def add_SHOW(SHOW:bool):
         b_.PrependBoolSlot(0, SHOW, 0)
@@ -377,6 +1301,45 @@ struct CZMLabelBuilder:
     def add_HEIGHT_REFERENCE(HEIGHT_REFERENCE:CZMHeightReference):
         b_.PrependInt8Slot(12, HEIGHT_REFERENCE, 0)
         return this
+    def add_SHOW_BACKGROUND(SHOW_BACKGROUND:bool):
+        b_.PrependBoolSlot(13, SHOW_BACKGROUND, 0)
+        return this
+    def add_BACKGROUND_COLOR(BACKGROUND_COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(14, BACKGROUND_COLOR)
+        return this
+    def add_BACKGROUND_PADDING_X(BACKGROUND_PADDING_X:float):
+        b_.PrependFloat64Slot(15, BACKGROUND_PADDING_X, 0.0)
+        return this
+    def add_BACKGROUND_PADDING_Y(BACKGROUND_PADDING_Y:float):
+        b_.PrependFloat64Slot(16, BACKGROUND_PADDING_Y, 0.0)
+        return this
+    def add_EYE_OFFSET_X(EYE_OFFSET_X:float):
+        b_.PrependFloat64Slot(17, EYE_OFFSET_X, 0.0)
+        return this
+    def add_EYE_OFFSET_Y(EYE_OFFSET_Y:float):
+        b_.PrependFloat64Slot(18, EYE_OFFSET_Y, 0.0)
+        return this
+    def add_EYE_OFFSET_Z(EYE_OFFSET_Z:float):
+        b_.PrependFloat64Slot(19, EYE_OFFSET_Z, 0.0)
+        return this
+    def add_TRANSLUCENCY_BY_DISTANCE(TRANSLUCENCY_BY_DISTANCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(20, TRANSLUCENCY_BY_DISTANCE)
+        return this
+    def add_PIXEL_OFFSET_SCALE_BY_DISTANCE(PIXEL_OFFSET_SCALE_BY_DISTANCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(21, PIXEL_OFFSET_SCALE_BY_DISTANCE)
+        return this
+    def add_SCALE_BY_DISTANCE(SCALE_BY_DISTANCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(22, SCALE_BY_DISTANCE)
+        return this
+    def add_DISTANCE_DISPLAY_CONDITION_NEAR(DISTANCE_DISPLAY_CONDITION_NEAR:float):
+        b_.PrependFloat64Slot(23, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0)
+        return this
+    def add_DISTANCE_DISPLAY_CONDITION_FAR(DISTANCE_DISPLAY_CONDITION_FAR:float):
+        b_.PrependFloat64Slot(24, DISTANCE_DISPLAY_CONDITION_FAR, 0.0)
+        return this
+    def add_DISABLE_DEPTH_TEST_DISTANCE(DISABLE_DEPTH_TEST_DISTANCE:float):
+        b_.PrependFloat64Slot(25, DISABLE_DEPTH_TEST_DISTANCE, 0.0)
+        return this
     def end():
         return b_.EndObject()
 
@@ -402,13 +1365,30 @@ class CZMPoint : flatbuffers.handle
     /// Height reference
     def HEIGHT_REFERENCE() -> CZMHeightReference:
         return CZMHeightReference(flatbuffers.field_int8(buf_, pos_, 14, 0))
+    /// Scale by distance
+    def SCALE_BY_DISTANCE() -> CZMNearFarScalar?:
+        let o = flatbuffers.field_table(buf_, pos_, 16)
+        return if o: CZMNearFarScalar { buf_, o } else: nil
+    /// Translucency by distance
+    def TRANSLUCENCY_BY_DISTANCE() -> CZMNearFarScalar?:
+        let o = flatbuffers.field_table(buf_, pos_, 18)
+        return if o: CZMNearFarScalar { buf_, o } else: nil
+    /// Distance display condition near
+    def DISTANCE_DISPLAY_CONDITION_NEAR() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
+    /// Distance display condition far
+    def DISTANCE_DISPLAY_CONDITION_FAR() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
+    /// Disable depth test distance
+    def DISABLE_DEPTH_TEST_DISTANCE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
 
 def GetRootAsCZMPoint(buf:string): return CZMPoint { buf, flatbuffers.indirect(buf, 0) }
 
 struct CZMPointBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(6)
+        b_.StartObject(11)
         return this
     def add_SHOW(SHOW:bool):
         b_.PrependBoolSlot(0, SHOW, 0)
@@ -427,6 +1407,21 @@ struct CZMPointBuilder:
         return this
     def add_HEIGHT_REFERENCE(HEIGHT_REFERENCE:CZMHeightReference):
         b_.PrependInt8Slot(5, HEIGHT_REFERENCE, 0)
+        return this
+    def add_SCALE_BY_DISTANCE(SCALE_BY_DISTANCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, SCALE_BY_DISTANCE)
+        return this
+    def add_TRANSLUCENCY_BY_DISTANCE(TRANSLUCENCY_BY_DISTANCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, TRANSLUCENCY_BY_DISTANCE)
+        return this
+    def add_DISTANCE_DISPLAY_CONDITION_NEAR(DISTANCE_DISPLAY_CONDITION_NEAR:float):
+        b_.PrependFloat64Slot(8, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0)
+        return this
+    def add_DISTANCE_DISPLAY_CONDITION_FAR(DISTANCE_DISPLAY_CONDITION_FAR:float):
+        b_.PrependFloat64Slot(9, DISTANCE_DISPLAY_CONDITION_FAR, 0.0)
+        return this
+    def add_DISABLE_DEPTH_TEST_DISTANCE(DISABLE_DEPTH_TEST_DISTANCE:float):
+        b_.PrependFloat64Slot(10, DISABLE_DEPTH_TEST_DISTANCE, 0.0)
         return this
     def end():
         return b_.EndObject()
@@ -449,20 +1444,43 @@ class CZMPolyline : flatbuffers.handle
     /// Line width in pixels
     def WIDTH() -> float:
         return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
-    /// Line color (solid color material)
+    /// Line color (solid color material, legacy)
     def COLOR() -> CZMColor?:
         let o = flatbuffers.field_table(buf_, pos_, 12)
         return if o: CZMColor { buf_, o } else: nil
     /// Whether to clamp to ground
     def CLAMP_TO_GROUND() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 14, 0))
+    /// Arc type
+    def ARC_TYPE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 16)
+    /// Granularity in radians
+    def GRANULARITY() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
+    /// Full polyline material
+    def MATERIAL() -> CZMPolylineMaterial?:
+        let o = flatbuffers.field_table(buf_, pos_, 20)
+        return if o: CZMPolylineMaterial { buf_, o } else: nil
+    /// Shadow mode
+    def SHADOWS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 22)
+    /// Depth fail material
+    def DEPTH_FAIL_MATERIAL() -> CZMPolylineMaterial?:
+        let o = flatbuffers.field_table(buf_, pos_, 24)
+        return if o: CZMPolylineMaterial { buf_, o } else: nil
+    /// Classification type
+    def CLASSIFICATION_TYPE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 26)
+    /// Z-index for ordering
+    def Z_INDEX() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 28, 0)
 
 def GetRootAsCZMPolyline(buf:string): return CZMPolyline { buf, flatbuffers.indirect(buf, 0) }
 
 struct CZMPolylineBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(6)
+        b_.StartObject(13)
         return this
     def add_SHOW(SHOW:bool):
         b_.PrependBoolSlot(0, SHOW, 0)
@@ -481,6 +1499,27 @@ struct CZMPolylineBuilder:
         return this
     def add_CLAMP_TO_GROUND(CLAMP_TO_GROUND:bool):
         b_.PrependBoolSlot(5, CLAMP_TO_GROUND, 0)
+        return this
+    def add_ARC_TYPE(ARC_TYPE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, ARC_TYPE)
+        return this
+    def add_GRANULARITY(GRANULARITY:float):
+        b_.PrependFloat64Slot(7, GRANULARITY, 0.0)
+        return this
+    def add_MATERIAL(MATERIAL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, MATERIAL)
+        return this
+    def add_SHADOWS(SHADOWS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, SHADOWS)
+        return this
+    def add_DEPTH_FAIL_MATERIAL(DEPTH_FAIL_MATERIAL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, DEPTH_FAIL_MATERIAL)
+        return this
+    def add_CLASSIFICATION_TYPE(CLASSIFICATION_TYPE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, CLASSIFICATION_TYPE)
+        return this
+    def add_Z_INDEX(Z_INDEX:int):
+        b_.PrependInt32Slot(12, Z_INDEX, 0)
         return this
     def end():
         return b_.EndObject()
@@ -517,7 +1556,7 @@ class CZMPolygon : flatbuffers.handle
     /// Fill flag
     def FILL() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 10, 0))
-    /// Fill color (solid color material)
+    /// Fill color (solid color material, legacy)
     def COLOR() -> CZMColor?:
         let o = flatbuffers.field_table(buf_, pos_, 12)
         return if o: CZMColor { buf_, o } else: nil
@@ -537,13 +1576,55 @@ class CZMPolygon : flatbuffers.handle
     /// Classification type
     def CLASSIFICATION_TYPE() -> CZMClassificationType:
         return CZMClassificationType(flatbuffers.field_int8(buf_, pos_, 22, 0))
+    /// Holes (position lists: each hole is [lon,lat,h,...])
+    def HOLES(i:int) -> CZMPolygonHole:
+        return CZMPolygonHole { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 24) + i * 4) }
+    def HOLES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 24)
+    /// Arc type
+    def ARC_TYPE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 26)
+    /// Height in meters
+    def HEIGHT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 28, 0.0)
+    /// Extruded height reference
+    def EXTRUDED_HEIGHT_REFERENCE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 30)
+    /// Texture rotation in radians
+    def ST_ROTATION() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 32, 0.0)
+    /// Granularity in radians
+    def GRANULARITY() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 34, 0.0)
+    /// Full surface material
+    def MATERIAL() -> CZMMaterial?:
+        let o = flatbuffers.field_table(buf_, pos_, 36)
+        return if o: CZMMaterial { buf_, o } else: nil
+    /// Outline width in pixels
+    def OUTLINE_WIDTH() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 38, 0.0)
+    /// Whether to use per-position heights
+    def PER_POSITION_HEIGHT() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 40, 0))
+    /// Whether to close the top of extruded polygon
+    def CLOSE_TOP() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 42, 0))
+    /// Whether to close the bottom of extruded polygon
+    def CLOSE_BOTTOM() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 44, 0))
+    /// Shadow mode
+    def SHADOWS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 46)
+    /// Z-index for ordering
+    def Z_INDEX() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 48, 0)
 
 def GetRootAsCZMPolygon(buf:string): return CZMPolygon { buf, flatbuffers.indirect(buf, 0) }
 
 struct CZMPolygonBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(10)
+        b_.StartObject(23)
         return this
     def add_SHOW(SHOW:bool):
         b_.PrependBoolSlot(0, SHOW, 0)
@@ -575,6 +1656,45 @@ struct CZMPolygonBuilder:
     def add_CLASSIFICATION_TYPE(CLASSIFICATION_TYPE:CZMClassificationType):
         b_.PrependInt8Slot(9, CLASSIFICATION_TYPE, 0)
         return this
+    def add_HOLES(HOLES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, HOLES)
+        return this
+    def add_ARC_TYPE(ARC_TYPE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, ARC_TYPE)
+        return this
+    def add_HEIGHT(HEIGHT:float):
+        b_.PrependFloat64Slot(12, HEIGHT, 0.0)
+        return this
+    def add_EXTRUDED_HEIGHT_REFERENCE(EXTRUDED_HEIGHT_REFERENCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(13, EXTRUDED_HEIGHT_REFERENCE)
+        return this
+    def add_ST_ROTATION(ST_ROTATION:float):
+        b_.PrependFloat64Slot(14, ST_ROTATION, 0.0)
+        return this
+    def add_GRANULARITY(GRANULARITY:float):
+        b_.PrependFloat64Slot(15, GRANULARITY, 0.0)
+        return this
+    def add_MATERIAL(MATERIAL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(16, MATERIAL)
+        return this
+    def add_OUTLINE_WIDTH(OUTLINE_WIDTH:float):
+        b_.PrependFloat64Slot(17, OUTLINE_WIDTH, 0.0)
+        return this
+    def add_PER_POSITION_HEIGHT(PER_POSITION_HEIGHT:bool):
+        b_.PrependBoolSlot(18, PER_POSITION_HEIGHT, 0)
+        return this
+    def add_CLOSE_TOP(CLOSE_TOP:bool):
+        b_.PrependBoolSlot(19, CLOSE_TOP, 0)
+        return this
+    def add_CLOSE_BOTTOM(CLOSE_BOTTOM:bool):
+        b_.PrependBoolSlot(20, CLOSE_BOTTOM, 0)
+        return this
+    def add_SHADOWS(SHADOWS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(21, SHADOWS)
+        return this
+    def add_Z_INDEX(Z_INDEX:int):
+        b_.PrependInt32Slot(22, Z_INDEX, 0)
+        return this
     def end():
         return b_.EndObject()
 
@@ -588,6 +1708,56 @@ def CZMPolygonCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(b_:flatbuffers.builder,
 def CZMPolygonStartPOSITIONS_CARTESIANVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
 def CZMPolygonCreatePOSITIONS_CARTESIANVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def CZMPolygonStartHOLESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def CZMPolygonCreateHOLESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+/// Polygon hole position list
+class CZMPolygonHole : flatbuffers.handle
+    /// Positions as cartographic degrees [lon, lat, height, ...]
+    def POSITIONS_CARTOGRAPHIC_DEGREES(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 4) + i * 8)
+    def POSITIONS_CARTOGRAPHIC_DEGREES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
+    /// Positions as Cartesian [X, Y, Z, ...]
+    def POSITIONS_CARTESIAN(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 6) + i * 8)
+    def POSITIONS_CARTESIAN_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 6)
+
+def GetRootAsCZMPolygonHole(buf:string): return CZMPolygonHole { buf, flatbuffers.indirect(buf, 0) }
+
+struct CZMPolygonHoleBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(2)
+        return this
+    def add_POSITIONS_CARTOGRAPHIC_DEGREES(POSITIONS_CARTOGRAPHIC_DEGREES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, POSITIONS_CARTOGRAPHIC_DEGREES)
+        return this
+    def add_POSITIONS_CARTESIAN(POSITIONS_CARTESIAN:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, POSITIONS_CARTESIAN)
+        return this
+    def end():
+        return b_.EndObject()
+
+def CZMPolygonHoleStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def CZMPolygonHoleCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def CZMPolygonHoleStartPOSITIONS_CARTESIANVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def CZMPolygonHoleCreatePOSITIONS_CARTESIANVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
@@ -616,13 +1786,35 @@ class CZMModel : flatbuffers.handle
     def COLOR() -> CZMColor?:
         let o = flatbuffers.field_table(buf_, pos_, 16)
         return if o: CZMColor { buf_, o } else: nil
+    /// Whether to incrementally load textures
+    def INCREMENTALLY_LOAD_TEXTURES() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 18, 0))
+    /// Whether to run animations
+    def RUN_ANIMATIONS() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 20, 0))
+    /// Shadow mode
+    def SHADOWS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 22)
+    /// Silhouette color
+    def SILHOUETTE_COLOR() -> CZMColor?:
+        let o = flatbuffers.field_table(buf_, pos_, 24)
+        return if o: CZMColor { buf_, o } else: nil
+    /// Silhouette size in pixels
+    def SILHOUETTE_SIZE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
+    /// Color blend mode
+    def COLOR_BLEND_MODE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 28)
+    /// Color blend amount (0-1)
+    def COLOR_BLEND_AMOUNT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 30, 0.0)
 
 def GetRootAsCZMModel(buf:string): return CZMModel { buf, flatbuffers.indirect(buf, 0) }
 
 struct CZMModelBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(7)
+        b_.StartObject(14)
         return this
     def add_SHOW(SHOW:bool):
         b_.PrependBoolSlot(0, SHOW, 0)
@@ -645,6 +1837,27 @@ struct CZMModelBuilder:
     def add_COLOR(COLOR:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(6, COLOR)
         return this
+    def add_INCREMENTALLY_LOAD_TEXTURES(INCREMENTALLY_LOAD_TEXTURES:bool):
+        b_.PrependBoolSlot(7, INCREMENTALLY_LOAD_TEXTURES, 0)
+        return this
+    def add_RUN_ANIMATIONS(RUN_ANIMATIONS:bool):
+        b_.PrependBoolSlot(8, RUN_ANIMATIONS, 0)
+        return this
+    def add_SHADOWS(SHADOWS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, SHADOWS)
+        return this
+    def add_SILHOUETTE_COLOR(SILHOUETTE_COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, SILHOUETTE_COLOR)
+        return this
+    def add_SILHOUETTE_SIZE(SILHOUETTE_SIZE:float):
+        b_.PrependFloat64Slot(11, SILHOUETTE_SIZE, 0.0)
+        return this
+    def add_COLOR_BLEND_MODE(COLOR_BLEND_MODE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(12, COLOR_BLEND_MODE)
+        return this
+    def add_COLOR_BLEND_AMOUNT(COLOR_BLEND_AMOUNT:float):
+        b_.PrependFloat64Slot(13, COLOR_BLEND_AMOUNT, 0.0)
+        return this
     def end():
         return b_.EndObject()
 
@@ -662,20 +1875,24 @@ class CZMPath : flatbuffers.handle
     /// Line width in pixels
     def WIDTH() -> float:
         return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
-    /// Path color
+    /// Path color (legacy solid color)
     def COLOR() -> CZMColor?:
         let o = flatbuffers.field_table(buf_, pos_, 12)
         return if o: CZMColor { buf_, o } else: nil
     /// Resolution in seconds
     def RESOLUTION() -> float:
         return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// Full polyline material
+    def MATERIAL() -> CZMPolylineMaterial?:
+        let o = flatbuffers.field_table(buf_, pos_, 16)
+        return if o: CZMPolylineMaterial { buf_, o } else: nil
 
 def GetRootAsCZMPath(buf:string): return CZMPath { buf, flatbuffers.indirect(buf, 0) }
 
 struct CZMPathBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(6)
+        b_.StartObject(7)
         return this
     def add_SHOW(SHOW:bool):
         b_.PrependBoolSlot(0, SHOW, 0)
@@ -694,6 +1911,9 @@ struct CZMPathBuilder:
         return this
     def add_RESOLUTION(RESOLUTION:float):
         b_.PrependFloat64Slot(5, RESOLUTION, 0.0)
+        return this
+    def add_MATERIAL(MATERIAL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, MATERIAL)
         return this
     def end():
         return b_.EndObject()
@@ -715,7 +1935,7 @@ class CZMEllipse : flatbuffers.handle
     /// Fill flag
     def FILL() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 12, 0))
-    /// Fill color
+    /// Fill color (legacy solid color)
     def COLOR() -> CZMColor?:
         let o = flatbuffers.field_table(buf_, pos_, 14)
         return if o: CZMColor { buf_, o } else: nil
@@ -732,13 +1952,44 @@ class CZMEllipse : flatbuffers.handle
     /// Height reference
     def HEIGHT_REFERENCE() -> CZMHeightReference:
         return CZMHeightReference(flatbuffers.field_int8(buf_, pos_, 22, 0))
+    /// Extruded height in meters
+    def EXTRUDED_HEIGHT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
+    /// Extruded height reference
+    def EXTRUDED_HEIGHT_REFERENCE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 26)
+    /// Texture rotation in radians
+    def ST_ROTATION() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 28, 0.0)
+    /// Granularity in radians
+    def GRANULARITY() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 30, 0.0)
+    /// Full surface material
+    def MATERIAL() -> CZMMaterial?:
+        let o = flatbuffers.field_table(buf_, pos_, 32)
+        return if o: CZMMaterial { buf_, o } else: nil
+    /// Outline width in pixels
+    def OUTLINE_WIDTH() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 34, 0.0)
+    /// Number of vertical lines
+    def NUMBER_OF_VERTICAL_LINES() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 36, 0)
+    /// Shadow mode
+    def SHADOWS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 38)
+    /// Classification type
+    def CLASSIFICATION_TYPE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 40)
+    /// Z-index for ordering
+    def Z_INDEX() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 42, 0)
 
 def GetRootAsCZMEllipse(buf:string): return CZMEllipse { buf, flatbuffers.indirect(buf, 0) }
 
 struct CZMEllipseBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(10)
+        b_.StartObject(20)
         return this
     def add_SHOW(SHOW:bool):
         b_.PrependBoolSlot(0, SHOW, 0)
@@ -770,8 +2021,900 @@ struct CZMEllipseBuilder:
     def add_HEIGHT_REFERENCE(HEIGHT_REFERENCE:CZMHeightReference):
         b_.PrependInt8Slot(9, HEIGHT_REFERENCE, 0)
         return this
+    def add_EXTRUDED_HEIGHT(EXTRUDED_HEIGHT:float):
+        b_.PrependFloat64Slot(10, EXTRUDED_HEIGHT, 0.0)
+        return this
+    def add_EXTRUDED_HEIGHT_REFERENCE(EXTRUDED_HEIGHT_REFERENCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, EXTRUDED_HEIGHT_REFERENCE)
+        return this
+    def add_ST_ROTATION(ST_ROTATION:float):
+        b_.PrependFloat64Slot(12, ST_ROTATION, 0.0)
+        return this
+    def add_GRANULARITY(GRANULARITY:float):
+        b_.PrependFloat64Slot(13, GRANULARITY, 0.0)
+        return this
+    def add_MATERIAL(MATERIAL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(14, MATERIAL)
+        return this
+    def add_OUTLINE_WIDTH(OUTLINE_WIDTH:float):
+        b_.PrependFloat64Slot(15, OUTLINE_WIDTH, 0.0)
+        return this
+    def add_NUMBER_OF_VERTICAL_LINES(NUMBER_OF_VERTICAL_LINES:int):
+        b_.PrependInt32Slot(16, NUMBER_OF_VERTICAL_LINES, 0)
+        return this
+    def add_SHADOWS(SHADOWS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(17, SHADOWS)
+        return this
+    def add_CLASSIFICATION_TYPE(CLASSIFICATION_TYPE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(18, CLASSIFICATION_TYPE)
+        return this
+    def add_Z_INDEX(Z_INDEX:int):
+        b_.PrependInt32Slot(19, Z_INDEX, 0)
+        return this
     def end():
         return b_.EndObject()
+
+/// Box (rectangular cuboid)
+class CZMBox : flatbuffers.handle
+    /// Whether the box is displayed
+    def SHOW() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    /// Width (X) in meters
+    def DIMENSIONS_X() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    /// Depth (Y) in meters
+    def DIMENSIONS_Y() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// Height (Z) in meters
+    def DIMENSIONS_Z() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    /// Height reference
+    def HEIGHT_REFERENCE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// Fill flag
+    def FILL() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 14, 0))
+    /// Surface material
+    def MATERIAL() -> CZMMaterial?:
+        let o = flatbuffers.field_table(buf_, pos_, 16)
+        return if o: CZMMaterial { buf_, o } else: nil
+    /// Outline flag
+    def OUTLINE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 18, 0))
+    /// Outline color
+    def OUTLINE_COLOR() -> CZMColor?:
+        let o = flatbuffers.field_table(buf_, pos_, 20)
+        return if o: CZMColor { buf_, o } else: nil
+    /// Outline width
+    def OUTLINE_WIDTH() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
+    /// Shadow mode
+    def SHADOWS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 24)
+    /// Distance display condition near
+    def DISTANCE_DISPLAY_CONDITION_NEAR() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
+    /// Distance display condition far
+    def DISTANCE_DISPLAY_CONDITION_FAR() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 28, 0.0)
+
+def GetRootAsCZMBox(buf:string): return CZMBox { buf, flatbuffers.indirect(buf, 0) }
+
+struct CZMBoxBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(13)
+        return this
+    def add_SHOW(SHOW:bool):
+        b_.PrependBoolSlot(0, SHOW, 0)
+        return this
+    def add_DIMENSIONS_X(DIMENSIONS_X:float):
+        b_.PrependFloat64Slot(1, DIMENSIONS_X, 0.0)
+        return this
+    def add_DIMENSIONS_Y(DIMENSIONS_Y:float):
+        b_.PrependFloat64Slot(2, DIMENSIONS_Y, 0.0)
+        return this
+    def add_DIMENSIONS_Z(DIMENSIONS_Z:float):
+        b_.PrependFloat64Slot(3, DIMENSIONS_Z, 0.0)
+        return this
+    def add_HEIGHT_REFERENCE(HEIGHT_REFERENCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, HEIGHT_REFERENCE)
+        return this
+    def add_FILL(FILL:bool):
+        b_.PrependBoolSlot(5, FILL, 0)
+        return this
+    def add_MATERIAL(MATERIAL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, MATERIAL)
+        return this
+    def add_OUTLINE(OUTLINE:bool):
+        b_.PrependBoolSlot(7, OUTLINE, 0)
+        return this
+    def add_OUTLINE_COLOR(OUTLINE_COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, OUTLINE_COLOR)
+        return this
+    def add_OUTLINE_WIDTH(OUTLINE_WIDTH:float):
+        b_.PrependFloat64Slot(9, OUTLINE_WIDTH, 0.0)
+        return this
+    def add_SHADOWS(SHADOWS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, SHADOWS)
+        return this
+    def add_DISTANCE_DISPLAY_CONDITION_NEAR(DISTANCE_DISPLAY_CONDITION_NEAR:float):
+        b_.PrependFloat64Slot(11, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0)
+        return this
+    def add_DISTANCE_DISPLAY_CONDITION_FAR(DISTANCE_DISPLAY_CONDITION_FAR:float):
+        b_.PrependFloat64Slot(12, DISTANCE_DISPLAY_CONDITION_FAR, 0.0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Corridor (centerline + width shape)
+class CZMCorridor : flatbuffers.handle
+    /// Whether the corridor is displayed
+    def SHOW() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    /// Positions as cartographic degrees
+    def POSITIONS_CARTOGRAPHIC_DEGREES(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 6) + i * 8)
+    def POSITIONS_CARTOGRAPHIC_DEGREES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 6)
+    /// Positions as Cartesian
+    def POSITIONS_CARTESIAN(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 8) + i * 8)
+    def POSITIONS_CARTESIAN_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 8)
+    /// Width in meters
+    def WIDTH() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    /// Height in meters
+    def HEIGHT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    /// Height reference
+    def HEIGHT_REFERENCE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+    /// Extruded height
+    def EXTRUDED_HEIGHT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+    /// Extruded height reference
+    def EXTRUDED_HEIGHT_REFERENCE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 18)
+    /// Corner type
+    def CORNER_TYPE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 20)
+    /// Granularity in radians
+    def GRANULARITY() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
+    /// Fill flag
+    def FILL() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 24, 0))
+    /// Surface material
+    def MATERIAL() -> CZMMaterial?:
+        let o = flatbuffers.field_table(buf_, pos_, 26)
+        return if o: CZMMaterial { buf_, o } else: nil
+    /// Outline flag
+    def OUTLINE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 28, 0))
+    /// Outline color
+    def OUTLINE_COLOR() -> CZMColor?:
+        let o = flatbuffers.field_table(buf_, pos_, 30)
+        return if o: CZMColor { buf_, o } else: nil
+    /// Outline width
+    def OUTLINE_WIDTH() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 32, 0.0)
+    /// Shadow mode
+    def SHADOWS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 34)
+    /// Classification type
+    def CLASSIFICATION_TYPE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 36)
+    /// Z-index for ordering
+    def Z_INDEX() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 38, 0)
+
+def GetRootAsCZMCorridor(buf:string): return CZMCorridor { buf, flatbuffers.indirect(buf, 0) }
+
+struct CZMCorridorBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(18)
+        return this
+    def add_SHOW(SHOW:bool):
+        b_.PrependBoolSlot(0, SHOW, 0)
+        return this
+    def add_POSITIONS_CARTOGRAPHIC_DEGREES(POSITIONS_CARTOGRAPHIC_DEGREES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, POSITIONS_CARTOGRAPHIC_DEGREES)
+        return this
+    def add_POSITIONS_CARTESIAN(POSITIONS_CARTESIAN:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, POSITIONS_CARTESIAN)
+        return this
+    def add_WIDTH(WIDTH:float):
+        b_.PrependFloat64Slot(3, WIDTH, 0.0)
+        return this
+    def add_HEIGHT(HEIGHT:float):
+        b_.PrependFloat64Slot(4, HEIGHT, 0.0)
+        return this
+    def add_HEIGHT_REFERENCE(HEIGHT_REFERENCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, HEIGHT_REFERENCE)
+        return this
+    def add_EXTRUDED_HEIGHT(EXTRUDED_HEIGHT:float):
+        b_.PrependFloat64Slot(6, EXTRUDED_HEIGHT, 0.0)
+        return this
+    def add_EXTRUDED_HEIGHT_REFERENCE(EXTRUDED_HEIGHT_REFERENCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, EXTRUDED_HEIGHT_REFERENCE)
+        return this
+    def add_CORNER_TYPE(CORNER_TYPE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, CORNER_TYPE)
+        return this
+    def add_GRANULARITY(GRANULARITY:float):
+        b_.PrependFloat64Slot(9, GRANULARITY, 0.0)
+        return this
+    def add_FILL(FILL:bool):
+        b_.PrependBoolSlot(10, FILL, 0)
+        return this
+    def add_MATERIAL(MATERIAL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, MATERIAL)
+        return this
+    def add_OUTLINE(OUTLINE:bool):
+        b_.PrependBoolSlot(12, OUTLINE, 0)
+        return this
+    def add_OUTLINE_COLOR(OUTLINE_COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(13, OUTLINE_COLOR)
+        return this
+    def add_OUTLINE_WIDTH(OUTLINE_WIDTH:float):
+        b_.PrependFloat64Slot(14, OUTLINE_WIDTH, 0.0)
+        return this
+    def add_SHADOWS(SHADOWS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(15, SHADOWS)
+        return this
+    def add_CLASSIFICATION_TYPE(CLASSIFICATION_TYPE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(16, CLASSIFICATION_TYPE)
+        return this
+    def add_Z_INDEX(Z_INDEX:int):
+        b_.PrependInt32Slot(17, Z_INDEX, 0)
+        return this
+    def end():
+        return b_.EndObject()
+
+def CZMCorridorStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def CZMCorridorCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def CZMCorridorStartPOSITIONS_CARTESIANVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def CZMCorridorCreatePOSITIONS_CARTESIANVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+/// Cylinder or cone
+class CZMCylinder : flatbuffers.handle
+    /// Whether the cylinder is displayed
+    def SHOW() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    /// Length in meters
+    def LENGTH() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    /// Top radius in meters
+    def TOP_RADIUS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// Bottom radius in meters
+    def BOTTOM_RADIUS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    /// Height reference
+    def HEIGHT_REFERENCE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// Fill flag
+    def FILL() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 14, 0))
+    /// Surface material
+    def MATERIAL() -> CZMMaterial?:
+        let o = flatbuffers.field_table(buf_, pos_, 16)
+        return if o: CZMMaterial { buf_, o } else: nil
+    /// Outline flag
+    def OUTLINE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 18, 0))
+    /// Outline color
+    def OUTLINE_COLOR() -> CZMColor?:
+        let o = flatbuffers.field_table(buf_, pos_, 20)
+        return if o: CZMColor { buf_, o } else: nil
+    /// Outline width
+    def OUTLINE_WIDTH() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
+    /// Number of vertical lines
+    def NUMBER_OF_VERTICAL_LINES() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 24, 0)
+    /// Number of slices
+    def SLICES() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 26, 0)
+    /// Shadow mode
+    def SHADOWS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 28)
+
+def GetRootAsCZMCylinder(buf:string): return CZMCylinder { buf, flatbuffers.indirect(buf, 0) }
+
+struct CZMCylinderBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(13)
+        return this
+    def add_SHOW(SHOW:bool):
+        b_.PrependBoolSlot(0, SHOW, 0)
+        return this
+    def add_LENGTH(LENGTH:float):
+        b_.PrependFloat64Slot(1, LENGTH, 0.0)
+        return this
+    def add_TOP_RADIUS(TOP_RADIUS:float):
+        b_.PrependFloat64Slot(2, TOP_RADIUS, 0.0)
+        return this
+    def add_BOTTOM_RADIUS(BOTTOM_RADIUS:float):
+        b_.PrependFloat64Slot(3, BOTTOM_RADIUS, 0.0)
+        return this
+    def add_HEIGHT_REFERENCE(HEIGHT_REFERENCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, HEIGHT_REFERENCE)
+        return this
+    def add_FILL(FILL:bool):
+        b_.PrependBoolSlot(5, FILL, 0)
+        return this
+    def add_MATERIAL(MATERIAL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, MATERIAL)
+        return this
+    def add_OUTLINE(OUTLINE:bool):
+        b_.PrependBoolSlot(7, OUTLINE, 0)
+        return this
+    def add_OUTLINE_COLOR(OUTLINE_COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, OUTLINE_COLOR)
+        return this
+    def add_OUTLINE_WIDTH(OUTLINE_WIDTH:float):
+        b_.PrependFloat64Slot(9, OUTLINE_WIDTH, 0.0)
+        return this
+    def add_NUMBER_OF_VERTICAL_LINES(NUMBER_OF_VERTICAL_LINES:int):
+        b_.PrependInt32Slot(10, NUMBER_OF_VERTICAL_LINES, 0)
+        return this
+    def add_SLICES(SLICES:int):
+        b_.PrependInt32Slot(11, SLICES, 0)
+        return this
+    def add_SHADOWS(SHADOWS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(12, SHADOWS)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Ellipsoid (3D shape)
+class CZMEllipsoid : flatbuffers.handle
+    /// Whether the ellipsoid is displayed
+    def SHOW() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    /// X radius in meters
+    def RADII_X() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    /// Y radius in meters
+    def RADII_Y() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// Z radius in meters
+    def RADII_Z() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    /// Inner X radius
+    def INNER_RADII_X() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    /// Inner Y radius
+    def INNER_RADII_Y() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// Inner Z radius
+    def INNER_RADII_Z() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+    /// Minimum clock angle in radians
+    def MINIMUM_CLOCK() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
+    /// Maximum clock angle in radians
+    def MAXIMUM_CLOCK() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
+    /// Minimum cone angle in radians
+    def MINIMUM_CONE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
+    /// Maximum cone angle in radians
+    def MAXIMUM_CONE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
+    /// Height reference
+    def HEIGHT_REFERENCE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 26)
+    /// Fill flag
+    def FILL() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 28, 0))
+    /// Surface material
+    def MATERIAL() -> CZMMaterial?:
+        let o = flatbuffers.field_table(buf_, pos_, 30)
+        return if o: CZMMaterial { buf_, o } else: nil
+    /// Outline flag
+    def OUTLINE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 32, 0))
+    /// Outline color
+    def OUTLINE_COLOR() -> CZMColor?:
+        let o = flatbuffers.field_table(buf_, pos_, 34)
+        return if o: CZMColor { buf_, o } else: nil
+    /// Outline width
+    def OUTLINE_WIDTH() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 36, 0.0)
+    /// Stack partitions
+    def STACK_PARTITIONS() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 38, 0)
+    /// Slice partitions
+    def SLICE_PARTITIONS() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 40, 0)
+    /// Subdivisions
+    def SUBDIVISIONS() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 42, 0)
+    /// Shadow mode
+    def SHADOWS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 44)
+
+def GetRootAsCZMEllipsoid(buf:string): return CZMEllipsoid { buf, flatbuffers.indirect(buf, 0) }
+
+struct CZMEllipsoidBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(21)
+        return this
+    def add_SHOW(SHOW:bool):
+        b_.PrependBoolSlot(0, SHOW, 0)
+        return this
+    def add_RADII_X(RADII_X:float):
+        b_.PrependFloat64Slot(1, RADII_X, 0.0)
+        return this
+    def add_RADII_Y(RADII_Y:float):
+        b_.PrependFloat64Slot(2, RADII_Y, 0.0)
+        return this
+    def add_RADII_Z(RADII_Z:float):
+        b_.PrependFloat64Slot(3, RADII_Z, 0.0)
+        return this
+    def add_INNER_RADII_X(INNER_RADII_X:float):
+        b_.PrependFloat64Slot(4, INNER_RADII_X, 0.0)
+        return this
+    def add_INNER_RADII_Y(INNER_RADII_Y:float):
+        b_.PrependFloat64Slot(5, INNER_RADII_Y, 0.0)
+        return this
+    def add_INNER_RADII_Z(INNER_RADII_Z:float):
+        b_.PrependFloat64Slot(6, INNER_RADII_Z, 0.0)
+        return this
+    def add_MINIMUM_CLOCK(MINIMUM_CLOCK:float):
+        b_.PrependFloat64Slot(7, MINIMUM_CLOCK, 0.0)
+        return this
+    def add_MAXIMUM_CLOCK(MAXIMUM_CLOCK:float):
+        b_.PrependFloat64Slot(8, MAXIMUM_CLOCK, 0.0)
+        return this
+    def add_MINIMUM_CONE(MINIMUM_CONE:float):
+        b_.PrependFloat64Slot(9, MINIMUM_CONE, 0.0)
+        return this
+    def add_MAXIMUM_CONE(MAXIMUM_CONE:float):
+        b_.PrependFloat64Slot(10, MAXIMUM_CONE, 0.0)
+        return this
+    def add_HEIGHT_REFERENCE(HEIGHT_REFERENCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, HEIGHT_REFERENCE)
+        return this
+    def add_FILL(FILL:bool):
+        b_.PrependBoolSlot(12, FILL, 0)
+        return this
+    def add_MATERIAL(MATERIAL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(13, MATERIAL)
+        return this
+    def add_OUTLINE(OUTLINE:bool):
+        b_.PrependBoolSlot(14, OUTLINE, 0)
+        return this
+    def add_OUTLINE_COLOR(OUTLINE_COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(15, OUTLINE_COLOR)
+        return this
+    def add_OUTLINE_WIDTH(OUTLINE_WIDTH:float):
+        b_.PrependFloat64Slot(16, OUTLINE_WIDTH, 0.0)
+        return this
+    def add_STACK_PARTITIONS(STACK_PARTITIONS:int):
+        b_.PrependInt32Slot(17, STACK_PARTITIONS, 0)
+        return this
+    def add_SLICE_PARTITIONS(SLICE_PARTITIONS:int):
+        b_.PrependInt32Slot(18, SLICE_PARTITIONS, 0)
+        return this
+    def add_SUBDIVISIONS(SUBDIVISIONS:int):
+        b_.PrependInt32Slot(19, SUBDIVISIONS, 0)
+        return this
+    def add_SHADOWS(SHADOWS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(20, SHADOWS)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Polyline volume (extruded 2D shape)
+class CZMPolylineVolume : flatbuffers.handle
+    /// Whether displayed
+    def SHOW() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    /// Positions as cartographic degrees
+    def POSITIONS_CARTOGRAPHIC_DEGREES(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 6) + i * 8)
+    def POSITIONS_CARTOGRAPHIC_DEGREES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 6)
+    /// Positions as Cartesian
+    def POSITIONS_CARTESIAN(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 8) + i * 8)
+    def POSITIONS_CARTESIAN_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 8)
+    /// 2D shape [x, y, x, y, ...]
+    def SHAPE(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 10) + i * 8)
+    def SHAPE_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 10)
+    /// Corner type
+    def CORNER_TYPE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// Granularity in radians
+    def GRANULARITY() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// Fill flag
+    def FILL() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 16, 0))
+    /// Surface material
+    def MATERIAL() -> CZMMaterial?:
+        let o = flatbuffers.field_table(buf_, pos_, 18)
+        return if o: CZMMaterial { buf_, o } else: nil
+    /// Outline flag
+    def OUTLINE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 20, 0))
+    /// Outline color
+    def OUTLINE_COLOR() -> CZMColor?:
+        let o = flatbuffers.field_table(buf_, pos_, 22)
+        return if o: CZMColor { buf_, o } else: nil
+    /// Outline width
+    def OUTLINE_WIDTH() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
+    /// Shadow mode
+    def SHADOWS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 26)
+
+def GetRootAsCZMPolylineVolume(buf:string): return CZMPolylineVolume { buf, flatbuffers.indirect(buf, 0) }
+
+struct CZMPolylineVolumeBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(12)
+        return this
+    def add_SHOW(SHOW:bool):
+        b_.PrependBoolSlot(0, SHOW, 0)
+        return this
+    def add_POSITIONS_CARTOGRAPHIC_DEGREES(POSITIONS_CARTOGRAPHIC_DEGREES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, POSITIONS_CARTOGRAPHIC_DEGREES)
+        return this
+    def add_POSITIONS_CARTESIAN(POSITIONS_CARTESIAN:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, POSITIONS_CARTESIAN)
+        return this
+    def add_SHAPE(SHAPE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, SHAPE)
+        return this
+    def add_CORNER_TYPE(CORNER_TYPE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, CORNER_TYPE)
+        return this
+    def add_GRANULARITY(GRANULARITY:float):
+        b_.PrependFloat64Slot(5, GRANULARITY, 0.0)
+        return this
+    def add_FILL(FILL:bool):
+        b_.PrependBoolSlot(6, FILL, 0)
+        return this
+    def add_MATERIAL(MATERIAL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, MATERIAL)
+        return this
+    def add_OUTLINE(OUTLINE:bool):
+        b_.PrependBoolSlot(8, OUTLINE, 0)
+        return this
+    def add_OUTLINE_COLOR(OUTLINE_COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, OUTLINE_COLOR)
+        return this
+    def add_OUTLINE_WIDTH(OUTLINE_WIDTH:float):
+        b_.PrependFloat64Slot(10, OUTLINE_WIDTH, 0.0)
+        return this
+    def add_SHADOWS(SHADOWS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, SHADOWS)
+        return this
+    def end():
+        return b_.EndObject()
+
+def CZMPolylineVolumeStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def CZMPolylineVolumeCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def CZMPolylineVolumeStartPOSITIONS_CARTESIANVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def CZMPolylineVolumeCreatePOSITIONS_CARTESIANVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def CZMPolylineVolumeStartSHAPEVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def CZMPolylineVolumeCreateSHAPEVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+/// Rectangle (cartographic rectangle)
+class CZMRectangle : flatbuffers.handle
+    /// Whether the rectangle is displayed
+    def SHOW() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    /// Coordinates [west, south, east, north] in degrees
+    def COORDINATES_WSEN_DEGREES(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 6) + i * 8)
+    def COORDINATES_WSEN_DEGREES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 6)
+    /// Height in meters
+    def HEIGHT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// Height reference
+    def HEIGHT_REFERENCE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+    /// Extruded height
+    def EXTRUDED_HEIGHT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    /// Extruded height reference
+    def EXTRUDED_HEIGHT_REFERENCE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+    /// Rotation in radians
+    def ROTATION() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+    /// Texture rotation in radians
+    def ST_ROTATION() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
+    /// Granularity in radians
+    def GRANULARITY() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
+    /// Fill flag
+    def FILL() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 22, 0))
+    /// Surface material
+    def MATERIAL() -> CZMMaterial?:
+        let o = flatbuffers.field_table(buf_, pos_, 24)
+        return if o: CZMMaterial { buf_, o } else: nil
+    /// Outline flag
+    def OUTLINE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 26, 0))
+    /// Outline color
+    def OUTLINE_COLOR() -> CZMColor?:
+        let o = flatbuffers.field_table(buf_, pos_, 28)
+        return if o: CZMColor { buf_, o } else: nil
+    /// Outline width
+    def OUTLINE_WIDTH() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 30, 0.0)
+    /// Shadow mode
+    def SHADOWS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 32)
+    /// Classification type
+    def CLASSIFICATION_TYPE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 34)
+    /// Z-index for ordering
+    def Z_INDEX() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 36, 0)
+
+def GetRootAsCZMRectangle(buf:string): return CZMRectangle { buf, flatbuffers.indirect(buf, 0) }
+
+struct CZMRectangleBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(17)
+        return this
+    def add_SHOW(SHOW:bool):
+        b_.PrependBoolSlot(0, SHOW, 0)
+        return this
+    def add_COORDINATES_WSEN_DEGREES(COORDINATES_WSEN_DEGREES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, COORDINATES_WSEN_DEGREES)
+        return this
+    def add_HEIGHT(HEIGHT:float):
+        b_.PrependFloat64Slot(2, HEIGHT, 0.0)
+        return this
+    def add_HEIGHT_REFERENCE(HEIGHT_REFERENCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, HEIGHT_REFERENCE)
+        return this
+    def add_EXTRUDED_HEIGHT(EXTRUDED_HEIGHT:float):
+        b_.PrependFloat64Slot(4, EXTRUDED_HEIGHT, 0.0)
+        return this
+    def add_EXTRUDED_HEIGHT_REFERENCE(EXTRUDED_HEIGHT_REFERENCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, EXTRUDED_HEIGHT_REFERENCE)
+        return this
+    def add_ROTATION(ROTATION:float):
+        b_.PrependFloat64Slot(6, ROTATION, 0.0)
+        return this
+    def add_ST_ROTATION(ST_ROTATION:float):
+        b_.PrependFloat64Slot(7, ST_ROTATION, 0.0)
+        return this
+    def add_GRANULARITY(GRANULARITY:float):
+        b_.PrependFloat64Slot(8, GRANULARITY, 0.0)
+        return this
+    def add_FILL(FILL:bool):
+        b_.PrependBoolSlot(9, FILL, 0)
+        return this
+    def add_MATERIAL(MATERIAL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, MATERIAL)
+        return this
+    def add_OUTLINE(OUTLINE:bool):
+        b_.PrependBoolSlot(11, OUTLINE, 0)
+        return this
+    def add_OUTLINE_COLOR(OUTLINE_COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(12, OUTLINE_COLOR)
+        return this
+    def add_OUTLINE_WIDTH(OUTLINE_WIDTH:float):
+        b_.PrependFloat64Slot(13, OUTLINE_WIDTH, 0.0)
+        return this
+    def add_SHADOWS(SHADOWS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(14, SHADOWS)
+        return this
+    def add_CLASSIFICATION_TYPE(CLASSIFICATION_TYPE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(15, CLASSIFICATION_TYPE)
+        return this
+    def add_Z_INDEX(Z_INDEX:int):
+        b_.PrependInt32Slot(16, Z_INDEX, 0)
+        return this
+    def end():
+        return b_.EndObject()
+
+def CZMRectangleStartCOORDINATES_WSEN_DEGREESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def CZMRectangleCreateCOORDINATES_WSEN_DEGREESVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+/// 3D Tileset
+class CZMTileset : flatbuffers.handle
+    /// Whether the tileset is displayed
+    def SHOW() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    /// URI to the tileset
+    def URI() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// Maximum screen space error
+    def MAXIMUM_SCREEN_SPACE_ERROR() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+
+def GetRootAsCZMTileset(buf:string): return CZMTileset { buf, flatbuffers.indirect(buf, 0) }
+
+struct CZMTilesetBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(3)
+        return this
+    def add_SHOW(SHOW:bool):
+        b_.PrependBoolSlot(0, SHOW, 0)
+        return this
+    def add_URI(URI:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, URI)
+        return this
+    def add_MAXIMUM_SCREEN_SPACE_ERROR(MAXIMUM_SCREEN_SPACE_ERROR:float):
+        b_.PrependFloat64Slot(2, MAXIMUM_SCREEN_SPACE_ERROR, 0.0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Wall (vertical curtain)
+class CZMWall : flatbuffers.handle
+    /// Whether the wall is displayed
+    def SHOW() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    /// Positions as cartographic degrees
+    def POSITIONS_CARTOGRAPHIC_DEGREES(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 6) + i * 8)
+    def POSITIONS_CARTOGRAPHIC_DEGREES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 6)
+    /// Positions as Cartesian
+    def POSITIONS_CARTESIAN(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 8) + i * 8)
+    def POSITIONS_CARTESIAN_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 8)
+    /// Minimum heights per position
+    def MINIMUM_HEIGHTS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 10) + i * 8)
+    def MINIMUM_HEIGHTS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 10)
+    /// Maximum heights per position
+    def MAXIMUM_HEIGHTS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 12) + i * 8)
+    def MAXIMUM_HEIGHTS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 12)
+    /// Granularity in radians
+    def GRANULARITY() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// Fill flag
+    def FILL() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 16, 0))
+    /// Surface material
+    def MATERIAL() -> CZMMaterial?:
+        let o = flatbuffers.field_table(buf_, pos_, 18)
+        return if o: CZMMaterial { buf_, o } else: nil
+    /// Outline flag
+    def OUTLINE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 20, 0))
+    /// Outline color
+    def OUTLINE_COLOR() -> CZMColor?:
+        let o = flatbuffers.field_table(buf_, pos_, 22)
+        return if o: CZMColor { buf_, o } else: nil
+    /// Outline width
+    def OUTLINE_WIDTH() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
+    /// Shadow mode
+    def SHADOWS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 26)
+
+def GetRootAsCZMWall(buf:string): return CZMWall { buf, flatbuffers.indirect(buf, 0) }
+
+struct CZMWallBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(12)
+        return this
+    def add_SHOW(SHOW:bool):
+        b_.PrependBoolSlot(0, SHOW, 0)
+        return this
+    def add_POSITIONS_CARTOGRAPHIC_DEGREES(POSITIONS_CARTOGRAPHIC_DEGREES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, POSITIONS_CARTOGRAPHIC_DEGREES)
+        return this
+    def add_POSITIONS_CARTESIAN(POSITIONS_CARTESIAN:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, POSITIONS_CARTESIAN)
+        return this
+    def add_MINIMUM_HEIGHTS(MINIMUM_HEIGHTS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, MINIMUM_HEIGHTS)
+        return this
+    def add_MAXIMUM_HEIGHTS(MAXIMUM_HEIGHTS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, MAXIMUM_HEIGHTS)
+        return this
+    def add_GRANULARITY(GRANULARITY:float):
+        b_.PrependFloat64Slot(5, GRANULARITY, 0.0)
+        return this
+    def add_FILL(FILL:bool):
+        b_.PrependBoolSlot(6, FILL, 0)
+        return this
+    def add_MATERIAL(MATERIAL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, MATERIAL)
+        return this
+    def add_OUTLINE(OUTLINE:bool):
+        b_.PrependBoolSlot(8, OUTLINE, 0)
+        return this
+    def add_OUTLINE_COLOR(OUTLINE_COLOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, OUTLINE_COLOR)
+        return this
+    def add_OUTLINE_WIDTH(OUTLINE_WIDTH:float):
+        b_.PrependFloat64Slot(10, OUTLINE_WIDTH, 0.0)
+        return this
+    def add_SHADOWS(SHADOWS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, SHADOWS)
+        return this
+    def end():
+        return b_.EndObject()
+
+def CZMWallStartPOSITIONS_CARTOGRAPHIC_DEGREESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def CZMWallCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def CZMWallStartPOSITIONS_CARTESIANVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def CZMWallCreatePOSITIONS_CARTESIANVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def CZMWallStartMINIMUM_HEIGHTSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def CZMWallCreateMINIMUM_HEIGHTSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def CZMWallStartMAXIMUM_HEIGHTSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def CZMWallCreateMAXIMUM_HEIGHTSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
 
 /// A CZML Packet describing an entity and its properties
 class CZMPacket : flatbuffers.handle
@@ -843,13 +2986,86 @@ class CZMPacket : flatbuffers.handle
     def ELLIPSE() -> CZMEllipse?:
         let o = flatbuffers.field_table(buf_, pos_, 38)
         return if o: CZMEllipse { buf_, o } else: nil
+    /// Orientation (quaternion)
+    def ORIENTATION() -> CZMOrientation?:
+        let o = flatbuffers.field_table(buf_, pos_, 40)
+        return if o: CZMOrientation { buf_, o } else: nil
+    /// Suggested camera offset
+    def VIEW_FROM() -> CZMViewFrom?:
+        let o = flatbuffers.field_table(buf_, pos_, 42)
+        return if o: CZMViewFrom { buf_, o } else: nil
+    /// Whether to delete this object
+    def DELETE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 44, 0))
+    /// Box properties
+    def BOX() -> CZMBox?:
+        let o = flatbuffers.field_table(buf_, pos_, 46)
+        return if o: CZMBox { buf_, o } else: nil
+    /// Corridor properties
+    def CORRIDOR() -> CZMCorridor?:
+        let o = flatbuffers.field_table(buf_, pos_, 48)
+        return if o: CZMCorridor { buf_, o } else: nil
+    /// Cylinder properties
+    def CYLINDER() -> CZMCylinder?:
+        let o = flatbuffers.field_table(buf_, pos_, 50)
+        return if o: CZMCylinder { buf_, o } else: nil
+    /// Ellipsoid properties
+    def ELLIPSOID() -> CZMEllipsoid?:
+        let o = flatbuffers.field_table(buf_, pos_, 52)
+        return if o: CZMEllipsoid { buf_, o } else: nil
+    /// Polyline volume properties
+    def POLYLINE_VOLUME() -> CZMPolylineVolume?:
+        let o = flatbuffers.field_table(buf_, pos_, 54)
+        return if o: CZMPolylineVolume { buf_, o } else: nil
+    /// Rectangle properties
+    def RECTANGLE() -> CZMRectangle?:
+        let o = flatbuffers.field_table(buf_, pos_, 56)
+        return if o: CZMRectangle { buf_, o } else: nil
+    /// 3D Tileset properties
+    def TILESET() -> CZMTileset?:
+        let o = flatbuffers.field_table(buf_, pos_, 58)
+        return if o: CZMTileset { buf_, o } else: nil
+    /// Wall properties
+    def WALL() -> CZMWall?:
+        let o = flatbuffers.field_table(buf_, pos_, 60)
+        return if o: CZMWall { buf_, o } else: nil
+    /// Position interpolation settings
+    def POSITION_INTERPOLATION() -> CZMInterpolation?:
+        let o = flatbuffers.field_table(buf_, pos_, 62)
+        return if o: CZMInterpolation { buf_, o } else: nil
+    /// Position reference frame (FIXED or INERTIAL)
+    def POSITION_REFERENCE_FRAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 64)
+    /// Position reference to another entity
+    def POSITION_REFERENCE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 66)
+    /// Orientation epoch (ISO 8601)
+    def ORIENTATION_EPOCH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 68)
+    /// Orientation sampled data [t, x, y, z, w, t, x, y, z, w, ...]
+    def ORIENTATION_ARRAY(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 70) + i * 8)
+    def ORIENTATION_ARRAY_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 70)
+    /// Orientation interpolation settings
+    def ORIENTATION_INTERPOLATION() -> CZMInterpolation?:
+        let o = flatbuffers.field_table(buf_, pos_, 72)
+        return if o: CZMInterpolation { buf_, o } else: nil
+    /// Orientation reference to another entity
+    def ORIENTATION_REFERENCE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 74)
+    /// Generic bag for all time-dynamic (non-static) properties
+    def DYNAMIC_PROPERTIES(i:int) -> CZMDynamicProperty:
+        return CZMDynamicProperty { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 76) + i * 4) }
+    def DYNAMIC_PROPERTIES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 76)
 
 def GetRootAsCZMPacket(buf:string): return CZMPacket { buf, flatbuffers.indirect(buf, 0) }
 
 struct CZMPacketBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(18)
+        b_.StartObject(37)
         return this
     def add_ID(ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ID)
@@ -905,6 +3121,63 @@ struct CZMPacketBuilder:
     def add_ELLIPSE(ELLIPSE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(17, ELLIPSE)
         return this
+    def add_ORIENTATION(ORIENTATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(18, ORIENTATION)
+        return this
+    def add_VIEW_FROM(VIEW_FROM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(19, VIEW_FROM)
+        return this
+    def add_DELETE(DELETE:bool):
+        b_.PrependBoolSlot(20, DELETE, 0)
+        return this
+    def add_BOX(BOX:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(21, BOX)
+        return this
+    def add_CORRIDOR(CORRIDOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(22, CORRIDOR)
+        return this
+    def add_CYLINDER(CYLINDER:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(23, CYLINDER)
+        return this
+    def add_ELLIPSOID(ELLIPSOID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(24, ELLIPSOID)
+        return this
+    def add_POLYLINE_VOLUME(POLYLINE_VOLUME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(25, POLYLINE_VOLUME)
+        return this
+    def add_RECTANGLE(RECTANGLE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(26, RECTANGLE)
+        return this
+    def add_TILESET(TILESET:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(27, TILESET)
+        return this
+    def add_WALL(WALL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(28, WALL)
+        return this
+    def add_POSITION_INTERPOLATION(POSITION_INTERPOLATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(29, POSITION_INTERPOLATION)
+        return this
+    def add_POSITION_REFERENCE_FRAME(POSITION_REFERENCE_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(30, POSITION_REFERENCE_FRAME)
+        return this
+    def add_POSITION_REFERENCE(POSITION_REFERENCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(31, POSITION_REFERENCE)
+        return this
+    def add_ORIENTATION_EPOCH(ORIENTATION_EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(32, ORIENTATION_EPOCH)
+        return this
+    def add_ORIENTATION_ARRAY(ORIENTATION_ARRAY:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(33, ORIENTATION_ARRAY)
+        return this
+    def add_ORIENTATION_INTERPOLATION(ORIENTATION_INTERPOLATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(34, ORIENTATION_INTERPOLATION)
+        return this
+    def add_ORIENTATION_REFERENCE(ORIENTATION_REFERENCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(35, ORIENTATION_REFERENCE)
+        return this
+    def add_DYNAMIC_PROPERTIES(DYNAMIC_PROPERTIES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(36, DYNAMIC_PROPERTIES)
+        return this
     def end():
         return b_.EndObject()
 
@@ -920,6 +3193,20 @@ def CZMPacketStartPOSITION_CARTESIAN_ARRAYVector(b_:flatbuffers.builder, n_:int)
 def CZMPacketCreatePOSITION_CARTESIAN_ARRAYVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def CZMPacketStartORIENTATION_ARRAYVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def CZMPacketCreateORIENTATION_ARRAYVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def CZMPacketStartDYNAMIC_PROPERTIESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def CZMPacketCreateDYNAMIC_PROPERTIESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
 /// CZML Document
@@ -939,18 +3226,24 @@ class CZM : flatbuffers.handle
     /// Clock settings - multiplier
     def CLOCK_MULTIPLIER() -> float:
         return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    /// Clock range
+    def CLOCK_RANGE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+    /// Clock step
+    def CLOCK_STEP() -> string:
+        return flatbuffers.field_string(buf_, pos_, 16)
     /// All packets in the document
     def PACKETS(i:int) -> CZMPacket:
-        return CZMPacket { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 14) + i * 4) }
+        return CZMPacket { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 18) + i * 4) }
     def PACKETS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 14)
+        return flatbuffers.field_vector_len(buf_, pos_, 18)
 
 def GetRootAsCZM(buf:string): return CZM { buf, flatbuffers.indirect(buf, 0) }
 
 struct CZMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(6)
+        b_.StartObject(8)
         return this
     def add_NAME(NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, NAME)
@@ -967,8 +3260,14 @@ struct CZMBuilder:
     def add_CLOCK_MULTIPLIER(CLOCK_MULTIPLIER:float):
         b_.PrependFloat64Slot(4, CLOCK_MULTIPLIER, 0.0)
         return this
+    def add_CLOCK_RANGE(CLOCK_RANGE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, CLOCK_RANGE)
+        return this
+    def add_CLOCK_STEP(CLOCK_STEP:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, CLOCK_STEP)
+        return this
     def add_PACKETS(PACKETS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(5, PACKETS)
+        b_.PrependUOffsetTRelativeSlot(7, PACKETS)
         return this
     def end():
         return b_.EndObject()

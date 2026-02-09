@@ -29,22 +29,48 @@ public struct KMLLineStyle : IFlatbufferObject
   public KMLColorMode COLOR_MODE { get { int o = __p.__offset(6); return o != 0 ? (KMLColorMode)__p.bb.GetSbyte(o + __p.bb_pos) : KMLColorMode.NORMAL; } }
   /// Width in pixels
   public double WIDTH { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// gx:outerColor
+  public string GX_OUTER_COLOR { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetGX_OUTER_COLORBytes() { return __p.__vector_as_span<byte>(10, 1); }
+#else
+  public ArraySegment<byte>? GetGX_OUTER_COLORBytes() { return __p.__vector_as_arraysegment(10); }
+#endif
+  public byte[] GetGX_OUTER_COLORArray() { return __p.__vector_as_array<byte>(10); }
+  /// gx:outerWidth
+  public double GX_OUTER_WIDTH { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// gx:physicalWidth
+  public double GX_PHYSICAL_WIDTH { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// gx:labelVisibility
+  public bool GX_LABEL_VISIBILITY { get { int o = __p.__offset(16); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<KMLLineStyle> CreateKMLLineStyle(FlatBufferBuilder builder,
       StringOffset COLOROffset = default(StringOffset),
       KMLColorMode COLOR_MODE = KMLColorMode.NORMAL,
-      double WIDTH = 0.0) {
-    builder.StartTable(3);
+      double WIDTH = 0.0,
+      StringOffset GX_OUTER_COLOROffset = default(StringOffset),
+      double GX_OUTER_WIDTH = 0.0,
+      double GX_PHYSICAL_WIDTH = 0.0,
+      bool GX_LABEL_VISIBILITY = false) {
+    builder.StartTable(7);
+    KMLLineStyle.AddGX_PHYSICAL_WIDTH(builder, GX_PHYSICAL_WIDTH);
+    KMLLineStyle.AddGX_OUTER_WIDTH(builder, GX_OUTER_WIDTH);
     KMLLineStyle.AddWIDTH(builder, WIDTH);
+    KMLLineStyle.AddGX_OUTER_COLOR(builder, GX_OUTER_COLOROffset);
     KMLLineStyle.AddCOLOR(builder, COLOROffset);
+    KMLLineStyle.AddGX_LABEL_VISIBILITY(builder, GX_LABEL_VISIBILITY);
     KMLLineStyle.AddCOLOR_MODE(builder, COLOR_MODE);
     return KMLLineStyle.EndKMLLineStyle(builder);
   }
 
-  public static void StartKMLLineStyle(FlatBufferBuilder builder) { builder.StartTable(3); }
+  public static void StartKMLLineStyle(FlatBufferBuilder builder) { builder.StartTable(7); }
   public static void AddCOLOR(FlatBufferBuilder builder, StringOffset COLOROffset) { builder.AddOffset(0, COLOROffset.Value, 0); }
   public static void AddCOLOR_MODE(FlatBufferBuilder builder, KMLColorMode COLOR_MODE) { builder.AddSbyte(1, (sbyte)COLOR_MODE, 0); }
   public static void AddWIDTH(FlatBufferBuilder builder, double WIDTH) { builder.AddDouble(2, WIDTH, 0.0); }
+  public static void AddGX_OUTER_COLOR(FlatBufferBuilder builder, StringOffset GX_OUTER_COLOROffset) { builder.AddOffset(3, GX_OUTER_COLOROffset.Value, 0); }
+  public static void AddGX_OUTER_WIDTH(FlatBufferBuilder builder, double GX_OUTER_WIDTH) { builder.AddDouble(4, GX_OUTER_WIDTH, 0.0); }
+  public static void AddGX_PHYSICAL_WIDTH(FlatBufferBuilder builder, double GX_PHYSICAL_WIDTH) { builder.AddDouble(5, GX_PHYSICAL_WIDTH, 0.0); }
+  public static void AddGX_LABEL_VISIBILITY(FlatBufferBuilder builder, bool GX_LABEL_VISIBILITY) { builder.AddBool(6, GX_LABEL_VISIBILITY, false); }
   public static Offset<KMLLineStyle> EndKMLLineStyle(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<KMLLineStyle>(o);
@@ -58,15 +84,24 @@ public struct KMLLineStyle : IFlatbufferObject
     _o.COLOR = this.COLOR;
     _o.COLOR_MODE = this.COLOR_MODE;
     _o.WIDTH = this.WIDTH;
+    _o.GX_OUTER_COLOR = this.GX_OUTER_COLOR;
+    _o.GX_OUTER_WIDTH = this.GX_OUTER_WIDTH;
+    _o.GX_PHYSICAL_WIDTH = this.GX_PHYSICAL_WIDTH;
+    _o.GX_LABEL_VISIBILITY = this.GX_LABEL_VISIBILITY;
   }
   public static Offset<KMLLineStyle> Pack(FlatBufferBuilder builder, KMLLineStyleT _o) {
     if (_o == null) return default(Offset<KMLLineStyle>);
     var _COLOR = _o.COLOR == null ? default(StringOffset) : builder.CreateString(_o.COLOR);
+    var _GX_OUTER_COLOR = _o.GX_OUTER_COLOR == null ? default(StringOffset) : builder.CreateString(_o.GX_OUTER_COLOR);
     return CreateKMLLineStyle(
       builder,
       _COLOR,
       _o.COLOR_MODE,
-      _o.WIDTH);
+      _o.WIDTH,
+      _GX_OUTER_COLOR,
+      _o.GX_OUTER_WIDTH,
+      _o.GX_PHYSICAL_WIDTH,
+      _o.GX_LABEL_VISIBILITY);
   }
 }
 
@@ -75,11 +110,19 @@ public class KMLLineStyleT
   public string COLOR { get; set; }
   public KMLColorMode COLOR_MODE { get; set; }
   public double WIDTH { get; set; }
+  public string GX_OUTER_COLOR { get; set; }
+  public double GX_OUTER_WIDTH { get; set; }
+  public double GX_PHYSICAL_WIDTH { get; set; }
+  public bool GX_LABEL_VISIBILITY { get; set; }
 
   public KMLLineStyleT() {
     this.COLOR = null;
     this.COLOR_MODE = KMLColorMode.NORMAL;
     this.WIDTH = 0.0;
+    this.GX_OUTER_COLOR = null;
+    this.GX_OUTER_WIDTH = 0.0;
+    this.GX_PHYSICAL_WIDTH = 0.0;
+    this.GX_LABEL_VISIBILITY = false;
   }
 }
 
@@ -92,6 +135,10 @@ static public class KMLLineStyleVerify
       && verifier.VerifyString(tablePos, 4 /*COLOR*/, false)
       && verifier.VerifyField(tablePos, 6 /*COLOR_MODE*/, 1 /*KMLColorMode*/, 1, false)
       && verifier.VerifyField(tablePos, 8 /*WIDTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 10 /*GX_OUTER_COLOR*/, false)
+      && verifier.VerifyField(tablePos, 12 /*GX_OUTER_WIDTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 14 /*GX_PHYSICAL_WIDTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 16 /*GX_LABEL_VISIBILITY*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

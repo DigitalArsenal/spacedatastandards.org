@@ -29,6 +29,8 @@ public struct GJNBoundingBox : IFlatbufferObject
   public double MIN_ALTITUDE { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Maximum altitude (optional)
   public double MAX_ALTITUDE { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// True if the bbox includes altitude (6 values vs 4)
+  public bool HAS_ALTITUDE { get { int o = __p.__offset(16); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<GJNBoundingBox> CreateGJNBoundingBox(FlatBufferBuilder builder,
       double WEST = 0.0,
@@ -36,24 +38,27 @@ public struct GJNBoundingBox : IFlatbufferObject
       double EAST = 0.0,
       double NORTH = 0.0,
       double MIN_ALTITUDE = 0.0,
-      double MAX_ALTITUDE = 0.0) {
-    builder.StartTable(6);
+      double MAX_ALTITUDE = 0.0,
+      bool HAS_ALTITUDE = false) {
+    builder.StartTable(7);
     GJNBoundingBox.AddMAX_ALTITUDE(builder, MAX_ALTITUDE);
     GJNBoundingBox.AddMIN_ALTITUDE(builder, MIN_ALTITUDE);
     GJNBoundingBox.AddNORTH(builder, NORTH);
     GJNBoundingBox.AddEAST(builder, EAST);
     GJNBoundingBox.AddSOUTH(builder, SOUTH);
     GJNBoundingBox.AddWEST(builder, WEST);
+    GJNBoundingBox.AddHAS_ALTITUDE(builder, HAS_ALTITUDE);
     return GJNBoundingBox.EndGJNBoundingBox(builder);
   }
 
-  public static void StartGJNBoundingBox(FlatBufferBuilder builder) { builder.StartTable(6); }
+  public static void StartGJNBoundingBox(FlatBufferBuilder builder) { builder.StartTable(7); }
   public static void AddWEST(FlatBufferBuilder builder, double WEST) { builder.AddDouble(0, WEST, 0.0); }
   public static void AddSOUTH(FlatBufferBuilder builder, double SOUTH) { builder.AddDouble(1, SOUTH, 0.0); }
   public static void AddEAST(FlatBufferBuilder builder, double EAST) { builder.AddDouble(2, EAST, 0.0); }
   public static void AddNORTH(FlatBufferBuilder builder, double NORTH) { builder.AddDouble(3, NORTH, 0.0); }
   public static void AddMIN_ALTITUDE(FlatBufferBuilder builder, double MIN_ALTITUDE) { builder.AddDouble(4, MIN_ALTITUDE, 0.0); }
   public static void AddMAX_ALTITUDE(FlatBufferBuilder builder, double MAX_ALTITUDE) { builder.AddDouble(5, MAX_ALTITUDE, 0.0); }
+  public static void AddHAS_ALTITUDE(FlatBufferBuilder builder, bool HAS_ALTITUDE) { builder.AddBool(6, HAS_ALTITUDE, false); }
   public static Offset<GJNBoundingBox> EndGJNBoundingBox(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<GJNBoundingBox>(o);
@@ -70,6 +75,7 @@ public struct GJNBoundingBox : IFlatbufferObject
     _o.NORTH = this.NORTH;
     _o.MIN_ALTITUDE = this.MIN_ALTITUDE;
     _o.MAX_ALTITUDE = this.MAX_ALTITUDE;
+    _o.HAS_ALTITUDE = this.HAS_ALTITUDE;
   }
   public static Offset<GJNBoundingBox> Pack(FlatBufferBuilder builder, GJNBoundingBoxT _o) {
     if (_o == null) return default(Offset<GJNBoundingBox>);
@@ -80,7 +86,8 @@ public struct GJNBoundingBox : IFlatbufferObject
       _o.EAST,
       _o.NORTH,
       _o.MIN_ALTITUDE,
-      _o.MAX_ALTITUDE);
+      _o.MAX_ALTITUDE,
+      _o.HAS_ALTITUDE);
   }
 }
 
@@ -92,6 +99,7 @@ public class GJNBoundingBoxT
   public double NORTH { get; set; }
   public double MIN_ALTITUDE { get; set; }
   public double MAX_ALTITUDE { get; set; }
+  public bool HAS_ALTITUDE { get; set; }
 
   public GJNBoundingBoxT() {
     this.WEST = 0.0;
@@ -100,6 +108,7 @@ public class GJNBoundingBoxT
     this.NORTH = 0.0;
     this.MIN_ALTITUDE = 0.0;
     this.MAX_ALTITUDE = 0.0;
+    this.HAS_ALTITUDE = false;
   }
 }
 
@@ -115,6 +124,7 @@ static public class GJNBoundingBoxVerify
       && verifier.VerifyField(tablePos, 10 /*NORTH*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 12 /*MIN_ALTITUDE*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 14 /*MAX_ALTITUDE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 16 /*HAS_ALTITUDE*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

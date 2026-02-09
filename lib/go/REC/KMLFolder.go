@@ -178,8 +178,225 @@ func (rcv *KMLFolder) GROUND_OVERLAYSLength() int {
 }
 
 /// Ground overlays
+/// Shared styles
+func (rcv *KMLFolder) STYLES(obj *KMLStyle, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *KMLFolder) STYLESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Shared styles
+/// Style maps
+func (rcv *KMLFolder) STYLE_MAPS(obj *KMLStyleMap, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *KMLFolder) STYLE_MAPSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Style maps
+/// Screen overlays
+func (rcv *KMLFolder) SCREEN_OVERLAYS(obj *KMLScreenOverlay, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *KMLFolder) SCREEN_OVERLAYSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Screen overlays
+/// Photo overlays
+func (rcv *KMLFolder) PHOTO_OVERLAYS(obj *KMLPhotoOverlay, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *KMLFolder) PHOTO_OVERLAYSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Photo overlays
+/// Tours
+func (rcv *KMLFolder) TOURS(obj *KMLTour, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *KMLFolder) TOURSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Tours
+/// Style URL reference
+func (rcv *KMLFolder) STYLE_URL() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Style URL reference
+/// Region
+func (rcv *KMLFolder) REGION(obj *KMLRegion) *KMLRegion {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(KMLRegion)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// Region
+/// Extended data
+func (rcv *KMLFolder) EXTENDED_DATA(obj *KMLData, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *KMLFolder) EXTENDED_DATALength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Extended data
+/// LookAt viewpoint
+func (rcv *KMLFolder) LOOK_AT(obj *KMLLookAt) *KMLLookAt {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(KMLLookAt)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// LookAt viewpoint
+/// Camera viewpoint
+func (rcv *KMLFolder) CAMERA(obj *KMLCamera) *KMLCamera {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(KMLCamera)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// Camera viewpoint
+/// TimeSpan
+func (rcv *KMLFolder) TIME_SPAN(obj *KMLTimeSpan) *KMLTimeSpan {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(KMLTimeSpan)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// TimeSpan
+/// TimeStamp
+func (rcv *KMLFolder) TIME_STAMP(obj *KMLTimeStamp) *KMLTimeStamp {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(KMLTimeStamp)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// TimeStamp
 func KMLFolderStart(builder *flatbuffers.Builder) {
-	builder.StartObject(8)
+	builder.StartObject(20)
 }
 func KMLFolderAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
@@ -216,6 +433,60 @@ func KMLFolderAddGROUND_OVERLAYS(builder *flatbuffers.Builder, GROUND_OVERLAYS f
 }
 func KMLFolderStartGROUND_OVERLAYSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func KMLFolderAddSTYLES(builder *flatbuffers.Builder, STYLES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(STYLES), 0)
+}
+func KMLFolderStartSTYLESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func KMLFolderAddSTYLE_MAPS(builder *flatbuffers.Builder, STYLE_MAPS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(STYLE_MAPS), 0)
+}
+func KMLFolderStartSTYLE_MAPSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func KMLFolderAddSCREEN_OVERLAYS(builder *flatbuffers.Builder, SCREEN_OVERLAYS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(SCREEN_OVERLAYS), 0)
+}
+func KMLFolderStartSCREEN_OVERLAYSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func KMLFolderAddPHOTO_OVERLAYS(builder *flatbuffers.Builder, PHOTO_OVERLAYS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(PHOTO_OVERLAYS), 0)
+}
+func KMLFolderStartPHOTO_OVERLAYSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func KMLFolderAddTOURS(builder *flatbuffers.Builder, TOURS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(TOURS), 0)
+}
+func KMLFolderStartTOURSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func KMLFolderAddSTYLE_URL(builder *flatbuffers.Builder, STYLE_URL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(STYLE_URL), 0)
+}
+func KMLFolderAddREGION(builder *flatbuffers.Builder, REGION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(REGION), 0)
+}
+func KMLFolderAddEXTENDED_DATA(builder *flatbuffers.Builder, EXTENDED_DATA flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(EXTENDED_DATA), 0)
+}
+func KMLFolderStartEXTENDED_DATAVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func KMLFolderAddLOOK_AT(builder *flatbuffers.Builder, LOOK_AT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(LOOK_AT), 0)
+}
+func KMLFolderAddCAMERA(builder *flatbuffers.Builder, CAMERA flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(CAMERA), 0)
+}
+func KMLFolderAddTIME_SPAN(builder *flatbuffers.Builder, TIME_SPAN flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(TIME_SPAN), 0)
+}
+func KMLFolderAddTIME_STAMP(builder *flatbuffers.Builder, TIME_STAMP flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(TIME_STAMP), 0)
 }
 func KMLFolderEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

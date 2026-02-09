@@ -88,28 +88,37 @@ class KMLStyle extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// List style
+    public function getLIST_STYLE()
+    {
+        $obj = new KMLListStyle();
+        $o = $this->__offset(16);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startKMLStyle(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(6);
+        $builder->StartObject(7);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return KMLStyle
      */
-    public static function createKMLStyle(FlatBufferBuilder $builder, $ID, $ICON_STYLE, $LABEL_STYLE, $LINE_STYLE, $POLY_STYLE, $BALLOON_STYLE)
+    public static function createKMLStyle(FlatBufferBuilder $builder, $ID, $ICON_STYLE, $LABEL_STYLE, $LINE_STYLE, $POLY_STYLE, $BALLOON_STYLE, $LIST_STYLE)
     {
-        $builder->startObject(6);
+        $builder->startObject(7);
         self::addID($builder, $ID);
         self::addICON_STYLE($builder, $ICON_STYLE);
         self::addLABEL_STYLE($builder, $LABEL_STYLE);
         self::addLINE_STYLE($builder, $LINE_STYLE);
         self::addPOLY_STYLE($builder, $POLY_STYLE);
         self::addBALLOON_STYLE($builder, $BALLOON_STYLE);
+        self::addLIST_STYLE($builder, $LIST_STYLE);
         $o = $builder->endObject();
         return $o;
     }
@@ -172,6 +181,16 @@ class KMLStyle extends Table
     public static function addBALLOON_STYLE(FlatBufferBuilder $builder, $BALLOON_STYLE)
     {
         $builder->addOffsetX(5, $BALLOON_STYLE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addLIST_STYLE(FlatBufferBuilder $builder, $LIST_STYLE)
+    {
+        $builder->addOffsetX(6, $LIST_STYLE, 0);
     }
 
     /**

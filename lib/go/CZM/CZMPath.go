@@ -98,7 +98,7 @@ func (rcv *CZMPath) MutateWIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
 }
 
-/// Path color
+/// Path color (legacy solid color)
 func (rcv *CZMPath) COLOR(obj *CZMColor) *CZMColor {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -112,7 +112,7 @@ func (rcv *CZMPath) COLOR(obj *CZMColor) *CZMColor {
 	return nil
 }
 
-/// Path color
+/// Path color (legacy solid color)
 /// Resolution in seconds
 func (rcv *CZMPath) RESOLUTION() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
@@ -127,8 +127,23 @@ func (rcv *CZMPath) MutateRESOLUTION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
 }
 
+/// Full polyline material
+func (rcv *CZMPath) MATERIAL(obj *CZMPolylineMaterial) *CZMPolylineMaterial {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CZMPolylineMaterial)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// Full polyline material
 func CZMPathStart(builder *flatbuffers.Builder) {
-	builder.StartObject(6)
+	builder.StartObject(7)
 }
 func CZMPathAddSHOW(builder *flatbuffers.Builder, SHOW bool) {
 	builder.PrependBoolSlot(0, SHOW, false)
@@ -147,6 +162,9 @@ func CZMPathAddCOLOR(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
 }
 func CZMPathAddRESOLUTION(builder *flatbuffers.Builder, RESOLUTION float64) {
 	builder.PrependFloat64Slot(5, RESOLUTION, 0.0)
+}
+func CZMPathAddMATERIAL(builder *flatbuffers.Builder, MATERIAL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(MATERIAL), 0)
 }
 func CZMPathEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

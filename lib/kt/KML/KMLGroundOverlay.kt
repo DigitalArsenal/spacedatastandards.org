@@ -66,23 +66,17 @@ class KMLGroundOverlay : Table() {
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     /**
+     * Whether open in tree view
+     */
+    val OPEN : Boolean
+        get() {
+            val o = __offset(10)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
      * Icon/image URL
      */
     val ICON_HREF : String?
-        get() {
-            val o = __offset(10)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val ICON_HREFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun ICON_HREFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    /**
-     * Color in aabbggrr hex format
-     */
-    val COLOR : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -91,14 +85,28 @@ class KMLGroundOverlay : Table() {
                 null
             }
         }
-    val COLORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun COLORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    val ICON_HREFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
+    fun ICON_HREFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * Color in aabbggrr hex format
+     */
+    val COLOR : String?
+        get() {
+            val o = __offset(14)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val COLORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
+    fun COLORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * North latitude of bounding box
      */
     val NORTH : Double
         get() {
-            val o = __offset(14)
+            val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -106,7 +114,7 @@ class KMLGroundOverlay : Table() {
      */
     val SOUTH : Double
         get() {
-            val o = __offset(16)
+            val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -114,7 +122,7 @@ class KMLGroundOverlay : Table() {
      */
     val EAST : Double
         get() {
-            val o = __offset(18)
+            val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -122,7 +130,7 @@ class KMLGroundOverlay : Table() {
      */
     val WEST : Double
         get() {
-            val o = __offset(20)
+            val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -130,7 +138,7 @@ class KMLGroundOverlay : Table() {
      */
     val ROTATION : Double
         get() {
-            val o = __offset(22)
+            val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -138,7 +146,7 @@ class KMLGroundOverlay : Table() {
      */
     val ALTITUDE : Double
         get() {
-            val o = __offset(24)
+            val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
@@ -146,9 +154,55 @@ class KMLGroundOverlay : Table() {
      */
     val ALTITUDE_MODE : Byte
         get() {
-            val o = __offset(26)
+            val o = __offset(28)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
+    /**
+     * Draw order
+     */
+    val DRAW_ORDER : Int
+        get() {
+            val o = __offset(30)
+            return if(o != 0) bb.getInt(o + bb_pos) else 0
+        }
+    /**
+     * LatLonQuad (non-rectangular overlay)
+     */
+    val LAT_LON_QUAD : KMLLatLonQuad? get() = LAT_LON_QUAD(KMLLatLonQuad())
+    fun LAT_LON_QUAD(obj: KMLLatLonQuad) : KMLLatLonQuad? {
+        val o = __offset(32)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Style URL reference
+     */
+    val STYLE_URL : String?
+        get() {
+            val o = __offset(34)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val STYLE_URLAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
+    fun STYLE_URLInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    /**
+     * Region
+     */
+    val REGION : KMLRegion? get() = REGION(KMLRegion())
+    fun REGION(obj: KMLRegion) : KMLRegion? {
+        val o = __offset(36)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsKMLGroundOverlay(_bb: ByteBuffer): KMLGroundOverlay = getRootAsKMLGroundOverlay(_bb, KMLGroundOverlay())
@@ -156,35 +210,45 @@ class KMLGroundOverlay : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLGroundOverlay(builder: FlatBufferBuilder, NAMEOffset: Int, DESCRIPTIONOffset: Int, VISIBILITY: Boolean, ICON_HREFOffset: Int, COLOROffset: Int, NORTH: Double, SOUTH: Double, EAST: Double, WEST: Double, ROTATION: Double, ALTITUDE: Double, ALTITUDE_MODE: Byte) : Int {
-            builder.startTable(12)
+        fun createKMLGroundOverlay(builder: FlatBufferBuilder, NAMEOffset: Int, DESCRIPTIONOffset: Int, VISIBILITY: Boolean, OPEN: Boolean, ICON_HREFOffset: Int, COLOROffset: Int, NORTH: Double, SOUTH: Double, EAST: Double, WEST: Double, ROTATION: Double, ALTITUDE: Double, ALTITUDE_MODE: Byte, DRAW_ORDER: Int, LAT_LON_QUADOffset: Int, STYLE_URLOffset: Int, REGIONOffset: Int) : Int {
+            builder.startTable(17)
             addALTITUDE(builder, ALTITUDE)
             addROTATION(builder, ROTATION)
             addWEST(builder, WEST)
             addEAST(builder, EAST)
             addSOUTH(builder, SOUTH)
             addNORTH(builder, NORTH)
+            addREGION(builder, REGIONOffset)
+            addSTYLE_URL(builder, STYLE_URLOffset)
+            addLAT_LON_QUAD(builder, LAT_LON_QUADOffset)
+            addDRAW_ORDER(builder, DRAW_ORDER)
             addCOLOR(builder, COLOROffset)
             addICON_HREF(builder, ICON_HREFOffset)
             addDESCRIPTION(builder, DESCRIPTIONOffset)
             addNAME(builder, NAMEOffset)
             addALTITUDE_MODE(builder, ALTITUDE_MODE)
+            addOPEN(builder, OPEN)
             addVISIBILITY(builder, VISIBILITY)
             return endKMLGroundOverlay(builder)
         }
-        fun startKMLGroundOverlay(builder: FlatBufferBuilder) = builder.startTable(12)
+        fun startKMLGroundOverlay(builder: FlatBufferBuilder) = builder.startTable(17)
         fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
         fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(1, DESCRIPTION, 0)
         fun addVISIBILITY(builder: FlatBufferBuilder, VISIBILITY: Boolean) = builder.addBoolean(2, VISIBILITY, false)
-        fun addICON_HREF(builder: FlatBufferBuilder, ICON_HREF: Int) = builder.addOffset(3, ICON_HREF, 0)
-        fun addCOLOR(builder: FlatBufferBuilder, COLOR: Int) = builder.addOffset(4, COLOR, 0)
-        fun addNORTH(builder: FlatBufferBuilder, NORTH: Double) = builder.addDouble(5, NORTH, 0.0)
-        fun addSOUTH(builder: FlatBufferBuilder, SOUTH: Double) = builder.addDouble(6, SOUTH, 0.0)
-        fun addEAST(builder: FlatBufferBuilder, EAST: Double) = builder.addDouble(7, EAST, 0.0)
-        fun addWEST(builder: FlatBufferBuilder, WEST: Double) = builder.addDouble(8, WEST, 0.0)
-        fun addROTATION(builder: FlatBufferBuilder, ROTATION: Double) = builder.addDouble(9, ROTATION, 0.0)
-        fun addALTITUDE(builder: FlatBufferBuilder, ALTITUDE: Double) = builder.addDouble(10, ALTITUDE, 0.0)
-        fun addALTITUDE_MODE(builder: FlatBufferBuilder, ALTITUDE_MODE: Byte) = builder.addByte(11, ALTITUDE_MODE, 0)
+        fun addOPEN(builder: FlatBufferBuilder, OPEN: Boolean) = builder.addBoolean(3, OPEN, false)
+        fun addICON_HREF(builder: FlatBufferBuilder, ICON_HREF: Int) = builder.addOffset(4, ICON_HREF, 0)
+        fun addCOLOR(builder: FlatBufferBuilder, COLOR: Int) = builder.addOffset(5, COLOR, 0)
+        fun addNORTH(builder: FlatBufferBuilder, NORTH: Double) = builder.addDouble(6, NORTH, 0.0)
+        fun addSOUTH(builder: FlatBufferBuilder, SOUTH: Double) = builder.addDouble(7, SOUTH, 0.0)
+        fun addEAST(builder: FlatBufferBuilder, EAST: Double) = builder.addDouble(8, EAST, 0.0)
+        fun addWEST(builder: FlatBufferBuilder, WEST: Double) = builder.addDouble(9, WEST, 0.0)
+        fun addROTATION(builder: FlatBufferBuilder, ROTATION: Double) = builder.addDouble(10, ROTATION, 0.0)
+        fun addALTITUDE(builder: FlatBufferBuilder, ALTITUDE: Double) = builder.addDouble(11, ALTITUDE, 0.0)
+        fun addALTITUDE_MODE(builder: FlatBufferBuilder, ALTITUDE_MODE: Byte) = builder.addByte(12, ALTITUDE_MODE, 0)
+        fun addDRAW_ORDER(builder: FlatBufferBuilder, DRAW_ORDER: Int) = builder.addInt(13, DRAW_ORDER, 0)
+        fun addLAT_LON_QUAD(builder: FlatBufferBuilder, LAT_LON_QUAD: Int) = builder.addOffset(14, LAT_LON_QUAD, 0)
+        fun addSTYLE_URL(builder: FlatBufferBuilder, STYLE_URL: Int) = builder.addOffset(15, STYLE_URL, 0)
+        fun addREGION(builder: FlatBufferBuilder, REGION: Int) = builder.addOffset(16, REGION, 0)
         fun endKMLGroundOverlay(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -37,25 +37,51 @@ public struct GJNProperty : IFlatbufferObject
   public double NUM_VALUE { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// True if NUM_VALUE should be used instead of VALUE
   public bool IS_NUMERIC { get { int o = __p.__offset(10); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// True if this property value is a boolean
+  public bool IS_BOOL { get { int o = __p.__offset(12); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Boolean value (use when IS_BOOL is true)
+  public bool BOOL_VALUE { get { int o = __p.__offset(14); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// True if this property value is JSON null
+  public bool IS_NULL { get { int o = __p.__offset(16); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Raw JSON string for complex values (objects, arrays)
+  public string JSON_VALUE { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetJSON_VALUEBytes() { return __p.__vector_as_span<byte>(18, 1); }
+#else
+  public ArraySegment<byte>? GetJSON_VALUEBytes() { return __p.__vector_as_arraysegment(18); }
+#endif
+  public byte[] GetJSON_VALUEArray() { return __p.__vector_as_array<byte>(18); }
 
   public static Offset<GJNProperty> CreateGJNProperty(FlatBufferBuilder builder,
       StringOffset KEYOffset = default(StringOffset),
       StringOffset VALUEOffset = default(StringOffset),
       double NUM_VALUE = 0.0,
-      bool IS_NUMERIC = false) {
-    builder.StartTable(4);
+      bool IS_NUMERIC = false,
+      bool IS_BOOL = false,
+      bool BOOL_VALUE = false,
+      bool IS_NULL = false,
+      StringOffset JSON_VALUEOffset = default(StringOffset)) {
+    builder.StartTable(8);
     GJNProperty.AddNUM_VALUE(builder, NUM_VALUE);
+    GJNProperty.AddJSON_VALUE(builder, JSON_VALUEOffset);
     GJNProperty.AddVALUE(builder, VALUEOffset);
     GJNProperty.AddKEY(builder, KEYOffset);
+    GJNProperty.AddIS_NULL(builder, IS_NULL);
+    GJNProperty.AddBOOL_VALUE(builder, BOOL_VALUE);
+    GJNProperty.AddIS_BOOL(builder, IS_BOOL);
     GJNProperty.AddIS_NUMERIC(builder, IS_NUMERIC);
     return GJNProperty.EndGJNProperty(builder);
   }
 
-  public static void StartGJNProperty(FlatBufferBuilder builder) { builder.StartTable(4); }
+  public static void StartGJNProperty(FlatBufferBuilder builder) { builder.StartTable(8); }
   public static void AddKEY(FlatBufferBuilder builder, StringOffset KEYOffset) { builder.AddOffset(0, KEYOffset.Value, 0); }
   public static void AddVALUE(FlatBufferBuilder builder, StringOffset VALUEOffset) { builder.AddOffset(1, VALUEOffset.Value, 0); }
   public static void AddNUM_VALUE(FlatBufferBuilder builder, double NUM_VALUE) { builder.AddDouble(2, NUM_VALUE, 0.0); }
   public static void AddIS_NUMERIC(FlatBufferBuilder builder, bool IS_NUMERIC) { builder.AddBool(3, IS_NUMERIC, false); }
+  public static void AddIS_BOOL(FlatBufferBuilder builder, bool IS_BOOL) { builder.AddBool(4, IS_BOOL, false); }
+  public static void AddBOOL_VALUE(FlatBufferBuilder builder, bool BOOL_VALUE) { builder.AddBool(5, BOOL_VALUE, false); }
+  public static void AddIS_NULL(FlatBufferBuilder builder, bool IS_NULL) { builder.AddBool(6, IS_NULL, false); }
+  public static void AddJSON_VALUE(FlatBufferBuilder builder, StringOffset JSON_VALUEOffset) { builder.AddOffset(7, JSON_VALUEOffset.Value, 0); }
   public static Offset<GJNProperty> EndGJNProperty(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<GJNProperty>(o);
@@ -70,17 +96,26 @@ public struct GJNProperty : IFlatbufferObject
     _o.VALUE = this.VALUE;
     _o.NUM_VALUE = this.NUM_VALUE;
     _o.IS_NUMERIC = this.IS_NUMERIC;
+    _o.IS_BOOL = this.IS_BOOL;
+    _o.BOOL_VALUE = this.BOOL_VALUE;
+    _o.IS_NULL = this.IS_NULL;
+    _o.JSON_VALUE = this.JSON_VALUE;
   }
   public static Offset<GJNProperty> Pack(FlatBufferBuilder builder, GJNPropertyT _o) {
     if (_o == null) return default(Offset<GJNProperty>);
     var _KEY = _o.KEY == null ? default(StringOffset) : builder.CreateString(_o.KEY);
     var _VALUE = _o.VALUE == null ? default(StringOffset) : builder.CreateString(_o.VALUE);
+    var _JSON_VALUE = _o.JSON_VALUE == null ? default(StringOffset) : builder.CreateString(_o.JSON_VALUE);
     return CreateGJNProperty(
       builder,
       _KEY,
       _VALUE,
       _o.NUM_VALUE,
-      _o.IS_NUMERIC);
+      _o.IS_NUMERIC,
+      _o.IS_BOOL,
+      _o.BOOL_VALUE,
+      _o.IS_NULL,
+      _JSON_VALUE);
   }
 }
 
@@ -90,12 +125,20 @@ public class GJNPropertyT
   public string VALUE { get; set; }
   public double NUM_VALUE { get; set; }
   public bool IS_NUMERIC { get; set; }
+  public bool IS_BOOL { get; set; }
+  public bool BOOL_VALUE { get; set; }
+  public bool IS_NULL { get; set; }
+  public string JSON_VALUE { get; set; }
 
   public GJNPropertyT() {
     this.KEY = null;
     this.VALUE = null;
     this.NUM_VALUE = 0.0;
     this.IS_NUMERIC = false;
+    this.IS_BOOL = false;
+    this.BOOL_VALUE = false;
+    this.IS_NULL = false;
+    this.JSON_VALUE = null;
   }
 }
 
@@ -109,6 +152,10 @@ static public class GJNPropertyVerify
       && verifier.VerifyString(tablePos, 6 /*VALUE*/, false)
       && verifier.VerifyField(tablePos, 8 /*NUM_VALUE*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 10 /*IS_NUMERIC*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 12 /*IS_BOOL*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 14 /*BOOL_VALUE*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 16 /*IS_NULL*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyString(tablePos, 18 /*JSON_VALUE*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -218,8 +218,194 @@ func (rcv *CZMLabel) MutateHEIGHT_REFERENCE(n CZMHeightReference) bool {
 	return rcv._tab.MutateInt8Slot(28, int8(n))
 }
 
+/// Whether to show background
+func (rcv *CZMLabel) SHOW_BACKGROUND() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+/// Whether to show background
+func (rcv *CZMLabel) MutateSHOW_BACKGROUND(n bool) bool {
+	return rcv._tab.MutateBoolSlot(30, n)
+}
+
+/// Background color
+func (rcv *CZMLabel) BACKGROUND_COLOR(obj *CZMColor) *CZMColor {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CZMColor)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// Background color
+/// Background padding X
+func (rcv *CZMLabel) BACKGROUND_PADDING_X() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Background padding X
+func (rcv *CZMLabel) MutateBACKGROUND_PADDING_X(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+/// Background padding Y
+func (rcv *CZMLabel) BACKGROUND_PADDING_Y() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Background padding Y
+func (rcv *CZMLabel) MutateBACKGROUND_PADDING_Y(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+/// Eye offset X in meters
+func (rcv *CZMLabel) EYE_OFFSET_X() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Eye offset X in meters
+func (rcv *CZMLabel) MutateEYE_OFFSET_X(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+/// Eye offset Y in meters
+func (rcv *CZMLabel) EYE_OFFSET_Y() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Eye offset Y in meters
+func (rcv *CZMLabel) MutateEYE_OFFSET_Y(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+/// Eye offset Z in meters
+func (rcv *CZMLabel) EYE_OFFSET_Z() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Eye offset Z in meters
+func (rcv *CZMLabel) MutateEYE_OFFSET_Z(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+/// Translucency by distance
+func (rcv *CZMLabel) TRANSLUCENCY_BY_DISTANCE(obj *CZMNearFarScalar) *CZMNearFarScalar {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CZMNearFarScalar)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// Translucency by distance
+/// Pixel offset scale by distance
+func (rcv *CZMLabel) PIXEL_OFFSET_SCALE_BY_DISTANCE(obj *CZMNearFarScalar) *CZMNearFarScalar {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CZMNearFarScalar)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// Pixel offset scale by distance
+/// Scale by distance
+func (rcv *CZMLabel) SCALE_BY_DISTANCE(obj *CZMNearFarScalar) *CZMNearFarScalar {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CZMNearFarScalar)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// Scale by distance
+/// Distance display condition near
+func (rcv *CZMLabel) DISTANCE_DISPLAY_CONDITION_NEAR() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Distance display condition near
+func (rcv *CZMLabel) MutateDISTANCE_DISPLAY_CONDITION_NEAR(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(50, n)
+}
+
+/// Distance display condition far
+func (rcv *CZMLabel) DISTANCE_DISPLAY_CONDITION_FAR() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Distance display condition far
+func (rcv *CZMLabel) MutateDISTANCE_DISPLAY_CONDITION_FAR(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(52, n)
+}
+
+/// Disable depth test distance
+func (rcv *CZMLabel) DISABLE_DEPTH_TEST_DISTANCE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Disable depth test distance
+func (rcv *CZMLabel) MutateDISABLE_DEPTH_TEST_DISTANCE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(54, n)
+}
+
 func CZMLabelStart(builder *flatbuffers.Builder) {
-	builder.StartObject(13)
+	builder.StartObject(26)
 }
 func CZMLabelAddSHOW(builder *flatbuffers.Builder, SHOW bool) {
 	builder.PrependBoolSlot(0, SHOW, false)
@@ -259,6 +445,45 @@ func CZMLabelAddVERTICAL_ORIGIN(builder *flatbuffers.Builder, VERTICAL_ORIGIN CZ
 }
 func CZMLabelAddHEIGHT_REFERENCE(builder *flatbuffers.Builder, HEIGHT_REFERENCE CZMHeightReference) {
 	builder.PrependInt8Slot(12, int8(HEIGHT_REFERENCE), 0)
+}
+func CZMLabelAddSHOW_BACKGROUND(builder *flatbuffers.Builder, SHOW_BACKGROUND bool) {
+	builder.PrependBoolSlot(13, SHOW_BACKGROUND, false)
+}
+func CZMLabelAddBACKGROUND_COLOR(builder *flatbuffers.Builder, BACKGROUND_COLOR flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(BACKGROUND_COLOR), 0)
+}
+func CZMLabelAddBACKGROUND_PADDING_X(builder *flatbuffers.Builder, BACKGROUND_PADDING_X float64) {
+	builder.PrependFloat64Slot(15, BACKGROUND_PADDING_X, 0.0)
+}
+func CZMLabelAddBACKGROUND_PADDING_Y(builder *flatbuffers.Builder, BACKGROUND_PADDING_Y float64) {
+	builder.PrependFloat64Slot(16, BACKGROUND_PADDING_Y, 0.0)
+}
+func CZMLabelAddEYE_OFFSET_X(builder *flatbuffers.Builder, EYE_OFFSET_X float64) {
+	builder.PrependFloat64Slot(17, EYE_OFFSET_X, 0.0)
+}
+func CZMLabelAddEYE_OFFSET_Y(builder *flatbuffers.Builder, EYE_OFFSET_Y float64) {
+	builder.PrependFloat64Slot(18, EYE_OFFSET_Y, 0.0)
+}
+func CZMLabelAddEYE_OFFSET_Z(builder *flatbuffers.Builder, EYE_OFFSET_Z float64) {
+	builder.PrependFloat64Slot(19, EYE_OFFSET_Z, 0.0)
+}
+func CZMLabelAddTRANSLUCENCY_BY_DISTANCE(builder *flatbuffers.Builder, TRANSLUCENCY_BY_DISTANCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(TRANSLUCENCY_BY_DISTANCE), 0)
+}
+func CZMLabelAddPIXEL_OFFSET_SCALE_BY_DISTANCE(builder *flatbuffers.Builder, PIXEL_OFFSET_SCALE_BY_DISTANCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(PIXEL_OFFSET_SCALE_BY_DISTANCE), 0)
+}
+func CZMLabelAddSCALE_BY_DISTANCE(builder *flatbuffers.Builder, SCALE_BY_DISTANCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(SCALE_BY_DISTANCE), 0)
+}
+func CZMLabelAddDISTANCE_DISPLAY_CONDITION_NEAR(builder *flatbuffers.Builder, DISTANCE_DISPLAY_CONDITION_NEAR float64) {
+	builder.PrependFloat64Slot(23, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0)
+}
+func CZMLabelAddDISTANCE_DISPLAY_CONDITION_FAR(builder *flatbuffers.Builder, DISTANCE_DISPLAY_CONDITION_FAR float64) {
+	builder.PrependFloat64Slot(24, DISTANCE_DISPLAY_CONDITION_FAR, 0.0)
+}
+func CZMLabelAddDISABLE_DEPTH_TEST_DISTANCE(builder *flatbuffers.Builder, DISABLE_DEPTH_TEST_DISTANCE float64) {
+	builder.PrependFloat64Slot(25, DISABLE_DEPTH_TEST_DISTANCE, 0.0)
 }
 func CZMLabelEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

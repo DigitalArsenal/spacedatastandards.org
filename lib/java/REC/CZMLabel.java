@@ -86,6 +86,62 @@ public final class CZMLabel extends Table {
    * Height reference
    */
   public byte HEIGHT_REFERENCE() { int o = __offset(28); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Whether to show background
+   */
+  public boolean SHOW_BACKGROUND() { int o = __offset(30); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Background color
+   */
+  public CZMColor BACKGROUND_COLOR() { return BACKGROUND_COLOR(new CZMColor()); }
+  public CZMColor BACKGROUND_COLOR(CZMColor obj) { int o = __offset(32); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Background padding X
+   */
+  public double BACKGROUND_PADDING_X() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Background padding Y
+   */
+  public double BACKGROUND_PADDING_Y() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Eye offset X in meters
+   */
+  public double EYE_OFFSET_X() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Eye offset Y in meters
+   */
+  public double EYE_OFFSET_Y() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Eye offset Z in meters
+   */
+  public double EYE_OFFSET_Z() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Translucency by distance
+   */
+  public CZMNearFarScalar TRANSLUCENCY_BY_DISTANCE() { return TRANSLUCENCY_BY_DISTANCE(new CZMNearFarScalar()); }
+  public CZMNearFarScalar TRANSLUCENCY_BY_DISTANCE(CZMNearFarScalar obj) { int o = __offset(44); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Pixel offset scale by distance
+   */
+  public CZMNearFarScalar PIXEL_OFFSET_SCALE_BY_DISTANCE() { return PIXEL_OFFSET_SCALE_BY_DISTANCE(new CZMNearFarScalar()); }
+  public CZMNearFarScalar PIXEL_OFFSET_SCALE_BY_DISTANCE(CZMNearFarScalar obj) { int o = __offset(46); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Scale by distance
+   */
+  public CZMNearFarScalar SCALE_BY_DISTANCE() { return SCALE_BY_DISTANCE(new CZMNearFarScalar()); }
+  public CZMNearFarScalar SCALE_BY_DISTANCE(CZMNearFarScalar obj) { int o = __offset(48); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Distance display condition near
+   */
+  public double DISTANCE_DISPLAY_CONDITION_NEAR() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Distance display condition far
+   */
+  public double DISTANCE_DISPLAY_CONDITION_FAR() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Disable depth test distance
+   */
+  public double DISABLE_DEPTH_TEST_DISTANCE() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createCZMLabel(FlatBufferBuilder builder,
       boolean SHOW,
@@ -100,16 +156,42 @@ public final class CZMLabel extends Table {
       double SCALE,
       byte HORIZONTAL_ORIGIN,
       byte VERTICAL_ORIGIN,
-      byte HEIGHT_REFERENCE) {
-    builder.startTable(13);
+      byte HEIGHT_REFERENCE,
+      boolean SHOW_BACKGROUND,
+      int BACKGROUND_COLOROffset,
+      double BACKGROUND_PADDING_X,
+      double BACKGROUND_PADDING_Y,
+      double EYE_OFFSET_X,
+      double EYE_OFFSET_Y,
+      double EYE_OFFSET_Z,
+      int TRANSLUCENCY_BY_DISTANCEOffset,
+      int PIXEL_OFFSET_SCALE_BY_DISTANCEOffset,
+      int SCALE_BY_DISTANCEOffset,
+      double DISTANCE_DISPLAY_CONDITION_NEAR,
+      double DISTANCE_DISPLAY_CONDITION_FAR,
+      double DISABLE_DEPTH_TEST_DISTANCE) {
+    builder.startTable(26);
+    CZMLabel.addDisableDepthTestDistance(builder, DISABLE_DEPTH_TEST_DISTANCE);
+    CZMLabel.addDistanceDisplayConditionFar(builder, DISTANCE_DISPLAY_CONDITION_FAR);
+    CZMLabel.addDistanceDisplayConditionNear(builder, DISTANCE_DISPLAY_CONDITION_NEAR);
+    CZMLabel.addEyeOffsetZ(builder, EYE_OFFSET_Z);
+    CZMLabel.addEyeOffsetY(builder, EYE_OFFSET_Y);
+    CZMLabel.addEyeOffsetX(builder, EYE_OFFSET_X);
+    CZMLabel.addBackgroundPaddingY(builder, BACKGROUND_PADDING_Y);
+    CZMLabel.addBackgroundPaddingX(builder, BACKGROUND_PADDING_X);
     CZMLabel.addScale(builder, SCALE);
     CZMLabel.addPixelOffsetY(builder, PIXEL_OFFSET_Y);
     CZMLabel.addPixelOffsetX(builder, PIXEL_OFFSET_X);
     CZMLabel.addOutlineWidth(builder, OUTLINE_WIDTH);
+    CZMLabel.addScaleByDistance(builder, SCALE_BY_DISTANCEOffset);
+    CZMLabel.addPixelOffsetScaleByDistance(builder, PIXEL_OFFSET_SCALE_BY_DISTANCEOffset);
+    CZMLabel.addTranslucencyByDistance(builder, TRANSLUCENCY_BY_DISTANCEOffset);
+    CZMLabel.addBackgroundColor(builder, BACKGROUND_COLOROffset);
     CZMLabel.addOutlineColor(builder, OUTLINE_COLOROffset);
     CZMLabel.addFillColor(builder, FILL_COLOROffset);
     CZMLabel.addFont(builder, FONTOffset);
     CZMLabel.addText(builder, TEXTOffset);
+    CZMLabel.addShowBackground(builder, SHOW_BACKGROUND);
     CZMLabel.addHeightReference(builder, HEIGHT_REFERENCE);
     CZMLabel.addVerticalOrigin(builder, VERTICAL_ORIGIN);
     CZMLabel.addHorizontalOrigin(builder, HORIZONTAL_ORIGIN);
@@ -118,7 +200,7 @@ public final class CZMLabel extends Table {
     return CZMLabel.endCZMLabel(builder);
   }
 
-  public static void startCZMLabel(FlatBufferBuilder builder) { builder.startTable(13); }
+  public static void startCZMLabel(FlatBufferBuilder builder) { builder.startTable(26); }
   public static void addShow(FlatBufferBuilder builder, boolean SHOW) { builder.addBoolean(0, SHOW, false); }
   public static void addText(FlatBufferBuilder builder, int TEXTOffset) { builder.addOffset(1, TEXTOffset, 0); }
   public static void addFont(FlatBufferBuilder builder, int FONTOffset) { builder.addOffset(2, FONTOffset, 0); }
@@ -132,6 +214,19 @@ public final class CZMLabel extends Table {
   public static void addHorizontalOrigin(FlatBufferBuilder builder, byte HORIZONTAL_ORIGIN) { builder.addByte(10, HORIZONTAL_ORIGIN, 0); }
   public static void addVerticalOrigin(FlatBufferBuilder builder, byte VERTICAL_ORIGIN) { builder.addByte(11, VERTICAL_ORIGIN, 0); }
   public static void addHeightReference(FlatBufferBuilder builder, byte HEIGHT_REFERENCE) { builder.addByte(12, HEIGHT_REFERENCE, 0); }
+  public static void addShowBackground(FlatBufferBuilder builder, boolean SHOW_BACKGROUND) { builder.addBoolean(13, SHOW_BACKGROUND, false); }
+  public static void addBackgroundColor(FlatBufferBuilder builder, int BACKGROUND_COLOROffset) { builder.addOffset(14, BACKGROUND_COLOROffset, 0); }
+  public static void addBackgroundPaddingX(FlatBufferBuilder builder, double BACKGROUND_PADDING_X) { builder.addDouble(15, BACKGROUND_PADDING_X, 0.0); }
+  public static void addBackgroundPaddingY(FlatBufferBuilder builder, double BACKGROUND_PADDING_Y) { builder.addDouble(16, BACKGROUND_PADDING_Y, 0.0); }
+  public static void addEyeOffsetX(FlatBufferBuilder builder, double EYE_OFFSET_X) { builder.addDouble(17, EYE_OFFSET_X, 0.0); }
+  public static void addEyeOffsetY(FlatBufferBuilder builder, double EYE_OFFSET_Y) { builder.addDouble(18, EYE_OFFSET_Y, 0.0); }
+  public static void addEyeOffsetZ(FlatBufferBuilder builder, double EYE_OFFSET_Z) { builder.addDouble(19, EYE_OFFSET_Z, 0.0); }
+  public static void addTranslucencyByDistance(FlatBufferBuilder builder, int TRANSLUCENCY_BY_DISTANCEOffset) { builder.addOffset(20, TRANSLUCENCY_BY_DISTANCEOffset, 0); }
+  public static void addPixelOffsetScaleByDistance(FlatBufferBuilder builder, int PIXEL_OFFSET_SCALE_BY_DISTANCEOffset) { builder.addOffset(21, PIXEL_OFFSET_SCALE_BY_DISTANCEOffset, 0); }
+  public static void addScaleByDistance(FlatBufferBuilder builder, int SCALE_BY_DISTANCEOffset) { builder.addOffset(22, SCALE_BY_DISTANCEOffset, 0); }
+  public static void addDistanceDisplayConditionNear(FlatBufferBuilder builder, double DISTANCE_DISPLAY_CONDITION_NEAR) { builder.addDouble(23, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0); }
+  public static void addDistanceDisplayConditionFar(FlatBufferBuilder builder, double DISTANCE_DISPLAY_CONDITION_FAR) { builder.addDouble(24, DISTANCE_DISPLAY_CONDITION_FAR, 0.0); }
+  public static void addDisableDepthTestDistance(FlatBufferBuilder builder, double DISABLE_DEPTH_TEST_DISTANCE) { builder.addDouble(25, DISABLE_DEPTH_TEST_DISTANCE, 0.0); }
   public static int endCZMLabel(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

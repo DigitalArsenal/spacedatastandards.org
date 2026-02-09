@@ -53,8 +53,16 @@ class GJNPosition(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # True if altitude was explicitly provided (distinguishes 0 from absent)
+    # GJNPosition
+    def HAS_ALTITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def GJNPositionStart(builder):
-    builder.StartObject(3)
+    builder.StartObject(4)
 
 def Start(builder):
     GJNPositionStart(builder)
@@ -77,6 +85,12 @@ def GJNPositionAddALTITUDE(builder, ALTITUDE):
 def AddALTITUDE(builder, ALTITUDE):
     GJNPositionAddALTITUDE(builder, ALTITUDE)
 
+def GJNPositionAddHAS_ALTITUDE(builder, HAS_ALTITUDE):
+    builder.PrependBoolSlot(3, HAS_ALTITUDE, 0)
+
+def AddHAS_ALTITUDE(builder, HAS_ALTITUDE):
+    GJNPositionAddHAS_ALTITUDE(builder, HAS_ALTITUDE)
+
 def GJNPositionEnd(builder):
     return builder.EndObject()
 
@@ -91,6 +105,7 @@ class GJNPositionT(object):
         self.LONGITUDE = 0.0  # type: float
         self.LATITUDE = 0.0  # type: float
         self.ALTITUDE = 0.0  # type: float
+        self.HAS_ALTITUDE = False  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -116,6 +131,7 @@ class GJNPositionT(object):
         self.LONGITUDE = gjnposition.LONGITUDE()
         self.LATITUDE = gjnposition.LATITUDE()
         self.ALTITUDE = gjnposition.ALTITUDE()
+        self.HAS_ALTITUDE = gjnposition.HAS_ALTITUDE()
 
     # GJNPositionT
     def Pack(self, builder):
@@ -123,5 +139,6 @@ class GJNPositionT(object):
         GJNPositionAddLONGITUDE(builder, self.LONGITUDE)
         GJNPositionAddLATITUDE(builder, self.LATITUDE)
         GJNPositionAddALTITUDE(builder, self.ALTITUDE)
+        GJNPositionAddHAS_ALTITUDE(builder, self.HAS_ALTITUDE)
         gjnposition = GJNPositionEnd(builder)
         return gjnposition

@@ -26,13 +26,17 @@ public struct KMLLineString : IFlatbufferObject
   public bool EXTRUDE { get { int o = __p.__offset(8); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   /// Whether to tessellate (follow terrain)
   public bool TESSELLATE { get { int o = __p.__offset(10); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// gx:drawOrder
+  public int GX_DRAW_ORDER { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
 
   public static Offset<KMLLineString> CreateKMLLineString(FlatBufferBuilder builder,
       VectorOffset COORDINATESOffset = default(VectorOffset),
       KMLAltitudeMode ALTITUDE_MODE = KMLAltitudeMode.CLAMP_TO_GROUND,
       bool EXTRUDE = false,
-      bool TESSELLATE = false) {
-    builder.StartTable(4);
+      bool TESSELLATE = false,
+      int GX_DRAW_ORDER = 0) {
+    builder.StartTable(5);
+    KMLLineString.AddGX_DRAW_ORDER(builder, GX_DRAW_ORDER);
     KMLLineString.AddCOORDINATES(builder, COORDINATESOffset);
     KMLLineString.AddTESSELLATE(builder, TESSELLATE);
     KMLLineString.AddEXTRUDE(builder, EXTRUDE);
@@ -40,7 +44,7 @@ public struct KMLLineString : IFlatbufferObject
     return KMLLineString.EndKMLLineString(builder);
   }
 
-  public static void StartKMLLineString(FlatBufferBuilder builder) { builder.StartTable(4); }
+  public static void StartKMLLineString(FlatBufferBuilder builder) { builder.StartTable(5); }
   public static void AddCOORDINATES(FlatBufferBuilder builder, VectorOffset COORDINATESOffset) { builder.AddOffset(0, COORDINATESOffset.Value, 0); }
   public static VectorOffset CreateCOORDINATESVector(FlatBufferBuilder builder, Offset<KMLCoordinate>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateCOORDINATESVectorBlock(FlatBufferBuilder builder, Offset<KMLCoordinate>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
@@ -50,6 +54,7 @@ public struct KMLLineString : IFlatbufferObject
   public static void AddALTITUDE_MODE(FlatBufferBuilder builder, KMLAltitudeMode ALTITUDE_MODE) { builder.AddSbyte(1, (sbyte)ALTITUDE_MODE, 0); }
   public static void AddEXTRUDE(FlatBufferBuilder builder, bool EXTRUDE) { builder.AddBool(2, EXTRUDE, false); }
   public static void AddTESSELLATE(FlatBufferBuilder builder, bool TESSELLATE) { builder.AddBool(3, TESSELLATE, false); }
+  public static void AddGX_DRAW_ORDER(FlatBufferBuilder builder, int GX_DRAW_ORDER) { builder.AddInt(4, GX_DRAW_ORDER, 0); }
   public static Offset<KMLLineString> EndKMLLineString(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<KMLLineString>(o);
@@ -65,6 +70,7 @@ public struct KMLLineString : IFlatbufferObject
     _o.ALTITUDE_MODE = this.ALTITUDE_MODE;
     _o.EXTRUDE = this.EXTRUDE;
     _o.TESSELLATE = this.TESSELLATE;
+    _o.GX_DRAW_ORDER = this.GX_DRAW_ORDER;
   }
   public static Offset<KMLLineString> Pack(FlatBufferBuilder builder, KMLLineStringT _o) {
     if (_o == null) return default(Offset<KMLLineString>);
@@ -79,7 +85,8 @@ public struct KMLLineString : IFlatbufferObject
       _COORDINATES,
       _o.ALTITUDE_MODE,
       _o.EXTRUDE,
-      _o.TESSELLATE);
+      _o.TESSELLATE,
+      _o.GX_DRAW_ORDER);
   }
 }
 
@@ -89,12 +96,14 @@ public class KMLLineStringT
   public KMLAltitudeMode ALTITUDE_MODE { get; set; }
   public bool EXTRUDE { get; set; }
   public bool TESSELLATE { get; set; }
+  public int GX_DRAW_ORDER { get; set; }
 
   public KMLLineStringT() {
     this.COORDINATES = null;
     this.ALTITUDE_MODE = KMLAltitudeMode.CLAMP_TO_GROUND;
     this.EXTRUDE = false;
     this.TESSELLATE = false;
+    this.GX_DRAW_ORDER = 0;
   }
 }
 
@@ -108,6 +117,7 @@ static public class KMLLineStringVerify
       && verifier.VerifyField(tablePos, 6 /*ALTITUDE_MODE*/, 1 /*KMLAltitudeMode*/, 1, false)
       && verifier.VerifyField(tablePos, 8 /*EXTRUDE*/, 1 /*bool*/, 1, false)
       && verifier.VerifyField(tablePos, 10 /*TESSELLATE*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 12 /*GX_DRAW_ORDER*/, 4 /*int*/, 4, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

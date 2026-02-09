@@ -71,25 +71,36 @@ class GJNPosition extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// True if altitude was explicitly provided (distinguishes 0 from absent)
+    /**
+     * @return bool
+     */
+    public function getHAS_ALTITUDE()
+    {
+        $o = $this->__offset(10);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startGJNPosition(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(3);
+        $builder->StartObject(4);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return GJNPosition
      */
-    public static function createGJNPosition(FlatBufferBuilder $builder, $LONGITUDE, $LATITUDE, $ALTITUDE)
+    public static function createGJNPosition(FlatBufferBuilder $builder, $LONGITUDE, $LATITUDE, $ALTITUDE, $HAS_ALTITUDE)
     {
-        $builder->startObject(3);
+        $builder->startObject(4);
         self::addLONGITUDE($builder, $LONGITUDE);
         self::addLATITUDE($builder, $LATITUDE);
         self::addALTITUDE($builder, $ALTITUDE);
+        self::addHAS_ALTITUDE($builder, $HAS_ALTITUDE);
         $o = $builder->endObject();
         return $o;
     }
@@ -122,6 +133,16 @@ class GJNPosition extends Table
     public static function addALTITUDE(FlatBufferBuilder $builder, $ALTITUDE)
     {
         $builder->addDoubleX(2, $ALTITUDE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_ALTITUDE(FlatBufferBuilder $builder, $HAS_ALTITUDE)
+    {
+        $builder->addBoolX(3, $HAS_ALTITUDE, false);
     }
 
     /**

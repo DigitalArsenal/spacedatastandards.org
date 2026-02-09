@@ -8,6 +8,7 @@ import { KMLBalloonStyle, KMLBalloonStyleT } from './KMLBalloonStyle.js';
 import { KMLIconStyle, KMLIconStyleT } from './KMLIconStyle.js';
 import { KMLLabelStyle, KMLLabelStyleT } from './KMLLabelStyle.js';
 import { KMLLineStyle, KMLLineStyleT } from './KMLLineStyle.js';
+import { KMLListStyle, KMLListStyleT } from './KMLListStyle.js';
 import { KMLPolyStyle, KMLPolyStyleT } from './KMLPolyStyle.js';
 
 
@@ -82,8 +83,16 @@ BALLOON_STYLE(obj?:KMLBalloonStyle):KMLBalloonStyle|null {
   return offset ? (obj || new KMLBalloonStyle()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * List style
+ */
+LIST_STYLE(obj?:KMLListStyle):KMLListStyle|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? (obj || new KMLListStyle()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startKMLStyle(builder:flatbuffers.Builder) {
-  builder.startObject(6);
+  builder.startObject(7);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -110,6 +119,10 @@ static addBalloonStyle(builder:flatbuffers.Builder, BALLOON_STYLEOffset:flatbuff
   builder.addFieldOffset(5, BALLOON_STYLEOffset, 0);
 }
 
+static addListStyle(builder:flatbuffers.Builder, LIST_STYLEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, LIST_STYLEOffset, 0);
+}
+
 static endKMLStyle(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -123,7 +136,8 @@ unpack(): KMLStyleT {
     (this.LABEL_STYLE() !== null ? this.LABEL_STYLE()!.unpack() : null),
     (this.LINE_STYLE() !== null ? this.LINE_STYLE()!.unpack() : null),
     (this.POLY_STYLE() !== null ? this.POLY_STYLE()!.unpack() : null),
-    (this.BALLOON_STYLE() !== null ? this.BALLOON_STYLE()!.unpack() : null)
+    (this.BALLOON_STYLE() !== null ? this.BALLOON_STYLE()!.unpack() : null),
+    (this.LIST_STYLE() !== null ? this.LIST_STYLE()!.unpack() : null)
   );
 }
 
@@ -135,6 +149,7 @@ unpackTo(_o: KMLStyleT): void {
   _o.LINE_STYLE = (this.LINE_STYLE() !== null ? this.LINE_STYLE()!.unpack() : null);
   _o.POLY_STYLE = (this.POLY_STYLE() !== null ? this.POLY_STYLE()!.unpack() : null);
   _o.BALLOON_STYLE = (this.BALLOON_STYLE() !== null ? this.BALLOON_STYLE()!.unpack() : null);
+  _o.LIST_STYLE = (this.LIST_STYLE() !== null ? this.LIST_STYLE()!.unpack() : null);
 }
 }
 
@@ -145,7 +160,8 @@ constructor(
   public LABEL_STYLE: KMLLabelStyleT|null = null,
   public LINE_STYLE: KMLLineStyleT|null = null,
   public POLY_STYLE: KMLPolyStyleT|null = null,
-  public BALLOON_STYLE: KMLBalloonStyleT|null = null
+  public BALLOON_STYLE: KMLBalloonStyleT|null = null,
+  public LIST_STYLE: KMLListStyleT|null = null
 ){}
 
 
@@ -156,6 +172,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const LINE_STYLE = (this.LINE_STYLE !== null ? this.LINE_STYLE!.pack(builder) : 0);
   const POLY_STYLE = (this.POLY_STYLE !== null ? this.POLY_STYLE!.pack(builder) : 0);
   const BALLOON_STYLE = (this.BALLOON_STYLE !== null ? this.BALLOON_STYLE!.pack(builder) : 0);
+  const LIST_STYLE = (this.LIST_STYLE !== null ? this.LIST_STYLE!.pack(builder) : 0);
 
   KMLStyle.startKMLStyle(builder);
   KMLStyle.addId(builder, ID);
@@ -164,6 +181,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   KMLStyle.addLineStyle(builder, LINE_STYLE);
   KMLStyle.addPolyStyle(builder, POLY_STYLE);
   KMLStyle.addBalloonStyle(builder, BALLOON_STYLE);
+  KMLStyle.addListStyle(builder, LIST_STYLE);
 
   return KMLStyle.endKMLStyle(builder);
 }

@@ -49,7 +49,7 @@ public final class CZMEllipse extends Table {
    */
   public boolean FILL() { int o = __offset(12); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
-   * Fill color
+   * Fill color (legacy solid color)
    */
   public CZMColor COLOR() { return COLOR(new CZMColor()); }
   public CZMColor COLOR(CZMColor obj) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
@@ -70,6 +70,53 @@ public final class CZMEllipse extends Table {
    * Height reference
    */
   public byte HEIGHT_REFERENCE() { int o = __offset(22); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Extruded height in meters
+   */
+  public double EXTRUDED_HEIGHT() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Extruded height reference
+   */
+  public String EXTRUDED_HEIGHT_REFERENCE() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EXTRUDED_HEIGHT_REFERENCEAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
+  public ByteBuffer EXTRUDED_HEIGHT_REFERENCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
+  /**
+   * Texture rotation in radians
+   */
+  public double ST_ROTATION() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Granularity in radians
+   */
+  public double GRANULARITY() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Full surface material
+   */
+  public CZMMaterial MATERIAL() { return MATERIAL(new CZMMaterial()); }
+  public CZMMaterial MATERIAL(CZMMaterial obj) { int o = __offset(32); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Outline width in pixels
+   */
+  public double OUTLINE_WIDTH() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Number of vertical lines
+   */
+  public int NUMBER_OF_VERTICAL_LINES() { int o = __offset(36); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Shadow mode
+   */
+  public String SHADOWS() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SHADOWSAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
+  public ByteBuffer SHADOWSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
+  /**
+   * Classification type
+   */
+  public String CLASSIFICATION_TYPE() { int o = __offset(40); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CLASSIFICATION_TYPEAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
+  public ByteBuffer CLASSIFICATION_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
+  /**
+   * Z-index for ordering
+   */
+  public int Z_INDEX() { int o = __offset(42); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
 
   public static int createCZMEllipse(FlatBufferBuilder builder,
       boolean SHOW,
@@ -81,12 +128,32 @@ public final class CZMEllipse extends Table {
       boolean OUTLINE,
       int OUTLINE_COLOROffset,
       double HEIGHT,
-      byte HEIGHT_REFERENCE) {
-    builder.startTable(10);
+      byte HEIGHT_REFERENCE,
+      double EXTRUDED_HEIGHT,
+      int EXTRUDED_HEIGHT_REFERENCEOffset,
+      double ST_ROTATION,
+      double GRANULARITY,
+      int MATERIALOffset,
+      double OUTLINE_WIDTH,
+      int NUMBER_OF_VERTICAL_LINES,
+      int SHADOWSOffset,
+      int CLASSIFICATION_TYPEOffset,
+      int Z_INDEX) {
+    builder.startTable(20);
+    CZMEllipse.addOutlineWidth(builder, OUTLINE_WIDTH);
+    CZMEllipse.addGranularity(builder, GRANULARITY);
+    CZMEllipse.addStRotation(builder, ST_ROTATION);
+    CZMEllipse.addExtrudedHeight(builder, EXTRUDED_HEIGHT);
     CZMEllipse.addHeight(builder, HEIGHT);
     CZMEllipse.addRotation(builder, ROTATION);
     CZMEllipse.addSemiMinorAxis(builder, SEMI_MINOR_AXIS);
     CZMEllipse.addSemiMajorAxis(builder, SEMI_MAJOR_AXIS);
+    CZMEllipse.addZIndex(builder, Z_INDEX);
+    CZMEllipse.addClassificationType(builder, CLASSIFICATION_TYPEOffset);
+    CZMEllipse.addShadows(builder, SHADOWSOffset);
+    CZMEllipse.addNumberOfVerticalLines(builder, NUMBER_OF_VERTICAL_LINES);
+    CZMEllipse.addMaterial(builder, MATERIALOffset);
+    CZMEllipse.addExtrudedHeightReference(builder, EXTRUDED_HEIGHT_REFERENCEOffset);
     CZMEllipse.addOutlineColor(builder, OUTLINE_COLOROffset);
     CZMEllipse.addColor(builder, COLOROffset);
     CZMEllipse.addHeightReference(builder, HEIGHT_REFERENCE);
@@ -96,7 +163,7 @@ public final class CZMEllipse extends Table {
     return CZMEllipse.endCZMEllipse(builder);
   }
 
-  public static void startCZMEllipse(FlatBufferBuilder builder) { builder.startTable(10); }
+  public static void startCZMEllipse(FlatBufferBuilder builder) { builder.startTable(20); }
   public static void addShow(FlatBufferBuilder builder, boolean SHOW) { builder.addBoolean(0, SHOW, false); }
   public static void addSemiMajorAxis(FlatBufferBuilder builder, double SEMI_MAJOR_AXIS) { builder.addDouble(1, SEMI_MAJOR_AXIS, 0.0); }
   public static void addSemiMinorAxis(FlatBufferBuilder builder, double SEMI_MINOR_AXIS) { builder.addDouble(2, SEMI_MINOR_AXIS, 0.0); }
@@ -107,6 +174,16 @@ public final class CZMEllipse extends Table {
   public static void addOutlineColor(FlatBufferBuilder builder, int OUTLINE_COLOROffset) { builder.addOffset(7, OUTLINE_COLOROffset, 0); }
   public static void addHeight(FlatBufferBuilder builder, double HEIGHT) { builder.addDouble(8, HEIGHT, 0.0); }
   public static void addHeightReference(FlatBufferBuilder builder, byte HEIGHT_REFERENCE) { builder.addByte(9, HEIGHT_REFERENCE, 0); }
+  public static void addExtrudedHeight(FlatBufferBuilder builder, double EXTRUDED_HEIGHT) { builder.addDouble(10, EXTRUDED_HEIGHT, 0.0); }
+  public static void addExtrudedHeightReference(FlatBufferBuilder builder, int EXTRUDED_HEIGHT_REFERENCEOffset) { builder.addOffset(11, EXTRUDED_HEIGHT_REFERENCEOffset, 0); }
+  public static void addStRotation(FlatBufferBuilder builder, double ST_ROTATION) { builder.addDouble(12, ST_ROTATION, 0.0); }
+  public static void addGranularity(FlatBufferBuilder builder, double GRANULARITY) { builder.addDouble(13, GRANULARITY, 0.0); }
+  public static void addMaterial(FlatBufferBuilder builder, int MATERIALOffset) { builder.addOffset(14, MATERIALOffset, 0); }
+  public static void addOutlineWidth(FlatBufferBuilder builder, double OUTLINE_WIDTH) { builder.addDouble(15, OUTLINE_WIDTH, 0.0); }
+  public static void addNumberOfVerticalLines(FlatBufferBuilder builder, int NUMBER_OF_VERTICAL_LINES) { builder.addInt(16, NUMBER_OF_VERTICAL_LINES, 0); }
+  public static void addShadows(FlatBufferBuilder builder, int SHADOWSOffset) { builder.addOffset(17, SHADOWSOffset, 0); }
+  public static void addClassificationType(FlatBufferBuilder builder, int CLASSIFICATION_TYPEOffset) { builder.addOffset(18, CLASSIFICATION_TYPEOffset, 0); }
+  public static void addZIndex(FlatBufferBuilder builder, int Z_INDEX) { builder.addInt(19, Z_INDEX, 0); }
   public static int endCZMEllipse(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

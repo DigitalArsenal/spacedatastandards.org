@@ -8,6 +8,7 @@ import { CZMColor, CZMColorT } from './CZMColor.js';
 import { CZMHeightReference } from './CZMHeightReference.js';
 import { CZMHorizontalOrigin } from './CZMHorizontalOrigin.js';
 import { CZMLabelStyle } from './CZMLabelStyle.js';
+import { CZMNearFarScalar, CZMNearFarScalarT } from './CZMNearFarScalar.js';
 import { CZMVerticalOrigin } from './CZMVerticalOrigin.js';
 
 
@@ -140,8 +141,112 @@ HEIGHT_REFERENCE():CZMHeightReference {
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : CZMHeightReference.NONE;
 }
 
+/**
+ * Whether to show background
+ */
+SHOW_BACKGROUND():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Background color
+ */
+BACKGROUND_COLOR(obj?:CZMColor):CZMColor|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? (obj || new CZMColor()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Background padding X
+ */
+BACKGROUND_PADDING_X():number {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Background padding Y
+ */
+BACKGROUND_PADDING_Y():number {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Eye offset X in meters
+ */
+EYE_OFFSET_X():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Eye offset Y in meters
+ */
+EYE_OFFSET_Y():number {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Eye offset Z in meters
+ */
+EYE_OFFSET_Z():number {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Translucency by distance
+ */
+TRANSLUCENCY_BY_DISTANCE(obj?:CZMNearFarScalar):CZMNearFarScalar|null {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? (obj || new CZMNearFarScalar()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Pixel offset scale by distance
+ */
+PIXEL_OFFSET_SCALE_BY_DISTANCE(obj?:CZMNearFarScalar):CZMNearFarScalar|null {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? (obj || new CZMNearFarScalar()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Scale by distance
+ */
+SCALE_BY_DISTANCE(obj?:CZMNearFarScalar):CZMNearFarScalar|null {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? (obj || new CZMNearFarScalar()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Distance display condition near
+ */
+DISTANCE_DISPLAY_CONDITION_NEAR():number {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Distance display condition far
+ */
+DISTANCE_DISPLAY_CONDITION_FAR():number {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Disable depth test distance
+ */
+DISABLE_DEPTH_TEST_DISTANCE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 54);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
 static startCZMLabel(builder:flatbuffers.Builder) {
-  builder.startObject(13);
+  builder.startObject(26);
 }
 
 static addShow(builder:flatbuffers.Builder, SHOW:boolean) {
@@ -196,6 +301,58 @@ static addHeightReference(builder:flatbuffers.Builder, HEIGHT_REFERENCE:CZMHeigh
   builder.addFieldInt8(12, HEIGHT_REFERENCE, CZMHeightReference.NONE);
 }
 
+static addShowBackground(builder:flatbuffers.Builder, SHOW_BACKGROUND:boolean) {
+  builder.addFieldInt8(13, +SHOW_BACKGROUND, +false);
+}
+
+static addBackgroundColor(builder:flatbuffers.Builder, BACKGROUND_COLOROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, BACKGROUND_COLOROffset, 0);
+}
+
+static addBackgroundPaddingX(builder:flatbuffers.Builder, BACKGROUND_PADDING_X:number) {
+  builder.addFieldFloat64(15, BACKGROUND_PADDING_X, 0.0);
+}
+
+static addBackgroundPaddingY(builder:flatbuffers.Builder, BACKGROUND_PADDING_Y:number) {
+  builder.addFieldFloat64(16, BACKGROUND_PADDING_Y, 0.0);
+}
+
+static addEyeOffsetX(builder:flatbuffers.Builder, EYE_OFFSET_X:number) {
+  builder.addFieldFloat64(17, EYE_OFFSET_X, 0.0);
+}
+
+static addEyeOffsetY(builder:flatbuffers.Builder, EYE_OFFSET_Y:number) {
+  builder.addFieldFloat64(18, EYE_OFFSET_Y, 0.0);
+}
+
+static addEyeOffsetZ(builder:flatbuffers.Builder, EYE_OFFSET_Z:number) {
+  builder.addFieldFloat64(19, EYE_OFFSET_Z, 0.0);
+}
+
+static addTranslucencyByDistance(builder:flatbuffers.Builder, TRANSLUCENCY_BY_DISTANCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(20, TRANSLUCENCY_BY_DISTANCEOffset, 0);
+}
+
+static addPixelOffsetScaleByDistance(builder:flatbuffers.Builder, PIXEL_OFFSET_SCALE_BY_DISTANCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(21, PIXEL_OFFSET_SCALE_BY_DISTANCEOffset, 0);
+}
+
+static addScaleByDistance(builder:flatbuffers.Builder, SCALE_BY_DISTANCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(22, SCALE_BY_DISTANCEOffset, 0);
+}
+
+static addDistanceDisplayConditionNear(builder:flatbuffers.Builder, DISTANCE_DISPLAY_CONDITION_NEAR:number) {
+  builder.addFieldFloat64(23, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0);
+}
+
+static addDistanceDisplayConditionFar(builder:flatbuffers.Builder, DISTANCE_DISPLAY_CONDITION_FAR:number) {
+  builder.addFieldFloat64(24, DISTANCE_DISPLAY_CONDITION_FAR, 0.0);
+}
+
+static addDisableDepthTestDistance(builder:flatbuffers.Builder, DISABLE_DEPTH_TEST_DISTANCE:number) {
+  builder.addFieldFloat64(25, DISABLE_DEPTH_TEST_DISTANCE, 0.0);
+}
+
 static endCZMLabel(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -216,7 +373,20 @@ unpack(): CZMLabelT {
     this.SCALE(),
     this.HORIZONTAL_ORIGIN(),
     this.VERTICAL_ORIGIN(),
-    this.HEIGHT_REFERENCE()
+    this.HEIGHT_REFERENCE(),
+    this.SHOW_BACKGROUND(),
+    (this.BACKGROUND_COLOR() !== null ? this.BACKGROUND_COLOR()!.unpack() : null),
+    this.BACKGROUND_PADDING_X(),
+    this.BACKGROUND_PADDING_Y(),
+    this.EYE_OFFSET_X(),
+    this.EYE_OFFSET_Y(),
+    this.EYE_OFFSET_Z(),
+    (this.TRANSLUCENCY_BY_DISTANCE() !== null ? this.TRANSLUCENCY_BY_DISTANCE()!.unpack() : null),
+    (this.PIXEL_OFFSET_SCALE_BY_DISTANCE() !== null ? this.PIXEL_OFFSET_SCALE_BY_DISTANCE()!.unpack() : null),
+    (this.SCALE_BY_DISTANCE() !== null ? this.SCALE_BY_DISTANCE()!.unpack() : null),
+    this.DISTANCE_DISPLAY_CONDITION_NEAR(),
+    this.DISTANCE_DISPLAY_CONDITION_FAR(),
+    this.DISABLE_DEPTH_TEST_DISTANCE()
   );
 }
 
@@ -235,6 +405,19 @@ unpackTo(_o: CZMLabelT): void {
   _o.HORIZONTAL_ORIGIN = this.HORIZONTAL_ORIGIN();
   _o.VERTICAL_ORIGIN = this.VERTICAL_ORIGIN();
   _o.HEIGHT_REFERENCE = this.HEIGHT_REFERENCE();
+  _o.SHOW_BACKGROUND = this.SHOW_BACKGROUND();
+  _o.BACKGROUND_COLOR = (this.BACKGROUND_COLOR() !== null ? this.BACKGROUND_COLOR()!.unpack() : null);
+  _o.BACKGROUND_PADDING_X = this.BACKGROUND_PADDING_X();
+  _o.BACKGROUND_PADDING_Y = this.BACKGROUND_PADDING_Y();
+  _o.EYE_OFFSET_X = this.EYE_OFFSET_X();
+  _o.EYE_OFFSET_Y = this.EYE_OFFSET_Y();
+  _o.EYE_OFFSET_Z = this.EYE_OFFSET_Z();
+  _o.TRANSLUCENCY_BY_DISTANCE = (this.TRANSLUCENCY_BY_DISTANCE() !== null ? this.TRANSLUCENCY_BY_DISTANCE()!.unpack() : null);
+  _o.PIXEL_OFFSET_SCALE_BY_DISTANCE = (this.PIXEL_OFFSET_SCALE_BY_DISTANCE() !== null ? this.PIXEL_OFFSET_SCALE_BY_DISTANCE()!.unpack() : null);
+  _o.SCALE_BY_DISTANCE = (this.SCALE_BY_DISTANCE() !== null ? this.SCALE_BY_DISTANCE()!.unpack() : null);
+  _o.DISTANCE_DISPLAY_CONDITION_NEAR = this.DISTANCE_DISPLAY_CONDITION_NEAR();
+  _o.DISTANCE_DISPLAY_CONDITION_FAR = this.DISTANCE_DISPLAY_CONDITION_FAR();
+  _o.DISABLE_DEPTH_TEST_DISTANCE = this.DISABLE_DEPTH_TEST_DISTANCE();
 }
 }
 
@@ -252,7 +435,20 @@ constructor(
   public SCALE: number = 0.0,
   public HORIZONTAL_ORIGIN: CZMHorizontalOrigin = CZMHorizontalOrigin.LEFT,
   public VERTICAL_ORIGIN: CZMVerticalOrigin = CZMVerticalOrigin.BASELINE,
-  public HEIGHT_REFERENCE: CZMHeightReference = CZMHeightReference.NONE
+  public HEIGHT_REFERENCE: CZMHeightReference = CZMHeightReference.NONE,
+  public SHOW_BACKGROUND: boolean = false,
+  public BACKGROUND_COLOR: CZMColorT|null = null,
+  public BACKGROUND_PADDING_X: number = 0.0,
+  public BACKGROUND_PADDING_Y: number = 0.0,
+  public EYE_OFFSET_X: number = 0.0,
+  public EYE_OFFSET_Y: number = 0.0,
+  public EYE_OFFSET_Z: number = 0.0,
+  public TRANSLUCENCY_BY_DISTANCE: CZMNearFarScalarT|null = null,
+  public PIXEL_OFFSET_SCALE_BY_DISTANCE: CZMNearFarScalarT|null = null,
+  public SCALE_BY_DISTANCE: CZMNearFarScalarT|null = null,
+  public DISTANCE_DISPLAY_CONDITION_NEAR: number = 0.0,
+  public DISTANCE_DISPLAY_CONDITION_FAR: number = 0.0,
+  public DISABLE_DEPTH_TEST_DISTANCE: number = 0.0
 ){}
 
 
@@ -261,6 +457,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const FONT = (this.FONT !== null ? builder.createString(this.FONT!) : 0);
   const FILL_COLOR = (this.FILL_COLOR !== null ? this.FILL_COLOR!.pack(builder) : 0);
   const OUTLINE_COLOR = (this.OUTLINE_COLOR !== null ? this.OUTLINE_COLOR!.pack(builder) : 0);
+  const BACKGROUND_COLOR = (this.BACKGROUND_COLOR !== null ? this.BACKGROUND_COLOR!.pack(builder) : 0);
+  const TRANSLUCENCY_BY_DISTANCE = (this.TRANSLUCENCY_BY_DISTANCE !== null ? this.TRANSLUCENCY_BY_DISTANCE!.pack(builder) : 0);
+  const PIXEL_OFFSET_SCALE_BY_DISTANCE = (this.PIXEL_OFFSET_SCALE_BY_DISTANCE !== null ? this.PIXEL_OFFSET_SCALE_BY_DISTANCE!.pack(builder) : 0);
+  const SCALE_BY_DISTANCE = (this.SCALE_BY_DISTANCE !== null ? this.SCALE_BY_DISTANCE!.pack(builder) : 0);
 
   CZMLabel.startCZMLabel(builder);
   CZMLabel.addShow(builder, this.SHOW);
@@ -276,6 +476,19 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   CZMLabel.addHorizontalOrigin(builder, this.HORIZONTAL_ORIGIN);
   CZMLabel.addVerticalOrigin(builder, this.VERTICAL_ORIGIN);
   CZMLabel.addHeightReference(builder, this.HEIGHT_REFERENCE);
+  CZMLabel.addShowBackground(builder, this.SHOW_BACKGROUND);
+  CZMLabel.addBackgroundColor(builder, BACKGROUND_COLOR);
+  CZMLabel.addBackgroundPaddingX(builder, this.BACKGROUND_PADDING_X);
+  CZMLabel.addBackgroundPaddingY(builder, this.BACKGROUND_PADDING_Y);
+  CZMLabel.addEyeOffsetX(builder, this.EYE_OFFSET_X);
+  CZMLabel.addEyeOffsetY(builder, this.EYE_OFFSET_Y);
+  CZMLabel.addEyeOffsetZ(builder, this.EYE_OFFSET_Z);
+  CZMLabel.addTranslucencyByDistance(builder, TRANSLUCENCY_BY_DISTANCE);
+  CZMLabel.addPixelOffsetScaleByDistance(builder, PIXEL_OFFSET_SCALE_BY_DISTANCE);
+  CZMLabel.addScaleByDistance(builder, SCALE_BY_DISTANCE);
+  CZMLabel.addDistanceDisplayConditionNear(builder, this.DISTANCE_DISPLAY_CONDITION_NEAR);
+  CZMLabel.addDistanceDisplayConditionFar(builder, this.DISTANCE_DISPLAY_CONDITION_FAR);
+  CZMLabel.addDisableDepthTestDistance(builder, this.DISABLE_DEPTH_TEST_DISTANCE);
 
   return CZMLabel.endCZMLabel(builder);
 }

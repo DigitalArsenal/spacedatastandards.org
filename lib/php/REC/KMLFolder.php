@@ -155,22 +155,189 @@ class KMLFolder extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Shared styles
+    /**
+     * @returnVectorOffset
+     */
+    public function getSTYLES($j)
+    {
+        $o = $this->__offset(20);
+        $obj = new KMLStyle();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSTYLESLength()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Style maps
+    /**
+     * @returnVectorOffset
+     */
+    public function getSTYLE_MAPS($j)
+    {
+        $o = $this->__offset(22);
+        $obj = new KMLStyleMap();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSTYLE_MAPSLength()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Screen overlays
+    /**
+     * @returnVectorOffset
+     */
+    public function getSCREEN_OVERLAYS($j)
+    {
+        $o = $this->__offset(24);
+        $obj = new KMLScreenOverlay();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSCREEN_OVERLAYSLength()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Photo overlays
+    /**
+     * @returnVectorOffset
+     */
+    public function getPHOTO_OVERLAYS($j)
+    {
+        $o = $this->__offset(26);
+        $obj = new KMLPhotoOverlay();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPHOTO_OVERLAYSLength()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Tours
+    /**
+     * @returnVectorOffset
+     */
+    public function getTOURS($j)
+    {
+        $o = $this->__offset(28);
+        $obj = new KMLTour();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTOURSLength()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Style URL reference
+    public function getSTYLE_URL()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Region
+    public function getREGION()
+    {
+        $obj = new KMLRegion();
+        $o = $this->__offset(32);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Extended data
+    /**
+     * @returnVectorOffset
+     */
+    public function getEXTENDED_DATA($j)
+    {
+        $o = $this->__offset(34);
+        $obj = new KMLData();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEXTENDED_DATALength()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// LookAt viewpoint
+    public function getLOOK_AT()
+    {
+        $obj = new KMLLookAt();
+        $o = $this->__offset(36);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Camera viewpoint
+    public function getCAMERA()
+    {
+        $obj = new KMLCamera();
+        $o = $this->__offset(38);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// TimeSpan
+    public function getTIME_SPAN()
+    {
+        $obj = new KMLTimeSpan();
+        $o = $this->__offset(40);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// TimeStamp
+    public function getTIME_STAMP()
+    {
+        $obj = new KMLTimeStamp();
+        $o = $this->__offset(42);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startKMLFolder(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(8);
+        $builder->StartObject(20);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return KMLFolder
      */
-    public static function createKMLFolder(FlatBufferBuilder $builder, $NAME, $DESCRIPTION, $VISIBILITY, $OPEN, $PLACEMARKS, $FOLDERS, $NETWORK_LINKS, $GROUND_OVERLAYS)
+    public static function createKMLFolder(FlatBufferBuilder $builder, $NAME, $DESCRIPTION, $VISIBILITY, $OPEN, $PLACEMARKS, $FOLDERS, $NETWORK_LINKS, $GROUND_OVERLAYS, $STYLES, $STYLE_MAPS, $SCREEN_OVERLAYS, $PHOTO_OVERLAYS, $TOURS, $STYLE_URL, $REGION, $EXTENDED_DATA, $LOOK_AT, $CAMERA, $TIME_SPAN, $TIME_STAMP)
     {
-        $builder->startObject(8);
+        $builder->startObject(20);
         self::addNAME($builder, $NAME);
         self::addDESCRIPTION($builder, $DESCRIPTION);
         self::addVISIBILITY($builder, $VISIBILITY);
@@ -179,6 +346,18 @@ class KMLFolder extends Table
         self::addFOLDERS($builder, $FOLDERS);
         self::addNETWORK_LINKS($builder, $NETWORK_LINKS);
         self::addGROUND_OVERLAYS($builder, $GROUND_OVERLAYS);
+        self::addSTYLES($builder, $STYLES);
+        self::addSTYLE_MAPS($builder, $STYLE_MAPS);
+        self::addSCREEN_OVERLAYS($builder, $SCREEN_OVERLAYS);
+        self::addPHOTO_OVERLAYS($builder, $PHOTO_OVERLAYS);
+        self::addTOURS($builder, $TOURS);
+        self::addSTYLE_URL($builder, $STYLE_URL);
+        self::addREGION($builder, $REGION);
+        self::addEXTENDED_DATA($builder, $EXTENDED_DATA);
+        self::addLOOK_AT($builder, $LOOK_AT);
+        self::addCAMERA($builder, $CAMERA);
+        self::addTIME_SPAN($builder, $TIME_SPAN);
+        self::addTIME_STAMP($builder, $TIME_STAMP);
         $o = $builder->endObject();
         return $o;
     }
@@ -357,6 +536,270 @@ class KMLFolder extends Table
     public static function startGROUND_OVERLAYSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSTYLES(FlatBufferBuilder $builder, $STYLES)
+    {
+        $builder->addOffsetX(8, $STYLES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSTYLESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSTYLESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSTYLE_MAPS(FlatBufferBuilder $builder, $STYLE_MAPS)
+    {
+        $builder->addOffsetX(9, $STYLE_MAPS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSTYLE_MAPSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSTYLE_MAPSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSCREEN_OVERLAYS(FlatBufferBuilder $builder, $SCREEN_OVERLAYS)
+    {
+        $builder->addOffsetX(10, $SCREEN_OVERLAYS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSCREEN_OVERLAYSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSCREEN_OVERLAYSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPHOTO_OVERLAYS(FlatBufferBuilder $builder, $PHOTO_OVERLAYS)
+    {
+        $builder->addOffsetX(11, $PHOTO_OVERLAYS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createPHOTO_OVERLAYSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startPHOTO_OVERLAYSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addTOURS(FlatBufferBuilder $builder, $TOURS)
+    {
+        $builder->addOffsetX(12, $TOURS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createTOURSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startTOURSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSTYLE_URL(FlatBufferBuilder $builder, $STYLE_URL)
+    {
+        $builder->addOffsetX(13, $STYLE_URL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addREGION(FlatBufferBuilder $builder, $REGION)
+    {
+        $builder->addOffsetX(14, $REGION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addEXTENDED_DATA(FlatBufferBuilder $builder, $EXTENDED_DATA)
+    {
+        $builder->addOffsetX(15, $EXTENDED_DATA, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createEXTENDED_DATAVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startEXTENDED_DATAVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addLOOK_AT(FlatBufferBuilder $builder, $LOOK_AT)
+    {
+        $builder->addOffsetX(16, $LOOK_AT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCAMERA(FlatBufferBuilder $builder, $CAMERA)
+    {
+        $builder->addOffsetX(17, $CAMERA, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addTIME_SPAN(FlatBufferBuilder $builder, $TIME_SPAN)
+    {
+        $builder->addOffsetX(18, $TIME_SPAN, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addTIME_STAMP(FlatBufferBuilder $builder, $TIME_STAMP)
+    {
+        $builder->addOffsetX(19, $TIME_STAMP, 0);
     }
 
     /**

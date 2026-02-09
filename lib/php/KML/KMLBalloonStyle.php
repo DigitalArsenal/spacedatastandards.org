@@ -62,25 +62,36 @@ class KMLBalloonStyle extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Display mode
+    /**
+     * @return sbyte
+     */
+    public function getDISPLAY_MODE()
+    {
+        $o = $this->__offset(10);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \KMLDisplayMode::DEFAULT;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startKMLBalloonStyle(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(3);
+        $builder->StartObject(4);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return KMLBalloonStyle
      */
-    public static function createKMLBalloonStyle(FlatBufferBuilder $builder, $BG_COLOR, $TEXT_COLOR, $TEXT)
+    public static function createKMLBalloonStyle(FlatBufferBuilder $builder, $BG_COLOR, $TEXT_COLOR, $TEXT, $DISPLAY_MODE)
     {
-        $builder->startObject(3);
+        $builder->startObject(4);
         self::addBG_COLOR($builder, $BG_COLOR);
         self::addTEXT_COLOR($builder, $TEXT_COLOR);
         self::addTEXT($builder, $TEXT);
+        self::addDISPLAY_MODE($builder, $DISPLAY_MODE);
         $o = $builder->endObject();
         return $o;
     }
@@ -113,6 +124,16 @@ class KMLBalloonStyle extends Table
     public static function addTEXT(FlatBufferBuilder $builder, $TEXT)
     {
         $builder->addOffsetX(2, $TEXT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addDISPLAY_MODE(FlatBufferBuilder $builder, $DISPLAY_MODE)
+    {
+        $builder->addSbyteX(3, $DISPLAY_MODE, 0);
     }
 
     /**

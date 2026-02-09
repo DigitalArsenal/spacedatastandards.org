@@ -27,6 +27,10 @@ export declare class KMLLineString implements flatbuffers.IUnpackableObject<KMLL
      * Whether to tessellate (follow terrain)
      */
     TESSELLATE(): boolean;
+    /**
+     * gx:drawOrder
+     */
+    GX_DRAW_ORDER(): number;
     static startKMLLineString(builder: flatbuffers.Builder): void;
     static addCoordinates(builder: flatbuffers.Builder, COORDINATESOffset: flatbuffers.Offset): void;
     static createCoordinatesVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
@@ -34,8 +38,9 @@ export declare class KMLLineString implements flatbuffers.IUnpackableObject<KMLL
     static addAltitudeMode(builder: flatbuffers.Builder, ALTITUDE_MODE: KMLAltitudeMode): void;
     static addExtrude(builder: flatbuffers.Builder, EXTRUDE: boolean): void;
     static addTessellate(builder: flatbuffers.Builder, TESSELLATE: boolean): void;
+    static addGxDrawOrder(builder: flatbuffers.Builder, GX_DRAW_ORDER: number): void;
     static endKMLLineString(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createKMLLineString(builder: flatbuffers.Builder, COORDINATESOffset: flatbuffers.Offset, ALTITUDE_MODE: KMLAltitudeMode, EXTRUDE: boolean, TESSELLATE: boolean): flatbuffers.Offset;
+    static createKMLLineString(builder: flatbuffers.Builder, COORDINATESOffset: flatbuffers.Offset, ALTITUDE_MODE: KMLAltitudeMode, EXTRUDE: boolean, TESSELLATE: boolean, GX_DRAW_ORDER: number): flatbuffers.Offset;
     unpack(): KMLLineStringT;
     unpackTo(_o: KMLLineStringT): void;
 }
@@ -44,7 +49,8 @@ export declare class KMLLineStringT implements flatbuffers.IGeneratedObject {
     ALTITUDE_MODE: KMLAltitudeMode;
     EXTRUDE: boolean;
     TESSELLATE: boolean;
-    constructor(COORDINATES?: (KMLCoordinateT)[], ALTITUDE_MODE?: KMLAltitudeMode, EXTRUDE?: boolean, TESSELLATE?: boolean);
+    GX_DRAW_ORDER: number;
+    constructor(COORDINATES?: (KMLCoordinateT)[], ALTITUDE_MODE?: KMLAltitudeMode, EXTRUDE?: boolean, TESSELLATE?: boolean, GX_DRAW_ORDER?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=KMLLineString.d.ts.map

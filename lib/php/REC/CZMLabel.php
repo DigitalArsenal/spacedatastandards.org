@@ -161,22 +161,144 @@ class CZMLabel extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \CZMHeightReference::NONE;
     }
 
+    /// Whether to show background
+    /**
+     * @return bool
+     */
+    public function getSHOW_BACKGROUND()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Background color
+    public function getBACKGROUND_COLOR()
+    {
+        $obj = new CZMColor();
+        $o = $this->__offset(32);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Background padding X
+    /**
+     * @return double
+     */
+    public function getBACKGROUND_PADDING_X()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Background padding Y
+    /**
+     * @return double
+     */
+    public function getBACKGROUND_PADDING_Y()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Eye offset X in meters
+    /**
+     * @return double
+     */
+    public function getEYE_OFFSET_X()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Eye offset Y in meters
+    /**
+     * @return double
+     */
+    public function getEYE_OFFSET_Y()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Eye offset Z in meters
+    /**
+     * @return double
+     */
+    public function getEYE_OFFSET_Z()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Translucency by distance
+    public function getTRANSLUCENCY_BY_DISTANCE()
+    {
+        $obj = new CZMNearFarScalar();
+        $o = $this->__offset(44);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Pixel offset scale by distance
+    public function getPIXEL_OFFSET_SCALE_BY_DISTANCE()
+    {
+        $obj = new CZMNearFarScalar();
+        $o = $this->__offset(46);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Scale by distance
+    public function getSCALE_BY_DISTANCE()
+    {
+        $obj = new CZMNearFarScalar();
+        $o = $this->__offset(48);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Distance display condition near
+    /**
+     * @return double
+     */
+    public function getDISTANCE_DISPLAY_CONDITION_NEAR()
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Distance display condition far
+    /**
+     * @return double
+     */
+    public function getDISTANCE_DISPLAY_CONDITION_FAR()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Disable depth test distance
+    /**
+     * @return double
+     */
+    public function getDISABLE_DEPTH_TEST_DISTANCE()
+    {
+        $o = $this->__offset(54);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCZMLabel(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(13);
+        $builder->StartObject(26);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CZMLabel
      */
-    public static function createCZMLabel(FlatBufferBuilder $builder, $SHOW, $TEXT, $FONT, $STYLE, $FILL_COLOR, $OUTLINE_COLOR, $OUTLINE_WIDTH, $PIXEL_OFFSET_X, $PIXEL_OFFSET_Y, $SCALE, $HORIZONTAL_ORIGIN, $VERTICAL_ORIGIN, $HEIGHT_REFERENCE)
+    public static function createCZMLabel(FlatBufferBuilder $builder, $SHOW, $TEXT, $FONT, $STYLE, $FILL_COLOR, $OUTLINE_COLOR, $OUTLINE_WIDTH, $PIXEL_OFFSET_X, $PIXEL_OFFSET_Y, $SCALE, $HORIZONTAL_ORIGIN, $VERTICAL_ORIGIN, $HEIGHT_REFERENCE, $SHOW_BACKGROUND, $BACKGROUND_COLOR, $BACKGROUND_PADDING_X, $BACKGROUND_PADDING_Y, $EYE_OFFSET_X, $EYE_OFFSET_Y, $EYE_OFFSET_Z, $TRANSLUCENCY_BY_DISTANCE, $PIXEL_OFFSET_SCALE_BY_DISTANCE, $SCALE_BY_DISTANCE, $DISTANCE_DISPLAY_CONDITION_NEAR, $DISTANCE_DISPLAY_CONDITION_FAR, $DISABLE_DEPTH_TEST_DISTANCE)
     {
-        $builder->startObject(13);
+        $builder->startObject(26);
         self::addSHOW($builder, $SHOW);
         self::addTEXT($builder, $TEXT);
         self::addFONT($builder, $FONT);
@@ -190,6 +312,19 @@ class CZMLabel extends Table
         self::addHORIZONTAL_ORIGIN($builder, $HORIZONTAL_ORIGIN);
         self::addVERTICAL_ORIGIN($builder, $VERTICAL_ORIGIN);
         self::addHEIGHT_REFERENCE($builder, $HEIGHT_REFERENCE);
+        self::addSHOW_BACKGROUND($builder, $SHOW_BACKGROUND);
+        self::addBACKGROUND_COLOR($builder, $BACKGROUND_COLOR);
+        self::addBACKGROUND_PADDING_X($builder, $BACKGROUND_PADDING_X);
+        self::addBACKGROUND_PADDING_Y($builder, $BACKGROUND_PADDING_Y);
+        self::addEYE_OFFSET_X($builder, $EYE_OFFSET_X);
+        self::addEYE_OFFSET_Y($builder, $EYE_OFFSET_Y);
+        self::addEYE_OFFSET_Z($builder, $EYE_OFFSET_Z);
+        self::addTRANSLUCENCY_BY_DISTANCE($builder, $TRANSLUCENCY_BY_DISTANCE);
+        self::addPIXEL_OFFSET_SCALE_BY_DISTANCE($builder, $PIXEL_OFFSET_SCALE_BY_DISTANCE);
+        self::addSCALE_BY_DISTANCE($builder, $SCALE_BY_DISTANCE);
+        self::addDISTANCE_DISPLAY_CONDITION_NEAR($builder, $DISTANCE_DISPLAY_CONDITION_NEAR);
+        self::addDISTANCE_DISPLAY_CONDITION_FAR($builder, $DISTANCE_DISPLAY_CONDITION_FAR);
+        self::addDISABLE_DEPTH_TEST_DISTANCE($builder, $DISABLE_DEPTH_TEST_DISTANCE);
         $o = $builder->endObject();
         return $o;
     }
@@ -322,6 +457,136 @@ class CZMLabel extends Table
     public static function addHEIGHT_REFERENCE(FlatBufferBuilder $builder, $HEIGHT_REFERENCE)
     {
         $builder->addSbyteX(12, $HEIGHT_REFERENCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addSHOW_BACKGROUND(FlatBufferBuilder $builder, $SHOW_BACKGROUND)
+    {
+        $builder->addBoolX(13, $SHOW_BACKGROUND, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addBACKGROUND_COLOR(FlatBufferBuilder $builder, $BACKGROUND_COLOR)
+    {
+        $builder->addOffsetX(14, $BACKGROUND_COLOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addBACKGROUND_PADDING_X(FlatBufferBuilder $builder, $BACKGROUND_PADDING_X)
+    {
+        $builder->addDoubleX(15, $BACKGROUND_PADDING_X, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addBACKGROUND_PADDING_Y(FlatBufferBuilder $builder, $BACKGROUND_PADDING_Y)
+    {
+        $builder->addDoubleX(16, $BACKGROUND_PADDING_Y, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addEYE_OFFSET_X(FlatBufferBuilder $builder, $EYE_OFFSET_X)
+    {
+        $builder->addDoubleX(17, $EYE_OFFSET_X, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addEYE_OFFSET_Y(FlatBufferBuilder $builder, $EYE_OFFSET_Y)
+    {
+        $builder->addDoubleX(18, $EYE_OFFSET_Y, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addEYE_OFFSET_Z(FlatBufferBuilder $builder, $EYE_OFFSET_Z)
+    {
+        $builder->addDoubleX(19, $EYE_OFFSET_Z, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addTRANSLUCENCY_BY_DISTANCE(FlatBufferBuilder $builder, $TRANSLUCENCY_BY_DISTANCE)
+    {
+        $builder->addOffsetX(20, $TRANSLUCENCY_BY_DISTANCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPIXEL_OFFSET_SCALE_BY_DISTANCE(FlatBufferBuilder $builder, $PIXEL_OFFSET_SCALE_BY_DISTANCE)
+    {
+        $builder->addOffsetX(21, $PIXEL_OFFSET_SCALE_BY_DISTANCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSCALE_BY_DISTANCE(FlatBufferBuilder $builder, $SCALE_BY_DISTANCE)
+    {
+        $builder->addOffsetX(22, $SCALE_BY_DISTANCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDISTANCE_DISPLAY_CONDITION_NEAR(FlatBufferBuilder $builder, $DISTANCE_DISPLAY_CONDITION_NEAR)
+    {
+        $builder->addDoubleX(23, $DISTANCE_DISPLAY_CONDITION_NEAR, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDISTANCE_DISPLAY_CONDITION_FAR(FlatBufferBuilder $builder, $DISTANCE_DISPLAY_CONDITION_FAR)
+    {
+        $builder->addDoubleX(24, $DISTANCE_DISPLAY_CONDITION_FAR, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDISABLE_DEPTH_TEST_DISTANCE(FlatBufferBuilder $builder, $DISABLE_DEPTH_TEST_DISTANCE)
+    {
+        $builder->addDoubleX(25, $DISABLE_DEPTH_TEST_DISTANCE, 0.0);
     }
 
     /**

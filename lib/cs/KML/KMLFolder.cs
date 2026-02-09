@@ -49,6 +49,42 @@ public struct KMLFolder : IFlatbufferObject
   /// Ground overlays
   public KMLGroundOverlay? GROUND_OVERLAYS(int j) { int o = __p.__offset(18); return o != 0 ? (KMLGroundOverlay?)(new KMLGroundOverlay()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int GROUND_OVERLAYSLength { get { int o = __p.__offset(18); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Shared styles
+  public KMLStyle? STYLES(int j) { int o = __p.__offset(20); return o != 0 ? (KMLStyle?)(new KMLStyle()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int STYLESLength { get { int o = __p.__offset(20); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Style maps
+  public KMLStyleMap? STYLE_MAPS(int j) { int o = __p.__offset(22); return o != 0 ? (KMLStyleMap?)(new KMLStyleMap()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int STYLE_MAPSLength { get { int o = __p.__offset(22); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Screen overlays
+  public KMLScreenOverlay? SCREEN_OVERLAYS(int j) { int o = __p.__offset(24); return o != 0 ? (KMLScreenOverlay?)(new KMLScreenOverlay()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int SCREEN_OVERLAYSLength { get { int o = __p.__offset(24); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Photo overlays
+  public KMLPhotoOverlay? PHOTO_OVERLAYS(int j) { int o = __p.__offset(26); return o != 0 ? (KMLPhotoOverlay?)(new KMLPhotoOverlay()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int PHOTO_OVERLAYSLength { get { int o = __p.__offset(26); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Tours
+  public KMLTour? TOURS(int j) { int o = __p.__offset(28); return o != 0 ? (KMLTour?)(new KMLTour()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int TOURSLength { get { int o = __p.__offset(28); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Style URL reference
+  public string STYLE_URL { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSTYLE_URLBytes() { return __p.__vector_as_span<byte>(30, 1); }
+#else
+  public ArraySegment<byte>? GetSTYLE_URLBytes() { return __p.__vector_as_arraysegment(30); }
+#endif
+  public byte[] GetSTYLE_URLArray() { return __p.__vector_as_array<byte>(30); }
+  /// Region
+  public KMLRegion? REGION { get { int o = __p.__offset(32); return o != 0 ? (KMLRegion?)(new KMLRegion()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Extended data
+  public KMLData? EXTENDED_DATA(int j) { int o = __p.__offset(34); return o != 0 ? (KMLData?)(new KMLData()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int EXTENDED_DATALength { get { int o = __p.__offset(34); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// LookAt viewpoint
+  public KMLLookAt? LOOK_AT { get { int o = __p.__offset(36); return o != 0 ? (KMLLookAt?)(new KMLLookAt()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Camera viewpoint
+  public KMLCamera? CAMERA { get { int o = __p.__offset(38); return o != 0 ? (KMLCamera?)(new KMLCamera()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// TimeSpan
+  public KMLTimeSpan? TIME_SPAN { get { int o = __p.__offset(40); return o != 0 ? (KMLTimeSpan?)(new KMLTimeSpan()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// TimeStamp
+  public KMLTimeStamp? TIME_STAMP { get { int o = __p.__offset(42); return o != 0 ? (KMLTimeStamp?)(new KMLTimeStamp()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<KMLFolder> CreateKMLFolder(FlatBufferBuilder builder,
       StringOffset NAMEOffset = default(StringOffset),
@@ -58,8 +94,32 @@ public struct KMLFolder : IFlatbufferObject
       VectorOffset PLACEMARKSOffset = default(VectorOffset),
       VectorOffset FOLDERSOffset = default(VectorOffset),
       VectorOffset NETWORK_LINKSOffset = default(VectorOffset),
-      VectorOffset GROUND_OVERLAYSOffset = default(VectorOffset)) {
-    builder.StartTable(8);
+      VectorOffset GROUND_OVERLAYSOffset = default(VectorOffset),
+      VectorOffset STYLESOffset = default(VectorOffset),
+      VectorOffset STYLE_MAPSOffset = default(VectorOffset),
+      VectorOffset SCREEN_OVERLAYSOffset = default(VectorOffset),
+      VectorOffset PHOTO_OVERLAYSOffset = default(VectorOffset),
+      VectorOffset TOURSOffset = default(VectorOffset),
+      StringOffset STYLE_URLOffset = default(StringOffset),
+      Offset<KMLRegion> REGIONOffset = default(Offset<KMLRegion>),
+      VectorOffset EXTENDED_DATAOffset = default(VectorOffset),
+      Offset<KMLLookAt> LOOK_ATOffset = default(Offset<KMLLookAt>),
+      Offset<KMLCamera> CAMERAOffset = default(Offset<KMLCamera>),
+      Offset<KMLTimeSpan> TIME_SPANOffset = default(Offset<KMLTimeSpan>),
+      Offset<KMLTimeStamp> TIME_STAMPOffset = default(Offset<KMLTimeStamp>)) {
+    builder.StartTable(20);
+    KMLFolder.AddTIME_STAMP(builder, TIME_STAMPOffset);
+    KMLFolder.AddTIME_SPAN(builder, TIME_SPANOffset);
+    KMLFolder.AddCAMERA(builder, CAMERAOffset);
+    KMLFolder.AddLOOK_AT(builder, LOOK_ATOffset);
+    KMLFolder.AddEXTENDED_DATA(builder, EXTENDED_DATAOffset);
+    KMLFolder.AddREGION(builder, REGIONOffset);
+    KMLFolder.AddSTYLE_URL(builder, STYLE_URLOffset);
+    KMLFolder.AddTOURS(builder, TOURSOffset);
+    KMLFolder.AddPHOTO_OVERLAYS(builder, PHOTO_OVERLAYSOffset);
+    KMLFolder.AddSCREEN_OVERLAYS(builder, SCREEN_OVERLAYSOffset);
+    KMLFolder.AddSTYLE_MAPS(builder, STYLE_MAPSOffset);
+    KMLFolder.AddSTYLES(builder, STYLESOffset);
     KMLFolder.AddGROUND_OVERLAYS(builder, GROUND_OVERLAYSOffset);
     KMLFolder.AddNETWORK_LINKS(builder, NETWORK_LINKSOffset);
     KMLFolder.AddFOLDERS(builder, FOLDERSOffset);
@@ -71,7 +131,7 @@ public struct KMLFolder : IFlatbufferObject
     return KMLFolder.EndKMLFolder(builder);
   }
 
-  public static void StartKMLFolder(FlatBufferBuilder builder) { builder.StartTable(8); }
+  public static void StartKMLFolder(FlatBufferBuilder builder) { builder.StartTable(20); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(0, NAMEOffset.Value, 0); }
   public static void AddDESCRIPTION(FlatBufferBuilder builder, StringOffset DESCRIPTIONOffset) { builder.AddOffset(1, DESCRIPTIONOffset.Value, 0); }
   public static void AddVISIBILITY(FlatBufferBuilder builder, bool VISIBILITY) { builder.AddBool(2, VISIBILITY, false); }
@@ -100,6 +160,48 @@ public struct KMLFolder : IFlatbufferObject
   public static VectorOffset CreateGROUND_OVERLAYSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<KMLGroundOverlay>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateGROUND_OVERLAYSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<KMLGroundOverlay>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartGROUND_OVERLAYSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddSTYLES(FlatBufferBuilder builder, VectorOffset STYLESOffset) { builder.AddOffset(8, STYLESOffset.Value, 0); }
+  public static VectorOffset CreateSTYLESVector(FlatBufferBuilder builder, Offset<KMLStyle>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateSTYLESVectorBlock(FlatBufferBuilder builder, Offset<KMLStyle>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSTYLESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<KMLStyle>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSTYLESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<KMLStyle>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSTYLESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddSTYLE_MAPS(FlatBufferBuilder builder, VectorOffset STYLE_MAPSOffset) { builder.AddOffset(9, STYLE_MAPSOffset.Value, 0); }
+  public static VectorOffset CreateSTYLE_MAPSVector(FlatBufferBuilder builder, Offset<KMLStyleMap>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateSTYLE_MAPSVectorBlock(FlatBufferBuilder builder, Offset<KMLStyleMap>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSTYLE_MAPSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<KMLStyleMap>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSTYLE_MAPSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<KMLStyleMap>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSTYLE_MAPSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddSCREEN_OVERLAYS(FlatBufferBuilder builder, VectorOffset SCREEN_OVERLAYSOffset) { builder.AddOffset(10, SCREEN_OVERLAYSOffset.Value, 0); }
+  public static VectorOffset CreateSCREEN_OVERLAYSVector(FlatBufferBuilder builder, Offset<KMLScreenOverlay>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateSCREEN_OVERLAYSVectorBlock(FlatBufferBuilder builder, Offset<KMLScreenOverlay>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSCREEN_OVERLAYSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<KMLScreenOverlay>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSCREEN_OVERLAYSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<KMLScreenOverlay>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSCREEN_OVERLAYSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddPHOTO_OVERLAYS(FlatBufferBuilder builder, VectorOffset PHOTO_OVERLAYSOffset) { builder.AddOffset(11, PHOTO_OVERLAYSOffset.Value, 0); }
+  public static VectorOffset CreatePHOTO_OVERLAYSVector(FlatBufferBuilder builder, Offset<KMLPhotoOverlay>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreatePHOTO_OVERLAYSVectorBlock(FlatBufferBuilder builder, Offset<KMLPhotoOverlay>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreatePHOTO_OVERLAYSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<KMLPhotoOverlay>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreatePHOTO_OVERLAYSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<KMLPhotoOverlay>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartPHOTO_OVERLAYSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddTOURS(FlatBufferBuilder builder, VectorOffset TOURSOffset) { builder.AddOffset(12, TOURSOffset.Value, 0); }
+  public static VectorOffset CreateTOURSVector(FlatBufferBuilder builder, Offset<KMLTour>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateTOURSVectorBlock(FlatBufferBuilder builder, Offset<KMLTour>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTOURSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<KMLTour>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTOURSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<KMLTour>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartTOURSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddSTYLE_URL(FlatBufferBuilder builder, StringOffset STYLE_URLOffset) { builder.AddOffset(13, STYLE_URLOffset.Value, 0); }
+  public static void AddREGION(FlatBufferBuilder builder, Offset<KMLRegion> REGIONOffset) { builder.AddOffset(14, REGIONOffset.Value, 0); }
+  public static void AddEXTENDED_DATA(FlatBufferBuilder builder, VectorOffset EXTENDED_DATAOffset) { builder.AddOffset(15, EXTENDED_DATAOffset.Value, 0); }
+  public static VectorOffset CreateEXTENDED_DATAVector(FlatBufferBuilder builder, Offset<KMLData>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateEXTENDED_DATAVectorBlock(FlatBufferBuilder builder, Offset<KMLData>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateEXTENDED_DATAVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<KMLData>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateEXTENDED_DATAVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<KMLData>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartEXTENDED_DATAVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddLOOK_AT(FlatBufferBuilder builder, Offset<KMLLookAt> LOOK_ATOffset) { builder.AddOffset(16, LOOK_ATOffset.Value, 0); }
+  public static void AddCAMERA(FlatBufferBuilder builder, Offset<KMLCamera> CAMERAOffset) { builder.AddOffset(17, CAMERAOffset.Value, 0); }
+  public static void AddTIME_SPAN(FlatBufferBuilder builder, Offset<KMLTimeSpan> TIME_SPANOffset) { builder.AddOffset(18, TIME_SPANOffset.Value, 0); }
+  public static void AddTIME_STAMP(FlatBufferBuilder builder, Offset<KMLTimeStamp> TIME_STAMPOffset) { builder.AddOffset(19, TIME_STAMPOffset.Value, 0); }
   public static Offset<KMLFolder> EndKMLFolder(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<KMLFolder>(o);
@@ -122,6 +224,24 @@ public struct KMLFolder : IFlatbufferObject
     for (var _j = 0; _j < this.NETWORK_LINKSLength; ++_j) {_o.NETWORK_LINKS.Add(this.NETWORK_LINKS(_j).HasValue ? this.NETWORK_LINKS(_j).Value.UnPack() : null);}
     _o.GROUND_OVERLAYS = new List<KMLGroundOverlayT>();
     for (var _j = 0; _j < this.GROUND_OVERLAYSLength; ++_j) {_o.GROUND_OVERLAYS.Add(this.GROUND_OVERLAYS(_j).HasValue ? this.GROUND_OVERLAYS(_j).Value.UnPack() : null);}
+    _o.STYLES = new List<KMLStyleT>();
+    for (var _j = 0; _j < this.STYLESLength; ++_j) {_o.STYLES.Add(this.STYLES(_j).HasValue ? this.STYLES(_j).Value.UnPack() : null);}
+    _o.STYLE_MAPS = new List<KMLStyleMapT>();
+    for (var _j = 0; _j < this.STYLE_MAPSLength; ++_j) {_o.STYLE_MAPS.Add(this.STYLE_MAPS(_j).HasValue ? this.STYLE_MAPS(_j).Value.UnPack() : null);}
+    _o.SCREEN_OVERLAYS = new List<KMLScreenOverlayT>();
+    for (var _j = 0; _j < this.SCREEN_OVERLAYSLength; ++_j) {_o.SCREEN_OVERLAYS.Add(this.SCREEN_OVERLAYS(_j).HasValue ? this.SCREEN_OVERLAYS(_j).Value.UnPack() : null);}
+    _o.PHOTO_OVERLAYS = new List<KMLPhotoOverlayT>();
+    for (var _j = 0; _j < this.PHOTO_OVERLAYSLength; ++_j) {_o.PHOTO_OVERLAYS.Add(this.PHOTO_OVERLAYS(_j).HasValue ? this.PHOTO_OVERLAYS(_j).Value.UnPack() : null);}
+    _o.TOURS = new List<KMLTourT>();
+    for (var _j = 0; _j < this.TOURSLength; ++_j) {_o.TOURS.Add(this.TOURS(_j).HasValue ? this.TOURS(_j).Value.UnPack() : null);}
+    _o.STYLE_URL = this.STYLE_URL;
+    _o.REGION = this.REGION.HasValue ? this.REGION.Value.UnPack() : null;
+    _o.EXTENDED_DATA = new List<KMLDataT>();
+    for (var _j = 0; _j < this.EXTENDED_DATALength; ++_j) {_o.EXTENDED_DATA.Add(this.EXTENDED_DATA(_j).HasValue ? this.EXTENDED_DATA(_j).Value.UnPack() : null);}
+    _o.LOOK_AT = this.LOOK_AT.HasValue ? this.LOOK_AT.Value.UnPack() : null;
+    _o.CAMERA = this.CAMERA.HasValue ? this.CAMERA.Value.UnPack() : null;
+    _o.TIME_SPAN = this.TIME_SPAN.HasValue ? this.TIME_SPAN.Value.UnPack() : null;
+    _o.TIME_STAMP = this.TIME_STAMP.HasValue ? this.TIME_STAMP.Value.UnPack() : null;
   }
   public static Offset<KMLFolder> Pack(FlatBufferBuilder builder, KMLFolderT _o) {
     if (_o == null) return default(Offset<KMLFolder>);
@@ -151,6 +271,48 @@ public struct KMLFolder : IFlatbufferObject
       for (var _j = 0; _j < __GROUND_OVERLAYS.Length; ++_j) { __GROUND_OVERLAYS[_j] = KMLGroundOverlay.Pack(builder, _o.GROUND_OVERLAYS[_j]); }
       _GROUND_OVERLAYS = CreateGROUND_OVERLAYSVector(builder, __GROUND_OVERLAYS);
     }
+    var _STYLES = default(VectorOffset);
+    if (_o.STYLES != null) {
+      var __STYLES = new Offset<KMLStyle>[_o.STYLES.Count];
+      for (var _j = 0; _j < __STYLES.Length; ++_j) { __STYLES[_j] = KMLStyle.Pack(builder, _o.STYLES[_j]); }
+      _STYLES = CreateSTYLESVector(builder, __STYLES);
+    }
+    var _STYLE_MAPS = default(VectorOffset);
+    if (_o.STYLE_MAPS != null) {
+      var __STYLE_MAPS = new Offset<KMLStyleMap>[_o.STYLE_MAPS.Count];
+      for (var _j = 0; _j < __STYLE_MAPS.Length; ++_j) { __STYLE_MAPS[_j] = KMLStyleMap.Pack(builder, _o.STYLE_MAPS[_j]); }
+      _STYLE_MAPS = CreateSTYLE_MAPSVector(builder, __STYLE_MAPS);
+    }
+    var _SCREEN_OVERLAYS = default(VectorOffset);
+    if (_o.SCREEN_OVERLAYS != null) {
+      var __SCREEN_OVERLAYS = new Offset<KMLScreenOverlay>[_o.SCREEN_OVERLAYS.Count];
+      for (var _j = 0; _j < __SCREEN_OVERLAYS.Length; ++_j) { __SCREEN_OVERLAYS[_j] = KMLScreenOverlay.Pack(builder, _o.SCREEN_OVERLAYS[_j]); }
+      _SCREEN_OVERLAYS = CreateSCREEN_OVERLAYSVector(builder, __SCREEN_OVERLAYS);
+    }
+    var _PHOTO_OVERLAYS = default(VectorOffset);
+    if (_o.PHOTO_OVERLAYS != null) {
+      var __PHOTO_OVERLAYS = new Offset<KMLPhotoOverlay>[_o.PHOTO_OVERLAYS.Count];
+      for (var _j = 0; _j < __PHOTO_OVERLAYS.Length; ++_j) { __PHOTO_OVERLAYS[_j] = KMLPhotoOverlay.Pack(builder, _o.PHOTO_OVERLAYS[_j]); }
+      _PHOTO_OVERLAYS = CreatePHOTO_OVERLAYSVector(builder, __PHOTO_OVERLAYS);
+    }
+    var _TOURS = default(VectorOffset);
+    if (_o.TOURS != null) {
+      var __TOURS = new Offset<KMLTour>[_o.TOURS.Count];
+      for (var _j = 0; _j < __TOURS.Length; ++_j) { __TOURS[_j] = KMLTour.Pack(builder, _o.TOURS[_j]); }
+      _TOURS = CreateTOURSVector(builder, __TOURS);
+    }
+    var _STYLE_URL = _o.STYLE_URL == null ? default(StringOffset) : builder.CreateString(_o.STYLE_URL);
+    var _REGION = _o.REGION == null ? default(Offset<KMLRegion>) : KMLRegion.Pack(builder, _o.REGION);
+    var _EXTENDED_DATA = default(VectorOffset);
+    if (_o.EXTENDED_DATA != null) {
+      var __EXTENDED_DATA = new Offset<KMLData>[_o.EXTENDED_DATA.Count];
+      for (var _j = 0; _j < __EXTENDED_DATA.Length; ++_j) { __EXTENDED_DATA[_j] = KMLData.Pack(builder, _o.EXTENDED_DATA[_j]); }
+      _EXTENDED_DATA = CreateEXTENDED_DATAVector(builder, __EXTENDED_DATA);
+    }
+    var _LOOK_AT = _o.LOOK_AT == null ? default(Offset<KMLLookAt>) : KMLLookAt.Pack(builder, _o.LOOK_AT);
+    var _CAMERA = _o.CAMERA == null ? default(Offset<KMLCamera>) : KMLCamera.Pack(builder, _o.CAMERA);
+    var _TIME_SPAN = _o.TIME_SPAN == null ? default(Offset<KMLTimeSpan>) : KMLTimeSpan.Pack(builder, _o.TIME_SPAN);
+    var _TIME_STAMP = _o.TIME_STAMP == null ? default(Offset<KMLTimeStamp>) : KMLTimeStamp.Pack(builder, _o.TIME_STAMP);
     return CreateKMLFolder(
       builder,
       _NAME,
@@ -160,7 +322,19 @@ public struct KMLFolder : IFlatbufferObject
       _PLACEMARKS,
       _FOLDERS,
       _NETWORK_LINKS,
-      _GROUND_OVERLAYS);
+      _GROUND_OVERLAYS,
+      _STYLES,
+      _STYLE_MAPS,
+      _SCREEN_OVERLAYS,
+      _PHOTO_OVERLAYS,
+      _TOURS,
+      _STYLE_URL,
+      _REGION,
+      _EXTENDED_DATA,
+      _LOOK_AT,
+      _CAMERA,
+      _TIME_SPAN,
+      _TIME_STAMP);
   }
 }
 
@@ -174,6 +348,18 @@ public class KMLFolderT
   public List<KMLFolderT> FOLDERS { get; set; }
   public List<KMLNetworkLinkT> NETWORK_LINKS { get; set; }
   public List<KMLGroundOverlayT> GROUND_OVERLAYS { get; set; }
+  public List<KMLStyleT> STYLES { get; set; }
+  public List<KMLStyleMapT> STYLE_MAPS { get; set; }
+  public List<KMLScreenOverlayT> SCREEN_OVERLAYS { get; set; }
+  public List<KMLPhotoOverlayT> PHOTO_OVERLAYS { get; set; }
+  public List<KMLTourT> TOURS { get; set; }
+  public string STYLE_URL { get; set; }
+  public KMLRegionT REGION { get; set; }
+  public List<KMLDataT> EXTENDED_DATA { get; set; }
+  public KMLLookAtT LOOK_AT { get; set; }
+  public KMLCameraT CAMERA { get; set; }
+  public KMLTimeSpanT TIME_SPAN { get; set; }
+  public KMLTimeStampT TIME_STAMP { get; set; }
 
   public KMLFolderT() {
     this.NAME = null;
@@ -184,6 +370,18 @@ public class KMLFolderT
     this.FOLDERS = null;
     this.NETWORK_LINKS = null;
     this.GROUND_OVERLAYS = null;
+    this.STYLES = null;
+    this.STYLE_MAPS = null;
+    this.SCREEN_OVERLAYS = null;
+    this.PHOTO_OVERLAYS = null;
+    this.TOURS = null;
+    this.STYLE_URL = null;
+    this.REGION = null;
+    this.EXTENDED_DATA = null;
+    this.LOOK_AT = null;
+    this.CAMERA = null;
+    this.TIME_SPAN = null;
+    this.TIME_STAMP = null;
   }
 }
 
@@ -201,6 +399,18 @@ static public class KMLFolderVerify
       && verifier.VerifyVectorOfTables(tablePos, 14 /*FOLDERS*/, KMLFolderVerify.Verify, false)
       && verifier.VerifyVectorOfTables(tablePos, 16 /*NETWORK_LINKS*/, KMLNetworkLinkVerify.Verify, false)
       && verifier.VerifyVectorOfTables(tablePos, 18 /*GROUND_OVERLAYS*/, KMLGroundOverlayVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 20 /*STYLES*/, KMLStyleVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 22 /*STYLE_MAPS*/, KMLStyleMapVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 24 /*SCREEN_OVERLAYS*/, KMLScreenOverlayVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 26 /*PHOTO_OVERLAYS*/, KMLPhotoOverlayVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 28 /*TOURS*/, KMLTourVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 30 /*STYLE_URL*/, false)
+      && verifier.VerifyTable(tablePos, 32 /*REGION*/, KMLRegionVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 34 /*EXTENDED_DATA*/, KMLDataVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 36 /*LOOK_AT*/, KMLLookAtVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 38 /*CAMERA*/, KMLCameraVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 40 /*TIME_SPAN*/, KMLTimeSpanVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 42 /*TIME_STAMP*/, KMLTimeStampVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -5,6 +5,7 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { CZMColor, CZMColorT } from './CZMColor.js';
+import { CZMPolylineMaterial, CZMPolylineMaterialT } from './CZMPolylineMaterial.js';
 
 
 /**
@@ -61,7 +62,7 @@ WIDTH():number {
 }
 
 /**
- * Path color
+ * Path color (legacy solid color)
  */
 COLOR(obj?:CZMColor):CZMColor|null {
   const offset = this.bb!.__offset(this.bb_pos, 12);
@@ -76,8 +77,16 @@ RESOLUTION():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Full polyline material
+ */
+MATERIAL(obj?:CZMPolylineMaterial):CZMPolylineMaterial|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? (obj || new CZMPolylineMaterial()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startCZMPath(builder:flatbuffers.Builder) {
-  builder.startObject(6);
+  builder.startObject(7);
 }
 
 static addShow(builder:flatbuffers.Builder, SHOW:boolean) {
@@ -104,6 +113,10 @@ static addResolution(builder:flatbuffers.Builder, RESOLUTION:number) {
   builder.addFieldFloat64(5, RESOLUTION, 0.0);
 }
 
+static addMaterial(builder:flatbuffers.Builder, MATERIALOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, MATERIALOffset, 0);
+}
+
 static endCZMPath(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -117,7 +130,8 @@ unpack(): CZMPathT {
     this.TRAIL_TIME(),
     this.WIDTH(),
     (this.COLOR() !== null ? this.COLOR()!.unpack() : null),
-    this.RESOLUTION()
+    this.RESOLUTION(),
+    (this.MATERIAL() !== null ? this.MATERIAL()!.unpack() : null)
   );
 }
 
@@ -129,6 +143,7 @@ unpackTo(_o: CZMPathT): void {
   _o.WIDTH = this.WIDTH();
   _o.COLOR = (this.COLOR() !== null ? this.COLOR()!.unpack() : null);
   _o.RESOLUTION = this.RESOLUTION();
+  _o.MATERIAL = (this.MATERIAL() !== null ? this.MATERIAL()!.unpack() : null);
 }
 }
 
@@ -139,12 +154,14 @@ constructor(
   public TRAIL_TIME: number = 0.0,
   public WIDTH: number = 0.0,
   public COLOR: CZMColorT|null = null,
-  public RESOLUTION: number = 0.0
+  public RESOLUTION: number = 0.0,
+  public MATERIAL: CZMPolylineMaterialT|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const COLOR = (this.COLOR !== null ? this.COLOR!.pack(builder) : 0);
+  const MATERIAL = (this.MATERIAL !== null ? this.MATERIAL!.pack(builder) : 0);
 
   CZMPath.startCZMPath(builder);
   CZMPath.addShow(builder, this.SHOW);
@@ -153,6 +170,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   CZMPath.addWidth(builder, this.WIDTH);
   CZMPath.addColor(builder, COLOR);
   CZMPath.addResolution(builder, this.RESOLUTION);
+  CZMPath.addMaterial(builder, MATERIAL);
 
   return CZMPath.endCZMPath(builder);
 }

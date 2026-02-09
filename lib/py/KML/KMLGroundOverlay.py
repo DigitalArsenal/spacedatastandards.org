@@ -53,10 +53,18 @@ class KMLGroundOverlay(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # Whether open in tree view
+    # KMLGroundOverlay
+    def OPEN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
     # Icon/image URL
     # KMLGroundOverlay
     def ICON_HREF(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -64,7 +72,7 @@ class KMLGroundOverlay(object):
     # Color in aabbggrr hex format
     # KMLGroundOverlay
     def COLOR(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -72,7 +80,7 @@ class KMLGroundOverlay(object):
     # North latitude of bounding box
     # KMLGroundOverlay
     def NORTH(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -80,7 +88,7 @@ class KMLGroundOverlay(object):
     # South latitude of bounding box
     # KMLGroundOverlay
     def SOUTH(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -88,7 +96,7 @@ class KMLGroundOverlay(object):
     # East longitude of bounding box
     # KMLGroundOverlay
     def EAST(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -96,7 +104,7 @@ class KMLGroundOverlay(object):
     # West longitude of bounding box
     # KMLGroundOverlay
     def WEST(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -104,7 +112,7 @@ class KMLGroundOverlay(object):
     # Rotation in degrees
     # KMLGroundOverlay
     def ROTATION(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -112,7 +120,7 @@ class KMLGroundOverlay(object):
     # Altitude in meters
     # KMLGroundOverlay
     def ALTITUDE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -120,13 +128,53 @@ class KMLGroundOverlay(object):
     # Altitude mode
     # KMLGroundOverlay
     def ALTITUDE_MODE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
+    # Draw order
+    # KMLGroundOverlay
+    def DRAW_ORDER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # LatLonQuad (non-rectangular overlay)
+    # KMLGroundOverlay
+    def LAT_LON_QUAD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLLatLonQuad import KMLLatLonQuad
+            obj = KMLLatLonQuad()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Style URL reference
+    # KMLGroundOverlay
+    def STYLE_URL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Region
+    # KMLGroundOverlay
+    def REGION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLRegion import KMLRegion
+            obj = KMLRegion()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def KMLGroundOverlayStart(builder):
-    builder.StartObject(12)
+    builder.StartObject(17)
 
 def Start(builder):
     KMLGroundOverlayStart(builder)
@@ -149,59 +197,89 @@ def KMLGroundOverlayAddVISIBILITY(builder, VISIBILITY):
 def AddVISIBILITY(builder, VISIBILITY):
     KMLGroundOverlayAddVISIBILITY(builder, VISIBILITY)
 
+def KMLGroundOverlayAddOPEN(builder, OPEN):
+    builder.PrependBoolSlot(3, OPEN, 0)
+
+def AddOPEN(builder, OPEN):
+    KMLGroundOverlayAddOPEN(builder, OPEN)
+
 def KMLGroundOverlayAddICON_HREF(builder, ICON_HREF):
-    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ICON_HREF), 0)
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ICON_HREF), 0)
 
 def AddICON_HREF(builder, ICON_HREF):
     KMLGroundOverlayAddICON_HREF(builder, ICON_HREF)
 
 def KMLGroundOverlayAddCOLOR(builder, COLOR):
-    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(COLOR), 0)
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(COLOR), 0)
 
 def AddCOLOR(builder, COLOR):
     KMLGroundOverlayAddCOLOR(builder, COLOR)
 
 def KMLGroundOverlayAddNORTH(builder, NORTH):
-    builder.PrependFloat64Slot(5, NORTH, 0.0)
+    builder.PrependFloat64Slot(6, NORTH, 0.0)
 
 def AddNORTH(builder, NORTH):
     KMLGroundOverlayAddNORTH(builder, NORTH)
 
 def KMLGroundOverlayAddSOUTH(builder, SOUTH):
-    builder.PrependFloat64Slot(6, SOUTH, 0.0)
+    builder.PrependFloat64Slot(7, SOUTH, 0.0)
 
 def AddSOUTH(builder, SOUTH):
     KMLGroundOverlayAddSOUTH(builder, SOUTH)
 
 def KMLGroundOverlayAddEAST(builder, EAST):
-    builder.PrependFloat64Slot(7, EAST, 0.0)
+    builder.PrependFloat64Slot(8, EAST, 0.0)
 
 def AddEAST(builder, EAST):
     KMLGroundOverlayAddEAST(builder, EAST)
 
 def KMLGroundOverlayAddWEST(builder, WEST):
-    builder.PrependFloat64Slot(8, WEST, 0.0)
+    builder.PrependFloat64Slot(9, WEST, 0.0)
 
 def AddWEST(builder, WEST):
     KMLGroundOverlayAddWEST(builder, WEST)
 
 def KMLGroundOverlayAddROTATION(builder, ROTATION):
-    builder.PrependFloat64Slot(9, ROTATION, 0.0)
+    builder.PrependFloat64Slot(10, ROTATION, 0.0)
 
 def AddROTATION(builder, ROTATION):
     KMLGroundOverlayAddROTATION(builder, ROTATION)
 
 def KMLGroundOverlayAddALTITUDE(builder, ALTITUDE):
-    builder.PrependFloat64Slot(10, ALTITUDE, 0.0)
+    builder.PrependFloat64Slot(11, ALTITUDE, 0.0)
 
 def AddALTITUDE(builder, ALTITUDE):
     KMLGroundOverlayAddALTITUDE(builder, ALTITUDE)
 
 def KMLGroundOverlayAddALTITUDE_MODE(builder, ALTITUDE_MODE):
-    builder.PrependInt8Slot(11, ALTITUDE_MODE, 0)
+    builder.PrependInt8Slot(12, ALTITUDE_MODE, 0)
 
 def AddALTITUDE_MODE(builder, ALTITUDE_MODE):
     KMLGroundOverlayAddALTITUDE_MODE(builder, ALTITUDE_MODE)
+
+def KMLGroundOverlayAddDRAW_ORDER(builder, DRAW_ORDER):
+    builder.PrependInt32Slot(13, DRAW_ORDER, 0)
+
+def AddDRAW_ORDER(builder, DRAW_ORDER):
+    KMLGroundOverlayAddDRAW_ORDER(builder, DRAW_ORDER)
+
+def KMLGroundOverlayAddLAT_LON_QUAD(builder, LAT_LON_QUAD):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(LAT_LON_QUAD), 0)
+
+def AddLAT_LON_QUAD(builder, LAT_LON_QUAD):
+    KMLGroundOverlayAddLAT_LON_QUAD(builder, LAT_LON_QUAD)
+
+def KMLGroundOverlayAddSTYLE_URL(builder, STYLE_URL):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(STYLE_URL), 0)
+
+def AddSTYLE_URL(builder, STYLE_URL):
+    KMLGroundOverlayAddSTYLE_URL(builder, STYLE_URL)
+
+def KMLGroundOverlayAddREGION(builder, REGION):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(REGION), 0)
+
+def AddREGION(builder, REGION):
+    KMLGroundOverlayAddREGION(builder, REGION)
 
 def KMLGroundOverlayEnd(builder):
     return builder.EndObject()
@@ -209,6 +287,12 @@ def KMLGroundOverlayEnd(builder):
 def End(builder):
     return KMLGroundOverlayEnd(builder)
 
+import KMLLatLonQuad
+import KMLRegion
+try:
+    from typing import Optional
+except:
+    pass
 
 class KMLGroundOverlayT(object):
 
@@ -217,6 +301,7 @@ class KMLGroundOverlayT(object):
         self.NAME = None  # type: str
         self.DESCRIPTION = None  # type: str
         self.VISIBILITY = False  # type: bool
+        self.OPEN = False  # type: bool
         self.ICON_HREF = None  # type: str
         self.COLOR = None  # type: str
         self.NORTH = 0.0  # type: float
@@ -226,6 +311,10 @@ class KMLGroundOverlayT(object):
         self.ROTATION = 0.0  # type: float
         self.ALTITUDE = 0.0  # type: float
         self.ALTITUDE_MODE = 0  # type: int
+        self.DRAW_ORDER = 0  # type: int
+        self.LAT_LON_QUAD = None  # type: Optional[KMLLatLonQuad.KMLLatLonQuadT]
+        self.STYLE_URL = None  # type: str
+        self.REGION = None  # type: Optional[KMLRegion.KMLRegionT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -251,6 +340,7 @@ class KMLGroundOverlayT(object):
         self.NAME = kmlgroundOverlay.NAME()
         self.DESCRIPTION = kmlgroundOverlay.DESCRIPTION()
         self.VISIBILITY = kmlgroundOverlay.VISIBILITY()
+        self.OPEN = kmlgroundOverlay.OPEN()
         self.ICON_HREF = kmlgroundOverlay.ICON_HREF()
         self.COLOR = kmlgroundOverlay.COLOR()
         self.NORTH = kmlgroundOverlay.NORTH()
@@ -260,6 +350,12 @@ class KMLGroundOverlayT(object):
         self.ROTATION = kmlgroundOverlay.ROTATION()
         self.ALTITUDE = kmlgroundOverlay.ALTITUDE()
         self.ALTITUDE_MODE = kmlgroundOverlay.ALTITUDE_MODE()
+        self.DRAW_ORDER = kmlgroundOverlay.DRAW_ORDER()
+        if kmlgroundOverlay.LAT_LON_QUAD() is not None:
+            self.LAT_LON_QUAD = KMLLatLonQuad.KMLLatLonQuadT.InitFromObj(kmlgroundOverlay.LAT_LON_QUAD())
+        self.STYLE_URL = kmlgroundOverlay.STYLE_URL()
+        if kmlgroundOverlay.REGION() is not None:
+            self.REGION = KMLRegion.KMLRegionT.InitFromObj(kmlgroundOverlay.REGION())
 
     # KMLGroundOverlayT
     def Pack(self, builder):
@@ -271,12 +367,19 @@ class KMLGroundOverlayT(object):
             ICON_HREF = builder.CreateString(self.ICON_HREF)
         if self.COLOR is not None:
             COLOR = builder.CreateString(self.COLOR)
+        if self.LAT_LON_QUAD is not None:
+            LAT_LON_QUAD = self.LAT_LON_QUAD.Pack(builder)
+        if self.STYLE_URL is not None:
+            STYLE_URL = builder.CreateString(self.STYLE_URL)
+        if self.REGION is not None:
+            REGION = self.REGION.Pack(builder)
         KMLGroundOverlayStart(builder)
         if self.NAME is not None:
             KMLGroundOverlayAddNAME(builder, NAME)
         if self.DESCRIPTION is not None:
             KMLGroundOverlayAddDESCRIPTION(builder, DESCRIPTION)
         KMLGroundOverlayAddVISIBILITY(builder, self.VISIBILITY)
+        KMLGroundOverlayAddOPEN(builder, self.OPEN)
         if self.ICON_HREF is not None:
             KMLGroundOverlayAddICON_HREF(builder, ICON_HREF)
         if self.COLOR is not None:
@@ -288,5 +391,12 @@ class KMLGroundOverlayT(object):
         KMLGroundOverlayAddROTATION(builder, self.ROTATION)
         KMLGroundOverlayAddALTITUDE(builder, self.ALTITUDE)
         KMLGroundOverlayAddALTITUDE_MODE(builder, self.ALTITUDE_MODE)
+        KMLGroundOverlayAddDRAW_ORDER(builder, self.DRAW_ORDER)
+        if self.LAT_LON_QUAD is not None:
+            KMLGroundOverlayAddLAT_LON_QUAD(builder, LAT_LON_QUAD)
+        if self.STYLE_URL is not None:
+            KMLGroundOverlayAddSTYLE_URL(builder, STYLE_URL)
+        if self.REGION is not None:
+            KMLGroundOverlayAddREGION(builder, REGION)
         kmlgroundOverlay = KMLGroundOverlayEnd(builder)
         return kmlgroundOverlay

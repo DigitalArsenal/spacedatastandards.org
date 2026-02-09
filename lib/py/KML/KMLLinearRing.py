@@ -55,8 +55,32 @@ class KMLLinearRing(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         return o == 0
 
+    # Whether to extrude to ground
+    # KMLLinearRing
+    def EXTRUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Whether to tessellate
+    # KMLLinearRing
+    def TESSELLATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Altitude mode
+    # KMLLinearRing
+    def ALTITUDE_MODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
 def KMLLinearRingStart(builder):
-    builder.StartObject(1)
+    builder.StartObject(4)
 
 def Start(builder):
     KMLLinearRingStart(builder)
@@ -72,6 +96,24 @@ def KMLLinearRingStartCOORDINATESVector(builder, numElems):
 
 def StartCOORDINATESVector(builder, numElems):
     return KMLLinearRingStartCOORDINATESVector(builder, numElems)
+
+def KMLLinearRingAddEXTRUDE(builder, EXTRUDE):
+    builder.PrependBoolSlot(1, EXTRUDE, 0)
+
+def AddEXTRUDE(builder, EXTRUDE):
+    KMLLinearRingAddEXTRUDE(builder, EXTRUDE)
+
+def KMLLinearRingAddTESSELLATE(builder, TESSELLATE):
+    builder.PrependBoolSlot(2, TESSELLATE, 0)
+
+def AddTESSELLATE(builder, TESSELLATE):
+    KMLLinearRingAddTESSELLATE(builder, TESSELLATE)
+
+def KMLLinearRingAddALTITUDE_MODE(builder, ALTITUDE_MODE):
+    builder.PrependInt8Slot(3, ALTITUDE_MODE, 0)
+
+def AddALTITUDE_MODE(builder, ALTITUDE_MODE):
+    KMLLinearRingAddALTITUDE_MODE(builder, ALTITUDE_MODE)
 
 def KMLLinearRingEnd(builder):
     return builder.EndObject()
@@ -90,6 +132,9 @@ class KMLLinearRingT(object):
     # KMLLinearRingT
     def __init__(self):
         self.COORDINATES = None  # type: List[KMLCoordinate.KMLCoordinateT]
+        self.EXTRUDE = False  # type: bool
+        self.TESSELLATE = False  # type: bool
+        self.ALTITUDE_MODE = 0  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -120,6 +165,9 @@ class KMLLinearRingT(object):
                 else:
                     kMLCoordinate_ = KMLCoordinate.KMLCoordinateT.InitFromObj(kmllinearRing.COORDINATES(i))
                     self.COORDINATES.append(kMLCoordinate_)
+        self.EXTRUDE = kmllinearRing.EXTRUDE()
+        self.TESSELLATE = kmllinearRing.TESSELLATE()
+        self.ALTITUDE_MODE = kmllinearRing.ALTITUDE_MODE()
 
     # KMLLinearRingT
     def Pack(self, builder):
@@ -134,5 +182,8 @@ class KMLLinearRingT(object):
         KMLLinearRingStart(builder)
         if self.COORDINATES is not None:
             KMLLinearRingAddCOORDINATES(builder, COORDINATES)
+        KMLLinearRingAddEXTRUDE(builder, self.EXTRUDE)
+        KMLLinearRingAddTESSELLATE(builder, self.TESSELLATE)
+        KMLLinearRingAddALTITUDE_MODE(builder, self.ALTITUDE_MODE)
         kmllinearRing = KMLLinearRingEnd(builder)
         return kmllinearRing

@@ -77,6 +77,14 @@ class GJNBoundingBox : Table() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * True if the bbox includes altitude (6 values vs 4)
+     */
+    val HAS_ALTITUDE : Boolean
+        get() {
+            val o = __offset(16)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsGJNBoundingBox(_bb: ByteBuffer): GJNBoundingBox = getRootAsGJNBoundingBox(_bb, GJNBoundingBox())
@@ -84,23 +92,25 @@ class GJNBoundingBox : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createGJNBoundingBox(builder: FlatBufferBuilder, WEST: Double, SOUTH: Double, EAST: Double, NORTH: Double, MIN_ALTITUDE: Double, MAX_ALTITUDE: Double) : Int {
-            builder.startTable(6)
+        fun createGJNBoundingBox(builder: FlatBufferBuilder, WEST: Double, SOUTH: Double, EAST: Double, NORTH: Double, MIN_ALTITUDE: Double, MAX_ALTITUDE: Double, HAS_ALTITUDE: Boolean) : Int {
+            builder.startTable(7)
             addMAX_ALTITUDE(builder, MAX_ALTITUDE)
             addMIN_ALTITUDE(builder, MIN_ALTITUDE)
             addNORTH(builder, NORTH)
             addEAST(builder, EAST)
             addSOUTH(builder, SOUTH)
             addWEST(builder, WEST)
+            addHAS_ALTITUDE(builder, HAS_ALTITUDE)
             return endGJNBoundingBox(builder)
         }
-        fun startGJNBoundingBox(builder: FlatBufferBuilder) = builder.startTable(6)
+        fun startGJNBoundingBox(builder: FlatBufferBuilder) = builder.startTable(7)
         fun addWEST(builder: FlatBufferBuilder, WEST: Double) = builder.addDouble(0, WEST, 0.0)
         fun addSOUTH(builder: FlatBufferBuilder, SOUTH: Double) = builder.addDouble(1, SOUTH, 0.0)
         fun addEAST(builder: FlatBufferBuilder, EAST: Double) = builder.addDouble(2, EAST, 0.0)
         fun addNORTH(builder: FlatBufferBuilder, NORTH: Double) = builder.addDouble(3, NORTH, 0.0)
         fun addMIN_ALTITUDE(builder: FlatBufferBuilder, MIN_ALTITUDE: Double) = builder.addDouble(4, MIN_ALTITUDE, 0.0)
         fun addMAX_ALTITUDE(builder: FlatBufferBuilder, MAX_ALTITUDE: Double) = builder.addDouble(5, MAX_ALTITUDE, 0.0)
+        fun addHAS_ALTITUDE(builder: FlatBufferBuilder, HAS_ALTITUDE: Boolean) = builder.addBoolean(6, HAS_ALTITUDE, false)
         fun endGJNBoundingBox(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

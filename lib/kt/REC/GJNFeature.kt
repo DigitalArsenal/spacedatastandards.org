@@ -30,7 +30,7 @@ class GJNFeature : Table() {
         return this
     }
     /**
-     * Feature identifier (optional)
+     * Feature identifier (optional, string form)
      */
     val ID : String?
         get() {
@@ -71,6 +71,50 @@ class GJNFeature : Table() {
         get() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Numeric feature identifier (use when ID_IS_NUMERIC is true)
+     */
+    val NUM_ID : Double
+        get() {
+            val o = __offset(10)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * True if the feature id is numeric rather than string
+     */
+    val ID_IS_NUMERIC : Boolean
+        get() {
+            val o = __offset(12)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * True if the feature has a geometry (false means geometry was JSON null)
+     */
+    val HAS_GEOMETRY : Boolean
+        get() {
+            val o = __offset(14)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * True if properties was JSON null (vs empty object)
+     */
+    val PROPERTIES_IS_NULL : Boolean
+        get() {
+            val o = __offset(16)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Bounding box (optional, per RFC 7946 Section 5)
+     */
+    val BBOX : GJNBoundingBox? get() = BBOX(GJNBoundingBox())
+    fun BBOX(obj: GJNBoundingBox) : GJNBoundingBox? {
+        val o = __offset(18)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsGJNFeature(_bb: ByteBuffer): GJNFeature = getRootAsGJNFeature(_bb, GJNFeature())
@@ -78,14 +122,19 @@ class GJNFeature : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createGJNFeature(builder: FlatBufferBuilder, IDOffset: Int, GEOMETRYOffset: Int, PROPERTIESOffset: Int) : Int {
-            builder.startTable(3)
+        fun createGJNFeature(builder: FlatBufferBuilder, IDOffset: Int, GEOMETRYOffset: Int, PROPERTIESOffset: Int, NUM_ID: Double, ID_IS_NUMERIC: Boolean, HAS_GEOMETRY: Boolean, PROPERTIES_IS_NULL: Boolean, BBOXOffset: Int) : Int {
+            builder.startTable(8)
+            addNUM_ID(builder, NUM_ID)
+            addBBOX(builder, BBOXOffset)
             addPROPERTIES(builder, PROPERTIESOffset)
             addGEOMETRY(builder, GEOMETRYOffset)
             addID(builder, IDOffset)
+            addPROPERTIES_IS_NULL(builder, PROPERTIES_IS_NULL)
+            addHAS_GEOMETRY(builder, HAS_GEOMETRY)
+            addID_IS_NUMERIC(builder, ID_IS_NUMERIC)
             return endGJNFeature(builder)
         }
-        fun startGJNFeature(builder: FlatBufferBuilder) = builder.startTable(3)
+        fun startGJNFeature(builder: FlatBufferBuilder) = builder.startTable(8)
         fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
         fun addGEOMETRY(builder: FlatBufferBuilder, GEOMETRY: Int) = builder.addOffset(1, GEOMETRY, 0)
         fun addPROPERTIES(builder: FlatBufferBuilder, PROPERTIES: Int) = builder.addOffset(2, PROPERTIES, 0)
@@ -97,6 +146,11 @@ class GJNFeature : Table() {
             return builder.endVector()
         }
         fun startPropertiesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addNUM_ID(builder: FlatBufferBuilder, NUM_ID: Double) = builder.addDouble(3, NUM_ID, 0.0)
+        fun addID_IS_NUMERIC(builder: FlatBufferBuilder, ID_IS_NUMERIC: Boolean) = builder.addBoolean(4, ID_IS_NUMERIC, false)
+        fun addHAS_GEOMETRY(builder: FlatBufferBuilder, HAS_GEOMETRY: Boolean) = builder.addBoolean(5, HAS_GEOMETRY, false)
+        fun addPROPERTIES_IS_NULL(builder: FlatBufferBuilder, PROPERTIES_IS_NULL: Boolean) = builder.addBoolean(6, PROPERTIES_IS_NULL, false)
+        fun addBBOX(builder: FlatBufferBuilder, BBOX: Int) = builder.addOffset(7, BBOX, 0)
         fun endGJNFeature(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

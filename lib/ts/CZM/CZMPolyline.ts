@@ -5,6 +5,7 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { CZMColor, CZMColorT } from './CZMColor.js';
+import { CZMPolylineMaterial, CZMPolylineMaterialT } from './CZMPolylineMaterial.js';
 
 
 /**
@@ -81,7 +82,7 @@ WIDTH():number {
 }
 
 /**
- * Line color (solid color material)
+ * Line color (solid color material, legacy)
  */
 COLOR(obj?:CZMColor):CZMColor|null {
   const offset = this.bb!.__offset(this.bb_pos, 12);
@@ -96,8 +97,70 @@ CLAMP_TO_GROUND():boolean {
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Arc type
+ */
+ARC_TYPE():string|null
+ARC_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ARC_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Granularity in radians
+ */
+GRANULARITY():number {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Full polyline material
+ */
+MATERIAL(obj?:CZMPolylineMaterial):CZMPolylineMaterial|null {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? (obj || new CZMPolylineMaterial()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Shadow mode
+ */
+SHADOWS():string|null
+SHADOWS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SHADOWS(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Depth fail material
+ */
+DEPTH_FAIL_MATERIAL(obj?:CZMPolylineMaterial):CZMPolylineMaterial|null {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? (obj || new CZMPolylineMaterial()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Classification type
+ */
+CLASSIFICATION_TYPE():string|null
+CLASSIFICATION_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CLASSIFICATION_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Z-index for ordering
+ */
+Z_INDEX():number {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+}
+
 static startCZMPolyline(builder:flatbuffers.Builder) {
-  builder.startObject(6);
+  builder.startObject(13);
 }
 
 static addShow(builder:flatbuffers.Builder, SHOW:boolean) {
@@ -158,6 +221,34 @@ static addClampToGround(builder:flatbuffers.Builder, CLAMP_TO_GROUND:boolean) {
   builder.addFieldInt8(5, +CLAMP_TO_GROUND, +false);
 }
 
+static addArcType(builder:flatbuffers.Builder, ARC_TYPEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, ARC_TYPEOffset, 0);
+}
+
+static addGranularity(builder:flatbuffers.Builder, GRANULARITY:number) {
+  builder.addFieldFloat64(7, GRANULARITY, 0.0);
+}
+
+static addMaterial(builder:flatbuffers.Builder, MATERIALOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(8, MATERIALOffset, 0);
+}
+
+static addShadows(builder:flatbuffers.Builder, SHADOWSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, SHADOWSOffset, 0);
+}
+
+static addDepthFailMaterial(builder:flatbuffers.Builder, DEPTH_FAIL_MATERIALOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(10, DEPTH_FAIL_MATERIALOffset, 0);
+}
+
+static addClassificationType(builder:flatbuffers.Builder, CLASSIFICATION_TYPEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, CLASSIFICATION_TYPEOffset, 0);
+}
+
+static addZIndex(builder:flatbuffers.Builder, Z_INDEX:number) {
+  builder.addFieldInt32(12, Z_INDEX, 0);
+}
+
 static endCZMPolyline(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -171,7 +262,14 @@ unpack(): CZMPolylineT {
     this.bb!.createScalarList<number>(this.POSITIONS_CARTESIAN.bind(this), this.positionsCartesianLength()),
     this.WIDTH(),
     (this.COLOR() !== null ? this.COLOR()!.unpack() : null),
-    this.CLAMP_TO_GROUND()
+    this.CLAMP_TO_GROUND(),
+    this.ARC_TYPE(),
+    this.GRANULARITY(),
+    (this.MATERIAL() !== null ? this.MATERIAL()!.unpack() : null),
+    this.SHADOWS(),
+    (this.DEPTH_FAIL_MATERIAL() !== null ? this.DEPTH_FAIL_MATERIAL()!.unpack() : null),
+    this.CLASSIFICATION_TYPE(),
+    this.Z_INDEX()
   );
 }
 
@@ -183,6 +281,13 @@ unpackTo(_o: CZMPolylineT): void {
   _o.WIDTH = this.WIDTH();
   _o.COLOR = (this.COLOR() !== null ? this.COLOR()!.unpack() : null);
   _o.CLAMP_TO_GROUND = this.CLAMP_TO_GROUND();
+  _o.ARC_TYPE = this.ARC_TYPE();
+  _o.GRANULARITY = this.GRANULARITY();
+  _o.MATERIAL = (this.MATERIAL() !== null ? this.MATERIAL()!.unpack() : null);
+  _o.SHADOWS = this.SHADOWS();
+  _o.DEPTH_FAIL_MATERIAL = (this.DEPTH_FAIL_MATERIAL() !== null ? this.DEPTH_FAIL_MATERIAL()!.unpack() : null);
+  _o.CLASSIFICATION_TYPE = this.CLASSIFICATION_TYPE();
+  _o.Z_INDEX = this.Z_INDEX();
 }
 }
 
@@ -193,7 +298,14 @@ constructor(
   public POSITIONS_CARTESIAN: (number)[] = [],
   public WIDTH: number = 0.0,
   public COLOR: CZMColorT|null = null,
-  public CLAMP_TO_GROUND: boolean = false
+  public CLAMP_TO_GROUND: boolean = false,
+  public ARC_TYPE: string|Uint8Array|null = null,
+  public GRANULARITY: number = 0.0,
+  public MATERIAL: CZMPolylineMaterialT|null = null,
+  public SHADOWS: string|Uint8Array|null = null,
+  public DEPTH_FAIL_MATERIAL: CZMPolylineMaterialT|null = null,
+  public CLASSIFICATION_TYPE: string|Uint8Array|null = null,
+  public Z_INDEX: number = 0
 ){}
 
 
@@ -201,6 +313,11 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const POSITIONS_CARTOGRAPHIC_DEGREES = CZMPolyline.createPositionsCartographicDegreesVector(builder, this.POSITIONS_CARTOGRAPHIC_DEGREES);
   const POSITIONS_CARTESIAN = CZMPolyline.createPositionsCartesianVector(builder, this.POSITIONS_CARTESIAN);
   const COLOR = (this.COLOR !== null ? this.COLOR!.pack(builder) : 0);
+  const ARC_TYPE = (this.ARC_TYPE !== null ? builder.createString(this.ARC_TYPE!) : 0);
+  const MATERIAL = (this.MATERIAL !== null ? this.MATERIAL!.pack(builder) : 0);
+  const SHADOWS = (this.SHADOWS !== null ? builder.createString(this.SHADOWS!) : 0);
+  const DEPTH_FAIL_MATERIAL = (this.DEPTH_FAIL_MATERIAL !== null ? this.DEPTH_FAIL_MATERIAL!.pack(builder) : 0);
+  const CLASSIFICATION_TYPE = (this.CLASSIFICATION_TYPE !== null ? builder.createString(this.CLASSIFICATION_TYPE!) : 0);
 
   CZMPolyline.startCZMPolyline(builder);
   CZMPolyline.addShow(builder, this.SHOW);
@@ -209,6 +326,13 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   CZMPolyline.addWidth(builder, this.WIDTH);
   CZMPolyline.addColor(builder, COLOR);
   CZMPolyline.addClampToGround(builder, this.CLAMP_TO_GROUND);
+  CZMPolyline.addArcType(builder, ARC_TYPE);
+  CZMPolyline.addGranularity(builder, this.GRANULARITY);
+  CZMPolyline.addMaterial(builder, MATERIAL);
+  CZMPolyline.addShadows(builder, SHADOWS);
+  CZMPolyline.addDepthFailMaterial(builder, DEPTH_FAIL_MATERIAL);
+  CZMPolyline.addClassificationType(builder, CLASSIFICATION_TYPE);
+  CZMPolyline.addZIndex(builder, this.Z_INDEX);
 
   return CZMPolyline.endCZMPolyline(builder);
 }

@@ -23,22 +23,27 @@ public struct GJNPosition : IFlatbufferObject
   public double LATITUDE { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Altitude in meters above WGS84 ellipsoid (optional)
   public double ALTITUDE { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// True if altitude was explicitly provided (distinguishes 0 from absent)
+  public bool HAS_ALTITUDE { get { int o = __p.__offset(10); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<GJNPosition> CreateGJNPosition(FlatBufferBuilder builder,
       double LONGITUDE = 0.0,
       double LATITUDE = 0.0,
-      double ALTITUDE = 0.0) {
-    builder.StartTable(3);
+      double ALTITUDE = 0.0,
+      bool HAS_ALTITUDE = false) {
+    builder.StartTable(4);
     GJNPosition.AddALTITUDE(builder, ALTITUDE);
     GJNPosition.AddLATITUDE(builder, LATITUDE);
     GJNPosition.AddLONGITUDE(builder, LONGITUDE);
+    GJNPosition.AddHAS_ALTITUDE(builder, HAS_ALTITUDE);
     return GJNPosition.EndGJNPosition(builder);
   }
 
-  public static void StartGJNPosition(FlatBufferBuilder builder) { builder.StartTable(3); }
+  public static void StartGJNPosition(FlatBufferBuilder builder) { builder.StartTable(4); }
   public static void AddLONGITUDE(FlatBufferBuilder builder, double LONGITUDE) { builder.AddDouble(0, LONGITUDE, 0.0); }
   public static void AddLATITUDE(FlatBufferBuilder builder, double LATITUDE) { builder.AddDouble(1, LATITUDE, 0.0); }
   public static void AddALTITUDE(FlatBufferBuilder builder, double ALTITUDE) { builder.AddDouble(2, ALTITUDE, 0.0); }
+  public static void AddHAS_ALTITUDE(FlatBufferBuilder builder, bool HAS_ALTITUDE) { builder.AddBool(3, HAS_ALTITUDE, false); }
   public static Offset<GJNPosition> EndGJNPosition(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<GJNPosition>(o);
@@ -52,6 +57,7 @@ public struct GJNPosition : IFlatbufferObject
     _o.LONGITUDE = this.LONGITUDE;
     _o.LATITUDE = this.LATITUDE;
     _o.ALTITUDE = this.ALTITUDE;
+    _o.HAS_ALTITUDE = this.HAS_ALTITUDE;
   }
   public static Offset<GJNPosition> Pack(FlatBufferBuilder builder, GJNPositionT _o) {
     if (_o == null) return default(Offset<GJNPosition>);
@@ -59,7 +65,8 @@ public struct GJNPosition : IFlatbufferObject
       builder,
       _o.LONGITUDE,
       _o.LATITUDE,
-      _o.ALTITUDE);
+      _o.ALTITUDE,
+      _o.HAS_ALTITUDE);
   }
 }
 
@@ -68,11 +75,13 @@ public class GJNPositionT
   public double LONGITUDE { get; set; }
   public double LATITUDE { get; set; }
   public double ALTITUDE { get; set; }
+  public bool HAS_ALTITUDE { get; set; }
 
   public GJNPositionT() {
     this.LONGITUDE = 0.0;
     this.LATITUDE = 0.0;
     this.ALTITUDE = 0.0;
+    this.HAS_ALTITUDE = false;
   }
 }
 
@@ -85,6 +94,7 @@ static public class GJNPositionVerify
       && verifier.VerifyField(tablePos, 4 /*LONGITUDE*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 6 /*LATITUDE*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 8 /*ALTITUDE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 10 /*HAS_ALTITUDE*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

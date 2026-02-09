@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { KMLDisplayMode } from './KMLDisplayMode.js';
 
 
 /**
@@ -57,8 +58,16 @@ TEXT(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Display mode
+ */
+DISPLAY_MODE():KMLDisplayMode {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : KMLDisplayMode.DEFAULT;
+}
+
 static startKMLBalloonStyle(builder:flatbuffers.Builder) {
-  builder.startObject(3);
+  builder.startObject(4);
 }
 
 static addBgColor(builder:flatbuffers.Builder, BG_COLOROffset:flatbuffers.Offset) {
@@ -73,16 +82,21 @@ static addText(builder:flatbuffers.Builder, TEXTOffset:flatbuffers.Offset) {
   builder.addFieldOffset(2, TEXTOffset, 0);
 }
 
+static addDisplayMode(builder:flatbuffers.Builder, DISPLAY_MODE:KMLDisplayMode) {
+  builder.addFieldInt8(3, DISPLAY_MODE, KMLDisplayMode.DEFAULT);
+}
+
 static endKMLBalloonStyle(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createKMLBalloonStyle(builder:flatbuffers.Builder, BG_COLOROffset:flatbuffers.Offset, TEXT_COLOROffset:flatbuffers.Offset, TEXTOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createKMLBalloonStyle(builder:flatbuffers.Builder, BG_COLOROffset:flatbuffers.Offset, TEXT_COLOROffset:flatbuffers.Offset, TEXTOffset:flatbuffers.Offset, DISPLAY_MODE:KMLDisplayMode):flatbuffers.Offset {
   KMLBalloonStyle.startKMLBalloonStyle(builder);
   KMLBalloonStyle.addBgColor(builder, BG_COLOROffset);
   KMLBalloonStyle.addTextColor(builder, TEXT_COLOROffset);
   KMLBalloonStyle.addText(builder, TEXTOffset);
+  KMLBalloonStyle.addDisplayMode(builder, DISPLAY_MODE);
   return KMLBalloonStyle.endKMLBalloonStyle(builder);
 }
 
@@ -90,7 +104,8 @@ unpack(): KMLBalloonStyleT {
   return new KMLBalloonStyleT(
     this.BG_COLOR(),
     this.TEXT_COLOR(),
-    this.TEXT()
+    this.TEXT(),
+    this.DISPLAY_MODE()
   );
 }
 
@@ -99,6 +114,7 @@ unpackTo(_o: KMLBalloonStyleT): void {
   _o.BG_COLOR = this.BG_COLOR();
   _o.TEXT_COLOR = this.TEXT_COLOR();
   _o.TEXT = this.TEXT();
+  _o.DISPLAY_MODE = this.DISPLAY_MODE();
 }
 }
 
@@ -106,7 +122,8 @@ export class KMLBalloonStyleT implements flatbuffers.IGeneratedObject {
 constructor(
   public BG_COLOR: string|Uint8Array|null = null,
   public TEXT_COLOR: string|Uint8Array|null = null,
-  public TEXT: string|Uint8Array|null = null
+  public TEXT: string|Uint8Array|null = null,
+  public DISPLAY_MODE: KMLDisplayMode = KMLDisplayMode.DEFAULT
 ){}
 
 
@@ -118,7 +135,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   return KMLBalloonStyle.createKMLBalloonStyle(builder,
     BG_COLOR,
     TEXT_COLOR,
-    TEXT
+    TEXT,
+    this.DISPLAY_MODE
   );
 }
 }

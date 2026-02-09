@@ -91,7 +91,7 @@ class CZMEllipse extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
-    /// Fill color
+    /// Fill color (legacy solid color)
     public function getCOLOR()
     {
         $obj = new CZMColor();
@@ -137,22 +137,111 @@ class CZMEllipse extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \CZMHeightReference::NONE;
     }
 
+    /// Extruded height in meters
+    /**
+     * @return double
+     */
+    public function getEXTRUDED_HEIGHT()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Extruded height reference
+    public function getEXTRUDED_HEIGHT_REFERENCE()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Texture rotation in radians
+    /**
+     * @return double
+     */
+    public function getST_ROTATION()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Granularity in radians
+    /**
+     * @return double
+     */
+    public function getGRANULARITY()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Full surface material
+    public function getMATERIAL()
+    {
+        $obj = new CZMMaterial();
+        $o = $this->__offset(32);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Outline width in pixels
+    /**
+     * @return double
+     */
+    public function getOUTLINE_WIDTH()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Number of vertical lines
+    /**
+     * @return int
+     */
+    public function getNUMBER_OF_VERTICAL_LINES()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+    }
+
+    /// Shadow mode
+    public function getSHADOWS()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Classification type
+    public function getCLASSIFICATION_TYPE()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Z-index for ordering
+    /**
+     * @return int
+     */
+    public function getZ_INDEX()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCZMEllipse(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(10);
+        $builder->StartObject(20);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CZMEllipse
      */
-    public static function createCZMEllipse(FlatBufferBuilder $builder, $SHOW, $SEMI_MAJOR_AXIS, $SEMI_MINOR_AXIS, $ROTATION, $FILL, $COLOR, $OUTLINE, $OUTLINE_COLOR, $HEIGHT, $HEIGHT_REFERENCE)
+    public static function createCZMEllipse(FlatBufferBuilder $builder, $SHOW, $SEMI_MAJOR_AXIS, $SEMI_MINOR_AXIS, $ROTATION, $FILL, $COLOR, $OUTLINE, $OUTLINE_COLOR, $HEIGHT, $HEIGHT_REFERENCE, $EXTRUDED_HEIGHT, $EXTRUDED_HEIGHT_REFERENCE, $ST_ROTATION, $GRANULARITY, $MATERIAL, $OUTLINE_WIDTH, $NUMBER_OF_VERTICAL_LINES, $SHADOWS, $CLASSIFICATION_TYPE, $Z_INDEX)
     {
-        $builder->startObject(10);
+        $builder->startObject(20);
         self::addSHOW($builder, $SHOW);
         self::addSEMI_MAJOR_AXIS($builder, $SEMI_MAJOR_AXIS);
         self::addSEMI_MINOR_AXIS($builder, $SEMI_MINOR_AXIS);
@@ -163,6 +252,16 @@ class CZMEllipse extends Table
         self::addOUTLINE_COLOR($builder, $OUTLINE_COLOR);
         self::addHEIGHT($builder, $HEIGHT);
         self::addHEIGHT_REFERENCE($builder, $HEIGHT_REFERENCE);
+        self::addEXTRUDED_HEIGHT($builder, $EXTRUDED_HEIGHT);
+        self::addEXTRUDED_HEIGHT_REFERENCE($builder, $EXTRUDED_HEIGHT_REFERENCE);
+        self::addST_ROTATION($builder, $ST_ROTATION);
+        self::addGRANULARITY($builder, $GRANULARITY);
+        self::addMATERIAL($builder, $MATERIAL);
+        self::addOUTLINE_WIDTH($builder, $OUTLINE_WIDTH);
+        self::addNUMBER_OF_VERTICAL_LINES($builder, $NUMBER_OF_VERTICAL_LINES);
+        self::addSHADOWS($builder, $SHADOWS);
+        self::addCLASSIFICATION_TYPE($builder, $CLASSIFICATION_TYPE);
+        self::addZ_INDEX($builder, $Z_INDEX);
         $o = $builder->endObject();
         return $o;
     }
@@ -265,6 +364,106 @@ class CZMEllipse extends Table
     public static function addHEIGHT_REFERENCE(FlatBufferBuilder $builder, $HEIGHT_REFERENCE)
     {
         $builder->addSbyteX(9, $HEIGHT_REFERENCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addEXTRUDED_HEIGHT(FlatBufferBuilder $builder, $EXTRUDED_HEIGHT)
+    {
+        $builder->addDoubleX(10, $EXTRUDED_HEIGHT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEXTRUDED_HEIGHT_REFERENCE(FlatBufferBuilder $builder, $EXTRUDED_HEIGHT_REFERENCE)
+    {
+        $builder->addOffsetX(11, $EXTRUDED_HEIGHT_REFERENCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addST_ROTATION(FlatBufferBuilder $builder, $ST_ROTATION)
+    {
+        $builder->addDoubleX(12, $ST_ROTATION, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addGRANULARITY(FlatBufferBuilder $builder, $GRANULARITY)
+    {
+        $builder->addDoubleX(13, $GRANULARITY, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addMATERIAL(FlatBufferBuilder $builder, $MATERIAL)
+    {
+        $builder->addOffsetX(14, $MATERIAL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addOUTLINE_WIDTH(FlatBufferBuilder $builder, $OUTLINE_WIDTH)
+    {
+        $builder->addDoubleX(15, $OUTLINE_WIDTH, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addNUMBER_OF_VERTICAL_LINES(FlatBufferBuilder $builder, $NUMBER_OF_VERTICAL_LINES)
+    {
+        $builder->addIntX(16, $NUMBER_OF_VERTICAL_LINES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSHADOWS(FlatBufferBuilder $builder, $SHADOWS)
+    {
+        $builder->addOffsetX(17, $SHADOWS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCLASSIFICATION_TYPE(FlatBufferBuilder $builder, $CLASSIFICATION_TYPE)
+    {
+        $builder->addOffsetX(18, $CLASSIFICATION_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addZ_INDEX(FlatBufferBuilder $builder, $Z_INDEX)
+    {
+        $builder->addIntX(19, $Z_INDEX, 0);
     }
 
     /**

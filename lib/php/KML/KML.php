@@ -195,22 +195,110 @@ class KML extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Schemas
+    /**
+     * @returnVectorOffset
+     */
+    public function getSCHEMAS($j)
+    {
+        $o = $this->__offset(24);
+        $obj = new KMLSchema();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSCHEMASLength()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Screen overlays
+    /**
+     * @returnVectorOffset
+     */
+    public function getSCREEN_OVERLAYS($j)
+    {
+        $o = $this->__offset(26);
+        $obj = new KMLScreenOverlay();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSCREEN_OVERLAYSLength()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Photo overlays
+    /**
+     * @returnVectorOffset
+     */
+    public function getPHOTO_OVERLAYS($j)
+    {
+        $o = $this->__offset(28);
+        $obj = new KMLPhotoOverlay();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPHOTO_OVERLAYSLength()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Tours
+    /**
+     * @returnVectorOffset
+     */
+    public function getTOURS($j)
+    {
+        $o = $this->__offset(30);
+        $obj = new KMLTour();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTOURSLength()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// NetworkLinkControl
+    public function getNETWORK_LINK_CONTROL()
+    {
+        $obj = new KMLNetworkLinkControl();
+        $o = $this->__offset(32);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startKML(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(10);
+        $builder->StartObject(15);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return KML
      */
-    public static function createKML(FlatBufferBuilder $builder, $NAME, $DESCRIPTION, $VISIBILITY, $OPEN, $STYLES, $STYLE_MAPS, $PLACEMARKS, $FOLDERS, $NETWORK_LINKS, $GROUND_OVERLAYS)
+    public static function createKML(FlatBufferBuilder $builder, $NAME, $DESCRIPTION, $VISIBILITY, $OPEN, $STYLES, $STYLE_MAPS, $PLACEMARKS, $FOLDERS, $NETWORK_LINKS, $GROUND_OVERLAYS, $SCHEMAS, $SCREEN_OVERLAYS, $PHOTO_OVERLAYS, $TOURS, $NETWORK_LINK_CONTROL)
     {
-        $builder->startObject(10);
+        $builder->startObject(15);
         self::addNAME($builder, $NAME);
         self::addDESCRIPTION($builder, $DESCRIPTION);
         self::addVISIBILITY($builder, $VISIBILITY);
@@ -221,6 +309,11 @@ class KML extends Table
         self::addFOLDERS($builder, $FOLDERS);
         self::addNETWORK_LINKS($builder, $NETWORK_LINKS);
         self::addGROUND_OVERLAYS($builder, $GROUND_OVERLAYS);
+        self::addSCHEMAS($builder, $SCHEMAS);
+        self::addSCREEN_OVERLAYS($builder, $SCREEN_OVERLAYS);
+        self::addPHOTO_OVERLAYS($builder, $PHOTO_OVERLAYS);
+        self::addTOURS($builder, $TOURS);
+        self::addNETWORK_LINK_CONTROL($builder, $NETWORK_LINK_CONTROL);
         $o = $builder->endObject();
         return $o;
     }
@@ -467,6 +560,152 @@ class KML extends Table
     public static function startGROUND_OVERLAYSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSCHEMAS(FlatBufferBuilder $builder, $SCHEMAS)
+    {
+        $builder->addOffsetX(10, $SCHEMAS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSCHEMASVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSCHEMASVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSCREEN_OVERLAYS(FlatBufferBuilder $builder, $SCREEN_OVERLAYS)
+    {
+        $builder->addOffsetX(11, $SCREEN_OVERLAYS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSCREEN_OVERLAYSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSCREEN_OVERLAYSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPHOTO_OVERLAYS(FlatBufferBuilder $builder, $PHOTO_OVERLAYS)
+    {
+        $builder->addOffsetX(12, $PHOTO_OVERLAYS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createPHOTO_OVERLAYSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startPHOTO_OVERLAYSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addTOURS(FlatBufferBuilder $builder, $TOURS)
+    {
+        $builder->addOffsetX(13, $TOURS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createTOURSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startTOURSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addNETWORK_LINK_CONTROL(FlatBufferBuilder $builder, $NETWORK_LINK_CONTROL)
+    {
+        $builder->addOffsetX(14, $NETWORK_LINK_CONTROL, 0);
     }
 
     /**

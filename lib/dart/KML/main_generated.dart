@@ -292,6 +292,232 @@ class _KmlviewRefreshModeReader extends fb.Reader<KmlviewRefreshMode> {
       KmlviewRefreshMode.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
+class KmllistItemType {
+  final int value;
+  const KmllistItemType._(this.value);
+
+  factory KmllistItemType.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum KmllistItemType');
+    }
+    return result;
+  }
+
+  static KmllistItemType? _createOrNull(int? value) => 
+      value == null ? null : KmllistItemType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const KmllistItemType CHECK = KmllistItemType._(0);
+  static const KmllistItemType CHECK_OFF_ONLY = KmllistItemType._(1);
+  static const KmllistItemType CHECK_HIDE_CHILDREN = KmllistItemType._(2);
+  static const KmllistItemType RADIO_FOLDER = KmllistItemType._(3);
+  static const Map<int, KmllistItemType> values = {
+    0: CHECK,
+    1: CHECK_OFF_ONLY,
+    2: CHECK_HIDE_CHILDREN,
+    3: RADIO_FOLDER};
+
+  static const fb.Reader<KmllistItemType> reader = _KmllistItemTypeReader();
+
+  @override
+  String toString() {
+    return 'KmllistItemType{value: $value}';
+  }
+}
+
+class _KmllistItemTypeReader extends fb.Reader<KmllistItemType> {
+  const _KmllistItemTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  KmllistItemType read(fb.BufferContext bc, int offset) =>
+      KmllistItemType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class KmldisplayMode {
+  final int value;
+  const KmldisplayMode._(this.value);
+
+  factory KmldisplayMode.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum KmldisplayMode');
+    }
+    return result;
+  }
+
+  static KmldisplayMode? _createOrNull(int? value) => 
+      value == null ? null : KmldisplayMode.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const KmldisplayMode DEFAULT = KmldisplayMode._(0);
+  static const KmldisplayMode HIDE = KmldisplayMode._(1);
+  static const Map<int, KmldisplayMode> values = {
+    0: DEFAULT,
+    1: HIDE};
+
+  static const fb.Reader<KmldisplayMode> reader = _KmldisplayModeReader();
+
+  @override
+  String toString() {
+    return 'KmldisplayMode{value: $value}';
+  }
+}
+
+class _KmldisplayModeReader extends fb.Reader<KmldisplayMode> {
+  const _KmldisplayModeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  KmldisplayMode read(fb.BufferContext bc, int offset) =>
+      KmldisplayMode.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class KmlgridOrigin {
+  final int value;
+  const KmlgridOrigin._(this.value);
+
+  factory KmlgridOrigin.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum KmlgridOrigin');
+    }
+    return result;
+  }
+
+  static KmlgridOrigin? _createOrNull(int? value) => 
+      value == null ? null : KmlgridOrigin.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const KmlgridOrigin LOWER_LEFT = KmlgridOrigin._(0);
+  static const KmlgridOrigin UPPER_LEFT = KmlgridOrigin._(1);
+  static const Map<int, KmlgridOrigin> values = {
+    0: LOWER_LEFT,
+    1: UPPER_LEFT};
+
+  static const fb.Reader<KmlgridOrigin> reader = _KmlgridOriginReader();
+
+  @override
+  String toString() {
+    return 'KmlgridOrigin{value: $value}';
+  }
+}
+
+class _KmlgridOriginReader extends fb.Reader<KmlgridOrigin> {
+  const _KmlgridOriginReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  KmlgridOrigin read(fb.BufferContext bc, int offset) =>
+      KmlgridOrigin.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class Kmlshape {
+  final int value;
+  const Kmlshape._(this.value);
+
+  factory Kmlshape.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum Kmlshape');
+    }
+    return result;
+  }
+
+  static Kmlshape? _createOrNull(int? value) => 
+      value == null ? null : Kmlshape.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const Kmlshape RECTANGLE = Kmlshape._(0);
+  static const Kmlshape CYLINDER = Kmlshape._(1);
+  static const Kmlshape SPHERE = Kmlshape._(2);
+  static const Map<int, Kmlshape> values = {
+    0: RECTANGLE,
+    1: CYLINDER,
+    2: SPHERE};
+
+  static const fb.Reader<Kmlshape> reader = _KmlshapeReader();
+
+  @override
+  String toString() {
+    return 'Kmlshape{value: $value}';
+  }
+}
+
+class _KmlshapeReader extends fb.Reader<Kmlshape> {
+  const _KmlshapeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  Kmlshape read(fb.BufferContext bc, int offset) =>
+      Kmlshape.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class KmlflyToMode {
+  final int value;
+  const KmlflyToMode._(this.value);
+
+  factory KmlflyToMode.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum KmlflyToMode');
+    }
+    return result;
+  }
+
+  static KmlflyToMode? _createOrNull(int? value) => 
+      value == null ? null : KmlflyToMode.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const KmlflyToMode BOUNCE = KmlflyToMode._(0);
+  static const KmlflyToMode SMOOTH = KmlflyToMode._(1);
+  static const Map<int, KmlflyToMode> values = {
+    0: BOUNCE,
+    1: SMOOTH};
+
+  static const fb.Reader<KmlflyToMode> reader = _KmlflyToModeReader();
+
+  @override
+  String toString() {
+    return 'KmlflyToMode{value: $value}';
+  }
+}
+
+class _KmlflyToModeReader extends fb.Reader<KmlflyToMode> {
+  const _KmlflyToModeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  KmlflyToMode read(fb.BufferContext bc, int offset) =>
+      KmlflyToMode.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 ///  KML coordinate (longitude, latitude, optional altitude)
 class Kmlcoordinate {
   Kmlcoordinate._(this._bc, this._bcOffset);
@@ -827,10 +1053,18 @@ class KmllineStyle {
   KmlcolorMode get COLOR_MODE => KmlcolorMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
   ///  Width in pixels
   double get WIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  gx:outerColor
+  String? get GX_OUTER_COLOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  gx:outerWidth
+  double get GX_OUTER_WIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  gx:physicalWidth
+  double get GX_PHYSICAL_WIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  ///  gx:labelVisibility
+  bool get GX_LABEL_VISIBILITY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
 
   @override
   String toString() {
-    return 'KmllineStyle{COLOR: ${COLOR}, COLOR_MODE: ${COLOR_MODE}, WIDTH: ${WIDTH}}';
+    return 'KmllineStyle{COLOR: ${COLOR}, COLOR_MODE: ${COLOR_MODE}, WIDTH: ${WIDTH}, GX_OUTER_COLOR: ${GX_OUTER_COLOR}, GX_OUTER_WIDTH: ${GX_OUTER_WIDTH}, GX_PHYSICAL_WIDTH: ${GX_PHYSICAL_WIDTH}, GX_LABEL_VISIBILITY: ${GX_LABEL_VISIBILITY}}';
   }
 }
 
@@ -848,7 +1082,7 @@ class KmllineStyleBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(3);
+    fbBuilder.startTable(7);
   }
 
   int addColorOffset(int? offset) {
@@ -863,6 +1097,22 @@ class KmllineStyleBuilder {
     fbBuilder.addFloat64(2, WIDTH);
     return fbBuilder.offset;
   }
+  int addGxOuterColorOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addGxOuterWidth(double? GX_OUTER_WIDTH) {
+    fbBuilder.addFloat64(4, GX_OUTER_WIDTH);
+    return fbBuilder.offset;
+  }
+  int addGxPhysicalWidth(double? GX_PHYSICAL_WIDTH) {
+    fbBuilder.addFloat64(5, GX_PHYSICAL_WIDTH);
+    return fbBuilder.offset;
+  }
+  int addGxLabelVisibility(bool? GX_LABEL_VISIBILITY) {
+    fbBuilder.addBool(6, GX_LABEL_VISIBILITY);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -873,25 +1123,43 @@ class KmllineStyleObjectBuilder extends fb.ObjectBuilder {
   final String? _COLOR;
   final KmlcolorMode? _COLOR_MODE;
   final double? _WIDTH;
+  final String? _GX_OUTER_COLOR;
+  final double? _GX_OUTER_WIDTH;
+  final double? _GX_PHYSICAL_WIDTH;
+  final bool? _GX_LABEL_VISIBILITY;
 
   KmllineStyleObjectBuilder({
     String? COLOR,
     KmlcolorMode? COLOR_MODE,
     double? WIDTH,
+    String? GX_OUTER_COLOR,
+    double? GX_OUTER_WIDTH,
+    double? GX_PHYSICAL_WIDTH,
+    bool? GX_LABEL_VISIBILITY,
   })
       : _COLOR = COLOR,
         _COLOR_MODE = COLOR_MODE,
-        _WIDTH = WIDTH;
+        _WIDTH = WIDTH,
+        _GX_OUTER_COLOR = GX_OUTER_COLOR,
+        _GX_OUTER_WIDTH = GX_OUTER_WIDTH,
+        _GX_PHYSICAL_WIDTH = GX_PHYSICAL_WIDTH,
+        _GX_LABEL_VISIBILITY = GX_LABEL_VISIBILITY;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? COLOROffset = _COLOR == null ? null
         : fbBuilder.writeString(_COLOR!);
-    fbBuilder.startTable(3);
+    final int? GX_OUTER_COLOROffset = _GX_OUTER_COLOR == null ? null
+        : fbBuilder.writeString(_GX_OUTER_COLOR!);
+    fbBuilder.startTable(7);
     fbBuilder.addOffset(0, COLOROffset);
     fbBuilder.addInt8(1, _COLOR_MODE?.value);
     fbBuilder.addFloat64(2, _WIDTH);
+    fbBuilder.addOffset(3, GX_OUTER_COLOROffset);
+    fbBuilder.addFloat64(4, _GX_OUTER_WIDTH);
+    fbBuilder.addFloat64(5, _GX_PHYSICAL_WIDTH);
+    fbBuilder.addBool(6, _GX_LABEL_VISIBILITY);
     return fbBuilder.endTable();
   }
 
@@ -1122,10 +1390,12 @@ class KmlballoonStyle {
   String? get TEXT_COLOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
   ///  Balloon text template (supports $[name], $[description])
   String? get TEXT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Display mode
+  KmldisplayMode get DISPLAY_MODE => KmldisplayMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
 
   @override
   String toString() {
-    return 'KmlballoonStyle{BG_COLOR: ${BG_COLOR}, TEXT_COLOR: ${TEXT_COLOR}, TEXT: ${TEXT}}';
+    return 'KmlballoonStyle{BG_COLOR: ${BG_COLOR}, TEXT_COLOR: ${TEXT_COLOR}, TEXT: ${TEXT}, DISPLAY_MODE: ${DISPLAY_MODE}}';
   }
 }
 
@@ -1143,7 +1413,7 @@ class KmlballoonStyleBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(3);
+    fbBuilder.startTable(4);
   }
 
   int addBgColorOffset(int? offset) {
@@ -1158,6 +1428,10 @@ class KmlballoonStyleBuilder {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
+  int addDisplayMode(KmldisplayMode? DISPLAY_MODE) {
+    fbBuilder.addInt8(3, DISPLAY_MODE?.value);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1168,15 +1442,18 @@ class KmlballoonStyleObjectBuilder extends fb.ObjectBuilder {
   final String? _BG_COLOR;
   final String? _TEXT_COLOR;
   final String? _TEXT;
+  final KmldisplayMode? _DISPLAY_MODE;
 
   KmlballoonStyleObjectBuilder({
     String? BG_COLOR,
     String? TEXT_COLOR,
     String? TEXT,
+    KmldisplayMode? DISPLAY_MODE,
   })
       : _BG_COLOR = BG_COLOR,
         _TEXT_COLOR = TEXT_COLOR,
-        _TEXT = TEXT;
+        _TEXT = TEXT,
+        _DISPLAY_MODE = DISPLAY_MODE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1187,10 +1464,205 @@ class KmlballoonStyleObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_TEXT_COLOR!);
     final int? TEXTOffset = _TEXT == null ? null
         : fbBuilder.writeString(_TEXT!);
-    fbBuilder.startTable(3);
+    fbBuilder.startTable(4);
     fbBuilder.addOffset(0, BG_COLOROffset);
     fbBuilder.addOffset(1, TEXT_COLOROffset);
     fbBuilder.addOffset(2, TEXTOffset);
+    fbBuilder.addInt8(3, _DISPLAY_MODE?.value);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Item icon for ListStyle
+class KmlitemIcon {
+  KmlitemIcon._(this._bc, this._bcOffset);
+  factory KmlitemIcon(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<KmlitemIcon> reader = _KmlitemIconReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  State (open, closed, error, fetching0-2)
+  String? get STATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Icon URL
+  String? get HREF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+
+  @override
+  String toString() {
+    return 'KmlitemIcon{STATE: ${STATE}, HREF: ${HREF}}';
+  }
+}
+
+class _KmlitemIconReader extends fb.TableReader<KmlitemIcon> {
+  const _KmlitemIconReader();
+
+  @override
+  KmlitemIcon createObject(fb.BufferContext bc, int offset) => 
+    KmlitemIcon._(bc, offset);
+}
+
+class KmlitemIconBuilder {
+  KmlitemIconBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addStateOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addHrefOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmlitemIconObjectBuilder extends fb.ObjectBuilder {
+  final String? _STATE;
+  final String? _HREF;
+
+  KmlitemIconObjectBuilder({
+    String? STATE,
+    String? HREF,
+  })
+      : _STATE = STATE,
+        _HREF = HREF;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? STATEOffset = _STATE == null ? null
+        : fbBuilder.writeString(_STATE!);
+    final int? HREFOffset = _HREF == null ? null
+        : fbBuilder.writeString(_HREF!);
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, STATEOffset);
+    fbBuilder.addOffset(1, HREFOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  List style
+class KmllistStyle {
+  KmllistStyle._(this._bc, this._bcOffset);
+  factory KmllistStyle(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<KmllistStyle> reader = _KmllistStyleReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  List item type
+  KmllistItemType get LIST_ITEM_TYPE => KmllistItemType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  Background color
+  String? get BG_COLOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Item icons
+  List<KmlitemIcon>? get ITEM_ICONS => const fb.ListReader<KmlitemIcon>(KmlitemIcon.reader).vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Maximum snippet lines
+  int get MAX_SNIPPET_LINES => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 10, 0);
+
+  @override
+  String toString() {
+    return 'KmllistStyle{LIST_ITEM_TYPE: ${LIST_ITEM_TYPE}, BG_COLOR: ${BG_COLOR}, ITEM_ICONS: ${ITEM_ICONS}, MAX_SNIPPET_LINES: ${MAX_SNIPPET_LINES}}';
+  }
+}
+
+class _KmllistStyleReader extends fb.TableReader<KmllistStyle> {
+  const _KmllistStyleReader();
+
+  @override
+  KmllistStyle createObject(fb.BufferContext bc, int offset) => 
+    KmllistStyle._(bc, offset);
+}
+
+class KmllistStyleBuilder {
+  KmllistStyleBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addListItemType(KmllistItemType? LIST_ITEM_TYPE) {
+    fbBuilder.addInt8(0, LIST_ITEM_TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addBgColorOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addItemIconsOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addMaxSnippetLines(int? MAX_SNIPPET_LINES) {
+    fbBuilder.addInt32(3, MAX_SNIPPET_LINES);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmllistStyleObjectBuilder extends fb.ObjectBuilder {
+  final KmllistItemType? _LIST_ITEM_TYPE;
+  final String? _BG_COLOR;
+  final List<KmlitemIconObjectBuilder>? _ITEM_ICONS;
+  final int? _MAX_SNIPPET_LINES;
+
+  KmllistStyleObjectBuilder({
+    KmllistItemType? LIST_ITEM_TYPE,
+    String? BG_COLOR,
+    List<KmlitemIconObjectBuilder>? ITEM_ICONS,
+    int? MAX_SNIPPET_LINES,
+  })
+      : _LIST_ITEM_TYPE = LIST_ITEM_TYPE,
+        _BG_COLOR = BG_COLOR,
+        _ITEM_ICONS = ITEM_ICONS,
+        _MAX_SNIPPET_LINES = MAX_SNIPPET_LINES;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? BG_COLOROffset = _BG_COLOR == null ? null
+        : fbBuilder.writeString(_BG_COLOR!);
+    final int? ITEM_ICONSOffset = _ITEM_ICONS == null ? null
+        : fbBuilder.writeList(_ITEM_ICONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(4);
+    fbBuilder.addInt8(0, _LIST_ITEM_TYPE?.value);
+    fbBuilder.addOffset(1, BG_COLOROffset);
+    fbBuilder.addOffset(2, ITEM_ICONSOffset);
+    fbBuilder.addInt32(3, _MAX_SNIPPET_LINES);
     return fbBuilder.endTable();
   }
 
@@ -1227,10 +1699,12 @@ class Kmlstyle {
   KmlpolyStyle? get POLY_STYLE => KmlpolyStyle.reader.vTableGetNullable(_bc, _bcOffset, 12);
   ///  Balloon style
   KmlballoonStyle? get BALLOON_STYLE => KmlballoonStyle.reader.vTableGetNullable(_bc, _bcOffset, 14);
+  ///  List style
+  KmllistStyle? get LIST_STYLE => KmllistStyle.reader.vTableGetNullable(_bc, _bcOffset, 16);
 
   @override
   String toString() {
-    return 'Kmlstyle{ID: ${ID}, ICON_STYLE: ${ICON_STYLE}, LABEL_STYLE: ${LABEL_STYLE}, LINE_STYLE: ${LINE_STYLE}, POLY_STYLE: ${POLY_STYLE}, BALLOON_STYLE: ${BALLOON_STYLE}}';
+    return 'Kmlstyle{ID: ${ID}, ICON_STYLE: ${ICON_STYLE}, LABEL_STYLE: ${LABEL_STYLE}, LINE_STYLE: ${LINE_STYLE}, POLY_STYLE: ${POLY_STYLE}, BALLOON_STYLE: ${BALLOON_STYLE}, LIST_STYLE: ${LIST_STYLE}}';
   }
 }
 
@@ -1248,7 +1722,7 @@ class KmlstyleBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(6);
+    fbBuilder.startTable(7);
   }
 
   int addIdOffset(int? offset) {
@@ -1275,6 +1749,10 @@ class KmlstyleBuilder {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
+  int addListStyleOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1288,6 +1766,7 @@ class KmlstyleObjectBuilder extends fb.ObjectBuilder {
   final KmllineStyleObjectBuilder? _LINE_STYLE;
   final KmlpolyStyleObjectBuilder? _POLY_STYLE;
   final KmlballoonStyleObjectBuilder? _BALLOON_STYLE;
+  final KmllistStyleObjectBuilder? _LIST_STYLE;
 
   KmlstyleObjectBuilder({
     String? ID,
@@ -1296,13 +1775,15 @@ class KmlstyleObjectBuilder extends fb.ObjectBuilder {
     KmllineStyleObjectBuilder? LINE_STYLE,
     KmlpolyStyleObjectBuilder? POLY_STYLE,
     KmlballoonStyleObjectBuilder? BALLOON_STYLE,
+    KmllistStyleObjectBuilder? LIST_STYLE,
   })
       : _ID = ID,
         _ICON_STYLE = ICON_STYLE,
         _LABEL_STYLE = LABEL_STYLE,
         _LINE_STYLE = LINE_STYLE,
         _POLY_STYLE = POLY_STYLE,
-        _BALLOON_STYLE = BALLOON_STYLE;
+        _BALLOON_STYLE = BALLOON_STYLE,
+        _LIST_STYLE = LIST_STYLE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1314,13 +1795,15 @@ class KmlstyleObjectBuilder extends fb.ObjectBuilder {
     final int? LINE_STYLEOffset = _LINE_STYLE?.getOrCreateOffset(fbBuilder);
     final int? POLY_STYLEOffset = _POLY_STYLE?.getOrCreateOffset(fbBuilder);
     final int? BALLOON_STYLEOffset = _BALLOON_STYLE?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(6);
+    final int? LIST_STYLEOffset = _LIST_STYLE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(7);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, ICON_STYLEOffset);
     fbBuilder.addOffset(2, LABEL_STYLEOffset);
     fbBuilder.addOffset(3, LINE_STYLEOffset);
     fbBuilder.addOffset(4, POLY_STYLEOffset);
     fbBuilder.addOffset(5, BALLOON_STYLEOffset);
+    fbBuilder.addOffset(6, LIST_STYLEOffset);
     return fbBuilder.endTable();
   }
 
@@ -1619,10 +2102,12 @@ class KmllineString {
   bool get EXTRUDE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
   ///  Whether to tessellate (follow terrain)
   bool get TESSELLATE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
+  ///  gx:drawOrder
+  int get GX_DRAW_ORDER => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 12, 0);
 
   @override
   String toString() {
-    return 'KmllineString{COORDINATES: ${COORDINATES}, ALTITUDE_MODE: ${ALTITUDE_MODE}, EXTRUDE: ${EXTRUDE}, TESSELLATE: ${TESSELLATE}}';
+    return 'KmllineString{COORDINATES: ${COORDINATES}, ALTITUDE_MODE: ${ALTITUDE_MODE}, EXTRUDE: ${EXTRUDE}, TESSELLATE: ${TESSELLATE}, GX_DRAW_ORDER: ${GX_DRAW_ORDER}}';
   }
 }
 
@@ -1640,7 +2125,7 @@ class KmllineStringBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(5);
   }
 
   int addCoordinatesOffset(int? offset) {
@@ -1659,6 +2144,10 @@ class KmllineStringBuilder {
     fbBuilder.addBool(3, TESSELLATE);
     return fbBuilder.offset;
   }
+  int addGxDrawOrder(int? GX_DRAW_ORDER) {
+    fbBuilder.addInt32(4, GX_DRAW_ORDER);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1670,28 +2159,32 @@ class KmllineStringObjectBuilder extends fb.ObjectBuilder {
   final KmlaltitudeMode? _ALTITUDE_MODE;
   final bool? _EXTRUDE;
   final bool? _TESSELLATE;
+  final int? _GX_DRAW_ORDER;
 
   KmllineStringObjectBuilder({
     List<KmlcoordinateObjectBuilder>? COORDINATES,
     KmlaltitudeMode? ALTITUDE_MODE,
     bool? EXTRUDE,
     bool? TESSELLATE,
+    int? GX_DRAW_ORDER,
   })
       : _COORDINATES = COORDINATES,
         _ALTITUDE_MODE = ALTITUDE_MODE,
         _EXTRUDE = EXTRUDE,
-        _TESSELLATE = TESSELLATE;
+        _TESSELLATE = TESSELLATE,
+        _GX_DRAW_ORDER = GX_DRAW_ORDER;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? COORDINATESOffset = _COORDINATES == null ? null
         : fbBuilder.writeList(_COORDINATES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(5);
     fbBuilder.addOffset(0, COORDINATESOffset);
     fbBuilder.addInt8(1, _ALTITUDE_MODE?.value);
     fbBuilder.addBool(2, _EXTRUDE);
     fbBuilder.addBool(3, _TESSELLATE);
+    fbBuilder.addInt32(4, _GX_DRAW_ORDER);
     return fbBuilder.endTable();
   }
 
@@ -1718,10 +2211,16 @@ class KmllinearRing {
 
   ///  Coordinates (first = last to close the ring)
   List<Kmlcoordinate>? get COORDINATES => const fb.ListReader<Kmlcoordinate>(Kmlcoordinate.reader).vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Whether to extrude to ground
+  bool get EXTRUDE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 6, false);
+  ///  Whether to tessellate
+  bool get TESSELLATE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
+  ///  Altitude mode
+  KmlaltitudeMode get ALTITUDE_MODE => KmlaltitudeMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
 
   @override
   String toString() {
-    return 'KmllinearRing{COORDINATES: ${COORDINATES}}';
+    return 'KmllinearRing{COORDINATES: ${COORDINATES}, EXTRUDE: ${EXTRUDE}, TESSELLATE: ${TESSELLATE}, ALTITUDE_MODE: ${ALTITUDE_MODE}}';
   }
 }
 
@@ -1739,11 +2238,23 @@ class KmllinearRingBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(1);
+    fbBuilder.startTable(4);
   }
 
   int addCoordinatesOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addExtrude(bool? EXTRUDE) {
+    fbBuilder.addBool(1, EXTRUDE);
+    return fbBuilder.offset;
+  }
+  int addTessellate(bool? TESSELLATE) {
+    fbBuilder.addBool(2, TESSELLATE);
+    return fbBuilder.offset;
+  }
+  int addAltitudeMode(KmlaltitudeMode? ALTITUDE_MODE) {
+    fbBuilder.addInt8(3, ALTITUDE_MODE?.value);
     return fbBuilder.offset;
   }
 
@@ -1754,19 +2265,31 @@ class KmllinearRingBuilder {
 
 class KmllinearRingObjectBuilder extends fb.ObjectBuilder {
   final List<KmlcoordinateObjectBuilder>? _COORDINATES;
+  final bool? _EXTRUDE;
+  final bool? _TESSELLATE;
+  final KmlaltitudeMode? _ALTITUDE_MODE;
 
   KmllinearRingObjectBuilder({
     List<KmlcoordinateObjectBuilder>? COORDINATES,
+    bool? EXTRUDE,
+    bool? TESSELLATE,
+    KmlaltitudeMode? ALTITUDE_MODE,
   })
-      : _COORDINATES = COORDINATES;
+      : _COORDINATES = COORDINATES,
+        _EXTRUDE = EXTRUDE,
+        _TESSELLATE = TESSELLATE,
+        _ALTITUDE_MODE = ALTITUDE_MODE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? COORDINATESOffset = _COORDINATES == null ? null
         : fbBuilder.writeList(_COORDINATES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(1);
+    fbBuilder.startTable(4);
     fbBuilder.addOffset(0, COORDINATESOffset);
+    fbBuilder.addBool(1, _EXTRUDE);
+    fbBuilder.addBool(2, _TESSELLATE);
+    fbBuilder.addInt8(3, _ALTITUDE_MODE?.value);
     return fbBuilder.endTable();
   }
 
@@ -1894,6 +2417,515 @@ class KmlpolygonObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+///  Resource map alias for Model
+class KmlresourceMapAlias {
+  KmlresourceMapAlias._(this._bc, this._bcOffset);
+  factory KmlresourceMapAlias(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<KmlresourceMapAlias> reader = _KmlresourceMapAliasReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Target href
+  String? get TARGET_HREF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Source href
+  String? get SOURCE_HREF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+
+  @override
+  String toString() {
+    return 'KmlresourceMapAlias{TARGET_HREF: ${TARGET_HREF}, SOURCE_HREF: ${SOURCE_HREF}}';
+  }
+}
+
+class _KmlresourceMapAliasReader extends fb.TableReader<KmlresourceMapAlias> {
+  const _KmlresourceMapAliasReader();
+
+  @override
+  KmlresourceMapAlias createObject(fb.BufferContext bc, int offset) => 
+    KmlresourceMapAlias._(bc, offset);
+}
+
+class KmlresourceMapAliasBuilder {
+  KmlresourceMapAliasBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addTargetHrefOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceHrefOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmlresourceMapAliasObjectBuilder extends fb.ObjectBuilder {
+  final String? _TARGET_HREF;
+  final String? _SOURCE_HREF;
+
+  KmlresourceMapAliasObjectBuilder({
+    String? TARGET_HREF,
+    String? SOURCE_HREF,
+  })
+      : _TARGET_HREF = TARGET_HREF,
+        _SOURCE_HREF = SOURCE_HREF;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? TARGET_HREFOffset = _TARGET_HREF == null ? null
+        : fbBuilder.writeString(_TARGET_HREF!);
+    final int? SOURCE_HREFOffset = _SOURCE_HREF == null ? null
+        : fbBuilder.writeString(_SOURCE_HREF!);
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, TARGET_HREFOffset);
+    fbBuilder.addOffset(1, SOURCE_HREFOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  3D Model geometry
+class Kmlmodel {
+  Kmlmodel._(this._bc, this._bcOffset);
+  factory Kmlmodel(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Kmlmodel> reader = _KmlmodelReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Altitude mode
+  KmlaltitudeMode get ALTITUDE_MODE => KmlaltitudeMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  Location longitude
+  double get LOCATION_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Location latitude
+  double get LOCATION_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Location altitude
+  double get LOCATION_ALT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  Orientation heading
+  double get ORIENTATION_HEADING => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  Orientation tilt
+  double get ORIENTATION_TILT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  ///  Orientation roll
+  double get ORIENTATION_ROLL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Scale X
+  double get SCALE_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  ///  Scale Y
+  double get SCALE_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  Scale Z
+  double get SCALE_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Link to 3D model file
+  String? get LINK_HREF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Resource map aliases
+  List<KmlresourceMapAlias>? get RESOURCE_MAP => const fb.ListReader<KmlresourceMapAlias>(KmlresourceMapAlias.reader).vTableGetNullable(_bc, _bcOffset, 26);
+
+  @override
+  String toString() {
+    return 'Kmlmodel{ALTITUDE_MODE: ${ALTITUDE_MODE}, LOCATION_LON: ${LOCATION_LON}, LOCATION_LAT: ${LOCATION_LAT}, LOCATION_ALT: ${LOCATION_ALT}, ORIENTATION_HEADING: ${ORIENTATION_HEADING}, ORIENTATION_TILT: ${ORIENTATION_TILT}, ORIENTATION_ROLL: ${ORIENTATION_ROLL}, SCALE_X: ${SCALE_X}, SCALE_Y: ${SCALE_Y}, SCALE_Z: ${SCALE_Z}, LINK_HREF: ${LINK_HREF}, RESOURCE_MAP: ${RESOURCE_MAP}}';
+  }
+}
+
+class _KmlmodelReader extends fb.TableReader<Kmlmodel> {
+  const _KmlmodelReader();
+
+  @override
+  Kmlmodel createObject(fb.BufferContext bc, int offset) => 
+    Kmlmodel._(bc, offset);
+}
+
+class KmlmodelBuilder {
+  KmlmodelBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(12);
+  }
+
+  int addAltitudeMode(KmlaltitudeMode? ALTITUDE_MODE) {
+    fbBuilder.addInt8(0, ALTITUDE_MODE?.value);
+    return fbBuilder.offset;
+  }
+  int addLocationLon(double? LOCATION_LON) {
+    fbBuilder.addFloat64(1, LOCATION_LON);
+    return fbBuilder.offset;
+  }
+  int addLocationLat(double? LOCATION_LAT) {
+    fbBuilder.addFloat64(2, LOCATION_LAT);
+    return fbBuilder.offset;
+  }
+  int addLocationAlt(double? LOCATION_ALT) {
+    fbBuilder.addFloat64(3, LOCATION_ALT);
+    return fbBuilder.offset;
+  }
+  int addOrientationHeading(double? ORIENTATION_HEADING) {
+    fbBuilder.addFloat64(4, ORIENTATION_HEADING);
+    return fbBuilder.offset;
+  }
+  int addOrientationTilt(double? ORIENTATION_TILT) {
+    fbBuilder.addFloat64(5, ORIENTATION_TILT);
+    return fbBuilder.offset;
+  }
+  int addOrientationRoll(double? ORIENTATION_ROLL) {
+    fbBuilder.addFloat64(6, ORIENTATION_ROLL);
+    return fbBuilder.offset;
+  }
+  int addScaleX(double? SCALE_X) {
+    fbBuilder.addFloat64(7, SCALE_X);
+    return fbBuilder.offset;
+  }
+  int addScaleY(double? SCALE_Y) {
+    fbBuilder.addFloat64(8, SCALE_Y);
+    return fbBuilder.offset;
+  }
+  int addScaleZ(double? SCALE_Z) {
+    fbBuilder.addFloat64(9, SCALE_Z);
+    return fbBuilder.offset;
+  }
+  int addLinkHrefOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addResourceMapOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmlmodelObjectBuilder extends fb.ObjectBuilder {
+  final KmlaltitudeMode? _ALTITUDE_MODE;
+  final double? _LOCATION_LON;
+  final double? _LOCATION_LAT;
+  final double? _LOCATION_ALT;
+  final double? _ORIENTATION_HEADING;
+  final double? _ORIENTATION_TILT;
+  final double? _ORIENTATION_ROLL;
+  final double? _SCALE_X;
+  final double? _SCALE_Y;
+  final double? _SCALE_Z;
+  final String? _LINK_HREF;
+  final List<KmlresourceMapAliasObjectBuilder>? _RESOURCE_MAP;
+
+  KmlmodelObjectBuilder({
+    KmlaltitudeMode? ALTITUDE_MODE,
+    double? LOCATION_LON,
+    double? LOCATION_LAT,
+    double? LOCATION_ALT,
+    double? ORIENTATION_HEADING,
+    double? ORIENTATION_TILT,
+    double? ORIENTATION_ROLL,
+    double? SCALE_X,
+    double? SCALE_Y,
+    double? SCALE_Z,
+    String? LINK_HREF,
+    List<KmlresourceMapAliasObjectBuilder>? RESOURCE_MAP,
+  })
+      : _ALTITUDE_MODE = ALTITUDE_MODE,
+        _LOCATION_LON = LOCATION_LON,
+        _LOCATION_LAT = LOCATION_LAT,
+        _LOCATION_ALT = LOCATION_ALT,
+        _ORIENTATION_HEADING = ORIENTATION_HEADING,
+        _ORIENTATION_TILT = ORIENTATION_TILT,
+        _ORIENTATION_ROLL = ORIENTATION_ROLL,
+        _SCALE_X = SCALE_X,
+        _SCALE_Y = SCALE_Y,
+        _SCALE_Z = SCALE_Z,
+        _LINK_HREF = LINK_HREF,
+        _RESOURCE_MAP = RESOURCE_MAP;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? LINK_HREFOffset = _LINK_HREF == null ? null
+        : fbBuilder.writeString(_LINK_HREF!);
+    final int? RESOURCE_MAPOffset = _RESOURCE_MAP == null ? null
+        : fbBuilder.writeList(_RESOURCE_MAP!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(12);
+    fbBuilder.addInt8(0, _ALTITUDE_MODE?.value);
+    fbBuilder.addFloat64(1, _LOCATION_LON);
+    fbBuilder.addFloat64(2, _LOCATION_LAT);
+    fbBuilder.addFloat64(3, _LOCATION_ALT);
+    fbBuilder.addFloat64(4, _ORIENTATION_HEADING);
+    fbBuilder.addFloat64(5, _ORIENTATION_TILT);
+    fbBuilder.addFloat64(6, _ORIENTATION_ROLL);
+    fbBuilder.addFloat64(7, _SCALE_X);
+    fbBuilder.addFloat64(8, _SCALE_Y);
+    fbBuilder.addFloat64(9, _SCALE_Z);
+    fbBuilder.addOffset(10, LINK_HREFOffset);
+    fbBuilder.addOffset(11, RESOURCE_MAPOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  gx:Track — time-stamped position track
+class Kmltrack {
+  Kmltrack._(this._bc, this._bcOffset);
+  factory Kmltrack(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Kmltrack> reader = _KmltrackReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Whether to extrude
+  bool get EXTRUDE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 4, false);
+  ///  Whether to tessellate
+  bool get TESSELLATE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 6, false);
+  ///  Altitude mode
+  KmlaltitudeMode get ALTITUDE_MODE => KmlaltitudeMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  ///  Time stamps (ISO 8601)
+  List<String>? get WHEN => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Coordinates (lon lat alt per entry)
+  List<Kmlcoordinate>? get COORDS => const fb.ListReader<Kmlcoordinate>(Kmlcoordinate.reader).vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Angles (heading tilt roll per entry)
+  List<Kmlcoordinate>? get ANGLES => const fb.ListReader<Kmlcoordinate>(Kmlcoordinate.reader).vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Model for track visualization
+  Kmlmodel? get MODEL => Kmlmodel.reader.vTableGetNullable(_bc, _bcOffset, 16);
+
+  @override
+  String toString() {
+    return 'Kmltrack{EXTRUDE: ${EXTRUDE}, TESSELLATE: ${TESSELLATE}, ALTITUDE_MODE: ${ALTITUDE_MODE}, WHEN: ${WHEN}, COORDS: ${COORDS}, ANGLES: ${ANGLES}, MODEL: ${MODEL}}';
+  }
+}
+
+class _KmltrackReader extends fb.TableReader<Kmltrack> {
+  const _KmltrackReader();
+
+  @override
+  Kmltrack createObject(fb.BufferContext bc, int offset) => 
+    Kmltrack._(bc, offset);
+}
+
+class KmltrackBuilder {
+  KmltrackBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(7);
+  }
+
+  int addExtrude(bool? EXTRUDE) {
+    fbBuilder.addBool(0, EXTRUDE);
+    return fbBuilder.offset;
+  }
+  int addTessellate(bool? TESSELLATE) {
+    fbBuilder.addBool(1, TESSELLATE);
+    return fbBuilder.offset;
+  }
+  int addAltitudeMode(KmlaltitudeMode? ALTITUDE_MODE) {
+    fbBuilder.addInt8(2, ALTITUDE_MODE?.value);
+    return fbBuilder.offset;
+  }
+  int addWhenOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addCoordsOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addAnglesOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addModelOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmltrackObjectBuilder extends fb.ObjectBuilder {
+  final bool? _EXTRUDE;
+  final bool? _TESSELLATE;
+  final KmlaltitudeMode? _ALTITUDE_MODE;
+  final List<String>? _WHEN;
+  final List<KmlcoordinateObjectBuilder>? _COORDS;
+  final List<KmlcoordinateObjectBuilder>? _ANGLES;
+  final KmlmodelObjectBuilder? _MODEL;
+
+  KmltrackObjectBuilder({
+    bool? EXTRUDE,
+    bool? TESSELLATE,
+    KmlaltitudeMode? ALTITUDE_MODE,
+    List<String>? WHEN,
+    List<KmlcoordinateObjectBuilder>? COORDS,
+    List<KmlcoordinateObjectBuilder>? ANGLES,
+    KmlmodelObjectBuilder? MODEL,
+  })
+      : _EXTRUDE = EXTRUDE,
+        _TESSELLATE = TESSELLATE,
+        _ALTITUDE_MODE = ALTITUDE_MODE,
+        _WHEN = WHEN,
+        _COORDS = COORDS,
+        _ANGLES = ANGLES,
+        _MODEL = MODEL;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? WHENOffset = _WHEN == null ? null
+        : fbBuilder.writeList(_WHEN!.map(fbBuilder.writeString).toList());
+    final int? COORDSOffset = _COORDS == null ? null
+        : fbBuilder.writeList(_COORDS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? ANGLESOffset = _ANGLES == null ? null
+        : fbBuilder.writeList(_ANGLES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? MODELOffset = _MODEL?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(7);
+    fbBuilder.addBool(0, _EXTRUDE);
+    fbBuilder.addBool(1, _TESSELLATE);
+    fbBuilder.addInt8(2, _ALTITUDE_MODE?.value);
+    fbBuilder.addOffset(3, WHENOffset);
+    fbBuilder.addOffset(4, COORDSOffset);
+    fbBuilder.addOffset(5, ANGLESOffset);
+    fbBuilder.addOffset(6, MODELOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  gx:MultiTrack
+class KmlmultiTrack {
+  KmlmultiTrack._(this._bc, this._bcOffset);
+  factory KmlmultiTrack(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<KmlmultiTrack> reader = _KmlmultiTrackReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Altitude mode
+  KmlaltitudeMode get ALTITUDE_MODE => KmlaltitudeMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  Whether to interpolate between tracks
+  bool get INTERPOLATE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 6, false);
+  ///  Child tracks
+  List<Kmltrack>? get TRACKS => const fb.ListReader<Kmltrack>(Kmltrack.reader).vTableGetNullable(_bc, _bcOffset, 8);
+
+  @override
+  String toString() {
+    return 'KmlmultiTrack{ALTITUDE_MODE: ${ALTITUDE_MODE}, INTERPOLATE: ${INTERPOLATE}, TRACKS: ${TRACKS}}';
+  }
+}
+
+class _KmlmultiTrackReader extends fb.TableReader<KmlmultiTrack> {
+  const _KmlmultiTrackReader();
+
+  @override
+  KmlmultiTrack createObject(fb.BufferContext bc, int offset) => 
+    KmlmultiTrack._(bc, offset);
+}
+
+class KmlmultiTrackBuilder {
+  KmlmultiTrackBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addAltitudeMode(KmlaltitudeMode? ALTITUDE_MODE) {
+    fbBuilder.addInt8(0, ALTITUDE_MODE?.value);
+    return fbBuilder.offset;
+  }
+  int addInterpolate(bool? INTERPOLATE) {
+    fbBuilder.addBool(1, INTERPOLATE);
+    return fbBuilder.offset;
+  }
+  int addTracksOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmlmultiTrackObjectBuilder extends fb.ObjectBuilder {
+  final KmlaltitudeMode? _ALTITUDE_MODE;
+  final bool? _INTERPOLATE;
+  final List<KmltrackObjectBuilder>? _TRACKS;
+
+  KmlmultiTrackObjectBuilder({
+    KmlaltitudeMode? ALTITUDE_MODE,
+    bool? INTERPOLATE,
+    List<KmltrackObjectBuilder>? TRACKS,
+  })
+      : _ALTITUDE_MODE = ALTITUDE_MODE,
+        _INTERPOLATE = INTERPOLATE,
+        _TRACKS = TRACKS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? TRACKSOffset = _TRACKS == null ? null
+        : fbBuilder.writeList(_TRACKS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(3);
+    fbBuilder.addInt8(0, _ALTITUDE_MODE?.value);
+    fbBuilder.addBool(1, _INTERPOLATE);
+    fbBuilder.addOffset(2, TRACKSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  MultiGeometry
 class KmlmultiGeometry {
   KmlmultiGeometry._(this._bc, this._bcOffset);
@@ -1915,10 +2947,18 @@ class KmlmultiGeometry {
   List<Kmlpolygon>? get POLYGONS => const fb.ListReader<Kmlpolygon>(Kmlpolygon.reader).vTableGetNullable(_bc, _bcOffset, 8);
   ///  Nested multi-geometries
   List<KmlmultiGeometry>? get MULTI_GEOMETRIES => const fb.ListReader<KmlmultiGeometry>(KmlmultiGeometry.reader).vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Child linear rings (standalone)
+  List<KmllinearRing>? get LINEAR_RINGS => const fb.ListReader<KmllinearRing>(KmllinearRing.reader).vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Child 3D models
+  List<Kmlmodel>? get MODELS => const fb.ListReader<Kmlmodel>(Kmlmodel.reader).vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Child tracks
+  List<Kmltrack>? get TRACKS => const fb.ListReader<Kmltrack>(Kmltrack.reader).vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Child multi-tracks
+  List<KmlmultiTrack>? get MULTI_TRACKS => const fb.ListReader<KmlmultiTrack>(KmlmultiTrack.reader).vTableGetNullable(_bc, _bcOffset, 18);
 
   @override
   String toString() {
-    return 'KmlmultiGeometry{POINTS: ${POINTS}, LINE_STRINGS: ${LINE_STRINGS}, POLYGONS: ${POLYGONS}, MULTI_GEOMETRIES: ${MULTI_GEOMETRIES}}';
+    return 'KmlmultiGeometry{POINTS: ${POINTS}, LINE_STRINGS: ${LINE_STRINGS}, POLYGONS: ${POLYGONS}, MULTI_GEOMETRIES: ${MULTI_GEOMETRIES}, LINEAR_RINGS: ${LINEAR_RINGS}, MODELS: ${MODELS}, TRACKS: ${TRACKS}, MULTI_TRACKS: ${MULTI_TRACKS}}';
   }
 }
 
@@ -1936,7 +2976,7 @@ class KmlmultiGeometryBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(8);
   }
 
   int addPointsOffset(int? offset) {
@@ -1955,6 +2995,22 @@ class KmlmultiGeometryBuilder {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
+  int addLinearRingsOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addModelsOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addTracksOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addMultiTracksOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1966,17 +3022,29 @@ class KmlmultiGeometryObjectBuilder extends fb.ObjectBuilder {
   final List<KmllineStringObjectBuilder>? _LINE_STRINGS;
   final List<KmlpolygonObjectBuilder>? _POLYGONS;
   final List<KmlmultiGeometryObjectBuilder>? _MULTI_GEOMETRIES;
+  final List<KmllinearRingObjectBuilder>? _LINEAR_RINGS;
+  final List<KmlmodelObjectBuilder>? _MODELS;
+  final List<KmltrackObjectBuilder>? _TRACKS;
+  final List<KmlmultiTrackObjectBuilder>? _MULTI_TRACKS;
 
   KmlmultiGeometryObjectBuilder({
     List<KmlpointObjectBuilder>? POINTS,
     List<KmllineStringObjectBuilder>? LINE_STRINGS,
     List<KmlpolygonObjectBuilder>? POLYGONS,
     List<KmlmultiGeometryObjectBuilder>? MULTI_GEOMETRIES,
+    List<KmllinearRingObjectBuilder>? LINEAR_RINGS,
+    List<KmlmodelObjectBuilder>? MODELS,
+    List<KmltrackObjectBuilder>? TRACKS,
+    List<KmlmultiTrackObjectBuilder>? MULTI_TRACKS,
   })
       : _POINTS = POINTS,
         _LINE_STRINGS = LINE_STRINGS,
         _POLYGONS = POLYGONS,
-        _MULTI_GEOMETRIES = MULTI_GEOMETRIES;
+        _MULTI_GEOMETRIES = MULTI_GEOMETRIES,
+        _LINEAR_RINGS = LINEAR_RINGS,
+        _MODELS = MODELS,
+        _TRACKS = TRACKS,
+        _MULTI_TRACKS = MULTI_TRACKS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1989,11 +3057,23 @@ class KmlmultiGeometryObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_POLYGONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? MULTI_GEOMETRIESOffset = _MULTI_GEOMETRIES == null ? null
         : fbBuilder.writeList(_MULTI_GEOMETRIES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(4);
+    final int? LINEAR_RINGSOffset = _LINEAR_RINGS == null ? null
+        : fbBuilder.writeList(_LINEAR_RINGS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? MODELSOffset = _MODELS == null ? null
+        : fbBuilder.writeList(_MODELS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? TRACKSOffset = _TRACKS == null ? null
+        : fbBuilder.writeList(_TRACKS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? MULTI_TRACKSOffset = _MULTI_TRACKS == null ? null
+        : fbBuilder.writeList(_MULTI_TRACKS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(8);
     fbBuilder.addOffset(0, POINTSOffset);
     fbBuilder.addOffset(1, LINE_STRINGSOffset);
     fbBuilder.addOffset(2, POLYGONSOffset);
     fbBuilder.addOffset(3, MULTI_GEOMETRIESOffset);
+    fbBuilder.addOffset(4, LINEAR_RINGSOffset);
+    fbBuilder.addOffset(5, MODELSOffset);
+    fbBuilder.addOffset(6, TRACKSOffset);
+    fbBuilder.addOffset(7, MULTI_TRACKSOffset);
     return fbBuilder.endTable();
   }
 
@@ -2266,6 +3346,1139 @@ class KmldataObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+///  Schema simple field definition
+class KmlsimpleField {
+  KmlsimpleField._(this._bc, this._bcOffset);
+  factory KmlsimpleField(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<KmlsimpleField> reader = _KmlsimpleFieldReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Field name
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Field type (xsd:string, xsd:int, xsd:float, etc.)
+  String? get FIELD_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Display name
+  String? get DISPLAY_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+
+  @override
+  String toString() {
+    return 'KmlsimpleField{NAME: ${NAME}, FIELD_TYPE: ${FIELD_TYPE}, DISPLAY_NAME: ${DISPLAY_NAME}}';
+  }
+}
+
+class _KmlsimpleFieldReader extends fb.TableReader<KmlsimpleField> {
+  const _KmlsimpleFieldReader();
+
+  @override
+  KmlsimpleField createObject(fb.BufferContext bc, int offset) => 
+    KmlsimpleField._(bc, offset);
+}
+
+class KmlsimpleFieldBuilder {
+  KmlsimpleFieldBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addFieldTypeOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addDisplayNameOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmlsimpleFieldObjectBuilder extends fb.ObjectBuilder {
+  final String? _NAME;
+  final String? _FIELD_TYPE;
+  final String? _DISPLAY_NAME;
+
+  KmlsimpleFieldObjectBuilder({
+    String? NAME,
+    String? FIELD_TYPE,
+    String? DISPLAY_NAME,
+  })
+      : _NAME = NAME,
+        _FIELD_TYPE = FIELD_TYPE,
+        _DISPLAY_NAME = DISPLAY_NAME;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? FIELD_TYPEOffset = _FIELD_TYPE == null ? null
+        : fbBuilder.writeString(_FIELD_TYPE!);
+    final int? DISPLAY_NAMEOffset = _DISPLAY_NAME == null ? null
+        : fbBuilder.writeString(_DISPLAY_NAME!);
+    fbBuilder.startTable(3);
+    fbBuilder.addOffset(0, NAMEOffset);
+    fbBuilder.addOffset(1, FIELD_TYPEOffset);
+    fbBuilder.addOffset(2, DISPLAY_NAMEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Schema definition
+class Kmlschema {
+  Kmlschema._(this._bc, this._bcOffset);
+  factory Kmlschema(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Kmlschema> reader = _KmlschemaReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Schema name
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Schema ID
+  String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Simple field definitions
+  List<KmlsimpleField>? get SIMPLE_FIELDS => const fb.ListReader<KmlsimpleField>(KmlsimpleField.reader).vTableGetNullable(_bc, _bcOffset, 8);
+
+  @override
+  String toString() {
+    return 'Kmlschema{NAME: ${NAME}, ID: ${ID}, SIMPLE_FIELDS: ${SIMPLE_FIELDS}}';
+  }
+}
+
+class _KmlschemaReader extends fb.TableReader<Kmlschema> {
+  const _KmlschemaReader();
+
+  @override
+  Kmlschema createObject(fb.BufferContext bc, int offset) => 
+    Kmlschema._(bc, offset);
+}
+
+class KmlschemaBuilder {
+  KmlschemaBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addSimpleFieldsOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmlschemaObjectBuilder extends fb.ObjectBuilder {
+  final String? _NAME;
+  final String? _ID;
+  final List<KmlsimpleFieldObjectBuilder>? _SIMPLE_FIELDS;
+
+  KmlschemaObjectBuilder({
+    String? NAME,
+    String? ID,
+    List<KmlsimpleFieldObjectBuilder>? SIMPLE_FIELDS,
+  })
+      : _NAME = NAME,
+        _ID = ID,
+        _SIMPLE_FIELDS = SIMPLE_FIELDS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? IDOffset = _ID == null ? null
+        : fbBuilder.writeString(_ID!);
+    final int? SIMPLE_FIELDSOffset = _SIMPLE_FIELDS == null ? null
+        : fbBuilder.writeList(_SIMPLE_FIELDS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(3);
+    fbBuilder.addOffset(0, NAMEOffset);
+    fbBuilder.addOffset(1, IDOffset);
+    fbBuilder.addOffset(2, SIMPLE_FIELDSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Simple data value for SchemaData
+class KmlsimpleData {
+  KmlsimpleData._(this._bc, this._bcOffset);
+  factory KmlsimpleData(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<KmlsimpleData> reader = _KmlsimpleDataReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Field name
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Field value
+  String? get VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+
+  @override
+  String toString() {
+    return 'KmlsimpleData{NAME: ${NAME}, VALUE: ${VALUE}}';
+  }
+}
+
+class _KmlsimpleDataReader extends fb.TableReader<KmlsimpleData> {
+  const _KmlsimpleDataReader();
+
+  @override
+  KmlsimpleData createObject(fb.BufferContext bc, int offset) => 
+    KmlsimpleData._(bc, offset);
+}
+
+class KmlsimpleDataBuilder {
+  KmlsimpleDataBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addValueOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmlsimpleDataObjectBuilder extends fb.ObjectBuilder {
+  final String? _NAME;
+  final String? _VALUE;
+
+  KmlsimpleDataObjectBuilder({
+    String? NAME,
+    String? VALUE,
+  })
+      : _NAME = NAME,
+        _VALUE = VALUE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? VALUEOffset = _VALUE == null ? null
+        : fbBuilder.writeString(_VALUE!);
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, NAMEOffset);
+    fbBuilder.addOffset(1, VALUEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Schema data reference
+class KmlschemaData {
+  KmlschemaData._(this._bc, this._bcOffset);
+  factory KmlschemaData(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<KmlschemaData> reader = _KmlschemaDataReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Schema URL reference
+  String? get SCHEMA_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Simple data values
+  List<KmlsimpleData>? get SIMPLE_DATA => const fb.ListReader<KmlsimpleData>(KmlsimpleData.reader).vTableGetNullable(_bc, _bcOffset, 6);
+
+  @override
+  String toString() {
+    return 'KmlschemaData{SCHEMA_URL: ${SCHEMA_URL}, SIMPLE_DATA: ${SIMPLE_DATA}}';
+  }
+}
+
+class _KmlschemaDataReader extends fb.TableReader<KmlschemaData> {
+  const _KmlschemaDataReader();
+
+  @override
+  KmlschemaData createObject(fb.BufferContext bc, int offset) => 
+    KmlschemaData._(bc, offset);
+}
+
+class KmlschemaDataBuilder {
+  KmlschemaDataBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addSchemaUrlOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addSimpleDataOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmlschemaDataObjectBuilder extends fb.ObjectBuilder {
+  final String? _SCHEMA_URL;
+  final List<KmlsimpleDataObjectBuilder>? _SIMPLE_DATA;
+
+  KmlschemaDataObjectBuilder({
+    String? SCHEMA_URL,
+    List<KmlsimpleDataObjectBuilder>? SIMPLE_DATA,
+  })
+      : _SCHEMA_URL = SCHEMA_URL,
+        _SIMPLE_DATA = SIMPLE_DATA;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SCHEMA_URLOffset = _SCHEMA_URL == null ? null
+        : fbBuilder.writeString(_SCHEMA_URL!);
+    final int? SIMPLE_DATAOffset = _SIMPLE_DATA == null ? null
+        : fbBuilder.writeList(_SIMPLE_DATA!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, SCHEMA_URLOffset);
+    fbBuilder.addOffset(1, SIMPLE_DATAOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  LatLonQuad — four corner coordinates for ground overlay
+class KmllatLonQuad {
+  KmllatLonQuad._(this._bc, this._bcOffset);
+  factory KmllatLonQuad(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<KmllatLonQuad> reader = _KmllatLonQuadReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Four corner coordinates
+  List<Kmlcoordinate>? get COORDINATES => const fb.ListReader<Kmlcoordinate>(Kmlcoordinate.reader).vTableGetNullable(_bc, _bcOffset, 4);
+
+  @override
+  String toString() {
+    return 'KmllatLonQuad{COORDINATES: ${COORDINATES}}';
+  }
+}
+
+class _KmllatLonQuadReader extends fb.TableReader<KmllatLonQuad> {
+  const _KmllatLonQuadReader();
+
+  @override
+  KmllatLonQuad createObject(fb.BufferContext bc, int offset) => 
+    KmllatLonQuad._(bc, offset);
+}
+
+class KmllatLonQuadBuilder {
+  KmllatLonQuadBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(1);
+  }
+
+  int addCoordinatesOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmllatLonQuadObjectBuilder extends fb.ObjectBuilder {
+  final List<KmlcoordinateObjectBuilder>? _COORDINATES;
+
+  KmllatLonQuadObjectBuilder({
+    List<KmlcoordinateObjectBuilder>? COORDINATES,
+  })
+      : _COORDINATES = COORDINATES;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? COORDINATESOffset = _COORDINATES == null ? null
+        : fbBuilder.writeList(_COORDINATES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(1);
+    fbBuilder.addOffset(0, COORDINATESOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Region — Level of Detail bounding region
+class Kmlregion {
+  Kmlregion._(this._bc, this._bcOffset);
+  factory Kmlregion(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Kmlregion> reader = _KmlregionReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  LatLonAltBox
+  KmllatLonAltBox? get LAT_LON_ALT_BOX => KmllatLonAltBox.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Level of detail
+  Kmllod? get LOD => Kmllod.reader.vTableGetNullable(_bc, _bcOffset, 6);
+
+  @override
+  String toString() {
+    return 'Kmlregion{LAT_LON_ALT_BOX: ${LAT_LON_ALT_BOX}, LOD: ${LOD}}';
+  }
+}
+
+class _KmlregionReader extends fb.TableReader<Kmlregion> {
+  const _KmlregionReader();
+
+  @override
+  Kmlregion createObject(fb.BufferContext bc, int offset) => 
+    Kmlregion._(bc, offset);
+}
+
+class KmlregionBuilder {
+  KmlregionBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addLatLonAltBoxOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addLodOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmlregionObjectBuilder extends fb.ObjectBuilder {
+  final KmllatLonAltBoxObjectBuilder? _LAT_LON_ALT_BOX;
+  final KmllodObjectBuilder? _LOD;
+
+  KmlregionObjectBuilder({
+    KmllatLonAltBoxObjectBuilder? LAT_LON_ALT_BOX,
+    KmllodObjectBuilder? LOD,
+  })
+      : _LAT_LON_ALT_BOX = LAT_LON_ALT_BOX,
+        _LOD = LOD;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? LAT_LON_ALT_BOXOffset = _LAT_LON_ALT_BOX?.getOrCreateOffset(fbBuilder);
+    final int? LODOffset = _LOD?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, LAT_LON_ALT_BOXOffset);
+    fbBuilder.addOffset(1, LODOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  LatLonAltBox for Region
+class KmllatLonAltBox {
+  KmllatLonAltBox._(this._bc, this._bcOffset);
+  factory KmllatLonAltBox(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<KmllatLonAltBox> reader = _KmllatLonAltBoxReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  North latitude
+  double get NORTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  ///  South latitude
+  double get SOUTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  East longitude
+  double get EAST => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  West longitude
+  double get WEST => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  Minimum altitude
+  double get MIN_ALTITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  Maximum altitude
+  double get MAX_ALTITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  ///  Altitude mode
+  KmlaltitudeMode get ALTITUDE_MODE => KmlaltitudeMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 16, 0));
+
+  @override
+  String toString() {
+    return 'KmllatLonAltBox{NORTH: ${NORTH}, SOUTH: ${SOUTH}, EAST: ${EAST}, WEST: ${WEST}, MIN_ALTITUDE: ${MIN_ALTITUDE}, MAX_ALTITUDE: ${MAX_ALTITUDE}, ALTITUDE_MODE: ${ALTITUDE_MODE}}';
+  }
+}
+
+class _KmllatLonAltBoxReader extends fb.TableReader<KmllatLonAltBox> {
+  const _KmllatLonAltBoxReader();
+
+  @override
+  KmllatLonAltBox createObject(fb.BufferContext bc, int offset) => 
+    KmllatLonAltBox._(bc, offset);
+}
+
+class KmllatLonAltBoxBuilder {
+  KmllatLonAltBoxBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(7);
+  }
+
+  int addNorth(double? NORTH) {
+    fbBuilder.addFloat64(0, NORTH);
+    return fbBuilder.offset;
+  }
+  int addSouth(double? SOUTH) {
+    fbBuilder.addFloat64(1, SOUTH);
+    return fbBuilder.offset;
+  }
+  int addEast(double? EAST) {
+    fbBuilder.addFloat64(2, EAST);
+    return fbBuilder.offset;
+  }
+  int addWest(double? WEST) {
+    fbBuilder.addFloat64(3, WEST);
+    return fbBuilder.offset;
+  }
+  int addMinAltitude(double? MIN_ALTITUDE) {
+    fbBuilder.addFloat64(4, MIN_ALTITUDE);
+    return fbBuilder.offset;
+  }
+  int addMaxAltitude(double? MAX_ALTITUDE) {
+    fbBuilder.addFloat64(5, MAX_ALTITUDE);
+    return fbBuilder.offset;
+  }
+  int addAltitudeMode(KmlaltitudeMode? ALTITUDE_MODE) {
+    fbBuilder.addInt8(6, ALTITUDE_MODE?.value);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmllatLonAltBoxObjectBuilder extends fb.ObjectBuilder {
+  final double? _NORTH;
+  final double? _SOUTH;
+  final double? _EAST;
+  final double? _WEST;
+  final double? _MIN_ALTITUDE;
+  final double? _MAX_ALTITUDE;
+  final KmlaltitudeMode? _ALTITUDE_MODE;
+
+  KmllatLonAltBoxObjectBuilder({
+    double? NORTH,
+    double? SOUTH,
+    double? EAST,
+    double? WEST,
+    double? MIN_ALTITUDE,
+    double? MAX_ALTITUDE,
+    KmlaltitudeMode? ALTITUDE_MODE,
+  })
+      : _NORTH = NORTH,
+        _SOUTH = SOUTH,
+        _EAST = EAST,
+        _WEST = WEST,
+        _MIN_ALTITUDE = MIN_ALTITUDE,
+        _MAX_ALTITUDE = MAX_ALTITUDE,
+        _ALTITUDE_MODE = ALTITUDE_MODE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(7);
+    fbBuilder.addFloat64(0, _NORTH);
+    fbBuilder.addFloat64(1, _SOUTH);
+    fbBuilder.addFloat64(2, _EAST);
+    fbBuilder.addFloat64(3, _WEST);
+    fbBuilder.addFloat64(4, _MIN_ALTITUDE);
+    fbBuilder.addFloat64(5, _MAX_ALTITUDE);
+    fbBuilder.addInt8(6, _ALTITUDE_MODE?.value);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Level of Detail parameters
+class Kmllod {
+  Kmllod._(this._bc, this._bcOffset);
+  factory Kmllod(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Kmllod> reader = _KmllodReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Minimum LOD pixels
+  double get MIN_LOD_PIXELS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  ///  Maximum LOD pixels (-1 = infinite)
+  double get MAX_LOD_PIXELS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Minimum fade extent
+  double get MIN_FADE_EXTENT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Maximum fade extent
+  double get MAX_FADE_EXTENT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+
+  @override
+  String toString() {
+    return 'Kmllod{MIN_LOD_PIXELS: ${MIN_LOD_PIXELS}, MAX_LOD_PIXELS: ${MAX_LOD_PIXELS}, MIN_FADE_EXTENT: ${MIN_FADE_EXTENT}, MAX_FADE_EXTENT: ${MAX_FADE_EXTENT}}';
+  }
+}
+
+class _KmllodReader extends fb.TableReader<Kmllod> {
+  const _KmllodReader();
+
+  @override
+  Kmllod createObject(fb.BufferContext bc, int offset) => 
+    Kmllod._(bc, offset);
+}
+
+class KmllodBuilder {
+  KmllodBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addMinLodPixels(double? MIN_LOD_PIXELS) {
+    fbBuilder.addFloat64(0, MIN_LOD_PIXELS);
+    return fbBuilder.offset;
+  }
+  int addMaxLodPixels(double? MAX_LOD_PIXELS) {
+    fbBuilder.addFloat64(1, MAX_LOD_PIXELS);
+    return fbBuilder.offset;
+  }
+  int addMinFadeExtent(double? MIN_FADE_EXTENT) {
+    fbBuilder.addFloat64(2, MIN_FADE_EXTENT);
+    return fbBuilder.offset;
+  }
+  int addMaxFadeExtent(double? MAX_FADE_EXTENT) {
+    fbBuilder.addFloat64(3, MAX_FADE_EXTENT);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmllodObjectBuilder extends fb.ObjectBuilder {
+  final double? _MIN_LOD_PIXELS;
+  final double? _MAX_LOD_PIXELS;
+  final double? _MIN_FADE_EXTENT;
+  final double? _MAX_FADE_EXTENT;
+
+  KmllodObjectBuilder({
+    double? MIN_LOD_PIXELS,
+    double? MAX_LOD_PIXELS,
+    double? MIN_FADE_EXTENT,
+    double? MAX_FADE_EXTENT,
+  })
+      : _MIN_LOD_PIXELS = MIN_LOD_PIXELS,
+        _MAX_LOD_PIXELS = MAX_LOD_PIXELS,
+        _MIN_FADE_EXTENT = MIN_FADE_EXTENT,
+        _MAX_FADE_EXTENT = MAX_FADE_EXTENT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(4);
+    fbBuilder.addFloat64(0, _MIN_LOD_PIXELS);
+    fbBuilder.addFloat64(1, _MAX_LOD_PIXELS);
+    fbBuilder.addFloat64(2, _MIN_FADE_EXTENT);
+    fbBuilder.addFloat64(3, _MAX_FADE_EXTENT);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Full Link element
+class Kmllink {
+  Kmllink._(this._bc, this._bcOffset);
+  factory Kmllink(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Kmllink> reader = _KmllinkReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  URL
+  String? get HREF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Refresh mode
+  KmlrefreshMode get REFRESH_MODE => KmlrefreshMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  ///  Refresh interval in seconds
+  double get REFRESH_INTERVAL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  View refresh mode
+  KmlviewRefreshMode get VIEW_REFRESH_MODE => KmlviewRefreshMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  ///  View refresh time in seconds
+  double get VIEW_REFRESH_TIME => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  View bound scale
+  double get VIEW_BOUND_SCALE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  ///  View format string
+  String? get VIEW_FORMAT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  HTTP query string
+  String? get HTTP_QUERY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+
+  @override
+  String toString() {
+    return 'Kmllink{HREF: ${HREF}, REFRESH_MODE: ${REFRESH_MODE}, REFRESH_INTERVAL: ${REFRESH_INTERVAL}, VIEW_REFRESH_MODE: ${VIEW_REFRESH_MODE}, VIEW_REFRESH_TIME: ${VIEW_REFRESH_TIME}, VIEW_BOUND_SCALE: ${VIEW_BOUND_SCALE}, VIEW_FORMAT: ${VIEW_FORMAT}, HTTP_QUERY: ${HTTP_QUERY}}';
+  }
+}
+
+class _KmllinkReader extends fb.TableReader<Kmllink> {
+  const _KmllinkReader();
+
+  @override
+  Kmllink createObject(fb.BufferContext bc, int offset) => 
+    Kmllink._(bc, offset);
+}
+
+class KmllinkBuilder {
+  KmllinkBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(8);
+  }
+
+  int addHrefOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addRefreshMode(KmlrefreshMode? REFRESH_MODE) {
+    fbBuilder.addInt8(1, REFRESH_MODE?.value);
+    return fbBuilder.offset;
+  }
+  int addRefreshInterval(double? REFRESH_INTERVAL) {
+    fbBuilder.addFloat64(2, REFRESH_INTERVAL);
+    return fbBuilder.offset;
+  }
+  int addViewRefreshMode(KmlviewRefreshMode? VIEW_REFRESH_MODE) {
+    fbBuilder.addInt8(3, VIEW_REFRESH_MODE?.value);
+    return fbBuilder.offset;
+  }
+  int addViewRefreshTime(double? VIEW_REFRESH_TIME) {
+    fbBuilder.addFloat64(4, VIEW_REFRESH_TIME);
+    return fbBuilder.offset;
+  }
+  int addViewBoundScale(double? VIEW_BOUND_SCALE) {
+    fbBuilder.addFloat64(5, VIEW_BOUND_SCALE);
+    return fbBuilder.offset;
+  }
+  int addViewFormatOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addHttpQueryOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmllinkObjectBuilder extends fb.ObjectBuilder {
+  final String? _HREF;
+  final KmlrefreshMode? _REFRESH_MODE;
+  final double? _REFRESH_INTERVAL;
+  final KmlviewRefreshMode? _VIEW_REFRESH_MODE;
+  final double? _VIEW_REFRESH_TIME;
+  final double? _VIEW_BOUND_SCALE;
+  final String? _VIEW_FORMAT;
+  final String? _HTTP_QUERY;
+
+  KmllinkObjectBuilder({
+    String? HREF,
+    KmlrefreshMode? REFRESH_MODE,
+    double? REFRESH_INTERVAL,
+    KmlviewRefreshMode? VIEW_REFRESH_MODE,
+    double? VIEW_REFRESH_TIME,
+    double? VIEW_BOUND_SCALE,
+    String? VIEW_FORMAT,
+    String? HTTP_QUERY,
+  })
+      : _HREF = HREF,
+        _REFRESH_MODE = REFRESH_MODE,
+        _REFRESH_INTERVAL = REFRESH_INTERVAL,
+        _VIEW_REFRESH_MODE = VIEW_REFRESH_MODE,
+        _VIEW_REFRESH_TIME = VIEW_REFRESH_TIME,
+        _VIEW_BOUND_SCALE = VIEW_BOUND_SCALE,
+        _VIEW_FORMAT = VIEW_FORMAT,
+        _HTTP_QUERY = HTTP_QUERY;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? HREFOffset = _HREF == null ? null
+        : fbBuilder.writeString(_HREF!);
+    final int? VIEW_FORMATOffset = _VIEW_FORMAT == null ? null
+        : fbBuilder.writeString(_VIEW_FORMAT!);
+    final int? HTTP_QUERYOffset = _HTTP_QUERY == null ? null
+        : fbBuilder.writeString(_HTTP_QUERY!);
+    fbBuilder.startTable(8);
+    fbBuilder.addOffset(0, HREFOffset);
+    fbBuilder.addInt8(1, _REFRESH_MODE?.value);
+    fbBuilder.addFloat64(2, _REFRESH_INTERVAL);
+    fbBuilder.addInt8(3, _VIEW_REFRESH_MODE?.value);
+    fbBuilder.addFloat64(4, _VIEW_REFRESH_TIME);
+    fbBuilder.addFloat64(5, _VIEW_BOUND_SCALE);
+    fbBuilder.addOffset(6, VIEW_FORMATOffset);
+    fbBuilder.addOffset(7, HTTP_QUERYOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  ViewVolume for PhotoOverlay
+class KmlviewVolume {
+  KmlviewVolume._(this._bc, this._bcOffset);
+  factory KmlviewVolume(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<KmlviewVolume> reader = _KmlviewVolumeReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Left field of view angle
+  double get LEFT_FOV => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  ///  Right field of view angle
+  double get RIGHT_FOV => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Bottom field of view angle
+  double get BOTTOM_FOV => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Top field of view angle
+  double get TOP_FOV => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  Near clipping plane
+  double get NEAR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+
+  @override
+  String toString() {
+    return 'KmlviewVolume{LEFT_FOV: ${LEFT_FOV}, RIGHT_FOV: ${RIGHT_FOV}, BOTTOM_FOV: ${BOTTOM_FOV}, TOP_FOV: ${TOP_FOV}, NEAR: ${NEAR}}';
+  }
+}
+
+class _KmlviewVolumeReader extends fb.TableReader<KmlviewVolume> {
+  const _KmlviewVolumeReader();
+
+  @override
+  KmlviewVolume createObject(fb.BufferContext bc, int offset) => 
+    KmlviewVolume._(bc, offset);
+}
+
+class KmlviewVolumeBuilder {
+  KmlviewVolumeBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addLeftFov(double? LEFT_FOV) {
+    fbBuilder.addFloat64(0, LEFT_FOV);
+    return fbBuilder.offset;
+  }
+  int addRightFov(double? RIGHT_FOV) {
+    fbBuilder.addFloat64(1, RIGHT_FOV);
+    return fbBuilder.offset;
+  }
+  int addBottomFov(double? BOTTOM_FOV) {
+    fbBuilder.addFloat64(2, BOTTOM_FOV);
+    return fbBuilder.offset;
+  }
+  int addTopFov(double? TOP_FOV) {
+    fbBuilder.addFloat64(3, TOP_FOV);
+    return fbBuilder.offset;
+  }
+  int addNear(double? NEAR) {
+    fbBuilder.addFloat64(4, NEAR);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmlviewVolumeObjectBuilder extends fb.ObjectBuilder {
+  final double? _LEFT_FOV;
+  final double? _RIGHT_FOV;
+  final double? _BOTTOM_FOV;
+  final double? _TOP_FOV;
+  final double? _NEAR;
+
+  KmlviewVolumeObjectBuilder({
+    double? LEFT_FOV,
+    double? RIGHT_FOV,
+    double? BOTTOM_FOV,
+    double? TOP_FOV,
+    double? NEAR,
+  })
+      : _LEFT_FOV = LEFT_FOV,
+        _RIGHT_FOV = RIGHT_FOV,
+        _BOTTOM_FOV = BOTTOM_FOV,
+        _TOP_FOV = TOP_FOV,
+        _NEAR = NEAR;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(5);
+    fbBuilder.addFloat64(0, _LEFT_FOV);
+    fbBuilder.addFloat64(1, _RIGHT_FOV);
+    fbBuilder.addFloat64(2, _BOTTOM_FOV);
+    fbBuilder.addFloat64(3, _TOP_FOV);
+    fbBuilder.addFloat64(4, _NEAR);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  ImagePyramid for PhotoOverlay
+class KmlimagePyramid {
+  KmlimagePyramid._(this._bc, this._bcOffset);
+  factory KmlimagePyramid(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<KmlimagePyramid> reader = _KmlimagePyramidReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Tile size in pixels
+  int get TILE_SIZE => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  ///  Maximum image width
+  int get MAX_WIDTH => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  ///  Maximum image height
+  int get MAX_HEIGHT => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  ///  Grid origin
+  KmlgridOrigin get GRID_ORIGIN => KmlgridOrigin.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+
+  @override
+  String toString() {
+    return 'KmlimagePyramid{TILE_SIZE: ${TILE_SIZE}, MAX_WIDTH: ${MAX_WIDTH}, MAX_HEIGHT: ${MAX_HEIGHT}, GRID_ORIGIN: ${GRID_ORIGIN}}';
+  }
+}
+
+class _KmlimagePyramidReader extends fb.TableReader<KmlimagePyramid> {
+  const _KmlimagePyramidReader();
+
+  @override
+  KmlimagePyramid createObject(fb.BufferContext bc, int offset) => 
+    KmlimagePyramid._(bc, offset);
+}
+
+class KmlimagePyramidBuilder {
+  KmlimagePyramidBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addTileSize(int? TILE_SIZE) {
+    fbBuilder.addInt32(0, TILE_SIZE);
+    return fbBuilder.offset;
+  }
+  int addMaxWidth(int? MAX_WIDTH) {
+    fbBuilder.addInt32(1, MAX_WIDTH);
+    return fbBuilder.offset;
+  }
+  int addMaxHeight(int? MAX_HEIGHT) {
+    fbBuilder.addInt32(2, MAX_HEIGHT);
+    return fbBuilder.offset;
+  }
+  int addGridOrigin(KmlgridOrigin? GRID_ORIGIN) {
+    fbBuilder.addInt8(3, GRID_ORIGIN?.value);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmlimagePyramidObjectBuilder extends fb.ObjectBuilder {
+  final int? _TILE_SIZE;
+  final int? _MAX_WIDTH;
+  final int? _MAX_HEIGHT;
+  final KmlgridOrigin? _GRID_ORIGIN;
+
+  KmlimagePyramidObjectBuilder({
+    int? TILE_SIZE,
+    int? MAX_WIDTH,
+    int? MAX_HEIGHT,
+    KmlgridOrigin? GRID_ORIGIN,
+  })
+      : _TILE_SIZE = TILE_SIZE,
+        _MAX_WIDTH = MAX_WIDTH,
+        _MAX_HEIGHT = MAX_HEIGHT,
+        _GRID_ORIGIN = GRID_ORIGIN;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(4);
+    fbBuilder.addInt32(0, _TILE_SIZE);
+    fbBuilder.addInt32(1, _MAX_WIDTH);
+    fbBuilder.addInt32(2, _MAX_HEIGHT);
+    fbBuilder.addInt8(3, _GRID_ORIGIN?.value);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Network link
 class KmlnetworkLink {
   KmlnetworkLink._(this._bc, this._bcOffset);
@@ -2281,22 +4494,32 @@ class KmlnetworkLink {
 
   ///  Name of the network link
   String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Description
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
   ///  Whether the link is visible
-  bool get VISIBILITY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 6, false);
+  bool get VISIBILITY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
+  ///  Whether open in tree view
+  bool get OPEN => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
   ///  Link URL
-  String? get HREF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get HREF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   ///  Refresh mode
-  KmlrefreshMode get REFRESH_MODE => KmlrefreshMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  KmlrefreshMode get REFRESH_MODE => KmlrefreshMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
   ///  Refresh interval in seconds
-  double get REFRESH_INTERVAL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get REFRESH_INTERVAL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
   ///  View refresh mode
-  KmlviewRefreshMode get VIEW_REFRESH_MODE => KmlviewRefreshMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
+  KmlviewRefreshMode get VIEW_REFRESH_MODE => KmlviewRefreshMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 0));
   ///  View refresh time in seconds
-  double get VIEW_REFRESH_TIME => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get VIEW_REFRESH_TIME => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  Whether to refresh on visibility change
+  bool get REFRESH_VISIBILITY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 22, false);
+  ///  Whether to fly to view on refresh
+  bool get FLY_TO_VIEW => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
+  ///  Full link element
+  Kmllink? get LINK => Kmllink.reader.vTableGetNullable(_bc, _bcOffset, 26);
 
   @override
   String toString() {
-    return 'KmlnetworkLink{NAME: ${NAME}, VISIBILITY: ${VISIBILITY}, HREF: ${HREF}, REFRESH_MODE: ${REFRESH_MODE}, REFRESH_INTERVAL: ${REFRESH_INTERVAL}, VIEW_REFRESH_MODE: ${VIEW_REFRESH_MODE}, VIEW_REFRESH_TIME: ${VIEW_REFRESH_TIME}}';
+    return 'KmlnetworkLink{NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, VISIBILITY: ${VISIBILITY}, OPEN: ${OPEN}, HREF: ${HREF}, REFRESH_MODE: ${REFRESH_MODE}, REFRESH_INTERVAL: ${REFRESH_INTERVAL}, VIEW_REFRESH_MODE: ${VIEW_REFRESH_MODE}, VIEW_REFRESH_TIME: ${VIEW_REFRESH_TIME}, REFRESH_VISIBILITY: ${REFRESH_VISIBILITY}, FLY_TO_VIEW: ${FLY_TO_VIEW}, LINK: ${LINK}}';
   }
 }
 
@@ -2314,35 +4537,55 @@ class KmlnetworkLinkBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(7);
+    fbBuilder.startTable(12);
   }
 
   int addNameOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
+  int addDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
   int addVisibility(bool? VISIBILITY) {
-    fbBuilder.addBool(1, VISIBILITY);
+    fbBuilder.addBool(2, VISIBILITY);
+    return fbBuilder.offset;
+  }
+  int addOpen(bool? OPEN) {
+    fbBuilder.addBool(3, OPEN);
     return fbBuilder.offset;
   }
   int addHrefOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
+    fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
   int addRefreshMode(KmlrefreshMode? REFRESH_MODE) {
-    fbBuilder.addInt8(3, REFRESH_MODE?.value);
+    fbBuilder.addInt8(5, REFRESH_MODE?.value);
     return fbBuilder.offset;
   }
   int addRefreshInterval(double? REFRESH_INTERVAL) {
-    fbBuilder.addFloat64(4, REFRESH_INTERVAL);
+    fbBuilder.addFloat64(6, REFRESH_INTERVAL);
     return fbBuilder.offset;
   }
   int addViewRefreshMode(KmlviewRefreshMode? VIEW_REFRESH_MODE) {
-    fbBuilder.addInt8(5, VIEW_REFRESH_MODE?.value);
+    fbBuilder.addInt8(7, VIEW_REFRESH_MODE?.value);
     return fbBuilder.offset;
   }
   int addViewRefreshTime(double? VIEW_REFRESH_TIME) {
-    fbBuilder.addFloat64(6, VIEW_REFRESH_TIME);
+    fbBuilder.addFloat64(8, VIEW_REFRESH_TIME);
+    return fbBuilder.offset;
+  }
+  int addRefreshVisibility(bool? REFRESH_VISIBILITY) {
+    fbBuilder.addBool(9, REFRESH_VISIBILITY);
+    return fbBuilder.offset;
+  }
+  int addFlyToView(bool? FLY_TO_VIEW) {
+    fbBuilder.addBool(10, FLY_TO_VIEW);
+    return fbBuilder.offset;
+  }
+  int addLinkOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
 
@@ -2353,45 +4596,553 @@ class KmlnetworkLinkBuilder {
 
 class KmlnetworkLinkObjectBuilder extends fb.ObjectBuilder {
   final String? _NAME;
+  final String? _DESCRIPTION;
   final bool? _VISIBILITY;
+  final bool? _OPEN;
   final String? _HREF;
   final KmlrefreshMode? _REFRESH_MODE;
   final double? _REFRESH_INTERVAL;
   final KmlviewRefreshMode? _VIEW_REFRESH_MODE;
   final double? _VIEW_REFRESH_TIME;
+  final bool? _REFRESH_VISIBILITY;
+  final bool? _FLY_TO_VIEW;
+  final KmllinkObjectBuilder? _LINK;
 
   KmlnetworkLinkObjectBuilder({
     String? NAME,
+    String? DESCRIPTION,
     bool? VISIBILITY,
+    bool? OPEN,
     String? HREF,
     KmlrefreshMode? REFRESH_MODE,
     double? REFRESH_INTERVAL,
     KmlviewRefreshMode? VIEW_REFRESH_MODE,
     double? VIEW_REFRESH_TIME,
+    bool? REFRESH_VISIBILITY,
+    bool? FLY_TO_VIEW,
+    KmllinkObjectBuilder? LINK,
   })
       : _NAME = NAME,
+        _DESCRIPTION = DESCRIPTION,
         _VISIBILITY = VISIBILITY,
+        _OPEN = OPEN,
         _HREF = HREF,
         _REFRESH_MODE = REFRESH_MODE,
         _REFRESH_INTERVAL = REFRESH_INTERVAL,
         _VIEW_REFRESH_MODE = VIEW_REFRESH_MODE,
-        _VIEW_REFRESH_TIME = VIEW_REFRESH_TIME;
+        _VIEW_REFRESH_TIME = VIEW_REFRESH_TIME,
+        _REFRESH_VISIBILITY = REFRESH_VISIBILITY,
+        _FLY_TO_VIEW = FLY_TO_VIEW,
+        _LINK = LINK;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? NAMEOffset = _NAME == null ? null
         : fbBuilder.writeString(_NAME!);
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
     final int? HREFOffset = _HREF == null ? null
         : fbBuilder.writeString(_HREF!);
-    fbBuilder.startTable(7);
+    final int? LINKOffset = _LINK?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(12);
     fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addBool(1, _VISIBILITY);
-    fbBuilder.addOffset(2, HREFOffset);
-    fbBuilder.addInt8(3, _REFRESH_MODE?.value);
-    fbBuilder.addFloat64(4, _REFRESH_INTERVAL);
-    fbBuilder.addInt8(5, _VIEW_REFRESH_MODE?.value);
-    fbBuilder.addFloat64(6, _VIEW_REFRESH_TIME);
+    fbBuilder.addOffset(1, DESCRIPTIONOffset);
+    fbBuilder.addBool(2, _VISIBILITY);
+    fbBuilder.addBool(3, _OPEN);
+    fbBuilder.addOffset(4, HREFOffset);
+    fbBuilder.addInt8(5, _REFRESH_MODE?.value);
+    fbBuilder.addFloat64(6, _REFRESH_INTERVAL);
+    fbBuilder.addInt8(7, _VIEW_REFRESH_MODE?.value);
+    fbBuilder.addFloat64(8, _VIEW_REFRESH_TIME);
+    fbBuilder.addBool(9, _REFRESH_VISIBILITY);
+    fbBuilder.addBool(10, _FLY_TO_VIEW);
+    fbBuilder.addOffset(11, LINKOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Screen overlay
+class KmlscreenOverlay {
+  KmlscreenOverlay._(this._bc, this._bcOffset);
+  factory KmlscreenOverlay(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<KmlscreenOverlay> reader = _KmlscreenOverlayReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Name
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Description
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Visibility
+  bool get VISIBILITY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
+  ///  Icon/image URL
+  String? get ICON_HREF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Color
+  String? get COLOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Draw order
+  int get DRAW_ORDER => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  ///  Overlay X position
+  double get OVERLAY_XY_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Overlay Y position
+  double get OVERLAY_XY_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  ///  Overlay X units
+  Kmlunits get OVERLAY_XY_XUNITS => Kmlunits.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 0));
+  ///  Overlay Y units
+  Kmlunits get OVERLAY_XY_YUNITS => Kmlunits.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 22, 0));
+  ///  Screen X position
+  double get SCREEN_XY_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  ///  Screen Y position
+  double get SCREEN_XY_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  ///  Screen X units
+  Kmlunits get SCREEN_XY_XUNITS => Kmlunits.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 28, 0));
+  ///  Screen Y units
+  Kmlunits get SCREEN_XY_YUNITS => Kmlunits.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 30, 0));
+  ///  Rotation X
+  double get ROTATION_XY_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  ///  Rotation Y
+  double get ROTATION_XY_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  ///  Rotation X units
+  Kmlunits get ROTATION_XY_XUNITS => Kmlunits.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 36, 0));
+  ///  Rotation Y units
+  Kmlunits get ROTATION_XY_YUNITS => Kmlunits.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 38, 0));
+  ///  Size X
+  double get SIZE_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  ///  Size Y
+  double get SIZE_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  ///  Size X units
+  Kmlunits get SIZE_XUNITS => Kmlunits.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 44, 0));
+  ///  Size Y units
+  Kmlunits get SIZE_YUNITS => Kmlunits.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 46, 0));
+  ///  Rotation in degrees
+  double get ROTATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
+
+  @override
+  String toString() {
+    return 'KmlscreenOverlay{NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, VISIBILITY: ${VISIBILITY}, ICON_HREF: ${ICON_HREF}, COLOR: ${COLOR}, DRAW_ORDER: ${DRAW_ORDER}, OVERLAY_XY_X: ${OVERLAY_XY_X}, OVERLAY_XY_Y: ${OVERLAY_XY_Y}, OVERLAY_XY_XUNITS: ${OVERLAY_XY_XUNITS}, OVERLAY_XY_YUNITS: ${OVERLAY_XY_YUNITS}, SCREEN_XY_X: ${SCREEN_XY_X}, SCREEN_XY_Y: ${SCREEN_XY_Y}, SCREEN_XY_XUNITS: ${SCREEN_XY_XUNITS}, SCREEN_XY_YUNITS: ${SCREEN_XY_YUNITS}, ROTATION_XY_X: ${ROTATION_XY_X}, ROTATION_XY_Y: ${ROTATION_XY_Y}, ROTATION_XY_XUNITS: ${ROTATION_XY_XUNITS}, ROTATION_XY_YUNITS: ${ROTATION_XY_YUNITS}, SIZE_X: ${SIZE_X}, SIZE_Y: ${SIZE_Y}, SIZE_XUNITS: ${SIZE_XUNITS}, SIZE_YUNITS: ${SIZE_YUNITS}, ROTATION: ${ROTATION}}';
+  }
+}
+
+class _KmlscreenOverlayReader extends fb.TableReader<KmlscreenOverlay> {
+  const _KmlscreenOverlayReader();
+
+  @override
+  KmlscreenOverlay createObject(fb.BufferContext bc, int offset) => 
+    KmlscreenOverlay._(bc, offset);
+}
+
+class KmlscreenOverlayBuilder {
+  KmlscreenOverlayBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(23);
+  }
+
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addVisibility(bool? VISIBILITY) {
+    fbBuilder.addBool(2, VISIBILITY);
+    return fbBuilder.offset;
+  }
+  int addIconHrefOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addColorOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addDrawOrder(int? DRAW_ORDER) {
+    fbBuilder.addInt32(5, DRAW_ORDER);
+    return fbBuilder.offset;
+  }
+  int addOverlayXyX(double? OVERLAY_XY_X) {
+    fbBuilder.addFloat64(6, OVERLAY_XY_X);
+    return fbBuilder.offset;
+  }
+  int addOverlayXyY(double? OVERLAY_XY_Y) {
+    fbBuilder.addFloat64(7, OVERLAY_XY_Y);
+    return fbBuilder.offset;
+  }
+  int addOverlayXyXunits(Kmlunits? OVERLAY_XY_XUNITS) {
+    fbBuilder.addInt8(8, OVERLAY_XY_XUNITS?.value);
+    return fbBuilder.offset;
+  }
+  int addOverlayXyYunits(Kmlunits? OVERLAY_XY_YUNITS) {
+    fbBuilder.addInt8(9, OVERLAY_XY_YUNITS?.value);
+    return fbBuilder.offset;
+  }
+  int addScreenXyX(double? SCREEN_XY_X) {
+    fbBuilder.addFloat64(10, SCREEN_XY_X);
+    return fbBuilder.offset;
+  }
+  int addScreenXyY(double? SCREEN_XY_Y) {
+    fbBuilder.addFloat64(11, SCREEN_XY_Y);
+    return fbBuilder.offset;
+  }
+  int addScreenXyXunits(Kmlunits? SCREEN_XY_XUNITS) {
+    fbBuilder.addInt8(12, SCREEN_XY_XUNITS?.value);
+    return fbBuilder.offset;
+  }
+  int addScreenXyYunits(Kmlunits? SCREEN_XY_YUNITS) {
+    fbBuilder.addInt8(13, SCREEN_XY_YUNITS?.value);
+    return fbBuilder.offset;
+  }
+  int addRotationXyX(double? ROTATION_XY_X) {
+    fbBuilder.addFloat64(14, ROTATION_XY_X);
+    return fbBuilder.offset;
+  }
+  int addRotationXyY(double? ROTATION_XY_Y) {
+    fbBuilder.addFloat64(15, ROTATION_XY_Y);
+    return fbBuilder.offset;
+  }
+  int addRotationXyXunits(Kmlunits? ROTATION_XY_XUNITS) {
+    fbBuilder.addInt8(16, ROTATION_XY_XUNITS?.value);
+    return fbBuilder.offset;
+  }
+  int addRotationXyYunits(Kmlunits? ROTATION_XY_YUNITS) {
+    fbBuilder.addInt8(17, ROTATION_XY_YUNITS?.value);
+    return fbBuilder.offset;
+  }
+  int addSizeX(double? SIZE_X) {
+    fbBuilder.addFloat64(18, SIZE_X);
+    return fbBuilder.offset;
+  }
+  int addSizeY(double? SIZE_Y) {
+    fbBuilder.addFloat64(19, SIZE_Y);
+    return fbBuilder.offset;
+  }
+  int addSizeXunits(Kmlunits? SIZE_XUNITS) {
+    fbBuilder.addInt8(20, SIZE_XUNITS?.value);
+    return fbBuilder.offset;
+  }
+  int addSizeYunits(Kmlunits? SIZE_YUNITS) {
+    fbBuilder.addInt8(21, SIZE_YUNITS?.value);
+    return fbBuilder.offset;
+  }
+  int addRotation(double? ROTATION) {
+    fbBuilder.addFloat64(22, ROTATION);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmlscreenOverlayObjectBuilder extends fb.ObjectBuilder {
+  final String? _NAME;
+  final String? _DESCRIPTION;
+  final bool? _VISIBILITY;
+  final String? _ICON_HREF;
+  final String? _COLOR;
+  final int? _DRAW_ORDER;
+  final double? _OVERLAY_XY_X;
+  final double? _OVERLAY_XY_Y;
+  final Kmlunits? _OVERLAY_XY_XUNITS;
+  final Kmlunits? _OVERLAY_XY_YUNITS;
+  final double? _SCREEN_XY_X;
+  final double? _SCREEN_XY_Y;
+  final Kmlunits? _SCREEN_XY_XUNITS;
+  final Kmlunits? _SCREEN_XY_YUNITS;
+  final double? _ROTATION_XY_X;
+  final double? _ROTATION_XY_Y;
+  final Kmlunits? _ROTATION_XY_XUNITS;
+  final Kmlunits? _ROTATION_XY_YUNITS;
+  final double? _SIZE_X;
+  final double? _SIZE_Y;
+  final Kmlunits? _SIZE_XUNITS;
+  final Kmlunits? _SIZE_YUNITS;
+  final double? _ROTATION;
+
+  KmlscreenOverlayObjectBuilder({
+    String? NAME,
+    String? DESCRIPTION,
+    bool? VISIBILITY,
+    String? ICON_HREF,
+    String? COLOR,
+    int? DRAW_ORDER,
+    double? OVERLAY_XY_X,
+    double? OVERLAY_XY_Y,
+    Kmlunits? OVERLAY_XY_XUNITS,
+    Kmlunits? OVERLAY_XY_YUNITS,
+    double? SCREEN_XY_X,
+    double? SCREEN_XY_Y,
+    Kmlunits? SCREEN_XY_XUNITS,
+    Kmlunits? SCREEN_XY_YUNITS,
+    double? ROTATION_XY_X,
+    double? ROTATION_XY_Y,
+    Kmlunits? ROTATION_XY_XUNITS,
+    Kmlunits? ROTATION_XY_YUNITS,
+    double? SIZE_X,
+    double? SIZE_Y,
+    Kmlunits? SIZE_XUNITS,
+    Kmlunits? SIZE_YUNITS,
+    double? ROTATION,
+  })
+      : _NAME = NAME,
+        _DESCRIPTION = DESCRIPTION,
+        _VISIBILITY = VISIBILITY,
+        _ICON_HREF = ICON_HREF,
+        _COLOR = COLOR,
+        _DRAW_ORDER = DRAW_ORDER,
+        _OVERLAY_XY_X = OVERLAY_XY_X,
+        _OVERLAY_XY_Y = OVERLAY_XY_Y,
+        _OVERLAY_XY_XUNITS = OVERLAY_XY_XUNITS,
+        _OVERLAY_XY_YUNITS = OVERLAY_XY_YUNITS,
+        _SCREEN_XY_X = SCREEN_XY_X,
+        _SCREEN_XY_Y = SCREEN_XY_Y,
+        _SCREEN_XY_XUNITS = SCREEN_XY_XUNITS,
+        _SCREEN_XY_YUNITS = SCREEN_XY_YUNITS,
+        _ROTATION_XY_X = ROTATION_XY_X,
+        _ROTATION_XY_Y = ROTATION_XY_Y,
+        _ROTATION_XY_XUNITS = ROTATION_XY_XUNITS,
+        _ROTATION_XY_YUNITS = ROTATION_XY_YUNITS,
+        _SIZE_X = SIZE_X,
+        _SIZE_Y = SIZE_Y,
+        _SIZE_XUNITS = SIZE_XUNITS,
+        _SIZE_YUNITS = SIZE_YUNITS,
+        _ROTATION = ROTATION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    final int? ICON_HREFOffset = _ICON_HREF == null ? null
+        : fbBuilder.writeString(_ICON_HREF!);
+    final int? COLOROffset = _COLOR == null ? null
+        : fbBuilder.writeString(_COLOR!);
+    fbBuilder.startTable(23);
+    fbBuilder.addOffset(0, NAMEOffset);
+    fbBuilder.addOffset(1, DESCRIPTIONOffset);
+    fbBuilder.addBool(2, _VISIBILITY);
+    fbBuilder.addOffset(3, ICON_HREFOffset);
+    fbBuilder.addOffset(4, COLOROffset);
+    fbBuilder.addInt32(5, _DRAW_ORDER);
+    fbBuilder.addFloat64(6, _OVERLAY_XY_X);
+    fbBuilder.addFloat64(7, _OVERLAY_XY_Y);
+    fbBuilder.addInt8(8, _OVERLAY_XY_XUNITS?.value);
+    fbBuilder.addInt8(9, _OVERLAY_XY_YUNITS?.value);
+    fbBuilder.addFloat64(10, _SCREEN_XY_X);
+    fbBuilder.addFloat64(11, _SCREEN_XY_Y);
+    fbBuilder.addInt8(12, _SCREEN_XY_XUNITS?.value);
+    fbBuilder.addInt8(13, _SCREEN_XY_YUNITS?.value);
+    fbBuilder.addFloat64(14, _ROTATION_XY_X);
+    fbBuilder.addFloat64(15, _ROTATION_XY_Y);
+    fbBuilder.addInt8(16, _ROTATION_XY_XUNITS?.value);
+    fbBuilder.addInt8(17, _ROTATION_XY_YUNITS?.value);
+    fbBuilder.addFloat64(18, _SIZE_X);
+    fbBuilder.addFloat64(19, _SIZE_Y);
+    fbBuilder.addInt8(20, _SIZE_XUNITS?.value);
+    fbBuilder.addInt8(21, _SIZE_YUNITS?.value);
+    fbBuilder.addFloat64(22, _ROTATION);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Photo overlay
+class KmlphotoOverlay {
+  KmlphotoOverlay._(this._bc, this._bcOffset);
+  factory KmlphotoOverlay(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<KmlphotoOverlay> reader = _KmlphotoOverlayReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Name
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Description
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Visibility
+  bool get VISIBILITY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
+  ///  Icon/image URL
+  String? get ICON_HREF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Color
+  String? get COLOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Draw order
+  int get DRAW_ORDER => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  ///  Rotation
+  double get ROTATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  View volume
+  KmlviewVolume? get VIEW_VOLUME => KmlviewVolume.reader.vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Image pyramid
+  KmlimagePyramid? get IMAGE_PYRAMID => KmlimagePyramid.reader.vTableGetNullable(_bc, _bcOffset, 20);
+  ///  Point for position
+  Kmlpoint? get POINT => Kmlpoint.reader.vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Shape
+  Kmlshape get SHAPE => Kmlshape.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 24, 0));
+
+  @override
+  String toString() {
+    return 'KmlphotoOverlay{NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, VISIBILITY: ${VISIBILITY}, ICON_HREF: ${ICON_HREF}, COLOR: ${COLOR}, DRAW_ORDER: ${DRAW_ORDER}, ROTATION: ${ROTATION}, VIEW_VOLUME: ${VIEW_VOLUME}, IMAGE_PYRAMID: ${IMAGE_PYRAMID}, POINT: ${POINT}, SHAPE: ${SHAPE}}';
+  }
+}
+
+class _KmlphotoOverlayReader extends fb.TableReader<KmlphotoOverlay> {
+  const _KmlphotoOverlayReader();
+
+  @override
+  KmlphotoOverlay createObject(fb.BufferContext bc, int offset) => 
+    KmlphotoOverlay._(bc, offset);
+}
+
+class KmlphotoOverlayBuilder {
+  KmlphotoOverlayBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(11);
+  }
+
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addVisibility(bool? VISIBILITY) {
+    fbBuilder.addBool(2, VISIBILITY);
+    return fbBuilder.offset;
+  }
+  int addIconHrefOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addColorOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addDrawOrder(int? DRAW_ORDER) {
+    fbBuilder.addInt32(5, DRAW_ORDER);
+    return fbBuilder.offset;
+  }
+  int addRotation(double? ROTATION) {
+    fbBuilder.addFloat64(6, ROTATION);
+    return fbBuilder.offset;
+  }
+  int addViewVolumeOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addImagePyramidOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addPointOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addShape(Kmlshape? SHAPE) {
+    fbBuilder.addInt8(10, SHAPE?.value);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmlphotoOverlayObjectBuilder extends fb.ObjectBuilder {
+  final String? _NAME;
+  final String? _DESCRIPTION;
+  final bool? _VISIBILITY;
+  final String? _ICON_HREF;
+  final String? _COLOR;
+  final int? _DRAW_ORDER;
+  final double? _ROTATION;
+  final KmlviewVolumeObjectBuilder? _VIEW_VOLUME;
+  final KmlimagePyramidObjectBuilder? _IMAGE_PYRAMID;
+  final KmlpointObjectBuilder? _POINT;
+  final Kmlshape? _SHAPE;
+
+  KmlphotoOverlayObjectBuilder({
+    String? NAME,
+    String? DESCRIPTION,
+    bool? VISIBILITY,
+    String? ICON_HREF,
+    String? COLOR,
+    int? DRAW_ORDER,
+    double? ROTATION,
+    KmlviewVolumeObjectBuilder? VIEW_VOLUME,
+    KmlimagePyramidObjectBuilder? IMAGE_PYRAMID,
+    KmlpointObjectBuilder? POINT,
+    Kmlshape? SHAPE,
+  })
+      : _NAME = NAME,
+        _DESCRIPTION = DESCRIPTION,
+        _VISIBILITY = VISIBILITY,
+        _ICON_HREF = ICON_HREF,
+        _COLOR = COLOR,
+        _DRAW_ORDER = DRAW_ORDER,
+        _ROTATION = ROTATION,
+        _VIEW_VOLUME = VIEW_VOLUME,
+        _IMAGE_PYRAMID = IMAGE_PYRAMID,
+        _POINT = POINT,
+        _SHAPE = SHAPE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    final int? ICON_HREFOffset = _ICON_HREF == null ? null
+        : fbBuilder.writeString(_ICON_HREF!);
+    final int? COLOROffset = _COLOR == null ? null
+        : fbBuilder.writeString(_COLOR!);
+    final int? VIEW_VOLUMEOffset = _VIEW_VOLUME?.getOrCreateOffset(fbBuilder);
+    final int? IMAGE_PYRAMIDOffset = _IMAGE_PYRAMID?.getOrCreateOffset(fbBuilder);
+    final int? POINTOffset = _POINT?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(11);
+    fbBuilder.addOffset(0, NAMEOffset);
+    fbBuilder.addOffset(1, DESCRIPTIONOffset);
+    fbBuilder.addBool(2, _VISIBILITY);
+    fbBuilder.addOffset(3, ICON_HREFOffset);
+    fbBuilder.addOffset(4, COLOROffset);
+    fbBuilder.addInt32(5, _DRAW_ORDER);
+    fbBuilder.addFloat64(6, _ROTATION);
+    fbBuilder.addOffset(7, VIEW_VOLUMEOffset);
+    fbBuilder.addOffset(8, IMAGE_PYRAMIDOffset);
+    fbBuilder.addOffset(9, POINTOffset);
+    fbBuilder.addInt8(10, _SHAPE?.value);
     return fbBuilder.endTable();
   }
 
@@ -2422,28 +5173,38 @@ class KmlgroundOverlay {
   String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
   ///  Visibility
   bool get VISIBILITY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
+  ///  Whether open in tree view
+  bool get OPEN => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
   ///  Icon/image URL
-  String? get ICON_HREF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get ICON_HREF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   ///  Color in aabbggrr hex format
-  String? get COLOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get COLOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
   ///  North latitude of bounding box
-  double get NORTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get NORTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
   ///  South latitude of bounding box
-  double get SOUTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get SOUTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
   ///  East longitude of bounding box
-  double get EAST => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get EAST => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
   ///  West longitude of bounding box
-  double get WEST => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get WEST => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
   ///  Rotation in degrees
-  double get ROTATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get ROTATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
   ///  Altitude in meters
-  double get ALTITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get ALTITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
   ///  Altitude mode
-  KmlaltitudeMode get ALTITUDE_MODE => KmlaltitudeMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 26, 0));
+  KmlaltitudeMode get ALTITUDE_MODE => KmlaltitudeMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 28, 0));
+  ///  Draw order
+  int get DRAW_ORDER => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 30, 0);
+  ///  LatLonQuad (non-rectangular overlay)
+  KmllatLonQuad? get LAT_LON_QUAD => KmllatLonQuad.reader.vTableGetNullable(_bc, _bcOffset, 32);
+  ///  Style URL reference
+  String? get STYLE_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  ///  Region
+  Kmlregion? get REGION => Kmlregion.reader.vTableGetNullable(_bc, _bcOffset, 36);
 
   @override
   String toString() {
-    return 'KmlgroundOverlay{NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, VISIBILITY: ${VISIBILITY}, ICON_HREF: ${ICON_HREF}, COLOR: ${COLOR}, NORTH: ${NORTH}, SOUTH: ${SOUTH}, EAST: ${EAST}, WEST: ${WEST}, ROTATION: ${ROTATION}, ALTITUDE: ${ALTITUDE}, ALTITUDE_MODE: ${ALTITUDE_MODE}}';
+    return 'KmlgroundOverlay{NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, VISIBILITY: ${VISIBILITY}, OPEN: ${OPEN}, ICON_HREF: ${ICON_HREF}, COLOR: ${COLOR}, NORTH: ${NORTH}, SOUTH: ${SOUTH}, EAST: ${EAST}, WEST: ${WEST}, ROTATION: ${ROTATION}, ALTITUDE: ${ALTITUDE}, ALTITUDE_MODE: ${ALTITUDE_MODE}, DRAW_ORDER: ${DRAW_ORDER}, LAT_LON_QUAD: ${LAT_LON_QUAD}, STYLE_URL: ${STYLE_URL}, REGION: ${REGION}}';
   }
 }
 
@@ -2461,7 +5222,7 @@ class KmlgroundOverlayBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(12);
+    fbBuilder.startTable(17);
   }
 
   int addNameOffset(int? offset) {
@@ -2476,40 +5237,60 @@ class KmlgroundOverlayBuilder {
     fbBuilder.addBool(2, VISIBILITY);
     return fbBuilder.offset;
   }
-  int addIconHrefOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
+  int addOpen(bool? OPEN) {
+    fbBuilder.addBool(3, OPEN);
     return fbBuilder.offset;
   }
-  int addColorOffset(int? offset) {
+  int addIconHrefOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
+  int addColorOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
   int addNorth(double? NORTH) {
-    fbBuilder.addFloat64(5, NORTH);
+    fbBuilder.addFloat64(6, NORTH);
     return fbBuilder.offset;
   }
   int addSouth(double? SOUTH) {
-    fbBuilder.addFloat64(6, SOUTH);
+    fbBuilder.addFloat64(7, SOUTH);
     return fbBuilder.offset;
   }
   int addEast(double? EAST) {
-    fbBuilder.addFloat64(7, EAST);
+    fbBuilder.addFloat64(8, EAST);
     return fbBuilder.offset;
   }
   int addWest(double? WEST) {
-    fbBuilder.addFloat64(8, WEST);
+    fbBuilder.addFloat64(9, WEST);
     return fbBuilder.offset;
   }
   int addRotation(double? ROTATION) {
-    fbBuilder.addFloat64(9, ROTATION);
+    fbBuilder.addFloat64(10, ROTATION);
     return fbBuilder.offset;
   }
   int addAltitude(double? ALTITUDE) {
-    fbBuilder.addFloat64(10, ALTITUDE);
+    fbBuilder.addFloat64(11, ALTITUDE);
     return fbBuilder.offset;
   }
   int addAltitudeMode(KmlaltitudeMode? ALTITUDE_MODE) {
-    fbBuilder.addInt8(11, ALTITUDE_MODE?.value);
+    fbBuilder.addInt8(12, ALTITUDE_MODE?.value);
+    return fbBuilder.offset;
+  }
+  int addDrawOrder(int? DRAW_ORDER) {
+    fbBuilder.addInt32(13, DRAW_ORDER);
+    return fbBuilder.offset;
+  }
+  int addLatLonQuadOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addStyleUrlOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addRegionOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
     return fbBuilder.offset;
   }
 
@@ -2522,6 +5303,7 @@ class KmlgroundOverlayObjectBuilder extends fb.ObjectBuilder {
   final String? _NAME;
   final String? _DESCRIPTION;
   final bool? _VISIBILITY;
+  final bool? _OPEN;
   final String? _ICON_HREF;
   final String? _COLOR;
   final double? _NORTH;
@@ -2531,11 +5313,16 @@ class KmlgroundOverlayObjectBuilder extends fb.ObjectBuilder {
   final double? _ROTATION;
   final double? _ALTITUDE;
   final KmlaltitudeMode? _ALTITUDE_MODE;
+  final int? _DRAW_ORDER;
+  final KmllatLonQuadObjectBuilder? _LAT_LON_QUAD;
+  final String? _STYLE_URL;
+  final KmlregionObjectBuilder? _REGION;
 
   KmlgroundOverlayObjectBuilder({
     String? NAME,
     String? DESCRIPTION,
     bool? VISIBILITY,
+    bool? OPEN,
     String? ICON_HREF,
     String? COLOR,
     double? NORTH,
@@ -2545,10 +5332,15 @@ class KmlgroundOverlayObjectBuilder extends fb.ObjectBuilder {
     double? ROTATION,
     double? ALTITUDE,
     KmlaltitudeMode? ALTITUDE_MODE,
+    int? DRAW_ORDER,
+    KmllatLonQuadObjectBuilder? LAT_LON_QUAD,
+    String? STYLE_URL,
+    KmlregionObjectBuilder? REGION,
   })
       : _NAME = NAME,
         _DESCRIPTION = DESCRIPTION,
         _VISIBILITY = VISIBILITY,
+        _OPEN = OPEN,
         _ICON_HREF = ICON_HREF,
         _COLOR = COLOR,
         _NORTH = NORTH,
@@ -2557,7 +5349,11 @@ class KmlgroundOverlayObjectBuilder extends fb.ObjectBuilder {
         _WEST = WEST,
         _ROTATION = ROTATION,
         _ALTITUDE = ALTITUDE,
-        _ALTITUDE_MODE = ALTITUDE_MODE;
+        _ALTITUDE_MODE = ALTITUDE_MODE,
+        _DRAW_ORDER = DRAW_ORDER,
+        _LAT_LON_QUAD = LAT_LON_QUAD,
+        _STYLE_URL = STYLE_URL,
+        _REGION = REGION;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -2570,19 +5366,1060 @@ class KmlgroundOverlayObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ICON_HREF!);
     final int? COLOROffset = _COLOR == null ? null
         : fbBuilder.writeString(_COLOR!);
-    fbBuilder.startTable(12);
+    final int? LAT_LON_QUADOffset = _LAT_LON_QUAD?.getOrCreateOffset(fbBuilder);
+    final int? STYLE_URLOffset = _STYLE_URL == null ? null
+        : fbBuilder.writeString(_STYLE_URL!);
+    final int? REGIONOffset = _REGION?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(17);
     fbBuilder.addOffset(0, NAMEOffset);
     fbBuilder.addOffset(1, DESCRIPTIONOffset);
     fbBuilder.addBool(2, _VISIBILITY);
-    fbBuilder.addOffset(3, ICON_HREFOffset);
-    fbBuilder.addOffset(4, COLOROffset);
-    fbBuilder.addFloat64(5, _NORTH);
-    fbBuilder.addFloat64(6, _SOUTH);
-    fbBuilder.addFloat64(7, _EAST);
-    fbBuilder.addFloat64(8, _WEST);
-    fbBuilder.addFloat64(9, _ROTATION);
-    fbBuilder.addFloat64(10, _ALTITUDE);
-    fbBuilder.addInt8(11, _ALTITUDE_MODE?.value);
+    fbBuilder.addBool(3, _OPEN);
+    fbBuilder.addOffset(4, ICON_HREFOffset);
+    fbBuilder.addOffset(5, COLOROffset);
+    fbBuilder.addFloat64(6, _NORTH);
+    fbBuilder.addFloat64(7, _SOUTH);
+    fbBuilder.addFloat64(8, _EAST);
+    fbBuilder.addFloat64(9, _WEST);
+    fbBuilder.addFloat64(10, _ROTATION);
+    fbBuilder.addFloat64(11, _ALTITUDE);
+    fbBuilder.addInt8(12, _ALTITUDE_MODE?.value);
+    fbBuilder.addInt32(13, _DRAW_ORDER);
+    fbBuilder.addOffset(14, LAT_LON_QUADOffset);
+    fbBuilder.addOffset(15, STYLE_URLOffset);
+    fbBuilder.addOffset(16, REGIONOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Update element for NetworkLinkControl
+class Kmlupdate {
+  Kmlupdate._(this._bc, this._bcOffset);
+  factory Kmlupdate(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Kmlupdate> reader = _KmlupdateReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Target href
+  String? get TARGET_HREF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Change KML (raw)
+  String? get CHANGE_KML => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Create KML (raw)
+  String? get CREATE_KML => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Delete KML (raw)
+  String? get DELETE_KML => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+
+  @override
+  String toString() {
+    return 'Kmlupdate{TARGET_HREF: ${TARGET_HREF}, CHANGE_KML: ${CHANGE_KML}, CREATE_KML: ${CREATE_KML}, DELETE_KML: ${DELETE_KML}}';
+  }
+}
+
+class _KmlupdateReader extends fb.TableReader<Kmlupdate> {
+  const _KmlupdateReader();
+
+  @override
+  Kmlupdate createObject(fb.BufferContext bc, int offset) => 
+    Kmlupdate._(bc, offset);
+}
+
+class KmlupdateBuilder {
+  KmlupdateBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addTargetHrefOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addChangeKmlOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addCreateKmlOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addDeleteKmlOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmlupdateObjectBuilder extends fb.ObjectBuilder {
+  final String? _TARGET_HREF;
+  final String? _CHANGE_KML;
+  final String? _CREATE_KML;
+  final String? _DELETE_KML;
+
+  KmlupdateObjectBuilder({
+    String? TARGET_HREF,
+    String? CHANGE_KML,
+    String? CREATE_KML,
+    String? DELETE_KML,
+  })
+      : _TARGET_HREF = TARGET_HREF,
+        _CHANGE_KML = CHANGE_KML,
+        _CREATE_KML = CREATE_KML,
+        _DELETE_KML = DELETE_KML;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? TARGET_HREFOffset = _TARGET_HREF == null ? null
+        : fbBuilder.writeString(_TARGET_HREF!);
+    final int? CHANGE_KMLOffset = _CHANGE_KML == null ? null
+        : fbBuilder.writeString(_CHANGE_KML!);
+    final int? CREATE_KMLOffset = _CREATE_KML == null ? null
+        : fbBuilder.writeString(_CREATE_KML!);
+    final int? DELETE_KMLOffset = _DELETE_KML == null ? null
+        : fbBuilder.writeString(_DELETE_KML!);
+    fbBuilder.startTable(4);
+    fbBuilder.addOffset(0, TARGET_HREFOffset);
+    fbBuilder.addOffset(1, CHANGE_KMLOffset);
+    fbBuilder.addOffset(2, CREATE_KMLOffset);
+    fbBuilder.addOffset(3, DELETE_KMLOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  NetworkLinkControl
+class KmlnetworkLinkControl {
+  KmlnetworkLinkControl._(this._bc, this._bcOffset);
+  factory KmlnetworkLinkControl(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<KmlnetworkLinkControl> reader = _KmlnetworkLinkControlReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Minimum refresh period in seconds
+  double get MIN_REFRESH_PERIOD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  ///  Maximum session length in seconds
+  double get MAX_SESSION_LENGTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Cookie
+  String? get COOKIE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Message to display
+  String? get MESSAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Link name override
+  String? get LINK_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Link description override
+  String? get LINK_DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Link snippet override
+  String? get LINK_SNIPPET => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Expiration time (ISO 8601)
+  String? get EXPIRES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Update
+  Kmlupdate? get UPDATE => Kmlupdate.reader.vTableGetNullable(_bc, _bcOffset, 20);
+  ///  LookAt
+  KmllookAt? get LOOK_AT => KmllookAt.reader.vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Camera
+  Kmlcamera? get CAMERA => Kmlcamera.reader.vTableGetNullable(_bc, _bcOffset, 24);
+
+  @override
+  String toString() {
+    return 'KmlnetworkLinkControl{MIN_REFRESH_PERIOD: ${MIN_REFRESH_PERIOD}, MAX_SESSION_LENGTH: ${MAX_SESSION_LENGTH}, COOKIE: ${COOKIE}, MESSAGE: ${MESSAGE}, LINK_NAME: ${LINK_NAME}, LINK_DESCRIPTION: ${LINK_DESCRIPTION}, LINK_SNIPPET: ${LINK_SNIPPET}, EXPIRES: ${EXPIRES}, UPDATE: ${UPDATE}, LOOK_AT: ${LOOK_AT}, CAMERA: ${CAMERA}}';
+  }
+}
+
+class _KmlnetworkLinkControlReader extends fb.TableReader<KmlnetworkLinkControl> {
+  const _KmlnetworkLinkControlReader();
+
+  @override
+  KmlnetworkLinkControl createObject(fb.BufferContext bc, int offset) => 
+    KmlnetworkLinkControl._(bc, offset);
+}
+
+class KmlnetworkLinkControlBuilder {
+  KmlnetworkLinkControlBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(11);
+  }
+
+  int addMinRefreshPeriod(double? MIN_REFRESH_PERIOD) {
+    fbBuilder.addFloat64(0, MIN_REFRESH_PERIOD);
+    return fbBuilder.offset;
+  }
+  int addMaxSessionLength(double? MAX_SESSION_LENGTH) {
+    fbBuilder.addFloat64(1, MAX_SESSION_LENGTH);
+    return fbBuilder.offset;
+  }
+  int addCookieOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addMessageOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addLinkNameOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addLinkDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addLinkSnippetOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addExpiresOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addUpdateOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addLookAtOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addCameraOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmlnetworkLinkControlObjectBuilder extends fb.ObjectBuilder {
+  final double? _MIN_REFRESH_PERIOD;
+  final double? _MAX_SESSION_LENGTH;
+  final String? _COOKIE;
+  final String? _MESSAGE;
+  final String? _LINK_NAME;
+  final String? _LINK_DESCRIPTION;
+  final String? _LINK_SNIPPET;
+  final String? _EXPIRES;
+  final KmlupdateObjectBuilder? _UPDATE;
+  final KmllookAtObjectBuilder? _LOOK_AT;
+  final KmlcameraObjectBuilder? _CAMERA;
+
+  KmlnetworkLinkControlObjectBuilder({
+    double? MIN_REFRESH_PERIOD,
+    double? MAX_SESSION_LENGTH,
+    String? COOKIE,
+    String? MESSAGE,
+    String? LINK_NAME,
+    String? LINK_DESCRIPTION,
+    String? LINK_SNIPPET,
+    String? EXPIRES,
+    KmlupdateObjectBuilder? UPDATE,
+    KmllookAtObjectBuilder? LOOK_AT,
+    KmlcameraObjectBuilder? CAMERA,
+  })
+      : _MIN_REFRESH_PERIOD = MIN_REFRESH_PERIOD,
+        _MAX_SESSION_LENGTH = MAX_SESSION_LENGTH,
+        _COOKIE = COOKIE,
+        _MESSAGE = MESSAGE,
+        _LINK_NAME = LINK_NAME,
+        _LINK_DESCRIPTION = LINK_DESCRIPTION,
+        _LINK_SNIPPET = LINK_SNIPPET,
+        _EXPIRES = EXPIRES,
+        _UPDATE = UPDATE,
+        _LOOK_AT = LOOK_AT,
+        _CAMERA = CAMERA;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? COOKIEOffset = _COOKIE == null ? null
+        : fbBuilder.writeString(_COOKIE!);
+    final int? MESSAGEOffset = _MESSAGE == null ? null
+        : fbBuilder.writeString(_MESSAGE!);
+    final int? LINK_NAMEOffset = _LINK_NAME == null ? null
+        : fbBuilder.writeString(_LINK_NAME!);
+    final int? LINK_DESCRIPTIONOffset = _LINK_DESCRIPTION == null ? null
+        : fbBuilder.writeString(_LINK_DESCRIPTION!);
+    final int? LINK_SNIPPETOffset = _LINK_SNIPPET == null ? null
+        : fbBuilder.writeString(_LINK_SNIPPET!);
+    final int? EXPIRESOffset = _EXPIRES == null ? null
+        : fbBuilder.writeString(_EXPIRES!);
+    final int? UPDATEOffset = _UPDATE?.getOrCreateOffset(fbBuilder);
+    final int? LOOK_ATOffset = _LOOK_AT?.getOrCreateOffset(fbBuilder);
+    final int? CAMERAOffset = _CAMERA?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(11);
+    fbBuilder.addFloat64(0, _MIN_REFRESH_PERIOD);
+    fbBuilder.addFloat64(1, _MAX_SESSION_LENGTH);
+    fbBuilder.addOffset(2, COOKIEOffset);
+    fbBuilder.addOffset(3, MESSAGEOffset);
+    fbBuilder.addOffset(4, LINK_NAMEOffset);
+    fbBuilder.addOffset(5, LINK_DESCRIPTIONOffset);
+    fbBuilder.addOffset(6, LINK_SNIPPETOffset);
+    fbBuilder.addOffset(7, EXPIRESOffset);
+    fbBuilder.addOffset(8, UPDATEOffset);
+    fbBuilder.addOffset(9, LOOK_ATOffset);
+    fbBuilder.addOffset(10, CAMERAOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  gx:FlyTo tour primitive
+class KmlflyTo {
+  KmlflyTo._(this._bc, this._bcOffset);
+  factory KmlflyTo(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<KmlflyTo> reader = _KmlflyToReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Duration in seconds
+  double get DURATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  ///  Fly-to mode
+  KmlflyToMode get FLY_TO_MODE => KmlflyToMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  ///  LookAt viewpoint
+  KmllookAt? get LOOK_AT => KmllookAt.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Camera viewpoint
+  Kmlcamera? get CAMERA => Kmlcamera.reader.vTableGetNullable(_bc, _bcOffset, 10);
+
+  @override
+  String toString() {
+    return 'KmlflyTo{DURATION: ${DURATION}, FLY_TO_MODE: ${FLY_TO_MODE}, LOOK_AT: ${LOOK_AT}, CAMERA: ${CAMERA}}';
+  }
+}
+
+class _KmlflyToReader extends fb.TableReader<KmlflyTo> {
+  const _KmlflyToReader();
+
+  @override
+  KmlflyTo createObject(fb.BufferContext bc, int offset) => 
+    KmlflyTo._(bc, offset);
+}
+
+class KmlflyToBuilder {
+  KmlflyToBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addDuration(double? DURATION) {
+    fbBuilder.addFloat64(0, DURATION);
+    return fbBuilder.offset;
+  }
+  int addFlyToMode(KmlflyToMode? FLY_TO_MODE) {
+    fbBuilder.addInt8(1, FLY_TO_MODE?.value);
+    return fbBuilder.offset;
+  }
+  int addLookAtOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addCameraOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmlflyToObjectBuilder extends fb.ObjectBuilder {
+  final double? _DURATION;
+  final KmlflyToMode? _FLY_TO_MODE;
+  final KmllookAtObjectBuilder? _LOOK_AT;
+  final KmlcameraObjectBuilder? _CAMERA;
+
+  KmlflyToObjectBuilder({
+    double? DURATION,
+    KmlflyToMode? FLY_TO_MODE,
+    KmllookAtObjectBuilder? LOOK_AT,
+    KmlcameraObjectBuilder? CAMERA,
+  })
+      : _DURATION = DURATION,
+        _FLY_TO_MODE = FLY_TO_MODE,
+        _LOOK_AT = LOOK_AT,
+        _CAMERA = CAMERA;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? LOOK_ATOffset = _LOOK_AT?.getOrCreateOffset(fbBuilder);
+    final int? CAMERAOffset = _CAMERA?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(4);
+    fbBuilder.addFloat64(0, _DURATION);
+    fbBuilder.addInt8(1, _FLY_TO_MODE?.value);
+    fbBuilder.addOffset(2, LOOK_ATOffset);
+    fbBuilder.addOffset(3, CAMERAOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  gx:Wait tour primitive
+class Kmlwait {
+  Kmlwait._(this._bc, this._bcOffset);
+  factory Kmlwait(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Kmlwait> reader = _KmlwaitReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Duration in seconds
+  double get DURATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+
+  @override
+  String toString() {
+    return 'Kmlwait{DURATION: ${DURATION}}';
+  }
+}
+
+class _KmlwaitReader extends fb.TableReader<Kmlwait> {
+  const _KmlwaitReader();
+
+  @override
+  Kmlwait createObject(fb.BufferContext bc, int offset) => 
+    Kmlwait._(bc, offset);
+}
+
+class KmlwaitBuilder {
+  KmlwaitBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(1);
+  }
+
+  int addDuration(double? DURATION) {
+    fbBuilder.addFloat64(0, DURATION);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmlwaitObjectBuilder extends fb.ObjectBuilder {
+  final double? _DURATION;
+
+  KmlwaitObjectBuilder({
+    double? DURATION,
+  })
+      : _DURATION = DURATION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(1);
+    fbBuilder.addFloat64(0, _DURATION);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  gx:AnimatedUpdate tour primitive
+class KmlanimatedUpdate {
+  KmlanimatedUpdate._(this._bc, this._bcOffset);
+  factory KmlanimatedUpdate(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<KmlanimatedUpdate> reader = _KmlanimatedUpdateReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Duration in seconds
+  double get DURATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  ///  Delayed start in seconds
+  double get DELAYED_START => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Update
+  Kmlupdate? get UPDATE => Kmlupdate.reader.vTableGetNullable(_bc, _bcOffset, 8);
+
+  @override
+  String toString() {
+    return 'KmlanimatedUpdate{DURATION: ${DURATION}, DELAYED_START: ${DELAYED_START}, UPDATE: ${UPDATE}}';
+  }
+}
+
+class _KmlanimatedUpdateReader extends fb.TableReader<KmlanimatedUpdate> {
+  const _KmlanimatedUpdateReader();
+
+  @override
+  KmlanimatedUpdate createObject(fb.BufferContext bc, int offset) => 
+    KmlanimatedUpdate._(bc, offset);
+}
+
+class KmlanimatedUpdateBuilder {
+  KmlanimatedUpdateBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addDuration(double? DURATION) {
+    fbBuilder.addFloat64(0, DURATION);
+    return fbBuilder.offset;
+  }
+  int addDelayedStart(double? DELAYED_START) {
+    fbBuilder.addFloat64(1, DELAYED_START);
+    return fbBuilder.offset;
+  }
+  int addUpdateOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmlanimatedUpdateObjectBuilder extends fb.ObjectBuilder {
+  final double? _DURATION;
+  final double? _DELAYED_START;
+  final KmlupdateObjectBuilder? _UPDATE;
+
+  KmlanimatedUpdateObjectBuilder({
+    double? DURATION,
+    double? DELAYED_START,
+    KmlupdateObjectBuilder? UPDATE,
+  })
+      : _DURATION = DURATION,
+        _DELAYED_START = DELAYED_START,
+        _UPDATE = UPDATE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? UPDATEOffset = _UPDATE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(3);
+    fbBuilder.addFloat64(0, _DURATION);
+    fbBuilder.addFloat64(1, _DELAYED_START);
+    fbBuilder.addOffset(2, UPDATEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  gx:TourControl tour primitive
+class KmltourControl {
+  KmltourControl._(this._bc, this._bcOffset);
+  factory KmltourControl(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<KmltourControl> reader = _KmltourControlReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Play mode (pause)
+  String? get PLAY_MODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+
+  @override
+  String toString() {
+    return 'KmltourControl{PLAY_MODE: ${PLAY_MODE}}';
+  }
+}
+
+class _KmltourControlReader extends fb.TableReader<KmltourControl> {
+  const _KmltourControlReader();
+
+  @override
+  KmltourControl createObject(fb.BufferContext bc, int offset) => 
+    KmltourControl._(bc, offset);
+}
+
+class KmltourControlBuilder {
+  KmltourControlBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(1);
+  }
+
+  int addPlayModeOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmltourControlObjectBuilder extends fb.ObjectBuilder {
+  final String? _PLAY_MODE;
+
+  KmltourControlObjectBuilder({
+    String? PLAY_MODE,
+  })
+      : _PLAY_MODE = PLAY_MODE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? PLAY_MODEOffset = _PLAY_MODE == null ? null
+        : fbBuilder.writeString(_PLAY_MODE!);
+    fbBuilder.startTable(1);
+    fbBuilder.addOffset(0, PLAY_MODEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  gx:SoundCue tour primitive
+class KmlsoundCue {
+  KmlsoundCue._(this._bc, this._bcOffset);
+  factory KmlsoundCue(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<KmlsoundCue> reader = _KmlsoundCueReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Audio file URL
+  String? get HREF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Delayed start in seconds
+  double get DELAYED_START => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+
+  @override
+  String toString() {
+    return 'KmlsoundCue{HREF: ${HREF}, DELAYED_START: ${DELAYED_START}}';
+  }
+}
+
+class _KmlsoundCueReader extends fb.TableReader<KmlsoundCue> {
+  const _KmlsoundCueReader();
+
+  @override
+  KmlsoundCue createObject(fb.BufferContext bc, int offset) => 
+    KmlsoundCue._(bc, offset);
+}
+
+class KmlsoundCueBuilder {
+  KmlsoundCueBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addHrefOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addDelayedStart(double? DELAYED_START) {
+    fbBuilder.addFloat64(1, DELAYED_START);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmlsoundCueObjectBuilder extends fb.ObjectBuilder {
+  final String? _HREF;
+  final double? _DELAYED_START;
+
+  KmlsoundCueObjectBuilder({
+    String? HREF,
+    double? DELAYED_START,
+  })
+      : _HREF = HREF,
+        _DELAYED_START = DELAYED_START;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? HREFOffset = _HREF == null ? null
+        : fbBuilder.writeString(_HREF!);
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, HREFOffset);
+    fbBuilder.addFloat64(1, _DELAYED_START);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Tour primitive (union-like)
+class KmltourPrimitive {
+  KmltourPrimitive._(this._bc, this._bcOffset);
+  factory KmltourPrimitive(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<KmltourPrimitive> reader = _KmltourPrimitiveReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  FlyTo
+  KmlflyTo? get FLY_TO => KmlflyTo.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Wait
+  Kmlwait? get WAIT => Kmlwait.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  ///  AnimatedUpdate
+  KmlanimatedUpdate? get ANIMATED_UPDATE => KmlanimatedUpdate.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  ///  TourControl
+  KmltourControl? get TOUR_CONTROL => KmltourControl.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  ///  SoundCue
+  KmlsoundCue? get SOUND_CUE => KmlsoundCue.reader.vTableGetNullable(_bc, _bcOffset, 12);
+
+  @override
+  String toString() {
+    return 'KmltourPrimitive{FLY_TO: ${FLY_TO}, WAIT: ${WAIT}, ANIMATED_UPDATE: ${ANIMATED_UPDATE}, TOUR_CONTROL: ${TOUR_CONTROL}, SOUND_CUE: ${SOUND_CUE}}';
+  }
+}
+
+class _KmltourPrimitiveReader extends fb.TableReader<KmltourPrimitive> {
+  const _KmltourPrimitiveReader();
+
+  @override
+  KmltourPrimitive createObject(fb.BufferContext bc, int offset) => 
+    KmltourPrimitive._(bc, offset);
+}
+
+class KmltourPrimitiveBuilder {
+  KmltourPrimitiveBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addFlyToOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addWaitOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addAnimatedUpdateOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addTourControlOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addSoundCueOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmltourPrimitiveObjectBuilder extends fb.ObjectBuilder {
+  final KmlflyToObjectBuilder? _FLY_TO;
+  final KmlwaitObjectBuilder? _WAIT;
+  final KmlanimatedUpdateObjectBuilder? _ANIMATED_UPDATE;
+  final KmltourControlObjectBuilder? _TOUR_CONTROL;
+  final KmlsoundCueObjectBuilder? _SOUND_CUE;
+
+  KmltourPrimitiveObjectBuilder({
+    KmlflyToObjectBuilder? FLY_TO,
+    KmlwaitObjectBuilder? WAIT,
+    KmlanimatedUpdateObjectBuilder? ANIMATED_UPDATE,
+    KmltourControlObjectBuilder? TOUR_CONTROL,
+    KmlsoundCueObjectBuilder? SOUND_CUE,
+  })
+      : _FLY_TO = FLY_TO,
+        _WAIT = WAIT,
+        _ANIMATED_UPDATE = ANIMATED_UPDATE,
+        _TOUR_CONTROL = TOUR_CONTROL,
+        _SOUND_CUE = SOUND_CUE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? FLY_TOOffset = _FLY_TO?.getOrCreateOffset(fbBuilder);
+    final int? WAITOffset = _WAIT?.getOrCreateOffset(fbBuilder);
+    final int? ANIMATED_UPDATEOffset = _ANIMATED_UPDATE?.getOrCreateOffset(fbBuilder);
+    final int? TOUR_CONTROLOffset = _TOUR_CONTROL?.getOrCreateOffset(fbBuilder);
+    final int? SOUND_CUEOffset = _SOUND_CUE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, FLY_TOOffset);
+    fbBuilder.addOffset(1, WAITOffset);
+    fbBuilder.addOffset(2, ANIMATED_UPDATEOffset);
+    fbBuilder.addOffset(3, TOUR_CONTROLOffset);
+    fbBuilder.addOffset(4, SOUND_CUEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  gx:Playlist
+class Kmlplaylist {
+  Kmlplaylist._(this._bc, this._bcOffset);
+  factory Kmlplaylist(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Kmlplaylist> reader = _KmlplaylistReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Tour primitives
+  List<KmltourPrimitive>? get PRIMITIVES => const fb.ListReader<KmltourPrimitive>(KmltourPrimitive.reader).vTableGetNullable(_bc, _bcOffset, 4);
+
+  @override
+  String toString() {
+    return 'Kmlplaylist{PRIMITIVES: ${PRIMITIVES}}';
+  }
+}
+
+class _KmlplaylistReader extends fb.TableReader<Kmlplaylist> {
+  const _KmlplaylistReader();
+
+  @override
+  Kmlplaylist createObject(fb.BufferContext bc, int offset) => 
+    Kmlplaylist._(bc, offset);
+}
+
+class KmlplaylistBuilder {
+  KmlplaylistBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(1);
+  }
+
+  int addPrimitivesOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmlplaylistObjectBuilder extends fb.ObjectBuilder {
+  final List<KmltourPrimitiveObjectBuilder>? _PRIMITIVES;
+
+  KmlplaylistObjectBuilder({
+    List<KmltourPrimitiveObjectBuilder>? PRIMITIVES,
+  })
+      : _PRIMITIVES = PRIMITIVES;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? PRIMITIVESOffset = _PRIMITIVES == null ? null
+        : fbBuilder.writeList(_PRIMITIVES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(1);
+    fbBuilder.addOffset(0, PRIMITIVESOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  gx:Tour
+class Kmltour {
+  Kmltour._(this._bc, this._bcOffset);
+  factory Kmltour(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Kmltour> reader = _KmltourReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Tour name
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Description
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Visibility
+  bool get VISIBILITY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
+  ///  Playlist
+  Kmlplaylist? get PLAYLIST => Kmlplaylist.reader.vTableGetNullable(_bc, _bcOffset, 10);
+
+  @override
+  String toString() {
+    return 'Kmltour{NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, VISIBILITY: ${VISIBILITY}, PLAYLIST: ${PLAYLIST}}';
+  }
+}
+
+class _KmltourReader extends fb.TableReader<Kmltour> {
+  const _KmltourReader();
+
+  @override
+  Kmltour createObject(fb.BufferContext bc, int offset) => 
+    Kmltour._(bc, offset);
+}
+
+class KmltourBuilder {
+  KmltourBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addVisibility(bool? VISIBILITY) {
+    fbBuilder.addBool(2, VISIBILITY);
+    return fbBuilder.offset;
+  }
+  int addPlaylistOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class KmltourObjectBuilder extends fb.ObjectBuilder {
+  final String? _NAME;
+  final String? _DESCRIPTION;
+  final bool? _VISIBILITY;
+  final KmlplaylistObjectBuilder? _PLAYLIST;
+
+  KmltourObjectBuilder({
+    String? NAME,
+    String? DESCRIPTION,
+    bool? VISIBILITY,
+    KmlplaylistObjectBuilder? PLAYLIST,
+  })
+      : _NAME = NAME,
+        _DESCRIPTION = DESCRIPTION,
+        _VISIBILITY = VISIBILITY,
+        _PLAYLIST = PLAYLIST;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    final int? PLAYLISTOffset = _PLAYLIST?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(4);
+    fbBuilder.addOffset(0, NAMEOffset);
+    fbBuilder.addOffset(1, DESCRIPTIONOffset);
+    fbBuilder.addBool(2, _VISIBILITY);
+    fbBuilder.addOffset(3, PLAYLISTOffset);
     return fbBuilder.endTable();
   }
 
@@ -2619,28 +6456,46 @@ class Kmlplacemark {
   Kmlstyle? get STYLE => Kmlstyle.reader.vTableGetNullable(_bc, _bcOffset, 12);
   ///  Snippet (short description)
   String? get SNIPPET => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Whether open in tree view
+  bool get OPEN => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
+  ///  Address
+  String? get ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
   ///  Point geometry
-  Kmlpoint? get POINT => Kmlpoint.reader.vTableGetNullable(_bc, _bcOffset, 16);
+  Kmlpoint? get POINT => Kmlpoint.reader.vTableGetNullable(_bc, _bcOffset, 20);
   ///  LineString geometry
-  KmllineString? get LINE_STRING => KmllineString.reader.vTableGetNullable(_bc, _bcOffset, 18);
+  KmllineString? get LINE_STRING => KmllineString.reader.vTableGetNullable(_bc, _bcOffset, 22);
   ///  Polygon geometry
-  Kmlpolygon? get POLYGON => Kmlpolygon.reader.vTableGetNullable(_bc, _bcOffset, 20);
+  Kmlpolygon? get POLYGON => Kmlpolygon.reader.vTableGetNullable(_bc, _bcOffset, 24);
+  ///  LinearRing geometry (standalone)
+  KmllinearRing? get LINEAR_RING => KmllinearRing.reader.vTableGetNullable(_bc, _bcOffset, 26);
   ///  MultiGeometry
-  KmlmultiGeometry? get MULTI_GEOMETRY => KmlmultiGeometry.reader.vTableGetNullable(_bc, _bcOffset, 22);
+  KmlmultiGeometry? get MULTI_GEOMETRY => KmlmultiGeometry.reader.vTableGetNullable(_bc, _bcOffset, 28);
+  ///  3D Model
+  Kmlmodel? get MODEL => Kmlmodel.reader.vTableGetNullable(_bc, _bcOffset, 30);
+  ///  gx:Track
+  Kmltrack? get TRACK => Kmltrack.reader.vTableGetNullable(_bc, _bcOffset, 32);
+  ///  gx:MultiTrack
+  KmlmultiTrack? get MULTI_TRACK => KmlmultiTrack.reader.vTableGetNullable(_bc, _bcOffset, 34);
   ///  LookAt viewpoint
-  KmllookAt? get LOOK_AT => KmllookAt.reader.vTableGetNullable(_bc, _bcOffset, 24);
+  KmllookAt? get LOOK_AT => KmllookAt.reader.vTableGetNullable(_bc, _bcOffset, 36);
   ///  Camera viewpoint
-  Kmlcamera? get CAMERA => Kmlcamera.reader.vTableGetNullable(_bc, _bcOffset, 26);
+  Kmlcamera? get CAMERA => Kmlcamera.reader.vTableGetNullable(_bc, _bcOffset, 38);
   ///  TimeSpan
-  KmltimeSpan? get TIME_SPAN => KmltimeSpan.reader.vTableGetNullable(_bc, _bcOffset, 28);
+  KmltimeSpan? get TIME_SPAN => KmltimeSpan.reader.vTableGetNullable(_bc, _bcOffset, 40);
   ///  TimeStamp
-  KmltimeStamp? get TIME_STAMP => KmltimeStamp.reader.vTableGetNullable(_bc, _bcOffset, 30);
+  KmltimeStamp? get TIME_STAMP => KmltimeStamp.reader.vTableGetNullable(_bc, _bcOffset, 42);
   ///  Extended data
-  List<Kmldata>? get EXTENDED_DATA => const fb.ListReader<Kmldata>(Kmldata.reader).vTableGetNullable(_bc, _bcOffset, 32);
+  List<Kmldata>? get EXTENDED_DATA => const fb.ListReader<Kmldata>(Kmldata.reader).vTableGetNullable(_bc, _bcOffset, 44);
+  ///  Schema data
+  KmlschemaData? get SCHEMA_DATA => KmlschemaData.reader.vTableGetNullable(_bc, _bcOffset, 46);
+  ///  Region
+  Kmlregion? get REGION => Kmlregion.reader.vTableGetNullable(_bc, _bcOffset, 48);
+  ///  StyleMap (inline)
+  KmlstyleMap? get STYLE_MAP => KmlstyleMap.reader.vTableGetNullable(_bc, _bcOffset, 50);
 
   @override
   String toString() {
-    return 'Kmlplacemark{NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, VISIBILITY: ${VISIBILITY}, STYLE_URL: ${STYLE_URL}, STYLE: ${STYLE}, SNIPPET: ${SNIPPET}, POINT: ${POINT}, LINE_STRING: ${LINE_STRING}, POLYGON: ${POLYGON}, MULTI_GEOMETRY: ${MULTI_GEOMETRY}, LOOK_AT: ${LOOK_AT}, CAMERA: ${CAMERA}, TIME_SPAN: ${TIME_SPAN}, TIME_STAMP: ${TIME_STAMP}, EXTENDED_DATA: ${EXTENDED_DATA}}';
+    return 'Kmlplacemark{NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, VISIBILITY: ${VISIBILITY}, STYLE_URL: ${STYLE_URL}, STYLE: ${STYLE}, SNIPPET: ${SNIPPET}, OPEN: ${OPEN}, ADDRESS: ${ADDRESS}, POINT: ${POINT}, LINE_STRING: ${LINE_STRING}, POLYGON: ${POLYGON}, LINEAR_RING: ${LINEAR_RING}, MULTI_GEOMETRY: ${MULTI_GEOMETRY}, MODEL: ${MODEL}, TRACK: ${TRACK}, MULTI_TRACK: ${MULTI_TRACK}, LOOK_AT: ${LOOK_AT}, CAMERA: ${CAMERA}, TIME_SPAN: ${TIME_SPAN}, TIME_STAMP: ${TIME_STAMP}, EXTENDED_DATA: ${EXTENDED_DATA}, SCHEMA_DATA: ${SCHEMA_DATA}, REGION: ${REGION}, STYLE_MAP: ${STYLE_MAP}}';
   }
 }
 
@@ -2658,7 +6513,7 @@ class KmlplacemarkBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(15);
+    fbBuilder.startTable(24);
   }
 
   int addNameOffset(int? offset) {
@@ -2685,40 +6540,76 @@ class KmlplacemarkBuilder {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addPointOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
+  int addOpen(bool? OPEN) {
+    fbBuilder.addBool(6, OPEN);
     return fbBuilder.offset;
   }
-  int addLineStringOffset(int? offset) {
+  int addAddressOffset(int? offset) {
     fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addPolygonOffset(int? offset) {
+  int addPointOffset(int? offset) {
     fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
-  int addMultiGeometryOffset(int? offset) {
+  int addLineStringOffset(int? offset) {
     fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
-  int addLookAtOffset(int? offset) {
+  int addPolygonOffset(int? offset) {
     fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
-  int addCameraOffset(int? offset) {
+  int addLinearRingOffset(int? offset) {
     fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
-  int addTimeSpanOffset(int? offset) {
+  int addMultiGeometryOffset(int? offset) {
     fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
-  int addTimeStampOffset(int? offset) {
+  int addModelOffset(int? offset) {
     fbBuilder.addOffset(13, offset);
     return fbBuilder.offset;
   }
-  int addExtendedDataOffset(int? offset) {
+  int addTrackOffset(int? offset) {
     fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addMultiTrackOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addLookAtOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addCameraOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addTimeSpanOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addTimeStampOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addExtendedDataOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addSchemaDataOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addRegionOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addStyleMapOffset(int? offset) {
+    fbBuilder.addOffset(23, offset);
     return fbBuilder.offset;
   }
 
@@ -2734,15 +6625,24 @@ class KmlplacemarkObjectBuilder extends fb.ObjectBuilder {
   final String? _STYLE_URL;
   final KmlstyleObjectBuilder? _STYLE;
   final String? _SNIPPET;
+  final bool? _OPEN;
+  final String? _ADDRESS;
   final KmlpointObjectBuilder? _POINT;
   final KmllineStringObjectBuilder? _LINE_STRING;
   final KmlpolygonObjectBuilder? _POLYGON;
+  final KmllinearRingObjectBuilder? _LINEAR_RING;
   final KmlmultiGeometryObjectBuilder? _MULTI_GEOMETRY;
+  final KmlmodelObjectBuilder? _MODEL;
+  final KmltrackObjectBuilder? _TRACK;
+  final KmlmultiTrackObjectBuilder? _MULTI_TRACK;
   final KmllookAtObjectBuilder? _LOOK_AT;
   final KmlcameraObjectBuilder? _CAMERA;
   final KmltimeSpanObjectBuilder? _TIME_SPAN;
   final KmltimeStampObjectBuilder? _TIME_STAMP;
   final List<KmldataObjectBuilder>? _EXTENDED_DATA;
+  final KmlschemaDataObjectBuilder? _SCHEMA_DATA;
+  final KmlregionObjectBuilder? _REGION;
+  final KmlstyleMapObjectBuilder? _STYLE_MAP;
 
   KmlplacemarkObjectBuilder({
     String? NAME,
@@ -2751,15 +6651,24 @@ class KmlplacemarkObjectBuilder extends fb.ObjectBuilder {
     String? STYLE_URL,
     KmlstyleObjectBuilder? STYLE,
     String? SNIPPET,
+    bool? OPEN,
+    String? ADDRESS,
     KmlpointObjectBuilder? POINT,
     KmllineStringObjectBuilder? LINE_STRING,
     KmlpolygonObjectBuilder? POLYGON,
+    KmllinearRingObjectBuilder? LINEAR_RING,
     KmlmultiGeometryObjectBuilder? MULTI_GEOMETRY,
+    KmlmodelObjectBuilder? MODEL,
+    KmltrackObjectBuilder? TRACK,
+    KmlmultiTrackObjectBuilder? MULTI_TRACK,
     KmllookAtObjectBuilder? LOOK_AT,
     KmlcameraObjectBuilder? CAMERA,
     KmltimeSpanObjectBuilder? TIME_SPAN,
     KmltimeStampObjectBuilder? TIME_STAMP,
     List<KmldataObjectBuilder>? EXTENDED_DATA,
+    KmlschemaDataObjectBuilder? SCHEMA_DATA,
+    KmlregionObjectBuilder? REGION,
+    KmlstyleMapObjectBuilder? STYLE_MAP,
   })
       : _NAME = NAME,
         _DESCRIPTION = DESCRIPTION,
@@ -2767,15 +6676,24 @@ class KmlplacemarkObjectBuilder extends fb.ObjectBuilder {
         _STYLE_URL = STYLE_URL,
         _STYLE = STYLE,
         _SNIPPET = SNIPPET,
+        _OPEN = OPEN,
+        _ADDRESS = ADDRESS,
         _POINT = POINT,
         _LINE_STRING = LINE_STRING,
         _POLYGON = POLYGON,
+        _LINEAR_RING = LINEAR_RING,
         _MULTI_GEOMETRY = MULTI_GEOMETRY,
+        _MODEL = MODEL,
+        _TRACK = TRACK,
+        _MULTI_TRACK = MULTI_TRACK,
         _LOOK_AT = LOOK_AT,
         _CAMERA = CAMERA,
         _TIME_SPAN = TIME_SPAN,
         _TIME_STAMP = TIME_STAMP,
-        _EXTENDED_DATA = EXTENDED_DATA;
+        _EXTENDED_DATA = EXTENDED_DATA,
+        _SCHEMA_DATA = SCHEMA_DATA,
+        _REGION = REGION,
+        _STYLE_MAP = STYLE_MAP;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -2789,32 +6707,50 @@ class KmlplacemarkObjectBuilder extends fb.ObjectBuilder {
     final int? STYLEOffset = _STYLE?.getOrCreateOffset(fbBuilder);
     final int? SNIPPETOffset = _SNIPPET == null ? null
         : fbBuilder.writeString(_SNIPPET!);
+    final int? ADDRESSOffset = _ADDRESS == null ? null
+        : fbBuilder.writeString(_ADDRESS!);
     final int? POINTOffset = _POINT?.getOrCreateOffset(fbBuilder);
     final int? LINE_STRINGOffset = _LINE_STRING?.getOrCreateOffset(fbBuilder);
     final int? POLYGONOffset = _POLYGON?.getOrCreateOffset(fbBuilder);
+    final int? LINEAR_RINGOffset = _LINEAR_RING?.getOrCreateOffset(fbBuilder);
     final int? MULTI_GEOMETRYOffset = _MULTI_GEOMETRY?.getOrCreateOffset(fbBuilder);
+    final int? MODELOffset = _MODEL?.getOrCreateOffset(fbBuilder);
+    final int? TRACKOffset = _TRACK?.getOrCreateOffset(fbBuilder);
+    final int? MULTI_TRACKOffset = _MULTI_TRACK?.getOrCreateOffset(fbBuilder);
     final int? LOOK_ATOffset = _LOOK_AT?.getOrCreateOffset(fbBuilder);
     final int? CAMERAOffset = _CAMERA?.getOrCreateOffset(fbBuilder);
     final int? TIME_SPANOffset = _TIME_SPAN?.getOrCreateOffset(fbBuilder);
     final int? TIME_STAMPOffset = _TIME_STAMP?.getOrCreateOffset(fbBuilder);
     final int? EXTENDED_DATAOffset = _EXTENDED_DATA == null ? null
         : fbBuilder.writeList(_EXTENDED_DATA!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(15);
+    final int? SCHEMA_DATAOffset = _SCHEMA_DATA?.getOrCreateOffset(fbBuilder);
+    final int? REGIONOffset = _REGION?.getOrCreateOffset(fbBuilder);
+    final int? STYLE_MAPOffset = _STYLE_MAP?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(24);
     fbBuilder.addOffset(0, NAMEOffset);
     fbBuilder.addOffset(1, DESCRIPTIONOffset);
     fbBuilder.addBool(2, _VISIBILITY);
     fbBuilder.addOffset(3, STYLE_URLOffset);
     fbBuilder.addOffset(4, STYLEOffset);
     fbBuilder.addOffset(5, SNIPPETOffset);
-    fbBuilder.addOffset(6, POINTOffset);
-    fbBuilder.addOffset(7, LINE_STRINGOffset);
-    fbBuilder.addOffset(8, POLYGONOffset);
-    fbBuilder.addOffset(9, MULTI_GEOMETRYOffset);
-    fbBuilder.addOffset(10, LOOK_ATOffset);
-    fbBuilder.addOffset(11, CAMERAOffset);
-    fbBuilder.addOffset(12, TIME_SPANOffset);
-    fbBuilder.addOffset(13, TIME_STAMPOffset);
-    fbBuilder.addOffset(14, EXTENDED_DATAOffset);
+    fbBuilder.addBool(6, _OPEN);
+    fbBuilder.addOffset(7, ADDRESSOffset);
+    fbBuilder.addOffset(8, POINTOffset);
+    fbBuilder.addOffset(9, LINE_STRINGOffset);
+    fbBuilder.addOffset(10, POLYGONOffset);
+    fbBuilder.addOffset(11, LINEAR_RINGOffset);
+    fbBuilder.addOffset(12, MULTI_GEOMETRYOffset);
+    fbBuilder.addOffset(13, MODELOffset);
+    fbBuilder.addOffset(14, TRACKOffset);
+    fbBuilder.addOffset(15, MULTI_TRACKOffset);
+    fbBuilder.addOffset(16, LOOK_ATOffset);
+    fbBuilder.addOffset(17, CAMERAOffset);
+    fbBuilder.addOffset(18, TIME_SPANOffset);
+    fbBuilder.addOffset(19, TIME_STAMPOffset);
+    fbBuilder.addOffset(20, EXTENDED_DATAOffset);
+    fbBuilder.addOffset(21, SCHEMA_DATAOffset);
+    fbBuilder.addOffset(22, REGIONOffset);
+    fbBuilder.addOffset(23, STYLE_MAPOffset);
     return fbBuilder.endTable();
   }
 
@@ -2855,10 +6791,34 @@ class Kmlfolder {
   List<KmlnetworkLink>? get NETWORK_LINKS => const fb.ListReader<KmlnetworkLink>(KmlnetworkLink.reader).vTableGetNullable(_bc, _bcOffset, 16);
   ///  Ground overlays
   List<KmlgroundOverlay>? get GROUND_OVERLAYS => const fb.ListReader<KmlgroundOverlay>(KmlgroundOverlay.reader).vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Shared styles
+  List<Kmlstyle>? get STYLES => const fb.ListReader<Kmlstyle>(Kmlstyle.reader).vTableGetNullable(_bc, _bcOffset, 20);
+  ///  Style maps
+  List<KmlstyleMap>? get STYLE_MAPS => const fb.ListReader<KmlstyleMap>(KmlstyleMap.reader).vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Screen overlays
+  List<KmlscreenOverlay>? get SCREEN_OVERLAYS => const fb.ListReader<KmlscreenOverlay>(KmlscreenOverlay.reader).vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Photo overlays
+  List<KmlphotoOverlay>? get PHOTO_OVERLAYS => const fb.ListReader<KmlphotoOverlay>(KmlphotoOverlay.reader).vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Tours
+  List<Kmltour>? get TOURS => const fb.ListReader<Kmltour>(Kmltour.reader).vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Style URL reference
+  String? get STYLE_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  ///  Region
+  Kmlregion? get REGION => Kmlregion.reader.vTableGetNullable(_bc, _bcOffset, 32);
+  ///  Extended data
+  List<Kmldata>? get EXTENDED_DATA => const fb.ListReader<Kmldata>(Kmldata.reader).vTableGetNullable(_bc, _bcOffset, 34);
+  ///  LookAt viewpoint
+  KmllookAt? get LOOK_AT => KmllookAt.reader.vTableGetNullable(_bc, _bcOffset, 36);
+  ///  Camera viewpoint
+  Kmlcamera? get CAMERA => Kmlcamera.reader.vTableGetNullable(_bc, _bcOffset, 38);
+  ///  TimeSpan
+  KmltimeSpan? get TIME_SPAN => KmltimeSpan.reader.vTableGetNullable(_bc, _bcOffset, 40);
+  ///  TimeStamp
+  KmltimeStamp? get TIME_STAMP => KmltimeStamp.reader.vTableGetNullable(_bc, _bcOffset, 42);
 
   @override
   String toString() {
-    return 'Kmlfolder{NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, VISIBILITY: ${VISIBILITY}, OPEN: ${OPEN}, PLACEMARKS: ${PLACEMARKS}, FOLDERS: ${FOLDERS}, NETWORK_LINKS: ${NETWORK_LINKS}, GROUND_OVERLAYS: ${GROUND_OVERLAYS}}';
+    return 'Kmlfolder{NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, VISIBILITY: ${VISIBILITY}, OPEN: ${OPEN}, PLACEMARKS: ${PLACEMARKS}, FOLDERS: ${FOLDERS}, NETWORK_LINKS: ${NETWORK_LINKS}, GROUND_OVERLAYS: ${GROUND_OVERLAYS}, STYLES: ${STYLES}, STYLE_MAPS: ${STYLE_MAPS}, SCREEN_OVERLAYS: ${SCREEN_OVERLAYS}, PHOTO_OVERLAYS: ${PHOTO_OVERLAYS}, TOURS: ${TOURS}, STYLE_URL: ${STYLE_URL}, REGION: ${REGION}, EXTENDED_DATA: ${EXTENDED_DATA}, LOOK_AT: ${LOOK_AT}, CAMERA: ${CAMERA}, TIME_SPAN: ${TIME_SPAN}, TIME_STAMP: ${TIME_STAMP}}';
   }
 }
 
@@ -2876,7 +6836,7 @@ class KmlfolderBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(8);
+    fbBuilder.startTable(20);
   }
 
   int addNameOffset(int? offset) {
@@ -2911,6 +6871,54 @@ class KmlfolderBuilder {
     fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
+  int addStylesOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addStyleMapsOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addScreenOverlaysOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addPhotoOverlaysOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addToursOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addStyleUrlOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addRegionOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addExtendedDataOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addLookAtOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addCameraOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addTimeSpanOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addTimeStampOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -2926,6 +6934,18 @@ class KmlfolderObjectBuilder extends fb.ObjectBuilder {
   final List<KmlfolderObjectBuilder>? _FOLDERS;
   final List<KmlnetworkLinkObjectBuilder>? _NETWORK_LINKS;
   final List<KmlgroundOverlayObjectBuilder>? _GROUND_OVERLAYS;
+  final List<KmlstyleObjectBuilder>? _STYLES;
+  final List<KmlstyleMapObjectBuilder>? _STYLE_MAPS;
+  final List<KmlscreenOverlayObjectBuilder>? _SCREEN_OVERLAYS;
+  final List<KmlphotoOverlayObjectBuilder>? _PHOTO_OVERLAYS;
+  final List<KmltourObjectBuilder>? _TOURS;
+  final String? _STYLE_URL;
+  final KmlregionObjectBuilder? _REGION;
+  final List<KmldataObjectBuilder>? _EXTENDED_DATA;
+  final KmllookAtObjectBuilder? _LOOK_AT;
+  final KmlcameraObjectBuilder? _CAMERA;
+  final KmltimeSpanObjectBuilder? _TIME_SPAN;
+  final KmltimeStampObjectBuilder? _TIME_STAMP;
 
   KmlfolderObjectBuilder({
     String? NAME,
@@ -2936,6 +6956,18 @@ class KmlfolderObjectBuilder extends fb.ObjectBuilder {
     List<KmlfolderObjectBuilder>? FOLDERS,
     List<KmlnetworkLinkObjectBuilder>? NETWORK_LINKS,
     List<KmlgroundOverlayObjectBuilder>? GROUND_OVERLAYS,
+    List<KmlstyleObjectBuilder>? STYLES,
+    List<KmlstyleMapObjectBuilder>? STYLE_MAPS,
+    List<KmlscreenOverlayObjectBuilder>? SCREEN_OVERLAYS,
+    List<KmlphotoOverlayObjectBuilder>? PHOTO_OVERLAYS,
+    List<KmltourObjectBuilder>? TOURS,
+    String? STYLE_URL,
+    KmlregionObjectBuilder? REGION,
+    List<KmldataObjectBuilder>? EXTENDED_DATA,
+    KmllookAtObjectBuilder? LOOK_AT,
+    KmlcameraObjectBuilder? CAMERA,
+    KmltimeSpanObjectBuilder? TIME_SPAN,
+    KmltimeStampObjectBuilder? TIME_STAMP,
   })
       : _NAME = NAME,
         _DESCRIPTION = DESCRIPTION,
@@ -2944,7 +6976,19 @@ class KmlfolderObjectBuilder extends fb.ObjectBuilder {
         _PLACEMARKS = PLACEMARKS,
         _FOLDERS = FOLDERS,
         _NETWORK_LINKS = NETWORK_LINKS,
-        _GROUND_OVERLAYS = GROUND_OVERLAYS;
+        _GROUND_OVERLAYS = GROUND_OVERLAYS,
+        _STYLES = STYLES,
+        _STYLE_MAPS = STYLE_MAPS,
+        _SCREEN_OVERLAYS = SCREEN_OVERLAYS,
+        _PHOTO_OVERLAYS = PHOTO_OVERLAYS,
+        _TOURS = TOURS,
+        _STYLE_URL = STYLE_URL,
+        _REGION = REGION,
+        _EXTENDED_DATA = EXTENDED_DATA,
+        _LOOK_AT = LOOK_AT,
+        _CAMERA = CAMERA,
+        _TIME_SPAN = TIME_SPAN,
+        _TIME_STAMP = TIME_STAMP;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -2961,7 +7005,26 @@ class KmlfolderObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_NETWORK_LINKS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? GROUND_OVERLAYSOffset = _GROUND_OVERLAYS == null ? null
         : fbBuilder.writeList(_GROUND_OVERLAYS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(8);
+    final int? STYLESOffset = _STYLES == null ? null
+        : fbBuilder.writeList(_STYLES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? STYLE_MAPSOffset = _STYLE_MAPS == null ? null
+        : fbBuilder.writeList(_STYLE_MAPS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? SCREEN_OVERLAYSOffset = _SCREEN_OVERLAYS == null ? null
+        : fbBuilder.writeList(_SCREEN_OVERLAYS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? PHOTO_OVERLAYSOffset = _PHOTO_OVERLAYS == null ? null
+        : fbBuilder.writeList(_PHOTO_OVERLAYS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? TOURSOffset = _TOURS == null ? null
+        : fbBuilder.writeList(_TOURS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? STYLE_URLOffset = _STYLE_URL == null ? null
+        : fbBuilder.writeString(_STYLE_URL!);
+    final int? REGIONOffset = _REGION?.getOrCreateOffset(fbBuilder);
+    final int? EXTENDED_DATAOffset = _EXTENDED_DATA == null ? null
+        : fbBuilder.writeList(_EXTENDED_DATA!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? LOOK_ATOffset = _LOOK_AT?.getOrCreateOffset(fbBuilder);
+    final int? CAMERAOffset = _CAMERA?.getOrCreateOffset(fbBuilder);
+    final int? TIME_SPANOffset = _TIME_SPAN?.getOrCreateOffset(fbBuilder);
+    final int? TIME_STAMPOffset = _TIME_STAMP?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(20);
     fbBuilder.addOffset(0, NAMEOffset);
     fbBuilder.addOffset(1, DESCRIPTIONOffset);
     fbBuilder.addBool(2, _VISIBILITY);
@@ -2970,6 +7033,18 @@ class KmlfolderObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(5, FOLDERSOffset);
     fbBuilder.addOffset(6, NETWORK_LINKSOffset);
     fbBuilder.addOffset(7, GROUND_OVERLAYSOffset);
+    fbBuilder.addOffset(8, STYLESOffset);
+    fbBuilder.addOffset(9, STYLE_MAPSOffset);
+    fbBuilder.addOffset(10, SCREEN_OVERLAYSOffset);
+    fbBuilder.addOffset(11, PHOTO_OVERLAYSOffset);
+    fbBuilder.addOffset(12, TOURSOffset);
+    fbBuilder.addOffset(13, STYLE_URLOffset);
+    fbBuilder.addOffset(14, REGIONOffset);
+    fbBuilder.addOffset(15, EXTENDED_DATAOffset);
+    fbBuilder.addOffset(16, LOOK_ATOffset);
+    fbBuilder.addOffset(17, CAMERAOffset);
+    fbBuilder.addOffset(18, TIME_SPANOffset);
+    fbBuilder.addOffset(19, TIME_STAMPOffset);
     return fbBuilder.endTable();
   }
 
@@ -3014,10 +7089,20 @@ class KML {
   List<KmlnetworkLink>? get NETWORK_LINKS => const fb.ListReader<KmlnetworkLink>(KmlnetworkLink.reader).vTableGetNullable(_bc, _bcOffset, 20);
   ///  Ground overlays
   List<KmlgroundOverlay>? get GROUND_OVERLAYS => const fb.ListReader<KmlgroundOverlay>(KmlgroundOverlay.reader).vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Schemas
+  List<Kmlschema>? get SCHEMAS => const fb.ListReader<Kmlschema>(Kmlschema.reader).vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Screen overlays
+  List<KmlscreenOverlay>? get SCREEN_OVERLAYS => const fb.ListReader<KmlscreenOverlay>(KmlscreenOverlay.reader).vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Photo overlays
+  List<KmlphotoOverlay>? get PHOTO_OVERLAYS => const fb.ListReader<KmlphotoOverlay>(KmlphotoOverlay.reader).vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Tours
+  List<Kmltour>? get TOURS => const fb.ListReader<Kmltour>(Kmltour.reader).vTableGetNullable(_bc, _bcOffset, 30);
+  ///  NetworkLinkControl
+  KmlnetworkLinkControl? get NETWORK_LINK_CONTROL => KmlnetworkLinkControl.reader.vTableGetNullable(_bc, _bcOffset, 32);
 
   @override
   String toString() {
-    return 'KML{NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, VISIBILITY: ${VISIBILITY}, OPEN: ${OPEN}, STYLES: ${STYLES}, STYLE_MAPS: ${STYLE_MAPS}, PLACEMARKS: ${PLACEMARKS}, FOLDERS: ${FOLDERS}, NETWORK_LINKS: ${NETWORK_LINKS}, GROUND_OVERLAYS: ${GROUND_OVERLAYS}}';
+    return 'KML{NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, VISIBILITY: ${VISIBILITY}, OPEN: ${OPEN}, STYLES: ${STYLES}, STYLE_MAPS: ${STYLE_MAPS}, PLACEMARKS: ${PLACEMARKS}, FOLDERS: ${FOLDERS}, NETWORK_LINKS: ${NETWORK_LINKS}, GROUND_OVERLAYS: ${GROUND_OVERLAYS}, SCHEMAS: ${SCHEMAS}, SCREEN_OVERLAYS: ${SCREEN_OVERLAYS}, PHOTO_OVERLAYS: ${PHOTO_OVERLAYS}, TOURS: ${TOURS}, NETWORK_LINK_CONTROL: ${NETWORK_LINK_CONTROL}}';
   }
 }
 
@@ -3035,7 +7120,7 @@ class KMLBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(10);
+    fbBuilder.startTable(15);
   }
 
   int addNameOffset(int? offset) {
@@ -3078,6 +7163,26 @@ class KMLBuilder {
     fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
+  int addSchemasOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addScreenOverlaysOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addPhotoOverlaysOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addToursOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addNetworkLinkControlOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -3095,6 +7200,11 @@ class KMLObjectBuilder extends fb.ObjectBuilder {
   final List<KmlfolderObjectBuilder>? _FOLDERS;
   final List<KmlnetworkLinkObjectBuilder>? _NETWORK_LINKS;
   final List<KmlgroundOverlayObjectBuilder>? _GROUND_OVERLAYS;
+  final List<KmlschemaObjectBuilder>? _SCHEMAS;
+  final List<KmlscreenOverlayObjectBuilder>? _SCREEN_OVERLAYS;
+  final List<KmlphotoOverlayObjectBuilder>? _PHOTO_OVERLAYS;
+  final List<KmltourObjectBuilder>? _TOURS;
+  final KmlnetworkLinkControlObjectBuilder? _NETWORK_LINK_CONTROL;
 
   KMLObjectBuilder({
     String? NAME,
@@ -3107,6 +7217,11 @@ class KMLObjectBuilder extends fb.ObjectBuilder {
     List<KmlfolderObjectBuilder>? FOLDERS,
     List<KmlnetworkLinkObjectBuilder>? NETWORK_LINKS,
     List<KmlgroundOverlayObjectBuilder>? GROUND_OVERLAYS,
+    List<KmlschemaObjectBuilder>? SCHEMAS,
+    List<KmlscreenOverlayObjectBuilder>? SCREEN_OVERLAYS,
+    List<KmlphotoOverlayObjectBuilder>? PHOTO_OVERLAYS,
+    List<KmltourObjectBuilder>? TOURS,
+    KmlnetworkLinkControlObjectBuilder? NETWORK_LINK_CONTROL,
   })
       : _NAME = NAME,
         _DESCRIPTION = DESCRIPTION,
@@ -3117,7 +7232,12 @@ class KMLObjectBuilder extends fb.ObjectBuilder {
         _PLACEMARKS = PLACEMARKS,
         _FOLDERS = FOLDERS,
         _NETWORK_LINKS = NETWORK_LINKS,
-        _GROUND_OVERLAYS = GROUND_OVERLAYS;
+        _GROUND_OVERLAYS = GROUND_OVERLAYS,
+        _SCHEMAS = SCHEMAS,
+        _SCREEN_OVERLAYS = SCREEN_OVERLAYS,
+        _PHOTO_OVERLAYS = PHOTO_OVERLAYS,
+        _TOURS = TOURS,
+        _NETWORK_LINK_CONTROL = NETWORK_LINK_CONTROL;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -3138,7 +7258,16 @@ class KMLObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_NETWORK_LINKS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? GROUND_OVERLAYSOffset = _GROUND_OVERLAYS == null ? null
         : fbBuilder.writeList(_GROUND_OVERLAYS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(10);
+    final int? SCHEMASOffset = _SCHEMAS == null ? null
+        : fbBuilder.writeList(_SCHEMAS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? SCREEN_OVERLAYSOffset = _SCREEN_OVERLAYS == null ? null
+        : fbBuilder.writeList(_SCREEN_OVERLAYS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? PHOTO_OVERLAYSOffset = _PHOTO_OVERLAYS == null ? null
+        : fbBuilder.writeList(_PHOTO_OVERLAYS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? TOURSOffset = _TOURS == null ? null
+        : fbBuilder.writeList(_TOURS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? NETWORK_LINK_CONTROLOffset = _NETWORK_LINK_CONTROL?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(15);
     fbBuilder.addOffset(0, NAMEOffset);
     fbBuilder.addOffset(1, DESCRIPTIONOffset);
     fbBuilder.addBool(2, _VISIBILITY);
@@ -3149,6 +7278,11 @@ class KMLObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(7, FOLDERSOffset);
     fbBuilder.addOffset(8, NETWORK_LINKSOffset);
     fbBuilder.addOffset(9, GROUND_OVERLAYSOffset);
+    fbBuilder.addOffset(10, SCHEMASOffset);
+    fbBuilder.addOffset(11, SCREEN_OVERLAYSOffset);
+    fbBuilder.addOffset(12, PHOTO_OVERLAYSOffset);
+    fbBuilder.addOffset(13, TOURSOffset);
+    fbBuilder.addOffset(14, NETWORK_LINK_CONTROLOffset);
     return fbBuilder.endTable();
   }
 

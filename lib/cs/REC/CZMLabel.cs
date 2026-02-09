@@ -55,6 +55,32 @@ public struct CZMLabel : IFlatbufferObject
   public CZMVerticalOrigin VERTICAL_ORIGIN { get { int o = __p.__offset(26); return o != 0 ? (CZMVerticalOrigin)__p.bb.GetSbyte(o + __p.bb_pos) : CZMVerticalOrigin.BASELINE; } }
   /// Height reference
   public CZMHeightReference HEIGHT_REFERENCE { get { int o = __p.__offset(28); return o != 0 ? (CZMHeightReference)__p.bb.GetSbyte(o + __p.bb_pos) : CZMHeightReference.NONE; } }
+  /// Whether to show background
+  public bool SHOW_BACKGROUND { get { int o = __p.__offset(30); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Background color
+  public CZMColor? BACKGROUND_COLOR { get { int o = __p.__offset(32); return o != 0 ? (CZMColor?)(new CZMColor()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Background padding X
+  public double BACKGROUND_PADDING_X { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Background padding Y
+  public double BACKGROUND_PADDING_Y { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Eye offset X in meters
+  public double EYE_OFFSET_X { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Eye offset Y in meters
+  public double EYE_OFFSET_Y { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Eye offset Z in meters
+  public double EYE_OFFSET_Z { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Translucency by distance
+  public CZMNearFarScalar? TRANSLUCENCY_BY_DISTANCE { get { int o = __p.__offset(44); return o != 0 ? (CZMNearFarScalar?)(new CZMNearFarScalar()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Pixel offset scale by distance
+  public CZMNearFarScalar? PIXEL_OFFSET_SCALE_BY_DISTANCE { get { int o = __p.__offset(46); return o != 0 ? (CZMNearFarScalar?)(new CZMNearFarScalar()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Scale by distance
+  public CZMNearFarScalar? SCALE_BY_DISTANCE { get { int o = __p.__offset(48); return o != 0 ? (CZMNearFarScalar?)(new CZMNearFarScalar()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Distance display condition near
+  public double DISTANCE_DISPLAY_CONDITION_NEAR { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Distance display condition far
+  public double DISTANCE_DISPLAY_CONDITION_FAR { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Disable depth test distance
+  public double DISABLE_DEPTH_TEST_DISTANCE { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<CZMLabel> CreateCZMLabel(FlatBufferBuilder builder,
       bool SHOW = false,
@@ -69,16 +95,42 @@ public struct CZMLabel : IFlatbufferObject
       double SCALE = 0.0,
       CZMHorizontalOrigin HORIZONTAL_ORIGIN = CZMHorizontalOrigin.LEFT,
       CZMVerticalOrigin VERTICAL_ORIGIN = CZMVerticalOrigin.BASELINE,
-      CZMHeightReference HEIGHT_REFERENCE = CZMHeightReference.NONE) {
-    builder.StartTable(13);
+      CZMHeightReference HEIGHT_REFERENCE = CZMHeightReference.NONE,
+      bool SHOW_BACKGROUND = false,
+      Offset<CZMColor> BACKGROUND_COLOROffset = default(Offset<CZMColor>),
+      double BACKGROUND_PADDING_X = 0.0,
+      double BACKGROUND_PADDING_Y = 0.0,
+      double EYE_OFFSET_X = 0.0,
+      double EYE_OFFSET_Y = 0.0,
+      double EYE_OFFSET_Z = 0.0,
+      Offset<CZMNearFarScalar> TRANSLUCENCY_BY_DISTANCEOffset = default(Offset<CZMNearFarScalar>),
+      Offset<CZMNearFarScalar> PIXEL_OFFSET_SCALE_BY_DISTANCEOffset = default(Offset<CZMNearFarScalar>),
+      Offset<CZMNearFarScalar> SCALE_BY_DISTANCEOffset = default(Offset<CZMNearFarScalar>),
+      double DISTANCE_DISPLAY_CONDITION_NEAR = 0.0,
+      double DISTANCE_DISPLAY_CONDITION_FAR = 0.0,
+      double DISABLE_DEPTH_TEST_DISTANCE = 0.0) {
+    builder.StartTable(26);
+    CZMLabel.AddDISABLE_DEPTH_TEST_DISTANCE(builder, DISABLE_DEPTH_TEST_DISTANCE);
+    CZMLabel.AddDISTANCE_DISPLAY_CONDITION_FAR(builder, DISTANCE_DISPLAY_CONDITION_FAR);
+    CZMLabel.AddDISTANCE_DISPLAY_CONDITION_NEAR(builder, DISTANCE_DISPLAY_CONDITION_NEAR);
+    CZMLabel.AddEYE_OFFSET_Z(builder, EYE_OFFSET_Z);
+    CZMLabel.AddEYE_OFFSET_Y(builder, EYE_OFFSET_Y);
+    CZMLabel.AddEYE_OFFSET_X(builder, EYE_OFFSET_X);
+    CZMLabel.AddBACKGROUND_PADDING_Y(builder, BACKGROUND_PADDING_Y);
+    CZMLabel.AddBACKGROUND_PADDING_X(builder, BACKGROUND_PADDING_X);
     CZMLabel.AddSCALE(builder, SCALE);
     CZMLabel.AddPIXEL_OFFSET_Y(builder, PIXEL_OFFSET_Y);
     CZMLabel.AddPIXEL_OFFSET_X(builder, PIXEL_OFFSET_X);
     CZMLabel.AddOUTLINE_WIDTH(builder, OUTLINE_WIDTH);
+    CZMLabel.AddSCALE_BY_DISTANCE(builder, SCALE_BY_DISTANCEOffset);
+    CZMLabel.AddPIXEL_OFFSET_SCALE_BY_DISTANCE(builder, PIXEL_OFFSET_SCALE_BY_DISTANCEOffset);
+    CZMLabel.AddTRANSLUCENCY_BY_DISTANCE(builder, TRANSLUCENCY_BY_DISTANCEOffset);
+    CZMLabel.AddBACKGROUND_COLOR(builder, BACKGROUND_COLOROffset);
     CZMLabel.AddOUTLINE_COLOR(builder, OUTLINE_COLOROffset);
     CZMLabel.AddFILL_COLOR(builder, FILL_COLOROffset);
     CZMLabel.AddFONT(builder, FONTOffset);
     CZMLabel.AddTEXT(builder, TEXTOffset);
+    CZMLabel.AddSHOW_BACKGROUND(builder, SHOW_BACKGROUND);
     CZMLabel.AddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE);
     CZMLabel.AddVERTICAL_ORIGIN(builder, VERTICAL_ORIGIN);
     CZMLabel.AddHORIZONTAL_ORIGIN(builder, HORIZONTAL_ORIGIN);
@@ -87,7 +139,7 @@ public struct CZMLabel : IFlatbufferObject
     return CZMLabel.EndCZMLabel(builder);
   }
 
-  public static void StartCZMLabel(FlatBufferBuilder builder) { builder.StartTable(13); }
+  public static void StartCZMLabel(FlatBufferBuilder builder) { builder.StartTable(26); }
   public static void AddSHOW(FlatBufferBuilder builder, bool SHOW) { builder.AddBool(0, SHOW, false); }
   public static void AddTEXT(FlatBufferBuilder builder, StringOffset TEXTOffset) { builder.AddOffset(1, TEXTOffset.Value, 0); }
   public static void AddFONT(FlatBufferBuilder builder, StringOffset FONTOffset) { builder.AddOffset(2, FONTOffset.Value, 0); }
@@ -101,6 +153,19 @@ public struct CZMLabel : IFlatbufferObject
   public static void AddHORIZONTAL_ORIGIN(FlatBufferBuilder builder, CZMHorizontalOrigin HORIZONTAL_ORIGIN) { builder.AddSbyte(10, (sbyte)HORIZONTAL_ORIGIN, 0); }
   public static void AddVERTICAL_ORIGIN(FlatBufferBuilder builder, CZMVerticalOrigin VERTICAL_ORIGIN) { builder.AddSbyte(11, (sbyte)VERTICAL_ORIGIN, 0); }
   public static void AddHEIGHT_REFERENCE(FlatBufferBuilder builder, CZMHeightReference HEIGHT_REFERENCE) { builder.AddSbyte(12, (sbyte)HEIGHT_REFERENCE, 0); }
+  public static void AddSHOW_BACKGROUND(FlatBufferBuilder builder, bool SHOW_BACKGROUND) { builder.AddBool(13, SHOW_BACKGROUND, false); }
+  public static void AddBACKGROUND_COLOR(FlatBufferBuilder builder, Offset<CZMColor> BACKGROUND_COLOROffset) { builder.AddOffset(14, BACKGROUND_COLOROffset.Value, 0); }
+  public static void AddBACKGROUND_PADDING_X(FlatBufferBuilder builder, double BACKGROUND_PADDING_X) { builder.AddDouble(15, BACKGROUND_PADDING_X, 0.0); }
+  public static void AddBACKGROUND_PADDING_Y(FlatBufferBuilder builder, double BACKGROUND_PADDING_Y) { builder.AddDouble(16, BACKGROUND_PADDING_Y, 0.0); }
+  public static void AddEYE_OFFSET_X(FlatBufferBuilder builder, double EYE_OFFSET_X) { builder.AddDouble(17, EYE_OFFSET_X, 0.0); }
+  public static void AddEYE_OFFSET_Y(FlatBufferBuilder builder, double EYE_OFFSET_Y) { builder.AddDouble(18, EYE_OFFSET_Y, 0.0); }
+  public static void AddEYE_OFFSET_Z(FlatBufferBuilder builder, double EYE_OFFSET_Z) { builder.AddDouble(19, EYE_OFFSET_Z, 0.0); }
+  public static void AddTRANSLUCENCY_BY_DISTANCE(FlatBufferBuilder builder, Offset<CZMNearFarScalar> TRANSLUCENCY_BY_DISTANCEOffset) { builder.AddOffset(20, TRANSLUCENCY_BY_DISTANCEOffset.Value, 0); }
+  public static void AddPIXEL_OFFSET_SCALE_BY_DISTANCE(FlatBufferBuilder builder, Offset<CZMNearFarScalar> PIXEL_OFFSET_SCALE_BY_DISTANCEOffset) { builder.AddOffset(21, PIXEL_OFFSET_SCALE_BY_DISTANCEOffset.Value, 0); }
+  public static void AddSCALE_BY_DISTANCE(FlatBufferBuilder builder, Offset<CZMNearFarScalar> SCALE_BY_DISTANCEOffset) { builder.AddOffset(22, SCALE_BY_DISTANCEOffset.Value, 0); }
+  public static void AddDISTANCE_DISPLAY_CONDITION_NEAR(FlatBufferBuilder builder, double DISTANCE_DISPLAY_CONDITION_NEAR) { builder.AddDouble(23, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0); }
+  public static void AddDISTANCE_DISPLAY_CONDITION_FAR(FlatBufferBuilder builder, double DISTANCE_DISPLAY_CONDITION_FAR) { builder.AddDouble(24, DISTANCE_DISPLAY_CONDITION_FAR, 0.0); }
+  public static void AddDISABLE_DEPTH_TEST_DISTANCE(FlatBufferBuilder builder, double DISABLE_DEPTH_TEST_DISTANCE) { builder.AddDouble(25, DISABLE_DEPTH_TEST_DISTANCE, 0.0); }
   public static Offset<CZMLabel> EndCZMLabel(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CZMLabel>(o);
@@ -124,6 +189,19 @@ public struct CZMLabel : IFlatbufferObject
     _o.HORIZONTAL_ORIGIN = this.HORIZONTAL_ORIGIN;
     _o.VERTICAL_ORIGIN = this.VERTICAL_ORIGIN;
     _o.HEIGHT_REFERENCE = this.HEIGHT_REFERENCE;
+    _o.SHOW_BACKGROUND = this.SHOW_BACKGROUND;
+    _o.BACKGROUND_COLOR = this.BACKGROUND_COLOR.HasValue ? this.BACKGROUND_COLOR.Value.UnPack() : null;
+    _o.BACKGROUND_PADDING_X = this.BACKGROUND_PADDING_X;
+    _o.BACKGROUND_PADDING_Y = this.BACKGROUND_PADDING_Y;
+    _o.EYE_OFFSET_X = this.EYE_OFFSET_X;
+    _o.EYE_OFFSET_Y = this.EYE_OFFSET_Y;
+    _o.EYE_OFFSET_Z = this.EYE_OFFSET_Z;
+    _o.TRANSLUCENCY_BY_DISTANCE = this.TRANSLUCENCY_BY_DISTANCE.HasValue ? this.TRANSLUCENCY_BY_DISTANCE.Value.UnPack() : null;
+    _o.PIXEL_OFFSET_SCALE_BY_DISTANCE = this.PIXEL_OFFSET_SCALE_BY_DISTANCE.HasValue ? this.PIXEL_OFFSET_SCALE_BY_DISTANCE.Value.UnPack() : null;
+    _o.SCALE_BY_DISTANCE = this.SCALE_BY_DISTANCE.HasValue ? this.SCALE_BY_DISTANCE.Value.UnPack() : null;
+    _o.DISTANCE_DISPLAY_CONDITION_NEAR = this.DISTANCE_DISPLAY_CONDITION_NEAR;
+    _o.DISTANCE_DISPLAY_CONDITION_FAR = this.DISTANCE_DISPLAY_CONDITION_FAR;
+    _o.DISABLE_DEPTH_TEST_DISTANCE = this.DISABLE_DEPTH_TEST_DISTANCE;
   }
   public static Offset<CZMLabel> Pack(FlatBufferBuilder builder, CZMLabelT _o) {
     if (_o == null) return default(Offset<CZMLabel>);
@@ -131,6 +209,10 @@ public struct CZMLabel : IFlatbufferObject
     var _FONT = _o.FONT == null ? default(StringOffset) : builder.CreateString(_o.FONT);
     var _FILL_COLOR = _o.FILL_COLOR == null ? default(Offset<CZMColor>) : CZMColor.Pack(builder, _o.FILL_COLOR);
     var _OUTLINE_COLOR = _o.OUTLINE_COLOR == null ? default(Offset<CZMColor>) : CZMColor.Pack(builder, _o.OUTLINE_COLOR);
+    var _BACKGROUND_COLOR = _o.BACKGROUND_COLOR == null ? default(Offset<CZMColor>) : CZMColor.Pack(builder, _o.BACKGROUND_COLOR);
+    var _TRANSLUCENCY_BY_DISTANCE = _o.TRANSLUCENCY_BY_DISTANCE == null ? default(Offset<CZMNearFarScalar>) : CZMNearFarScalar.Pack(builder, _o.TRANSLUCENCY_BY_DISTANCE);
+    var _PIXEL_OFFSET_SCALE_BY_DISTANCE = _o.PIXEL_OFFSET_SCALE_BY_DISTANCE == null ? default(Offset<CZMNearFarScalar>) : CZMNearFarScalar.Pack(builder, _o.PIXEL_OFFSET_SCALE_BY_DISTANCE);
+    var _SCALE_BY_DISTANCE = _o.SCALE_BY_DISTANCE == null ? default(Offset<CZMNearFarScalar>) : CZMNearFarScalar.Pack(builder, _o.SCALE_BY_DISTANCE);
     return CreateCZMLabel(
       builder,
       _o.SHOW,
@@ -145,7 +227,20 @@ public struct CZMLabel : IFlatbufferObject
       _o.SCALE,
       _o.HORIZONTAL_ORIGIN,
       _o.VERTICAL_ORIGIN,
-      _o.HEIGHT_REFERENCE);
+      _o.HEIGHT_REFERENCE,
+      _o.SHOW_BACKGROUND,
+      _BACKGROUND_COLOR,
+      _o.BACKGROUND_PADDING_X,
+      _o.BACKGROUND_PADDING_Y,
+      _o.EYE_OFFSET_X,
+      _o.EYE_OFFSET_Y,
+      _o.EYE_OFFSET_Z,
+      _TRANSLUCENCY_BY_DISTANCE,
+      _PIXEL_OFFSET_SCALE_BY_DISTANCE,
+      _SCALE_BY_DISTANCE,
+      _o.DISTANCE_DISPLAY_CONDITION_NEAR,
+      _o.DISTANCE_DISPLAY_CONDITION_FAR,
+      _o.DISABLE_DEPTH_TEST_DISTANCE);
   }
 }
 
@@ -164,6 +259,19 @@ public class CZMLabelT
   public CZMHorizontalOrigin HORIZONTAL_ORIGIN { get; set; }
   public CZMVerticalOrigin VERTICAL_ORIGIN { get; set; }
   public CZMHeightReference HEIGHT_REFERENCE { get; set; }
+  public bool SHOW_BACKGROUND { get; set; }
+  public CZMColorT BACKGROUND_COLOR { get; set; }
+  public double BACKGROUND_PADDING_X { get; set; }
+  public double BACKGROUND_PADDING_Y { get; set; }
+  public double EYE_OFFSET_X { get; set; }
+  public double EYE_OFFSET_Y { get; set; }
+  public double EYE_OFFSET_Z { get; set; }
+  public CZMNearFarScalarT TRANSLUCENCY_BY_DISTANCE { get; set; }
+  public CZMNearFarScalarT PIXEL_OFFSET_SCALE_BY_DISTANCE { get; set; }
+  public CZMNearFarScalarT SCALE_BY_DISTANCE { get; set; }
+  public double DISTANCE_DISPLAY_CONDITION_NEAR { get; set; }
+  public double DISTANCE_DISPLAY_CONDITION_FAR { get; set; }
+  public double DISABLE_DEPTH_TEST_DISTANCE { get; set; }
 
   public CZMLabelT() {
     this.SHOW = false;
@@ -179,6 +287,19 @@ public class CZMLabelT
     this.HORIZONTAL_ORIGIN = CZMHorizontalOrigin.LEFT;
     this.VERTICAL_ORIGIN = CZMVerticalOrigin.BASELINE;
     this.HEIGHT_REFERENCE = CZMHeightReference.NONE;
+    this.SHOW_BACKGROUND = false;
+    this.BACKGROUND_COLOR = null;
+    this.BACKGROUND_PADDING_X = 0.0;
+    this.BACKGROUND_PADDING_Y = 0.0;
+    this.EYE_OFFSET_X = 0.0;
+    this.EYE_OFFSET_Y = 0.0;
+    this.EYE_OFFSET_Z = 0.0;
+    this.TRANSLUCENCY_BY_DISTANCE = null;
+    this.PIXEL_OFFSET_SCALE_BY_DISTANCE = null;
+    this.SCALE_BY_DISTANCE = null;
+    this.DISTANCE_DISPLAY_CONDITION_NEAR = 0.0;
+    this.DISTANCE_DISPLAY_CONDITION_FAR = 0.0;
+    this.DISABLE_DEPTH_TEST_DISTANCE = 0.0;
   }
 }
 
@@ -201,6 +322,19 @@ static public class CZMLabelVerify
       && verifier.VerifyField(tablePos, 24 /*HORIZONTAL_ORIGIN*/, 1 /*CZMHorizontalOrigin*/, 1, false)
       && verifier.VerifyField(tablePos, 26 /*VERTICAL_ORIGIN*/, 1 /*CZMVerticalOrigin*/, 1, false)
       && verifier.VerifyField(tablePos, 28 /*HEIGHT_REFERENCE*/, 1 /*CZMHeightReference*/, 1, false)
+      && verifier.VerifyField(tablePos, 30 /*SHOW_BACKGROUND*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyTable(tablePos, 32 /*BACKGROUND_COLOR*/, CZMColorVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 34 /*BACKGROUND_PADDING_X*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 36 /*BACKGROUND_PADDING_Y*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 38 /*EYE_OFFSET_X*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 40 /*EYE_OFFSET_Y*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 42 /*EYE_OFFSET_Z*/, 8 /*double*/, 8, false)
+      && verifier.VerifyTable(tablePos, 44 /*TRANSLUCENCY_BY_DISTANCE*/, CZMNearFarScalarVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 46 /*PIXEL_OFFSET_SCALE_BY_DISTANCE*/, CZMNearFarScalarVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 48 /*SCALE_BY_DISTANCE*/, CZMNearFarScalarVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 50 /*DISTANCE_DISPLAY_CONDITION_NEAR*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 52 /*DISTANCE_DISPLAY_CONDITION_FAR*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 54 /*DISABLE_DEPTH_TEST_DISTANCE*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

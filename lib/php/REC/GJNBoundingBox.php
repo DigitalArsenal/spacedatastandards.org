@@ -101,28 +101,39 @@ class GJNBoundingBox extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// True if the bbox includes altitude (6 values vs 4)
+    /**
+     * @return bool
+     */
+    public function getHAS_ALTITUDE()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startGJNBoundingBox(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(6);
+        $builder->StartObject(7);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return GJNBoundingBox
      */
-    public static function createGJNBoundingBox(FlatBufferBuilder $builder, $WEST, $SOUTH, $EAST, $NORTH, $MIN_ALTITUDE, $MAX_ALTITUDE)
+    public static function createGJNBoundingBox(FlatBufferBuilder $builder, $WEST, $SOUTH, $EAST, $NORTH, $MIN_ALTITUDE, $MAX_ALTITUDE, $HAS_ALTITUDE)
     {
-        $builder->startObject(6);
+        $builder->startObject(7);
         self::addWEST($builder, $WEST);
         self::addSOUTH($builder, $SOUTH);
         self::addEAST($builder, $EAST);
         self::addNORTH($builder, $NORTH);
         self::addMIN_ALTITUDE($builder, $MIN_ALTITUDE);
         self::addMAX_ALTITUDE($builder, $MAX_ALTITUDE);
+        self::addHAS_ALTITUDE($builder, $HAS_ALTITUDE);
         $o = $builder->endObject();
         return $o;
     }
@@ -185,6 +196,16 @@ class GJNBoundingBox extends Table
     public static function addMAX_ALTITUDE(FlatBufferBuilder $builder, $MAX_ALTITUDE)
     {
         $builder->addDoubleX(5, $MAX_ALTITUDE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_ALTITUDE(FlatBufferBuilder $builder, $HAS_ALTITUDE)
+    {
+        $builder->addBoolX(6, $HAS_ALTITUDE, false);
     }
 
     /**

@@ -81,10 +81,26 @@ class KMLPlacemark(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Whether open in tree view
+    # KMLPlacemark
+    def OPEN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Address
+    # KMLPlacemark
+    def ADDRESS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
     # Point geometry
     # KMLPlacemark
     def POINT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from KMLPoint import KMLPoint
@@ -96,7 +112,7 @@ class KMLPlacemark(object):
     # LineString geometry
     # KMLPlacemark
     def LINE_STRING(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from KMLLineString import KMLLineString
@@ -108,7 +124,7 @@ class KMLPlacemark(object):
     # Polygon geometry
     # KMLPlacemark
     def POLYGON(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from KMLPolygon import KMLPolygon
@@ -117,10 +133,22 @@ class KMLPlacemark(object):
             return obj
         return None
 
+    # LinearRing geometry (standalone)
+    # KMLPlacemark
+    def LINEAR_RING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLLinearRing import KMLLinearRing
+            obj = KMLLinearRing()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
     # MultiGeometry
     # KMLPlacemark
     def MULTI_GEOMETRY(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from KMLMultiGeometry import KMLMultiGeometry
@@ -129,10 +157,46 @@ class KMLPlacemark(object):
             return obj
         return None
 
+    # 3D Model
+    # KMLPlacemark
+    def MODEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLModel import KMLModel
+            obj = KMLModel()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # gx:Track
+    # KMLPlacemark
+    def TRACK(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLTrack import KMLTrack
+            obj = KMLTrack()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # gx:MultiTrack
+    # KMLPlacemark
+    def MULTI_TRACK(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLMultiTrack import KMLMultiTrack
+            obj = KMLMultiTrack()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
     # LookAt viewpoint
     # KMLPlacemark
     def LOOK_AT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from KMLLookAt import KMLLookAt
@@ -144,7 +208,7 @@ class KMLPlacemark(object):
     # Camera viewpoint
     # KMLPlacemark
     def CAMERA(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from KMLCamera import KMLCamera
@@ -156,7 +220,7 @@ class KMLPlacemark(object):
     # TimeSpan
     # KMLPlacemark
     def TIME_SPAN(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from KMLTimeSpan import KMLTimeSpan
@@ -168,7 +232,7 @@ class KMLPlacemark(object):
     # TimeStamp
     # KMLPlacemark
     def TIME_STAMP(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from KMLTimeStamp import KMLTimeStamp
@@ -180,7 +244,7 @@ class KMLPlacemark(object):
     # Extended data
     # KMLPlacemark
     def EXTENDED_DATA(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
@@ -193,18 +257,54 @@ class KMLPlacemark(object):
 
     # KMLPlacemark
     def EXTENDED_DATALength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # KMLPlacemark
     def EXTENDED_DATAIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
         return o == 0
 
+    # Schema data
+    # KMLPlacemark
+    def SCHEMA_DATA(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLSchemaData import KMLSchemaData
+            obj = KMLSchemaData()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Region
+    # KMLPlacemark
+    def REGION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLRegion import KMLRegion
+            obj = KMLRegion()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # StyleMap (inline)
+    # KMLPlacemark
+    def STYLE_MAP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLStyleMap import KMLStyleMap
+            obj = KMLStyleMap()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def KMLPlacemarkStart(builder):
-    builder.StartObject(15)
+    builder.StartObject(24)
 
 def Start(builder):
     KMLPlacemarkStart(builder)
@@ -245,56 +345,92 @@ def KMLPlacemarkAddSNIPPET(builder, SNIPPET):
 def AddSNIPPET(builder, SNIPPET):
     KMLPlacemarkAddSNIPPET(builder, SNIPPET)
 
+def KMLPlacemarkAddOPEN(builder, OPEN):
+    builder.PrependBoolSlot(6, OPEN, 0)
+
+def AddOPEN(builder, OPEN):
+    KMLPlacemarkAddOPEN(builder, OPEN)
+
+def KMLPlacemarkAddADDRESS(builder, ADDRESS):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(ADDRESS), 0)
+
+def AddADDRESS(builder, ADDRESS):
+    KMLPlacemarkAddADDRESS(builder, ADDRESS)
+
 def KMLPlacemarkAddPOINT(builder, POINT):
-    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(POINT), 0)
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(POINT), 0)
 
 def AddPOINT(builder, POINT):
     KMLPlacemarkAddPOINT(builder, POINT)
 
 def KMLPlacemarkAddLINE_STRING(builder, LINE_STRING):
-    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(LINE_STRING), 0)
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(LINE_STRING), 0)
 
 def AddLINE_STRING(builder, LINE_STRING):
     KMLPlacemarkAddLINE_STRING(builder, LINE_STRING)
 
 def KMLPlacemarkAddPOLYGON(builder, POLYGON):
-    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(POLYGON), 0)
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(POLYGON), 0)
 
 def AddPOLYGON(builder, POLYGON):
     KMLPlacemarkAddPOLYGON(builder, POLYGON)
 
+def KMLPlacemarkAddLINEAR_RING(builder, LINEAR_RING):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(LINEAR_RING), 0)
+
+def AddLINEAR_RING(builder, LINEAR_RING):
+    KMLPlacemarkAddLINEAR_RING(builder, LINEAR_RING)
+
 def KMLPlacemarkAddMULTI_GEOMETRY(builder, MULTI_GEOMETRY):
-    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(MULTI_GEOMETRY), 0)
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(MULTI_GEOMETRY), 0)
 
 def AddMULTI_GEOMETRY(builder, MULTI_GEOMETRY):
     KMLPlacemarkAddMULTI_GEOMETRY(builder, MULTI_GEOMETRY)
 
+def KMLPlacemarkAddMODEL(builder, MODEL):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(MODEL), 0)
+
+def AddMODEL(builder, MODEL):
+    KMLPlacemarkAddMODEL(builder, MODEL)
+
+def KMLPlacemarkAddTRACK(builder, TRACK):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(TRACK), 0)
+
+def AddTRACK(builder, TRACK):
+    KMLPlacemarkAddTRACK(builder, TRACK)
+
+def KMLPlacemarkAddMULTI_TRACK(builder, MULTI_TRACK):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(MULTI_TRACK), 0)
+
+def AddMULTI_TRACK(builder, MULTI_TRACK):
+    KMLPlacemarkAddMULTI_TRACK(builder, MULTI_TRACK)
+
 def KMLPlacemarkAddLOOK_AT(builder, LOOK_AT):
-    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(LOOK_AT), 0)
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(LOOK_AT), 0)
 
 def AddLOOK_AT(builder, LOOK_AT):
     KMLPlacemarkAddLOOK_AT(builder, LOOK_AT)
 
 def KMLPlacemarkAddCAMERA(builder, CAMERA):
-    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(CAMERA), 0)
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(CAMERA), 0)
 
 def AddCAMERA(builder, CAMERA):
     KMLPlacemarkAddCAMERA(builder, CAMERA)
 
 def KMLPlacemarkAddTIME_SPAN(builder, TIME_SPAN):
-    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_SPAN), 0)
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_SPAN), 0)
 
 def AddTIME_SPAN(builder, TIME_SPAN):
     KMLPlacemarkAddTIME_SPAN(builder, TIME_SPAN)
 
 def KMLPlacemarkAddTIME_STAMP(builder, TIME_STAMP):
-    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_STAMP), 0)
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_STAMP), 0)
 
 def AddTIME_STAMP(builder, TIME_STAMP):
     KMLPlacemarkAddTIME_STAMP(builder, TIME_STAMP)
 
 def KMLPlacemarkAddEXTENDED_DATA(builder, EXTENDED_DATA):
-    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(EXTENDED_DATA), 0)
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(EXTENDED_DATA), 0)
 
 def AddEXTENDED_DATA(builder, EXTENDED_DATA):
     KMLPlacemarkAddEXTENDED_DATA(builder, EXTENDED_DATA)
@@ -305,6 +441,24 @@ def KMLPlacemarkStartEXTENDED_DATAVector(builder, numElems):
 def StartEXTENDED_DATAVector(builder, numElems):
     return KMLPlacemarkStartEXTENDED_DATAVector(builder, numElems)
 
+def KMLPlacemarkAddSCHEMA_DATA(builder, SCHEMA_DATA):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(SCHEMA_DATA), 0)
+
+def AddSCHEMA_DATA(builder, SCHEMA_DATA):
+    KMLPlacemarkAddSCHEMA_DATA(builder, SCHEMA_DATA)
+
+def KMLPlacemarkAddREGION(builder, REGION):
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(REGION), 0)
+
+def AddREGION(builder, REGION):
+    KMLPlacemarkAddREGION(builder, REGION)
+
+def KMLPlacemarkAddSTYLE_MAP(builder, STYLE_MAP):
+    builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(STYLE_MAP), 0)
+
+def AddSTYLE_MAP(builder, STYLE_MAP):
+    KMLPlacemarkAddSTYLE_MAP(builder, STYLE_MAP)
+
 def KMLPlacemarkEnd(builder):
     return builder.EndObject()
 
@@ -314,13 +468,20 @@ def End(builder):
 import KMLCamera
 import KMLData
 import KMLLineString
+import KMLLinearRing
 import KMLLookAt
+import KMLModel
 import KMLMultiGeometry
+import KMLMultiTrack
 import KMLPoint
 import KMLPolygon
+import KMLRegion
+import KMLSchemaData
 import KMLStyle
+import KMLStyleMap
 import KMLTimeSpan
 import KMLTimeStamp
+import KMLTrack
 try:
     from typing import List, Optional
 except:
@@ -336,15 +497,24 @@ class KMLPlacemarkT(object):
         self.STYLE_URL = None  # type: str
         self.STYLE = None  # type: Optional[KMLStyle.KMLStyleT]
         self.SNIPPET = None  # type: str
+        self.OPEN = False  # type: bool
+        self.ADDRESS = None  # type: str
         self.POINT = None  # type: Optional[KMLPoint.KMLPointT]
         self.LINE_STRING = None  # type: Optional[KMLLineString.KMLLineStringT]
         self.POLYGON = None  # type: Optional[KMLPolygon.KMLPolygonT]
+        self.LINEAR_RING = None  # type: Optional[KMLLinearRing.KMLLinearRingT]
         self.MULTI_GEOMETRY = None  # type: Optional[KMLMultiGeometry.KMLMultiGeometryT]
+        self.MODEL = None  # type: Optional[KMLModel.KMLModelT]
+        self.TRACK = None  # type: Optional[KMLTrack.KMLTrackT]
+        self.MULTI_TRACK = None  # type: Optional[KMLMultiTrack.KMLMultiTrackT]
         self.LOOK_AT = None  # type: Optional[KMLLookAt.KMLLookAtT]
         self.CAMERA = None  # type: Optional[KMLCamera.KMLCameraT]
         self.TIME_SPAN = None  # type: Optional[KMLTimeSpan.KMLTimeSpanT]
         self.TIME_STAMP = None  # type: Optional[KMLTimeStamp.KMLTimeStampT]
         self.EXTENDED_DATA = None  # type: List[KMLData.KMLDataT]
+        self.SCHEMA_DATA = None  # type: Optional[KMLSchemaData.KMLSchemaDataT]
+        self.REGION = None  # type: Optional[KMLRegion.KMLRegionT]
+        self.STYLE_MAP = None  # type: Optional[KMLStyleMap.KMLStyleMapT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -374,14 +544,24 @@ class KMLPlacemarkT(object):
         if kmlplacemark.STYLE() is not None:
             self.STYLE = KMLStyle.KMLStyleT.InitFromObj(kmlplacemark.STYLE())
         self.SNIPPET = kmlplacemark.SNIPPET()
+        self.OPEN = kmlplacemark.OPEN()
+        self.ADDRESS = kmlplacemark.ADDRESS()
         if kmlplacemark.POINT() is not None:
             self.POINT = KMLPoint.KMLPointT.InitFromObj(kmlplacemark.POINT())
         if kmlplacemark.LINE_STRING() is not None:
             self.LINE_STRING = KMLLineString.KMLLineStringT.InitFromObj(kmlplacemark.LINE_STRING())
         if kmlplacemark.POLYGON() is not None:
             self.POLYGON = KMLPolygon.KMLPolygonT.InitFromObj(kmlplacemark.POLYGON())
+        if kmlplacemark.LINEAR_RING() is not None:
+            self.LINEAR_RING = KMLLinearRing.KMLLinearRingT.InitFromObj(kmlplacemark.LINEAR_RING())
         if kmlplacemark.MULTI_GEOMETRY() is not None:
             self.MULTI_GEOMETRY = KMLMultiGeometry.KMLMultiGeometryT.InitFromObj(kmlplacemark.MULTI_GEOMETRY())
+        if kmlplacemark.MODEL() is not None:
+            self.MODEL = KMLModel.KMLModelT.InitFromObj(kmlplacemark.MODEL())
+        if kmlplacemark.TRACK() is not None:
+            self.TRACK = KMLTrack.KMLTrackT.InitFromObj(kmlplacemark.TRACK())
+        if kmlplacemark.MULTI_TRACK() is not None:
+            self.MULTI_TRACK = KMLMultiTrack.KMLMultiTrackT.InitFromObj(kmlplacemark.MULTI_TRACK())
         if kmlplacemark.LOOK_AT() is not None:
             self.LOOK_AT = KMLLookAt.KMLLookAtT.InitFromObj(kmlplacemark.LOOK_AT())
         if kmlplacemark.CAMERA() is not None:
@@ -398,6 +578,12 @@ class KMLPlacemarkT(object):
                 else:
                     kMLData_ = KMLData.KMLDataT.InitFromObj(kmlplacemark.EXTENDED_DATA(i))
                     self.EXTENDED_DATA.append(kMLData_)
+        if kmlplacemark.SCHEMA_DATA() is not None:
+            self.SCHEMA_DATA = KMLSchemaData.KMLSchemaDataT.InitFromObj(kmlplacemark.SCHEMA_DATA())
+        if kmlplacemark.REGION() is not None:
+            self.REGION = KMLRegion.KMLRegionT.InitFromObj(kmlplacemark.REGION())
+        if kmlplacemark.STYLE_MAP() is not None:
+            self.STYLE_MAP = KMLStyleMap.KMLStyleMapT.InitFromObj(kmlplacemark.STYLE_MAP())
 
     # KMLPlacemarkT
     def Pack(self, builder):
@@ -411,14 +597,24 @@ class KMLPlacemarkT(object):
             STYLE = self.STYLE.Pack(builder)
         if self.SNIPPET is not None:
             SNIPPET = builder.CreateString(self.SNIPPET)
+        if self.ADDRESS is not None:
+            ADDRESS = builder.CreateString(self.ADDRESS)
         if self.POINT is not None:
             POINT = self.POINT.Pack(builder)
         if self.LINE_STRING is not None:
             LINE_STRING = self.LINE_STRING.Pack(builder)
         if self.POLYGON is not None:
             POLYGON = self.POLYGON.Pack(builder)
+        if self.LINEAR_RING is not None:
+            LINEAR_RING = self.LINEAR_RING.Pack(builder)
         if self.MULTI_GEOMETRY is not None:
             MULTI_GEOMETRY = self.MULTI_GEOMETRY.Pack(builder)
+        if self.MODEL is not None:
+            MODEL = self.MODEL.Pack(builder)
+        if self.TRACK is not None:
+            TRACK = self.TRACK.Pack(builder)
+        if self.MULTI_TRACK is not None:
+            MULTI_TRACK = self.MULTI_TRACK.Pack(builder)
         if self.LOOK_AT is not None:
             LOOK_AT = self.LOOK_AT.Pack(builder)
         if self.CAMERA is not None:
@@ -435,6 +631,12 @@ class KMLPlacemarkT(object):
             for i in reversed(range(len(self.EXTENDED_DATA))):
                 builder.PrependUOffsetTRelative(EXTENDED_DATAlist[i])
             EXTENDED_DATA = builder.EndVector()
+        if self.SCHEMA_DATA is not None:
+            SCHEMA_DATA = self.SCHEMA_DATA.Pack(builder)
+        if self.REGION is not None:
+            REGION = self.REGION.Pack(builder)
+        if self.STYLE_MAP is not None:
+            STYLE_MAP = self.STYLE_MAP.Pack(builder)
         KMLPlacemarkStart(builder)
         if self.NAME is not None:
             KMLPlacemarkAddNAME(builder, NAME)
@@ -447,14 +649,25 @@ class KMLPlacemarkT(object):
             KMLPlacemarkAddSTYLE(builder, STYLE)
         if self.SNIPPET is not None:
             KMLPlacemarkAddSNIPPET(builder, SNIPPET)
+        KMLPlacemarkAddOPEN(builder, self.OPEN)
+        if self.ADDRESS is not None:
+            KMLPlacemarkAddADDRESS(builder, ADDRESS)
         if self.POINT is not None:
             KMLPlacemarkAddPOINT(builder, POINT)
         if self.LINE_STRING is not None:
             KMLPlacemarkAddLINE_STRING(builder, LINE_STRING)
         if self.POLYGON is not None:
             KMLPlacemarkAddPOLYGON(builder, POLYGON)
+        if self.LINEAR_RING is not None:
+            KMLPlacemarkAddLINEAR_RING(builder, LINEAR_RING)
         if self.MULTI_GEOMETRY is not None:
             KMLPlacemarkAddMULTI_GEOMETRY(builder, MULTI_GEOMETRY)
+        if self.MODEL is not None:
+            KMLPlacemarkAddMODEL(builder, MODEL)
+        if self.TRACK is not None:
+            KMLPlacemarkAddTRACK(builder, TRACK)
+        if self.MULTI_TRACK is not None:
+            KMLPlacemarkAddMULTI_TRACK(builder, MULTI_TRACK)
         if self.LOOK_AT is not None:
             KMLPlacemarkAddLOOK_AT(builder, LOOK_AT)
         if self.CAMERA is not None:
@@ -465,5 +678,11 @@ class KMLPlacemarkT(object):
             KMLPlacemarkAddTIME_STAMP(builder, TIME_STAMP)
         if self.EXTENDED_DATA is not None:
             KMLPlacemarkAddEXTENDED_DATA(builder, EXTENDED_DATA)
+        if self.SCHEMA_DATA is not None:
+            KMLPlacemarkAddSCHEMA_DATA(builder, SCHEMA_DATA)
+        if self.REGION is not None:
+            KMLPlacemarkAddREGION(builder, REGION)
+        if self.STYLE_MAP is not None:
+            KMLPlacemarkAddSTYLE_MAP(builder, STYLE_MAP)
         kmlplacemark = KMLPlacemarkEnd(builder)
         return kmlplacemark

@@ -81,7 +81,7 @@ class CZMPath extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Path color
+    /// Path color (legacy solid color)
     public function getCOLOR()
     {
         $obj = new CZMColor();
@@ -99,28 +99,37 @@ class CZMPath extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Full polyline material
+    public function getMATERIAL()
+    {
+        $obj = new CZMPolylineMaterial();
+        $o = $this->__offset(16);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCZMPath(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(6);
+        $builder->StartObject(7);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CZMPath
      */
-    public static function createCZMPath(FlatBufferBuilder $builder, $SHOW, $LEAD_TIME, $TRAIL_TIME, $WIDTH, $COLOR, $RESOLUTION)
+    public static function createCZMPath(FlatBufferBuilder $builder, $SHOW, $LEAD_TIME, $TRAIL_TIME, $WIDTH, $COLOR, $RESOLUTION, $MATERIAL)
     {
-        $builder->startObject(6);
+        $builder->startObject(7);
         self::addSHOW($builder, $SHOW);
         self::addLEAD_TIME($builder, $LEAD_TIME);
         self::addTRAIL_TIME($builder, $TRAIL_TIME);
         self::addWIDTH($builder, $WIDTH);
         self::addCOLOR($builder, $COLOR);
         self::addRESOLUTION($builder, $RESOLUTION);
+        self::addMATERIAL($builder, $MATERIAL);
         $o = $builder->endObject();
         return $o;
     }
@@ -183,6 +192,16 @@ class CZMPath extends Table
     public static function addRESOLUTION(FlatBufferBuilder $builder, $RESOLUTION)
     {
         $builder->addDoubleX(5, $RESOLUTION, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addMATERIAL(FlatBufferBuilder $builder, $MATERIAL)
+    {
+        $builder->addOffsetX(6, $MATERIAL, 0);
     }
 
     /**

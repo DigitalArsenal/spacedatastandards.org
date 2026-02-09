@@ -81,20 +81,40 @@ CLOCK_MULTIPLIER():number {
 }
 
 /**
+ * Clock range
+ */
+CLOCK_RANGE():string|null
+CLOCK_RANGE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CLOCK_RANGE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Clock step
+ */
+CLOCK_STEP():string|null
+CLOCK_STEP(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CLOCK_STEP(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
  * All packets in the document
  */
 PACKETS(index: number, obj?:CZMPacket):CZMPacket|null {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? (obj || new CZMPacket()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 packetsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 static startCZM(builder:flatbuffers.Builder) {
-  builder.startObject(6);
+  builder.startObject(8);
 }
 
 static addName(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset) {
@@ -117,8 +137,16 @@ static addClockMultiplier(builder:flatbuffers.Builder, CLOCK_MULTIPLIER:number) 
   builder.addFieldFloat64(4, CLOCK_MULTIPLIER, 0.0);
 }
 
+static addClockRange(builder:flatbuffers.Builder, CLOCK_RANGEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, CLOCK_RANGEOffset, 0);
+}
+
+static addClockStep(builder:flatbuffers.Builder, CLOCK_STEPOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, CLOCK_STEPOffset, 0);
+}
+
 static addPackets(builder:flatbuffers.Builder, PACKETSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, PACKETSOffset, 0);
+  builder.addFieldOffset(7, PACKETSOffset, 0);
 }
 
 static createPacketsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -146,13 +174,15 @@ static finishSizePrefixedCZMBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$CZM', true);
 }
 
-static createCZM(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, CLOCK_CURRENT_TIMEOffset:flatbuffers.Offset, CLOCK_INTERVALOffset:flatbuffers.Offset, CLOCK_MULTIPLIER:number, PACKETSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createCZM(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, CLOCK_CURRENT_TIMEOffset:flatbuffers.Offset, CLOCK_INTERVALOffset:flatbuffers.Offset, CLOCK_MULTIPLIER:number, CLOCK_RANGEOffset:flatbuffers.Offset, CLOCK_STEPOffset:flatbuffers.Offset, PACKETSOffset:flatbuffers.Offset):flatbuffers.Offset {
   CZM.startCZM(builder);
   CZM.addName(builder, NAMEOffset);
   CZM.addVersion(builder, VERSIONOffset);
   CZM.addClockCurrentTime(builder, CLOCK_CURRENT_TIMEOffset);
   CZM.addClockInterval(builder, CLOCK_INTERVALOffset);
   CZM.addClockMultiplier(builder, CLOCK_MULTIPLIER);
+  CZM.addClockRange(builder, CLOCK_RANGEOffset);
+  CZM.addClockStep(builder, CLOCK_STEPOffset);
   CZM.addPackets(builder, PACKETSOffset);
   return CZM.endCZM(builder);
 }
@@ -164,6 +194,8 @@ unpack(): CZMT {
     this.CLOCK_CURRENT_TIME(),
     this.CLOCK_INTERVAL(),
     this.CLOCK_MULTIPLIER(),
+    this.CLOCK_RANGE(),
+    this.CLOCK_STEP(),
     this.bb!.createObjList<CZMPacket, CZMPacketT>(this.PACKETS.bind(this), this.packetsLength())
   );
 }
@@ -175,6 +207,8 @@ unpackTo(_o: CZMT): void {
   _o.CLOCK_CURRENT_TIME = this.CLOCK_CURRENT_TIME();
   _o.CLOCK_INTERVAL = this.CLOCK_INTERVAL();
   _o.CLOCK_MULTIPLIER = this.CLOCK_MULTIPLIER();
+  _o.CLOCK_RANGE = this.CLOCK_RANGE();
+  _o.CLOCK_STEP = this.CLOCK_STEP();
   _o.PACKETS = this.bb!.createObjList<CZMPacket, CZMPacketT>(this.PACKETS.bind(this), this.packetsLength());
 }
 }
@@ -186,6 +220,8 @@ constructor(
   public CLOCK_CURRENT_TIME: string|Uint8Array|null = null,
   public CLOCK_INTERVAL: string|Uint8Array|null = null,
   public CLOCK_MULTIPLIER: number = 0.0,
+  public CLOCK_RANGE: string|Uint8Array|null = null,
+  public CLOCK_STEP: string|Uint8Array|null = null,
   public PACKETS: (CZMPacketT)[] = []
 ){}
 
@@ -195,6 +231,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const VERSION = (this.VERSION !== null ? builder.createString(this.VERSION!) : 0);
   const CLOCK_CURRENT_TIME = (this.CLOCK_CURRENT_TIME !== null ? builder.createString(this.CLOCK_CURRENT_TIME!) : 0);
   const CLOCK_INTERVAL = (this.CLOCK_INTERVAL !== null ? builder.createString(this.CLOCK_INTERVAL!) : 0);
+  const CLOCK_RANGE = (this.CLOCK_RANGE !== null ? builder.createString(this.CLOCK_RANGE!) : 0);
+  const CLOCK_STEP = (this.CLOCK_STEP !== null ? builder.createString(this.CLOCK_STEP!) : 0);
   const PACKETS = CZM.createPacketsVector(builder, builder.createObjectOffsetList(this.PACKETS));
 
   return CZM.createCZM(builder,
@@ -203,6 +241,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     CLOCK_CURRENT_TIME,
     CLOCK_INTERVAL,
     this.CLOCK_MULTIPLIER,
+    CLOCK_RANGE,
+    CLOCK_STEP,
     PACKETS
   );
 }

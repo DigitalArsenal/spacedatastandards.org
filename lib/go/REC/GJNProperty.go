@@ -90,8 +90,60 @@ func (rcv *GJNProperty) MutateIS_NUMERIC(n bool) bool {
 	return rcv._tab.MutateBoolSlot(10, n)
 }
 
+/// True if this property value is a boolean
+func (rcv *GJNProperty) IS_BOOL() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+/// True if this property value is a boolean
+func (rcv *GJNProperty) MutateIS_BOOL(n bool) bool {
+	return rcv._tab.MutateBoolSlot(12, n)
+}
+
+/// Boolean value (use when IS_BOOL is true)
+func (rcv *GJNProperty) BOOL_VALUE() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+/// Boolean value (use when IS_BOOL is true)
+func (rcv *GJNProperty) MutateBOOL_VALUE(n bool) bool {
+	return rcv._tab.MutateBoolSlot(14, n)
+}
+
+/// True if this property value is JSON null
+func (rcv *GJNProperty) IS_NULL() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+/// True if this property value is JSON null
+func (rcv *GJNProperty) MutateIS_NULL(n bool) bool {
+	return rcv._tab.MutateBoolSlot(16, n)
+}
+
+/// Raw JSON string for complex values (objects, arrays)
+func (rcv *GJNProperty) JSON_VALUE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Raw JSON string for complex values (objects, arrays)
 func GJNPropertyStart(builder *flatbuffers.Builder) {
-	builder.StartObject(4)
+	builder.StartObject(8)
 }
 func GJNPropertyAddKEY(builder *flatbuffers.Builder, KEY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(KEY), 0)
@@ -104,6 +156,18 @@ func GJNPropertyAddNUM_VALUE(builder *flatbuffers.Builder, NUM_VALUE float64) {
 }
 func GJNPropertyAddIS_NUMERIC(builder *flatbuffers.Builder, IS_NUMERIC bool) {
 	builder.PrependBoolSlot(3, IS_NUMERIC, false)
+}
+func GJNPropertyAddIS_BOOL(builder *flatbuffers.Builder, IS_BOOL bool) {
+	builder.PrependBoolSlot(4, IS_BOOL, false)
+}
+func GJNPropertyAddBOOL_VALUE(builder *flatbuffers.Builder, BOOL_VALUE bool) {
+	builder.PrependBoolSlot(5, BOOL_VALUE, false)
+}
+func GJNPropertyAddIS_NULL(builder *flatbuffers.Builder, IS_NULL bool) {
+	builder.PrependBoolSlot(6, IS_NULL, false)
+}
+func GJNPropertyAddJSON_VALUE(builder *flatbuffers.Builder, JSON_VALUE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(JSON_VALUE), 0)
 }
 func GJNPropertyEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

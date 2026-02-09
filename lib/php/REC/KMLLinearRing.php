@@ -61,23 +61,56 @@ class KMLLinearRing extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Whether to extrude to ground
+    /**
+     * @return bool
+     */
+    public function getEXTRUDE()
+    {
+        $o = $this->__offset(6);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Whether to tessellate
+    /**
+     * @return bool
+     */
+    public function getTESSELLATE()
+    {
+        $o = $this->__offset(8);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Altitude mode
+    /**
+     * @return sbyte
+     */
+    public function getALTITUDE_MODE()
+    {
+        $o = $this->__offset(10);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \KMLAltitudeMode::CLAMP_TO_GROUND;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startKMLLinearRing(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(1);
+        $builder->StartObject(4);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return KMLLinearRing
      */
-    public static function createKMLLinearRing(FlatBufferBuilder $builder, $COORDINATES)
+    public static function createKMLLinearRing(FlatBufferBuilder $builder, $COORDINATES, $EXTRUDE, $TESSELLATE, $ALTITUDE_MODE)
     {
-        $builder->startObject(1);
+        $builder->startObject(4);
         self::addCOORDINATES($builder, $COORDINATES);
+        self::addEXTRUDE($builder, $EXTRUDE);
+        self::addTESSELLATE($builder, $TESSELLATE);
+        self::addALTITUDE_MODE($builder, $ALTITUDE_MODE);
         $o = $builder->endObject();
         return $o;
     }
@@ -114,6 +147,36 @@ class KMLLinearRing extends Table
     public static function startCOORDINATESVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addEXTRUDE(FlatBufferBuilder $builder, $EXTRUDE)
+    {
+        $builder->addBoolX(1, $EXTRUDE, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addTESSELLATE(FlatBufferBuilder $builder, $TESSELLATE)
+    {
+        $builder->addBoolX(2, $TESSELLATE, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addALTITUDE_MODE(FlatBufferBuilder $builder, $ALTITUDE_MODE)
+    {
+        $builder->addSbyteX(3, $ALTITUDE_MODE, 0);
     }
 
     /**

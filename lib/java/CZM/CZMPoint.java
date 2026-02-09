@@ -54,6 +54,28 @@ public final class CZMPoint extends Table {
    * Height reference
    */
   public byte HEIGHT_REFERENCE() { int o = __offset(14); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Scale by distance
+   */
+  public CZMNearFarScalar SCALE_BY_DISTANCE() { return SCALE_BY_DISTANCE(new CZMNearFarScalar()); }
+  public CZMNearFarScalar SCALE_BY_DISTANCE(CZMNearFarScalar obj) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Translucency by distance
+   */
+  public CZMNearFarScalar TRANSLUCENCY_BY_DISTANCE() { return TRANSLUCENCY_BY_DISTANCE(new CZMNearFarScalar()); }
+  public CZMNearFarScalar TRANSLUCENCY_BY_DISTANCE(CZMNearFarScalar obj) { int o = __offset(18); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Distance display condition near
+   */
+  public double DISTANCE_DISPLAY_CONDITION_NEAR() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Distance display condition far
+   */
+  public double DISTANCE_DISPLAY_CONDITION_FAR() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Disable depth test distance
+   */
+  public double DISABLE_DEPTH_TEST_DISTANCE() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createCZMPoint(FlatBufferBuilder builder,
       boolean SHOW,
@@ -61,10 +83,20 @@ public final class CZMPoint extends Table {
       int OUTLINE_COLOROffset,
       double OUTLINE_WIDTH,
       double PIXEL_SIZE,
-      byte HEIGHT_REFERENCE) {
-    builder.startTable(6);
+      byte HEIGHT_REFERENCE,
+      int SCALE_BY_DISTANCEOffset,
+      int TRANSLUCENCY_BY_DISTANCEOffset,
+      double DISTANCE_DISPLAY_CONDITION_NEAR,
+      double DISTANCE_DISPLAY_CONDITION_FAR,
+      double DISABLE_DEPTH_TEST_DISTANCE) {
+    builder.startTable(11);
+    CZMPoint.addDisableDepthTestDistance(builder, DISABLE_DEPTH_TEST_DISTANCE);
+    CZMPoint.addDistanceDisplayConditionFar(builder, DISTANCE_DISPLAY_CONDITION_FAR);
+    CZMPoint.addDistanceDisplayConditionNear(builder, DISTANCE_DISPLAY_CONDITION_NEAR);
     CZMPoint.addPixelSize(builder, PIXEL_SIZE);
     CZMPoint.addOutlineWidth(builder, OUTLINE_WIDTH);
+    CZMPoint.addTranslucencyByDistance(builder, TRANSLUCENCY_BY_DISTANCEOffset);
+    CZMPoint.addScaleByDistance(builder, SCALE_BY_DISTANCEOffset);
     CZMPoint.addOutlineColor(builder, OUTLINE_COLOROffset);
     CZMPoint.addColor(builder, COLOROffset);
     CZMPoint.addHeightReference(builder, HEIGHT_REFERENCE);
@@ -72,13 +104,18 @@ public final class CZMPoint extends Table {
     return CZMPoint.endCZMPoint(builder);
   }
 
-  public static void startCZMPoint(FlatBufferBuilder builder) { builder.startTable(6); }
+  public static void startCZMPoint(FlatBufferBuilder builder) { builder.startTable(11); }
   public static void addShow(FlatBufferBuilder builder, boolean SHOW) { builder.addBoolean(0, SHOW, false); }
   public static void addColor(FlatBufferBuilder builder, int COLOROffset) { builder.addOffset(1, COLOROffset, 0); }
   public static void addOutlineColor(FlatBufferBuilder builder, int OUTLINE_COLOROffset) { builder.addOffset(2, OUTLINE_COLOROffset, 0); }
   public static void addOutlineWidth(FlatBufferBuilder builder, double OUTLINE_WIDTH) { builder.addDouble(3, OUTLINE_WIDTH, 0.0); }
   public static void addPixelSize(FlatBufferBuilder builder, double PIXEL_SIZE) { builder.addDouble(4, PIXEL_SIZE, 0.0); }
   public static void addHeightReference(FlatBufferBuilder builder, byte HEIGHT_REFERENCE) { builder.addByte(5, HEIGHT_REFERENCE, 0); }
+  public static void addScaleByDistance(FlatBufferBuilder builder, int SCALE_BY_DISTANCEOffset) { builder.addOffset(6, SCALE_BY_DISTANCEOffset, 0); }
+  public static void addTranslucencyByDistance(FlatBufferBuilder builder, int TRANSLUCENCY_BY_DISTANCEOffset) { builder.addOffset(7, TRANSLUCENCY_BY_DISTANCEOffset, 0); }
+  public static void addDistanceDisplayConditionNear(FlatBufferBuilder builder, double DISTANCE_DISPLAY_CONDITION_NEAR) { builder.addDouble(8, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0); }
+  public static void addDistanceDisplayConditionFar(FlatBufferBuilder builder, double DISTANCE_DISPLAY_CONDITION_FAR) { builder.addDouble(9, DISTANCE_DISPLAY_CONDITION_FAR, 0.0); }
+  public static void addDisableDepthTestDistance(FlatBufferBuilder builder, double DISABLE_DEPTH_TEST_DISTANCE) { builder.addDouble(10, DISABLE_DEPTH_TEST_DISTANCE, 0.0); }
   public static int endCZMPoint(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

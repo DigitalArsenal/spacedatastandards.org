@@ -237,6 +237,385 @@ class _CzmverticalOriginReader extends fb.Reader<CzmverticalOrigin> {
       CzmverticalOrigin.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
+class CzmshadowMode {
+  final int value;
+  const CzmshadowMode._(this.value);
+
+  factory CzmshadowMode.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum CzmshadowMode');
+    }
+    return result;
+  }
+
+  static CzmshadowMode? _createOrNull(int? value) => 
+      value == null ? null : CzmshadowMode.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const CzmshadowMode DISABLED = CzmshadowMode._(0);
+  static const CzmshadowMode ENABLED = CzmshadowMode._(1);
+  static const CzmshadowMode CAST_ONLY = CzmshadowMode._(2);
+  static const CzmshadowMode RECEIVE_ONLY = CzmshadowMode._(3);
+  static const Map<int, CzmshadowMode> values = {
+    0: DISABLED,
+    1: ENABLED,
+    2: CAST_ONLY,
+    3: RECEIVE_ONLY};
+
+  static const fb.Reader<CzmshadowMode> reader = _CzmshadowModeReader();
+
+  @override
+  String toString() {
+    return 'CzmshadowMode{value: $value}';
+  }
+}
+
+class _CzmshadowModeReader extends fb.Reader<CzmshadowMode> {
+  const _CzmshadowModeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  CzmshadowMode read(fb.BufferContext bc, int offset) =>
+      CzmshadowMode.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class CzmcolorBlendMode {
+  final int value;
+  const CzmcolorBlendMode._(this.value);
+
+  factory CzmcolorBlendMode.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum CzmcolorBlendMode');
+    }
+    return result;
+  }
+
+  static CzmcolorBlendMode? _createOrNull(int? value) => 
+      value == null ? null : CzmcolorBlendMode.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const CzmcolorBlendMode HIGHLIGHT = CzmcolorBlendMode._(0);
+  static const CzmcolorBlendMode REPLACE = CzmcolorBlendMode._(1);
+  static const CzmcolorBlendMode MIX = CzmcolorBlendMode._(2);
+  static const Map<int, CzmcolorBlendMode> values = {
+    0: HIGHLIGHT,
+    1: REPLACE,
+    2: MIX};
+
+  static const fb.Reader<CzmcolorBlendMode> reader = _CzmcolorBlendModeReader();
+
+  @override
+  String toString() {
+    return 'CzmcolorBlendMode{value: $value}';
+  }
+}
+
+class _CzmcolorBlendModeReader extends fb.Reader<CzmcolorBlendMode> {
+  const _CzmcolorBlendModeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  CzmcolorBlendMode read(fb.BufferContext bc, int offset) =>
+      CzmcolorBlendMode.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class CzmcornerType {
+  final int value;
+  const CzmcornerType._(this.value);
+
+  factory CzmcornerType.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum CzmcornerType');
+    }
+    return result;
+  }
+
+  static CzmcornerType? _createOrNull(int? value) => 
+      value == null ? null : CzmcornerType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const CzmcornerType ROUNDED = CzmcornerType._(0);
+  static const CzmcornerType MITERED = CzmcornerType._(1);
+  static const CzmcornerType BEVELED = CzmcornerType._(2);
+  static const Map<int, CzmcornerType> values = {
+    0: ROUNDED,
+    1: MITERED,
+    2: BEVELED};
+
+  static const fb.Reader<CzmcornerType> reader = _CzmcornerTypeReader();
+
+  @override
+  String toString() {
+    return 'CzmcornerType{value: $value}';
+  }
+}
+
+class _CzmcornerTypeReader extends fb.Reader<CzmcornerType> {
+  const _CzmcornerTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  CzmcornerType read(fb.BufferContext bc, int offset) =>
+      CzmcornerType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class CzmarcType {
+  final int value;
+  const CzmarcType._(this.value);
+
+  factory CzmarcType.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum CzmarcType');
+    }
+    return result;
+  }
+
+  static CzmarcType? _createOrNull(int? value) => 
+      value == null ? null : CzmarcType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const CzmarcType NONE = CzmarcType._(0);
+  static const CzmarcType GEODESIC = CzmarcType._(1);
+  static const CzmarcType RHUMB = CzmarcType._(2);
+  static const Map<int, CzmarcType> values = {
+    0: NONE,
+    1: GEODESIC,
+    2: RHUMB};
+
+  static const fb.Reader<CzmarcType> reader = _CzmarcTypeReader();
+
+  @override
+  String toString() {
+    return 'CzmarcType{value: $value}';
+  }
+}
+
+class _CzmarcTypeReader extends fb.Reader<CzmarcType> {
+  const _CzmarcTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  CzmarcType read(fb.BufferContext bc, int offset) =>
+      CzmarcType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class CzmstripeOrientation {
+  final int value;
+  const CzmstripeOrientation._(this.value);
+
+  factory CzmstripeOrientation.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum CzmstripeOrientation');
+    }
+    return result;
+  }
+
+  static CzmstripeOrientation? _createOrNull(int? value) => 
+      value == null ? null : CzmstripeOrientation.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const CzmstripeOrientation HORIZONTAL = CzmstripeOrientation._(0);
+  static const CzmstripeOrientation VERTICAL = CzmstripeOrientation._(1);
+  static const Map<int, CzmstripeOrientation> values = {
+    0: HORIZONTAL,
+    1: VERTICAL};
+
+  static const fb.Reader<CzmstripeOrientation> reader = _CzmstripeOrientationReader();
+
+  @override
+  String toString() {
+    return 'CzmstripeOrientation{value: $value}';
+  }
+}
+
+class _CzmstripeOrientationReader extends fb.Reader<CzmstripeOrientation> {
+  const _CzmstripeOrientationReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  CzmstripeOrientation read(fb.BufferContext bc, int offset) =>
+      CzmstripeOrientation.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class CzmclockRange {
+  final int value;
+  const CzmclockRange._(this.value);
+
+  factory CzmclockRange.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum CzmclockRange');
+    }
+    return result;
+  }
+
+  static CzmclockRange? _createOrNull(int? value) => 
+      value == null ? null : CzmclockRange.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const CzmclockRange UNBOUNDED = CzmclockRange._(0);
+  static const CzmclockRange CLAMPED = CzmclockRange._(1);
+  static const CzmclockRange LOOP_STOP = CzmclockRange._(2);
+  static const Map<int, CzmclockRange> values = {
+    0: UNBOUNDED,
+    1: CLAMPED,
+    2: LOOP_STOP};
+
+  static const fb.Reader<CzmclockRange> reader = _CzmclockRangeReader();
+
+  @override
+  String toString() {
+    return 'CzmclockRange{value: $value}';
+  }
+}
+
+class _CzmclockRangeReader extends fb.Reader<CzmclockRange> {
+  const _CzmclockRangeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  CzmclockRange read(fb.BufferContext bc, int offset) =>
+      CzmclockRange.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class CzmclockStep {
+  final int value;
+  const CzmclockStep._(this.value);
+
+  factory CzmclockStep.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum CzmclockStep');
+    }
+    return result;
+  }
+
+  static CzmclockStep? _createOrNull(int? value) => 
+      value == null ? null : CzmclockStep.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const CzmclockStep TICK_DEPENDENT = CzmclockStep._(0);
+  static const CzmclockStep SYSTEM_CLOCK_MULTIPLIER = CzmclockStep._(1);
+  static const CzmclockStep SYSTEM_CLOCK = CzmclockStep._(2);
+  static const Map<int, CzmclockStep> values = {
+    0: TICK_DEPENDENT,
+    1: SYSTEM_CLOCK_MULTIPLIER,
+    2: SYSTEM_CLOCK};
+
+  static const fb.Reader<CzmclockStep> reader = _CzmclockStepReader();
+
+  @override
+  String toString() {
+    return 'CzmclockStep{value: $value}';
+  }
+}
+
+class _CzmclockStepReader extends fb.Reader<CzmclockStep> {
+  const _CzmclockStepReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  CzmclockStep read(fb.BufferContext bc, int offset) =>
+      CzmclockStep.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Dynamic value types for time-varying properties
+class CzmdynValueType {
+  final int value;
+  const CzmdynValueType._(this.value);
+
+  factory CzmdynValueType.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum CzmdynValueType');
+    }
+    return result;
+  }
+
+  static CzmdynValueType? _createOrNull(int? value) => 
+      value == null ? null : CzmdynValueType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 7;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const CzmdynValueType NUMBER = CzmdynValueType._(0);
+  static const CzmdynValueType BOOLEAN = CzmdynValueType._(1);
+  static const CzmdynValueType STRING = CzmdynValueType._(2);
+  static const CzmdynValueType COLOR = CzmdynValueType._(3);
+  static const CzmdynValueType CARTESIAN3 = CzmdynValueType._(4);
+  static const CzmdynValueType CARTESIAN2 = CzmdynValueType._(5);
+  static const CzmdynValueType NEAR_FAR_SCALAR = CzmdynValueType._(6);
+  static const CzmdynValueType UNIT_QUATERNION = CzmdynValueType._(7);
+  static const Map<int, CzmdynValueType> values = {
+    0: NUMBER,
+    1: BOOLEAN,
+    2: STRING,
+    3: COLOR,
+    4: CARTESIAN3,
+    5: CARTESIAN2,
+    6: NEAR_FAR_SCALAR,
+    7: UNIT_QUATERNION};
+
+  static const fb.Reader<CzmdynValueType> reader = _CzmdynValueTypeReader();
+
+  @override
+  String toString() {
+    return 'CzmdynValueType{value: $value}';
+  }
+}
+
+class _CzmdynValueTypeReader extends fb.Reader<CzmdynValueType> {
+  const _CzmdynValueTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  CzmdynValueType read(fb.BufferContext bc, int offset) =>
+      CzmdynValueType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 ///  Time interval for time-dynamic properties
 class Czminterval {
   Czminterval._(this._bc, this._bcOffset);
@@ -301,6 +680,449 @@ class CzmintervalObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_INTERVAL!);
     fbBuilder.startTable(1);
     fbBuilder.addOffset(0, INTERVALOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Interpolation settings for sampled data
+class Czminterpolation {
+  Czminterpolation._(this._bc, this._bcOffset);
+  factory Czminterpolation(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Czminterpolation> reader = _CzminterpolationReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Algorithm: LINEAR, LAGRANGE, HERMITE
+  String? get ALGORITHM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Polynomial degree (1=linear, 5=typical Lagrange)
+  int get DEGREE => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+
+  @override
+  String toString() {
+    return 'Czminterpolation{ALGORITHM: ${ALGORITHM}, DEGREE: ${DEGREE}}';
+  }
+}
+
+class _CzminterpolationReader extends fb.TableReader<Czminterpolation> {
+  const _CzminterpolationReader();
+
+  @override
+  Czminterpolation createObject(fb.BufferContext bc, int offset) => 
+    Czminterpolation._(bc, offset);
+}
+
+class CzminterpolationBuilder {
+  CzminterpolationBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addAlgorithmOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addDegree(int? DEGREE) {
+    fbBuilder.addInt32(1, DEGREE);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CzminterpolationObjectBuilder extends fb.ObjectBuilder {
+  final String? _ALGORITHM;
+  final int? _DEGREE;
+
+  CzminterpolationObjectBuilder({
+    String? ALGORITHM,
+    int? DEGREE,
+  })
+      : _ALGORITHM = ALGORITHM,
+        _DEGREE = DEGREE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? ALGORITHMOffset = _ALGORITHM == null ? null
+        : fbBuilder.writeString(_ALGORITHM!);
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, ALGORITHMOffset);
+    fbBuilder.addInt32(1, _DEGREE);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  A single interval in a time-varying property
+class CzmdynInterval {
+  CzmdynInterval._(this._bc, this._bcOffset);
+  factory CzmdynInterval(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CzmdynInterval> reader = _CzmdynIntervalReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  ISO 8601 interval string
+  String? get INTERVAL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Value type
+  CzmdynValueType get VALUE_TYPE => CzmdynValueType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  ///  Numeric value (when VALUE_TYPE is NUMBER)
+  double get NUMBER_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Boolean value (when VALUE_TYPE is BOOLEAN)
+  bool get BOOLEAN_VALUE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
+  ///  String value (when VALUE_TYPE is STRING)
+  String? get STRING_VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Color value (when VALUE_TYPE is COLOR)
+  Czmcolor? get COLOR_VALUE => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Array value for cartesian/nearFarScalar types
+  List<double>? get ARRAY_VALUE => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 16);
+
+  @override
+  String toString() {
+    return 'CzmdynInterval{INTERVAL: ${INTERVAL}, VALUE_TYPE: ${VALUE_TYPE}, NUMBER_VALUE: ${NUMBER_VALUE}, BOOLEAN_VALUE: ${BOOLEAN_VALUE}, STRING_VALUE: ${STRING_VALUE}, COLOR_VALUE: ${COLOR_VALUE}, ARRAY_VALUE: ${ARRAY_VALUE}}';
+  }
+}
+
+class _CzmdynIntervalReader extends fb.TableReader<CzmdynInterval> {
+  const _CzmdynIntervalReader();
+
+  @override
+  CzmdynInterval createObject(fb.BufferContext bc, int offset) => 
+    CzmdynInterval._(bc, offset);
+}
+
+class CzmdynIntervalBuilder {
+  CzmdynIntervalBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(7);
+  }
+
+  int addIntervalOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addValueType(CzmdynValueType? VALUE_TYPE) {
+    fbBuilder.addInt8(1, VALUE_TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addNumberValue(double? NUMBER_VALUE) {
+    fbBuilder.addFloat64(2, NUMBER_VALUE);
+    return fbBuilder.offset;
+  }
+  int addBooleanValue(bool? BOOLEAN_VALUE) {
+    fbBuilder.addBool(3, BOOLEAN_VALUE);
+    return fbBuilder.offset;
+  }
+  int addStringValueOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addColorValueOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addArrayValueOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CzmdynIntervalObjectBuilder extends fb.ObjectBuilder {
+  final String? _INTERVAL;
+  final CzmdynValueType? _VALUE_TYPE;
+  final double? _NUMBER_VALUE;
+  final bool? _BOOLEAN_VALUE;
+  final String? _STRING_VALUE;
+  final CzmcolorObjectBuilder? _COLOR_VALUE;
+  final List<double>? _ARRAY_VALUE;
+
+  CzmdynIntervalObjectBuilder({
+    String? INTERVAL,
+    CzmdynValueType? VALUE_TYPE,
+    double? NUMBER_VALUE,
+    bool? BOOLEAN_VALUE,
+    String? STRING_VALUE,
+    CzmcolorObjectBuilder? COLOR_VALUE,
+    List<double>? ARRAY_VALUE,
+  })
+      : _INTERVAL = INTERVAL,
+        _VALUE_TYPE = VALUE_TYPE,
+        _NUMBER_VALUE = NUMBER_VALUE,
+        _BOOLEAN_VALUE = BOOLEAN_VALUE,
+        _STRING_VALUE = STRING_VALUE,
+        _COLOR_VALUE = COLOR_VALUE,
+        _ARRAY_VALUE = ARRAY_VALUE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? INTERVALOffset = _INTERVAL == null ? null
+        : fbBuilder.writeString(_INTERVAL!);
+    final int? STRING_VALUEOffset = _STRING_VALUE == null ? null
+        : fbBuilder.writeString(_STRING_VALUE!);
+    final int? COLOR_VALUEOffset = _COLOR_VALUE?.getOrCreateOffset(fbBuilder);
+    final int? ARRAY_VALUEOffset = _ARRAY_VALUE == null ? null
+        : fbBuilder.writeListFloat64(_ARRAY_VALUE!);
+    fbBuilder.startTable(7);
+    fbBuilder.addOffset(0, INTERVALOffset);
+    fbBuilder.addInt8(1, _VALUE_TYPE?.value);
+    fbBuilder.addFloat64(2, _NUMBER_VALUE);
+    fbBuilder.addBool(3, _BOOLEAN_VALUE);
+    fbBuilder.addOffset(4, STRING_VALUEOffset);
+    fbBuilder.addOffset(5, COLOR_VALUEOffset);
+    fbBuilder.addOffset(6, ARRAY_VALUEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Sampled time-varying data
+class CzmdynSampled {
+  CzmdynSampled._(this._bc, this._bcOffset);
+  factory CzmdynSampled(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CzmdynSampled> reader = _CzmdynSampledReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Reference epoch (ISO 8601)
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Value type determines stride through DATA
+  CzmdynValueType get VALUE_TYPE => CzmdynValueType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  ///  Interleaved [time, value(s), ...] — stride depends on VALUE_TYPE
+  List<double>? get DATA => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Interpolation settings
+  Czminterpolation? get INTERPOLATION => Czminterpolation.reader.vTableGetNullable(_bc, _bcOffset, 10);
+
+  @override
+  String toString() {
+    return 'CzmdynSampled{EPOCH: ${EPOCH}, VALUE_TYPE: ${VALUE_TYPE}, DATA: ${DATA}, INTERPOLATION: ${INTERPOLATION}}';
+  }
+}
+
+class _CzmdynSampledReader extends fb.TableReader<CzmdynSampled> {
+  const _CzmdynSampledReader();
+
+  @override
+  CzmdynSampled createObject(fb.BufferContext bc, int offset) => 
+    CzmdynSampled._(bc, offset);
+}
+
+class CzmdynSampledBuilder {
+  CzmdynSampledBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addValueType(CzmdynValueType? VALUE_TYPE) {
+    fbBuilder.addInt8(1, VALUE_TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addDataOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addInterpolationOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CzmdynSampledObjectBuilder extends fb.ObjectBuilder {
+  final String? _EPOCH;
+  final CzmdynValueType? _VALUE_TYPE;
+  final List<double>? _DATA;
+  final CzminterpolationObjectBuilder? _INTERPOLATION;
+
+  CzmdynSampledObjectBuilder({
+    String? EPOCH,
+    CzmdynValueType? VALUE_TYPE,
+    List<double>? DATA,
+    CzminterpolationObjectBuilder? INTERPOLATION,
+  })
+      : _EPOCH = EPOCH,
+        _VALUE_TYPE = VALUE_TYPE,
+        _DATA = DATA,
+        _INTERPOLATION = INTERPOLATION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    final int? DATAOffset = _DATA == null ? null
+        : fbBuilder.writeListFloat64(_DATA!);
+    final int? INTERPOLATIONOffset = _INTERPOLATION?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(4);
+    fbBuilder.addOffset(0, EPOCHOffset);
+    fbBuilder.addInt8(1, _VALUE_TYPE?.value);
+    fbBuilder.addOffset(2, DATAOffset);
+    fbBuilder.addOffset(3, INTERPOLATIONOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  A single time-dynamic property (non-static value)
+class CzmdynamicProperty {
+  CzmdynamicProperty._(this._bc, this._bcOffset);
+  factory CzmdynamicProperty(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CzmdynamicProperty> reader = _CzmdynamicPropertyReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Dotted path name, e.g. "billboard.scale", "point.color"
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Sampled data (when property uses epoch + data array)
+  CzmdynSampled? get SAMPLED => CzmdynSampled.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Interval-based values
+  List<CzmdynInterval>? get INTERVALS => const fb.ListReader<CzmdynInterval>(CzmdynInterval.reader).vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Reference to another entity's property
+  String? get REFERENCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+
+  @override
+  String toString() {
+    return 'CzmdynamicProperty{NAME: ${NAME}, SAMPLED: ${SAMPLED}, INTERVALS: ${INTERVALS}, REFERENCE: ${REFERENCE}}';
+  }
+}
+
+class _CzmdynamicPropertyReader extends fb.TableReader<CzmdynamicProperty> {
+  const _CzmdynamicPropertyReader();
+
+  @override
+  CzmdynamicProperty createObject(fb.BufferContext bc, int offset) => 
+    CzmdynamicProperty._(bc, offset);
+}
+
+class CzmdynamicPropertyBuilder {
+  CzmdynamicPropertyBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addSampledOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addIntervalsOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addReferenceOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CzmdynamicPropertyObjectBuilder extends fb.ObjectBuilder {
+  final String? _NAME;
+  final CzmdynSampledObjectBuilder? _SAMPLED;
+  final List<CzmdynIntervalObjectBuilder>? _INTERVALS;
+  final String? _REFERENCE;
+
+  CzmdynamicPropertyObjectBuilder({
+    String? NAME,
+    CzmdynSampledObjectBuilder? SAMPLED,
+    List<CzmdynIntervalObjectBuilder>? INTERVALS,
+    String? REFERENCE,
+  })
+      : _NAME = NAME,
+        _SAMPLED = SAMPLED,
+        _INTERVALS = INTERVALS,
+        _REFERENCE = REFERENCE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? SAMPLEDOffset = _SAMPLED?.getOrCreateOffset(fbBuilder);
+    final int? INTERVALSOffset = _INTERVALS == null ? null
+        : fbBuilder.writeList(_INTERVALS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? REFERENCEOffset = _REFERENCE == null ? null
+        : fbBuilder.writeString(_REFERENCE!);
+    fbBuilder.startTable(4);
+    fbBuilder.addOffset(0, NAMEOffset);
+    fbBuilder.addOffset(1, SAMPLEDOffset);
+    fbBuilder.addOffset(2, INTERVALSOffset);
+    fbBuilder.addOffset(3, REFERENCEOffset);
     return fbBuilder.endTable();
   }
 
@@ -704,6 +1526,1445 @@ class CzmnearFarScalarObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+///  Distance display condition
+class CzmdistanceDisplayCondition {
+  CzmdistanceDisplayCondition._(this._bc, this._bcOffset);
+  factory CzmdistanceDisplayCondition(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CzmdistanceDisplayCondition> reader = _CzmdistanceDisplayConditionReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Near distance in meters
+  double get NEAR_DISTANCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  ///  Far distance in meters
+  double get FAR_DISTANCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+
+  @override
+  String toString() {
+    return 'CzmdistanceDisplayCondition{NEAR_DISTANCE: ${NEAR_DISTANCE}, FAR_DISTANCE: ${FAR_DISTANCE}}';
+  }
+}
+
+class _CzmdistanceDisplayConditionReader extends fb.TableReader<CzmdistanceDisplayCondition> {
+  const _CzmdistanceDisplayConditionReader();
+
+  @override
+  CzmdistanceDisplayCondition createObject(fb.BufferContext bc, int offset) => 
+    CzmdistanceDisplayCondition._(bc, offset);
+}
+
+class CzmdistanceDisplayConditionBuilder {
+  CzmdistanceDisplayConditionBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addNearDistance(double? NEAR_DISTANCE) {
+    fbBuilder.addFloat64(0, NEAR_DISTANCE);
+    return fbBuilder.offset;
+  }
+  int addFarDistance(double? FAR_DISTANCE) {
+    fbBuilder.addFloat64(1, FAR_DISTANCE);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CzmdistanceDisplayConditionObjectBuilder extends fb.ObjectBuilder {
+  final double? _NEAR_DISTANCE;
+  final double? _FAR_DISTANCE;
+
+  CzmdistanceDisplayConditionObjectBuilder({
+    double? NEAR_DISTANCE,
+    double? FAR_DISTANCE,
+  })
+      : _NEAR_DISTANCE = NEAR_DISTANCE,
+        _FAR_DISTANCE = FAR_DISTANCE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(2);
+    fbBuilder.addFloat64(0, _NEAR_DISTANCE);
+    fbBuilder.addFloat64(1, _FAR_DISTANCE);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Orientation as unit quaternion
+class Czmorientation {
+  Czmorientation._(this._bc, this._bcOffset);
+  factory Czmorientation(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Czmorientation> reader = _CzmorientationReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  X component
+  double get UNIT_QUATERNION_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  ///  Y component
+  double get UNIT_QUATERNION_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Z component
+  double get UNIT_QUATERNION_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  W component
+  double get UNIT_QUATERNION_W => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+
+  @override
+  String toString() {
+    return 'Czmorientation{UNIT_QUATERNION_X: ${UNIT_QUATERNION_X}, UNIT_QUATERNION_Y: ${UNIT_QUATERNION_Y}, UNIT_QUATERNION_Z: ${UNIT_QUATERNION_Z}, UNIT_QUATERNION_W: ${UNIT_QUATERNION_W}}';
+  }
+}
+
+class _CzmorientationReader extends fb.TableReader<Czmorientation> {
+  const _CzmorientationReader();
+
+  @override
+  Czmorientation createObject(fb.BufferContext bc, int offset) => 
+    Czmorientation._(bc, offset);
+}
+
+class CzmorientationBuilder {
+  CzmorientationBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addUnitQuaternionX(double? UNIT_QUATERNION_X) {
+    fbBuilder.addFloat64(0, UNIT_QUATERNION_X);
+    return fbBuilder.offset;
+  }
+  int addUnitQuaternionY(double? UNIT_QUATERNION_Y) {
+    fbBuilder.addFloat64(1, UNIT_QUATERNION_Y);
+    return fbBuilder.offset;
+  }
+  int addUnitQuaternionZ(double? UNIT_QUATERNION_Z) {
+    fbBuilder.addFloat64(2, UNIT_QUATERNION_Z);
+    return fbBuilder.offset;
+  }
+  int addUnitQuaternionW(double? UNIT_QUATERNION_W) {
+    fbBuilder.addFloat64(3, UNIT_QUATERNION_W);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CzmorientationObjectBuilder extends fb.ObjectBuilder {
+  final double? _UNIT_QUATERNION_X;
+  final double? _UNIT_QUATERNION_Y;
+  final double? _UNIT_QUATERNION_Z;
+  final double? _UNIT_QUATERNION_W;
+
+  CzmorientationObjectBuilder({
+    double? UNIT_QUATERNION_X,
+    double? UNIT_QUATERNION_Y,
+    double? UNIT_QUATERNION_Z,
+    double? UNIT_QUATERNION_W,
+  })
+      : _UNIT_QUATERNION_X = UNIT_QUATERNION_X,
+        _UNIT_QUATERNION_Y = UNIT_QUATERNION_Y,
+        _UNIT_QUATERNION_Z = UNIT_QUATERNION_Z,
+        _UNIT_QUATERNION_W = UNIT_QUATERNION_W;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(4);
+    fbBuilder.addFloat64(0, _UNIT_QUATERNION_X);
+    fbBuilder.addFloat64(1, _UNIT_QUATERNION_Y);
+    fbBuilder.addFloat64(2, _UNIT_QUATERNION_Z);
+    fbBuilder.addFloat64(3, _UNIT_QUATERNION_W);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Suggested camera offset from entity
+class CzmviewFrom {
+  CzmviewFrom._(this._bc, this._bcOffset);
+  factory CzmviewFrom(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CzmviewFrom> reader = _CzmviewFromReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  X offset in meters
+  double get X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  ///  Y offset in meters
+  double get Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Z offset in meters
+  double get Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+
+  @override
+  String toString() {
+    return 'CzmviewFrom{X: ${X}, Y: ${Y}, Z: ${Z}}';
+  }
+}
+
+class _CzmviewFromReader extends fb.TableReader<CzmviewFrom> {
+  const _CzmviewFromReader();
+
+  @override
+  CzmviewFrom createObject(fb.BufferContext bc, int offset) => 
+    CzmviewFrom._(bc, offset);
+}
+
+class CzmviewFromBuilder {
+  CzmviewFromBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addX(double? X) {
+    fbBuilder.addFloat64(0, X);
+    return fbBuilder.offset;
+  }
+  int addY(double? Y) {
+    fbBuilder.addFloat64(1, Y);
+    return fbBuilder.offset;
+  }
+  int addZ(double? Z) {
+    fbBuilder.addFloat64(2, Z);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CzmviewFromObjectBuilder extends fb.ObjectBuilder {
+  final double? _X;
+  final double? _Y;
+  final double? _Z;
+
+  CzmviewFromObjectBuilder({
+    double? X,
+    double? Y,
+    double? Z,
+  })
+      : _X = X,
+        _Y = Y,
+        _Z = Z;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(3);
+    fbBuilder.addFloat64(0, _X);
+    fbBuilder.addFloat64(1, _Y);
+    fbBuilder.addFloat64(2, _Z);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Solid color material
+class CzmsolidColorMaterial {
+  CzmsolidColorMaterial._(this._bc, this._bcOffset);
+  factory CzmsolidColorMaterial(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CzmsolidColorMaterial> reader = _CzmsolidColorMaterialReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Color
+  Czmcolor? get COLOR => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 4);
+
+  @override
+  String toString() {
+    return 'CzmsolidColorMaterial{COLOR: ${COLOR}}';
+  }
+}
+
+class _CzmsolidColorMaterialReader extends fb.TableReader<CzmsolidColorMaterial> {
+  const _CzmsolidColorMaterialReader();
+
+  @override
+  CzmsolidColorMaterial createObject(fb.BufferContext bc, int offset) => 
+    CzmsolidColorMaterial._(bc, offset);
+}
+
+class CzmsolidColorMaterialBuilder {
+  CzmsolidColorMaterialBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(1);
+  }
+
+  int addColorOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CzmsolidColorMaterialObjectBuilder extends fb.ObjectBuilder {
+  final CzmcolorObjectBuilder? _COLOR;
+
+  CzmsolidColorMaterialObjectBuilder({
+    CzmcolorObjectBuilder? COLOR,
+  })
+      : _COLOR = COLOR;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? COLOROffset = _COLOR?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(1);
+    fbBuilder.addOffset(0, COLOROffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Image material
+class CzmimageMaterial {
+  CzmimageMaterial._(this._bc, this._bcOffset);
+  factory CzmimageMaterial(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CzmimageMaterial> reader = _CzmimageMaterialReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Image URI
+  String? get IMAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Repeat X
+  double get REPEAT_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Repeat Y
+  double get REPEAT_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Color tint
+  Czmcolor? get COLOR => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Whether the image has transparency
+  bool get TRANSPARENT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
+
+  @override
+  String toString() {
+    return 'CzmimageMaterial{IMAGE: ${IMAGE}, REPEAT_X: ${REPEAT_X}, REPEAT_Y: ${REPEAT_Y}, COLOR: ${COLOR}, TRANSPARENT: ${TRANSPARENT}}';
+  }
+}
+
+class _CzmimageMaterialReader extends fb.TableReader<CzmimageMaterial> {
+  const _CzmimageMaterialReader();
+
+  @override
+  CzmimageMaterial createObject(fb.BufferContext bc, int offset) => 
+    CzmimageMaterial._(bc, offset);
+}
+
+class CzmimageMaterialBuilder {
+  CzmimageMaterialBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addImageOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addRepeatX(double? REPEAT_X) {
+    fbBuilder.addFloat64(1, REPEAT_X);
+    return fbBuilder.offset;
+  }
+  int addRepeatY(double? REPEAT_Y) {
+    fbBuilder.addFloat64(2, REPEAT_Y);
+    return fbBuilder.offset;
+  }
+  int addColorOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addTransparent(bool? TRANSPARENT) {
+    fbBuilder.addBool(4, TRANSPARENT);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CzmimageMaterialObjectBuilder extends fb.ObjectBuilder {
+  final String? _IMAGE;
+  final double? _REPEAT_X;
+  final double? _REPEAT_Y;
+  final CzmcolorObjectBuilder? _COLOR;
+  final bool? _TRANSPARENT;
+
+  CzmimageMaterialObjectBuilder({
+    String? IMAGE,
+    double? REPEAT_X,
+    double? REPEAT_Y,
+    CzmcolorObjectBuilder? COLOR,
+    bool? TRANSPARENT,
+  })
+      : _IMAGE = IMAGE,
+        _REPEAT_X = REPEAT_X,
+        _REPEAT_Y = REPEAT_Y,
+        _COLOR = COLOR,
+        _TRANSPARENT = TRANSPARENT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? IMAGEOffset = _IMAGE == null ? null
+        : fbBuilder.writeString(_IMAGE!);
+    final int? COLOROffset = _COLOR?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, IMAGEOffset);
+    fbBuilder.addFloat64(1, _REPEAT_X);
+    fbBuilder.addFloat64(2, _REPEAT_Y);
+    fbBuilder.addOffset(3, COLOROffset);
+    fbBuilder.addBool(4, _TRANSPARENT);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Grid material
+class CzmgridMaterial {
+  CzmgridMaterial._(this._bc, this._bcOffset);
+  factory CzmgridMaterial(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CzmgridMaterial> reader = _CzmgridMaterialReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Grid line color
+  Czmcolor? get COLOR => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Cell alpha
+  double get CELL_ALPHA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Number of grid lines along X
+  double get LINE_COUNT_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Number of grid lines along Y
+  double get LINE_COUNT_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  Thickness of grid lines along X
+  double get LINE_THICKNESS_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  Thickness of grid lines along Y
+  double get LINE_THICKNESS_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  ///  Offset of grid lines along X
+  double get LINE_OFFSET_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Offset of grid lines along Y
+  double get LINE_OFFSET_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+
+  @override
+  String toString() {
+    return 'CzmgridMaterial{COLOR: ${COLOR}, CELL_ALPHA: ${CELL_ALPHA}, LINE_COUNT_X: ${LINE_COUNT_X}, LINE_COUNT_Y: ${LINE_COUNT_Y}, LINE_THICKNESS_X: ${LINE_THICKNESS_X}, LINE_THICKNESS_Y: ${LINE_THICKNESS_Y}, LINE_OFFSET_X: ${LINE_OFFSET_X}, LINE_OFFSET_Y: ${LINE_OFFSET_Y}}';
+  }
+}
+
+class _CzmgridMaterialReader extends fb.TableReader<CzmgridMaterial> {
+  const _CzmgridMaterialReader();
+
+  @override
+  CzmgridMaterial createObject(fb.BufferContext bc, int offset) => 
+    CzmgridMaterial._(bc, offset);
+}
+
+class CzmgridMaterialBuilder {
+  CzmgridMaterialBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(8);
+  }
+
+  int addColorOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addCellAlpha(double? CELL_ALPHA) {
+    fbBuilder.addFloat64(1, CELL_ALPHA);
+    return fbBuilder.offset;
+  }
+  int addLineCountX(double? LINE_COUNT_X) {
+    fbBuilder.addFloat64(2, LINE_COUNT_X);
+    return fbBuilder.offset;
+  }
+  int addLineCountY(double? LINE_COUNT_Y) {
+    fbBuilder.addFloat64(3, LINE_COUNT_Y);
+    return fbBuilder.offset;
+  }
+  int addLineThicknessX(double? LINE_THICKNESS_X) {
+    fbBuilder.addFloat64(4, LINE_THICKNESS_X);
+    return fbBuilder.offset;
+  }
+  int addLineThicknessY(double? LINE_THICKNESS_Y) {
+    fbBuilder.addFloat64(5, LINE_THICKNESS_Y);
+    return fbBuilder.offset;
+  }
+  int addLineOffsetX(double? LINE_OFFSET_X) {
+    fbBuilder.addFloat64(6, LINE_OFFSET_X);
+    return fbBuilder.offset;
+  }
+  int addLineOffsetY(double? LINE_OFFSET_Y) {
+    fbBuilder.addFloat64(7, LINE_OFFSET_Y);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CzmgridMaterialObjectBuilder extends fb.ObjectBuilder {
+  final CzmcolorObjectBuilder? _COLOR;
+  final double? _CELL_ALPHA;
+  final double? _LINE_COUNT_X;
+  final double? _LINE_COUNT_Y;
+  final double? _LINE_THICKNESS_X;
+  final double? _LINE_THICKNESS_Y;
+  final double? _LINE_OFFSET_X;
+  final double? _LINE_OFFSET_Y;
+
+  CzmgridMaterialObjectBuilder({
+    CzmcolorObjectBuilder? COLOR,
+    double? CELL_ALPHA,
+    double? LINE_COUNT_X,
+    double? LINE_COUNT_Y,
+    double? LINE_THICKNESS_X,
+    double? LINE_THICKNESS_Y,
+    double? LINE_OFFSET_X,
+    double? LINE_OFFSET_Y,
+  })
+      : _COLOR = COLOR,
+        _CELL_ALPHA = CELL_ALPHA,
+        _LINE_COUNT_X = LINE_COUNT_X,
+        _LINE_COUNT_Y = LINE_COUNT_Y,
+        _LINE_THICKNESS_X = LINE_THICKNESS_X,
+        _LINE_THICKNESS_Y = LINE_THICKNESS_Y,
+        _LINE_OFFSET_X = LINE_OFFSET_X,
+        _LINE_OFFSET_Y = LINE_OFFSET_Y;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? COLOROffset = _COLOR?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(8);
+    fbBuilder.addOffset(0, COLOROffset);
+    fbBuilder.addFloat64(1, _CELL_ALPHA);
+    fbBuilder.addFloat64(2, _LINE_COUNT_X);
+    fbBuilder.addFloat64(3, _LINE_COUNT_Y);
+    fbBuilder.addFloat64(4, _LINE_THICKNESS_X);
+    fbBuilder.addFloat64(5, _LINE_THICKNESS_Y);
+    fbBuilder.addFloat64(6, _LINE_OFFSET_X);
+    fbBuilder.addFloat64(7, _LINE_OFFSET_Y);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Stripe material
+class CzmstripeMaterial {
+  CzmstripeMaterial._(this._bc, this._bcOffset);
+  factory CzmstripeMaterial(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CzmstripeMaterial> reader = _CzmstripeMaterialReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Stripe orientation
+  String? get ORIENTATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Even color
+  Czmcolor? get EVEN_COLOR => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Odd color
+  Czmcolor? get ODD_COLOR => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Offset
+  double get OFFSET => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  Number of times to repeat
+  double get REPEAT_COUNT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+
+  @override
+  String toString() {
+    return 'CzmstripeMaterial{ORIENTATION: ${ORIENTATION}, EVEN_COLOR: ${EVEN_COLOR}, ODD_COLOR: ${ODD_COLOR}, OFFSET: ${OFFSET}, REPEAT_COUNT: ${REPEAT_COUNT}}';
+  }
+}
+
+class _CzmstripeMaterialReader extends fb.TableReader<CzmstripeMaterial> {
+  const _CzmstripeMaterialReader();
+
+  @override
+  CzmstripeMaterial createObject(fb.BufferContext bc, int offset) => 
+    CzmstripeMaterial._(bc, offset);
+}
+
+class CzmstripeMaterialBuilder {
+  CzmstripeMaterialBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addOrientationOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addEvenColorOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addOddColorOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addOffset(double? OFFSET) {
+    fbBuilder.addFloat64(3, OFFSET);
+    return fbBuilder.offset;
+  }
+  int addRepeatCount(double? REPEAT_COUNT) {
+    fbBuilder.addFloat64(4, REPEAT_COUNT);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CzmstripeMaterialObjectBuilder extends fb.ObjectBuilder {
+  final String? _ORIENTATION;
+  final CzmcolorObjectBuilder? _EVEN_COLOR;
+  final CzmcolorObjectBuilder? _ODD_COLOR;
+  final double? _OFFSET;
+  final double? _REPEAT_COUNT;
+
+  CzmstripeMaterialObjectBuilder({
+    String? ORIENTATION,
+    CzmcolorObjectBuilder? EVEN_COLOR,
+    CzmcolorObjectBuilder? ODD_COLOR,
+    double? OFFSET,
+    double? REPEAT_COUNT,
+  })
+      : _ORIENTATION = ORIENTATION,
+        _EVEN_COLOR = EVEN_COLOR,
+        _ODD_COLOR = ODD_COLOR,
+        _OFFSET = OFFSET,
+        _REPEAT_COUNT = REPEAT_COUNT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? ORIENTATIONOffset = _ORIENTATION == null ? null
+        : fbBuilder.writeString(_ORIENTATION!);
+    final int? EVEN_COLOROffset = _EVEN_COLOR?.getOrCreateOffset(fbBuilder);
+    final int? ODD_COLOROffset = _ODD_COLOR?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, ORIENTATIONOffset);
+    fbBuilder.addOffset(1, EVEN_COLOROffset);
+    fbBuilder.addOffset(2, ODD_COLOROffset);
+    fbBuilder.addFloat64(3, _OFFSET);
+    fbBuilder.addFloat64(4, _REPEAT_COUNT);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Checkerboard material
+class CzmcheckerboardMaterial {
+  CzmcheckerboardMaterial._(this._bc, this._bcOffset);
+  factory CzmcheckerboardMaterial(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CzmcheckerboardMaterial> reader = _CzmcheckerboardMaterialReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Even color
+  Czmcolor? get EVEN_COLOR => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Odd color
+  Czmcolor? get ODD_COLOR => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Repeat X
+  double get REPEAT_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Repeat Y
+  double get REPEAT_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+
+  @override
+  String toString() {
+    return 'CzmcheckerboardMaterial{EVEN_COLOR: ${EVEN_COLOR}, ODD_COLOR: ${ODD_COLOR}, REPEAT_X: ${REPEAT_X}, REPEAT_Y: ${REPEAT_Y}}';
+  }
+}
+
+class _CzmcheckerboardMaterialReader extends fb.TableReader<CzmcheckerboardMaterial> {
+  const _CzmcheckerboardMaterialReader();
+
+  @override
+  CzmcheckerboardMaterial createObject(fb.BufferContext bc, int offset) => 
+    CzmcheckerboardMaterial._(bc, offset);
+}
+
+class CzmcheckerboardMaterialBuilder {
+  CzmcheckerboardMaterialBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addEvenColorOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addOddColorOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addRepeatX(double? REPEAT_X) {
+    fbBuilder.addFloat64(2, REPEAT_X);
+    return fbBuilder.offset;
+  }
+  int addRepeatY(double? REPEAT_Y) {
+    fbBuilder.addFloat64(3, REPEAT_Y);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CzmcheckerboardMaterialObjectBuilder extends fb.ObjectBuilder {
+  final CzmcolorObjectBuilder? _EVEN_COLOR;
+  final CzmcolorObjectBuilder? _ODD_COLOR;
+  final double? _REPEAT_X;
+  final double? _REPEAT_Y;
+
+  CzmcheckerboardMaterialObjectBuilder({
+    CzmcolorObjectBuilder? EVEN_COLOR,
+    CzmcolorObjectBuilder? ODD_COLOR,
+    double? REPEAT_X,
+    double? REPEAT_Y,
+  })
+      : _EVEN_COLOR = EVEN_COLOR,
+        _ODD_COLOR = ODD_COLOR,
+        _REPEAT_X = REPEAT_X,
+        _REPEAT_Y = REPEAT_Y;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? EVEN_COLOROffset = _EVEN_COLOR?.getOrCreateOffset(fbBuilder);
+    final int? ODD_COLOROffset = _ODD_COLOR?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(4);
+    fbBuilder.addOffset(0, EVEN_COLOROffset);
+    fbBuilder.addOffset(1, ODD_COLOROffset);
+    fbBuilder.addFloat64(2, _REPEAT_X);
+    fbBuilder.addFloat64(3, _REPEAT_Y);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Surface material (used by polygon, ellipse, box, etc.)
+class Czmmaterial {
+  Czmmaterial._(this._bc, this._bcOffset);
+  factory Czmmaterial(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Czmmaterial> reader = _CzmmaterialReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Solid color material
+  CzmsolidColorMaterial? get SOLID_COLOR => CzmsolidColorMaterial.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Image material
+  CzmimageMaterial? get IMAGE => CzmimageMaterial.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Grid material
+  CzmgridMaterial? get GRID => CzmgridMaterial.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Stripe material
+  CzmstripeMaterial? get STRIPE => CzmstripeMaterial.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Checkerboard material
+  CzmcheckerboardMaterial? get CHECKERBOARD => CzmcheckerboardMaterial.reader.vTableGetNullable(_bc, _bcOffset, 12);
+
+  @override
+  String toString() {
+    return 'Czmmaterial{SOLID_COLOR: ${SOLID_COLOR}, IMAGE: ${IMAGE}, GRID: ${GRID}, STRIPE: ${STRIPE}, CHECKERBOARD: ${CHECKERBOARD}}';
+  }
+}
+
+class _CzmmaterialReader extends fb.TableReader<Czmmaterial> {
+  const _CzmmaterialReader();
+
+  @override
+  Czmmaterial createObject(fb.BufferContext bc, int offset) => 
+    Czmmaterial._(bc, offset);
+}
+
+class CzmmaterialBuilder {
+  CzmmaterialBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addSolidColorOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addImageOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addGridOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addStripeOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addCheckerboardOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CzmmaterialObjectBuilder extends fb.ObjectBuilder {
+  final CzmsolidColorMaterialObjectBuilder? _SOLID_COLOR;
+  final CzmimageMaterialObjectBuilder? _IMAGE;
+  final CzmgridMaterialObjectBuilder? _GRID;
+  final CzmstripeMaterialObjectBuilder? _STRIPE;
+  final CzmcheckerboardMaterialObjectBuilder? _CHECKERBOARD;
+
+  CzmmaterialObjectBuilder({
+    CzmsolidColorMaterialObjectBuilder? SOLID_COLOR,
+    CzmimageMaterialObjectBuilder? IMAGE,
+    CzmgridMaterialObjectBuilder? GRID,
+    CzmstripeMaterialObjectBuilder? STRIPE,
+    CzmcheckerboardMaterialObjectBuilder? CHECKERBOARD,
+  })
+      : _SOLID_COLOR = SOLID_COLOR,
+        _IMAGE = IMAGE,
+        _GRID = GRID,
+        _STRIPE = STRIPE,
+        _CHECKERBOARD = CHECKERBOARD;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SOLID_COLOROffset = _SOLID_COLOR?.getOrCreateOffset(fbBuilder);
+    final int? IMAGEOffset = _IMAGE?.getOrCreateOffset(fbBuilder);
+    final int? GRIDOffset = _GRID?.getOrCreateOffset(fbBuilder);
+    final int? STRIPEOffset = _STRIPE?.getOrCreateOffset(fbBuilder);
+    final int? CHECKERBOARDOffset = _CHECKERBOARD?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, SOLID_COLOROffset);
+    fbBuilder.addOffset(1, IMAGEOffset);
+    fbBuilder.addOffset(2, GRIDOffset);
+    fbBuilder.addOffset(3, STRIPEOffset);
+    fbBuilder.addOffset(4, CHECKERBOARDOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Polyline outline material
+class CzmpolylineOutlineMaterial {
+  CzmpolylineOutlineMaterial._(this._bc, this._bcOffset);
+  factory CzmpolylineOutlineMaterial(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CzmpolylineOutlineMaterial> reader = _CzmpolylineOutlineMaterialReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Line color
+  Czmcolor? get COLOR => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Outline color
+  Czmcolor? get OUTLINE_COLOR => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Outline width
+  double get OUTLINE_WIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+
+  @override
+  String toString() {
+    return 'CzmpolylineOutlineMaterial{COLOR: ${COLOR}, OUTLINE_COLOR: ${OUTLINE_COLOR}, OUTLINE_WIDTH: ${OUTLINE_WIDTH}}';
+  }
+}
+
+class _CzmpolylineOutlineMaterialReader extends fb.TableReader<CzmpolylineOutlineMaterial> {
+  const _CzmpolylineOutlineMaterialReader();
+
+  @override
+  CzmpolylineOutlineMaterial createObject(fb.BufferContext bc, int offset) => 
+    CzmpolylineOutlineMaterial._(bc, offset);
+}
+
+class CzmpolylineOutlineMaterialBuilder {
+  CzmpolylineOutlineMaterialBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addColorOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addOutlineColorOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addOutlineWidth(double? OUTLINE_WIDTH) {
+    fbBuilder.addFloat64(2, OUTLINE_WIDTH);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CzmpolylineOutlineMaterialObjectBuilder extends fb.ObjectBuilder {
+  final CzmcolorObjectBuilder? _COLOR;
+  final CzmcolorObjectBuilder? _OUTLINE_COLOR;
+  final double? _OUTLINE_WIDTH;
+
+  CzmpolylineOutlineMaterialObjectBuilder({
+    CzmcolorObjectBuilder? COLOR,
+    CzmcolorObjectBuilder? OUTLINE_COLOR,
+    double? OUTLINE_WIDTH,
+  })
+      : _COLOR = COLOR,
+        _OUTLINE_COLOR = OUTLINE_COLOR,
+        _OUTLINE_WIDTH = OUTLINE_WIDTH;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? COLOROffset = _COLOR?.getOrCreateOffset(fbBuilder);
+    final int? OUTLINE_COLOROffset = _OUTLINE_COLOR?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(3);
+    fbBuilder.addOffset(0, COLOROffset);
+    fbBuilder.addOffset(1, OUTLINE_COLOROffset);
+    fbBuilder.addFloat64(2, _OUTLINE_WIDTH);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Polyline arrow material
+class CzmpolylineArrowMaterial {
+  CzmpolylineArrowMaterial._(this._bc, this._bcOffset);
+  factory CzmpolylineArrowMaterial(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CzmpolylineArrowMaterial> reader = _CzmpolylineArrowMaterialReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Arrow color
+  Czmcolor? get COLOR => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 4);
+
+  @override
+  String toString() {
+    return 'CzmpolylineArrowMaterial{COLOR: ${COLOR}}';
+  }
+}
+
+class _CzmpolylineArrowMaterialReader extends fb.TableReader<CzmpolylineArrowMaterial> {
+  const _CzmpolylineArrowMaterialReader();
+
+  @override
+  CzmpolylineArrowMaterial createObject(fb.BufferContext bc, int offset) => 
+    CzmpolylineArrowMaterial._(bc, offset);
+}
+
+class CzmpolylineArrowMaterialBuilder {
+  CzmpolylineArrowMaterialBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(1);
+  }
+
+  int addColorOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CzmpolylineArrowMaterialObjectBuilder extends fb.ObjectBuilder {
+  final CzmcolorObjectBuilder? _COLOR;
+
+  CzmpolylineArrowMaterialObjectBuilder({
+    CzmcolorObjectBuilder? COLOR,
+  })
+      : _COLOR = COLOR;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? COLOROffset = _COLOR?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(1);
+    fbBuilder.addOffset(0, COLOROffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Polyline dash material
+class CzmpolylineDashMaterial {
+  CzmpolylineDashMaterial._(this._bc, this._bcOffset);
+  factory CzmpolylineDashMaterial(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CzmpolylineDashMaterial> reader = _CzmpolylineDashMaterialReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Dash color
+  Czmcolor? get COLOR => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Gap color
+  Czmcolor? get GAP_COLOR => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Dash length in pixels
+  double get DASH_LENGTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Dash pattern (bitmask)
+  int get DASH_PATTERN => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 10, 0);
+
+  @override
+  String toString() {
+    return 'CzmpolylineDashMaterial{COLOR: ${COLOR}, GAP_COLOR: ${GAP_COLOR}, DASH_LENGTH: ${DASH_LENGTH}, DASH_PATTERN: ${DASH_PATTERN}}';
+  }
+}
+
+class _CzmpolylineDashMaterialReader extends fb.TableReader<CzmpolylineDashMaterial> {
+  const _CzmpolylineDashMaterialReader();
+
+  @override
+  CzmpolylineDashMaterial createObject(fb.BufferContext bc, int offset) => 
+    CzmpolylineDashMaterial._(bc, offset);
+}
+
+class CzmpolylineDashMaterialBuilder {
+  CzmpolylineDashMaterialBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addColorOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addGapColorOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addDashLength(double? DASH_LENGTH) {
+    fbBuilder.addFloat64(2, DASH_LENGTH);
+    return fbBuilder.offset;
+  }
+  int addDashPattern(int? DASH_PATTERN) {
+    fbBuilder.addInt32(3, DASH_PATTERN);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CzmpolylineDashMaterialObjectBuilder extends fb.ObjectBuilder {
+  final CzmcolorObjectBuilder? _COLOR;
+  final CzmcolorObjectBuilder? _GAP_COLOR;
+  final double? _DASH_LENGTH;
+  final int? _DASH_PATTERN;
+
+  CzmpolylineDashMaterialObjectBuilder({
+    CzmcolorObjectBuilder? COLOR,
+    CzmcolorObjectBuilder? GAP_COLOR,
+    double? DASH_LENGTH,
+    int? DASH_PATTERN,
+  })
+      : _COLOR = COLOR,
+        _GAP_COLOR = GAP_COLOR,
+        _DASH_LENGTH = DASH_LENGTH,
+        _DASH_PATTERN = DASH_PATTERN;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? COLOROffset = _COLOR?.getOrCreateOffset(fbBuilder);
+    final int? GAP_COLOROffset = _GAP_COLOR?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(4);
+    fbBuilder.addOffset(0, COLOROffset);
+    fbBuilder.addOffset(1, GAP_COLOROffset);
+    fbBuilder.addFloat64(2, _DASH_LENGTH);
+    fbBuilder.addInt32(3, _DASH_PATTERN);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Polyline glow material
+class CzmpolylineGlowMaterial {
+  CzmpolylineGlowMaterial._(this._bc, this._bcOffset);
+  factory CzmpolylineGlowMaterial(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CzmpolylineGlowMaterial> reader = _CzmpolylineGlowMaterialReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Glow color
+  Czmcolor? get COLOR => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Glow power
+  double get GLOW_POWER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Taper power
+  double get TAPER_POWER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+
+  @override
+  String toString() {
+    return 'CzmpolylineGlowMaterial{COLOR: ${COLOR}, GLOW_POWER: ${GLOW_POWER}, TAPER_POWER: ${TAPER_POWER}}';
+  }
+}
+
+class _CzmpolylineGlowMaterialReader extends fb.TableReader<CzmpolylineGlowMaterial> {
+  const _CzmpolylineGlowMaterialReader();
+
+  @override
+  CzmpolylineGlowMaterial createObject(fb.BufferContext bc, int offset) => 
+    CzmpolylineGlowMaterial._(bc, offset);
+}
+
+class CzmpolylineGlowMaterialBuilder {
+  CzmpolylineGlowMaterialBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addColorOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addGlowPower(double? GLOW_POWER) {
+    fbBuilder.addFloat64(1, GLOW_POWER);
+    return fbBuilder.offset;
+  }
+  int addTaperPower(double? TAPER_POWER) {
+    fbBuilder.addFloat64(2, TAPER_POWER);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CzmpolylineGlowMaterialObjectBuilder extends fb.ObjectBuilder {
+  final CzmcolorObjectBuilder? _COLOR;
+  final double? _GLOW_POWER;
+  final double? _TAPER_POWER;
+
+  CzmpolylineGlowMaterialObjectBuilder({
+    CzmcolorObjectBuilder? COLOR,
+    double? GLOW_POWER,
+    double? TAPER_POWER,
+  })
+      : _COLOR = COLOR,
+        _GLOW_POWER = GLOW_POWER,
+        _TAPER_POWER = TAPER_POWER;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? COLOROffset = _COLOR?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(3);
+    fbBuilder.addOffset(0, COLOROffset);
+    fbBuilder.addFloat64(1, _GLOW_POWER);
+    fbBuilder.addFloat64(2, _TAPER_POWER);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Polyline material (used by polyline, path)
+class CzmpolylineMaterial {
+  CzmpolylineMaterial._(this._bc, this._bcOffset);
+  factory CzmpolylineMaterial(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CzmpolylineMaterial> reader = _CzmpolylineMaterialReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Solid color material
+  CzmsolidColorMaterial? get SOLID_COLOR => CzmsolidColorMaterial.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Polyline outline material
+  CzmpolylineOutlineMaterial? get POLYLINE_OUTLINE => CzmpolylineOutlineMaterial.reader.vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Polyline arrow material
+  CzmpolylineArrowMaterial? get POLYLINE_ARROW => CzmpolylineArrowMaterial.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Polyline dash material
+  CzmpolylineDashMaterial? get POLYLINE_DASH => CzmpolylineDashMaterial.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Polyline glow material
+  CzmpolylineGlowMaterial? get POLYLINE_GLOW => CzmpolylineGlowMaterial.reader.vTableGetNullable(_bc, _bcOffset, 12);
+
+  @override
+  String toString() {
+    return 'CzmpolylineMaterial{SOLID_COLOR: ${SOLID_COLOR}, POLYLINE_OUTLINE: ${POLYLINE_OUTLINE}, POLYLINE_ARROW: ${POLYLINE_ARROW}, POLYLINE_DASH: ${POLYLINE_DASH}, POLYLINE_GLOW: ${POLYLINE_GLOW}}';
+  }
+}
+
+class _CzmpolylineMaterialReader extends fb.TableReader<CzmpolylineMaterial> {
+  const _CzmpolylineMaterialReader();
+
+  @override
+  CzmpolylineMaterial createObject(fb.BufferContext bc, int offset) => 
+    CzmpolylineMaterial._(bc, offset);
+}
+
+class CzmpolylineMaterialBuilder {
+  CzmpolylineMaterialBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addSolidColorOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addPolylineOutlineOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addPolylineArrowOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addPolylineDashOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addPolylineGlowOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CzmpolylineMaterialObjectBuilder extends fb.ObjectBuilder {
+  final CzmsolidColorMaterialObjectBuilder? _SOLID_COLOR;
+  final CzmpolylineOutlineMaterialObjectBuilder? _POLYLINE_OUTLINE;
+  final CzmpolylineArrowMaterialObjectBuilder? _POLYLINE_ARROW;
+  final CzmpolylineDashMaterialObjectBuilder? _POLYLINE_DASH;
+  final CzmpolylineGlowMaterialObjectBuilder? _POLYLINE_GLOW;
+
+  CzmpolylineMaterialObjectBuilder({
+    CzmsolidColorMaterialObjectBuilder? SOLID_COLOR,
+    CzmpolylineOutlineMaterialObjectBuilder? POLYLINE_OUTLINE,
+    CzmpolylineArrowMaterialObjectBuilder? POLYLINE_ARROW,
+    CzmpolylineDashMaterialObjectBuilder? POLYLINE_DASH,
+    CzmpolylineGlowMaterialObjectBuilder? POLYLINE_GLOW,
+  })
+      : _SOLID_COLOR = SOLID_COLOR,
+        _POLYLINE_OUTLINE = POLYLINE_OUTLINE,
+        _POLYLINE_ARROW = POLYLINE_ARROW,
+        _POLYLINE_DASH = POLYLINE_DASH,
+        _POLYLINE_GLOW = POLYLINE_GLOW;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SOLID_COLOROffset = _SOLID_COLOR?.getOrCreateOffset(fbBuilder);
+    final int? POLYLINE_OUTLINEOffset = _POLYLINE_OUTLINE?.getOrCreateOffset(fbBuilder);
+    final int? POLYLINE_ARROWOffset = _POLYLINE_ARROW?.getOrCreateOffset(fbBuilder);
+    final int? POLYLINE_DASHOffset = _POLYLINE_DASH?.getOrCreateOffset(fbBuilder);
+    final int? POLYLINE_GLOWOffset = _POLYLINE_GLOW?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, SOLID_COLOROffset);
+    fbBuilder.addOffset(1, POLYLINE_OUTLINEOffset);
+    fbBuilder.addOffset(2, POLYLINE_ARROWOffset);
+    fbBuilder.addOffset(3, POLYLINE_DASHOffset);
+    fbBuilder.addOffset(4, POLYLINE_GLOWOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Billboard (icon) properties
 class Czmbillboard {
   Czmbillboard._(this._bc, this._bcOffset);
@@ -737,10 +2998,34 @@ class Czmbillboard {
   CzmverticalOrigin get VERTICAL_ORIGIN => CzmverticalOrigin.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 0));
   ///  Translucency by distance
   CzmnearFarScalar? get TRANSLUCENCY_BY_DISTANCE => CzmnearFarScalar.reader.vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Rotation in radians
+  double get ROTATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  ///  Whether size is in meters
+  bool get SIZE_IN_METERS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 26, false);
+  ///  Width in pixels
+  double get WIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  ///  Height in pixels
+  double get HEIGHT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  ///  Eye offset X in meters
+  double get EYE_OFFSET_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  ///  Eye offset Y in meters
+  double get EYE_OFFSET_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  ///  Eye offset Z in meters
+  double get EYE_OFFSET_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  ///  Scale by distance
+  CzmnearFarScalar? get SCALE_BY_DISTANCE => CzmnearFarScalar.reader.vTableGetNullable(_bc, _bcOffset, 38);
+  ///  Pixel offset scale by distance
+  CzmnearFarScalar? get PIXEL_OFFSET_SCALE_BY_DISTANCE => CzmnearFarScalar.reader.vTableGetNullable(_bc, _bcOffset, 40);
+  ///  Distance display condition near
+  double get DISTANCE_DISPLAY_CONDITION_NEAR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  ///  Distance display condition far
+  double get DISTANCE_DISPLAY_CONDITION_FAR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  ///  Disable depth test distance
+  double get DISABLE_DEPTH_TEST_DISTANCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
 
   @override
   String toString() {
-    return 'Czmbillboard{SHOW: ${SHOW}, IMAGE: ${IMAGE}, SCALE: ${SCALE}, COLOR: ${COLOR}, HEIGHT_REFERENCE: ${HEIGHT_REFERENCE}, PIXEL_OFFSET_X: ${PIXEL_OFFSET_X}, PIXEL_OFFSET_Y: ${PIXEL_OFFSET_Y}, HORIZONTAL_ORIGIN: ${HORIZONTAL_ORIGIN}, VERTICAL_ORIGIN: ${VERTICAL_ORIGIN}, TRANSLUCENCY_BY_DISTANCE: ${TRANSLUCENCY_BY_DISTANCE}}';
+    return 'Czmbillboard{SHOW: ${SHOW}, IMAGE: ${IMAGE}, SCALE: ${SCALE}, COLOR: ${COLOR}, HEIGHT_REFERENCE: ${HEIGHT_REFERENCE}, PIXEL_OFFSET_X: ${PIXEL_OFFSET_X}, PIXEL_OFFSET_Y: ${PIXEL_OFFSET_Y}, HORIZONTAL_ORIGIN: ${HORIZONTAL_ORIGIN}, VERTICAL_ORIGIN: ${VERTICAL_ORIGIN}, TRANSLUCENCY_BY_DISTANCE: ${TRANSLUCENCY_BY_DISTANCE}, ROTATION: ${ROTATION}, SIZE_IN_METERS: ${SIZE_IN_METERS}, WIDTH: ${WIDTH}, HEIGHT: ${HEIGHT}, EYE_OFFSET_X: ${EYE_OFFSET_X}, EYE_OFFSET_Y: ${EYE_OFFSET_Y}, EYE_OFFSET_Z: ${EYE_OFFSET_Z}, SCALE_BY_DISTANCE: ${SCALE_BY_DISTANCE}, PIXEL_OFFSET_SCALE_BY_DISTANCE: ${PIXEL_OFFSET_SCALE_BY_DISTANCE}, DISTANCE_DISPLAY_CONDITION_NEAR: ${DISTANCE_DISPLAY_CONDITION_NEAR}, DISTANCE_DISPLAY_CONDITION_FAR: ${DISTANCE_DISPLAY_CONDITION_FAR}, DISABLE_DEPTH_TEST_DISTANCE: ${DISABLE_DEPTH_TEST_DISTANCE}}';
   }
 }
 
@@ -758,7 +3043,7 @@ class CzmbillboardBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(10);
+    fbBuilder.startTable(22);
   }
 
   int addShow(bool? SHOW) {
@@ -801,6 +3086,54 @@ class CzmbillboardBuilder {
     fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
+  int addRotation(double? ROTATION) {
+    fbBuilder.addFloat64(10, ROTATION);
+    return fbBuilder.offset;
+  }
+  int addSizeInMeters(bool? SIZE_IN_METERS) {
+    fbBuilder.addBool(11, SIZE_IN_METERS);
+    return fbBuilder.offset;
+  }
+  int addWidth(double? WIDTH) {
+    fbBuilder.addFloat64(12, WIDTH);
+    return fbBuilder.offset;
+  }
+  int addHeight(double? HEIGHT) {
+    fbBuilder.addFloat64(13, HEIGHT);
+    return fbBuilder.offset;
+  }
+  int addEyeOffsetX(double? EYE_OFFSET_X) {
+    fbBuilder.addFloat64(14, EYE_OFFSET_X);
+    return fbBuilder.offset;
+  }
+  int addEyeOffsetY(double? EYE_OFFSET_Y) {
+    fbBuilder.addFloat64(15, EYE_OFFSET_Y);
+    return fbBuilder.offset;
+  }
+  int addEyeOffsetZ(double? EYE_OFFSET_Z) {
+    fbBuilder.addFloat64(16, EYE_OFFSET_Z);
+    return fbBuilder.offset;
+  }
+  int addScaleByDistanceOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addPixelOffsetScaleByDistanceOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addDistanceDisplayConditionNear(double? DISTANCE_DISPLAY_CONDITION_NEAR) {
+    fbBuilder.addFloat64(19, DISTANCE_DISPLAY_CONDITION_NEAR);
+    return fbBuilder.offset;
+  }
+  int addDistanceDisplayConditionFar(double? DISTANCE_DISPLAY_CONDITION_FAR) {
+    fbBuilder.addFloat64(20, DISTANCE_DISPLAY_CONDITION_FAR);
+    return fbBuilder.offset;
+  }
+  int addDisableDepthTestDistance(double? DISABLE_DEPTH_TEST_DISTANCE) {
+    fbBuilder.addFloat64(21, DISABLE_DEPTH_TEST_DISTANCE);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -818,6 +3151,18 @@ class CzmbillboardObjectBuilder extends fb.ObjectBuilder {
   final CzmhorizontalOrigin? _HORIZONTAL_ORIGIN;
   final CzmverticalOrigin? _VERTICAL_ORIGIN;
   final CzmnearFarScalarObjectBuilder? _TRANSLUCENCY_BY_DISTANCE;
+  final double? _ROTATION;
+  final bool? _SIZE_IN_METERS;
+  final double? _WIDTH;
+  final double? _HEIGHT;
+  final double? _EYE_OFFSET_X;
+  final double? _EYE_OFFSET_Y;
+  final double? _EYE_OFFSET_Z;
+  final CzmnearFarScalarObjectBuilder? _SCALE_BY_DISTANCE;
+  final CzmnearFarScalarObjectBuilder? _PIXEL_OFFSET_SCALE_BY_DISTANCE;
+  final double? _DISTANCE_DISPLAY_CONDITION_NEAR;
+  final double? _DISTANCE_DISPLAY_CONDITION_FAR;
+  final double? _DISABLE_DEPTH_TEST_DISTANCE;
 
   CzmbillboardObjectBuilder({
     bool? SHOW,
@@ -830,6 +3175,18 @@ class CzmbillboardObjectBuilder extends fb.ObjectBuilder {
     CzmhorizontalOrigin? HORIZONTAL_ORIGIN,
     CzmverticalOrigin? VERTICAL_ORIGIN,
     CzmnearFarScalarObjectBuilder? TRANSLUCENCY_BY_DISTANCE,
+    double? ROTATION,
+    bool? SIZE_IN_METERS,
+    double? WIDTH,
+    double? HEIGHT,
+    double? EYE_OFFSET_X,
+    double? EYE_OFFSET_Y,
+    double? EYE_OFFSET_Z,
+    CzmnearFarScalarObjectBuilder? SCALE_BY_DISTANCE,
+    CzmnearFarScalarObjectBuilder? PIXEL_OFFSET_SCALE_BY_DISTANCE,
+    double? DISTANCE_DISPLAY_CONDITION_NEAR,
+    double? DISTANCE_DISPLAY_CONDITION_FAR,
+    double? DISABLE_DEPTH_TEST_DISTANCE,
   })
       : _SHOW = SHOW,
         _IMAGE = IMAGE,
@@ -840,7 +3197,19 @@ class CzmbillboardObjectBuilder extends fb.ObjectBuilder {
         _PIXEL_OFFSET_Y = PIXEL_OFFSET_Y,
         _HORIZONTAL_ORIGIN = HORIZONTAL_ORIGIN,
         _VERTICAL_ORIGIN = VERTICAL_ORIGIN,
-        _TRANSLUCENCY_BY_DISTANCE = TRANSLUCENCY_BY_DISTANCE;
+        _TRANSLUCENCY_BY_DISTANCE = TRANSLUCENCY_BY_DISTANCE,
+        _ROTATION = ROTATION,
+        _SIZE_IN_METERS = SIZE_IN_METERS,
+        _WIDTH = WIDTH,
+        _HEIGHT = HEIGHT,
+        _EYE_OFFSET_X = EYE_OFFSET_X,
+        _EYE_OFFSET_Y = EYE_OFFSET_Y,
+        _EYE_OFFSET_Z = EYE_OFFSET_Z,
+        _SCALE_BY_DISTANCE = SCALE_BY_DISTANCE,
+        _PIXEL_OFFSET_SCALE_BY_DISTANCE = PIXEL_OFFSET_SCALE_BY_DISTANCE,
+        _DISTANCE_DISPLAY_CONDITION_NEAR = DISTANCE_DISPLAY_CONDITION_NEAR,
+        _DISTANCE_DISPLAY_CONDITION_FAR = DISTANCE_DISPLAY_CONDITION_FAR,
+        _DISABLE_DEPTH_TEST_DISTANCE = DISABLE_DEPTH_TEST_DISTANCE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -849,7 +3218,9 @@ class CzmbillboardObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_IMAGE!);
     final int? COLOROffset = _COLOR?.getOrCreateOffset(fbBuilder);
     final int? TRANSLUCENCY_BY_DISTANCEOffset = _TRANSLUCENCY_BY_DISTANCE?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(10);
+    final int? SCALE_BY_DISTANCEOffset = _SCALE_BY_DISTANCE?.getOrCreateOffset(fbBuilder);
+    final int? PIXEL_OFFSET_SCALE_BY_DISTANCEOffset = _PIXEL_OFFSET_SCALE_BY_DISTANCE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(22);
     fbBuilder.addBool(0, _SHOW);
     fbBuilder.addOffset(1, IMAGEOffset);
     fbBuilder.addFloat64(2, _SCALE);
@@ -860,6 +3231,18 @@ class CzmbillboardObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addInt8(7, _HORIZONTAL_ORIGIN?.value);
     fbBuilder.addInt8(8, _VERTICAL_ORIGIN?.value);
     fbBuilder.addOffset(9, TRANSLUCENCY_BY_DISTANCEOffset);
+    fbBuilder.addFloat64(10, _ROTATION);
+    fbBuilder.addBool(11, _SIZE_IN_METERS);
+    fbBuilder.addFloat64(12, _WIDTH);
+    fbBuilder.addFloat64(13, _HEIGHT);
+    fbBuilder.addFloat64(14, _EYE_OFFSET_X);
+    fbBuilder.addFloat64(15, _EYE_OFFSET_Y);
+    fbBuilder.addFloat64(16, _EYE_OFFSET_Z);
+    fbBuilder.addOffset(17, SCALE_BY_DISTANCEOffset);
+    fbBuilder.addOffset(18, PIXEL_OFFSET_SCALE_BY_DISTANCEOffset);
+    fbBuilder.addFloat64(19, _DISTANCE_DISPLAY_CONDITION_NEAR);
+    fbBuilder.addFloat64(20, _DISTANCE_DISPLAY_CONDITION_FAR);
+    fbBuilder.addFloat64(21, _DISABLE_DEPTH_TEST_DISTANCE);
     return fbBuilder.endTable();
   }
 
@@ -910,10 +3293,36 @@ class Czmlabel {
   CzmverticalOrigin get VERTICAL_ORIGIN => CzmverticalOrigin.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 26, 0));
   ///  Height reference
   CzmheightReference get HEIGHT_REFERENCE => CzmheightReference.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 28, 0));
+  ///  Whether to show background
+  bool get SHOW_BACKGROUND => const fb.BoolReader().vTableGet(_bc, _bcOffset, 30, false);
+  ///  Background color
+  Czmcolor? get BACKGROUND_COLOR => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 32);
+  ///  Background padding X
+  double get BACKGROUND_PADDING_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  ///  Background padding Y
+  double get BACKGROUND_PADDING_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  ///  Eye offset X in meters
+  double get EYE_OFFSET_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  ///  Eye offset Y in meters
+  double get EYE_OFFSET_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  ///  Eye offset Z in meters
+  double get EYE_OFFSET_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  ///  Translucency by distance
+  CzmnearFarScalar? get TRANSLUCENCY_BY_DISTANCE => CzmnearFarScalar.reader.vTableGetNullable(_bc, _bcOffset, 44);
+  ///  Pixel offset scale by distance
+  CzmnearFarScalar? get PIXEL_OFFSET_SCALE_BY_DISTANCE => CzmnearFarScalar.reader.vTableGetNullable(_bc, _bcOffset, 46);
+  ///  Scale by distance
+  CzmnearFarScalar? get SCALE_BY_DISTANCE => CzmnearFarScalar.reader.vTableGetNullable(_bc, _bcOffset, 48);
+  ///  Distance display condition near
+  double get DISTANCE_DISPLAY_CONDITION_NEAR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
+  ///  Distance display condition far
+  double get DISTANCE_DISPLAY_CONDITION_FAR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
+  ///  Disable depth test distance
+  double get DISABLE_DEPTH_TEST_DISTANCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
 
   @override
   String toString() {
-    return 'Czmlabel{SHOW: ${SHOW}, TEXT: ${TEXT}, FONT: ${FONT}, STYLE: ${STYLE}, FILL_COLOR: ${FILL_COLOR}, OUTLINE_COLOR: ${OUTLINE_COLOR}, OUTLINE_WIDTH: ${OUTLINE_WIDTH}, PIXEL_OFFSET_X: ${PIXEL_OFFSET_X}, PIXEL_OFFSET_Y: ${PIXEL_OFFSET_Y}, SCALE: ${SCALE}, HORIZONTAL_ORIGIN: ${HORIZONTAL_ORIGIN}, VERTICAL_ORIGIN: ${VERTICAL_ORIGIN}, HEIGHT_REFERENCE: ${HEIGHT_REFERENCE}}';
+    return 'Czmlabel{SHOW: ${SHOW}, TEXT: ${TEXT}, FONT: ${FONT}, STYLE: ${STYLE}, FILL_COLOR: ${FILL_COLOR}, OUTLINE_COLOR: ${OUTLINE_COLOR}, OUTLINE_WIDTH: ${OUTLINE_WIDTH}, PIXEL_OFFSET_X: ${PIXEL_OFFSET_X}, PIXEL_OFFSET_Y: ${PIXEL_OFFSET_Y}, SCALE: ${SCALE}, HORIZONTAL_ORIGIN: ${HORIZONTAL_ORIGIN}, VERTICAL_ORIGIN: ${VERTICAL_ORIGIN}, HEIGHT_REFERENCE: ${HEIGHT_REFERENCE}, SHOW_BACKGROUND: ${SHOW_BACKGROUND}, BACKGROUND_COLOR: ${BACKGROUND_COLOR}, BACKGROUND_PADDING_X: ${BACKGROUND_PADDING_X}, BACKGROUND_PADDING_Y: ${BACKGROUND_PADDING_Y}, EYE_OFFSET_X: ${EYE_OFFSET_X}, EYE_OFFSET_Y: ${EYE_OFFSET_Y}, EYE_OFFSET_Z: ${EYE_OFFSET_Z}, TRANSLUCENCY_BY_DISTANCE: ${TRANSLUCENCY_BY_DISTANCE}, PIXEL_OFFSET_SCALE_BY_DISTANCE: ${PIXEL_OFFSET_SCALE_BY_DISTANCE}, SCALE_BY_DISTANCE: ${SCALE_BY_DISTANCE}, DISTANCE_DISPLAY_CONDITION_NEAR: ${DISTANCE_DISPLAY_CONDITION_NEAR}, DISTANCE_DISPLAY_CONDITION_FAR: ${DISTANCE_DISPLAY_CONDITION_FAR}, DISABLE_DEPTH_TEST_DISTANCE: ${DISABLE_DEPTH_TEST_DISTANCE}}';
   }
 }
 
@@ -931,7 +3340,7 @@ class CzmlabelBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(13);
+    fbBuilder.startTable(26);
   }
 
   int addShow(bool? SHOW) {
@@ -986,6 +3395,58 @@ class CzmlabelBuilder {
     fbBuilder.addInt8(12, HEIGHT_REFERENCE?.value);
     return fbBuilder.offset;
   }
+  int addShowBackground(bool? SHOW_BACKGROUND) {
+    fbBuilder.addBool(13, SHOW_BACKGROUND);
+    return fbBuilder.offset;
+  }
+  int addBackgroundColorOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addBackgroundPaddingX(double? BACKGROUND_PADDING_X) {
+    fbBuilder.addFloat64(15, BACKGROUND_PADDING_X);
+    return fbBuilder.offset;
+  }
+  int addBackgroundPaddingY(double? BACKGROUND_PADDING_Y) {
+    fbBuilder.addFloat64(16, BACKGROUND_PADDING_Y);
+    return fbBuilder.offset;
+  }
+  int addEyeOffsetX(double? EYE_OFFSET_X) {
+    fbBuilder.addFloat64(17, EYE_OFFSET_X);
+    return fbBuilder.offset;
+  }
+  int addEyeOffsetY(double? EYE_OFFSET_Y) {
+    fbBuilder.addFloat64(18, EYE_OFFSET_Y);
+    return fbBuilder.offset;
+  }
+  int addEyeOffsetZ(double? EYE_OFFSET_Z) {
+    fbBuilder.addFloat64(19, EYE_OFFSET_Z);
+    return fbBuilder.offset;
+  }
+  int addTranslucencyByDistanceOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addPixelOffsetScaleByDistanceOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addScaleByDistanceOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addDistanceDisplayConditionNear(double? DISTANCE_DISPLAY_CONDITION_NEAR) {
+    fbBuilder.addFloat64(23, DISTANCE_DISPLAY_CONDITION_NEAR);
+    return fbBuilder.offset;
+  }
+  int addDistanceDisplayConditionFar(double? DISTANCE_DISPLAY_CONDITION_FAR) {
+    fbBuilder.addFloat64(24, DISTANCE_DISPLAY_CONDITION_FAR);
+    return fbBuilder.offset;
+  }
+  int addDisableDepthTestDistance(double? DISABLE_DEPTH_TEST_DISTANCE) {
+    fbBuilder.addFloat64(25, DISABLE_DEPTH_TEST_DISTANCE);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1006,6 +3467,19 @@ class CzmlabelObjectBuilder extends fb.ObjectBuilder {
   final CzmhorizontalOrigin? _HORIZONTAL_ORIGIN;
   final CzmverticalOrigin? _VERTICAL_ORIGIN;
   final CzmheightReference? _HEIGHT_REFERENCE;
+  final bool? _SHOW_BACKGROUND;
+  final CzmcolorObjectBuilder? _BACKGROUND_COLOR;
+  final double? _BACKGROUND_PADDING_X;
+  final double? _BACKGROUND_PADDING_Y;
+  final double? _EYE_OFFSET_X;
+  final double? _EYE_OFFSET_Y;
+  final double? _EYE_OFFSET_Z;
+  final CzmnearFarScalarObjectBuilder? _TRANSLUCENCY_BY_DISTANCE;
+  final CzmnearFarScalarObjectBuilder? _PIXEL_OFFSET_SCALE_BY_DISTANCE;
+  final CzmnearFarScalarObjectBuilder? _SCALE_BY_DISTANCE;
+  final double? _DISTANCE_DISPLAY_CONDITION_NEAR;
+  final double? _DISTANCE_DISPLAY_CONDITION_FAR;
+  final double? _DISABLE_DEPTH_TEST_DISTANCE;
 
   CzmlabelObjectBuilder({
     bool? SHOW,
@@ -1021,6 +3495,19 @@ class CzmlabelObjectBuilder extends fb.ObjectBuilder {
     CzmhorizontalOrigin? HORIZONTAL_ORIGIN,
     CzmverticalOrigin? VERTICAL_ORIGIN,
     CzmheightReference? HEIGHT_REFERENCE,
+    bool? SHOW_BACKGROUND,
+    CzmcolorObjectBuilder? BACKGROUND_COLOR,
+    double? BACKGROUND_PADDING_X,
+    double? BACKGROUND_PADDING_Y,
+    double? EYE_OFFSET_X,
+    double? EYE_OFFSET_Y,
+    double? EYE_OFFSET_Z,
+    CzmnearFarScalarObjectBuilder? TRANSLUCENCY_BY_DISTANCE,
+    CzmnearFarScalarObjectBuilder? PIXEL_OFFSET_SCALE_BY_DISTANCE,
+    CzmnearFarScalarObjectBuilder? SCALE_BY_DISTANCE,
+    double? DISTANCE_DISPLAY_CONDITION_NEAR,
+    double? DISTANCE_DISPLAY_CONDITION_FAR,
+    double? DISABLE_DEPTH_TEST_DISTANCE,
   })
       : _SHOW = SHOW,
         _TEXT = TEXT,
@@ -1034,7 +3521,20 @@ class CzmlabelObjectBuilder extends fb.ObjectBuilder {
         _SCALE = SCALE,
         _HORIZONTAL_ORIGIN = HORIZONTAL_ORIGIN,
         _VERTICAL_ORIGIN = VERTICAL_ORIGIN,
-        _HEIGHT_REFERENCE = HEIGHT_REFERENCE;
+        _HEIGHT_REFERENCE = HEIGHT_REFERENCE,
+        _SHOW_BACKGROUND = SHOW_BACKGROUND,
+        _BACKGROUND_COLOR = BACKGROUND_COLOR,
+        _BACKGROUND_PADDING_X = BACKGROUND_PADDING_X,
+        _BACKGROUND_PADDING_Y = BACKGROUND_PADDING_Y,
+        _EYE_OFFSET_X = EYE_OFFSET_X,
+        _EYE_OFFSET_Y = EYE_OFFSET_Y,
+        _EYE_OFFSET_Z = EYE_OFFSET_Z,
+        _TRANSLUCENCY_BY_DISTANCE = TRANSLUCENCY_BY_DISTANCE,
+        _PIXEL_OFFSET_SCALE_BY_DISTANCE = PIXEL_OFFSET_SCALE_BY_DISTANCE,
+        _SCALE_BY_DISTANCE = SCALE_BY_DISTANCE,
+        _DISTANCE_DISPLAY_CONDITION_NEAR = DISTANCE_DISPLAY_CONDITION_NEAR,
+        _DISTANCE_DISPLAY_CONDITION_FAR = DISTANCE_DISPLAY_CONDITION_FAR,
+        _DISABLE_DEPTH_TEST_DISTANCE = DISABLE_DEPTH_TEST_DISTANCE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1045,7 +3545,11 @@ class CzmlabelObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_FONT!);
     final int? FILL_COLOROffset = _FILL_COLOR?.getOrCreateOffset(fbBuilder);
     final int? OUTLINE_COLOROffset = _OUTLINE_COLOR?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(13);
+    final int? BACKGROUND_COLOROffset = _BACKGROUND_COLOR?.getOrCreateOffset(fbBuilder);
+    final int? TRANSLUCENCY_BY_DISTANCEOffset = _TRANSLUCENCY_BY_DISTANCE?.getOrCreateOffset(fbBuilder);
+    final int? PIXEL_OFFSET_SCALE_BY_DISTANCEOffset = _PIXEL_OFFSET_SCALE_BY_DISTANCE?.getOrCreateOffset(fbBuilder);
+    final int? SCALE_BY_DISTANCEOffset = _SCALE_BY_DISTANCE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(26);
     fbBuilder.addBool(0, _SHOW);
     fbBuilder.addOffset(1, TEXTOffset);
     fbBuilder.addOffset(2, FONTOffset);
@@ -1059,6 +3563,19 @@ class CzmlabelObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addInt8(10, _HORIZONTAL_ORIGIN?.value);
     fbBuilder.addInt8(11, _VERTICAL_ORIGIN?.value);
     fbBuilder.addInt8(12, _HEIGHT_REFERENCE?.value);
+    fbBuilder.addBool(13, _SHOW_BACKGROUND);
+    fbBuilder.addOffset(14, BACKGROUND_COLOROffset);
+    fbBuilder.addFloat64(15, _BACKGROUND_PADDING_X);
+    fbBuilder.addFloat64(16, _BACKGROUND_PADDING_Y);
+    fbBuilder.addFloat64(17, _EYE_OFFSET_X);
+    fbBuilder.addFloat64(18, _EYE_OFFSET_Y);
+    fbBuilder.addFloat64(19, _EYE_OFFSET_Z);
+    fbBuilder.addOffset(20, TRANSLUCENCY_BY_DISTANCEOffset);
+    fbBuilder.addOffset(21, PIXEL_OFFSET_SCALE_BY_DISTANCEOffset);
+    fbBuilder.addOffset(22, SCALE_BY_DISTANCEOffset);
+    fbBuilder.addFloat64(23, _DISTANCE_DISPLAY_CONDITION_NEAR);
+    fbBuilder.addFloat64(24, _DISTANCE_DISPLAY_CONDITION_FAR);
+    fbBuilder.addFloat64(25, _DISABLE_DEPTH_TEST_DISTANCE);
     return fbBuilder.endTable();
   }
 
@@ -1095,10 +3612,20 @@ class Czmpoint {
   double get PIXEL_SIZE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
   ///  Height reference
   CzmheightReference get HEIGHT_REFERENCE => CzmheightReference.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
+  ///  Scale by distance
+  CzmnearFarScalar? get SCALE_BY_DISTANCE => CzmnearFarScalar.reader.vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Translucency by distance
+  CzmnearFarScalar? get TRANSLUCENCY_BY_DISTANCE => CzmnearFarScalar.reader.vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Distance display condition near
+  double get DISTANCE_DISPLAY_CONDITION_NEAR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  Distance display condition far
+  double get DISTANCE_DISPLAY_CONDITION_FAR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Disable depth test distance
+  double get DISABLE_DEPTH_TEST_DISTANCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
 
   @override
   String toString() {
-    return 'Czmpoint{SHOW: ${SHOW}, COLOR: ${COLOR}, OUTLINE_COLOR: ${OUTLINE_COLOR}, OUTLINE_WIDTH: ${OUTLINE_WIDTH}, PIXEL_SIZE: ${PIXEL_SIZE}, HEIGHT_REFERENCE: ${HEIGHT_REFERENCE}}';
+    return 'Czmpoint{SHOW: ${SHOW}, COLOR: ${COLOR}, OUTLINE_COLOR: ${OUTLINE_COLOR}, OUTLINE_WIDTH: ${OUTLINE_WIDTH}, PIXEL_SIZE: ${PIXEL_SIZE}, HEIGHT_REFERENCE: ${HEIGHT_REFERENCE}, SCALE_BY_DISTANCE: ${SCALE_BY_DISTANCE}, TRANSLUCENCY_BY_DISTANCE: ${TRANSLUCENCY_BY_DISTANCE}, DISTANCE_DISPLAY_CONDITION_NEAR: ${DISTANCE_DISPLAY_CONDITION_NEAR}, DISTANCE_DISPLAY_CONDITION_FAR: ${DISTANCE_DISPLAY_CONDITION_FAR}, DISABLE_DEPTH_TEST_DISTANCE: ${DISABLE_DEPTH_TEST_DISTANCE}}';
   }
 }
 
@@ -1116,7 +3643,7 @@ class CzmpointBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(6);
+    fbBuilder.startTable(11);
   }
 
   int addShow(bool? SHOW) {
@@ -1143,6 +3670,26 @@ class CzmpointBuilder {
     fbBuilder.addInt8(5, HEIGHT_REFERENCE?.value);
     return fbBuilder.offset;
   }
+  int addScaleByDistanceOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addTranslucencyByDistanceOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addDistanceDisplayConditionNear(double? DISTANCE_DISPLAY_CONDITION_NEAR) {
+    fbBuilder.addFloat64(8, DISTANCE_DISPLAY_CONDITION_NEAR);
+    return fbBuilder.offset;
+  }
+  int addDistanceDisplayConditionFar(double? DISTANCE_DISPLAY_CONDITION_FAR) {
+    fbBuilder.addFloat64(9, DISTANCE_DISPLAY_CONDITION_FAR);
+    return fbBuilder.offset;
+  }
+  int addDisableDepthTestDistance(double? DISABLE_DEPTH_TEST_DISTANCE) {
+    fbBuilder.addFloat64(10, DISABLE_DEPTH_TEST_DISTANCE);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1156,6 +3703,11 @@ class CzmpointObjectBuilder extends fb.ObjectBuilder {
   final double? _OUTLINE_WIDTH;
   final double? _PIXEL_SIZE;
   final CzmheightReference? _HEIGHT_REFERENCE;
+  final CzmnearFarScalarObjectBuilder? _SCALE_BY_DISTANCE;
+  final CzmnearFarScalarObjectBuilder? _TRANSLUCENCY_BY_DISTANCE;
+  final double? _DISTANCE_DISPLAY_CONDITION_NEAR;
+  final double? _DISTANCE_DISPLAY_CONDITION_FAR;
+  final double? _DISABLE_DEPTH_TEST_DISTANCE;
 
   CzmpointObjectBuilder({
     bool? SHOW,
@@ -1164,26 +3716,43 @@ class CzmpointObjectBuilder extends fb.ObjectBuilder {
     double? OUTLINE_WIDTH,
     double? PIXEL_SIZE,
     CzmheightReference? HEIGHT_REFERENCE,
+    CzmnearFarScalarObjectBuilder? SCALE_BY_DISTANCE,
+    CzmnearFarScalarObjectBuilder? TRANSLUCENCY_BY_DISTANCE,
+    double? DISTANCE_DISPLAY_CONDITION_NEAR,
+    double? DISTANCE_DISPLAY_CONDITION_FAR,
+    double? DISABLE_DEPTH_TEST_DISTANCE,
   })
       : _SHOW = SHOW,
         _COLOR = COLOR,
         _OUTLINE_COLOR = OUTLINE_COLOR,
         _OUTLINE_WIDTH = OUTLINE_WIDTH,
         _PIXEL_SIZE = PIXEL_SIZE,
-        _HEIGHT_REFERENCE = HEIGHT_REFERENCE;
+        _HEIGHT_REFERENCE = HEIGHT_REFERENCE,
+        _SCALE_BY_DISTANCE = SCALE_BY_DISTANCE,
+        _TRANSLUCENCY_BY_DISTANCE = TRANSLUCENCY_BY_DISTANCE,
+        _DISTANCE_DISPLAY_CONDITION_NEAR = DISTANCE_DISPLAY_CONDITION_NEAR,
+        _DISTANCE_DISPLAY_CONDITION_FAR = DISTANCE_DISPLAY_CONDITION_FAR,
+        _DISABLE_DEPTH_TEST_DISTANCE = DISABLE_DEPTH_TEST_DISTANCE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? COLOROffset = _COLOR?.getOrCreateOffset(fbBuilder);
     final int? OUTLINE_COLOROffset = _OUTLINE_COLOR?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(6);
+    final int? SCALE_BY_DISTANCEOffset = _SCALE_BY_DISTANCE?.getOrCreateOffset(fbBuilder);
+    final int? TRANSLUCENCY_BY_DISTANCEOffset = _TRANSLUCENCY_BY_DISTANCE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(11);
     fbBuilder.addBool(0, _SHOW);
     fbBuilder.addOffset(1, COLOROffset);
     fbBuilder.addOffset(2, OUTLINE_COLOROffset);
     fbBuilder.addFloat64(3, _OUTLINE_WIDTH);
     fbBuilder.addFloat64(4, _PIXEL_SIZE);
     fbBuilder.addInt8(5, _HEIGHT_REFERENCE?.value);
+    fbBuilder.addOffset(6, SCALE_BY_DISTANCEOffset);
+    fbBuilder.addOffset(7, TRANSLUCENCY_BY_DISTANCEOffset);
+    fbBuilder.addFloat64(8, _DISTANCE_DISPLAY_CONDITION_NEAR);
+    fbBuilder.addFloat64(9, _DISTANCE_DISPLAY_CONDITION_FAR);
+    fbBuilder.addFloat64(10, _DISABLE_DEPTH_TEST_DISTANCE);
     return fbBuilder.endTable();
   }
 
@@ -1216,14 +3785,28 @@ class Czmpolyline {
   List<double>? get POSITIONS_CARTESIAN => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 8);
   ///  Line width in pixels
   double get WIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  ///  Line color (solid color material)
+  ///  Line color (solid color material, legacy)
   Czmcolor? get COLOR => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 12);
   ///  Whether to clamp to ground
   bool get CLAMP_TO_GROUND => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
+  ///  Arc type
+  String? get ARC_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Granularity in radians
+  double get GRANULARITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  ///  Full polyline material
+  CzmpolylineMaterial? get MATERIAL => CzmpolylineMaterial.reader.vTableGetNullable(_bc, _bcOffset, 20);
+  ///  Shadow mode
+  String? get SHADOWS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Depth fail material
+  CzmpolylineMaterial? get DEPTH_FAIL_MATERIAL => CzmpolylineMaterial.reader.vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Classification type
+  String? get CLASSIFICATION_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Z-index for ordering
+  int get Z_INDEX => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 28, 0);
 
   @override
   String toString() {
-    return 'Czmpolyline{SHOW: ${SHOW}, POSITIONS_CARTOGRAPHIC_DEGREES: ${POSITIONS_CARTOGRAPHIC_DEGREES}, POSITIONS_CARTESIAN: ${POSITIONS_CARTESIAN}, WIDTH: ${WIDTH}, COLOR: ${COLOR}, CLAMP_TO_GROUND: ${CLAMP_TO_GROUND}}';
+    return 'Czmpolyline{SHOW: ${SHOW}, POSITIONS_CARTOGRAPHIC_DEGREES: ${POSITIONS_CARTOGRAPHIC_DEGREES}, POSITIONS_CARTESIAN: ${POSITIONS_CARTESIAN}, WIDTH: ${WIDTH}, COLOR: ${COLOR}, CLAMP_TO_GROUND: ${CLAMP_TO_GROUND}, ARC_TYPE: ${ARC_TYPE}, GRANULARITY: ${GRANULARITY}, MATERIAL: ${MATERIAL}, SHADOWS: ${SHADOWS}, DEPTH_FAIL_MATERIAL: ${DEPTH_FAIL_MATERIAL}, CLASSIFICATION_TYPE: ${CLASSIFICATION_TYPE}, Z_INDEX: ${Z_INDEX}}';
   }
 }
 
@@ -1241,7 +3824,7 @@ class CzmpolylineBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(6);
+    fbBuilder.startTable(13);
   }
 
   int addShow(bool? SHOW) {
@@ -1268,6 +3851,34 @@ class CzmpolylineBuilder {
     fbBuilder.addBool(5, CLAMP_TO_GROUND);
     return fbBuilder.offset;
   }
+  int addArcTypeOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addGranularity(double? GRANULARITY) {
+    fbBuilder.addFloat64(7, GRANULARITY);
+    return fbBuilder.offset;
+  }
+  int addMaterialOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addShadowsOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addDepthFailMaterialOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addClassificationTypeOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addZIndex(int? Z_INDEX) {
+    fbBuilder.addInt32(12, Z_INDEX);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1281,6 +3892,13 @@ class CzmpolylineObjectBuilder extends fb.ObjectBuilder {
   final double? _WIDTH;
   final CzmcolorObjectBuilder? _COLOR;
   final bool? _CLAMP_TO_GROUND;
+  final String? _ARC_TYPE;
+  final double? _GRANULARITY;
+  final CzmpolylineMaterialObjectBuilder? _MATERIAL;
+  final String? _SHADOWS;
+  final CzmpolylineMaterialObjectBuilder? _DEPTH_FAIL_MATERIAL;
+  final String? _CLASSIFICATION_TYPE;
+  final int? _Z_INDEX;
 
   CzmpolylineObjectBuilder({
     bool? SHOW,
@@ -1289,13 +3907,27 @@ class CzmpolylineObjectBuilder extends fb.ObjectBuilder {
     double? WIDTH,
     CzmcolorObjectBuilder? COLOR,
     bool? CLAMP_TO_GROUND,
+    String? ARC_TYPE,
+    double? GRANULARITY,
+    CzmpolylineMaterialObjectBuilder? MATERIAL,
+    String? SHADOWS,
+    CzmpolylineMaterialObjectBuilder? DEPTH_FAIL_MATERIAL,
+    String? CLASSIFICATION_TYPE,
+    int? Z_INDEX,
   })
       : _SHOW = SHOW,
         _POSITIONS_CARTOGRAPHIC_DEGREES = POSITIONS_CARTOGRAPHIC_DEGREES,
         _POSITIONS_CARTESIAN = POSITIONS_CARTESIAN,
         _WIDTH = WIDTH,
         _COLOR = COLOR,
-        _CLAMP_TO_GROUND = CLAMP_TO_GROUND;
+        _CLAMP_TO_GROUND = CLAMP_TO_GROUND,
+        _ARC_TYPE = ARC_TYPE,
+        _GRANULARITY = GRANULARITY,
+        _MATERIAL = MATERIAL,
+        _SHADOWS = SHADOWS,
+        _DEPTH_FAIL_MATERIAL = DEPTH_FAIL_MATERIAL,
+        _CLASSIFICATION_TYPE = CLASSIFICATION_TYPE,
+        _Z_INDEX = Z_INDEX;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1305,13 +3937,28 @@ class CzmpolylineObjectBuilder extends fb.ObjectBuilder {
     final int? POSITIONS_CARTESIANOffset = _POSITIONS_CARTESIAN == null ? null
         : fbBuilder.writeListFloat64(_POSITIONS_CARTESIAN!);
     final int? COLOROffset = _COLOR?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(6);
+    final int? ARC_TYPEOffset = _ARC_TYPE == null ? null
+        : fbBuilder.writeString(_ARC_TYPE!);
+    final int? MATERIALOffset = _MATERIAL?.getOrCreateOffset(fbBuilder);
+    final int? SHADOWSOffset = _SHADOWS == null ? null
+        : fbBuilder.writeString(_SHADOWS!);
+    final int? DEPTH_FAIL_MATERIALOffset = _DEPTH_FAIL_MATERIAL?.getOrCreateOffset(fbBuilder);
+    final int? CLASSIFICATION_TYPEOffset = _CLASSIFICATION_TYPE == null ? null
+        : fbBuilder.writeString(_CLASSIFICATION_TYPE!);
+    fbBuilder.startTable(13);
     fbBuilder.addBool(0, _SHOW);
     fbBuilder.addOffset(1, POSITIONS_CARTOGRAPHIC_DEGREESOffset);
     fbBuilder.addOffset(2, POSITIONS_CARTESIANOffset);
     fbBuilder.addFloat64(3, _WIDTH);
     fbBuilder.addOffset(4, COLOROffset);
     fbBuilder.addBool(5, _CLAMP_TO_GROUND);
+    fbBuilder.addOffset(6, ARC_TYPEOffset);
+    fbBuilder.addFloat64(7, _GRANULARITY);
+    fbBuilder.addOffset(8, MATERIALOffset);
+    fbBuilder.addOffset(9, SHADOWSOffset);
+    fbBuilder.addOffset(10, DEPTH_FAIL_MATERIALOffset);
+    fbBuilder.addOffset(11, CLASSIFICATION_TYPEOffset);
+    fbBuilder.addInt32(12, _Z_INDEX);
     return fbBuilder.endTable();
   }
 
@@ -1344,7 +3991,7 @@ class Czmpolygon {
   List<double>? get POSITIONS_CARTESIAN => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 8);
   ///  Fill flag
   bool get FILL => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
-  ///  Fill color (solid color material)
+  ///  Fill color (solid color material, legacy)
   Czmcolor? get COLOR => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 12);
   ///  Outline flag
   bool get OUTLINE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
@@ -1356,10 +4003,36 @@ class Czmpolygon {
   CzmheightReference get HEIGHT_REFERENCE => CzmheightReference.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 0));
   ///  Classification type
   CzmclassificationType get CLASSIFICATION_TYPE => CzmclassificationType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 22, 0));
+  ///  Holes (position lists: each hole is [lon,lat,h,...])
+  List<CzmpolygonHole>? get HOLES => const fb.ListReader<CzmpolygonHole>(CzmpolygonHole.reader).vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Arc type
+  String? get ARC_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Height in meters
+  double get HEIGHT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  ///  Extruded height reference
+  String? get EXTRUDED_HEIGHT_REFERENCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  ///  Texture rotation in radians
+  double get ST_ROTATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  ///  Granularity in radians
+  double get GRANULARITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  ///  Full surface material
+  Czmmaterial? get MATERIAL => Czmmaterial.reader.vTableGetNullable(_bc, _bcOffset, 36);
+  ///  Outline width in pixels
+  double get OUTLINE_WIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  ///  Whether to use per-position heights
+  bool get PER_POSITION_HEIGHT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 40, false);
+  ///  Whether to close the top of extruded polygon
+  bool get CLOSE_TOP => const fb.BoolReader().vTableGet(_bc, _bcOffset, 42, false);
+  ///  Whether to close the bottom of extruded polygon
+  bool get CLOSE_BOTTOM => const fb.BoolReader().vTableGet(_bc, _bcOffset, 44, false);
+  ///  Shadow mode
+  String? get SHADOWS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
+  ///  Z-index for ordering
+  int get Z_INDEX => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 48, 0);
 
   @override
   String toString() {
-    return 'Czmpolygon{SHOW: ${SHOW}, POSITIONS_CARTOGRAPHIC_DEGREES: ${POSITIONS_CARTOGRAPHIC_DEGREES}, POSITIONS_CARTESIAN: ${POSITIONS_CARTESIAN}, FILL: ${FILL}, COLOR: ${COLOR}, OUTLINE: ${OUTLINE}, OUTLINE_COLOR: ${OUTLINE_COLOR}, EXTRUDED_HEIGHT: ${EXTRUDED_HEIGHT}, HEIGHT_REFERENCE: ${HEIGHT_REFERENCE}, CLASSIFICATION_TYPE: ${CLASSIFICATION_TYPE}}';
+    return 'Czmpolygon{SHOW: ${SHOW}, POSITIONS_CARTOGRAPHIC_DEGREES: ${POSITIONS_CARTOGRAPHIC_DEGREES}, POSITIONS_CARTESIAN: ${POSITIONS_CARTESIAN}, FILL: ${FILL}, COLOR: ${COLOR}, OUTLINE: ${OUTLINE}, OUTLINE_COLOR: ${OUTLINE_COLOR}, EXTRUDED_HEIGHT: ${EXTRUDED_HEIGHT}, HEIGHT_REFERENCE: ${HEIGHT_REFERENCE}, CLASSIFICATION_TYPE: ${CLASSIFICATION_TYPE}, HOLES: ${HOLES}, ARC_TYPE: ${ARC_TYPE}, HEIGHT: ${HEIGHT}, EXTRUDED_HEIGHT_REFERENCE: ${EXTRUDED_HEIGHT_REFERENCE}, ST_ROTATION: ${ST_ROTATION}, GRANULARITY: ${GRANULARITY}, MATERIAL: ${MATERIAL}, OUTLINE_WIDTH: ${OUTLINE_WIDTH}, PER_POSITION_HEIGHT: ${PER_POSITION_HEIGHT}, CLOSE_TOP: ${CLOSE_TOP}, CLOSE_BOTTOM: ${CLOSE_BOTTOM}, SHADOWS: ${SHADOWS}, Z_INDEX: ${Z_INDEX}}';
   }
 }
 
@@ -1377,7 +4050,7 @@ class CzmpolygonBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(10);
+    fbBuilder.startTable(23);
   }
 
   int addShow(bool? SHOW) {
@@ -1420,6 +4093,58 @@ class CzmpolygonBuilder {
     fbBuilder.addInt8(9, CLASSIFICATION_TYPE?.value);
     return fbBuilder.offset;
   }
+  int addHolesOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addArcTypeOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addHeight(double? HEIGHT) {
+    fbBuilder.addFloat64(12, HEIGHT);
+    return fbBuilder.offset;
+  }
+  int addExtrudedHeightReferenceOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addStRotation(double? ST_ROTATION) {
+    fbBuilder.addFloat64(14, ST_ROTATION);
+    return fbBuilder.offset;
+  }
+  int addGranularity(double? GRANULARITY) {
+    fbBuilder.addFloat64(15, GRANULARITY);
+    return fbBuilder.offset;
+  }
+  int addMaterialOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addOutlineWidth(double? OUTLINE_WIDTH) {
+    fbBuilder.addFloat64(17, OUTLINE_WIDTH);
+    return fbBuilder.offset;
+  }
+  int addPerPositionHeight(bool? PER_POSITION_HEIGHT) {
+    fbBuilder.addBool(18, PER_POSITION_HEIGHT);
+    return fbBuilder.offset;
+  }
+  int addCloseTop(bool? CLOSE_TOP) {
+    fbBuilder.addBool(19, CLOSE_TOP);
+    return fbBuilder.offset;
+  }
+  int addCloseBottom(bool? CLOSE_BOTTOM) {
+    fbBuilder.addBool(20, CLOSE_BOTTOM);
+    return fbBuilder.offset;
+  }
+  int addShadowsOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addZIndex(int? Z_INDEX) {
+    fbBuilder.addInt32(22, Z_INDEX);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1437,6 +4162,19 @@ class CzmpolygonObjectBuilder extends fb.ObjectBuilder {
   final double? _EXTRUDED_HEIGHT;
   final CzmheightReference? _HEIGHT_REFERENCE;
   final CzmclassificationType? _CLASSIFICATION_TYPE;
+  final List<CzmpolygonHoleObjectBuilder>? _HOLES;
+  final String? _ARC_TYPE;
+  final double? _HEIGHT;
+  final String? _EXTRUDED_HEIGHT_REFERENCE;
+  final double? _ST_ROTATION;
+  final double? _GRANULARITY;
+  final CzmmaterialObjectBuilder? _MATERIAL;
+  final double? _OUTLINE_WIDTH;
+  final bool? _PER_POSITION_HEIGHT;
+  final bool? _CLOSE_TOP;
+  final bool? _CLOSE_BOTTOM;
+  final String? _SHADOWS;
+  final int? _Z_INDEX;
 
   CzmpolygonObjectBuilder({
     bool? SHOW,
@@ -1449,6 +4187,19 @@ class CzmpolygonObjectBuilder extends fb.ObjectBuilder {
     double? EXTRUDED_HEIGHT,
     CzmheightReference? HEIGHT_REFERENCE,
     CzmclassificationType? CLASSIFICATION_TYPE,
+    List<CzmpolygonHoleObjectBuilder>? HOLES,
+    String? ARC_TYPE,
+    double? HEIGHT,
+    String? EXTRUDED_HEIGHT_REFERENCE,
+    double? ST_ROTATION,
+    double? GRANULARITY,
+    CzmmaterialObjectBuilder? MATERIAL,
+    double? OUTLINE_WIDTH,
+    bool? PER_POSITION_HEIGHT,
+    bool? CLOSE_TOP,
+    bool? CLOSE_BOTTOM,
+    String? SHADOWS,
+    int? Z_INDEX,
   })
       : _SHOW = SHOW,
         _POSITIONS_CARTOGRAPHIC_DEGREES = POSITIONS_CARTOGRAPHIC_DEGREES,
@@ -1459,7 +4210,20 @@ class CzmpolygonObjectBuilder extends fb.ObjectBuilder {
         _OUTLINE_COLOR = OUTLINE_COLOR,
         _EXTRUDED_HEIGHT = EXTRUDED_HEIGHT,
         _HEIGHT_REFERENCE = HEIGHT_REFERENCE,
-        _CLASSIFICATION_TYPE = CLASSIFICATION_TYPE;
+        _CLASSIFICATION_TYPE = CLASSIFICATION_TYPE,
+        _HOLES = HOLES,
+        _ARC_TYPE = ARC_TYPE,
+        _HEIGHT = HEIGHT,
+        _EXTRUDED_HEIGHT_REFERENCE = EXTRUDED_HEIGHT_REFERENCE,
+        _ST_ROTATION = ST_ROTATION,
+        _GRANULARITY = GRANULARITY,
+        _MATERIAL = MATERIAL,
+        _OUTLINE_WIDTH = OUTLINE_WIDTH,
+        _PER_POSITION_HEIGHT = PER_POSITION_HEIGHT,
+        _CLOSE_TOP = CLOSE_TOP,
+        _CLOSE_BOTTOM = CLOSE_BOTTOM,
+        _SHADOWS = SHADOWS,
+        _Z_INDEX = Z_INDEX;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1470,7 +4234,16 @@ class CzmpolygonObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeListFloat64(_POSITIONS_CARTESIAN!);
     final int? COLOROffset = _COLOR?.getOrCreateOffset(fbBuilder);
     final int? OUTLINE_COLOROffset = _OUTLINE_COLOR?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(10);
+    final int? HOLESOffset = _HOLES == null ? null
+        : fbBuilder.writeList(_HOLES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? ARC_TYPEOffset = _ARC_TYPE == null ? null
+        : fbBuilder.writeString(_ARC_TYPE!);
+    final int? EXTRUDED_HEIGHT_REFERENCEOffset = _EXTRUDED_HEIGHT_REFERENCE == null ? null
+        : fbBuilder.writeString(_EXTRUDED_HEIGHT_REFERENCE!);
+    final int? MATERIALOffset = _MATERIAL?.getOrCreateOffset(fbBuilder);
+    final int? SHADOWSOffset = _SHADOWS == null ? null
+        : fbBuilder.writeString(_SHADOWS!);
+    fbBuilder.startTable(23);
     fbBuilder.addBool(0, _SHOW);
     fbBuilder.addOffset(1, POSITIONS_CARTOGRAPHIC_DEGREESOffset);
     fbBuilder.addOffset(2, POSITIONS_CARTESIANOffset);
@@ -1481,6 +4254,106 @@ class CzmpolygonObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(7, _EXTRUDED_HEIGHT);
     fbBuilder.addInt8(8, _HEIGHT_REFERENCE?.value);
     fbBuilder.addInt8(9, _CLASSIFICATION_TYPE?.value);
+    fbBuilder.addOffset(10, HOLESOffset);
+    fbBuilder.addOffset(11, ARC_TYPEOffset);
+    fbBuilder.addFloat64(12, _HEIGHT);
+    fbBuilder.addOffset(13, EXTRUDED_HEIGHT_REFERENCEOffset);
+    fbBuilder.addFloat64(14, _ST_ROTATION);
+    fbBuilder.addFloat64(15, _GRANULARITY);
+    fbBuilder.addOffset(16, MATERIALOffset);
+    fbBuilder.addFloat64(17, _OUTLINE_WIDTH);
+    fbBuilder.addBool(18, _PER_POSITION_HEIGHT);
+    fbBuilder.addBool(19, _CLOSE_TOP);
+    fbBuilder.addBool(20, _CLOSE_BOTTOM);
+    fbBuilder.addOffset(21, SHADOWSOffset);
+    fbBuilder.addInt32(22, _Z_INDEX);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Polygon hole position list
+class CzmpolygonHole {
+  CzmpolygonHole._(this._bc, this._bcOffset);
+  factory CzmpolygonHole(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CzmpolygonHole> reader = _CzmpolygonHoleReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Positions as cartographic degrees [lon, lat, height, ...]
+  List<double>? get POSITIONS_CARTOGRAPHIC_DEGREES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Positions as Cartesian [X, Y, Z, ...]
+  List<double>? get POSITIONS_CARTESIAN => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 6);
+
+  @override
+  String toString() {
+    return 'CzmpolygonHole{POSITIONS_CARTOGRAPHIC_DEGREES: ${POSITIONS_CARTOGRAPHIC_DEGREES}, POSITIONS_CARTESIAN: ${POSITIONS_CARTESIAN}}';
+  }
+}
+
+class _CzmpolygonHoleReader extends fb.TableReader<CzmpolygonHole> {
+  const _CzmpolygonHoleReader();
+
+  @override
+  CzmpolygonHole createObject(fb.BufferContext bc, int offset) => 
+    CzmpolygonHole._(bc, offset);
+}
+
+class CzmpolygonHoleBuilder {
+  CzmpolygonHoleBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(2);
+  }
+
+  int addPositionsCartographicDegreesOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addPositionsCartesianOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CzmpolygonHoleObjectBuilder extends fb.ObjectBuilder {
+  final List<double>? _POSITIONS_CARTOGRAPHIC_DEGREES;
+  final List<double>? _POSITIONS_CARTESIAN;
+
+  CzmpolygonHoleObjectBuilder({
+    List<double>? POSITIONS_CARTOGRAPHIC_DEGREES,
+    List<double>? POSITIONS_CARTESIAN,
+  })
+      : _POSITIONS_CARTOGRAPHIC_DEGREES = POSITIONS_CARTOGRAPHIC_DEGREES,
+        _POSITIONS_CARTESIAN = POSITIONS_CARTESIAN;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? POSITIONS_CARTOGRAPHIC_DEGREESOffset = _POSITIONS_CARTOGRAPHIC_DEGREES == null ? null
+        : fbBuilder.writeListFloat64(_POSITIONS_CARTOGRAPHIC_DEGREES!);
+    final int? POSITIONS_CARTESIANOffset = _POSITIONS_CARTESIAN == null ? null
+        : fbBuilder.writeListFloat64(_POSITIONS_CARTESIAN!);
+    fbBuilder.startTable(2);
+    fbBuilder.addOffset(0, POSITIONS_CARTOGRAPHIC_DEGREESOffset);
+    fbBuilder.addOffset(1, POSITIONS_CARTESIANOffset);
     return fbBuilder.endTable();
   }
 
@@ -1519,10 +4392,24 @@ class Czmmodel {
   CzmheightReference get HEIGHT_REFERENCE => CzmheightReference.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
   ///  Color tint
   Czmcolor? get COLOR => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Whether to incrementally load textures
+  bool get INCREMENTALLY_LOAD_TEXTURES => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, false);
+  ///  Whether to run animations
+  bool get RUN_ANIMATIONS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
+  ///  Shadow mode
+  String? get SHADOWS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Silhouette color
+  Czmcolor? get SILHOUETTE_COLOR => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Silhouette size in pixels
+  double get SILHOUETTE_SIZE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  ///  Color blend mode
+  String? get COLOR_BLEND_MODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Color blend amount (0-1)
+  double get COLOR_BLEND_AMOUNT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
 
   @override
   String toString() {
-    return 'Czmmodel{SHOW: ${SHOW}, GLTF: ${GLTF}, SCALE: ${SCALE}, MINIMUM_PIXEL_SIZE: ${MINIMUM_PIXEL_SIZE}, MAXIMUM_SCALE: ${MAXIMUM_SCALE}, HEIGHT_REFERENCE: ${HEIGHT_REFERENCE}, COLOR: ${COLOR}}';
+    return 'Czmmodel{SHOW: ${SHOW}, GLTF: ${GLTF}, SCALE: ${SCALE}, MINIMUM_PIXEL_SIZE: ${MINIMUM_PIXEL_SIZE}, MAXIMUM_SCALE: ${MAXIMUM_SCALE}, HEIGHT_REFERENCE: ${HEIGHT_REFERENCE}, COLOR: ${COLOR}, INCREMENTALLY_LOAD_TEXTURES: ${INCREMENTALLY_LOAD_TEXTURES}, RUN_ANIMATIONS: ${RUN_ANIMATIONS}, SHADOWS: ${SHADOWS}, SILHOUETTE_COLOR: ${SILHOUETTE_COLOR}, SILHOUETTE_SIZE: ${SILHOUETTE_SIZE}, COLOR_BLEND_MODE: ${COLOR_BLEND_MODE}, COLOR_BLEND_AMOUNT: ${COLOR_BLEND_AMOUNT}}';
   }
 }
 
@@ -1540,7 +4427,7 @@ class CzmmodelBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(7);
+    fbBuilder.startTable(14);
   }
 
   int addShow(bool? SHOW) {
@@ -1571,6 +4458,34 @@ class CzmmodelBuilder {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
+  int addIncrementallyLoadTextures(bool? INCREMENTALLY_LOAD_TEXTURES) {
+    fbBuilder.addBool(7, INCREMENTALLY_LOAD_TEXTURES);
+    return fbBuilder.offset;
+  }
+  int addRunAnimations(bool? RUN_ANIMATIONS) {
+    fbBuilder.addBool(8, RUN_ANIMATIONS);
+    return fbBuilder.offset;
+  }
+  int addShadowsOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addSilhouetteColorOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addSilhouetteSize(double? SILHOUETTE_SIZE) {
+    fbBuilder.addFloat64(11, SILHOUETTE_SIZE);
+    return fbBuilder.offset;
+  }
+  int addColorBlendModeOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addColorBlendAmount(double? COLOR_BLEND_AMOUNT) {
+    fbBuilder.addFloat64(13, COLOR_BLEND_AMOUNT);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1585,6 +4500,13 @@ class CzmmodelObjectBuilder extends fb.ObjectBuilder {
   final double? _MAXIMUM_SCALE;
   final CzmheightReference? _HEIGHT_REFERENCE;
   final CzmcolorObjectBuilder? _COLOR;
+  final bool? _INCREMENTALLY_LOAD_TEXTURES;
+  final bool? _RUN_ANIMATIONS;
+  final String? _SHADOWS;
+  final CzmcolorObjectBuilder? _SILHOUETTE_COLOR;
+  final double? _SILHOUETTE_SIZE;
+  final String? _COLOR_BLEND_MODE;
+  final double? _COLOR_BLEND_AMOUNT;
 
   CzmmodelObjectBuilder({
     bool? SHOW,
@@ -1594,6 +4516,13 @@ class CzmmodelObjectBuilder extends fb.ObjectBuilder {
     double? MAXIMUM_SCALE,
     CzmheightReference? HEIGHT_REFERENCE,
     CzmcolorObjectBuilder? COLOR,
+    bool? INCREMENTALLY_LOAD_TEXTURES,
+    bool? RUN_ANIMATIONS,
+    String? SHADOWS,
+    CzmcolorObjectBuilder? SILHOUETTE_COLOR,
+    double? SILHOUETTE_SIZE,
+    String? COLOR_BLEND_MODE,
+    double? COLOR_BLEND_AMOUNT,
   })
       : _SHOW = SHOW,
         _GLTF = GLTF,
@@ -1601,7 +4530,14 @@ class CzmmodelObjectBuilder extends fb.ObjectBuilder {
         _MINIMUM_PIXEL_SIZE = MINIMUM_PIXEL_SIZE,
         _MAXIMUM_SCALE = MAXIMUM_SCALE,
         _HEIGHT_REFERENCE = HEIGHT_REFERENCE,
-        _COLOR = COLOR;
+        _COLOR = COLOR,
+        _INCREMENTALLY_LOAD_TEXTURES = INCREMENTALLY_LOAD_TEXTURES,
+        _RUN_ANIMATIONS = RUN_ANIMATIONS,
+        _SHADOWS = SHADOWS,
+        _SILHOUETTE_COLOR = SILHOUETTE_COLOR,
+        _SILHOUETTE_SIZE = SILHOUETTE_SIZE,
+        _COLOR_BLEND_MODE = COLOR_BLEND_MODE,
+        _COLOR_BLEND_AMOUNT = COLOR_BLEND_AMOUNT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1609,7 +4545,12 @@ class CzmmodelObjectBuilder extends fb.ObjectBuilder {
     final int? GLTFOffset = _GLTF == null ? null
         : fbBuilder.writeString(_GLTF!);
     final int? COLOROffset = _COLOR?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(7);
+    final int? SHADOWSOffset = _SHADOWS == null ? null
+        : fbBuilder.writeString(_SHADOWS!);
+    final int? SILHOUETTE_COLOROffset = _SILHOUETTE_COLOR?.getOrCreateOffset(fbBuilder);
+    final int? COLOR_BLEND_MODEOffset = _COLOR_BLEND_MODE == null ? null
+        : fbBuilder.writeString(_COLOR_BLEND_MODE!);
+    fbBuilder.startTable(14);
     fbBuilder.addBool(0, _SHOW);
     fbBuilder.addOffset(1, GLTFOffset);
     fbBuilder.addFloat64(2, _SCALE);
@@ -1617,6 +4558,13 @@ class CzmmodelObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(4, _MAXIMUM_SCALE);
     fbBuilder.addInt8(5, _HEIGHT_REFERENCE?.value);
     fbBuilder.addOffset(6, COLOROffset);
+    fbBuilder.addBool(7, _INCREMENTALLY_LOAD_TEXTURES);
+    fbBuilder.addBool(8, _RUN_ANIMATIONS);
+    fbBuilder.addOffset(9, SHADOWSOffset);
+    fbBuilder.addOffset(10, SILHOUETTE_COLOROffset);
+    fbBuilder.addFloat64(11, _SILHOUETTE_SIZE);
+    fbBuilder.addOffset(12, COLOR_BLEND_MODEOffset);
+    fbBuilder.addFloat64(13, _COLOR_BLEND_AMOUNT);
     return fbBuilder.endTable();
   }
 
@@ -1649,14 +4597,16 @@ class Czmpath {
   double get TRAIL_TIME => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
   ///  Line width in pixels
   double get WIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  ///  Path color
+  ///  Path color (legacy solid color)
   Czmcolor? get COLOR => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 12);
   ///  Resolution in seconds
   double get RESOLUTION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  ///  Full polyline material
+  CzmpolylineMaterial? get MATERIAL => CzmpolylineMaterial.reader.vTableGetNullable(_bc, _bcOffset, 16);
 
   @override
   String toString() {
-    return 'Czmpath{SHOW: ${SHOW}, LEAD_TIME: ${LEAD_TIME}, TRAIL_TIME: ${TRAIL_TIME}, WIDTH: ${WIDTH}, COLOR: ${COLOR}, RESOLUTION: ${RESOLUTION}}';
+    return 'Czmpath{SHOW: ${SHOW}, LEAD_TIME: ${LEAD_TIME}, TRAIL_TIME: ${TRAIL_TIME}, WIDTH: ${WIDTH}, COLOR: ${COLOR}, RESOLUTION: ${RESOLUTION}, MATERIAL: ${MATERIAL}}';
   }
 }
 
@@ -1674,7 +4624,7 @@ class CzmpathBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(6);
+    fbBuilder.startTable(7);
   }
 
   int addShow(bool? SHOW) {
@@ -1701,6 +4651,10 @@ class CzmpathBuilder {
     fbBuilder.addFloat64(5, RESOLUTION);
     return fbBuilder.offset;
   }
+  int addMaterialOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1714,6 +4668,7 @@ class CzmpathObjectBuilder extends fb.ObjectBuilder {
   final double? _WIDTH;
   final CzmcolorObjectBuilder? _COLOR;
   final double? _RESOLUTION;
+  final CzmpolylineMaterialObjectBuilder? _MATERIAL;
 
   CzmpathObjectBuilder({
     bool? SHOW,
@@ -1722,25 +4677,29 @@ class CzmpathObjectBuilder extends fb.ObjectBuilder {
     double? WIDTH,
     CzmcolorObjectBuilder? COLOR,
     double? RESOLUTION,
+    CzmpolylineMaterialObjectBuilder? MATERIAL,
   })
       : _SHOW = SHOW,
         _LEAD_TIME = LEAD_TIME,
         _TRAIL_TIME = TRAIL_TIME,
         _WIDTH = WIDTH,
         _COLOR = COLOR,
-        _RESOLUTION = RESOLUTION;
+        _RESOLUTION = RESOLUTION,
+        _MATERIAL = MATERIAL;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? COLOROffset = _COLOR?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(6);
+    final int? MATERIALOffset = _MATERIAL?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(7);
     fbBuilder.addBool(0, _SHOW);
     fbBuilder.addFloat64(1, _LEAD_TIME);
     fbBuilder.addFloat64(2, _TRAIL_TIME);
     fbBuilder.addFloat64(3, _WIDTH);
     fbBuilder.addOffset(4, COLOROffset);
     fbBuilder.addFloat64(5, _RESOLUTION);
+    fbBuilder.addOffset(6, MATERIALOffset);
     return fbBuilder.endTable();
   }
 
@@ -1775,7 +4734,7 @@ class Czmellipse {
   double get ROTATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
   ///  Fill flag
   bool get FILL => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
-  ///  Fill color
+  ///  Fill color (legacy solid color)
   Czmcolor? get COLOR => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 14);
   ///  Outline flag
   bool get OUTLINE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
@@ -1785,10 +4744,30 @@ class Czmellipse {
   double get HEIGHT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
   ///  Height reference
   CzmheightReference get HEIGHT_REFERENCE => CzmheightReference.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 22, 0));
+  ///  Extruded height in meters
+  double get EXTRUDED_HEIGHT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  ///  Extruded height reference
+  String? get EXTRUDED_HEIGHT_REFERENCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Texture rotation in radians
+  double get ST_ROTATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  ///  Granularity in radians
+  double get GRANULARITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  ///  Full surface material
+  Czmmaterial? get MATERIAL => Czmmaterial.reader.vTableGetNullable(_bc, _bcOffset, 32);
+  ///  Outline width in pixels
+  double get OUTLINE_WIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  ///  Number of vertical lines
+  int get NUMBER_OF_VERTICAL_LINES => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 36, 0);
+  ///  Shadow mode
+  String? get SHADOWS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  ///  Classification type
+  String? get CLASSIFICATION_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+  ///  Z-index for ordering
+  int get Z_INDEX => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 42, 0);
 
   @override
   String toString() {
-    return 'Czmellipse{SHOW: ${SHOW}, SEMI_MAJOR_AXIS: ${SEMI_MAJOR_AXIS}, SEMI_MINOR_AXIS: ${SEMI_MINOR_AXIS}, ROTATION: ${ROTATION}, FILL: ${FILL}, COLOR: ${COLOR}, OUTLINE: ${OUTLINE}, OUTLINE_COLOR: ${OUTLINE_COLOR}, HEIGHT: ${HEIGHT}, HEIGHT_REFERENCE: ${HEIGHT_REFERENCE}}';
+    return 'Czmellipse{SHOW: ${SHOW}, SEMI_MAJOR_AXIS: ${SEMI_MAJOR_AXIS}, SEMI_MINOR_AXIS: ${SEMI_MINOR_AXIS}, ROTATION: ${ROTATION}, FILL: ${FILL}, COLOR: ${COLOR}, OUTLINE: ${OUTLINE}, OUTLINE_COLOR: ${OUTLINE_COLOR}, HEIGHT: ${HEIGHT}, HEIGHT_REFERENCE: ${HEIGHT_REFERENCE}, EXTRUDED_HEIGHT: ${EXTRUDED_HEIGHT}, EXTRUDED_HEIGHT_REFERENCE: ${EXTRUDED_HEIGHT_REFERENCE}, ST_ROTATION: ${ST_ROTATION}, GRANULARITY: ${GRANULARITY}, MATERIAL: ${MATERIAL}, OUTLINE_WIDTH: ${OUTLINE_WIDTH}, NUMBER_OF_VERTICAL_LINES: ${NUMBER_OF_VERTICAL_LINES}, SHADOWS: ${SHADOWS}, CLASSIFICATION_TYPE: ${CLASSIFICATION_TYPE}, Z_INDEX: ${Z_INDEX}}';
   }
 }
 
@@ -1806,7 +4785,7 @@ class CzmellipseBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(10);
+    fbBuilder.startTable(20);
   }
 
   int addShow(bool? SHOW) {
@@ -1849,6 +4828,46 @@ class CzmellipseBuilder {
     fbBuilder.addInt8(9, HEIGHT_REFERENCE?.value);
     return fbBuilder.offset;
   }
+  int addExtrudedHeight(double? EXTRUDED_HEIGHT) {
+    fbBuilder.addFloat64(10, EXTRUDED_HEIGHT);
+    return fbBuilder.offset;
+  }
+  int addExtrudedHeightReferenceOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addStRotation(double? ST_ROTATION) {
+    fbBuilder.addFloat64(12, ST_ROTATION);
+    return fbBuilder.offset;
+  }
+  int addGranularity(double? GRANULARITY) {
+    fbBuilder.addFloat64(13, GRANULARITY);
+    return fbBuilder.offset;
+  }
+  int addMaterialOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addOutlineWidth(double? OUTLINE_WIDTH) {
+    fbBuilder.addFloat64(15, OUTLINE_WIDTH);
+    return fbBuilder.offset;
+  }
+  int addNumberOfVerticalLines(int? NUMBER_OF_VERTICAL_LINES) {
+    fbBuilder.addInt32(16, NUMBER_OF_VERTICAL_LINES);
+    return fbBuilder.offset;
+  }
+  int addShadowsOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addClassificationTypeOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addZIndex(int? Z_INDEX) {
+    fbBuilder.addInt32(19, Z_INDEX);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1866,6 +4885,16 @@ class CzmellipseObjectBuilder extends fb.ObjectBuilder {
   final CzmcolorObjectBuilder? _OUTLINE_COLOR;
   final double? _HEIGHT;
   final CzmheightReference? _HEIGHT_REFERENCE;
+  final double? _EXTRUDED_HEIGHT;
+  final String? _EXTRUDED_HEIGHT_REFERENCE;
+  final double? _ST_ROTATION;
+  final double? _GRANULARITY;
+  final CzmmaterialObjectBuilder? _MATERIAL;
+  final double? _OUTLINE_WIDTH;
+  final int? _NUMBER_OF_VERTICAL_LINES;
+  final String? _SHADOWS;
+  final String? _CLASSIFICATION_TYPE;
+  final int? _Z_INDEX;
 
   CzmellipseObjectBuilder({
     bool? SHOW,
@@ -1878,6 +4907,16 @@ class CzmellipseObjectBuilder extends fb.ObjectBuilder {
     CzmcolorObjectBuilder? OUTLINE_COLOR,
     double? HEIGHT,
     CzmheightReference? HEIGHT_REFERENCE,
+    double? EXTRUDED_HEIGHT,
+    String? EXTRUDED_HEIGHT_REFERENCE,
+    double? ST_ROTATION,
+    double? GRANULARITY,
+    CzmmaterialObjectBuilder? MATERIAL,
+    double? OUTLINE_WIDTH,
+    int? NUMBER_OF_VERTICAL_LINES,
+    String? SHADOWS,
+    String? CLASSIFICATION_TYPE,
+    int? Z_INDEX,
   })
       : _SHOW = SHOW,
         _SEMI_MAJOR_AXIS = SEMI_MAJOR_AXIS,
@@ -1888,14 +4927,31 @@ class CzmellipseObjectBuilder extends fb.ObjectBuilder {
         _OUTLINE = OUTLINE,
         _OUTLINE_COLOR = OUTLINE_COLOR,
         _HEIGHT = HEIGHT,
-        _HEIGHT_REFERENCE = HEIGHT_REFERENCE;
+        _HEIGHT_REFERENCE = HEIGHT_REFERENCE,
+        _EXTRUDED_HEIGHT = EXTRUDED_HEIGHT,
+        _EXTRUDED_HEIGHT_REFERENCE = EXTRUDED_HEIGHT_REFERENCE,
+        _ST_ROTATION = ST_ROTATION,
+        _GRANULARITY = GRANULARITY,
+        _MATERIAL = MATERIAL,
+        _OUTLINE_WIDTH = OUTLINE_WIDTH,
+        _NUMBER_OF_VERTICAL_LINES = NUMBER_OF_VERTICAL_LINES,
+        _SHADOWS = SHADOWS,
+        _CLASSIFICATION_TYPE = CLASSIFICATION_TYPE,
+        _Z_INDEX = Z_INDEX;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? COLOROffset = _COLOR?.getOrCreateOffset(fbBuilder);
     final int? OUTLINE_COLOROffset = _OUTLINE_COLOR?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(10);
+    final int? EXTRUDED_HEIGHT_REFERENCEOffset = _EXTRUDED_HEIGHT_REFERENCE == null ? null
+        : fbBuilder.writeString(_EXTRUDED_HEIGHT_REFERENCE!);
+    final int? MATERIALOffset = _MATERIAL?.getOrCreateOffset(fbBuilder);
+    final int? SHADOWSOffset = _SHADOWS == null ? null
+        : fbBuilder.writeString(_SHADOWS!);
+    final int? CLASSIFICATION_TYPEOffset = _CLASSIFICATION_TYPE == null ? null
+        : fbBuilder.writeString(_CLASSIFICATION_TYPE!);
+    fbBuilder.startTable(20);
     fbBuilder.addBool(0, _SHOW);
     fbBuilder.addFloat64(1, _SEMI_MAJOR_AXIS);
     fbBuilder.addFloat64(2, _SEMI_MINOR_AXIS);
@@ -1906,6 +4962,1682 @@ class CzmellipseObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(7, OUTLINE_COLOROffset);
     fbBuilder.addFloat64(8, _HEIGHT);
     fbBuilder.addInt8(9, _HEIGHT_REFERENCE?.value);
+    fbBuilder.addFloat64(10, _EXTRUDED_HEIGHT);
+    fbBuilder.addOffset(11, EXTRUDED_HEIGHT_REFERENCEOffset);
+    fbBuilder.addFloat64(12, _ST_ROTATION);
+    fbBuilder.addFloat64(13, _GRANULARITY);
+    fbBuilder.addOffset(14, MATERIALOffset);
+    fbBuilder.addFloat64(15, _OUTLINE_WIDTH);
+    fbBuilder.addInt32(16, _NUMBER_OF_VERTICAL_LINES);
+    fbBuilder.addOffset(17, SHADOWSOffset);
+    fbBuilder.addOffset(18, CLASSIFICATION_TYPEOffset);
+    fbBuilder.addInt32(19, _Z_INDEX);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Box (rectangular cuboid)
+class Czmbox {
+  Czmbox._(this._bc, this._bcOffset);
+  factory Czmbox(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Czmbox> reader = _CzmboxReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Whether the box is displayed
+  bool get SHOW => const fb.BoolReader().vTableGet(_bc, _bcOffset, 4, false);
+  ///  Width (X) in meters
+  double get DIMENSIONS_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Depth (Y) in meters
+  double get DIMENSIONS_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Height (Z) in meters
+  double get DIMENSIONS_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  Height reference
+  String? get HEIGHT_REFERENCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Fill flag
+  bool get FILL => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
+  ///  Surface material
+  Czmmaterial? get MATERIAL => Czmmaterial.reader.vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Outline flag
+  bool get OUTLINE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, false);
+  ///  Outline color
+  Czmcolor? get OUTLINE_COLOR => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 20);
+  ///  Outline width
+  double get OUTLINE_WIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Shadow mode
+  String? get SHADOWS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Distance display condition near
+  double get DISTANCE_DISPLAY_CONDITION_NEAR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  ///  Distance display condition far
+  double get DISTANCE_DISPLAY_CONDITION_FAR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+
+  @override
+  String toString() {
+    return 'Czmbox{SHOW: ${SHOW}, DIMENSIONS_X: ${DIMENSIONS_X}, DIMENSIONS_Y: ${DIMENSIONS_Y}, DIMENSIONS_Z: ${DIMENSIONS_Z}, HEIGHT_REFERENCE: ${HEIGHT_REFERENCE}, FILL: ${FILL}, MATERIAL: ${MATERIAL}, OUTLINE: ${OUTLINE}, OUTLINE_COLOR: ${OUTLINE_COLOR}, OUTLINE_WIDTH: ${OUTLINE_WIDTH}, SHADOWS: ${SHADOWS}, DISTANCE_DISPLAY_CONDITION_NEAR: ${DISTANCE_DISPLAY_CONDITION_NEAR}, DISTANCE_DISPLAY_CONDITION_FAR: ${DISTANCE_DISPLAY_CONDITION_FAR}}';
+  }
+}
+
+class _CzmboxReader extends fb.TableReader<Czmbox> {
+  const _CzmboxReader();
+
+  @override
+  Czmbox createObject(fb.BufferContext bc, int offset) => 
+    Czmbox._(bc, offset);
+}
+
+class CzmboxBuilder {
+  CzmboxBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(13);
+  }
+
+  int addShow(bool? SHOW) {
+    fbBuilder.addBool(0, SHOW);
+    return fbBuilder.offset;
+  }
+  int addDimensionsX(double? DIMENSIONS_X) {
+    fbBuilder.addFloat64(1, DIMENSIONS_X);
+    return fbBuilder.offset;
+  }
+  int addDimensionsY(double? DIMENSIONS_Y) {
+    fbBuilder.addFloat64(2, DIMENSIONS_Y);
+    return fbBuilder.offset;
+  }
+  int addDimensionsZ(double? DIMENSIONS_Z) {
+    fbBuilder.addFloat64(3, DIMENSIONS_Z);
+    return fbBuilder.offset;
+  }
+  int addHeightReferenceOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addFill(bool? FILL) {
+    fbBuilder.addBool(5, FILL);
+    return fbBuilder.offset;
+  }
+  int addMaterialOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addOutline(bool? OUTLINE) {
+    fbBuilder.addBool(7, OUTLINE);
+    return fbBuilder.offset;
+  }
+  int addOutlineColorOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addOutlineWidth(double? OUTLINE_WIDTH) {
+    fbBuilder.addFloat64(9, OUTLINE_WIDTH);
+    return fbBuilder.offset;
+  }
+  int addShadowsOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addDistanceDisplayConditionNear(double? DISTANCE_DISPLAY_CONDITION_NEAR) {
+    fbBuilder.addFloat64(11, DISTANCE_DISPLAY_CONDITION_NEAR);
+    return fbBuilder.offset;
+  }
+  int addDistanceDisplayConditionFar(double? DISTANCE_DISPLAY_CONDITION_FAR) {
+    fbBuilder.addFloat64(12, DISTANCE_DISPLAY_CONDITION_FAR);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CzmboxObjectBuilder extends fb.ObjectBuilder {
+  final bool? _SHOW;
+  final double? _DIMENSIONS_X;
+  final double? _DIMENSIONS_Y;
+  final double? _DIMENSIONS_Z;
+  final String? _HEIGHT_REFERENCE;
+  final bool? _FILL;
+  final CzmmaterialObjectBuilder? _MATERIAL;
+  final bool? _OUTLINE;
+  final CzmcolorObjectBuilder? _OUTLINE_COLOR;
+  final double? _OUTLINE_WIDTH;
+  final String? _SHADOWS;
+  final double? _DISTANCE_DISPLAY_CONDITION_NEAR;
+  final double? _DISTANCE_DISPLAY_CONDITION_FAR;
+
+  CzmboxObjectBuilder({
+    bool? SHOW,
+    double? DIMENSIONS_X,
+    double? DIMENSIONS_Y,
+    double? DIMENSIONS_Z,
+    String? HEIGHT_REFERENCE,
+    bool? FILL,
+    CzmmaterialObjectBuilder? MATERIAL,
+    bool? OUTLINE,
+    CzmcolorObjectBuilder? OUTLINE_COLOR,
+    double? OUTLINE_WIDTH,
+    String? SHADOWS,
+    double? DISTANCE_DISPLAY_CONDITION_NEAR,
+    double? DISTANCE_DISPLAY_CONDITION_FAR,
+  })
+      : _SHOW = SHOW,
+        _DIMENSIONS_X = DIMENSIONS_X,
+        _DIMENSIONS_Y = DIMENSIONS_Y,
+        _DIMENSIONS_Z = DIMENSIONS_Z,
+        _HEIGHT_REFERENCE = HEIGHT_REFERENCE,
+        _FILL = FILL,
+        _MATERIAL = MATERIAL,
+        _OUTLINE = OUTLINE,
+        _OUTLINE_COLOR = OUTLINE_COLOR,
+        _OUTLINE_WIDTH = OUTLINE_WIDTH,
+        _SHADOWS = SHADOWS,
+        _DISTANCE_DISPLAY_CONDITION_NEAR = DISTANCE_DISPLAY_CONDITION_NEAR,
+        _DISTANCE_DISPLAY_CONDITION_FAR = DISTANCE_DISPLAY_CONDITION_FAR;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? HEIGHT_REFERENCEOffset = _HEIGHT_REFERENCE == null ? null
+        : fbBuilder.writeString(_HEIGHT_REFERENCE!);
+    final int? MATERIALOffset = _MATERIAL?.getOrCreateOffset(fbBuilder);
+    final int? OUTLINE_COLOROffset = _OUTLINE_COLOR?.getOrCreateOffset(fbBuilder);
+    final int? SHADOWSOffset = _SHADOWS == null ? null
+        : fbBuilder.writeString(_SHADOWS!);
+    fbBuilder.startTable(13);
+    fbBuilder.addBool(0, _SHOW);
+    fbBuilder.addFloat64(1, _DIMENSIONS_X);
+    fbBuilder.addFloat64(2, _DIMENSIONS_Y);
+    fbBuilder.addFloat64(3, _DIMENSIONS_Z);
+    fbBuilder.addOffset(4, HEIGHT_REFERENCEOffset);
+    fbBuilder.addBool(5, _FILL);
+    fbBuilder.addOffset(6, MATERIALOffset);
+    fbBuilder.addBool(7, _OUTLINE);
+    fbBuilder.addOffset(8, OUTLINE_COLOROffset);
+    fbBuilder.addFloat64(9, _OUTLINE_WIDTH);
+    fbBuilder.addOffset(10, SHADOWSOffset);
+    fbBuilder.addFloat64(11, _DISTANCE_DISPLAY_CONDITION_NEAR);
+    fbBuilder.addFloat64(12, _DISTANCE_DISPLAY_CONDITION_FAR);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Corridor (centerline + width shape)
+class Czmcorridor {
+  Czmcorridor._(this._bc, this._bcOffset);
+  factory Czmcorridor(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Czmcorridor> reader = _CzmcorridorReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Whether the corridor is displayed
+  bool get SHOW => const fb.BoolReader().vTableGet(_bc, _bcOffset, 4, false);
+  ///  Positions as cartographic degrees
+  List<double>? get POSITIONS_CARTOGRAPHIC_DEGREES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Positions as Cartesian
+  List<double>? get POSITIONS_CARTESIAN => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Width in meters
+  double get WIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  Height in meters
+  double get HEIGHT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  Height reference
+  String? get HEIGHT_REFERENCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Extruded height
+  double get EXTRUDED_HEIGHT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Extruded height reference
+  String? get EXTRUDED_HEIGHT_REFERENCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Corner type
+  String? get CORNER_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  ///  Granularity in radians
+  double get GRANULARITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Fill flag
+  bool get FILL => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
+  ///  Surface material
+  Czmmaterial? get MATERIAL => Czmmaterial.reader.vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Outline flag
+  bool get OUTLINE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 28, false);
+  ///  Outline color
+  Czmcolor? get OUTLINE_COLOR => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 30);
+  ///  Outline width
+  double get OUTLINE_WIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  ///  Shadow mode
+  String? get SHADOWS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  ///  Classification type
+  String? get CLASSIFICATION_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  ///  Z-index for ordering
+  int get Z_INDEX => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 38, 0);
+
+  @override
+  String toString() {
+    return 'Czmcorridor{SHOW: ${SHOW}, POSITIONS_CARTOGRAPHIC_DEGREES: ${POSITIONS_CARTOGRAPHIC_DEGREES}, POSITIONS_CARTESIAN: ${POSITIONS_CARTESIAN}, WIDTH: ${WIDTH}, HEIGHT: ${HEIGHT}, HEIGHT_REFERENCE: ${HEIGHT_REFERENCE}, EXTRUDED_HEIGHT: ${EXTRUDED_HEIGHT}, EXTRUDED_HEIGHT_REFERENCE: ${EXTRUDED_HEIGHT_REFERENCE}, CORNER_TYPE: ${CORNER_TYPE}, GRANULARITY: ${GRANULARITY}, FILL: ${FILL}, MATERIAL: ${MATERIAL}, OUTLINE: ${OUTLINE}, OUTLINE_COLOR: ${OUTLINE_COLOR}, OUTLINE_WIDTH: ${OUTLINE_WIDTH}, SHADOWS: ${SHADOWS}, CLASSIFICATION_TYPE: ${CLASSIFICATION_TYPE}, Z_INDEX: ${Z_INDEX}}';
+  }
+}
+
+class _CzmcorridorReader extends fb.TableReader<Czmcorridor> {
+  const _CzmcorridorReader();
+
+  @override
+  Czmcorridor createObject(fb.BufferContext bc, int offset) => 
+    Czmcorridor._(bc, offset);
+}
+
+class CzmcorridorBuilder {
+  CzmcorridorBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(18);
+  }
+
+  int addShow(bool? SHOW) {
+    fbBuilder.addBool(0, SHOW);
+    return fbBuilder.offset;
+  }
+  int addPositionsCartographicDegreesOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addPositionsCartesianOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addWidth(double? WIDTH) {
+    fbBuilder.addFloat64(3, WIDTH);
+    return fbBuilder.offset;
+  }
+  int addHeight(double? HEIGHT) {
+    fbBuilder.addFloat64(4, HEIGHT);
+    return fbBuilder.offset;
+  }
+  int addHeightReferenceOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addExtrudedHeight(double? EXTRUDED_HEIGHT) {
+    fbBuilder.addFloat64(6, EXTRUDED_HEIGHT);
+    return fbBuilder.offset;
+  }
+  int addExtrudedHeightReferenceOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addCornerTypeOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addGranularity(double? GRANULARITY) {
+    fbBuilder.addFloat64(9, GRANULARITY);
+    return fbBuilder.offset;
+  }
+  int addFill(bool? FILL) {
+    fbBuilder.addBool(10, FILL);
+    return fbBuilder.offset;
+  }
+  int addMaterialOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addOutline(bool? OUTLINE) {
+    fbBuilder.addBool(12, OUTLINE);
+    return fbBuilder.offset;
+  }
+  int addOutlineColorOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addOutlineWidth(double? OUTLINE_WIDTH) {
+    fbBuilder.addFloat64(14, OUTLINE_WIDTH);
+    return fbBuilder.offset;
+  }
+  int addShadowsOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addClassificationTypeOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addZIndex(int? Z_INDEX) {
+    fbBuilder.addInt32(17, Z_INDEX);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CzmcorridorObjectBuilder extends fb.ObjectBuilder {
+  final bool? _SHOW;
+  final List<double>? _POSITIONS_CARTOGRAPHIC_DEGREES;
+  final List<double>? _POSITIONS_CARTESIAN;
+  final double? _WIDTH;
+  final double? _HEIGHT;
+  final String? _HEIGHT_REFERENCE;
+  final double? _EXTRUDED_HEIGHT;
+  final String? _EXTRUDED_HEIGHT_REFERENCE;
+  final String? _CORNER_TYPE;
+  final double? _GRANULARITY;
+  final bool? _FILL;
+  final CzmmaterialObjectBuilder? _MATERIAL;
+  final bool? _OUTLINE;
+  final CzmcolorObjectBuilder? _OUTLINE_COLOR;
+  final double? _OUTLINE_WIDTH;
+  final String? _SHADOWS;
+  final String? _CLASSIFICATION_TYPE;
+  final int? _Z_INDEX;
+
+  CzmcorridorObjectBuilder({
+    bool? SHOW,
+    List<double>? POSITIONS_CARTOGRAPHIC_DEGREES,
+    List<double>? POSITIONS_CARTESIAN,
+    double? WIDTH,
+    double? HEIGHT,
+    String? HEIGHT_REFERENCE,
+    double? EXTRUDED_HEIGHT,
+    String? EXTRUDED_HEIGHT_REFERENCE,
+    String? CORNER_TYPE,
+    double? GRANULARITY,
+    bool? FILL,
+    CzmmaterialObjectBuilder? MATERIAL,
+    bool? OUTLINE,
+    CzmcolorObjectBuilder? OUTLINE_COLOR,
+    double? OUTLINE_WIDTH,
+    String? SHADOWS,
+    String? CLASSIFICATION_TYPE,
+    int? Z_INDEX,
+  })
+      : _SHOW = SHOW,
+        _POSITIONS_CARTOGRAPHIC_DEGREES = POSITIONS_CARTOGRAPHIC_DEGREES,
+        _POSITIONS_CARTESIAN = POSITIONS_CARTESIAN,
+        _WIDTH = WIDTH,
+        _HEIGHT = HEIGHT,
+        _HEIGHT_REFERENCE = HEIGHT_REFERENCE,
+        _EXTRUDED_HEIGHT = EXTRUDED_HEIGHT,
+        _EXTRUDED_HEIGHT_REFERENCE = EXTRUDED_HEIGHT_REFERENCE,
+        _CORNER_TYPE = CORNER_TYPE,
+        _GRANULARITY = GRANULARITY,
+        _FILL = FILL,
+        _MATERIAL = MATERIAL,
+        _OUTLINE = OUTLINE,
+        _OUTLINE_COLOR = OUTLINE_COLOR,
+        _OUTLINE_WIDTH = OUTLINE_WIDTH,
+        _SHADOWS = SHADOWS,
+        _CLASSIFICATION_TYPE = CLASSIFICATION_TYPE,
+        _Z_INDEX = Z_INDEX;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? POSITIONS_CARTOGRAPHIC_DEGREESOffset = _POSITIONS_CARTOGRAPHIC_DEGREES == null ? null
+        : fbBuilder.writeListFloat64(_POSITIONS_CARTOGRAPHIC_DEGREES!);
+    final int? POSITIONS_CARTESIANOffset = _POSITIONS_CARTESIAN == null ? null
+        : fbBuilder.writeListFloat64(_POSITIONS_CARTESIAN!);
+    final int? HEIGHT_REFERENCEOffset = _HEIGHT_REFERENCE == null ? null
+        : fbBuilder.writeString(_HEIGHT_REFERENCE!);
+    final int? EXTRUDED_HEIGHT_REFERENCEOffset = _EXTRUDED_HEIGHT_REFERENCE == null ? null
+        : fbBuilder.writeString(_EXTRUDED_HEIGHT_REFERENCE!);
+    final int? CORNER_TYPEOffset = _CORNER_TYPE == null ? null
+        : fbBuilder.writeString(_CORNER_TYPE!);
+    final int? MATERIALOffset = _MATERIAL?.getOrCreateOffset(fbBuilder);
+    final int? OUTLINE_COLOROffset = _OUTLINE_COLOR?.getOrCreateOffset(fbBuilder);
+    final int? SHADOWSOffset = _SHADOWS == null ? null
+        : fbBuilder.writeString(_SHADOWS!);
+    final int? CLASSIFICATION_TYPEOffset = _CLASSIFICATION_TYPE == null ? null
+        : fbBuilder.writeString(_CLASSIFICATION_TYPE!);
+    fbBuilder.startTable(18);
+    fbBuilder.addBool(0, _SHOW);
+    fbBuilder.addOffset(1, POSITIONS_CARTOGRAPHIC_DEGREESOffset);
+    fbBuilder.addOffset(2, POSITIONS_CARTESIANOffset);
+    fbBuilder.addFloat64(3, _WIDTH);
+    fbBuilder.addFloat64(4, _HEIGHT);
+    fbBuilder.addOffset(5, HEIGHT_REFERENCEOffset);
+    fbBuilder.addFloat64(6, _EXTRUDED_HEIGHT);
+    fbBuilder.addOffset(7, EXTRUDED_HEIGHT_REFERENCEOffset);
+    fbBuilder.addOffset(8, CORNER_TYPEOffset);
+    fbBuilder.addFloat64(9, _GRANULARITY);
+    fbBuilder.addBool(10, _FILL);
+    fbBuilder.addOffset(11, MATERIALOffset);
+    fbBuilder.addBool(12, _OUTLINE);
+    fbBuilder.addOffset(13, OUTLINE_COLOROffset);
+    fbBuilder.addFloat64(14, _OUTLINE_WIDTH);
+    fbBuilder.addOffset(15, SHADOWSOffset);
+    fbBuilder.addOffset(16, CLASSIFICATION_TYPEOffset);
+    fbBuilder.addInt32(17, _Z_INDEX);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Cylinder or cone
+class Czmcylinder {
+  Czmcylinder._(this._bc, this._bcOffset);
+  factory Czmcylinder(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Czmcylinder> reader = _CzmcylinderReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Whether the cylinder is displayed
+  bool get SHOW => const fb.BoolReader().vTableGet(_bc, _bcOffset, 4, false);
+  ///  Length in meters
+  double get LENGTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Top radius in meters
+  double get TOP_RADIUS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Bottom radius in meters
+  double get BOTTOM_RADIUS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  Height reference
+  String? get HEIGHT_REFERENCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Fill flag
+  bool get FILL => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
+  ///  Surface material
+  Czmmaterial? get MATERIAL => Czmmaterial.reader.vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Outline flag
+  bool get OUTLINE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, false);
+  ///  Outline color
+  Czmcolor? get OUTLINE_COLOR => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 20);
+  ///  Outline width
+  double get OUTLINE_WIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Number of vertical lines
+  int get NUMBER_OF_VERTICAL_LINES => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 24, 0);
+  ///  Number of slices
+  int get SLICES => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 26, 0);
+  ///  Shadow mode
+  String? get SHADOWS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+
+  @override
+  String toString() {
+    return 'Czmcylinder{SHOW: ${SHOW}, LENGTH: ${LENGTH}, TOP_RADIUS: ${TOP_RADIUS}, BOTTOM_RADIUS: ${BOTTOM_RADIUS}, HEIGHT_REFERENCE: ${HEIGHT_REFERENCE}, FILL: ${FILL}, MATERIAL: ${MATERIAL}, OUTLINE: ${OUTLINE}, OUTLINE_COLOR: ${OUTLINE_COLOR}, OUTLINE_WIDTH: ${OUTLINE_WIDTH}, NUMBER_OF_VERTICAL_LINES: ${NUMBER_OF_VERTICAL_LINES}, SLICES: ${SLICES}, SHADOWS: ${SHADOWS}}';
+  }
+}
+
+class _CzmcylinderReader extends fb.TableReader<Czmcylinder> {
+  const _CzmcylinderReader();
+
+  @override
+  Czmcylinder createObject(fb.BufferContext bc, int offset) => 
+    Czmcylinder._(bc, offset);
+}
+
+class CzmcylinderBuilder {
+  CzmcylinderBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(13);
+  }
+
+  int addShow(bool? SHOW) {
+    fbBuilder.addBool(0, SHOW);
+    return fbBuilder.offset;
+  }
+  int addLength(double? LENGTH) {
+    fbBuilder.addFloat64(1, LENGTH);
+    return fbBuilder.offset;
+  }
+  int addTopRadius(double? TOP_RADIUS) {
+    fbBuilder.addFloat64(2, TOP_RADIUS);
+    return fbBuilder.offset;
+  }
+  int addBottomRadius(double? BOTTOM_RADIUS) {
+    fbBuilder.addFloat64(3, BOTTOM_RADIUS);
+    return fbBuilder.offset;
+  }
+  int addHeightReferenceOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addFill(bool? FILL) {
+    fbBuilder.addBool(5, FILL);
+    return fbBuilder.offset;
+  }
+  int addMaterialOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addOutline(bool? OUTLINE) {
+    fbBuilder.addBool(7, OUTLINE);
+    return fbBuilder.offset;
+  }
+  int addOutlineColorOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addOutlineWidth(double? OUTLINE_WIDTH) {
+    fbBuilder.addFloat64(9, OUTLINE_WIDTH);
+    return fbBuilder.offset;
+  }
+  int addNumberOfVerticalLines(int? NUMBER_OF_VERTICAL_LINES) {
+    fbBuilder.addInt32(10, NUMBER_OF_VERTICAL_LINES);
+    return fbBuilder.offset;
+  }
+  int addSlices(int? SLICES) {
+    fbBuilder.addInt32(11, SLICES);
+    return fbBuilder.offset;
+  }
+  int addShadowsOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CzmcylinderObjectBuilder extends fb.ObjectBuilder {
+  final bool? _SHOW;
+  final double? _LENGTH;
+  final double? _TOP_RADIUS;
+  final double? _BOTTOM_RADIUS;
+  final String? _HEIGHT_REFERENCE;
+  final bool? _FILL;
+  final CzmmaterialObjectBuilder? _MATERIAL;
+  final bool? _OUTLINE;
+  final CzmcolorObjectBuilder? _OUTLINE_COLOR;
+  final double? _OUTLINE_WIDTH;
+  final int? _NUMBER_OF_VERTICAL_LINES;
+  final int? _SLICES;
+  final String? _SHADOWS;
+
+  CzmcylinderObjectBuilder({
+    bool? SHOW,
+    double? LENGTH,
+    double? TOP_RADIUS,
+    double? BOTTOM_RADIUS,
+    String? HEIGHT_REFERENCE,
+    bool? FILL,
+    CzmmaterialObjectBuilder? MATERIAL,
+    bool? OUTLINE,
+    CzmcolorObjectBuilder? OUTLINE_COLOR,
+    double? OUTLINE_WIDTH,
+    int? NUMBER_OF_VERTICAL_LINES,
+    int? SLICES,
+    String? SHADOWS,
+  })
+      : _SHOW = SHOW,
+        _LENGTH = LENGTH,
+        _TOP_RADIUS = TOP_RADIUS,
+        _BOTTOM_RADIUS = BOTTOM_RADIUS,
+        _HEIGHT_REFERENCE = HEIGHT_REFERENCE,
+        _FILL = FILL,
+        _MATERIAL = MATERIAL,
+        _OUTLINE = OUTLINE,
+        _OUTLINE_COLOR = OUTLINE_COLOR,
+        _OUTLINE_WIDTH = OUTLINE_WIDTH,
+        _NUMBER_OF_VERTICAL_LINES = NUMBER_OF_VERTICAL_LINES,
+        _SLICES = SLICES,
+        _SHADOWS = SHADOWS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? HEIGHT_REFERENCEOffset = _HEIGHT_REFERENCE == null ? null
+        : fbBuilder.writeString(_HEIGHT_REFERENCE!);
+    final int? MATERIALOffset = _MATERIAL?.getOrCreateOffset(fbBuilder);
+    final int? OUTLINE_COLOROffset = _OUTLINE_COLOR?.getOrCreateOffset(fbBuilder);
+    final int? SHADOWSOffset = _SHADOWS == null ? null
+        : fbBuilder.writeString(_SHADOWS!);
+    fbBuilder.startTable(13);
+    fbBuilder.addBool(0, _SHOW);
+    fbBuilder.addFloat64(1, _LENGTH);
+    fbBuilder.addFloat64(2, _TOP_RADIUS);
+    fbBuilder.addFloat64(3, _BOTTOM_RADIUS);
+    fbBuilder.addOffset(4, HEIGHT_REFERENCEOffset);
+    fbBuilder.addBool(5, _FILL);
+    fbBuilder.addOffset(6, MATERIALOffset);
+    fbBuilder.addBool(7, _OUTLINE);
+    fbBuilder.addOffset(8, OUTLINE_COLOROffset);
+    fbBuilder.addFloat64(9, _OUTLINE_WIDTH);
+    fbBuilder.addInt32(10, _NUMBER_OF_VERTICAL_LINES);
+    fbBuilder.addInt32(11, _SLICES);
+    fbBuilder.addOffset(12, SHADOWSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Ellipsoid (3D shape)
+class Czmellipsoid {
+  Czmellipsoid._(this._bc, this._bcOffset);
+  factory Czmellipsoid(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Czmellipsoid> reader = _CzmellipsoidReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Whether the ellipsoid is displayed
+  bool get SHOW => const fb.BoolReader().vTableGet(_bc, _bcOffset, 4, false);
+  ///  X radius in meters
+  double get RADII_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Y radius in meters
+  double get RADII_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Z radius in meters
+  double get RADII_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  Inner X radius
+  double get INNER_RADII_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  Inner Y radius
+  double get INNER_RADII_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  ///  Inner Z radius
+  double get INNER_RADII_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Minimum clock angle in radians
+  double get MINIMUM_CLOCK => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  ///  Maximum clock angle in radians
+  double get MAXIMUM_CLOCK => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  Minimum cone angle in radians
+  double get MINIMUM_CONE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Maximum cone angle in radians
+  double get MAXIMUM_CONE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  ///  Height reference
+  String? get HEIGHT_REFERENCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Fill flag
+  bool get FILL => const fb.BoolReader().vTableGet(_bc, _bcOffset, 28, false);
+  ///  Surface material
+  Czmmaterial? get MATERIAL => Czmmaterial.reader.vTableGetNullable(_bc, _bcOffset, 30);
+  ///  Outline flag
+  bool get OUTLINE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 32, false);
+  ///  Outline color
+  Czmcolor? get OUTLINE_COLOR => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 34);
+  ///  Outline width
+  double get OUTLINE_WIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  ///  Stack partitions
+  int get STACK_PARTITIONS => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 38, 0);
+  ///  Slice partitions
+  int get SLICE_PARTITIONS => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 40, 0);
+  ///  Subdivisions
+  int get SUBDIVISIONS => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 42, 0);
+  ///  Shadow mode
+  String? get SHADOWS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
+
+  @override
+  String toString() {
+    return 'Czmellipsoid{SHOW: ${SHOW}, RADII_X: ${RADII_X}, RADII_Y: ${RADII_Y}, RADII_Z: ${RADII_Z}, INNER_RADII_X: ${INNER_RADII_X}, INNER_RADII_Y: ${INNER_RADII_Y}, INNER_RADII_Z: ${INNER_RADII_Z}, MINIMUM_CLOCK: ${MINIMUM_CLOCK}, MAXIMUM_CLOCK: ${MAXIMUM_CLOCK}, MINIMUM_CONE: ${MINIMUM_CONE}, MAXIMUM_CONE: ${MAXIMUM_CONE}, HEIGHT_REFERENCE: ${HEIGHT_REFERENCE}, FILL: ${FILL}, MATERIAL: ${MATERIAL}, OUTLINE: ${OUTLINE}, OUTLINE_COLOR: ${OUTLINE_COLOR}, OUTLINE_WIDTH: ${OUTLINE_WIDTH}, STACK_PARTITIONS: ${STACK_PARTITIONS}, SLICE_PARTITIONS: ${SLICE_PARTITIONS}, SUBDIVISIONS: ${SUBDIVISIONS}, SHADOWS: ${SHADOWS}}';
+  }
+}
+
+class _CzmellipsoidReader extends fb.TableReader<Czmellipsoid> {
+  const _CzmellipsoidReader();
+
+  @override
+  Czmellipsoid createObject(fb.BufferContext bc, int offset) => 
+    Czmellipsoid._(bc, offset);
+}
+
+class CzmellipsoidBuilder {
+  CzmellipsoidBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(21);
+  }
+
+  int addShow(bool? SHOW) {
+    fbBuilder.addBool(0, SHOW);
+    return fbBuilder.offset;
+  }
+  int addRadiiX(double? RADII_X) {
+    fbBuilder.addFloat64(1, RADII_X);
+    return fbBuilder.offset;
+  }
+  int addRadiiY(double? RADII_Y) {
+    fbBuilder.addFloat64(2, RADII_Y);
+    return fbBuilder.offset;
+  }
+  int addRadiiZ(double? RADII_Z) {
+    fbBuilder.addFloat64(3, RADII_Z);
+    return fbBuilder.offset;
+  }
+  int addInnerRadiiX(double? INNER_RADII_X) {
+    fbBuilder.addFloat64(4, INNER_RADII_X);
+    return fbBuilder.offset;
+  }
+  int addInnerRadiiY(double? INNER_RADII_Y) {
+    fbBuilder.addFloat64(5, INNER_RADII_Y);
+    return fbBuilder.offset;
+  }
+  int addInnerRadiiZ(double? INNER_RADII_Z) {
+    fbBuilder.addFloat64(6, INNER_RADII_Z);
+    return fbBuilder.offset;
+  }
+  int addMinimumClock(double? MINIMUM_CLOCK) {
+    fbBuilder.addFloat64(7, MINIMUM_CLOCK);
+    return fbBuilder.offset;
+  }
+  int addMaximumClock(double? MAXIMUM_CLOCK) {
+    fbBuilder.addFloat64(8, MAXIMUM_CLOCK);
+    return fbBuilder.offset;
+  }
+  int addMinimumCone(double? MINIMUM_CONE) {
+    fbBuilder.addFloat64(9, MINIMUM_CONE);
+    return fbBuilder.offset;
+  }
+  int addMaximumCone(double? MAXIMUM_CONE) {
+    fbBuilder.addFloat64(10, MAXIMUM_CONE);
+    return fbBuilder.offset;
+  }
+  int addHeightReferenceOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addFill(bool? FILL) {
+    fbBuilder.addBool(12, FILL);
+    return fbBuilder.offset;
+  }
+  int addMaterialOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addOutline(bool? OUTLINE) {
+    fbBuilder.addBool(14, OUTLINE);
+    return fbBuilder.offset;
+  }
+  int addOutlineColorOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addOutlineWidth(double? OUTLINE_WIDTH) {
+    fbBuilder.addFloat64(16, OUTLINE_WIDTH);
+    return fbBuilder.offset;
+  }
+  int addStackPartitions(int? STACK_PARTITIONS) {
+    fbBuilder.addInt32(17, STACK_PARTITIONS);
+    return fbBuilder.offset;
+  }
+  int addSlicePartitions(int? SLICE_PARTITIONS) {
+    fbBuilder.addInt32(18, SLICE_PARTITIONS);
+    return fbBuilder.offset;
+  }
+  int addSubdivisions(int? SUBDIVISIONS) {
+    fbBuilder.addInt32(19, SUBDIVISIONS);
+    return fbBuilder.offset;
+  }
+  int addShadowsOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CzmellipsoidObjectBuilder extends fb.ObjectBuilder {
+  final bool? _SHOW;
+  final double? _RADII_X;
+  final double? _RADII_Y;
+  final double? _RADII_Z;
+  final double? _INNER_RADII_X;
+  final double? _INNER_RADII_Y;
+  final double? _INNER_RADII_Z;
+  final double? _MINIMUM_CLOCK;
+  final double? _MAXIMUM_CLOCK;
+  final double? _MINIMUM_CONE;
+  final double? _MAXIMUM_CONE;
+  final String? _HEIGHT_REFERENCE;
+  final bool? _FILL;
+  final CzmmaterialObjectBuilder? _MATERIAL;
+  final bool? _OUTLINE;
+  final CzmcolorObjectBuilder? _OUTLINE_COLOR;
+  final double? _OUTLINE_WIDTH;
+  final int? _STACK_PARTITIONS;
+  final int? _SLICE_PARTITIONS;
+  final int? _SUBDIVISIONS;
+  final String? _SHADOWS;
+
+  CzmellipsoidObjectBuilder({
+    bool? SHOW,
+    double? RADII_X,
+    double? RADII_Y,
+    double? RADII_Z,
+    double? INNER_RADII_X,
+    double? INNER_RADII_Y,
+    double? INNER_RADII_Z,
+    double? MINIMUM_CLOCK,
+    double? MAXIMUM_CLOCK,
+    double? MINIMUM_CONE,
+    double? MAXIMUM_CONE,
+    String? HEIGHT_REFERENCE,
+    bool? FILL,
+    CzmmaterialObjectBuilder? MATERIAL,
+    bool? OUTLINE,
+    CzmcolorObjectBuilder? OUTLINE_COLOR,
+    double? OUTLINE_WIDTH,
+    int? STACK_PARTITIONS,
+    int? SLICE_PARTITIONS,
+    int? SUBDIVISIONS,
+    String? SHADOWS,
+  })
+      : _SHOW = SHOW,
+        _RADII_X = RADII_X,
+        _RADII_Y = RADII_Y,
+        _RADII_Z = RADII_Z,
+        _INNER_RADII_X = INNER_RADII_X,
+        _INNER_RADII_Y = INNER_RADII_Y,
+        _INNER_RADII_Z = INNER_RADII_Z,
+        _MINIMUM_CLOCK = MINIMUM_CLOCK,
+        _MAXIMUM_CLOCK = MAXIMUM_CLOCK,
+        _MINIMUM_CONE = MINIMUM_CONE,
+        _MAXIMUM_CONE = MAXIMUM_CONE,
+        _HEIGHT_REFERENCE = HEIGHT_REFERENCE,
+        _FILL = FILL,
+        _MATERIAL = MATERIAL,
+        _OUTLINE = OUTLINE,
+        _OUTLINE_COLOR = OUTLINE_COLOR,
+        _OUTLINE_WIDTH = OUTLINE_WIDTH,
+        _STACK_PARTITIONS = STACK_PARTITIONS,
+        _SLICE_PARTITIONS = SLICE_PARTITIONS,
+        _SUBDIVISIONS = SUBDIVISIONS,
+        _SHADOWS = SHADOWS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? HEIGHT_REFERENCEOffset = _HEIGHT_REFERENCE == null ? null
+        : fbBuilder.writeString(_HEIGHT_REFERENCE!);
+    final int? MATERIALOffset = _MATERIAL?.getOrCreateOffset(fbBuilder);
+    final int? OUTLINE_COLOROffset = _OUTLINE_COLOR?.getOrCreateOffset(fbBuilder);
+    final int? SHADOWSOffset = _SHADOWS == null ? null
+        : fbBuilder.writeString(_SHADOWS!);
+    fbBuilder.startTable(21);
+    fbBuilder.addBool(0, _SHOW);
+    fbBuilder.addFloat64(1, _RADII_X);
+    fbBuilder.addFloat64(2, _RADII_Y);
+    fbBuilder.addFloat64(3, _RADII_Z);
+    fbBuilder.addFloat64(4, _INNER_RADII_X);
+    fbBuilder.addFloat64(5, _INNER_RADII_Y);
+    fbBuilder.addFloat64(6, _INNER_RADII_Z);
+    fbBuilder.addFloat64(7, _MINIMUM_CLOCK);
+    fbBuilder.addFloat64(8, _MAXIMUM_CLOCK);
+    fbBuilder.addFloat64(9, _MINIMUM_CONE);
+    fbBuilder.addFloat64(10, _MAXIMUM_CONE);
+    fbBuilder.addOffset(11, HEIGHT_REFERENCEOffset);
+    fbBuilder.addBool(12, _FILL);
+    fbBuilder.addOffset(13, MATERIALOffset);
+    fbBuilder.addBool(14, _OUTLINE);
+    fbBuilder.addOffset(15, OUTLINE_COLOROffset);
+    fbBuilder.addFloat64(16, _OUTLINE_WIDTH);
+    fbBuilder.addInt32(17, _STACK_PARTITIONS);
+    fbBuilder.addInt32(18, _SLICE_PARTITIONS);
+    fbBuilder.addInt32(19, _SUBDIVISIONS);
+    fbBuilder.addOffset(20, SHADOWSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Polyline volume (extruded 2D shape)
+class CzmpolylineVolume {
+  CzmpolylineVolume._(this._bc, this._bcOffset);
+  factory CzmpolylineVolume(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CzmpolylineVolume> reader = _CzmpolylineVolumeReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Whether displayed
+  bool get SHOW => const fb.BoolReader().vTableGet(_bc, _bcOffset, 4, false);
+  ///  Positions as cartographic degrees
+  List<double>? get POSITIONS_CARTOGRAPHIC_DEGREES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Positions as Cartesian
+  List<double>? get POSITIONS_CARTESIAN => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 8);
+  ///  2D shape [x, y, x, y, ...]
+  List<double>? get SHAPE => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Corner type
+  String? get CORNER_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Granularity in radians
+  double get GRANULARITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  ///  Fill flag
+  bool get FILL => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
+  ///  Surface material
+  Czmmaterial? get MATERIAL => Czmmaterial.reader.vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Outline flag
+  bool get OUTLINE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
+  ///  Outline color
+  Czmcolor? get OUTLINE_COLOR => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Outline width
+  double get OUTLINE_WIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  ///  Shadow mode
+  String? get SHADOWS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+
+  @override
+  String toString() {
+    return 'CzmpolylineVolume{SHOW: ${SHOW}, POSITIONS_CARTOGRAPHIC_DEGREES: ${POSITIONS_CARTOGRAPHIC_DEGREES}, POSITIONS_CARTESIAN: ${POSITIONS_CARTESIAN}, SHAPE: ${SHAPE}, CORNER_TYPE: ${CORNER_TYPE}, GRANULARITY: ${GRANULARITY}, FILL: ${FILL}, MATERIAL: ${MATERIAL}, OUTLINE: ${OUTLINE}, OUTLINE_COLOR: ${OUTLINE_COLOR}, OUTLINE_WIDTH: ${OUTLINE_WIDTH}, SHADOWS: ${SHADOWS}}';
+  }
+}
+
+class _CzmpolylineVolumeReader extends fb.TableReader<CzmpolylineVolume> {
+  const _CzmpolylineVolumeReader();
+
+  @override
+  CzmpolylineVolume createObject(fb.BufferContext bc, int offset) => 
+    CzmpolylineVolume._(bc, offset);
+}
+
+class CzmpolylineVolumeBuilder {
+  CzmpolylineVolumeBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(12);
+  }
+
+  int addShow(bool? SHOW) {
+    fbBuilder.addBool(0, SHOW);
+    return fbBuilder.offset;
+  }
+  int addPositionsCartographicDegreesOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addPositionsCartesianOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addShapeOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addCornerTypeOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addGranularity(double? GRANULARITY) {
+    fbBuilder.addFloat64(5, GRANULARITY);
+    return fbBuilder.offset;
+  }
+  int addFill(bool? FILL) {
+    fbBuilder.addBool(6, FILL);
+    return fbBuilder.offset;
+  }
+  int addMaterialOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addOutline(bool? OUTLINE) {
+    fbBuilder.addBool(8, OUTLINE);
+    return fbBuilder.offset;
+  }
+  int addOutlineColorOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addOutlineWidth(double? OUTLINE_WIDTH) {
+    fbBuilder.addFloat64(10, OUTLINE_WIDTH);
+    return fbBuilder.offset;
+  }
+  int addShadowsOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CzmpolylineVolumeObjectBuilder extends fb.ObjectBuilder {
+  final bool? _SHOW;
+  final List<double>? _POSITIONS_CARTOGRAPHIC_DEGREES;
+  final List<double>? _POSITIONS_CARTESIAN;
+  final List<double>? _SHAPE;
+  final String? _CORNER_TYPE;
+  final double? _GRANULARITY;
+  final bool? _FILL;
+  final CzmmaterialObjectBuilder? _MATERIAL;
+  final bool? _OUTLINE;
+  final CzmcolorObjectBuilder? _OUTLINE_COLOR;
+  final double? _OUTLINE_WIDTH;
+  final String? _SHADOWS;
+
+  CzmpolylineVolumeObjectBuilder({
+    bool? SHOW,
+    List<double>? POSITIONS_CARTOGRAPHIC_DEGREES,
+    List<double>? POSITIONS_CARTESIAN,
+    List<double>? SHAPE,
+    String? CORNER_TYPE,
+    double? GRANULARITY,
+    bool? FILL,
+    CzmmaterialObjectBuilder? MATERIAL,
+    bool? OUTLINE,
+    CzmcolorObjectBuilder? OUTLINE_COLOR,
+    double? OUTLINE_WIDTH,
+    String? SHADOWS,
+  })
+      : _SHOW = SHOW,
+        _POSITIONS_CARTOGRAPHIC_DEGREES = POSITIONS_CARTOGRAPHIC_DEGREES,
+        _POSITIONS_CARTESIAN = POSITIONS_CARTESIAN,
+        _SHAPE = SHAPE,
+        _CORNER_TYPE = CORNER_TYPE,
+        _GRANULARITY = GRANULARITY,
+        _FILL = FILL,
+        _MATERIAL = MATERIAL,
+        _OUTLINE = OUTLINE,
+        _OUTLINE_COLOR = OUTLINE_COLOR,
+        _OUTLINE_WIDTH = OUTLINE_WIDTH,
+        _SHADOWS = SHADOWS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? POSITIONS_CARTOGRAPHIC_DEGREESOffset = _POSITIONS_CARTOGRAPHIC_DEGREES == null ? null
+        : fbBuilder.writeListFloat64(_POSITIONS_CARTOGRAPHIC_DEGREES!);
+    final int? POSITIONS_CARTESIANOffset = _POSITIONS_CARTESIAN == null ? null
+        : fbBuilder.writeListFloat64(_POSITIONS_CARTESIAN!);
+    final int? SHAPEOffset = _SHAPE == null ? null
+        : fbBuilder.writeListFloat64(_SHAPE!);
+    final int? CORNER_TYPEOffset = _CORNER_TYPE == null ? null
+        : fbBuilder.writeString(_CORNER_TYPE!);
+    final int? MATERIALOffset = _MATERIAL?.getOrCreateOffset(fbBuilder);
+    final int? OUTLINE_COLOROffset = _OUTLINE_COLOR?.getOrCreateOffset(fbBuilder);
+    final int? SHADOWSOffset = _SHADOWS == null ? null
+        : fbBuilder.writeString(_SHADOWS!);
+    fbBuilder.startTable(12);
+    fbBuilder.addBool(0, _SHOW);
+    fbBuilder.addOffset(1, POSITIONS_CARTOGRAPHIC_DEGREESOffset);
+    fbBuilder.addOffset(2, POSITIONS_CARTESIANOffset);
+    fbBuilder.addOffset(3, SHAPEOffset);
+    fbBuilder.addOffset(4, CORNER_TYPEOffset);
+    fbBuilder.addFloat64(5, _GRANULARITY);
+    fbBuilder.addBool(6, _FILL);
+    fbBuilder.addOffset(7, MATERIALOffset);
+    fbBuilder.addBool(8, _OUTLINE);
+    fbBuilder.addOffset(9, OUTLINE_COLOROffset);
+    fbBuilder.addFloat64(10, _OUTLINE_WIDTH);
+    fbBuilder.addOffset(11, SHADOWSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Rectangle (cartographic rectangle)
+class Czmrectangle {
+  Czmrectangle._(this._bc, this._bcOffset);
+  factory Czmrectangle(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Czmrectangle> reader = _CzmrectangleReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Whether the rectangle is displayed
+  bool get SHOW => const fb.BoolReader().vTableGet(_bc, _bcOffset, 4, false);
+  ///  Coordinates [west, south, east, north] in degrees
+  List<double>? get COORDINATES_WSEN_DEGREES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Height in meters
+  double get HEIGHT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Height reference
+  String? get HEIGHT_REFERENCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Extruded height
+  double get EXTRUDED_HEIGHT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  Extruded height reference
+  String? get EXTRUDED_HEIGHT_REFERENCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Rotation in radians
+  double get ROTATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Texture rotation in radians
+  double get ST_ROTATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  ///  Granularity in radians
+  double get GRANULARITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  Fill flag
+  bool get FILL => const fb.BoolReader().vTableGet(_bc, _bcOffset, 22, false);
+  ///  Surface material
+  Czmmaterial? get MATERIAL => Czmmaterial.reader.vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Outline flag
+  bool get OUTLINE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 26, false);
+  ///  Outline color
+  Czmcolor? get OUTLINE_COLOR => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Outline width
+  double get OUTLINE_WIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  ///  Shadow mode
+  String? get SHADOWS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  ///  Classification type
+  String? get CLASSIFICATION_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  ///  Z-index for ordering
+  int get Z_INDEX => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 36, 0);
+
+  @override
+  String toString() {
+    return 'Czmrectangle{SHOW: ${SHOW}, COORDINATES_WSEN_DEGREES: ${COORDINATES_WSEN_DEGREES}, HEIGHT: ${HEIGHT}, HEIGHT_REFERENCE: ${HEIGHT_REFERENCE}, EXTRUDED_HEIGHT: ${EXTRUDED_HEIGHT}, EXTRUDED_HEIGHT_REFERENCE: ${EXTRUDED_HEIGHT_REFERENCE}, ROTATION: ${ROTATION}, ST_ROTATION: ${ST_ROTATION}, GRANULARITY: ${GRANULARITY}, FILL: ${FILL}, MATERIAL: ${MATERIAL}, OUTLINE: ${OUTLINE}, OUTLINE_COLOR: ${OUTLINE_COLOR}, OUTLINE_WIDTH: ${OUTLINE_WIDTH}, SHADOWS: ${SHADOWS}, CLASSIFICATION_TYPE: ${CLASSIFICATION_TYPE}, Z_INDEX: ${Z_INDEX}}';
+  }
+}
+
+class _CzmrectangleReader extends fb.TableReader<Czmrectangle> {
+  const _CzmrectangleReader();
+
+  @override
+  Czmrectangle createObject(fb.BufferContext bc, int offset) => 
+    Czmrectangle._(bc, offset);
+}
+
+class CzmrectangleBuilder {
+  CzmrectangleBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(17);
+  }
+
+  int addShow(bool? SHOW) {
+    fbBuilder.addBool(0, SHOW);
+    return fbBuilder.offset;
+  }
+  int addCoordinatesWsenDegreesOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addHeight(double? HEIGHT) {
+    fbBuilder.addFloat64(2, HEIGHT);
+    return fbBuilder.offset;
+  }
+  int addHeightReferenceOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addExtrudedHeight(double? EXTRUDED_HEIGHT) {
+    fbBuilder.addFloat64(4, EXTRUDED_HEIGHT);
+    return fbBuilder.offset;
+  }
+  int addExtrudedHeightReferenceOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addRotation(double? ROTATION) {
+    fbBuilder.addFloat64(6, ROTATION);
+    return fbBuilder.offset;
+  }
+  int addStRotation(double? ST_ROTATION) {
+    fbBuilder.addFloat64(7, ST_ROTATION);
+    return fbBuilder.offset;
+  }
+  int addGranularity(double? GRANULARITY) {
+    fbBuilder.addFloat64(8, GRANULARITY);
+    return fbBuilder.offset;
+  }
+  int addFill(bool? FILL) {
+    fbBuilder.addBool(9, FILL);
+    return fbBuilder.offset;
+  }
+  int addMaterialOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addOutline(bool? OUTLINE) {
+    fbBuilder.addBool(11, OUTLINE);
+    return fbBuilder.offset;
+  }
+  int addOutlineColorOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addOutlineWidth(double? OUTLINE_WIDTH) {
+    fbBuilder.addFloat64(13, OUTLINE_WIDTH);
+    return fbBuilder.offset;
+  }
+  int addShadowsOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addClassificationTypeOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addZIndex(int? Z_INDEX) {
+    fbBuilder.addInt32(16, Z_INDEX);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CzmrectangleObjectBuilder extends fb.ObjectBuilder {
+  final bool? _SHOW;
+  final List<double>? _COORDINATES_WSEN_DEGREES;
+  final double? _HEIGHT;
+  final String? _HEIGHT_REFERENCE;
+  final double? _EXTRUDED_HEIGHT;
+  final String? _EXTRUDED_HEIGHT_REFERENCE;
+  final double? _ROTATION;
+  final double? _ST_ROTATION;
+  final double? _GRANULARITY;
+  final bool? _FILL;
+  final CzmmaterialObjectBuilder? _MATERIAL;
+  final bool? _OUTLINE;
+  final CzmcolorObjectBuilder? _OUTLINE_COLOR;
+  final double? _OUTLINE_WIDTH;
+  final String? _SHADOWS;
+  final String? _CLASSIFICATION_TYPE;
+  final int? _Z_INDEX;
+
+  CzmrectangleObjectBuilder({
+    bool? SHOW,
+    List<double>? COORDINATES_WSEN_DEGREES,
+    double? HEIGHT,
+    String? HEIGHT_REFERENCE,
+    double? EXTRUDED_HEIGHT,
+    String? EXTRUDED_HEIGHT_REFERENCE,
+    double? ROTATION,
+    double? ST_ROTATION,
+    double? GRANULARITY,
+    bool? FILL,
+    CzmmaterialObjectBuilder? MATERIAL,
+    bool? OUTLINE,
+    CzmcolorObjectBuilder? OUTLINE_COLOR,
+    double? OUTLINE_WIDTH,
+    String? SHADOWS,
+    String? CLASSIFICATION_TYPE,
+    int? Z_INDEX,
+  })
+      : _SHOW = SHOW,
+        _COORDINATES_WSEN_DEGREES = COORDINATES_WSEN_DEGREES,
+        _HEIGHT = HEIGHT,
+        _HEIGHT_REFERENCE = HEIGHT_REFERENCE,
+        _EXTRUDED_HEIGHT = EXTRUDED_HEIGHT,
+        _EXTRUDED_HEIGHT_REFERENCE = EXTRUDED_HEIGHT_REFERENCE,
+        _ROTATION = ROTATION,
+        _ST_ROTATION = ST_ROTATION,
+        _GRANULARITY = GRANULARITY,
+        _FILL = FILL,
+        _MATERIAL = MATERIAL,
+        _OUTLINE = OUTLINE,
+        _OUTLINE_COLOR = OUTLINE_COLOR,
+        _OUTLINE_WIDTH = OUTLINE_WIDTH,
+        _SHADOWS = SHADOWS,
+        _CLASSIFICATION_TYPE = CLASSIFICATION_TYPE,
+        _Z_INDEX = Z_INDEX;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? COORDINATES_WSEN_DEGREESOffset = _COORDINATES_WSEN_DEGREES == null ? null
+        : fbBuilder.writeListFloat64(_COORDINATES_WSEN_DEGREES!);
+    final int? HEIGHT_REFERENCEOffset = _HEIGHT_REFERENCE == null ? null
+        : fbBuilder.writeString(_HEIGHT_REFERENCE!);
+    final int? EXTRUDED_HEIGHT_REFERENCEOffset = _EXTRUDED_HEIGHT_REFERENCE == null ? null
+        : fbBuilder.writeString(_EXTRUDED_HEIGHT_REFERENCE!);
+    final int? MATERIALOffset = _MATERIAL?.getOrCreateOffset(fbBuilder);
+    final int? OUTLINE_COLOROffset = _OUTLINE_COLOR?.getOrCreateOffset(fbBuilder);
+    final int? SHADOWSOffset = _SHADOWS == null ? null
+        : fbBuilder.writeString(_SHADOWS!);
+    final int? CLASSIFICATION_TYPEOffset = _CLASSIFICATION_TYPE == null ? null
+        : fbBuilder.writeString(_CLASSIFICATION_TYPE!);
+    fbBuilder.startTable(17);
+    fbBuilder.addBool(0, _SHOW);
+    fbBuilder.addOffset(1, COORDINATES_WSEN_DEGREESOffset);
+    fbBuilder.addFloat64(2, _HEIGHT);
+    fbBuilder.addOffset(3, HEIGHT_REFERENCEOffset);
+    fbBuilder.addFloat64(4, _EXTRUDED_HEIGHT);
+    fbBuilder.addOffset(5, EXTRUDED_HEIGHT_REFERENCEOffset);
+    fbBuilder.addFloat64(6, _ROTATION);
+    fbBuilder.addFloat64(7, _ST_ROTATION);
+    fbBuilder.addFloat64(8, _GRANULARITY);
+    fbBuilder.addBool(9, _FILL);
+    fbBuilder.addOffset(10, MATERIALOffset);
+    fbBuilder.addBool(11, _OUTLINE);
+    fbBuilder.addOffset(12, OUTLINE_COLOROffset);
+    fbBuilder.addFloat64(13, _OUTLINE_WIDTH);
+    fbBuilder.addOffset(14, SHADOWSOffset);
+    fbBuilder.addOffset(15, CLASSIFICATION_TYPEOffset);
+    fbBuilder.addInt32(16, _Z_INDEX);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  3D Tileset
+class Czmtileset {
+  Czmtileset._(this._bc, this._bcOffset);
+  factory Czmtileset(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Czmtileset> reader = _CzmtilesetReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Whether the tileset is displayed
+  bool get SHOW => const fb.BoolReader().vTableGet(_bc, _bcOffset, 4, false);
+  ///  URI to the tileset
+  String? get URI => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Maximum screen space error
+  double get MAXIMUM_SCREEN_SPACE_ERROR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+
+  @override
+  String toString() {
+    return 'Czmtileset{SHOW: ${SHOW}, URI: ${URI}, MAXIMUM_SCREEN_SPACE_ERROR: ${MAXIMUM_SCREEN_SPACE_ERROR}}';
+  }
+}
+
+class _CzmtilesetReader extends fb.TableReader<Czmtileset> {
+  const _CzmtilesetReader();
+
+  @override
+  Czmtileset createObject(fb.BufferContext bc, int offset) => 
+    Czmtileset._(bc, offset);
+}
+
+class CzmtilesetBuilder {
+  CzmtilesetBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addShow(bool? SHOW) {
+    fbBuilder.addBool(0, SHOW);
+    return fbBuilder.offset;
+  }
+  int addUriOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addMaximumScreenSpaceError(double? MAXIMUM_SCREEN_SPACE_ERROR) {
+    fbBuilder.addFloat64(2, MAXIMUM_SCREEN_SPACE_ERROR);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CzmtilesetObjectBuilder extends fb.ObjectBuilder {
+  final bool? _SHOW;
+  final String? _URI;
+  final double? _MAXIMUM_SCREEN_SPACE_ERROR;
+
+  CzmtilesetObjectBuilder({
+    bool? SHOW,
+    String? URI,
+    double? MAXIMUM_SCREEN_SPACE_ERROR,
+  })
+      : _SHOW = SHOW,
+        _URI = URI,
+        _MAXIMUM_SCREEN_SPACE_ERROR = MAXIMUM_SCREEN_SPACE_ERROR;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? URIOffset = _URI == null ? null
+        : fbBuilder.writeString(_URI!);
+    fbBuilder.startTable(3);
+    fbBuilder.addBool(0, _SHOW);
+    fbBuilder.addOffset(1, URIOffset);
+    fbBuilder.addFloat64(2, _MAXIMUM_SCREEN_SPACE_ERROR);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Wall (vertical curtain)
+class Czmwall {
+  Czmwall._(this._bc, this._bcOffset);
+  factory Czmwall(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<Czmwall> reader = _CzmwallReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Whether the wall is displayed
+  bool get SHOW => const fb.BoolReader().vTableGet(_bc, _bcOffset, 4, false);
+  ///  Positions as cartographic degrees
+  List<double>? get POSITIONS_CARTOGRAPHIC_DEGREES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Positions as Cartesian
+  List<double>? get POSITIONS_CARTESIAN => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Minimum heights per position
+  List<double>? get MINIMUM_HEIGHTS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Maximum heights per position
+  List<double>? get MAXIMUM_HEIGHTS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Granularity in radians
+  double get GRANULARITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  ///  Fill flag
+  bool get FILL => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
+  ///  Surface material
+  Czmmaterial? get MATERIAL => Czmmaterial.reader.vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Outline flag
+  bool get OUTLINE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
+  ///  Outline color
+  Czmcolor? get OUTLINE_COLOR => Czmcolor.reader.vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Outline width
+  double get OUTLINE_WIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  ///  Shadow mode
+  String? get SHADOWS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+
+  @override
+  String toString() {
+    return 'Czmwall{SHOW: ${SHOW}, POSITIONS_CARTOGRAPHIC_DEGREES: ${POSITIONS_CARTOGRAPHIC_DEGREES}, POSITIONS_CARTESIAN: ${POSITIONS_CARTESIAN}, MINIMUM_HEIGHTS: ${MINIMUM_HEIGHTS}, MAXIMUM_HEIGHTS: ${MAXIMUM_HEIGHTS}, GRANULARITY: ${GRANULARITY}, FILL: ${FILL}, MATERIAL: ${MATERIAL}, OUTLINE: ${OUTLINE}, OUTLINE_COLOR: ${OUTLINE_COLOR}, OUTLINE_WIDTH: ${OUTLINE_WIDTH}, SHADOWS: ${SHADOWS}}';
+  }
+}
+
+class _CzmwallReader extends fb.TableReader<Czmwall> {
+  const _CzmwallReader();
+
+  @override
+  Czmwall createObject(fb.BufferContext bc, int offset) => 
+    Czmwall._(bc, offset);
+}
+
+class CzmwallBuilder {
+  CzmwallBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(12);
+  }
+
+  int addShow(bool? SHOW) {
+    fbBuilder.addBool(0, SHOW);
+    return fbBuilder.offset;
+  }
+  int addPositionsCartographicDegreesOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addPositionsCartesianOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addMinimumHeightsOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addMaximumHeightsOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addGranularity(double? GRANULARITY) {
+    fbBuilder.addFloat64(5, GRANULARITY);
+    return fbBuilder.offset;
+  }
+  int addFill(bool? FILL) {
+    fbBuilder.addBool(6, FILL);
+    return fbBuilder.offset;
+  }
+  int addMaterialOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addOutline(bool? OUTLINE) {
+    fbBuilder.addBool(8, OUTLINE);
+    return fbBuilder.offset;
+  }
+  int addOutlineColorOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addOutlineWidth(double? OUTLINE_WIDTH) {
+    fbBuilder.addFloat64(10, OUTLINE_WIDTH);
+    return fbBuilder.offset;
+  }
+  int addShadowsOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CzmwallObjectBuilder extends fb.ObjectBuilder {
+  final bool? _SHOW;
+  final List<double>? _POSITIONS_CARTOGRAPHIC_DEGREES;
+  final List<double>? _POSITIONS_CARTESIAN;
+  final List<double>? _MINIMUM_HEIGHTS;
+  final List<double>? _MAXIMUM_HEIGHTS;
+  final double? _GRANULARITY;
+  final bool? _FILL;
+  final CzmmaterialObjectBuilder? _MATERIAL;
+  final bool? _OUTLINE;
+  final CzmcolorObjectBuilder? _OUTLINE_COLOR;
+  final double? _OUTLINE_WIDTH;
+  final String? _SHADOWS;
+
+  CzmwallObjectBuilder({
+    bool? SHOW,
+    List<double>? POSITIONS_CARTOGRAPHIC_DEGREES,
+    List<double>? POSITIONS_CARTESIAN,
+    List<double>? MINIMUM_HEIGHTS,
+    List<double>? MAXIMUM_HEIGHTS,
+    double? GRANULARITY,
+    bool? FILL,
+    CzmmaterialObjectBuilder? MATERIAL,
+    bool? OUTLINE,
+    CzmcolorObjectBuilder? OUTLINE_COLOR,
+    double? OUTLINE_WIDTH,
+    String? SHADOWS,
+  })
+      : _SHOW = SHOW,
+        _POSITIONS_CARTOGRAPHIC_DEGREES = POSITIONS_CARTOGRAPHIC_DEGREES,
+        _POSITIONS_CARTESIAN = POSITIONS_CARTESIAN,
+        _MINIMUM_HEIGHTS = MINIMUM_HEIGHTS,
+        _MAXIMUM_HEIGHTS = MAXIMUM_HEIGHTS,
+        _GRANULARITY = GRANULARITY,
+        _FILL = FILL,
+        _MATERIAL = MATERIAL,
+        _OUTLINE = OUTLINE,
+        _OUTLINE_COLOR = OUTLINE_COLOR,
+        _OUTLINE_WIDTH = OUTLINE_WIDTH,
+        _SHADOWS = SHADOWS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? POSITIONS_CARTOGRAPHIC_DEGREESOffset = _POSITIONS_CARTOGRAPHIC_DEGREES == null ? null
+        : fbBuilder.writeListFloat64(_POSITIONS_CARTOGRAPHIC_DEGREES!);
+    final int? POSITIONS_CARTESIANOffset = _POSITIONS_CARTESIAN == null ? null
+        : fbBuilder.writeListFloat64(_POSITIONS_CARTESIAN!);
+    final int? MINIMUM_HEIGHTSOffset = _MINIMUM_HEIGHTS == null ? null
+        : fbBuilder.writeListFloat64(_MINIMUM_HEIGHTS!);
+    final int? MAXIMUM_HEIGHTSOffset = _MAXIMUM_HEIGHTS == null ? null
+        : fbBuilder.writeListFloat64(_MAXIMUM_HEIGHTS!);
+    final int? MATERIALOffset = _MATERIAL?.getOrCreateOffset(fbBuilder);
+    final int? OUTLINE_COLOROffset = _OUTLINE_COLOR?.getOrCreateOffset(fbBuilder);
+    final int? SHADOWSOffset = _SHADOWS == null ? null
+        : fbBuilder.writeString(_SHADOWS!);
+    fbBuilder.startTable(12);
+    fbBuilder.addBool(0, _SHOW);
+    fbBuilder.addOffset(1, POSITIONS_CARTOGRAPHIC_DEGREESOffset);
+    fbBuilder.addOffset(2, POSITIONS_CARTESIANOffset);
+    fbBuilder.addOffset(3, MINIMUM_HEIGHTSOffset);
+    fbBuilder.addOffset(4, MAXIMUM_HEIGHTSOffset);
+    fbBuilder.addFloat64(5, _GRANULARITY);
+    fbBuilder.addBool(6, _FILL);
+    fbBuilder.addOffset(7, MATERIALOffset);
+    fbBuilder.addBool(8, _OUTLINE);
+    fbBuilder.addOffset(9, OUTLINE_COLOROffset);
+    fbBuilder.addFloat64(10, _OUTLINE_WIDTH);
+    fbBuilder.addOffset(11, SHADOWSOffset);
     return fbBuilder.endTable();
   }
 
@@ -1966,10 +6698,48 @@ class Czmpacket {
   Czmpath? get PATH => Czmpath.reader.vTableGetNullable(_bc, _bcOffset, 36);
   ///  Ellipse properties
   Czmellipse? get ELLIPSE => Czmellipse.reader.vTableGetNullable(_bc, _bcOffset, 38);
+  ///  Orientation (quaternion)
+  Czmorientation? get ORIENTATION => Czmorientation.reader.vTableGetNullable(_bc, _bcOffset, 40);
+  ///  Suggested camera offset
+  CzmviewFrom? get VIEW_FROM => CzmviewFrom.reader.vTableGetNullable(_bc, _bcOffset, 42);
+  ///  Whether to delete this object
+  bool get DELETE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 44, false);
+  ///  Box properties
+  Czmbox? get BOX => Czmbox.reader.vTableGetNullable(_bc, _bcOffset, 46);
+  ///  Corridor properties
+  Czmcorridor? get CORRIDOR => Czmcorridor.reader.vTableGetNullable(_bc, _bcOffset, 48);
+  ///  Cylinder properties
+  Czmcylinder? get CYLINDER => Czmcylinder.reader.vTableGetNullable(_bc, _bcOffset, 50);
+  ///  Ellipsoid properties
+  Czmellipsoid? get ELLIPSOID => Czmellipsoid.reader.vTableGetNullable(_bc, _bcOffset, 52);
+  ///  Polyline volume properties
+  CzmpolylineVolume? get POLYLINE_VOLUME => CzmpolylineVolume.reader.vTableGetNullable(_bc, _bcOffset, 54);
+  ///  Rectangle properties
+  Czmrectangle? get RECTANGLE => Czmrectangle.reader.vTableGetNullable(_bc, _bcOffset, 56);
+  ///  3D Tileset properties
+  Czmtileset? get TILESET => Czmtileset.reader.vTableGetNullable(_bc, _bcOffset, 58);
+  ///  Wall properties
+  Czmwall? get WALL => Czmwall.reader.vTableGetNullable(_bc, _bcOffset, 60);
+  ///  Position interpolation settings
+  Czminterpolation? get POSITION_INTERPOLATION => Czminterpolation.reader.vTableGetNullable(_bc, _bcOffset, 62);
+  ///  Position reference frame (FIXED or INERTIAL)
+  String? get POSITION_REFERENCE_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 64);
+  ///  Position reference to another entity
+  String? get POSITION_REFERENCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 66);
+  ///  Orientation epoch (ISO 8601)
+  String? get ORIENTATION_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 68);
+  ///  Orientation sampled data [t, x, y, z, w, t, x, y, z, w, ...]
+  List<double>? get ORIENTATION_ARRAY => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 70);
+  ///  Orientation interpolation settings
+  Czminterpolation? get ORIENTATION_INTERPOLATION => Czminterpolation.reader.vTableGetNullable(_bc, _bcOffset, 72);
+  ///  Orientation reference to another entity
+  String? get ORIENTATION_REFERENCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 74);
+  ///  Generic bag for all time-dynamic (non-static) properties
+  List<CzmdynamicProperty>? get DYNAMIC_PROPERTIES => const fb.ListReader<CzmdynamicProperty>(CzmdynamicProperty.reader).vTableGetNullable(_bc, _bcOffset, 76);
 
   @override
   String toString() {
-    return 'Czmpacket{ID: ${ID}, NAME: ${NAME}, PARENT: ${PARENT}, DESCRIPTION: ${DESCRIPTION}, AVAILABILITY: ${AVAILABILITY}, POSITION_CARTOGRAPHIC_DEGREES: ${POSITION_CARTOGRAPHIC_DEGREES}, POSITION_CARTESIAN: ${POSITION_CARTESIAN}, POSITION_EPOCH: ${POSITION_EPOCH}, POSITION_CARTOGRAPHIC_DEGREES_ARRAY: ${POSITION_CARTOGRAPHIC_DEGREES_ARRAY}, POSITION_CARTESIAN_ARRAY: ${POSITION_CARTESIAN_ARRAY}, BILLBOARD: ${BILLBOARD}, LABEL: ${LABEL}, POINT: ${POINT}, POLYLINE: ${POLYLINE}, POLYGON: ${POLYGON}, MODEL: ${MODEL}, PATH: ${PATH}, ELLIPSE: ${ELLIPSE}}';
+    return 'Czmpacket{ID: ${ID}, NAME: ${NAME}, PARENT: ${PARENT}, DESCRIPTION: ${DESCRIPTION}, AVAILABILITY: ${AVAILABILITY}, POSITION_CARTOGRAPHIC_DEGREES: ${POSITION_CARTOGRAPHIC_DEGREES}, POSITION_CARTESIAN: ${POSITION_CARTESIAN}, POSITION_EPOCH: ${POSITION_EPOCH}, POSITION_CARTOGRAPHIC_DEGREES_ARRAY: ${POSITION_CARTOGRAPHIC_DEGREES_ARRAY}, POSITION_CARTESIAN_ARRAY: ${POSITION_CARTESIAN_ARRAY}, BILLBOARD: ${BILLBOARD}, LABEL: ${LABEL}, POINT: ${POINT}, POLYLINE: ${POLYLINE}, POLYGON: ${POLYGON}, MODEL: ${MODEL}, PATH: ${PATH}, ELLIPSE: ${ELLIPSE}, ORIENTATION: ${ORIENTATION}, VIEW_FROM: ${VIEW_FROM}, DELETE: ${DELETE}, BOX: ${BOX}, CORRIDOR: ${CORRIDOR}, CYLINDER: ${CYLINDER}, ELLIPSOID: ${ELLIPSOID}, POLYLINE_VOLUME: ${POLYLINE_VOLUME}, RECTANGLE: ${RECTANGLE}, TILESET: ${TILESET}, WALL: ${WALL}, POSITION_INTERPOLATION: ${POSITION_INTERPOLATION}, POSITION_REFERENCE_FRAME: ${POSITION_REFERENCE_FRAME}, POSITION_REFERENCE: ${POSITION_REFERENCE}, ORIENTATION_EPOCH: ${ORIENTATION_EPOCH}, ORIENTATION_ARRAY: ${ORIENTATION_ARRAY}, ORIENTATION_INTERPOLATION: ${ORIENTATION_INTERPOLATION}, ORIENTATION_REFERENCE: ${ORIENTATION_REFERENCE}, DYNAMIC_PROPERTIES: ${DYNAMIC_PROPERTIES}}';
   }
 }
 
@@ -1987,7 +6757,7 @@ class CzmpacketBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(18);
+    fbBuilder.startTable(37);
   }
 
   int addIdOffset(int? offset) {
@@ -2062,6 +6832,82 @@ class CzmpacketBuilder {
     fbBuilder.addOffset(17, offset);
     return fbBuilder.offset;
   }
+  int addOrientationOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addViewFromOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addDelete(bool? DELETE) {
+    fbBuilder.addBool(20, DELETE);
+    return fbBuilder.offset;
+  }
+  int addBoxOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addCorridorOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addCylinderOffset(int? offset) {
+    fbBuilder.addOffset(23, offset);
+    return fbBuilder.offset;
+  }
+  int addEllipsoidOffset(int? offset) {
+    fbBuilder.addOffset(24, offset);
+    return fbBuilder.offset;
+  }
+  int addPolylineVolumeOffset(int? offset) {
+    fbBuilder.addOffset(25, offset);
+    return fbBuilder.offset;
+  }
+  int addRectangleOffset(int? offset) {
+    fbBuilder.addOffset(26, offset);
+    return fbBuilder.offset;
+  }
+  int addTilesetOffset(int? offset) {
+    fbBuilder.addOffset(27, offset);
+    return fbBuilder.offset;
+  }
+  int addWallOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
+  int addPositionInterpolationOffset(int? offset) {
+    fbBuilder.addOffset(29, offset);
+    return fbBuilder.offset;
+  }
+  int addPositionReferenceFrameOffset(int? offset) {
+    fbBuilder.addOffset(30, offset);
+    return fbBuilder.offset;
+  }
+  int addPositionReferenceOffset(int? offset) {
+    fbBuilder.addOffset(31, offset);
+    return fbBuilder.offset;
+  }
+  int addOrientationEpochOffset(int? offset) {
+    fbBuilder.addOffset(32, offset);
+    return fbBuilder.offset;
+  }
+  int addOrientationArrayOffset(int? offset) {
+    fbBuilder.addOffset(33, offset);
+    return fbBuilder.offset;
+  }
+  int addOrientationInterpolationOffset(int? offset) {
+    fbBuilder.addOffset(34, offset);
+    return fbBuilder.offset;
+  }
+  int addOrientationReferenceOffset(int? offset) {
+    fbBuilder.addOffset(35, offset);
+    return fbBuilder.offset;
+  }
+  int addDynamicPropertiesOffset(int? offset) {
+    fbBuilder.addOffset(36, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -2087,6 +6933,25 @@ class CzmpacketObjectBuilder extends fb.ObjectBuilder {
   final CzmmodelObjectBuilder? _MODEL;
   final CzmpathObjectBuilder? _PATH;
   final CzmellipseObjectBuilder? _ELLIPSE;
+  final CzmorientationObjectBuilder? _ORIENTATION;
+  final CzmviewFromObjectBuilder? _VIEW_FROM;
+  final bool? _DELETE;
+  final CzmboxObjectBuilder? _BOX;
+  final CzmcorridorObjectBuilder? _CORRIDOR;
+  final CzmcylinderObjectBuilder? _CYLINDER;
+  final CzmellipsoidObjectBuilder? _ELLIPSOID;
+  final CzmpolylineVolumeObjectBuilder? _POLYLINE_VOLUME;
+  final CzmrectangleObjectBuilder? _RECTANGLE;
+  final CzmtilesetObjectBuilder? _TILESET;
+  final CzmwallObjectBuilder? _WALL;
+  final CzminterpolationObjectBuilder? _POSITION_INTERPOLATION;
+  final String? _POSITION_REFERENCE_FRAME;
+  final String? _POSITION_REFERENCE;
+  final String? _ORIENTATION_EPOCH;
+  final List<double>? _ORIENTATION_ARRAY;
+  final CzminterpolationObjectBuilder? _ORIENTATION_INTERPOLATION;
+  final String? _ORIENTATION_REFERENCE;
+  final List<CzmdynamicPropertyObjectBuilder>? _DYNAMIC_PROPERTIES;
 
   CzmpacketObjectBuilder({
     String? ID,
@@ -2107,6 +6972,25 @@ class CzmpacketObjectBuilder extends fb.ObjectBuilder {
     CzmmodelObjectBuilder? MODEL,
     CzmpathObjectBuilder? PATH,
     CzmellipseObjectBuilder? ELLIPSE,
+    CzmorientationObjectBuilder? ORIENTATION,
+    CzmviewFromObjectBuilder? VIEW_FROM,
+    bool? DELETE,
+    CzmboxObjectBuilder? BOX,
+    CzmcorridorObjectBuilder? CORRIDOR,
+    CzmcylinderObjectBuilder? CYLINDER,
+    CzmellipsoidObjectBuilder? ELLIPSOID,
+    CzmpolylineVolumeObjectBuilder? POLYLINE_VOLUME,
+    CzmrectangleObjectBuilder? RECTANGLE,
+    CzmtilesetObjectBuilder? TILESET,
+    CzmwallObjectBuilder? WALL,
+    CzminterpolationObjectBuilder? POSITION_INTERPOLATION,
+    String? POSITION_REFERENCE_FRAME,
+    String? POSITION_REFERENCE,
+    String? ORIENTATION_EPOCH,
+    List<double>? ORIENTATION_ARRAY,
+    CzminterpolationObjectBuilder? ORIENTATION_INTERPOLATION,
+    String? ORIENTATION_REFERENCE,
+    List<CzmdynamicPropertyObjectBuilder>? DYNAMIC_PROPERTIES,
   })
       : _ID = ID,
         _NAME = NAME,
@@ -2125,7 +7009,26 @@ class CzmpacketObjectBuilder extends fb.ObjectBuilder {
         _POLYGON = POLYGON,
         _MODEL = MODEL,
         _PATH = PATH,
-        _ELLIPSE = ELLIPSE;
+        _ELLIPSE = ELLIPSE,
+        _ORIENTATION = ORIENTATION,
+        _VIEW_FROM = VIEW_FROM,
+        _DELETE = DELETE,
+        _BOX = BOX,
+        _CORRIDOR = CORRIDOR,
+        _CYLINDER = CYLINDER,
+        _ELLIPSOID = ELLIPSOID,
+        _POLYLINE_VOLUME = POLYLINE_VOLUME,
+        _RECTANGLE = RECTANGLE,
+        _TILESET = TILESET,
+        _WALL = WALL,
+        _POSITION_INTERPOLATION = POSITION_INTERPOLATION,
+        _POSITION_REFERENCE_FRAME = POSITION_REFERENCE_FRAME,
+        _POSITION_REFERENCE = POSITION_REFERENCE,
+        _ORIENTATION_EPOCH = ORIENTATION_EPOCH,
+        _ORIENTATION_ARRAY = ORIENTATION_ARRAY,
+        _ORIENTATION_INTERPOLATION = ORIENTATION_INTERPOLATION,
+        _ORIENTATION_REFERENCE = ORIENTATION_REFERENCE,
+        _DYNAMIC_PROPERTIES = DYNAMIC_PROPERTIES;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -2156,7 +7059,31 @@ class CzmpacketObjectBuilder extends fb.ObjectBuilder {
     final int? MODELOffset = _MODEL?.getOrCreateOffset(fbBuilder);
     final int? PATHOffset = _PATH?.getOrCreateOffset(fbBuilder);
     final int? ELLIPSEOffset = _ELLIPSE?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(18);
+    final int? ORIENTATIONOffset = _ORIENTATION?.getOrCreateOffset(fbBuilder);
+    final int? VIEW_FROMOffset = _VIEW_FROM?.getOrCreateOffset(fbBuilder);
+    final int? BOXOffset = _BOX?.getOrCreateOffset(fbBuilder);
+    final int? CORRIDOROffset = _CORRIDOR?.getOrCreateOffset(fbBuilder);
+    final int? CYLINDEROffset = _CYLINDER?.getOrCreateOffset(fbBuilder);
+    final int? ELLIPSOIDOffset = _ELLIPSOID?.getOrCreateOffset(fbBuilder);
+    final int? POLYLINE_VOLUMEOffset = _POLYLINE_VOLUME?.getOrCreateOffset(fbBuilder);
+    final int? RECTANGLEOffset = _RECTANGLE?.getOrCreateOffset(fbBuilder);
+    final int? TILESETOffset = _TILESET?.getOrCreateOffset(fbBuilder);
+    final int? WALLOffset = _WALL?.getOrCreateOffset(fbBuilder);
+    final int? POSITION_INTERPOLATIONOffset = _POSITION_INTERPOLATION?.getOrCreateOffset(fbBuilder);
+    final int? POSITION_REFERENCE_FRAMEOffset = _POSITION_REFERENCE_FRAME == null ? null
+        : fbBuilder.writeString(_POSITION_REFERENCE_FRAME!);
+    final int? POSITION_REFERENCEOffset = _POSITION_REFERENCE == null ? null
+        : fbBuilder.writeString(_POSITION_REFERENCE!);
+    final int? ORIENTATION_EPOCHOffset = _ORIENTATION_EPOCH == null ? null
+        : fbBuilder.writeString(_ORIENTATION_EPOCH!);
+    final int? ORIENTATION_ARRAYOffset = _ORIENTATION_ARRAY == null ? null
+        : fbBuilder.writeListFloat64(_ORIENTATION_ARRAY!);
+    final int? ORIENTATION_INTERPOLATIONOffset = _ORIENTATION_INTERPOLATION?.getOrCreateOffset(fbBuilder);
+    final int? ORIENTATION_REFERENCEOffset = _ORIENTATION_REFERENCE == null ? null
+        : fbBuilder.writeString(_ORIENTATION_REFERENCE!);
+    final int? DYNAMIC_PROPERTIESOffset = _DYNAMIC_PROPERTIES == null ? null
+        : fbBuilder.writeList(_DYNAMIC_PROPERTIES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(37);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, NAMEOffset);
     fbBuilder.addOffset(2, PARENTOffset);
@@ -2175,6 +7102,25 @@ class CzmpacketObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(15, MODELOffset);
     fbBuilder.addOffset(16, PATHOffset);
     fbBuilder.addOffset(17, ELLIPSEOffset);
+    fbBuilder.addOffset(18, ORIENTATIONOffset);
+    fbBuilder.addOffset(19, VIEW_FROMOffset);
+    fbBuilder.addBool(20, _DELETE);
+    fbBuilder.addOffset(21, BOXOffset);
+    fbBuilder.addOffset(22, CORRIDOROffset);
+    fbBuilder.addOffset(23, CYLINDEROffset);
+    fbBuilder.addOffset(24, ELLIPSOIDOffset);
+    fbBuilder.addOffset(25, POLYLINE_VOLUMEOffset);
+    fbBuilder.addOffset(26, RECTANGLEOffset);
+    fbBuilder.addOffset(27, TILESETOffset);
+    fbBuilder.addOffset(28, WALLOffset);
+    fbBuilder.addOffset(29, POSITION_INTERPOLATIONOffset);
+    fbBuilder.addOffset(30, POSITION_REFERENCE_FRAMEOffset);
+    fbBuilder.addOffset(31, POSITION_REFERENCEOffset);
+    fbBuilder.addOffset(32, ORIENTATION_EPOCHOffset);
+    fbBuilder.addOffset(33, ORIENTATION_ARRAYOffset);
+    fbBuilder.addOffset(34, ORIENTATION_INTERPOLATIONOffset);
+    fbBuilder.addOffset(35, ORIENTATION_REFERENCEOffset);
+    fbBuilder.addOffset(36, DYNAMIC_PROPERTIESOffset);
     return fbBuilder.endTable();
   }
 
@@ -2209,12 +7155,16 @@ class CZM {
   String? get CLOCK_INTERVAL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
   ///  Clock settings - multiplier
   double get CLOCK_MULTIPLIER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  Clock range
+  String? get CLOCK_RANGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Clock step
+  String? get CLOCK_STEP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
   ///  All packets in the document
-  List<Czmpacket>? get PACKETS => const fb.ListReader<Czmpacket>(Czmpacket.reader).vTableGetNullable(_bc, _bcOffset, 14);
+  List<Czmpacket>? get PACKETS => const fb.ListReader<Czmpacket>(Czmpacket.reader).vTableGetNullable(_bc, _bcOffset, 18);
 
   @override
   String toString() {
-    return 'CZM{NAME: ${NAME}, VERSION: ${VERSION}, CLOCK_CURRENT_TIME: ${CLOCK_CURRENT_TIME}, CLOCK_INTERVAL: ${CLOCK_INTERVAL}, CLOCK_MULTIPLIER: ${CLOCK_MULTIPLIER}, PACKETS: ${PACKETS}}';
+    return 'CZM{NAME: ${NAME}, VERSION: ${VERSION}, CLOCK_CURRENT_TIME: ${CLOCK_CURRENT_TIME}, CLOCK_INTERVAL: ${CLOCK_INTERVAL}, CLOCK_MULTIPLIER: ${CLOCK_MULTIPLIER}, CLOCK_RANGE: ${CLOCK_RANGE}, CLOCK_STEP: ${CLOCK_STEP}, PACKETS: ${PACKETS}}';
   }
 }
 
@@ -2232,7 +7182,7 @@ class CZMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(6);
+    fbBuilder.startTable(8);
   }
 
   int addNameOffset(int? offset) {
@@ -2255,8 +7205,16 @@ class CZMBuilder {
     fbBuilder.addFloat64(4, CLOCK_MULTIPLIER);
     return fbBuilder.offset;
   }
-  int addPacketsOffset(int? offset) {
+  int addClockRangeOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addClockStepOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addPacketsOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
 
@@ -2271,6 +7229,8 @@ class CZMObjectBuilder extends fb.ObjectBuilder {
   final String? _CLOCK_CURRENT_TIME;
   final String? _CLOCK_INTERVAL;
   final double? _CLOCK_MULTIPLIER;
+  final String? _CLOCK_RANGE;
+  final String? _CLOCK_STEP;
   final List<CzmpacketObjectBuilder>? _PACKETS;
 
   CZMObjectBuilder({
@@ -2279,6 +7239,8 @@ class CZMObjectBuilder extends fb.ObjectBuilder {
     String? CLOCK_CURRENT_TIME,
     String? CLOCK_INTERVAL,
     double? CLOCK_MULTIPLIER,
+    String? CLOCK_RANGE,
+    String? CLOCK_STEP,
     List<CzmpacketObjectBuilder>? PACKETS,
   })
       : _NAME = NAME,
@@ -2286,6 +7248,8 @@ class CZMObjectBuilder extends fb.ObjectBuilder {
         _CLOCK_CURRENT_TIME = CLOCK_CURRENT_TIME,
         _CLOCK_INTERVAL = CLOCK_INTERVAL,
         _CLOCK_MULTIPLIER = CLOCK_MULTIPLIER,
+        _CLOCK_RANGE = CLOCK_RANGE,
+        _CLOCK_STEP = CLOCK_STEP,
         _PACKETS = PACKETS;
 
   /// Finish building, and store into the [fbBuilder].
@@ -2299,15 +7263,21 @@ class CZMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_CLOCK_CURRENT_TIME!);
     final int? CLOCK_INTERVALOffset = _CLOCK_INTERVAL == null ? null
         : fbBuilder.writeString(_CLOCK_INTERVAL!);
+    final int? CLOCK_RANGEOffset = _CLOCK_RANGE == null ? null
+        : fbBuilder.writeString(_CLOCK_RANGE!);
+    final int? CLOCK_STEPOffset = _CLOCK_STEP == null ? null
+        : fbBuilder.writeString(_CLOCK_STEP!);
     final int? PACKETSOffset = _PACKETS == null ? null
         : fbBuilder.writeList(_PACKETS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(6);
+    fbBuilder.startTable(8);
     fbBuilder.addOffset(0, NAMEOffset);
     fbBuilder.addOffset(1, VERSIONOffset);
     fbBuilder.addOffset(2, CLOCK_CURRENT_TIMEOffset);
     fbBuilder.addOffset(3, CLOCK_INTERVALOffset);
     fbBuilder.addFloat64(4, _CLOCK_MULTIPLIER);
-    fbBuilder.addOffset(5, PACKETSOffset);
+    fbBuilder.addOffset(5, CLOCK_RANGEOffset);
+    fbBuilder.addOffset(6, CLOCK_STEPOffset);
+    fbBuilder.addOffset(7, PACKETSOffset);
     return fbBuilder.endTable();
   }
 

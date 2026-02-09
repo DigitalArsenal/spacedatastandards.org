@@ -53,25 +53,49 @@ public struct KMLPlacemark : IFlatbufferObject
   public ArraySegment<byte>? GetSNIPPETBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
   public byte[] GetSNIPPETArray() { return __p.__vector_as_array<byte>(14); }
+  /// Whether open in tree view
+  public bool OPEN { get { int o = __p.__offset(16); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Address
+  public string ADDRESS { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetADDRESSBytes() { return __p.__vector_as_span<byte>(18, 1); }
+#else
+  public ArraySegment<byte>? GetADDRESSBytes() { return __p.__vector_as_arraysegment(18); }
+#endif
+  public byte[] GetADDRESSArray() { return __p.__vector_as_array<byte>(18); }
   /// Point geometry
-  public KMLPoint? POINT { get { int o = __p.__offset(16); return o != 0 ? (KMLPoint?)(new KMLPoint()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public KMLPoint? POINT { get { int o = __p.__offset(20); return o != 0 ? (KMLPoint?)(new KMLPoint()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// LineString geometry
-  public KMLLineString? LINE_STRING { get { int o = __p.__offset(18); return o != 0 ? (KMLLineString?)(new KMLLineString()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public KMLLineString? LINE_STRING { get { int o = __p.__offset(22); return o != 0 ? (KMLLineString?)(new KMLLineString()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Polygon geometry
-  public KMLPolygon? POLYGON { get { int o = __p.__offset(20); return o != 0 ? (KMLPolygon?)(new KMLPolygon()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public KMLPolygon? POLYGON { get { int o = __p.__offset(24); return o != 0 ? (KMLPolygon?)(new KMLPolygon()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// LinearRing geometry (standalone)
+  public KMLLinearRing? LINEAR_RING { get { int o = __p.__offset(26); return o != 0 ? (KMLLinearRing?)(new KMLLinearRing()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// MultiGeometry
-  public KMLMultiGeometry? MULTI_GEOMETRY { get { int o = __p.__offset(22); return o != 0 ? (KMLMultiGeometry?)(new KMLMultiGeometry()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public KMLMultiGeometry? MULTI_GEOMETRY { get { int o = __p.__offset(28); return o != 0 ? (KMLMultiGeometry?)(new KMLMultiGeometry()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// 3D Model
+  public KMLModel? MODEL { get { int o = __p.__offset(30); return o != 0 ? (KMLModel?)(new KMLModel()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// gx:Track
+  public KMLTrack? TRACK { get { int o = __p.__offset(32); return o != 0 ? (KMLTrack?)(new KMLTrack()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// gx:MultiTrack
+  public KMLMultiTrack? MULTI_TRACK { get { int o = __p.__offset(34); return o != 0 ? (KMLMultiTrack?)(new KMLMultiTrack()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// LookAt viewpoint
-  public KMLLookAt? LOOK_AT { get { int o = __p.__offset(24); return o != 0 ? (KMLLookAt?)(new KMLLookAt()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public KMLLookAt? LOOK_AT { get { int o = __p.__offset(36); return o != 0 ? (KMLLookAt?)(new KMLLookAt()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Camera viewpoint
-  public KMLCamera? CAMERA { get { int o = __p.__offset(26); return o != 0 ? (KMLCamera?)(new KMLCamera()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public KMLCamera? CAMERA { get { int o = __p.__offset(38); return o != 0 ? (KMLCamera?)(new KMLCamera()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// TimeSpan
-  public KMLTimeSpan? TIME_SPAN { get { int o = __p.__offset(28); return o != 0 ? (KMLTimeSpan?)(new KMLTimeSpan()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public KMLTimeSpan? TIME_SPAN { get { int o = __p.__offset(40); return o != 0 ? (KMLTimeSpan?)(new KMLTimeSpan()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// TimeStamp
-  public KMLTimeStamp? TIME_STAMP { get { int o = __p.__offset(30); return o != 0 ? (KMLTimeStamp?)(new KMLTimeStamp()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public KMLTimeStamp? TIME_STAMP { get { int o = __p.__offset(42); return o != 0 ? (KMLTimeStamp?)(new KMLTimeStamp()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Extended data
-  public KMLData? EXTENDED_DATA(int j) { int o = __p.__offset(32); return o != 0 ? (KMLData?)(new KMLData()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int EXTENDED_DATALength { get { int o = __p.__offset(32); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public KMLData? EXTENDED_DATA(int j) { int o = __p.__offset(44); return o != 0 ? (KMLData?)(new KMLData()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int EXTENDED_DATALength { get { int o = __p.__offset(44); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Schema data
+  public KMLSchemaData? SCHEMA_DATA { get { int o = __p.__offset(46); return o != 0 ? (KMLSchemaData?)(new KMLSchemaData()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Region
+  public KMLRegion? REGION { get { int o = __p.__offset(48); return o != 0 ? (KMLRegion?)(new KMLRegion()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// StyleMap (inline)
+  public KMLStyleMap? STYLE_MAP { get { int o = __p.__offset(50); return o != 0 ? (KMLStyleMap?)(new KMLStyleMap()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<KMLPlacemark> CreateKMLPlacemark(FlatBufferBuilder builder,
       StringOffset NAMEOffset = default(StringOffset),
@@ -80,55 +104,82 @@ public struct KMLPlacemark : IFlatbufferObject
       StringOffset STYLE_URLOffset = default(StringOffset),
       Offset<KMLStyle> STYLEOffset = default(Offset<KMLStyle>),
       StringOffset SNIPPETOffset = default(StringOffset),
+      bool OPEN = false,
+      StringOffset ADDRESSOffset = default(StringOffset),
       Offset<KMLPoint> POINTOffset = default(Offset<KMLPoint>),
       Offset<KMLLineString> LINE_STRINGOffset = default(Offset<KMLLineString>),
       Offset<KMLPolygon> POLYGONOffset = default(Offset<KMLPolygon>),
+      Offset<KMLLinearRing> LINEAR_RINGOffset = default(Offset<KMLLinearRing>),
       Offset<KMLMultiGeometry> MULTI_GEOMETRYOffset = default(Offset<KMLMultiGeometry>),
+      Offset<KMLModel> MODELOffset = default(Offset<KMLModel>),
+      Offset<KMLTrack> TRACKOffset = default(Offset<KMLTrack>),
+      Offset<KMLMultiTrack> MULTI_TRACKOffset = default(Offset<KMLMultiTrack>),
       Offset<KMLLookAt> LOOK_ATOffset = default(Offset<KMLLookAt>),
       Offset<KMLCamera> CAMERAOffset = default(Offset<KMLCamera>),
       Offset<KMLTimeSpan> TIME_SPANOffset = default(Offset<KMLTimeSpan>),
       Offset<KMLTimeStamp> TIME_STAMPOffset = default(Offset<KMLTimeStamp>),
-      VectorOffset EXTENDED_DATAOffset = default(VectorOffset)) {
-    builder.StartTable(15);
+      VectorOffset EXTENDED_DATAOffset = default(VectorOffset),
+      Offset<KMLSchemaData> SCHEMA_DATAOffset = default(Offset<KMLSchemaData>),
+      Offset<KMLRegion> REGIONOffset = default(Offset<KMLRegion>),
+      Offset<KMLStyleMap> STYLE_MAPOffset = default(Offset<KMLStyleMap>)) {
+    builder.StartTable(24);
+    KMLPlacemark.AddSTYLE_MAP(builder, STYLE_MAPOffset);
+    KMLPlacemark.AddREGION(builder, REGIONOffset);
+    KMLPlacemark.AddSCHEMA_DATA(builder, SCHEMA_DATAOffset);
     KMLPlacemark.AddEXTENDED_DATA(builder, EXTENDED_DATAOffset);
     KMLPlacemark.AddTIME_STAMP(builder, TIME_STAMPOffset);
     KMLPlacemark.AddTIME_SPAN(builder, TIME_SPANOffset);
     KMLPlacemark.AddCAMERA(builder, CAMERAOffset);
     KMLPlacemark.AddLOOK_AT(builder, LOOK_ATOffset);
+    KMLPlacemark.AddMULTI_TRACK(builder, MULTI_TRACKOffset);
+    KMLPlacemark.AddTRACK(builder, TRACKOffset);
+    KMLPlacemark.AddMODEL(builder, MODELOffset);
     KMLPlacemark.AddMULTI_GEOMETRY(builder, MULTI_GEOMETRYOffset);
+    KMLPlacemark.AddLINEAR_RING(builder, LINEAR_RINGOffset);
     KMLPlacemark.AddPOLYGON(builder, POLYGONOffset);
     KMLPlacemark.AddLINE_STRING(builder, LINE_STRINGOffset);
     KMLPlacemark.AddPOINT(builder, POINTOffset);
+    KMLPlacemark.AddADDRESS(builder, ADDRESSOffset);
     KMLPlacemark.AddSNIPPET(builder, SNIPPETOffset);
     KMLPlacemark.AddSTYLE(builder, STYLEOffset);
     KMLPlacemark.AddSTYLE_URL(builder, STYLE_URLOffset);
     KMLPlacemark.AddDESCRIPTION(builder, DESCRIPTIONOffset);
     KMLPlacemark.AddNAME(builder, NAMEOffset);
+    KMLPlacemark.AddOPEN(builder, OPEN);
     KMLPlacemark.AddVISIBILITY(builder, VISIBILITY);
     return KMLPlacemark.EndKMLPlacemark(builder);
   }
 
-  public static void StartKMLPlacemark(FlatBufferBuilder builder) { builder.StartTable(15); }
+  public static void StartKMLPlacemark(FlatBufferBuilder builder) { builder.StartTable(24); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(0, NAMEOffset.Value, 0); }
   public static void AddDESCRIPTION(FlatBufferBuilder builder, StringOffset DESCRIPTIONOffset) { builder.AddOffset(1, DESCRIPTIONOffset.Value, 0); }
   public static void AddVISIBILITY(FlatBufferBuilder builder, bool VISIBILITY) { builder.AddBool(2, VISIBILITY, false); }
   public static void AddSTYLE_URL(FlatBufferBuilder builder, StringOffset STYLE_URLOffset) { builder.AddOffset(3, STYLE_URLOffset.Value, 0); }
   public static void AddSTYLE(FlatBufferBuilder builder, Offset<KMLStyle> STYLEOffset) { builder.AddOffset(4, STYLEOffset.Value, 0); }
   public static void AddSNIPPET(FlatBufferBuilder builder, StringOffset SNIPPETOffset) { builder.AddOffset(5, SNIPPETOffset.Value, 0); }
-  public static void AddPOINT(FlatBufferBuilder builder, Offset<KMLPoint> POINTOffset) { builder.AddOffset(6, POINTOffset.Value, 0); }
-  public static void AddLINE_STRING(FlatBufferBuilder builder, Offset<KMLLineString> LINE_STRINGOffset) { builder.AddOffset(7, LINE_STRINGOffset.Value, 0); }
-  public static void AddPOLYGON(FlatBufferBuilder builder, Offset<KMLPolygon> POLYGONOffset) { builder.AddOffset(8, POLYGONOffset.Value, 0); }
-  public static void AddMULTI_GEOMETRY(FlatBufferBuilder builder, Offset<KMLMultiGeometry> MULTI_GEOMETRYOffset) { builder.AddOffset(9, MULTI_GEOMETRYOffset.Value, 0); }
-  public static void AddLOOK_AT(FlatBufferBuilder builder, Offset<KMLLookAt> LOOK_ATOffset) { builder.AddOffset(10, LOOK_ATOffset.Value, 0); }
-  public static void AddCAMERA(FlatBufferBuilder builder, Offset<KMLCamera> CAMERAOffset) { builder.AddOffset(11, CAMERAOffset.Value, 0); }
-  public static void AddTIME_SPAN(FlatBufferBuilder builder, Offset<KMLTimeSpan> TIME_SPANOffset) { builder.AddOffset(12, TIME_SPANOffset.Value, 0); }
-  public static void AddTIME_STAMP(FlatBufferBuilder builder, Offset<KMLTimeStamp> TIME_STAMPOffset) { builder.AddOffset(13, TIME_STAMPOffset.Value, 0); }
-  public static void AddEXTENDED_DATA(FlatBufferBuilder builder, VectorOffset EXTENDED_DATAOffset) { builder.AddOffset(14, EXTENDED_DATAOffset.Value, 0); }
+  public static void AddOPEN(FlatBufferBuilder builder, bool OPEN) { builder.AddBool(6, OPEN, false); }
+  public static void AddADDRESS(FlatBufferBuilder builder, StringOffset ADDRESSOffset) { builder.AddOffset(7, ADDRESSOffset.Value, 0); }
+  public static void AddPOINT(FlatBufferBuilder builder, Offset<KMLPoint> POINTOffset) { builder.AddOffset(8, POINTOffset.Value, 0); }
+  public static void AddLINE_STRING(FlatBufferBuilder builder, Offset<KMLLineString> LINE_STRINGOffset) { builder.AddOffset(9, LINE_STRINGOffset.Value, 0); }
+  public static void AddPOLYGON(FlatBufferBuilder builder, Offset<KMLPolygon> POLYGONOffset) { builder.AddOffset(10, POLYGONOffset.Value, 0); }
+  public static void AddLINEAR_RING(FlatBufferBuilder builder, Offset<KMLLinearRing> LINEAR_RINGOffset) { builder.AddOffset(11, LINEAR_RINGOffset.Value, 0); }
+  public static void AddMULTI_GEOMETRY(FlatBufferBuilder builder, Offset<KMLMultiGeometry> MULTI_GEOMETRYOffset) { builder.AddOffset(12, MULTI_GEOMETRYOffset.Value, 0); }
+  public static void AddMODEL(FlatBufferBuilder builder, Offset<KMLModel> MODELOffset) { builder.AddOffset(13, MODELOffset.Value, 0); }
+  public static void AddTRACK(FlatBufferBuilder builder, Offset<KMLTrack> TRACKOffset) { builder.AddOffset(14, TRACKOffset.Value, 0); }
+  public static void AddMULTI_TRACK(FlatBufferBuilder builder, Offset<KMLMultiTrack> MULTI_TRACKOffset) { builder.AddOffset(15, MULTI_TRACKOffset.Value, 0); }
+  public static void AddLOOK_AT(FlatBufferBuilder builder, Offset<KMLLookAt> LOOK_ATOffset) { builder.AddOffset(16, LOOK_ATOffset.Value, 0); }
+  public static void AddCAMERA(FlatBufferBuilder builder, Offset<KMLCamera> CAMERAOffset) { builder.AddOffset(17, CAMERAOffset.Value, 0); }
+  public static void AddTIME_SPAN(FlatBufferBuilder builder, Offset<KMLTimeSpan> TIME_SPANOffset) { builder.AddOffset(18, TIME_SPANOffset.Value, 0); }
+  public static void AddTIME_STAMP(FlatBufferBuilder builder, Offset<KMLTimeStamp> TIME_STAMPOffset) { builder.AddOffset(19, TIME_STAMPOffset.Value, 0); }
+  public static void AddEXTENDED_DATA(FlatBufferBuilder builder, VectorOffset EXTENDED_DATAOffset) { builder.AddOffset(20, EXTENDED_DATAOffset.Value, 0); }
   public static VectorOffset CreateEXTENDED_DATAVector(FlatBufferBuilder builder, Offset<KMLData>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateEXTENDED_DATAVectorBlock(FlatBufferBuilder builder, Offset<KMLData>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateEXTENDED_DATAVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<KMLData>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateEXTENDED_DATAVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<KMLData>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartEXTENDED_DATAVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddSCHEMA_DATA(FlatBufferBuilder builder, Offset<KMLSchemaData> SCHEMA_DATAOffset) { builder.AddOffset(21, SCHEMA_DATAOffset.Value, 0); }
+  public static void AddREGION(FlatBufferBuilder builder, Offset<KMLRegion> REGIONOffset) { builder.AddOffset(22, REGIONOffset.Value, 0); }
+  public static void AddSTYLE_MAP(FlatBufferBuilder builder, Offset<KMLStyleMap> STYLE_MAPOffset) { builder.AddOffset(23, STYLE_MAPOffset.Value, 0); }
   public static Offset<KMLPlacemark> EndKMLPlacemark(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<KMLPlacemark>(o);
@@ -145,16 +196,25 @@ public struct KMLPlacemark : IFlatbufferObject
     _o.STYLE_URL = this.STYLE_URL;
     _o.STYLE = this.STYLE.HasValue ? this.STYLE.Value.UnPack() : null;
     _o.SNIPPET = this.SNIPPET;
+    _o.OPEN = this.OPEN;
+    _o.ADDRESS = this.ADDRESS;
     _o.POINT = this.POINT.HasValue ? this.POINT.Value.UnPack() : null;
     _o.LINE_STRING = this.LINE_STRING.HasValue ? this.LINE_STRING.Value.UnPack() : null;
     _o.POLYGON = this.POLYGON.HasValue ? this.POLYGON.Value.UnPack() : null;
+    _o.LINEAR_RING = this.LINEAR_RING.HasValue ? this.LINEAR_RING.Value.UnPack() : null;
     _o.MULTI_GEOMETRY = this.MULTI_GEOMETRY.HasValue ? this.MULTI_GEOMETRY.Value.UnPack() : null;
+    _o.MODEL = this.MODEL.HasValue ? this.MODEL.Value.UnPack() : null;
+    _o.TRACK = this.TRACK.HasValue ? this.TRACK.Value.UnPack() : null;
+    _o.MULTI_TRACK = this.MULTI_TRACK.HasValue ? this.MULTI_TRACK.Value.UnPack() : null;
     _o.LOOK_AT = this.LOOK_AT.HasValue ? this.LOOK_AT.Value.UnPack() : null;
     _o.CAMERA = this.CAMERA.HasValue ? this.CAMERA.Value.UnPack() : null;
     _o.TIME_SPAN = this.TIME_SPAN.HasValue ? this.TIME_SPAN.Value.UnPack() : null;
     _o.TIME_STAMP = this.TIME_STAMP.HasValue ? this.TIME_STAMP.Value.UnPack() : null;
     _o.EXTENDED_DATA = new List<KMLDataT>();
     for (var _j = 0; _j < this.EXTENDED_DATALength; ++_j) {_o.EXTENDED_DATA.Add(this.EXTENDED_DATA(_j).HasValue ? this.EXTENDED_DATA(_j).Value.UnPack() : null);}
+    _o.SCHEMA_DATA = this.SCHEMA_DATA.HasValue ? this.SCHEMA_DATA.Value.UnPack() : null;
+    _o.REGION = this.REGION.HasValue ? this.REGION.Value.UnPack() : null;
+    _o.STYLE_MAP = this.STYLE_MAP.HasValue ? this.STYLE_MAP.Value.UnPack() : null;
   }
   public static Offset<KMLPlacemark> Pack(FlatBufferBuilder builder, KMLPlacemarkT _o) {
     if (_o == null) return default(Offset<KMLPlacemark>);
@@ -163,10 +223,15 @@ public struct KMLPlacemark : IFlatbufferObject
     var _STYLE_URL = _o.STYLE_URL == null ? default(StringOffset) : builder.CreateString(_o.STYLE_URL);
     var _STYLE = _o.STYLE == null ? default(Offset<KMLStyle>) : KMLStyle.Pack(builder, _o.STYLE);
     var _SNIPPET = _o.SNIPPET == null ? default(StringOffset) : builder.CreateString(_o.SNIPPET);
+    var _ADDRESS = _o.ADDRESS == null ? default(StringOffset) : builder.CreateString(_o.ADDRESS);
     var _POINT = _o.POINT == null ? default(Offset<KMLPoint>) : KMLPoint.Pack(builder, _o.POINT);
     var _LINE_STRING = _o.LINE_STRING == null ? default(Offset<KMLLineString>) : KMLLineString.Pack(builder, _o.LINE_STRING);
     var _POLYGON = _o.POLYGON == null ? default(Offset<KMLPolygon>) : KMLPolygon.Pack(builder, _o.POLYGON);
+    var _LINEAR_RING = _o.LINEAR_RING == null ? default(Offset<KMLLinearRing>) : KMLLinearRing.Pack(builder, _o.LINEAR_RING);
     var _MULTI_GEOMETRY = _o.MULTI_GEOMETRY == null ? default(Offset<KMLMultiGeometry>) : KMLMultiGeometry.Pack(builder, _o.MULTI_GEOMETRY);
+    var _MODEL = _o.MODEL == null ? default(Offset<KMLModel>) : KMLModel.Pack(builder, _o.MODEL);
+    var _TRACK = _o.TRACK == null ? default(Offset<KMLTrack>) : KMLTrack.Pack(builder, _o.TRACK);
+    var _MULTI_TRACK = _o.MULTI_TRACK == null ? default(Offset<KMLMultiTrack>) : KMLMultiTrack.Pack(builder, _o.MULTI_TRACK);
     var _LOOK_AT = _o.LOOK_AT == null ? default(Offset<KMLLookAt>) : KMLLookAt.Pack(builder, _o.LOOK_AT);
     var _CAMERA = _o.CAMERA == null ? default(Offset<KMLCamera>) : KMLCamera.Pack(builder, _o.CAMERA);
     var _TIME_SPAN = _o.TIME_SPAN == null ? default(Offset<KMLTimeSpan>) : KMLTimeSpan.Pack(builder, _o.TIME_SPAN);
@@ -177,6 +242,9 @@ public struct KMLPlacemark : IFlatbufferObject
       for (var _j = 0; _j < __EXTENDED_DATA.Length; ++_j) { __EXTENDED_DATA[_j] = KMLData.Pack(builder, _o.EXTENDED_DATA[_j]); }
       _EXTENDED_DATA = CreateEXTENDED_DATAVector(builder, __EXTENDED_DATA);
     }
+    var _SCHEMA_DATA = _o.SCHEMA_DATA == null ? default(Offset<KMLSchemaData>) : KMLSchemaData.Pack(builder, _o.SCHEMA_DATA);
+    var _REGION = _o.REGION == null ? default(Offset<KMLRegion>) : KMLRegion.Pack(builder, _o.REGION);
+    var _STYLE_MAP = _o.STYLE_MAP == null ? default(Offset<KMLStyleMap>) : KMLStyleMap.Pack(builder, _o.STYLE_MAP);
     return CreateKMLPlacemark(
       builder,
       _NAME,
@@ -185,15 +253,24 @@ public struct KMLPlacemark : IFlatbufferObject
       _STYLE_URL,
       _STYLE,
       _SNIPPET,
+      _o.OPEN,
+      _ADDRESS,
       _POINT,
       _LINE_STRING,
       _POLYGON,
+      _LINEAR_RING,
       _MULTI_GEOMETRY,
+      _MODEL,
+      _TRACK,
+      _MULTI_TRACK,
       _LOOK_AT,
       _CAMERA,
       _TIME_SPAN,
       _TIME_STAMP,
-      _EXTENDED_DATA);
+      _EXTENDED_DATA,
+      _SCHEMA_DATA,
+      _REGION,
+      _STYLE_MAP);
   }
 }
 
@@ -205,15 +282,24 @@ public class KMLPlacemarkT
   public string STYLE_URL { get; set; }
   public KMLStyleT STYLE { get; set; }
   public string SNIPPET { get; set; }
+  public bool OPEN { get; set; }
+  public string ADDRESS { get; set; }
   public KMLPointT POINT { get; set; }
   public KMLLineStringT LINE_STRING { get; set; }
   public KMLPolygonT POLYGON { get; set; }
+  public KMLLinearRingT LINEAR_RING { get; set; }
   public KMLMultiGeometryT MULTI_GEOMETRY { get; set; }
+  public KMLModelT MODEL { get; set; }
+  public KMLTrackT TRACK { get; set; }
+  public KMLMultiTrackT MULTI_TRACK { get; set; }
   public KMLLookAtT LOOK_AT { get; set; }
   public KMLCameraT CAMERA { get; set; }
   public KMLTimeSpanT TIME_SPAN { get; set; }
   public KMLTimeStampT TIME_STAMP { get; set; }
   public List<KMLDataT> EXTENDED_DATA { get; set; }
+  public KMLSchemaDataT SCHEMA_DATA { get; set; }
+  public KMLRegionT REGION { get; set; }
+  public KMLStyleMapT STYLE_MAP { get; set; }
 
   public KMLPlacemarkT() {
     this.NAME = null;
@@ -222,15 +308,24 @@ public class KMLPlacemarkT
     this.STYLE_URL = null;
     this.STYLE = null;
     this.SNIPPET = null;
+    this.OPEN = false;
+    this.ADDRESS = null;
     this.POINT = null;
     this.LINE_STRING = null;
     this.POLYGON = null;
+    this.LINEAR_RING = null;
     this.MULTI_GEOMETRY = null;
+    this.MODEL = null;
+    this.TRACK = null;
+    this.MULTI_TRACK = null;
     this.LOOK_AT = null;
     this.CAMERA = null;
     this.TIME_SPAN = null;
     this.TIME_STAMP = null;
     this.EXTENDED_DATA = null;
+    this.SCHEMA_DATA = null;
+    this.REGION = null;
+    this.STYLE_MAP = null;
   }
 }
 
@@ -246,15 +341,24 @@ static public class KMLPlacemarkVerify
       && verifier.VerifyString(tablePos, 10 /*STYLE_URL*/, false)
       && verifier.VerifyTable(tablePos, 12 /*STYLE*/, KMLStyleVerify.Verify, false)
       && verifier.VerifyString(tablePos, 14 /*SNIPPET*/, false)
-      && verifier.VerifyTable(tablePos, 16 /*POINT*/, KMLPointVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 18 /*LINE_STRING*/, KMLLineStringVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 20 /*POLYGON*/, KMLPolygonVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 22 /*MULTI_GEOMETRY*/, KMLMultiGeometryVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 24 /*LOOK_AT*/, KMLLookAtVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 26 /*CAMERA*/, KMLCameraVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 28 /*TIME_SPAN*/, KMLTimeSpanVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 30 /*TIME_STAMP*/, KMLTimeStampVerify.Verify, false)
-      && verifier.VerifyVectorOfTables(tablePos, 32 /*EXTENDED_DATA*/, KMLDataVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 16 /*OPEN*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyString(tablePos, 18 /*ADDRESS*/, false)
+      && verifier.VerifyTable(tablePos, 20 /*POINT*/, KMLPointVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 22 /*LINE_STRING*/, KMLLineStringVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 24 /*POLYGON*/, KMLPolygonVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 26 /*LINEAR_RING*/, KMLLinearRingVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 28 /*MULTI_GEOMETRY*/, KMLMultiGeometryVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 30 /*MODEL*/, KMLModelVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 32 /*TRACK*/, KMLTrackVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 34 /*MULTI_TRACK*/, KMLMultiTrackVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 36 /*LOOK_AT*/, KMLLookAtVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 38 /*CAMERA*/, KMLCameraVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 40 /*TIME_SPAN*/, KMLTimeSpanVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 42 /*TIME_STAMP*/, KMLTimeStampVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 44 /*EXTENDED_DATA*/, KMLDataVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 46 /*SCHEMA_DATA*/, KMLSchemaDataVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 48 /*REGION*/, KMLRegionVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 50 /*STYLE_MAP*/, KMLStyleMapVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

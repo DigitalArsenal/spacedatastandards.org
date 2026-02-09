@@ -43,6 +43,30 @@ public struct CZMBillboard : IFlatbufferObject
   public CZMVerticalOrigin VERTICAL_ORIGIN { get { int o = __p.__offset(20); return o != 0 ? (CZMVerticalOrigin)__p.bb.GetSbyte(o + __p.bb_pos) : CZMVerticalOrigin.BASELINE; } }
   /// Translucency by distance
   public CZMNearFarScalar? TRANSLUCENCY_BY_DISTANCE { get { int o = __p.__offset(22); return o != 0 ? (CZMNearFarScalar?)(new CZMNearFarScalar()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Rotation in radians
+  public double ROTATION { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Whether size is in meters
+  public bool SIZE_IN_METERS { get { int o = __p.__offset(26); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Width in pixels
+  public double WIDTH { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Height in pixels
+  public double HEIGHT { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Eye offset X in meters
+  public double EYE_OFFSET_X { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Eye offset Y in meters
+  public double EYE_OFFSET_Y { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Eye offset Z in meters
+  public double EYE_OFFSET_Z { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Scale by distance
+  public CZMNearFarScalar? SCALE_BY_DISTANCE { get { int o = __p.__offset(38); return o != 0 ? (CZMNearFarScalar?)(new CZMNearFarScalar()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Pixel offset scale by distance
+  public CZMNearFarScalar? PIXEL_OFFSET_SCALE_BY_DISTANCE { get { int o = __p.__offset(40); return o != 0 ? (CZMNearFarScalar?)(new CZMNearFarScalar()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Distance display condition near
+  public double DISTANCE_DISPLAY_CONDITION_NEAR { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Distance display condition far
+  public double DISTANCE_DISPLAY_CONDITION_FAR { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Disable depth test distance
+  public double DISABLE_DEPTH_TEST_DISTANCE { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<CZMBillboard> CreateCZMBillboard(FlatBufferBuilder builder,
       bool SHOW = false,
@@ -54,14 +78,38 @@ public struct CZMBillboard : IFlatbufferObject
       double PIXEL_OFFSET_Y = 0.0,
       CZMHorizontalOrigin HORIZONTAL_ORIGIN = CZMHorizontalOrigin.LEFT,
       CZMVerticalOrigin VERTICAL_ORIGIN = CZMVerticalOrigin.BASELINE,
-      Offset<CZMNearFarScalar> TRANSLUCENCY_BY_DISTANCEOffset = default(Offset<CZMNearFarScalar>)) {
-    builder.StartTable(10);
+      Offset<CZMNearFarScalar> TRANSLUCENCY_BY_DISTANCEOffset = default(Offset<CZMNearFarScalar>),
+      double ROTATION = 0.0,
+      bool SIZE_IN_METERS = false,
+      double WIDTH = 0.0,
+      double HEIGHT = 0.0,
+      double EYE_OFFSET_X = 0.0,
+      double EYE_OFFSET_Y = 0.0,
+      double EYE_OFFSET_Z = 0.0,
+      Offset<CZMNearFarScalar> SCALE_BY_DISTANCEOffset = default(Offset<CZMNearFarScalar>),
+      Offset<CZMNearFarScalar> PIXEL_OFFSET_SCALE_BY_DISTANCEOffset = default(Offset<CZMNearFarScalar>),
+      double DISTANCE_DISPLAY_CONDITION_NEAR = 0.0,
+      double DISTANCE_DISPLAY_CONDITION_FAR = 0.0,
+      double DISABLE_DEPTH_TEST_DISTANCE = 0.0) {
+    builder.StartTable(22);
+    CZMBillboard.AddDISABLE_DEPTH_TEST_DISTANCE(builder, DISABLE_DEPTH_TEST_DISTANCE);
+    CZMBillboard.AddDISTANCE_DISPLAY_CONDITION_FAR(builder, DISTANCE_DISPLAY_CONDITION_FAR);
+    CZMBillboard.AddDISTANCE_DISPLAY_CONDITION_NEAR(builder, DISTANCE_DISPLAY_CONDITION_NEAR);
+    CZMBillboard.AddEYE_OFFSET_Z(builder, EYE_OFFSET_Z);
+    CZMBillboard.AddEYE_OFFSET_Y(builder, EYE_OFFSET_Y);
+    CZMBillboard.AddEYE_OFFSET_X(builder, EYE_OFFSET_X);
+    CZMBillboard.AddHEIGHT(builder, HEIGHT);
+    CZMBillboard.AddWIDTH(builder, WIDTH);
+    CZMBillboard.AddROTATION(builder, ROTATION);
     CZMBillboard.AddPIXEL_OFFSET_Y(builder, PIXEL_OFFSET_Y);
     CZMBillboard.AddPIXEL_OFFSET_X(builder, PIXEL_OFFSET_X);
     CZMBillboard.AddSCALE(builder, SCALE);
+    CZMBillboard.AddPIXEL_OFFSET_SCALE_BY_DISTANCE(builder, PIXEL_OFFSET_SCALE_BY_DISTANCEOffset);
+    CZMBillboard.AddSCALE_BY_DISTANCE(builder, SCALE_BY_DISTANCEOffset);
     CZMBillboard.AddTRANSLUCENCY_BY_DISTANCE(builder, TRANSLUCENCY_BY_DISTANCEOffset);
     CZMBillboard.AddCOLOR(builder, COLOROffset);
     CZMBillboard.AddIMAGE(builder, IMAGEOffset);
+    CZMBillboard.AddSIZE_IN_METERS(builder, SIZE_IN_METERS);
     CZMBillboard.AddVERTICAL_ORIGIN(builder, VERTICAL_ORIGIN);
     CZMBillboard.AddHORIZONTAL_ORIGIN(builder, HORIZONTAL_ORIGIN);
     CZMBillboard.AddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE);
@@ -69,7 +117,7 @@ public struct CZMBillboard : IFlatbufferObject
     return CZMBillboard.EndCZMBillboard(builder);
   }
 
-  public static void StartCZMBillboard(FlatBufferBuilder builder) { builder.StartTable(10); }
+  public static void StartCZMBillboard(FlatBufferBuilder builder) { builder.StartTable(22); }
   public static void AddSHOW(FlatBufferBuilder builder, bool SHOW) { builder.AddBool(0, SHOW, false); }
   public static void AddIMAGE(FlatBufferBuilder builder, StringOffset IMAGEOffset) { builder.AddOffset(1, IMAGEOffset.Value, 0); }
   public static void AddSCALE(FlatBufferBuilder builder, double SCALE) { builder.AddDouble(2, SCALE, 0.0); }
@@ -80,6 +128,18 @@ public struct CZMBillboard : IFlatbufferObject
   public static void AddHORIZONTAL_ORIGIN(FlatBufferBuilder builder, CZMHorizontalOrigin HORIZONTAL_ORIGIN) { builder.AddSbyte(7, (sbyte)HORIZONTAL_ORIGIN, 0); }
   public static void AddVERTICAL_ORIGIN(FlatBufferBuilder builder, CZMVerticalOrigin VERTICAL_ORIGIN) { builder.AddSbyte(8, (sbyte)VERTICAL_ORIGIN, 0); }
   public static void AddTRANSLUCENCY_BY_DISTANCE(FlatBufferBuilder builder, Offset<CZMNearFarScalar> TRANSLUCENCY_BY_DISTANCEOffset) { builder.AddOffset(9, TRANSLUCENCY_BY_DISTANCEOffset.Value, 0); }
+  public static void AddROTATION(FlatBufferBuilder builder, double ROTATION) { builder.AddDouble(10, ROTATION, 0.0); }
+  public static void AddSIZE_IN_METERS(FlatBufferBuilder builder, bool SIZE_IN_METERS) { builder.AddBool(11, SIZE_IN_METERS, false); }
+  public static void AddWIDTH(FlatBufferBuilder builder, double WIDTH) { builder.AddDouble(12, WIDTH, 0.0); }
+  public static void AddHEIGHT(FlatBufferBuilder builder, double HEIGHT) { builder.AddDouble(13, HEIGHT, 0.0); }
+  public static void AddEYE_OFFSET_X(FlatBufferBuilder builder, double EYE_OFFSET_X) { builder.AddDouble(14, EYE_OFFSET_X, 0.0); }
+  public static void AddEYE_OFFSET_Y(FlatBufferBuilder builder, double EYE_OFFSET_Y) { builder.AddDouble(15, EYE_OFFSET_Y, 0.0); }
+  public static void AddEYE_OFFSET_Z(FlatBufferBuilder builder, double EYE_OFFSET_Z) { builder.AddDouble(16, EYE_OFFSET_Z, 0.0); }
+  public static void AddSCALE_BY_DISTANCE(FlatBufferBuilder builder, Offset<CZMNearFarScalar> SCALE_BY_DISTANCEOffset) { builder.AddOffset(17, SCALE_BY_DISTANCEOffset.Value, 0); }
+  public static void AddPIXEL_OFFSET_SCALE_BY_DISTANCE(FlatBufferBuilder builder, Offset<CZMNearFarScalar> PIXEL_OFFSET_SCALE_BY_DISTANCEOffset) { builder.AddOffset(18, PIXEL_OFFSET_SCALE_BY_DISTANCEOffset.Value, 0); }
+  public static void AddDISTANCE_DISPLAY_CONDITION_NEAR(FlatBufferBuilder builder, double DISTANCE_DISPLAY_CONDITION_NEAR) { builder.AddDouble(19, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0); }
+  public static void AddDISTANCE_DISPLAY_CONDITION_FAR(FlatBufferBuilder builder, double DISTANCE_DISPLAY_CONDITION_FAR) { builder.AddDouble(20, DISTANCE_DISPLAY_CONDITION_FAR, 0.0); }
+  public static void AddDISABLE_DEPTH_TEST_DISTANCE(FlatBufferBuilder builder, double DISABLE_DEPTH_TEST_DISTANCE) { builder.AddDouble(21, DISABLE_DEPTH_TEST_DISTANCE, 0.0); }
   public static Offset<CZMBillboard> EndCZMBillboard(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CZMBillboard>(o);
@@ -100,12 +160,26 @@ public struct CZMBillboard : IFlatbufferObject
     _o.HORIZONTAL_ORIGIN = this.HORIZONTAL_ORIGIN;
     _o.VERTICAL_ORIGIN = this.VERTICAL_ORIGIN;
     _o.TRANSLUCENCY_BY_DISTANCE = this.TRANSLUCENCY_BY_DISTANCE.HasValue ? this.TRANSLUCENCY_BY_DISTANCE.Value.UnPack() : null;
+    _o.ROTATION = this.ROTATION;
+    _o.SIZE_IN_METERS = this.SIZE_IN_METERS;
+    _o.WIDTH = this.WIDTH;
+    _o.HEIGHT = this.HEIGHT;
+    _o.EYE_OFFSET_X = this.EYE_OFFSET_X;
+    _o.EYE_OFFSET_Y = this.EYE_OFFSET_Y;
+    _o.EYE_OFFSET_Z = this.EYE_OFFSET_Z;
+    _o.SCALE_BY_DISTANCE = this.SCALE_BY_DISTANCE.HasValue ? this.SCALE_BY_DISTANCE.Value.UnPack() : null;
+    _o.PIXEL_OFFSET_SCALE_BY_DISTANCE = this.PIXEL_OFFSET_SCALE_BY_DISTANCE.HasValue ? this.PIXEL_OFFSET_SCALE_BY_DISTANCE.Value.UnPack() : null;
+    _o.DISTANCE_DISPLAY_CONDITION_NEAR = this.DISTANCE_DISPLAY_CONDITION_NEAR;
+    _o.DISTANCE_DISPLAY_CONDITION_FAR = this.DISTANCE_DISPLAY_CONDITION_FAR;
+    _o.DISABLE_DEPTH_TEST_DISTANCE = this.DISABLE_DEPTH_TEST_DISTANCE;
   }
   public static Offset<CZMBillboard> Pack(FlatBufferBuilder builder, CZMBillboardT _o) {
     if (_o == null) return default(Offset<CZMBillboard>);
     var _IMAGE = _o.IMAGE == null ? default(StringOffset) : builder.CreateString(_o.IMAGE);
     var _COLOR = _o.COLOR == null ? default(Offset<CZMColor>) : CZMColor.Pack(builder, _o.COLOR);
     var _TRANSLUCENCY_BY_DISTANCE = _o.TRANSLUCENCY_BY_DISTANCE == null ? default(Offset<CZMNearFarScalar>) : CZMNearFarScalar.Pack(builder, _o.TRANSLUCENCY_BY_DISTANCE);
+    var _SCALE_BY_DISTANCE = _o.SCALE_BY_DISTANCE == null ? default(Offset<CZMNearFarScalar>) : CZMNearFarScalar.Pack(builder, _o.SCALE_BY_DISTANCE);
+    var _PIXEL_OFFSET_SCALE_BY_DISTANCE = _o.PIXEL_OFFSET_SCALE_BY_DISTANCE == null ? default(Offset<CZMNearFarScalar>) : CZMNearFarScalar.Pack(builder, _o.PIXEL_OFFSET_SCALE_BY_DISTANCE);
     return CreateCZMBillboard(
       builder,
       _o.SHOW,
@@ -117,7 +191,19 @@ public struct CZMBillboard : IFlatbufferObject
       _o.PIXEL_OFFSET_Y,
       _o.HORIZONTAL_ORIGIN,
       _o.VERTICAL_ORIGIN,
-      _TRANSLUCENCY_BY_DISTANCE);
+      _TRANSLUCENCY_BY_DISTANCE,
+      _o.ROTATION,
+      _o.SIZE_IN_METERS,
+      _o.WIDTH,
+      _o.HEIGHT,
+      _o.EYE_OFFSET_X,
+      _o.EYE_OFFSET_Y,
+      _o.EYE_OFFSET_Z,
+      _SCALE_BY_DISTANCE,
+      _PIXEL_OFFSET_SCALE_BY_DISTANCE,
+      _o.DISTANCE_DISPLAY_CONDITION_NEAR,
+      _o.DISTANCE_DISPLAY_CONDITION_FAR,
+      _o.DISABLE_DEPTH_TEST_DISTANCE);
   }
 }
 
@@ -133,6 +219,18 @@ public class CZMBillboardT
   public CZMHorizontalOrigin HORIZONTAL_ORIGIN { get; set; }
   public CZMVerticalOrigin VERTICAL_ORIGIN { get; set; }
   public CZMNearFarScalarT TRANSLUCENCY_BY_DISTANCE { get; set; }
+  public double ROTATION { get; set; }
+  public bool SIZE_IN_METERS { get; set; }
+  public double WIDTH { get; set; }
+  public double HEIGHT { get; set; }
+  public double EYE_OFFSET_X { get; set; }
+  public double EYE_OFFSET_Y { get; set; }
+  public double EYE_OFFSET_Z { get; set; }
+  public CZMNearFarScalarT SCALE_BY_DISTANCE { get; set; }
+  public CZMNearFarScalarT PIXEL_OFFSET_SCALE_BY_DISTANCE { get; set; }
+  public double DISTANCE_DISPLAY_CONDITION_NEAR { get; set; }
+  public double DISTANCE_DISPLAY_CONDITION_FAR { get; set; }
+  public double DISABLE_DEPTH_TEST_DISTANCE { get; set; }
 
   public CZMBillboardT() {
     this.SHOW = false;
@@ -145,6 +243,18 @@ public class CZMBillboardT
     this.HORIZONTAL_ORIGIN = CZMHorizontalOrigin.LEFT;
     this.VERTICAL_ORIGIN = CZMVerticalOrigin.BASELINE;
     this.TRANSLUCENCY_BY_DISTANCE = null;
+    this.ROTATION = 0.0;
+    this.SIZE_IN_METERS = false;
+    this.WIDTH = 0.0;
+    this.HEIGHT = 0.0;
+    this.EYE_OFFSET_X = 0.0;
+    this.EYE_OFFSET_Y = 0.0;
+    this.EYE_OFFSET_Z = 0.0;
+    this.SCALE_BY_DISTANCE = null;
+    this.PIXEL_OFFSET_SCALE_BY_DISTANCE = null;
+    this.DISTANCE_DISPLAY_CONDITION_NEAR = 0.0;
+    this.DISTANCE_DISPLAY_CONDITION_FAR = 0.0;
+    this.DISABLE_DEPTH_TEST_DISTANCE = 0.0;
   }
 }
 
@@ -164,6 +274,18 @@ static public class CZMBillboardVerify
       && verifier.VerifyField(tablePos, 18 /*HORIZONTAL_ORIGIN*/, 1 /*CZMHorizontalOrigin*/, 1, false)
       && verifier.VerifyField(tablePos, 20 /*VERTICAL_ORIGIN*/, 1 /*CZMVerticalOrigin*/, 1, false)
       && verifier.VerifyTable(tablePos, 22 /*TRANSLUCENCY_BY_DISTANCE*/, CZMNearFarScalarVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 24 /*ROTATION*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 26 /*SIZE_IN_METERS*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 28 /*WIDTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 30 /*HEIGHT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 32 /*EYE_OFFSET_X*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 34 /*EYE_OFFSET_Y*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 36 /*EYE_OFFSET_Z*/, 8 /*double*/, 8, false)
+      && verifier.VerifyTable(tablePos, 38 /*SCALE_BY_DISTANCE*/, CZMNearFarScalarVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 40 /*PIXEL_OFFSET_SCALE_BY_DISTANCE*/, CZMNearFarScalarVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 42 /*DISTANCE_DISPLAY_CONDITION_NEAR*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 44 /*DISTANCE_DISPLAY_CONDITION_FAR*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 46 /*DISABLE_DEPTH_TEST_DISTANCE*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -4,9 +4,20 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { KMLCamera, KMLCameraT } from './KMLCamera.js';
+import { KMLData, KMLDataT } from './KMLData.js';
 import { KMLGroundOverlay, KMLGroundOverlayT } from './KMLGroundOverlay.js';
+import { KMLLookAt, KMLLookAtT } from './KMLLookAt.js';
 import { KMLNetworkLink, KMLNetworkLinkT } from './KMLNetworkLink.js';
+import { KMLPhotoOverlay, KMLPhotoOverlayT } from './KMLPhotoOverlay.js';
 import { KMLPlacemark, KMLPlacemarkT } from './KMLPlacemark.js';
+import { KMLRegion, KMLRegionT } from './KMLRegion.js';
+import { KMLScreenOverlay, KMLScreenOverlayT } from './KMLScreenOverlay.js';
+import { KMLStyle, KMLStyleT } from './KMLStyle.js';
+import { KMLStyleMap, KMLStyleMapT } from './KMLStyleMap.js';
+import { KMLTimeSpan, KMLTimeSpanT } from './KMLTimeSpan.js';
+import { KMLTimeStamp, KMLTimeStampT } from './KMLTimeStamp.js';
+import { KMLTour, KMLTourT } from './KMLTour.js';
 
 
 /**
@@ -118,8 +129,136 @@ groundOverlaysLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Shared styles
+ */
+STYLES(index: number, obj?:KMLStyle):KMLStyle|null {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? (obj || new KMLStyle()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+stylesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Style maps
+ */
+STYLE_MAPS(index: number, obj?:KMLStyleMap):KMLStyleMap|null {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? (obj || new KMLStyleMap()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+styleMapsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Screen overlays
+ */
+SCREEN_OVERLAYS(index: number, obj?:KMLScreenOverlay):KMLScreenOverlay|null {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? (obj || new KMLScreenOverlay()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+screenOverlaysLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Photo overlays
+ */
+PHOTO_OVERLAYS(index: number, obj?:KMLPhotoOverlay):KMLPhotoOverlay|null {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? (obj || new KMLPhotoOverlay()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+photoOverlaysLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Tours
+ */
+TOURS(index: number, obj?:KMLTour):KMLTour|null {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? (obj || new KMLTour()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+toursLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Style URL reference
+ */
+STYLE_URL():string|null
+STYLE_URL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+STYLE_URL(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Region
+ */
+REGION(obj?:KMLRegion):KMLRegion|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? (obj || new KMLRegion()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Extended data
+ */
+EXTENDED_DATA(index: number, obj?:KMLData):KMLData|null {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? (obj || new KMLData()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+extendedDataLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * LookAt viewpoint
+ */
+LOOK_AT(obj?:KMLLookAt):KMLLookAt|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? (obj || new KMLLookAt()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Camera viewpoint
+ */
+CAMERA(obj?:KMLCamera):KMLCamera|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? (obj || new KMLCamera()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * TimeSpan
+ */
+TIME_SPAN(obj?:KMLTimeSpan):KMLTimeSpan|null {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? (obj || new KMLTimeSpan()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * TimeStamp
+ */
+TIME_STAMP(obj?:KMLTimeStamp):KMLTimeStamp|null {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? (obj || new KMLTimeStamp()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startKMLFolder(builder:flatbuffers.Builder) {
-  builder.startObject(8);
+  builder.startObject(20);
 }
 
 static addName(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset) {
@@ -202,23 +341,131 @@ static startGroundOverlaysVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addStyles(builder:flatbuffers.Builder, STYLESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(8, STYLESOffset, 0);
+}
+
+static createStylesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startStylesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addStyleMaps(builder:flatbuffers.Builder, STYLE_MAPSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, STYLE_MAPSOffset, 0);
+}
+
+static createStyleMapsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startStyleMapsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addScreenOverlays(builder:flatbuffers.Builder, SCREEN_OVERLAYSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(10, SCREEN_OVERLAYSOffset, 0);
+}
+
+static createScreenOverlaysVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startScreenOverlaysVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addPhotoOverlays(builder:flatbuffers.Builder, PHOTO_OVERLAYSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, PHOTO_OVERLAYSOffset, 0);
+}
+
+static createPhotoOverlaysVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startPhotoOverlaysVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addTours(builder:flatbuffers.Builder, TOURSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(12, TOURSOffset, 0);
+}
+
+static createToursVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startToursVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addStyleUrl(builder:flatbuffers.Builder, STYLE_URLOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, STYLE_URLOffset, 0);
+}
+
+static addRegion(builder:flatbuffers.Builder, REGIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, REGIONOffset, 0);
+}
+
+static addExtendedData(builder:flatbuffers.Builder, EXTENDED_DATAOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(15, EXTENDED_DATAOffset, 0);
+}
+
+static createExtendedDataVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startExtendedDataVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addLookAt(builder:flatbuffers.Builder, LOOK_ATOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, LOOK_ATOffset, 0);
+}
+
+static addCamera(builder:flatbuffers.Builder, CAMERAOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, CAMERAOffset, 0);
+}
+
+static addTimeSpan(builder:flatbuffers.Builder, TIME_SPANOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(18, TIME_SPANOffset, 0);
+}
+
+static addTimeStamp(builder:flatbuffers.Builder, TIME_STAMPOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(19, TIME_STAMPOffset, 0);
+}
+
 static endKMLFolder(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createKMLFolder(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, VISIBILITY:boolean, OPEN:boolean, PLACEMARKSOffset:flatbuffers.Offset, FOLDERSOffset:flatbuffers.Offset, NETWORK_LINKSOffset:flatbuffers.Offset, GROUND_OVERLAYSOffset:flatbuffers.Offset):flatbuffers.Offset {
-  KMLFolder.startKMLFolder(builder);
-  KMLFolder.addName(builder, NAMEOffset);
-  KMLFolder.addDescription(builder, DESCRIPTIONOffset);
-  KMLFolder.addVisibility(builder, VISIBILITY);
-  KMLFolder.addOpen(builder, OPEN);
-  KMLFolder.addPlacemarks(builder, PLACEMARKSOffset);
-  KMLFolder.addFolders(builder, FOLDERSOffset);
-  KMLFolder.addNetworkLinks(builder, NETWORK_LINKSOffset);
-  KMLFolder.addGroundOverlays(builder, GROUND_OVERLAYSOffset);
-  return KMLFolder.endKMLFolder(builder);
-}
 
 unpack(): KMLFolderT {
   return new KMLFolderT(
@@ -229,7 +476,19 @@ unpack(): KMLFolderT {
     this.bb!.createObjList<KMLPlacemark, KMLPlacemarkT>(this.PLACEMARKS.bind(this), this.placemarksLength()),
     this.bb!.createObjList<KMLFolder, KMLFolderT>(this.FOLDERS.bind(this), this.foldersLength()),
     this.bb!.createObjList<KMLNetworkLink, KMLNetworkLinkT>(this.NETWORK_LINKS.bind(this), this.networkLinksLength()),
-    this.bb!.createObjList<KMLGroundOverlay, KMLGroundOverlayT>(this.GROUND_OVERLAYS.bind(this), this.groundOverlaysLength())
+    this.bb!.createObjList<KMLGroundOverlay, KMLGroundOverlayT>(this.GROUND_OVERLAYS.bind(this), this.groundOverlaysLength()),
+    this.bb!.createObjList<KMLStyle, KMLStyleT>(this.STYLES.bind(this), this.stylesLength()),
+    this.bb!.createObjList<KMLStyleMap, KMLStyleMapT>(this.STYLE_MAPS.bind(this), this.styleMapsLength()),
+    this.bb!.createObjList<KMLScreenOverlay, KMLScreenOverlayT>(this.SCREEN_OVERLAYS.bind(this), this.screenOverlaysLength()),
+    this.bb!.createObjList<KMLPhotoOverlay, KMLPhotoOverlayT>(this.PHOTO_OVERLAYS.bind(this), this.photoOverlaysLength()),
+    this.bb!.createObjList<KMLTour, KMLTourT>(this.TOURS.bind(this), this.toursLength()),
+    this.STYLE_URL(),
+    (this.REGION() !== null ? this.REGION()!.unpack() : null),
+    this.bb!.createObjList<KMLData, KMLDataT>(this.EXTENDED_DATA.bind(this), this.extendedDataLength()),
+    (this.LOOK_AT() !== null ? this.LOOK_AT()!.unpack() : null),
+    (this.CAMERA() !== null ? this.CAMERA()!.unpack() : null),
+    (this.TIME_SPAN() !== null ? this.TIME_SPAN()!.unpack() : null),
+    (this.TIME_STAMP() !== null ? this.TIME_STAMP()!.unpack() : null)
   );
 }
 
@@ -243,6 +502,18 @@ unpackTo(_o: KMLFolderT): void {
   _o.FOLDERS = this.bb!.createObjList<KMLFolder, KMLFolderT>(this.FOLDERS.bind(this), this.foldersLength());
   _o.NETWORK_LINKS = this.bb!.createObjList<KMLNetworkLink, KMLNetworkLinkT>(this.NETWORK_LINKS.bind(this), this.networkLinksLength());
   _o.GROUND_OVERLAYS = this.bb!.createObjList<KMLGroundOverlay, KMLGroundOverlayT>(this.GROUND_OVERLAYS.bind(this), this.groundOverlaysLength());
+  _o.STYLES = this.bb!.createObjList<KMLStyle, KMLStyleT>(this.STYLES.bind(this), this.stylesLength());
+  _o.STYLE_MAPS = this.bb!.createObjList<KMLStyleMap, KMLStyleMapT>(this.STYLE_MAPS.bind(this), this.styleMapsLength());
+  _o.SCREEN_OVERLAYS = this.bb!.createObjList<KMLScreenOverlay, KMLScreenOverlayT>(this.SCREEN_OVERLAYS.bind(this), this.screenOverlaysLength());
+  _o.PHOTO_OVERLAYS = this.bb!.createObjList<KMLPhotoOverlay, KMLPhotoOverlayT>(this.PHOTO_OVERLAYS.bind(this), this.photoOverlaysLength());
+  _o.TOURS = this.bb!.createObjList<KMLTour, KMLTourT>(this.TOURS.bind(this), this.toursLength());
+  _o.STYLE_URL = this.STYLE_URL();
+  _o.REGION = (this.REGION() !== null ? this.REGION()!.unpack() : null);
+  _o.EXTENDED_DATA = this.bb!.createObjList<KMLData, KMLDataT>(this.EXTENDED_DATA.bind(this), this.extendedDataLength());
+  _o.LOOK_AT = (this.LOOK_AT() !== null ? this.LOOK_AT()!.unpack() : null);
+  _o.CAMERA = (this.CAMERA() !== null ? this.CAMERA()!.unpack() : null);
+  _o.TIME_SPAN = (this.TIME_SPAN() !== null ? this.TIME_SPAN()!.unpack() : null);
+  _o.TIME_STAMP = (this.TIME_STAMP() !== null ? this.TIME_STAMP()!.unpack() : null);
 }
 }
 
@@ -255,7 +526,19 @@ constructor(
   public PLACEMARKS: (KMLPlacemarkT)[] = [],
   public FOLDERS: (KMLFolderT)[] = [],
   public NETWORK_LINKS: (KMLNetworkLinkT)[] = [],
-  public GROUND_OVERLAYS: (KMLGroundOverlayT)[] = []
+  public GROUND_OVERLAYS: (KMLGroundOverlayT)[] = [],
+  public STYLES: (KMLStyleT)[] = [],
+  public STYLE_MAPS: (KMLStyleMapT)[] = [],
+  public SCREEN_OVERLAYS: (KMLScreenOverlayT)[] = [],
+  public PHOTO_OVERLAYS: (KMLPhotoOverlayT)[] = [],
+  public TOURS: (KMLTourT)[] = [],
+  public STYLE_URL: string|Uint8Array|null = null,
+  public REGION: KMLRegionT|null = null,
+  public EXTENDED_DATA: (KMLDataT)[] = [],
+  public LOOK_AT: KMLLookAtT|null = null,
+  public CAMERA: KMLCameraT|null = null,
+  public TIME_SPAN: KMLTimeSpanT|null = null,
+  public TIME_STAMP: KMLTimeStampT|null = null
 ){}
 
 
@@ -266,16 +549,41 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const FOLDERS = KMLFolder.createFoldersVector(builder, builder.createObjectOffsetList(this.FOLDERS));
   const NETWORK_LINKS = KMLFolder.createNetworkLinksVector(builder, builder.createObjectOffsetList(this.NETWORK_LINKS));
   const GROUND_OVERLAYS = KMLFolder.createGroundOverlaysVector(builder, builder.createObjectOffsetList(this.GROUND_OVERLAYS));
+  const STYLES = KMLFolder.createStylesVector(builder, builder.createObjectOffsetList(this.STYLES));
+  const STYLE_MAPS = KMLFolder.createStyleMapsVector(builder, builder.createObjectOffsetList(this.STYLE_MAPS));
+  const SCREEN_OVERLAYS = KMLFolder.createScreenOverlaysVector(builder, builder.createObjectOffsetList(this.SCREEN_OVERLAYS));
+  const PHOTO_OVERLAYS = KMLFolder.createPhotoOverlaysVector(builder, builder.createObjectOffsetList(this.PHOTO_OVERLAYS));
+  const TOURS = KMLFolder.createToursVector(builder, builder.createObjectOffsetList(this.TOURS));
+  const STYLE_URL = (this.STYLE_URL !== null ? builder.createString(this.STYLE_URL!) : 0);
+  const REGION = (this.REGION !== null ? this.REGION!.pack(builder) : 0);
+  const EXTENDED_DATA = KMLFolder.createExtendedDataVector(builder, builder.createObjectOffsetList(this.EXTENDED_DATA));
+  const LOOK_AT = (this.LOOK_AT !== null ? this.LOOK_AT!.pack(builder) : 0);
+  const CAMERA = (this.CAMERA !== null ? this.CAMERA!.pack(builder) : 0);
+  const TIME_SPAN = (this.TIME_SPAN !== null ? this.TIME_SPAN!.pack(builder) : 0);
+  const TIME_STAMP = (this.TIME_STAMP !== null ? this.TIME_STAMP!.pack(builder) : 0);
 
-  return KMLFolder.createKMLFolder(builder,
-    NAME,
-    DESCRIPTION,
-    this.VISIBILITY,
-    this.OPEN,
-    PLACEMARKS,
-    FOLDERS,
-    NETWORK_LINKS,
-    GROUND_OVERLAYS
-  );
+  KMLFolder.startKMLFolder(builder);
+  KMLFolder.addName(builder, NAME);
+  KMLFolder.addDescription(builder, DESCRIPTION);
+  KMLFolder.addVisibility(builder, this.VISIBILITY);
+  KMLFolder.addOpen(builder, this.OPEN);
+  KMLFolder.addPlacemarks(builder, PLACEMARKS);
+  KMLFolder.addFolders(builder, FOLDERS);
+  KMLFolder.addNetworkLinks(builder, NETWORK_LINKS);
+  KMLFolder.addGroundOverlays(builder, GROUND_OVERLAYS);
+  KMLFolder.addStyles(builder, STYLES);
+  KMLFolder.addStyleMaps(builder, STYLE_MAPS);
+  KMLFolder.addScreenOverlays(builder, SCREEN_OVERLAYS);
+  KMLFolder.addPhotoOverlays(builder, PHOTO_OVERLAYS);
+  KMLFolder.addTours(builder, TOURS);
+  KMLFolder.addStyleUrl(builder, STYLE_URL);
+  KMLFolder.addRegion(builder, REGION);
+  KMLFolder.addExtendedData(builder, EXTENDED_DATA);
+  KMLFolder.addLookAt(builder, LOOK_AT);
+  KMLFolder.addCamera(builder, CAMERA);
+  KMLFolder.addTimeSpan(builder, TIME_SPAN);
+  KMLFolder.addTimeStamp(builder, TIME_STAMP);
+
+  return KMLFolder.endKMLFolder(builder);
 }
 }

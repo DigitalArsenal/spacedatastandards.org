@@ -16,6 +16,18 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct CZMInterval;
 struct CZMIntervalBuilder;
 
+struct CZMInterpolation;
+struct CZMInterpolationBuilder;
+
+struct CZMDynInterval;
+struct CZMDynIntervalBuilder;
+
+struct CZMDynSampled;
+struct CZMDynSampledBuilder;
+
+struct CZMDynamicProperty;
+struct CZMDynamicPropertyBuilder;
+
 struct CZMCartographicDegrees;
 struct CZMCartographicDegreesBuilder;
 
@@ -27,6 +39,48 @@ struct CZMColorBuilder;
 
 struct CZMNearFarScalar;
 struct CZMNearFarScalarBuilder;
+
+struct CZMDistanceDisplayCondition;
+struct CZMDistanceDisplayConditionBuilder;
+
+struct CZMOrientation;
+struct CZMOrientationBuilder;
+
+struct CZMViewFrom;
+struct CZMViewFromBuilder;
+
+struct CZMSolidColorMaterial;
+struct CZMSolidColorMaterialBuilder;
+
+struct CZMImageMaterial;
+struct CZMImageMaterialBuilder;
+
+struct CZMGridMaterial;
+struct CZMGridMaterialBuilder;
+
+struct CZMStripeMaterial;
+struct CZMStripeMaterialBuilder;
+
+struct CZMCheckerboardMaterial;
+struct CZMCheckerboardMaterialBuilder;
+
+struct CZMMaterial;
+struct CZMMaterialBuilder;
+
+struct CZMPolylineOutlineMaterial;
+struct CZMPolylineOutlineMaterialBuilder;
+
+struct CZMPolylineArrowMaterial;
+struct CZMPolylineArrowMaterialBuilder;
+
+struct CZMPolylineDashMaterial;
+struct CZMPolylineDashMaterialBuilder;
+
+struct CZMPolylineGlowMaterial;
+struct CZMPolylineGlowMaterialBuilder;
+
+struct CZMPolylineMaterial;
+struct CZMPolylineMaterialBuilder;
 
 struct CZMBillboard;
 struct CZMBillboardBuilder;
@@ -43,6 +97,9 @@ struct CZMPolylineBuilder;
 struct CZMPolygon;
 struct CZMPolygonBuilder;
 
+struct CZMPolygonHole;
+struct CZMPolygonHoleBuilder;
+
 struct CZMModel;
 struct CZMModelBuilder;
 
@@ -51,6 +108,30 @@ struct CZMPathBuilder;
 
 struct CZMEllipse;
 struct CZMEllipseBuilder;
+
+struct CZMBox;
+struct CZMBoxBuilder;
+
+struct CZMCorridor;
+struct CZMCorridorBuilder;
+
+struct CZMCylinder;
+struct CZMCylinderBuilder;
+
+struct CZMEllipsoid;
+struct CZMEllipsoidBuilder;
+
+struct CZMPolylineVolume;
+struct CZMPolylineVolumeBuilder;
+
+struct CZMRectangle;
+struct CZMRectangleBuilder;
+
+struct CZMTileset;
+struct CZMTilesetBuilder;
+
+struct CZMWall;
+struct CZMWallBuilder;
 
 struct CZMPacket;
 struct CZMPacketBuilder;
@@ -226,6 +307,286 @@ inline const char *EnumNameCZMVerticalOrigin(CZMVerticalOrigin e) {
   return EnumNamesCZMVerticalOrigin()[index];
 }
 
+enum CZMShadowMode : int8_t {
+  CZMShadowMode_DISABLED = 0,
+  CZMShadowMode_ENABLED = 1,
+  CZMShadowMode_CAST_ONLY = 2,
+  CZMShadowMode_RECEIVE_ONLY = 3,
+  CZMShadowMode_MIN = CZMShadowMode_DISABLED,
+  CZMShadowMode_MAX = CZMShadowMode_RECEIVE_ONLY
+};
+
+inline const CZMShadowMode (&EnumValuesCZMShadowMode())[4] {
+  static const CZMShadowMode values[] = {
+    CZMShadowMode_DISABLED,
+    CZMShadowMode_ENABLED,
+    CZMShadowMode_CAST_ONLY,
+    CZMShadowMode_RECEIVE_ONLY
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesCZMShadowMode() {
+  static const char * const names[5] = {
+    "DISABLED",
+    "ENABLED",
+    "CAST_ONLY",
+    "RECEIVE_ONLY",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameCZMShadowMode(CZMShadowMode e) {
+  if (::flatbuffers::IsOutRange(e, CZMShadowMode_DISABLED, CZMShadowMode_RECEIVE_ONLY)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesCZMShadowMode()[index];
+}
+
+enum CZMColorBlendMode : int8_t {
+  CZMColorBlendMode_HIGHLIGHT = 0,
+  CZMColorBlendMode_REPLACE = 1,
+  CZMColorBlendMode_MIX = 2,
+  CZMColorBlendMode_MIN = CZMColorBlendMode_HIGHLIGHT,
+  CZMColorBlendMode_MAX = CZMColorBlendMode_MIX
+};
+
+inline const CZMColorBlendMode (&EnumValuesCZMColorBlendMode())[3] {
+  static const CZMColorBlendMode values[] = {
+    CZMColorBlendMode_HIGHLIGHT,
+    CZMColorBlendMode_REPLACE,
+    CZMColorBlendMode_MIX
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesCZMColorBlendMode() {
+  static const char * const names[4] = {
+    "HIGHLIGHT",
+    "REPLACE",
+    "MIX",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameCZMColorBlendMode(CZMColorBlendMode e) {
+  if (::flatbuffers::IsOutRange(e, CZMColorBlendMode_HIGHLIGHT, CZMColorBlendMode_MIX)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesCZMColorBlendMode()[index];
+}
+
+enum CZMCornerType : int8_t {
+  CZMCornerType_ROUNDED = 0,
+  CZMCornerType_MITERED = 1,
+  CZMCornerType_BEVELED = 2,
+  CZMCornerType_MIN = CZMCornerType_ROUNDED,
+  CZMCornerType_MAX = CZMCornerType_BEVELED
+};
+
+inline const CZMCornerType (&EnumValuesCZMCornerType())[3] {
+  static const CZMCornerType values[] = {
+    CZMCornerType_ROUNDED,
+    CZMCornerType_MITERED,
+    CZMCornerType_BEVELED
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesCZMCornerType() {
+  static const char * const names[4] = {
+    "ROUNDED",
+    "MITERED",
+    "BEVELED",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameCZMCornerType(CZMCornerType e) {
+  if (::flatbuffers::IsOutRange(e, CZMCornerType_ROUNDED, CZMCornerType_BEVELED)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesCZMCornerType()[index];
+}
+
+enum CZMArcType : int8_t {
+  CZMArcType_NONE = 0,
+  CZMArcType_GEODESIC = 1,
+  CZMArcType_RHUMB = 2,
+  CZMArcType_MIN = CZMArcType_NONE,
+  CZMArcType_MAX = CZMArcType_RHUMB
+};
+
+inline const CZMArcType (&EnumValuesCZMArcType())[3] {
+  static const CZMArcType values[] = {
+    CZMArcType_NONE,
+    CZMArcType_GEODESIC,
+    CZMArcType_RHUMB
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesCZMArcType() {
+  static const char * const names[4] = {
+    "NONE",
+    "GEODESIC",
+    "RHUMB",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameCZMArcType(CZMArcType e) {
+  if (::flatbuffers::IsOutRange(e, CZMArcType_NONE, CZMArcType_RHUMB)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesCZMArcType()[index];
+}
+
+enum CZMStripeOrientation : int8_t {
+  CZMStripeOrientation_HORIZONTAL = 0,
+  CZMStripeOrientation_VERTICAL = 1,
+  CZMStripeOrientation_MIN = CZMStripeOrientation_HORIZONTAL,
+  CZMStripeOrientation_MAX = CZMStripeOrientation_VERTICAL
+};
+
+inline const CZMStripeOrientation (&EnumValuesCZMStripeOrientation())[2] {
+  static const CZMStripeOrientation values[] = {
+    CZMStripeOrientation_HORIZONTAL,
+    CZMStripeOrientation_VERTICAL
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesCZMStripeOrientation() {
+  static const char * const names[3] = {
+    "HORIZONTAL",
+    "VERTICAL",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameCZMStripeOrientation(CZMStripeOrientation e) {
+  if (::flatbuffers::IsOutRange(e, CZMStripeOrientation_HORIZONTAL, CZMStripeOrientation_VERTICAL)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesCZMStripeOrientation()[index];
+}
+
+enum CZMClockRange : int8_t {
+  CZMClockRange_UNBOUNDED = 0,
+  CZMClockRange_CLAMPED = 1,
+  CZMClockRange_LOOP_STOP = 2,
+  CZMClockRange_MIN = CZMClockRange_UNBOUNDED,
+  CZMClockRange_MAX = CZMClockRange_LOOP_STOP
+};
+
+inline const CZMClockRange (&EnumValuesCZMClockRange())[3] {
+  static const CZMClockRange values[] = {
+    CZMClockRange_UNBOUNDED,
+    CZMClockRange_CLAMPED,
+    CZMClockRange_LOOP_STOP
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesCZMClockRange() {
+  static const char * const names[4] = {
+    "UNBOUNDED",
+    "CLAMPED",
+    "LOOP_STOP",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameCZMClockRange(CZMClockRange e) {
+  if (::flatbuffers::IsOutRange(e, CZMClockRange_UNBOUNDED, CZMClockRange_LOOP_STOP)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesCZMClockRange()[index];
+}
+
+enum CZMClockStep : int8_t {
+  CZMClockStep_TICK_DEPENDENT = 0,
+  CZMClockStep_SYSTEM_CLOCK_MULTIPLIER = 1,
+  CZMClockStep_SYSTEM_CLOCK = 2,
+  CZMClockStep_MIN = CZMClockStep_TICK_DEPENDENT,
+  CZMClockStep_MAX = CZMClockStep_SYSTEM_CLOCK
+};
+
+inline const CZMClockStep (&EnumValuesCZMClockStep())[3] {
+  static const CZMClockStep values[] = {
+    CZMClockStep_TICK_DEPENDENT,
+    CZMClockStep_SYSTEM_CLOCK_MULTIPLIER,
+    CZMClockStep_SYSTEM_CLOCK
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesCZMClockStep() {
+  static const char * const names[4] = {
+    "TICK_DEPENDENT",
+    "SYSTEM_CLOCK_MULTIPLIER",
+    "SYSTEM_CLOCK",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameCZMClockStep(CZMClockStep e) {
+  if (::flatbuffers::IsOutRange(e, CZMClockStep_TICK_DEPENDENT, CZMClockStep_SYSTEM_CLOCK)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesCZMClockStep()[index];
+}
+
+/// Dynamic value types for time-varying properties
+enum CZMDynValueType : int8_t {
+  CZMDynValueType_NUMBER = 0,
+  CZMDynValueType_BOOLEAN = 1,
+  CZMDynValueType_STRING = 2,
+  CZMDynValueType_COLOR = 3,
+  CZMDynValueType_CARTESIAN3 = 4,
+  CZMDynValueType_CARTESIAN2 = 5,
+  CZMDynValueType_NEAR_FAR_SCALAR = 6,
+  CZMDynValueType_UNIT_QUATERNION = 7,
+  CZMDynValueType_MIN = CZMDynValueType_NUMBER,
+  CZMDynValueType_MAX = CZMDynValueType_UNIT_QUATERNION
+};
+
+inline const CZMDynValueType (&EnumValuesCZMDynValueType())[8] {
+  static const CZMDynValueType values[] = {
+    CZMDynValueType_NUMBER,
+    CZMDynValueType_BOOLEAN,
+    CZMDynValueType_STRING,
+    CZMDynValueType_COLOR,
+    CZMDynValueType_CARTESIAN3,
+    CZMDynValueType_CARTESIAN2,
+    CZMDynValueType_NEAR_FAR_SCALAR,
+    CZMDynValueType_UNIT_QUATERNION
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesCZMDynValueType() {
+  static const char * const names[9] = {
+    "NUMBER",
+    "BOOLEAN",
+    "STRING",
+    "COLOR",
+    "CARTESIAN3",
+    "CARTESIAN2",
+    "NEAR_FAR_SCALAR",
+    "UNIT_QUATERNION",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameCZMDynValueType(CZMDynValueType e) {
+  if (::flatbuffers::IsOutRange(e, CZMDynValueType_NUMBER, CZMDynValueType_UNIT_QUATERNION)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesCZMDynValueType()[index];
+}
+
 /// Time interval for time-dynamic properties
 struct CZMInterval FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CZMIntervalBuilder Builder;
@@ -277,6 +638,401 @@ inline ::flatbuffers::Offset<CZMInterval> CreateCZMIntervalDirect(
   return CreateCZMInterval(
       _fbb,
       INTERVAL__);
+}
+
+/// Interpolation settings for sampled data
+struct CZMInterpolation FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CZMInterpolationBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_ALGORITHM = 4,
+    VT_DEGREE = 6
+  };
+  /// Algorithm: LINEAR, LAGRANGE, HERMITE
+  const ::flatbuffers::String *ALGORITHM() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ALGORITHM);
+  }
+  /// Polynomial degree (1=linear, 5=typical Lagrange)
+  int32_t DEGREE() const {
+    return GetField<int32_t>(VT_DEGREE, 0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_ALGORITHM) &&
+           verifier.VerifyString(ALGORITHM()) &&
+           VerifyField<int32_t>(verifier, VT_DEGREE, 4) &&
+           verifier.EndTable();
+  }
+};
+
+struct CZMInterpolationBuilder {
+  typedef CZMInterpolation Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_ALGORITHM(::flatbuffers::Offset<::flatbuffers::String> ALGORITHM) {
+    fbb_.AddOffset(CZMInterpolation::VT_ALGORITHM, ALGORITHM);
+  }
+  void add_DEGREE(int32_t DEGREE) {
+    fbb_.AddElement<int32_t>(CZMInterpolation::VT_DEGREE, DEGREE, 0);
+  }
+  explicit CZMInterpolationBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CZMInterpolation> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CZMInterpolation>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CZMInterpolation> CreateCZMInterpolation(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> ALGORITHM = 0,
+    int32_t DEGREE = 0) {
+  CZMInterpolationBuilder builder_(_fbb);
+  builder_.add_DEGREE(DEGREE);
+  builder_.add_ALGORITHM(ALGORITHM);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<CZMInterpolation> CreateCZMInterpolationDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *ALGORITHM = nullptr,
+    int32_t DEGREE = 0) {
+  auto ALGORITHM__ = ALGORITHM ? _fbb.CreateString(ALGORITHM) : 0;
+  return CreateCZMInterpolation(
+      _fbb,
+      ALGORITHM__,
+      DEGREE);
+}
+
+/// A single interval in a time-varying property
+struct CZMDynInterval FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CZMDynIntervalBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_INTERVAL = 4,
+    VT_VALUE_TYPE = 6,
+    VT_NUMBER_VALUE = 8,
+    VT_BOOLEAN_VALUE = 10,
+    VT_STRING_VALUE = 12,
+    VT_COLOR_VALUE = 14,
+    VT_ARRAY_VALUE = 16
+  };
+  /// ISO 8601 interval string
+  const ::flatbuffers::String *INTERVAL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_INTERVAL);
+  }
+  /// Value type
+  CZMDynValueType VALUE_TYPE() const {
+    return static_cast<CZMDynValueType>(GetField<int8_t>(VT_VALUE_TYPE, 0));
+  }
+  /// Numeric value (when VALUE_TYPE is NUMBER)
+  double NUMBER_VALUE() const {
+    return GetField<double>(VT_NUMBER_VALUE, 0.0);
+  }
+  /// Boolean value (when VALUE_TYPE is BOOLEAN)
+  bool BOOLEAN_VALUE() const {
+    return GetField<uint8_t>(VT_BOOLEAN_VALUE, 0) != 0;
+  }
+  /// String value (when VALUE_TYPE is STRING)
+  const ::flatbuffers::String *STRING_VALUE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_STRING_VALUE);
+  }
+  /// Color value (when VALUE_TYPE is COLOR)
+  const CZMColor *COLOR_VALUE() const {
+    return GetPointer<const CZMColor *>(VT_COLOR_VALUE);
+  }
+  /// Array value for cartesian/nearFarScalar types
+  const ::flatbuffers::Vector<double> *ARRAY_VALUE() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_ARRAY_VALUE);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_INTERVAL) &&
+           verifier.VerifyString(INTERVAL()) &&
+           VerifyField<int8_t>(verifier, VT_VALUE_TYPE, 1) &&
+           VerifyField<double>(verifier, VT_NUMBER_VALUE, 8) &&
+           VerifyField<uint8_t>(verifier, VT_BOOLEAN_VALUE, 1) &&
+           VerifyOffset(verifier, VT_STRING_VALUE) &&
+           verifier.VerifyString(STRING_VALUE()) &&
+           VerifyOffset(verifier, VT_COLOR_VALUE) &&
+           verifier.VerifyTable(COLOR_VALUE()) &&
+           VerifyOffset(verifier, VT_ARRAY_VALUE) &&
+           verifier.VerifyVector(ARRAY_VALUE()) &&
+           verifier.EndTable();
+  }
+};
+
+struct CZMDynIntervalBuilder {
+  typedef CZMDynInterval Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_INTERVAL(::flatbuffers::Offset<::flatbuffers::String> INTERVAL) {
+    fbb_.AddOffset(CZMDynInterval::VT_INTERVAL, INTERVAL);
+  }
+  void add_VALUE_TYPE(CZMDynValueType VALUE_TYPE) {
+    fbb_.AddElement<int8_t>(CZMDynInterval::VT_VALUE_TYPE, static_cast<int8_t>(VALUE_TYPE), 0);
+  }
+  void add_NUMBER_VALUE(double NUMBER_VALUE) {
+    fbb_.AddElement<double>(CZMDynInterval::VT_NUMBER_VALUE, NUMBER_VALUE, 0.0);
+  }
+  void add_BOOLEAN_VALUE(bool BOOLEAN_VALUE) {
+    fbb_.AddElement<uint8_t>(CZMDynInterval::VT_BOOLEAN_VALUE, static_cast<uint8_t>(BOOLEAN_VALUE), 0);
+  }
+  void add_STRING_VALUE(::flatbuffers::Offset<::flatbuffers::String> STRING_VALUE) {
+    fbb_.AddOffset(CZMDynInterval::VT_STRING_VALUE, STRING_VALUE);
+  }
+  void add_COLOR_VALUE(::flatbuffers::Offset<CZMColor> COLOR_VALUE) {
+    fbb_.AddOffset(CZMDynInterval::VT_COLOR_VALUE, COLOR_VALUE);
+  }
+  void add_ARRAY_VALUE(::flatbuffers::Offset<::flatbuffers::Vector<double>> ARRAY_VALUE) {
+    fbb_.AddOffset(CZMDynInterval::VT_ARRAY_VALUE, ARRAY_VALUE);
+  }
+  explicit CZMDynIntervalBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CZMDynInterval> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CZMDynInterval>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CZMDynInterval> CreateCZMDynInterval(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> INTERVAL = 0,
+    CZMDynValueType VALUE_TYPE = CZMDynValueType_NUMBER,
+    double NUMBER_VALUE = 0.0,
+    bool BOOLEAN_VALUE = false,
+    ::flatbuffers::Offset<::flatbuffers::String> STRING_VALUE = 0,
+    ::flatbuffers::Offset<CZMColor> COLOR_VALUE = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> ARRAY_VALUE = 0) {
+  CZMDynIntervalBuilder builder_(_fbb);
+  builder_.add_NUMBER_VALUE(NUMBER_VALUE);
+  builder_.add_ARRAY_VALUE(ARRAY_VALUE);
+  builder_.add_COLOR_VALUE(COLOR_VALUE);
+  builder_.add_STRING_VALUE(STRING_VALUE);
+  builder_.add_INTERVAL(INTERVAL);
+  builder_.add_BOOLEAN_VALUE(BOOLEAN_VALUE);
+  builder_.add_VALUE_TYPE(VALUE_TYPE);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<CZMDynInterval> CreateCZMDynIntervalDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *INTERVAL = nullptr,
+    CZMDynValueType VALUE_TYPE = CZMDynValueType_NUMBER,
+    double NUMBER_VALUE = 0.0,
+    bool BOOLEAN_VALUE = false,
+    const char *STRING_VALUE = nullptr,
+    ::flatbuffers::Offset<CZMColor> COLOR_VALUE = 0,
+    const std::vector<double> *ARRAY_VALUE = nullptr) {
+  auto INTERVAL__ = INTERVAL ? _fbb.CreateString(INTERVAL) : 0;
+  auto STRING_VALUE__ = STRING_VALUE ? _fbb.CreateString(STRING_VALUE) : 0;
+  auto ARRAY_VALUE__ = ARRAY_VALUE ? _fbb.CreateVector<double>(*ARRAY_VALUE) : 0;
+  return CreateCZMDynInterval(
+      _fbb,
+      INTERVAL__,
+      VALUE_TYPE,
+      NUMBER_VALUE,
+      BOOLEAN_VALUE,
+      STRING_VALUE__,
+      COLOR_VALUE,
+      ARRAY_VALUE__);
+}
+
+/// Sampled time-varying data
+struct CZMDynSampled FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CZMDynSampledBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_EPOCH = 4,
+    VT_VALUE_TYPE = 6,
+    VT_DATA = 8,
+    VT_INTERPOLATION = 10
+  };
+  /// Reference epoch (ISO 8601)
+  const ::flatbuffers::String *EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
+  }
+  /// Value type determines stride through DATA
+  CZMDynValueType VALUE_TYPE() const {
+    return static_cast<CZMDynValueType>(GetField<int8_t>(VT_VALUE_TYPE, 0));
+  }
+  /// Interleaved [time, value(s), ...] — stride depends on VALUE_TYPE
+  const ::flatbuffers::Vector<double> *DATA() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_DATA);
+  }
+  /// Interpolation settings
+  const CZMInterpolation *INTERPOLATION() const {
+    return GetPointer<const CZMInterpolation *>(VT_INTERPOLATION);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_EPOCH) &&
+           verifier.VerifyString(EPOCH()) &&
+           VerifyField<int8_t>(verifier, VT_VALUE_TYPE, 1) &&
+           VerifyOffset(verifier, VT_DATA) &&
+           verifier.VerifyVector(DATA()) &&
+           VerifyOffset(verifier, VT_INTERPOLATION) &&
+           verifier.VerifyTable(INTERPOLATION()) &&
+           verifier.EndTable();
+  }
+};
+
+struct CZMDynSampledBuilder {
+  typedef CZMDynSampled Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
+    fbb_.AddOffset(CZMDynSampled::VT_EPOCH, EPOCH);
+  }
+  void add_VALUE_TYPE(CZMDynValueType VALUE_TYPE) {
+    fbb_.AddElement<int8_t>(CZMDynSampled::VT_VALUE_TYPE, static_cast<int8_t>(VALUE_TYPE), 0);
+  }
+  void add_DATA(::flatbuffers::Offset<::flatbuffers::Vector<double>> DATA) {
+    fbb_.AddOffset(CZMDynSampled::VT_DATA, DATA);
+  }
+  void add_INTERPOLATION(::flatbuffers::Offset<CZMInterpolation> INTERPOLATION) {
+    fbb_.AddOffset(CZMDynSampled::VT_INTERPOLATION, INTERPOLATION);
+  }
+  explicit CZMDynSampledBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CZMDynSampled> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CZMDynSampled>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CZMDynSampled> CreateCZMDynSampled(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
+    CZMDynValueType VALUE_TYPE = CZMDynValueType_NUMBER,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> DATA = 0,
+    ::flatbuffers::Offset<CZMInterpolation> INTERPOLATION = 0) {
+  CZMDynSampledBuilder builder_(_fbb);
+  builder_.add_INTERPOLATION(INTERPOLATION);
+  builder_.add_DATA(DATA);
+  builder_.add_EPOCH(EPOCH);
+  builder_.add_VALUE_TYPE(VALUE_TYPE);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<CZMDynSampled> CreateCZMDynSampledDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *EPOCH = nullptr,
+    CZMDynValueType VALUE_TYPE = CZMDynValueType_NUMBER,
+    const std::vector<double> *DATA = nullptr,
+    ::flatbuffers::Offset<CZMInterpolation> INTERPOLATION = 0) {
+  auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
+  auto DATA__ = DATA ? _fbb.CreateVector<double>(*DATA) : 0;
+  return CreateCZMDynSampled(
+      _fbb,
+      EPOCH__,
+      VALUE_TYPE,
+      DATA__,
+      INTERPOLATION);
+}
+
+/// A single time-dynamic property (non-static value)
+struct CZMDynamicProperty FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CZMDynamicPropertyBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_NAME = 4,
+    VT_SAMPLED = 6,
+    VT_INTERVALS = 8,
+    VT_REFERENCE = 10
+  };
+  /// Dotted path name, e.g. "billboard.scale", "point.color"
+  const ::flatbuffers::String *NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  /// Sampled data (when property uses epoch + data array)
+  const CZMDynSampled *SAMPLED() const {
+    return GetPointer<const CZMDynSampled *>(VT_SAMPLED);
+  }
+  /// Interval-based values
+  const ::flatbuffers::Vector<::flatbuffers::Offset<CZMDynInterval>> *INTERVALS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<CZMDynInterval>> *>(VT_INTERVALS);
+  }
+  /// Reference to another entity's property
+  const ::flatbuffers::String *REFERENCE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REFERENCE);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(NAME()) &&
+           VerifyOffset(verifier, VT_SAMPLED) &&
+           verifier.VerifyTable(SAMPLED()) &&
+           VerifyOffset(verifier, VT_INTERVALS) &&
+           verifier.VerifyVector(INTERVALS()) &&
+           verifier.VerifyVectorOfTables(INTERVALS()) &&
+           VerifyOffset(verifier, VT_REFERENCE) &&
+           verifier.VerifyString(REFERENCE()) &&
+           verifier.EndTable();
+  }
+};
+
+struct CZMDynamicPropertyBuilder {
+  typedef CZMDynamicProperty Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
+    fbb_.AddOffset(CZMDynamicProperty::VT_NAME, NAME);
+  }
+  void add_SAMPLED(::flatbuffers::Offset<CZMDynSampled> SAMPLED) {
+    fbb_.AddOffset(CZMDynamicProperty::VT_SAMPLED, SAMPLED);
+  }
+  void add_INTERVALS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CZMDynInterval>>> INTERVALS) {
+    fbb_.AddOffset(CZMDynamicProperty::VT_INTERVALS, INTERVALS);
+  }
+  void add_REFERENCE(::flatbuffers::Offset<::flatbuffers::String> REFERENCE) {
+    fbb_.AddOffset(CZMDynamicProperty::VT_REFERENCE, REFERENCE);
+  }
+  explicit CZMDynamicPropertyBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CZMDynamicProperty> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CZMDynamicProperty>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CZMDynamicProperty> CreateCZMDynamicProperty(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
+    ::flatbuffers::Offset<CZMDynSampled> SAMPLED = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CZMDynInterval>>> INTERVALS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REFERENCE = 0) {
+  CZMDynamicPropertyBuilder builder_(_fbb);
+  builder_.add_REFERENCE(REFERENCE);
+  builder_.add_INTERVALS(INTERVALS);
+  builder_.add_SAMPLED(SAMPLED);
+  builder_.add_NAME(NAME);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<CZMDynamicProperty> CreateCZMDynamicPropertyDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *NAME = nullptr,
+    ::flatbuffers::Offset<CZMDynSampled> SAMPLED = 0,
+    const std::vector<::flatbuffers::Offset<CZMDynInterval>> *INTERVALS = nullptr,
+    const char *REFERENCE = nullptr) {
+  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
+  auto INTERVALS__ = INTERVALS ? _fbb.CreateVector<::flatbuffers::Offset<CZMDynInterval>>(*INTERVALS) : 0;
+  auto REFERENCE__ = REFERENCE ? _fbb.CreateString(REFERENCE) : 0;
+  return CreateCZMDynamicProperty(
+      _fbb,
+      NAME__,
+      SAMPLED,
+      INTERVALS__,
+      REFERENCE__);
 }
 
 /// Cartographic position (longitude, latitude, height in radians/meters)
@@ -561,6 +1317,1096 @@ inline ::flatbuffers::Offset<CZMNearFarScalar> CreateCZMNearFarScalar(
   return builder_.Finish();
 }
 
+/// Distance display condition
+struct CZMDistanceDisplayCondition FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CZMDistanceDisplayConditionBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_NEAR_DISTANCE = 4,
+    VT_FAR_DISTANCE = 6
+  };
+  /// Near distance in meters
+  double NEAR_DISTANCE() const {
+    return GetField<double>(VT_NEAR_DISTANCE, 0.0);
+  }
+  /// Far distance in meters
+  double FAR_DISTANCE() const {
+    return GetField<double>(VT_FAR_DISTANCE, 0.0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<double>(verifier, VT_NEAR_DISTANCE, 8) &&
+           VerifyField<double>(verifier, VT_FAR_DISTANCE, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct CZMDistanceDisplayConditionBuilder {
+  typedef CZMDistanceDisplayCondition Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_NEAR_DISTANCE(double NEAR_DISTANCE) {
+    fbb_.AddElement<double>(CZMDistanceDisplayCondition::VT_NEAR_DISTANCE, NEAR_DISTANCE, 0.0);
+  }
+  void add_FAR_DISTANCE(double FAR_DISTANCE) {
+    fbb_.AddElement<double>(CZMDistanceDisplayCondition::VT_FAR_DISTANCE, FAR_DISTANCE, 0.0);
+  }
+  explicit CZMDistanceDisplayConditionBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CZMDistanceDisplayCondition> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CZMDistanceDisplayCondition>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CZMDistanceDisplayCondition> CreateCZMDistanceDisplayCondition(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    double NEAR_DISTANCE = 0.0,
+    double FAR_DISTANCE = 0.0) {
+  CZMDistanceDisplayConditionBuilder builder_(_fbb);
+  builder_.add_FAR_DISTANCE(FAR_DISTANCE);
+  builder_.add_NEAR_DISTANCE(NEAR_DISTANCE);
+  return builder_.Finish();
+}
+
+/// Orientation as unit quaternion
+struct CZMOrientation FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CZMOrientationBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_UNIT_QUATERNION_X = 4,
+    VT_UNIT_QUATERNION_Y = 6,
+    VT_UNIT_QUATERNION_Z = 8,
+    VT_UNIT_QUATERNION_W = 10
+  };
+  /// X component
+  double UNIT_QUATERNION_X() const {
+    return GetField<double>(VT_UNIT_QUATERNION_X, 0.0);
+  }
+  /// Y component
+  double UNIT_QUATERNION_Y() const {
+    return GetField<double>(VT_UNIT_QUATERNION_Y, 0.0);
+  }
+  /// Z component
+  double UNIT_QUATERNION_Z() const {
+    return GetField<double>(VT_UNIT_QUATERNION_Z, 0.0);
+  }
+  /// W component
+  double UNIT_QUATERNION_W() const {
+    return GetField<double>(VT_UNIT_QUATERNION_W, 0.0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<double>(verifier, VT_UNIT_QUATERNION_X, 8) &&
+           VerifyField<double>(verifier, VT_UNIT_QUATERNION_Y, 8) &&
+           VerifyField<double>(verifier, VT_UNIT_QUATERNION_Z, 8) &&
+           VerifyField<double>(verifier, VT_UNIT_QUATERNION_W, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct CZMOrientationBuilder {
+  typedef CZMOrientation Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_UNIT_QUATERNION_X(double UNIT_QUATERNION_X) {
+    fbb_.AddElement<double>(CZMOrientation::VT_UNIT_QUATERNION_X, UNIT_QUATERNION_X, 0.0);
+  }
+  void add_UNIT_QUATERNION_Y(double UNIT_QUATERNION_Y) {
+    fbb_.AddElement<double>(CZMOrientation::VT_UNIT_QUATERNION_Y, UNIT_QUATERNION_Y, 0.0);
+  }
+  void add_UNIT_QUATERNION_Z(double UNIT_QUATERNION_Z) {
+    fbb_.AddElement<double>(CZMOrientation::VT_UNIT_QUATERNION_Z, UNIT_QUATERNION_Z, 0.0);
+  }
+  void add_UNIT_QUATERNION_W(double UNIT_QUATERNION_W) {
+    fbb_.AddElement<double>(CZMOrientation::VT_UNIT_QUATERNION_W, UNIT_QUATERNION_W, 0.0);
+  }
+  explicit CZMOrientationBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CZMOrientation> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CZMOrientation>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CZMOrientation> CreateCZMOrientation(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    double UNIT_QUATERNION_X = 0.0,
+    double UNIT_QUATERNION_Y = 0.0,
+    double UNIT_QUATERNION_Z = 0.0,
+    double UNIT_QUATERNION_W = 0.0) {
+  CZMOrientationBuilder builder_(_fbb);
+  builder_.add_UNIT_QUATERNION_W(UNIT_QUATERNION_W);
+  builder_.add_UNIT_QUATERNION_Z(UNIT_QUATERNION_Z);
+  builder_.add_UNIT_QUATERNION_Y(UNIT_QUATERNION_Y);
+  builder_.add_UNIT_QUATERNION_X(UNIT_QUATERNION_X);
+  return builder_.Finish();
+}
+
+/// Suggested camera offset from entity
+struct CZMViewFrom FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CZMViewFromBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_X = 4,
+    VT_Y = 6,
+    VT_Z = 8
+  };
+  /// X offset in meters
+  double X() const {
+    return GetField<double>(VT_X, 0.0);
+  }
+  /// Y offset in meters
+  double Y() const {
+    return GetField<double>(VT_Y, 0.0);
+  }
+  /// Z offset in meters
+  double Z() const {
+    return GetField<double>(VT_Z, 0.0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<double>(verifier, VT_X, 8) &&
+           VerifyField<double>(verifier, VT_Y, 8) &&
+           VerifyField<double>(verifier, VT_Z, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct CZMViewFromBuilder {
+  typedef CZMViewFrom Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_X(double X) {
+    fbb_.AddElement<double>(CZMViewFrom::VT_X, X, 0.0);
+  }
+  void add_Y(double Y) {
+    fbb_.AddElement<double>(CZMViewFrom::VT_Y, Y, 0.0);
+  }
+  void add_Z(double Z) {
+    fbb_.AddElement<double>(CZMViewFrom::VT_Z, Z, 0.0);
+  }
+  explicit CZMViewFromBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CZMViewFrom> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CZMViewFrom>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CZMViewFrom> CreateCZMViewFrom(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    double X = 0.0,
+    double Y = 0.0,
+    double Z = 0.0) {
+  CZMViewFromBuilder builder_(_fbb);
+  builder_.add_Z(Z);
+  builder_.add_Y(Y);
+  builder_.add_X(X);
+  return builder_.Finish();
+}
+
+/// Solid color material
+struct CZMSolidColorMaterial FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CZMSolidColorMaterialBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_COLOR = 4
+  };
+  /// Color
+  const CZMColor *COLOR() const {
+    return GetPointer<const CZMColor *>(VT_COLOR);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_COLOR) &&
+           verifier.VerifyTable(COLOR()) &&
+           verifier.EndTable();
+  }
+};
+
+struct CZMSolidColorMaterialBuilder {
+  typedef CZMSolidColorMaterial Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_COLOR(::flatbuffers::Offset<CZMColor> COLOR) {
+    fbb_.AddOffset(CZMSolidColorMaterial::VT_COLOR, COLOR);
+  }
+  explicit CZMSolidColorMaterialBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CZMSolidColorMaterial> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CZMSolidColorMaterial>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CZMSolidColorMaterial> CreateCZMSolidColorMaterial(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<CZMColor> COLOR = 0) {
+  CZMSolidColorMaterialBuilder builder_(_fbb);
+  builder_.add_COLOR(COLOR);
+  return builder_.Finish();
+}
+
+/// Image material
+struct CZMImageMaterial FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CZMImageMaterialBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_IMAGE = 4,
+    VT_REPEAT_X = 6,
+    VT_REPEAT_Y = 8,
+    VT_COLOR = 10,
+    VT_TRANSPARENT = 12
+  };
+  /// Image URI
+  const ::flatbuffers::String *IMAGE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_IMAGE);
+  }
+  /// Repeat X
+  double REPEAT_X() const {
+    return GetField<double>(VT_REPEAT_X, 0.0);
+  }
+  /// Repeat Y
+  double REPEAT_Y() const {
+    return GetField<double>(VT_REPEAT_Y, 0.0);
+  }
+  /// Color tint
+  const CZMColor *COLOR() const {
+    return GetPointer<const CZMColor *>(VT_COLOR);
+  }
+  /// Whether the image has transparency
+  bool TRANSPARENT() const {
+    return GetField<uint8_t>(VT_TRANSPARENT, 0) != 0;
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_IMAGE) &&
+           verifier.VerifyString(IMAGE()) &&
+           VerifyField<double>(verifier, VT_REPEAT_X, 8) &&
+           VerifyField<double>(verifier, VT_REPEAT_Y, 8) &&
+           VerifyOffset(verifier, VT_COLOR) &&
+           verifier.VerifyTable(COLOR()) &&
+           VerifyField<uint8_t>(verifier, VT_TRANSPARENT, 1) &&
+           verifier.EndTable();
+  }
+};
+
+struct CZMImageMaterialBuilder {
+  typedef CZMImageMaterial Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_IMAGE(::flatbuffers::Offset<::flatbuffers::String> IMAGE) {
+    fbb_.AddOffset(CZMImageMaterial::VT_IMAGE, IMAGE);
+  }
+  void add_REPEAT_X(double REPEAT_X) {
+    fbb_.AddElement<double>(CZMImageMaterial::VT_REPEAT_X, REPEAT_X, 0.0);
+  }
+  void add_REPEAT_Y(double REPEAT_Y) {
+    fbb_.AddElement<double>(CZMImageMaterial::VT_REPEAT_Y, REPEAT_Y, 0.0);
+  }
+  void add_COLOR(::flatbuffers::Offset<CZMColor> COLOR) {
+    fbb_.AddOffset(CZMImageMaterial::VT_COLOR, COLOR);
+  }
+  void add_TRANSPARENT(bool TRANSPARENT) {
+    fbb_.AddElement<uint8_t>(CZMImageMaterial::VT_TRANSPARENT, static_cast<uint8_t>(TRANSPARENT), 0);
+  }
+  explicit CZMImageMaterialBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CZMImageMaterial> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CZMImageMaterial>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CZMImageMaterial> CreateCZMImageMaterial(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> IMAGE = 0,
+    double REPEAT_X = 0.0,
+    double REPEAT_Y = 0.0,
+    ::flatbuffers::Offset<CZMColor> COLOR = 0,
+    bool TRANSPARENT = false) {
+  CZMImageMaterialBuilder builder_(_fbb);
+  builder_.add_REPEAT_Y(REPEAT_Y);
+  builder_.add_REPEAT_X(REPEAT_X);
+  builder_.add_COLOR(COLOR);
+  builder_.add_IMAGE(IMAGE);
+  builder_.add_TRANSPARENT(TRANSPARENT);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<CZMImageMaterial> CreateCZMImageMaterialDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *IMAGE = nullptr,
+    double REPEAT_X = 0.0,
+    double REPEAT_Y = 0.0,
+    ::flatbuffers::Offset<CZMColor> COLOR = 0,
+    bool TRANSPARENT = false) {
+  auto IMAGE__ = IMAGE ? _fbb.CreateString(IMAGE) : 0;
+  return CreateCZMImageMaterial(
+      _fbb,
+      IMAGE__,
+      REPEAT_X,
+      REPEAT_Y,
+      COLOR,
+      TRANSPARENT);
+}
+
+/// Grid material
+struct CZMGridMaterial FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CZMGridMaterialBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_COLOR = 4,
+    VT_CELL_ALPHA = 6,
+    VT_LINE_COUNT_X = 8,
+    VT_LINE_COUNT_Y = 10,
+    VT_LINE_THICKNESS_X = 12,
+    VT_LINE_THICKNESS_Y = 14,
+    VT_LINE_OFFSET_X = 16,
+    VT_LINE_OFFSET_Y = 18
+  };
+  /// Grid line color
+  const CZMColor *COLOR() const {
+    return GetPointer<const CZMColor *>(VT_COLOR);
+  }
+  /// Cell alpha
+  double CELL_ALPHA() const {
+    return GetField<double>(VT_CELL_ALPHA, 0.0);
+  }
+  /// Number of grid lines along X
+  double LINE_COUNT_X() const {
+    return GetField<double>(VT_LINE_COUNT_X, 0.0);
+  }
+  /// Number of grid lines along Y
+  double LINE_COUNT_Y() const {
+    return GetField<double>(VT_LINE_COUNT_Y, 0.0);
+  }
+  /// Thickness of grid lines along X
+  double LINE_THICKNESS_X() const {
+    return GetField<double>(VT_LINE_THICKNESS_X, 0.0);
+  }
+  /// Thickness of grid lines along Y
+  double LINE_THICKNESS_Y() const {
+    return GetField<double>(VT_LINE_THICKNESS_Y, 0.0);
+  }
+  /// Offset of grid lines along X
+  double LINE_OFFSET_X() const {
+    return GetField<double>(VT_LINE_OFFSET_X, 0.0);
+  }
+  /// Offset of grid lines along Y
+  double LINE_OFFSET_Y() const {
+    return GetField<double>(VT_LINE_OFFSET_Y, 0.0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_COLOR) &&
+           verifier.VerifyTable(COLOR()) &&
+           VerifyField<double>(verifier, VT_CELL_ALPHA, 8) &&
+           VerifyField<double>(verifier, VT_LINE_COUNT_X, 8) &&
+           VerifyField<double>(verifier, VT_LINE_COUNT_Y, 8) &&
+           VerifyField<double>(verifier, VT_LINE_THICKNESS_X, 8) &&
+           VerifyField<double>(verifier, VT_LINE_THICKNESS_Y, 8) &&
+           VerifyField<double>(verifier, VT_LINE_OFFSET_X, 8) &&
+           VerifyField<double>(verifier, VT_LINE_OFFSET_Y, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct CZMGridMaterialBuilder {
+  typedef CZMGridMaterial Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_COLOR(::flatbuffers::Offset<CZMColor> COLOR) {
+    fbb_.AddOffset(CZMGridMaterial::VT_COLOR, COLOR);
+  }
+  void add_CELL_ALPHA(double CELL_ALPHA) {
+    fbb_.AddElement<double>(CZMGridMaterial::VT_CELL_ALPHA, CELL_ALPHA, 0.0);
+  }
+  void add_LINE_COUNT_X(double LINE_COUNT_X) {
+    fbb_.AddElement<double>(CZMGridMaterial::VT_LINE_COUNT_X, LINE_COUNT_X, 0.0);
+  }
+  void add_LINE_COUNT_Y(double LINE_COUNT_Y) {
+    fbb_.AddElement<double>(CZMGridMaterial::VT_LINE_COUNT_Y, LINE_COUNT_Y, 0.0);
+  }
+  void add_LINE_THICKNESS_X(double LINE_THICKNESS_X) {
+    fbb_.AddElement<double>(CZMGridMaterial::VT_LINE_THICKNESS_X, LINE_THICKNESS_X, 0.0);
+  }
+  void add_LINE_THICKNESS_Y(double LINE_THICKNESS_Y) {
+    fbb_.AddElement<double>(CZMGridMaterial::VT_LINE_THICKNESS_Y, LINE_THICKNESS_Y, 0.0);
+  }
+  void add_LINE_OFFSET_X(double LINE_OFFSET_X) {
+    fbb_.AddElement<double>(CZMGridMaterial::VT_LINE_OFFSET_X, LINE_OFFSET_X, 0.0);
+  }
+  void add_LINE_OFFSET_Y(double LINE_OFFSET_Y) {
+    fbb_.AddElement<double>(CZMGridMaterial::VT_LINE_OFFSET_Y, LINE_OFFSET_Y, 0.0);
+  }
+  explicit CZMGridMaterialBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CZMGridMaterial> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CZMGridMaterial>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CZMGridMaterial> CreateCZMGridMaterial(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<CZMColor> COLOR = 0,
+    double CELL_ALPHA = 0.0,
+    double LINE_COUNT_X = 0.0,
+    double LINE_COUNT_Y = 0.0,
+    double LINE_THICKNESS_X = 0.0,
+    double LINE_THICKNESS_Y = 0.0,
+    double LINE_OFFSET_X = 0.0,
+    double LINE_OFFSET_Y = 0.0) {
+  CZMGridMaterialBuilder builder_(_fbb);
+  builder_.add_LINE_OFFSET_Y(LINE_OFFSET_Y);
+  builder_.add_LINE_OFFSET_X(LINE_OFFSET_X);
+  builder_.add_LINE_THICKNESS_Y(LINE_THICKNESS_Y);
+  builder_.add_LINE_THICKNESS_X(LINE_THICKNESS_X);
+  builder_.add_LINE_COUNT_Y(LINE_COUNT_Y);
+  builder_.add_LINE_COUNT_X(LINE_COUNT_X);
+  builder_.add_CELL_ALPHA(CELL_ALPHA);
+  builder_.add_COLOR(COLOR);
+  return builder_.Finish();
+}
+
+/// Stripe material
+struct CZMStripeMaterial FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CZMStripeMaterialBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_ORIENTATION = 4,
+    VT_EVEN_COLOR = 6,
+    VT_ODD_COLOR = 8,
+    VT_OFFSET = 10,
+    VT_REPEAT_COUNT = 12
+  };
+  /// Stripe orientation
+  const ::flatbuffers::String *ORIENTATION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ORIENTATION);
+  }
+  /// Even color
+  const CZMColor *EVEN_COLOR() const {
+    return GetPointer<const CZMColor *>(VT_EVEN_COLOR);
+  }
+  /// Odd color
+  const CZMColor *ODD_COLOR() const {
+    return GetPointer<const CZMColor *>(VT_ODD_COLOR);
+  }
+  /// Offset
+  double OFFSET() const {
+    return GetField<double>(VT_OFFSET, 0.0);
+  }
+  /// Number of times to repeat
+  double REPEAT_COUNT() const {
+    return GetField<double>(VT_REPEAT_COUNT, 0.0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_ORIENTATION) &&
+           verifier.VerifyString(ORIENTATION()) &&
+           VerifyOffset(verifier, VT_EVEN_COLOR) &&
+           verifier.VerifyTable(EVEN_COLOR()) &&
+           VerifyOffset(verifier, VT_ODD_COLOR) &&
+           verifier.VerifyTable(ODD_COLOR()) &&
+           VerifyField<double>(verifier, VT_OFFSET, 8) &&
+           VerifyField<double>(verifier, VT_REPEAT_COUNT, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct CZMStripeMaterialBuilder {
+  typedef CZMStripeMaterial Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_ORIENTATION(::flatbuffers::Offset<::flatbuffers::String> ORIENTATION) {
+    fbb_.AddOffset(CZMStripeMaterial::VT_ORIENTATION, ORIENTATION);
+  }
+  void add_EVEN_COLOR(::flatbuffers::Offset<CZMColor> EVEN_COLOR) {
+    fbb_.AddOffset(CZMStripeMaterial::VT_EVEN_COLOR, EVEN_COLOR);
+  }
+  void add_ODD_COLOR(::flatbuffers::Offset<CZMColor> ODD_COLOR) {
+    fbb_.AddOffset(CZMStripeMaterial::VT_ODD_COLOR, ODD_COLOR);
+  }
+  void add_OFFSET(double OFFSET) {
+    fbb_.AddElement<double>(CZMStripeMaterial::VT_OFFSET, OFFSET, 0.0);
+  }
+  void add_REPEAT_COUNT(double REPEAT_COUNT) {
+    fbb_.AddElement<double>(CZMStripeMaterial::VT_REPEAT_COUNT, REPEAT_COUNT, 0.0);
+  }
+  explicit CZMStripeMaterialBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CZMStripeMaterial> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CZMStripeMaterial>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CZMStripeMaterial> CreateCZMStripeMaterial(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIENTATION = 0,
+    ::flatbuffers::Offset<CZMColor> EVEN_COLOR = 0,
+    ::flatbuffers::Offset<CZMColor> ODD_COLOR = 0,
+    double OFFSET = 0.0,
+    double REPEAT_COUNT = 0.0) {
+  CZMStripeMaterialBuilder builder_(_fbb);
+  builder_.add_REPEAT_COUNT(REPEAT_COUNT);
+  builder_.add_OFFSET(OFFSET);
+  builder_.add_ODD_COLOR(ODD_COLOR);
+  builder_.add_EVEN_COLOR(EVEN_COLOR);
+  builder_.add_ORIENTATION(ORIENTATION);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<CZMStripeMaterial> CreateCZMStripeMaterialDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *ORIENTATION = nullptr,
+    ::flatbuffers::Offset<CZMColor> EVEN_COLOR = 0,
+    ::flatbuffers::Offset<CZMColor> ODD_COLOR = 0,
+    double OFFSET = 0.0,
+    double REPEAT_COUNT = 0.0) {
+  auto ORIENTATION__ = ORIENTATION ? _fbb.CreateString(ORIENTATION) : 0;
+  return CreateCZMStripeMaterial(
+      _fbb,
+      ORIENTATION__,
+      EVEN_COLOR,
+      ODD_COLOR,
+      OFFSET,
+      REPEAT_COUNT);
+}
+
+/// Checkerboard material
+struct CZMCheckerboardMaterial FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CZMCheckerboardMaterialBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_EVEN_COLOR = 4,
+    VT_ODD_COLOR = 6,
+    VT_REPEAT_X = 8,
+    VT_REPEAT_Y = 10
+  };
+  /// Even color
+  const CZMColor *EVEN_COLOR() const {
+    return GetPointer<const CZMColor *>(VT_EVEN_COLOR);
+  }
+  /// Odd color
+  const CZMColor *ODD_COLOR() const {
+    return GetPointer<const CZMColor *>(VT_ODD_COLOR);
+  }
+  /// Repeat X
+  double REPEAT_X() const {
+    return GetField<double>(VT_REPEAT_X, 0.0);
+  }
+  /// Repeat Y
+  double REPEAT_Y() const {
+    return GetField<double>(VT_REPEAT_Y, 0.0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_EVEN_COLOR) &&
+           verifier.VerifyTable(EVEN_COLOR()) &&
+           VerifyOffset(verifier, VT_ODD_COLOR) &&
+           verifier.VerifyTable(ODD_COLOR()) &&
+           VerifyField<double>(verifier, VT_REPEAT_X, 8) &&
+           VerifyField<double>(verifier, VT_REPEAT_Y, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct CZMCheckerboardMaterialBuilder {
+  typedef CZMCheckerboardMaterial Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_EVEN_COLOR(::flatbuffers::Offset<CZMColor> EVEN_COLOR) {
+    fbb_.AddOffset(CZMCheckerboardMaterial::VT_EVEN_COLOR, EVEN_COLOR);
+  }
+  void add_ODD_COLOR(::flatbuffers::Offset<CZMColor> ODD_COLOR) {
+    fbb_.AddOffset(CZMCheckerboardMaterial::VT_ODD_COLOR, ODD_COLOR);
+  }
+  void add_REPEAT_X(double REPEAT_X) {
+    fbb_.AddElement<double>(CZMCheckerboardMaterial::VT_REPEAT_X, REPEAT_X, 0.0);
+  }
+  void add_REPEAT_Y(double REPEAT_Y) {
+    fbb_.AddElement<double>(CZMCheckerboardMaterial::VT_REPEAT_Y, REPEAT_Y, 0.0);
+  }
+  explicit CZMCheckerboardMaterialBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CZMCheckerboardMaterial> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CZMCheckerboardMaterial>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CZMCheckerboardMaterial> CreateCZMCheckerboardMaterial(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<CZMColor> EVEN_COLOR = 0,
+    ::flatbuffers::Offset<CZMColor> ODD_COLOR = 0,
+    double REPEAT_X = 0.0,
+    double REPEAT_Y = 0.0) {
+  CZMCheckerboardMaterialBuilder builder_(_fbb);
+  builder_.add_REPEAT_Y(REPEAT_Y);
+  builder_.add_REPEAT_X(REPEAT_X);
+  builder_.add_ODD_COLOR(ODD_COLOR);
+  builder_.add_EVEN_COLOR(EVEN_COLOR);
+  return builder_.Finish();
+}
+
+/// Surface material (used by polygon, ellipse, box, etc.)
+struct CZMMaterial FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CZMMaterialBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_SOLID_COLOR = 4,
+    VT_IMAGE = 6,
+    VT_GRID = 8,
+    VT_STRIPE = 10,
+    VT_CHECKERBOARD = 12
+  };
+  /// Solid color material
+  const CZMSolidColorMaterial *SOLID_COLOR() const {
+    return GetPointer<const CZMSolidColorMaterial *>(VT_SOLID_COLOR);
+  }
+  /// Image material
+  const CZMImageMaterial *IMAGE() const {
+    return GetPointer<const CZMImageMaterial *>(VT_IMAGE);
+  }
+  /// Grid material
+  const CZMGridMaterial *GRID() const {
+    return GetPointer<const CZMGridMaterial *>(VT_GRID);
+  }
+  /// Stripe material
+  const CZMStripeMaterial *STRIPE() const {
+    return GetPointer<const CZMStripeMaterial *>(VT_STRIPE);
+  }
+  /// Checkerboard material
+  const CZMCheckerboardMaterial *CHECKERBOARD() const {
+    return GetPointer<const CZMCheckerboardMaterial *>(VT_CHECKERBOARD);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_SOLID_COLOR) &&
+           verifier.VerifyTable(SOLID_COLOR()) &&
+           VerifyOffset(verifier, VT_IMAGE) &&
+           verifier.VerifyTable(IMAGE()) &&
+           VerifyOffset(verifier, VT_GRID) &&
+           verifier.VerifyTable(GRID()) &&
+           VerifyOffset(verifier, VT_STRIPE) &&
+           verifier.VerifyTable(STRIPE()) &&
+           VerifyOffset(verifier, VT_CHECKERBOARD) &&
+           verifier.VerifyTable(CHECKERBOARD()) &&
+           verifier.EndTable();
+  }
+};
+
+struct CZMMaterialBuilder {
+  typedef CZMMaterial Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_SOLID_COLOR(::flatbuffers::Offset<CZMSolidColorMaterial> SOLID_COLOR) {
+    fbb_.AddOffset(CZMMaterial::VT_SOLID_COLOR, SOLID_COLOR);
+  }
+  void add_IMAGE(::flatbuffers::Offset<CZMImageMaterial> IMAGE) {
+    fbb_.AddOffset(CZMMaterial::VT_IMAGE, IMAGE);
+  }
+  void add_GRID(::flatbuffers::Offset<CZMGridMaterial> GRID) {
+    fbb_.AddOffset(CZMMaterial::VT_GRID, GRID);
+  }
+  void add_STRIPE(::flatbuffers::Offset<CZMStripeMaterial> STRIPE) {
+    fbb_.AddOffset(CZMMaterial::VT_STRIPE, STRIPE);
+  }
+  void add_CHECKERBOARD(::flatbuffers::Offset<CZMCheckerboardMaterial> CHECKERBOARD) {
+    fbb_.AddOffset(CZMMaterial::VT_CHECKERBOARD, CHECKERBOARD);
+  }
+  explicit CZMMaterialBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CZMMaterial> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CZMMaterial>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CZMMaterial> CreateCZMMaterial(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<CZMSolidColorMaterial> SOLID_COLOR = 0,
+    ::flatbuffers::Offset<CZMImageMaterial> IMAGE = 0,
+    ::flatbuffers::Offset<CZMGridMaterial> GRID = 0,
+    ::flatbuffers::Offset<CZMStripeMaterial> STRIPE = 0,
+    ::flatbuffers::Offset<CZMCheckerboardMaterial> CHECKERBOARD = 0) {
+  CZMMaterialBuilder builder_(_fbb);
+  builder_.add_CHECKERBOARD(CHECKERBOARD);
+  builder_.add_STRIPE(STRIPE);
+  builder_.add_GRID(GRID);
+  builder_.add_IMAGE(IMAGE);
+  builder_.add_SOLID_COLOR(SOLID_COLOR);
+  return builder_.Finish();
+}
+
+/// Polyline outline material
+struct CZMPolylineOutlineMaterial FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CZMPolylineOutlineMaterialBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_COLOR = 4,
+    VT_OUTLINE_COLOR = 6,
+    VT_OUTLINE_WIDTH = 8
+  };
+  /// Line color
+  const CZMColor *COLOR() const {
+    return GetPointer<const CZMColor *>(VT_COLOR);
+  }
+  /// Outline color
+  const CZMColor *OUTLINE_COLOR() const {
+    return GetPointer<const CZMColor *>(VT_OUTLINE_COLOR);
+  }
+  /// Outline width
+  double OUTLINE_WIDTH() const {
+    return GetField<double>(VT_OUTLINE_WIDTH, 0.0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_COLOR) &&
+           verifier.VerifyTable(COLOR()) &&
+           VerifyOffset(verifier, VT_OUTLINE_COLOR) &&
+           verifier.VerifyTable(OUTLINE_COLOR()) &&
+           VerifyField<double>(verifier, VT_OUTLINE_WIDTH, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct CZMPolylineOutlineMaterialBuilder {
+  typedef CZMPolylineOutlineMaterial Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_COLOR(::flatbuffers::Offset<CZMColor> COLOR) {
+    fbb_.AddOffset(CZMPolylineOutlineMaterial::VT_COLOR, COLOR);
+  }
+  void add_OUTLINE_COLOR(::flatbuffers::Offset<CZMColor> OUTLINE_COLOR) {
+    fbb_.AddOffset(CZMPolylineOutlineMaterial::VT_OUTLINE_COLOR, OUTLINE_COLOR);
+  }
+  void add_OUTLINE_WIDTH(double OUTLINE_WIDTH) {
+    fbb_.AddElement<double>(CZMPolylineOutlineMaterial::VT_OUTLINE_WIDTH, OUTLINE_WIDTH, 0.0);
+  }
+  explicit CZMPolylineOutlineMaterialBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CZMPolylineOutlineMaterial> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CZMPolylineOutlineMaterial>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CZMPolylineOutlineMaterial> CreateCZMPolylineOutlineMaterial(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<CZMColor> COLOR = 0,
+    ::flatbuffers::Offset<CZMColor> OUTLINE_COLOR = 0,
+    double OUTLINE_WIDTH = 0.0) {
+  CZMPolylineOutlineMaterialBuilder builder_(_fbb);
+  builder_.add_OUTLINE_WIDTH(OUTLINE_WIDTH);
+  builder_.add_OUTLINE_COLOR(OUTLINE_COLOR);
+  builder_.add_COLOR(COLOR);
+  return builder_.Finish();
+}
+
+/// Polyline arrow material
+struct CZMPolylineArrowMaterial FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CZMPolylineArrowMaterialBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_COLOR = 4
+  };
+  /// Arrow color
+  const CZMColor *COLOR() const {
+    return GetPointer<const CZMColor *>(VT_COLOR);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_COLOR) &&
+           verifier.VerifyTable(COLOR()) &&
+           verifier.EndTable();
+  }
+};
+
+struct CZMPolylineArrowMaterialBuilder {
+  typedef CZMPolylineArrowMaterial Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_COLOR(::flatbuffers::Offset<CZMColor> COLOR) {
+    fbb_.AddOffset(CZMPolylineArrowMaterial::VT_COLOR, COLOR);
+  }
+  explicit CZMPolylineArrowMaterialBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CZMPolylineArrowMaterial> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CZMPolylineArrowMaterial>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CZMPolylineArrowMaterial> CreateCZMPolylineArrowMaterial(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<CZMColor> COLOR = 0) {
+  CZMPolylineArrowMaterialBuilder builder_(_fbb);
+  builder_.add_COLOR(COLOR);
+  return builder_.Finish();
+}
+
+/// Polyline dash material
+struct CZMPolylineDashMaterial FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CZMPolylineDashMaterialBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_COLOR = 4,
+    VT_GAP_COLOR = 6,
+    VT_DASH_LENGTH = 8,
+    VT_DASH_PATTERN = 10
+  };
+  /// Dash color
+  const CZMColor *COLOR() const {
+    return GetPointer<const CZMColor *>(VT_COLOR);
+  }
+  /// Gap color
+  const CZMColor *GAP_COLOR() const {
+    return GetPointer<const CZMColor *>(VT_GAP_COLOR);
+  }
+  /// Dash length in pixels
+  double DASH_LENGTH() const {
+    return GetField<double>(VT_DASH_LENGTH, 0.0);
+  }
+  /// Dash pattern (bitmask)
+  int32_t DASH_PATTERN() const {
+    return GetField<int32_t>(VT_DASH_PATTERN, 0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_COLOR) &&
+           verifier.VerifyTable(COLOR()) &&
+           VerifyOffset(verifier, VT_GAP_COLOR) &&
+           verifier.VerifyTable(GAP_COLOR()) &&
+           VerifyField<double>(verifier, VT_DASH_LENGTH, 8) &&
+           VerifyField<int32_t>(verifier, VT_DASH_PATTERN, 4) &&
+           verifier.EndTable();
+  }
+};
+
+struct CZMPolylineDashMaterialBuilder {
+  typedef CZMPolylineDashMaterial Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_COLOR(::flatbuffers::Offset<CZMColor> COLOR) {
+    fbb_.AddOffset(CZMPolylineDashMaterial::VT_COLOR, COLOR);
+  }
+  void add_GAP_COLOR(::flatbuffers::Offset<CZMColor> GAP_COLOR) {
+    fbb_.AddOffset(CZMPolylineDashMaterial::VT_GAP_COLOR, GAP_COLOR);
+  }
+  void add_DASH_LENGTH(double DASH_LENGTH) {
+    fbb_.AddElement<double>(CZMPolylineDashMaterial::VT_DASH_LENGTH, DASH_LENGTH, 0.0);
+  }
+  void add_DASH_PATTERN(int32_t DASH_PATTERN) {
+    fbb_.AddElement<int32_t>(CZMPolylineDashMaterial::VT_DASH_PATTERN, DASH_PATTERN, 0);
+  }
+  explicit CZMPolylineDashMaterialBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CZMPolylineDashMaterial> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CZMPolylineDashMaterial>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CZMPolylineDashMaterial> CreateCZMPolylineDashMaterial(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<CZMColor> COLOR = 0,
+    ::flatbuffers::Offset<CZMColor> GAP_COLOR = 0,
+    double DASH_LENGTH = 0.0,
+    int32_t DASH_PATTERN = 0) {
+  CZMPolylineDashMaterialBuilder builder_(_fbb);
+  builder_.add_DASH_LENGTH(DASH_LENGTH);
+  builder_.add_DASH_PATTERN(DASH_PATTERN);
+  builder_.add_GAP_COLOR(GAP_COLOR);
+  builder_.add_COLOR(COLOR);
+  return builder_.Finish();
+}
+
+/// Polyline glow material
+struct CZMPolylineGlowMaterial FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CZMPolylineGlowMaterialBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_COLOR = 4,
+    VT_GLOW_POWER = 6,
+    VT_TAPER_POWER = 8
+  };
+  /// Glow color
+  const CZMColor *COLOR() const {
+    return GetPointer<const CZMColor *>(VT_COLOR);
+  }
+  /// Glow power
+  double GLOW_POWER() const {
+    return GetField<double>(VT_GLOW_POWER, 0.0);
+  }
+  /// Taper power
+  double TAPER_POWER() const {
+    return GetField<double>(VT_TAPER_POWER, 0.0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_COLOR) &&
+           verifier.VerifyTable(COLOR()) &&
+           VerifyField<double>(verifier, VT_GLOW_POWER, 8) &&
+           VerifyField<double>(verifier, VT_TAPER_POWER, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct CZMPolylineGlowMaterialBuilder {
+  typedef CZMPolylineGlowMaterial Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_COLOR(::flatbuffers::Offset<CZMColor> COLOR) {
+    fbb_.AddOffset(CZMPolylineGlowMaterial::VT_COLOR, COLOR);
+  }
+  void add_GLOW_POWER(double GLOW_POWER) {
+    fbb_.AddElement<double>(CZMPolylineGlowMaterial::VT_GLOW_POWER, GLOW_POWER, 0.0);
+  }
+  void add_TAPER_POWER(double TAPER_POWER) {
+    fbb_.AddElement<double>(CZMPolylineGlowMaterial::VT_TAPER_POWER, TAPER_POWER, 0.0);
+  }
+  explicit CZMPolylineGlowMaterialBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CZMPolylineGlowMaterial> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CZMPolylineGlowMaterial>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CZMPolylineGlowMaterial> CreateCZMPolylineGlowMaterial(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<CZMColor> COLOR = 0,
+    double GLOW_POWER = 0.0,
+    double TAPER_POWER = 0.0) {
+  CZMPolylineGlowMaterialBuilder builder_(_fbb);
+  builder_.add_TAPER_POWER(TAPER_POWER);
+  builder_.add_GLOW_POWER(GLOW_POWER);
+  builder_.add_COLOR(COLOR);
+  return builder_.Finish();
+}
+
+/// Polyline material (used by polyline, path)
+struct CZMPolylineMaterial FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CZMPolylineMaterialBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_SOLID_COLOR = 4,
+    VT_POLYLINE_OUTLINE = 6,
+    VT_POLYLINE_ARROW = 8,
+    VT_POLYLINE_DASH = 10,
+    VT_POLYLINE_GLOW = 12
+  };
+  /// Solid color material
+  const CZMSolidColorMaterial *SOLID_COLOR() const {
+    return GetPointer<const CZMSolidColorMaterial *>(VT_SOLID_COLOR);
+  }
+  /// Polyline outline material
+  const CZMPolylineOutlineMaterial *POLYLINE_OUTLINE() const {
+    return GetPointer<const CZMPolylineOutlineMaterial *>(VT_POLYLINE_OUTLINE);
+  }
+  /// Polyline arrow material
+  const CZMPolylineArrowMaterial *POLYLINE_ARROW() const {
+    return GetPointer<const CZMPolylineArrowMaterial *>(VT_POLYLINE_ARROW);
+  }
+  /// Polyline dash material
+  const CZMPolylineDashMaterial *POLYLINE_DASH() const {
+    return GetPointer<const CZMPolylineDashMaterial *>(VT_POLYLINE_DASH);
+  }
+  /// Polyline glow material
+  const CZMPolylineGlowMaterial *POLYLINE_GLOW() const {
+    return GetPointer<const CZMPolylineGlowMaterial *>(VT_POLYLINE_GLOW);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_SOLID_COLOR) &&
+           verifier.VerifyTable(SOLID_COLOR()) &&
+           VerifyOffset(verifier, VT_POLYLINE_OUTLINE) &&
+           verifier.VerifyTable(POLYLINE_OUTLINE()) &&
+           VerifyOffset(verifier, VT_POLYLINE_ARROW) &&
+           verifier.VerifyTable(POLYLINE_ARROW()) &&
+           VerifyOffset(verifier, VT_POLYLINE_DASH) &&
+           verifier.VerifyTable(POLYLINE_DASH()) &&
+           VerifyOffset(verifier, VT_POLYLINE_GLOW) &&
+           verifier.VerifyTable(POLYLINE_GLOW()) &&
+           verifier.EndTable();
+  }
+};
+
+struct CZMPolylineMaterialBuilder {
+  typedef CZMPolylineMaterial Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_SOLID_COLOR(::flatbuffers::Offset<CZMSolidColorMaterial> SOLID_COLOR) {
+    fbb_.AddOffset(CZMPolylineMaterial::VT_SOLID_COLOR, SOLID_COLOR);
+  }
+  void add_POLYLINE_OUTLINE(::flatbuffers::Offset<CZMPolylineOutlineMaterial> POLYLINE_OUTLINE) {
+    fbb_.AddOffset(CZMPolylineMaterial::VT_POLYLINE_OUTLINE, POLYLINE_OUTLINE);
+  }
+  void add_POLYLINE_ARROW(::flatbuffers::Offset<CZMPolylineArrowMaterial> POLYLINE_ARROW) {
+    fbb_.AddOffset(CZMPolylineMaterial::VT_POLYLINE_ARROW, POLYLINE_ARROW);
+  }
+  void add_POLYLINE_DASH(::flatbuffers::Offset<CZMPolylineDashMaterial> POLYLINE_DASH) {
+    fbb_.AddOffset(CZMPolylineMaterial::VT_POLYLINE_DASH, POLYLINE_DASH);
+  }
+  void add_POLYLINE_GLOW(::flatbuffers::Offset<CZMPolylineGlowMaterial> POLYLINE_GLOW) {
+    fbb_.AddOffset(CZMPolylineMaterial::VT_POLYLINE_GLOW, POLYLINE_GLOW);
+  }
+  explicit CZMPolylineMaterialBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CZMPolylineMaterial> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CZMPolylineMaterial>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CZMPolylineMaterial> CreateCZMPolylineMaterial(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<CZMSolidColorMaterial> SOLID_COLOR = 0,
+    ::flatbuffers::Offset<CZMPolylineOutlineMaterial> POLYLINE_OUTLINE = 0,
+    ::flatbuffers::Offset<CZMPolylineArrowMaterial> POLYLINE_ARROW = 0,
+    ::flatbuffers::Offset<CZMPolylineDashMaterial> POLYLINE_DASH = 0,
+    ::flatbuffers::Offset<CZMPolylineGlowMaterial> POLYLINE_GLOW = 0) {
+  CZMPolylineMaterialBuilder builder_(_fbb);
+  builder_.add_POLYLINE_GLOW(POLYLINE_GLOW);
+  builder_.add_POLYLINE_DASH(POLYLINE_DASH);
+  builder_.add_POLYLINE_ARROW(POLYLINE_ARROW);
+  builder_.add_POLYLINE_OUTLINE(POLYLINE_OUTLINE);
+  builder_.add_SOLID_COLOR(SOLID_COLOR);
+  return builder_.Finish();
+}
+
 /// Billboard (icon) properties
 struct CZMBillboard FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CZMBillboardBuilder Builder;
@@ -574,7 +2420,19 @@ struct CZMBillboard FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_PIXEL_OFFSET_Y = 16,
     VT_HORIZONTAL_ORIGIN = 18,
     VT_VERTICAL_ORIGIN = 20,
-    VT_TRANSLUCENCY_BY_DISTANCE = 22
+    VT_TRANSLUCENCY_BY_DISTANCE = 22,
+    VT_ROTATION = 24,
+    VT_SIZE_IN_METERS = 26,
+    VT_WIDTH = 28,
+    VT_HEIGHT = 30,
+    VT_EYE_OFFSET_X = 32,
+    VT_EYE_OFFSET_Y = 34,
+    VT_EYE_OFFSET_Z = 36,
+    VT_SCALE_BY_DISTANCE = 38,
+    VT_PIXEL_OFFSET_SCALE_BY_DISTANCE = 40,
+    VT_DISTANCE_DISPLAY_CONDITION_NEAR = 42,
+    VT_DISTANCE_DISPLAY_CONDITION_FAR = 44,
+    VT_DISABLE_DEPTH_TEST_DISTANCE = 46
   };
   /// Whether the billboard is displayed
   bool SHOW() const {
@@ -616,6 +2474,54 @@ struct CZMBillboard FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const CZMNearFarScalar *TRANSLUCENCY_BY_DISTANCE() const {
     return GetPointer<const CZMNearFarScalar *>(VT_TRANSLUCENCY_BY_DISTANCE);
   }
+  /// Rotation in radians
+  double ROTATION() const {
+    return GetField<double>(VT_ROTATION, 0.0);
+  }
+  /// Whether size is in meters
+  bool SIZE_IN_METERS() const {
+    return GetField<uint8_t>(VT_SIZE_IN_METERS, 0) != 0;
+  }
+  /// Width in pixels
+  double WIDTH() const {
+    return GetField<double>(VT_WIDTH, 0.0);
+  }
+  /// Height in pixels
+  double HEIGHT() const {
+    return GetField<double>(VT_HEIGHT, 0.0);
+  }
+  /// Eye offset X in meters
+  double EYE_OFFSET_X() const {
+    return GetField<double>(VT_EYE_OFFSET_X, 0.0);
+  }
+  /// Eye offset Y in meters
+  double EYE_OFFSET_Y() const {
+    return GetField<double>(VT_EYE_OFFSET_Y, 0.0);
+  }
+  /// Eye offset Z in meters
+  double EYE_OFFSET_Z() const {
+    return GetField<double>(VT_EYE_OFFSET_Z, 0.0);
+  }
+  /// Scale by distance
+  const CZMNearFarScalar *SCALE_BY_DISTANCE() const {
+    return GetPointer<const CZMNearFarScalar *>(VT_SCALE_BY_DISTANCE);
+  }
+  /// Pixel offset scale by distance
+  const CZMNearFarScalar *PIXEL_OFFSET_SCALE_BY_DISTANCE() const {
+    return GetPointer<const CZMNearFarScalar *>(VT_PIXEL_OFFSET_SCALE_BY_DISTANCE);
+  }
+  /// Distance display condition near
+  double DISTANCE_DISPLAY_CONDITION_NEAR() const {
+    return GetField<double>(VT_DISTANCE_DISPLAY_CONDITION_NEAR, 0.0);
+  }
+  /// Distance display condition far
+  double DISTANCE_DISPLAY_CONDITION_FAR() const {
+    return GetField<double>(VT_DISTANCE_DISPLAY_CONDITION_FAR, 0.0);
+  }
+  /// Disable depth test distance
+  double DISABLE_DEPTH_TEST_DISTANCE() const {
+    return GetField<double>(VT_DISABLE_DEPTH_TEST_DISTANCE, 0.0);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
@@ -631,6 +2537,20 @@ struct CZMBillboard FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<int8_t>(verifier, VT_VERTICAL_ORIGIN, 1) &&
            VerifyOffset(verifier, VT_TRANSLUCENCY_BY_DISTANCE) &&
            verifier.VerifyTable(TRANSLUCENCY_BY_DISTANCE()) &&
+           VerifyField<double>(verifier, VT_ROTATION, 8) &&
+           VerifyField<uint8_t>(verifier, VT_SIZE_IN_METERS, 1) &&
+           VerifyField<double>(verifier, VT_WIDTH, 8) &&
+           VerifyField<double>(verifier, VT_HEIGHT, 8) &&
+           VerifyField<double>(verifier, VT_EYE_OFFSET_X, 8) &&
+           VerifyField<double>(verifier, VT_EYE_OFFSET_Y, 8) &&
+           VerifyField<double>(verifier, VT_EYE_OFFSET_Z, 8) &&
+           VerifyOffset(verifier, VT_SCALE_BY_DISTANCE) &&
+           verifier.VerifyTable(SCALE_BY_DISTANCE()) &&
+           VerifyOffset(verifier, VT_PIXEL_OFFSET_SCALE_BY_DISTANCE) &&
+           verifier.VerifyTable(PIXEL_OFFSET_SCALE_BY_DISTANCE()) &&
+           VerifyField<double>(verifier, VT_DISTANCE_DISPLAY_CONDITION_NEAR, 8) &&
+           VerifyField<double>(verifier, VT_DISTANCE_DISPLAY_CONDITION_FAR, 8) &&
+           VerifyField<double>(verifier, VT_DISABLE_DEPTH_TEST_DISTANCE, 8) &&
            verifier.EndTable();
   }
 };
@@ -669,6 +2589,42 @@ struct CZMBillboardBuilder {
   void add_TRANSLUCENCY_BY_DISTANCE(::flatbuffers::Offset<CZMNearFarScalar> TRANSLUCENCY_BY_DISTANCE) {
     fbb_.AddOffset(CZMBillboard::VT_TRANSLUCENCY_BY_DISTANCE, TRANSLUCENCY_BY_DISTANCE);
   }
+  void add_ROTATION(double ROTATION) {
+    fbb_.AddElement<double>(CZMBillboard::VT_ROTATION, ROTATION, 0.0);
+  }
+  void add_SIZE_IN_METERS(bool SIZE_IN_METERS) {
+    fbb_.AddElement<uint8_t>(CZMBillboard::VT_SIZE_IN_METERS, static_cast<uint8_t>(SIZE_IN_METERS), 0);
+  }
+  void add_WIDTH(double WIDTH) {
+    fbb_.AddElement<double>(CZMBillboard::VT_WIDTH, WIDTH, 0.0);
+  }
+  void add_HEIGHT(double HEIGHT) {
+    fbb_.AddElement<double>(CZMBillboard::VT_HEIGHT, HEIGHT, 0.0);
+  }
+  void add_EYE_OFFSET_X(double EYE_OFFSET_X) {
+    fbb_.AddElement<double>(CZMBillboard::VT_EYE_OFFSET_X, EYE_OFFSET_X, 0.0);
+  }
+  void add_EYE_OFFSET_Y(double EYE_OFFSET_Y) {
+    fbb_.AddElement<double>(CZMBillboard::VT_EYE_OFFSET_Y, EYE_OFFSET_Y, 0.0);
+  }
+  void add_EYE_OFFSET_Z(double EYE_OFFSET_Z) {
+    fbb_.AddElement<double>(CZMBillboard::VT_EYE_OFFSET_Z, EYE_OFFSET_Z, 0.0);
+  }
+  void add_SCALE_BY_DISTANCE(::flatbuffers::Offset<CZMNearFarScalar> SCALE_BY_DISTANCE) {
+    fbb_.AddOffset(CZMBillboard::VT_SCALE_BY_DISTANCE, SCALE_BY_DISTANCE);
+  }
+  void add_PIXEL_OFFSET_SCALE_BY_DISTANCE(::flatbuffers::Offset<CZMNearFarScalar> PIXEL_OFFSET_SCALE_BY_DISTANCE) {
+    fbb_.AddOffset(CZMBillboard::VT_PIXEL_OFFSET_SCALE_BY_DISTANCE, PIXEL_OFFSET_SCALE_BY_DISTANCE);
+  }
+  void add_DISTANCE_DISPLAY_CONDITION_NEAR(double DISTANCE_DISPLAY_CONDITION_NEAR) {
+    fbb_.AddElement<double>(CZMBillboard::VT_DISTANCE_DISPLAY_CONDITION_NEAR, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0);
+  }
+  void add_DISTANCE_DISPLAY_CONDITION_FAR(double DISTANCE_DISPLAY_CONDITION_FAR) {
+    fbb_.AddElement<double>(CZMBillboard::VT_DISTANCE_DISPLAY_CONDITION_FAR, DISTANCE_DISPLAY_CONDITION_FAR, 0.0);
+  }
+  void add_DISABLE_DEPTH_TEST_DISTANCE(double DISABLE_DEPTH_TEST_DISTANCE) {
+    fbb_.AddElement<double>(CZMBillboard::VT_DISABLE_DEPTH_TEST_DISTANCE, DISABLE_DEPTH_TEST_DISTANCE, 0.0);
+  }
   explicit CZMBillboardBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -691,14 +2647,38 @@ inline ::flatbuffers::Offset<CZMBillboard> CreateCZMBillboard(
     double PIXEL_OFFSET_Y = 0.0,
     CZMHorizontalOrigin HORIZONTAL_ORIGIN = CZMHorizontalOrigin_LEFT,
     CZMVerticalOrigin VERTICAL_ORIGIN = CZMVerticalOrigin_BASELINE,
-    ::flatbuffers::Offset<CZMNearFarScalar> TRANSLUCENCY_BY_DISTANCE = 0) {
+    ::flatbuffers::Offset<CZMNearFarScalar> TRANSLUCENCY_BY_DISTANCE = 0,
+    double ROTATION = 0.0,
+    bool SIZE_IN_METERS = false,
+    double WIDTH = 0.0,
+    double HEIGHT = 0.0,
+    double EYE_OFFSET_X = 0.0,
+    double EYE_OFFSET_Y = 0.0,
+    double EYE_OFFSET_Z = 0.0,
+    ::flatbuffers::Offset<CZMNearFarScalar> SCALE_BY_DISTANCE = 0,
+    ::flatbuffers::Offset<CZMNearFarScalar> PIXEL_OFFSET_SCALE_BY_DISTANCE = 0,
+    double DISTANCE_DISPLAY_CONDITION_NEAR = 0.0,
+    double DISTANCE_DISPLAY_CONDITION_FAR = 0.0,
+    double DISABLE_DEPTH_TEST_DISTANCE = 0.0) {
   CZMBillboardBuilder builder_(_fbb);
+  builder_.add_DISABLE_DEPTH_TEST_DISTANCE(DISABLE_DEPTH_TEST_DISTANCE);
+  builder_.add_DISTANCE_DISPLAY_CONDITION_FAR(DISTANCE_DISPLAY_CONDITION_FAR);
+  builder_.add_DISTANCE_DISPLAY_CONDITION_NEAR(DISTANCE_DISPLAY_CONDITION_NEAR);
+  builder_.add_EYE_OFFSET_Z(EYE_OFFSET_Z);
+  builder_.add_EYE_OFFSET_Y(EYE_OFFSET_Y);
+  builder_.add_EYE_OFFSET_X(EYE_OFFSET_X);
+  builder_.add_HEIGHT(HEIGHT);
+  builder_.add_WIDTH(WIDTH);
+  builder_.add_ROTATION(ROTATION);
   builder_.add_PIXEL_OFFSET_Y(PIXEL_OFFSET_Y);
   builder_.add_PIXEL_OFFSET_X(PIXEL_OFFSET_X);
   builder_.add_SCALE(SCALE);
+  builder_.add_PIXEL_OFFSET_SCALE_BY_DISTANCE(PIXEL_OFFSET_SCALE_BY_DISTANCE);
+  builder_.add_SCALE_BY_DISTANCE(SCALE_BY_DISTANCE);
   builder_.add_TRANSLUCENCY_BY_DISTANCE(TRANSLUCENCY_BY_DISTANCE);
   builder_.add_COLOR(COLOR);
   builder_.add_IMAGE(IMAGE);
+  builder_.add_SIZE_IN_METERS(SIZE_IN_METERS);
   builder_.add_VERTICAL_ORIGIN(VERTICAL_ORIGIN);
   builder_.add_HORIZONTAL_ORIGIN(HORIZONTAL_ORIGIN);
   builder_.add_HEIGHT_REFERENCE(HEIGHT_REFERENCE);
@@ -717,7 +2697,19 @@ inline ::flatbuffers::Offset<CZMBillboard> CreateCZMBillboardDirect(
     double PIXEL_OFFSET_Y = 0.0,
     CZMHorizontalOrigin HORIZONTAL_ORIGIN = CZMHorizontalOrigin_LEFT,
     CZMVerticalOrigin VERTICAL_ORIGIN = CZMVerticalOrigin_BASELINE,
-    ::flatbuffers::Offset<CZMNearFarScalar> TRANSLUCENCY_BY_DISTANCE = 0) {
+    ::flatbuffers::Offset<CZMNearFarScalar> TRANSLUCENCY_BY_DISTANCE = 0,
+    double ROTATION = 0.0,
+    bool SIZE_IN_METERS = false,
+    double WIDTH = 0.0,
+    double HEIGHT = 0.0,
+    double EYE_OFFSET_X = 0.0,
+    double EYE_OFFSET_Y = 0.0,
+    double EYE_OFFSET_Z = 0.0,
+    ::flatbuffers::Offset<CZMNearFarScalar> SCALE_BY_DISTANCE = 0,
+    ::flatbuffers::Offset<CZMNearFarScalar> PIXEL_OFFSET_SCALE_BY_DISTANCE = 0,
+    double DISTANCE_DISPLAY_CONDITION_NEAR = 0.0,
+    double DISTANCE_DISPLAY_CONDITION_FAR = 0.0,
+    double DISABLE_DEPTH_TEST_DISTANCE = 0.0) {
   auto IMAGE__ = IMAGE ? _fbb.CreateString(IMAGE) : 0;
   return CreateCZMBillboard(
       _fbb,
@@ -730,7 +2722,19 @@ inline ::flatbuffers::Offset<CZMBillboard> CreateCZMBillboardDirect(
       PIXEL_OFFSET_Y,
       HORIZONTAL_ORIGIN,
       VERTICAL_ORIGIN,
-      TRANSLUCENCY_BY_DISTANCE);
+      TRANSLUCENCY_BY_DISTANCE,
+      ROTATION,
+      SIZE_IN_METERS,
+      WIDTH,
+      HEIGHT,
+      EYE_OFFSET_X,
+      EYE_OFFSET_Y,
+      EYE_OFFSET_Z,
+      SCALE_BY_DISTANCE,
+      PIXEL_OFFSET_SCALE_BY_DISTANCE,
+      DISTANCE_DISPLAY_CONDITION_NEAR,
+      DISTANCE_DISPLAY_CONDITION_FAR,
+      DISABLE_DEPTH_TEST_DISTANCE);
 }
 
 /// Label properties
@@ -749,7 +2753,20 @@ struct CZMLabel FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_SCALE = 22,
     VT_HORIZONTAL_ORIGIN = 24,
     VT_VERTICAL_ORIGIN = 26,
-    VT_HEIGHT_REFERENCE = 28
+    VT_HEIGHT_REFERENCE = 28,
+    VT_SHOW_BACKGROUND = 30,
+    VT_BACKGROUND_COLOR = 32,
+    VT_BACKGROUND_PADDING_X = 34,
+    VT_BACKGROUND_PADDING_Y = 36,
+    VT_EYE_OFFSET_X = 38,
+    VT_EYE_OFFSET_Y = 40,
+    VT_EYE_OFFSET_Z = 42,
+    VT_TRANSLUCENCY_BY_DISTANCE = 44,
+    VT_PIXEL_OFFSET_SCALE_BY_DISTANCE = 46,
+    VT_SCALE_BY_DISTANCE = 48,
+    VT_DISTANCE_DISPLAY_CONDITION_NEAR = 50,
+    VT_DISTANCE_DISPLAY_CONDITION_FAR = 52,
+    VT_DISABLE_DEPTH_TEST_DISTANCE = 54
   };
   /// Whether the label is displayed
   bool SHOW() const {
@@ -803,6 +2820,58 @@ struct CZMLabel FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   CZMHeightReference HEIGHT_REFERENCE() const {
     return static_cast<CZMHeightReference>(GetField<int8_t>(VT_HEIGHT_REFERENCE, 0));
   }
+  /// Whether to show background
+  bool SHOW_BACKGROUND() const {
+    return GetField<uint8_t>(VT_SHOW_BACKGROUND, 0) != 0;
+  }
+  /// Background color
+  const CZMColor *BACKGROUND_COLOR() const {
+    return GetPointer<const CZMColor *>(VT_BACKGROUND_COLOR);
+  }
+  /// Background padding X
+  double BACKGROUND_PADDING_X() const {
+    return GetField<double>(VT_BACKGROUND_PADDING_X, 0.0);
+  }
+  /// Background padding Y
+  double BACKGROUND_PADDING_Y() const {
+    return GetField<double>(VT_BACKGROUND_PADDING_Y, 0.0);
+  }
+  /// Eye offset X in meters
+  double EYE_OFFSET_X() const {
+    return GetField<double>(VT_EYE_OFFSET_X, 0.0);
+  }
+  /// Eye offset Y in meters
+  double EYE_OFFSET_Y() const {
+    return GetField<double>(VT_EYE_OFFSET_Y, 0.0);
+  }
+  /// Eye offset Z in meters
+  double EYE_OFFSET_Z() const {
+    return GetField<double>(VT_EYE_OFFSET_Z, 0.0);
+  }
+  /// Translucency by distance
+  const CZMNearFarScalar *TRANSLUCENCY_BY_DISTANCE() const {
+    return GetPointer<const CZMNearFarScalar *>(VT_TRANSLUCENCY_BY_DISTANCE);
+  }
+  /// Pixel offset scale by distance
+  const CZMNearFarScalar *PIXEL_OFFSET_SCALE_BY_DISTANCE() const {
+    return GetPointer<const CZMNearFarScalar *>(VT_PIXEL_OFFSET_SCALE_BY_DISTANCE);
+  }
+  /// Scale by distance
+  const CZMNearFarScalar *SCALE_BY_DISTANCE() const {
+    return GetPointer<const CZMNearFarScalar *>(VT_SCALE_BY_DISTANCE);
+  }
+  /// Distance display condition near
+  double DISTANCE_DISPLAY_CONDITION_NEAR() const {
+    return GetField<double>(VT_DISTANCE_DISPLAY_CONDITION_NEAR, 0.0);
+  }
+  /// Distance display condition far
+  double DISTANCE_DISPLAY_CONDITION_FAR() const {
+    return GetField<double>(VT_DISTANCE_DISPLAY_CONDITION_FAR, 0.0);
+  }
+  /// Disable depth test distance
+  double DISABLE_DEPTH_TEST_DISTANCE() const {
+    return GetField<double>(VT_DISABLE_DEPTH_TEST_DISTANCE, 0.0);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
@@ -822,6 +2891,23 @@ struct CZMLabel FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<int8_t>(verifier, VT_HORIZONTAL_ORIGIN, 1) &&
            VerifyField<int8_t>(verifier, VT_VERTICAL_ORIGIN, 1) &&
            VerifyField<int8_t>(verifier, VT_HEIGHT_REFERENCE, 1) &&
+           VerifyField<uint8_t>(verifier, VT_SHOW_BACKGROUND, 1) &&
+           VerifyOffset(verifier, VT_BACKGROUND_COLOR) &&
+           verifier.VerifyTable(BACKGROUND_COLOR()) &&
+           VerifyField<double>(verifier, VT_BACKGROUND_PADDING_X, 8) &&
+           VerifyField<double>(verifier, VT_BACKGROUND_PADDING_Y, 8) &&
+           VerifyField<double>(verifier, VT_EYE_OFFSET_X, 8) &&
+           VerifyField<double>(verifier, VT_EYE_OFFSET_Y, 8) &&
+           VerifyField<double>(verifier, VT_EYE_OFFSET_Z, 8) &&
+           VerifyOffset(verifier, VT_TRANSLUCENCY_BY_DISTANCE) &&
+           verifier.VerifyTable(TRANSLUCENCY_BY_DISTANCE()) &&
+           VerifyOffset(verifier, VT_PIXEL_OFFSET_SCALE_BY_DISTANCE) &&
+           verifier.VerifyTable(PIXEL_OFFSET_SCALE_BY_DISTANCE()) &&
+           VerifyOffset(verifier, VT_SCALE_BY_DISTANCE) &&
+           verifier.VerifyTable(SCALE_BY_DISTANCE()) &&
+           VerifyField<double>(verifier, VT_DISTANCE_DISPLAY_CONDITION_NEAR, 8) &&
+           VerifyField<double>(verifier, VT_DISTANCE_DISPLAY_CONDITION_FAR, 8) &&
+           VerifyField<double>(verifier, VT_DISABLE_DEPTH_TEST_DISTANCE, 8) &&
            verifier.EndTable();
   }
 };
@@ -869,6 +2955,45 @@ struct CZMLabelBuilder {
   void add_HEIGHT_REFERENCE(CZMHeightReference HEIGHT_REFERENCE) {
     fbb_.AddElement<int8_t>(CZMLabel::VT_HEIGHT_REFERENCE, static_cast<int8_t>(HEIGHT_REFERENCE), 0);
   }
+  void add_SHOW_BACKGROUND(bool SHOW_BACKGROUND) {
+    fbb_.AddElement<uint8_t>(CZMLabel::VT_SHOW_BACKGROUND, static_cast<uint8_t>(SHOW_BACKGROUND), 0);
+  }
+  void add_BACKGROUND_COLOR(::flatbuffers::Offset<CZMColor> BACKGROUND_COLOR) {
+    fbb_.AddOffset(CZMLabel::VT_BACKGROUND_COLOR, BACKGROUND_COLOR);
+  }
+  void add_BACKGROUND_PADDING_X(double BACKGROUND_PADDING_X) {
+    fbb_.AddElement<double>(CZMLabel::VT_BACKGROUND_PADDING_X, BACKGROUND_PADDING_X, 0.0);
+  }
+  void add_BACKGROUND_PADDING_Y(double BACKGROUND_PADDING_Y) {
+    fbb_.AddElement<double>(CZMLabel::VT_BACKGROUND_PADDING_Y, BACKGROUND_PADDING_Y, 0.0);
+  }
+  void add_EYE_OFFSET_X(double EYE_OFFSET_X) {
+    fbb_.AddElement<double>(CZMLabel::VT_EYE_OFFSET_X, EYE_OFFSET_X, 0.0);
+  }
+  void add_EYE_OFFSET_Y(double EYE_OFFSET_Y) {
+    fbb_.AddElement<double>(CZMLabel::VT_EYE_OFFSET_Y, EYE_OFFSET_Y, 0.0);
+  }
+  void add_EYE_OFFSET_Z(double EYE_OFFSET_Z) {
+    fbb_.AddElement<double>(CZMLabel::VT_EYE_OFFSET_Z, EYE_OFFSET_Z, 0.0);
+  }
+  void add_TRANSLUCENCY_BY_DISTANCE(::flatbuffers::Offset<CZMNearFarScalar> TRANSLUCENCY_BY_DISTANCE) {
+    fbb_.AddOffset(CZMLabel::VT_TRANSLUCENCY_BY_DISTANCE, TRANSLUCENCY_BY_DISTANCE);
+  }
+  void add_PIXEL_OFFSET_SCALE_BY_DISTANCE(::flatbuffers::Offset<CZMNearFarScalar> PIXEL_OFFSET_SCALE_BY_DISTANCE) {
+    fbb_.AddOffset(CZMLabel::VT_PIXEL_OFFSET_SCALE_BY_DISTANCE, PIXEL_OFFSET_SCALE_BY_DISTANCE);
+  }
+  void add_SCALE_BY_DISTANCE(::flatbuffers::Offset<CZMNearFarScalar> SCALE_BY_DISTANCE) {
+    fbb_.AddOffset(CZMLabel::VT_SCALE_BY_DISTANCE, SCALE_BY_DISTANCE);
+  }
+  void add_DISTANCE_DISPLAY_CONDITION_NEAR(double DISTANCE_DISPLAY_CONDITION_NEAR) {
+    fbb_.AddElement<double>(CZMLabel::VT_DISTANCE_DISPLAY_CONDITION_NEAR, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0);
+  }
+  void add_DISTANCE_DISPLAY_CONDITION_FAR(double DISTANCE_DISPLAY_CONDITION_FAR) {
+    fbb_.AddElement<double>(CZMLabel::VT_DISTANCE_DISPLAY_CONDITION_FAR, DISTANCE_DISPLAY_CONDITION_FAR, 0.0);
+  }
+  void add_DISABLE_DEPTH_TEST_DISTANCE(double DISABLE_DEPTH_TEST_DISTANCE) {
+    fbb_.AddElement<double>(CZMLabel::VT_DISABLE_DEPTH_TEST_DISTANCE, DISABLE_DEPTH_TEST_DISTANCE, 0.0);
+  }
   explicit CZMLabelBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -894,16 +3019,42 @@ inline ::flatbuffers::Offset<CZMLabel> CreateCZMLabel(
     double SCALE = 0.0,
     CZMHorizontalOrigin HORIZONTAL_ORIGIN = CZMHorizontalOrigin_LEFT,
     CZMVerticalOrigin VERTICAL_ORIGIN = CZMVerticalOrigin_BASELINE,
-    CZMHeightReference HEIGHT_REFERENCE = CZMHeightReference_NONE) {
+    CZMHeightReference HEIGHT_REFERENCE = CZMHeightReference_NONE,
+    bool SHOW_BACKGROUND = false,
+    ::flatbuffers::Offset<CZMColor> BACKGROUND_COLOR = 0,
+    double BACKGROUND_PADDING_X = 0.0,
+    double BACKGROUND_PADDING_Y = 0.0,
+    double EYE_OFFSET_X = 0.0,
+    double EYE_OFFSET_Y = 0.0,
+    double EYE_OFFSET_Z = 0.0,
+    ::flatbuffers::Offset<CZMNearFarScalar> TRANSLUCENCY_BY_DISTANCE = 0,
+    ::flatbuffers::Offset<CZMNearFarScalar> PIXEL_OFFSET_SCALE_BY_DISTANCE = 0,
+    ::flatbuffers::Offset<CZMNearFarScalar> SCALE_BY_DISTANCE = 0,
+    double DISTANCE_DISPLAY_CONDITION_NEAR = 0.0,
+    double DISTANCE_DISPLAY_CONDITION_FAR = 0.0,
+    double DISABLE_DEPTH_TEST_DISTANCE = 0.0) {
   CZMLabelBuilder builder_(_fbb);
+  builder_.add_DISABLE_DEPTH_TEST_DISTANCE(DISABLE_DEPTH_TEST_DISTANCE);
+  builder_.add_DISTANCE_DISPLAY_CONDITION_FAR(DISTANCE_DISPLAY_CONDITION_FAR);
+  builder_.add_DISTANCE_DISPLAY_CONDITION_NEAR(DISTANCE_DISPLAY_CONDITION_NEAR);
+  builder_.add_EYE_OFFSET_Z(EYE_OFFSET_Z);
+  builder_.add_EYE_OFFSET_Y(EYE_OFFSET_Y);
+  builder_.add_EYE_OFFSET_X(EYE_OFFSET_X);
+  builder_.add_BACKGROUND_PADDING_Y(BACKGROUND_PADDING_Y);
+  builder_.add_BACKGROUND_PADDING_X(BACKGROUND_PADDING_X);
   builder_.add_SCALE(SCALE);
   builder_.add_PIXEL_OFFSET_Y(PIXEL_OFFSET_Y);
   builder_.add_PIXEL_OFFSET_X(PIXEL_OFFSET_X);
   builder_.add_OUTLINE_WIDTH(OUTLINE_WIDTH);
+  builder_.add_SCALE_BY_DISTANCE(SCALE_BY_DISTANCE);
+  builder_.add_PIXEL_OFFSET_SCALE_BY_DISTANCE(PIXEL_OFFSET_SCALE_BY_DISTANCE);
+  builder_.add_TRANSLUCENCY_BY_DISTANCE(TRANSLUCENCY_BY_DISTANCE);
+  builder_.add_BACKGROUND_COLOR(BACKGROUND_COLOR);
   builder_.add_OUTLINE_COLOR(OUTLINE_COLOR);
   builder_.add_FILL_COLOR(FILL_COLOR);
   builder_.add_FONT(FONT);
   builder_.add_TEXT(TEXT);
+  builder_.add_SHOW_BACKGROUND(SHOW_BACKGROUND);
   builder_.add_HEIGHT_REFERENCE(HEIGHT_REFERENCE);
   builder_.add_VERTICAL_ORIGIN(VERTICAL_ORIGIN);
   builder_.add_HORIZONTAL_ORIGIN(HORIZONTAL_ORIGIN);
@@ -926,7 +3077,20 @@ inline ::flatbuffers::Offset<CZMLabel> CreateCZMLabelDirect(
     double SCALE = 0.0,
     CZMHorizontalOrigin HORIZONTAL_ORIGIN = CZMHorizontalOrigin_LEFT,
     CZMVerticalOrigin VERTICAL_ORIGIN = CZMVerticalOrigin_BASELINE,
-    CZMHeightReference HEIGHT_REFERENCE = CZMHeightReference_NONE) {
+    CZMHeightReference HEIGHT_REFERENCE = CZMHeightReference_NONE,
+    bool SHOW_BACKGROUND = false,
+    ::flatbuffers::Offset<CZMColor> BACKGROUND_COLOR = 0,
+    double BACKGROUND_PADDING_X = 0.0,
+    double BACKGROUND_PADDING_Y = 0.0,
+    double EYE_OFFSET_X = 0.0,
+    double EYE_OFFSET_Y = 0.0,
+    double EYE_OFFSET_Z = 0.0,
+    ::flatbuffers::Offset<CZMNearFarScalar> TRANSLUCENCY_BY_DISTANCE = 0,
+    ::flatbuffers::Offset<CZMNearFarScalar> PIXEL_OFFSET_SCALE_BY_DISTANCE = 0,
+    ::flatbuffers::Offset<CZMNearFarScalar> SCALE_BY_DISTANCE = 0,
+    double DISTANCE_DISPLAY_CONDITION_NEAR = 0.0,
+    double DISTANCE_DISPLAY_CONDITION_FAR = 0.0,
+    double DISABLE_DEPTH_TEST_DISTANCE = 0.0) {
   auto TEXT__ = TEXT ? _fbb.CreateString(TEXT) : 0;
   auto FONT__ = FONT ? _fbb.CreateString(FONT) : 0;
   return CreateCZMLabel(
@@ -943,7 +3107,20 @@ inline ::flatbuffers::Offset<CZMLabel> CreateCZMLabelDirect(
       SCALE,
       HORIZONTAL_ORIGIN,
       VERTICAL_ORIGIN,
-      HEIGHT_REFERENCE);
+      HEIGHT_REFERENCE,
+      SHOW_BACKGROUND,
+      BACKGROUND_COLOR,
+      BACKGROUND_PADDING_X,
+      BACKGROUND_PADDING_Y,
+      EYE_OFFSET_X,
+      EYE_OFFSET_Y,
+      EYE_OFFSET_Z,
+      TRANSLUCENCY_BY_DISTANCE,
+      PIXEL_OFFSET_SCALE_BY_DISTANCE,
+      SCALE_BY_DISTANCE,
+      DISTANCE_DISPLAY_CONDITION_NEAR,
+      DISTANCE_DISPLAY_CONDITION_FAR,
+      DISABLE_DEPTH_TEST_DISTANCE);
 }
 
 /// Point properties
@@ -955,7 +3132,12 @@ struct CZMPoint FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_OUTLINE_COLOR = 8,
     VT_OUTLINE_WIDTH = 10,
     VT_PIXEL_SIZE = 12,
-    VT_HEIGHT_REFERENCE = 14
+    VT_HEIGHT_REFERENCE = 14,
+    VT_SCALE_BY_DISTANCE = 16,
+    VT_TRANSLUCENCY_BY_DISTANCE = 18,
+    VT_DISTANCE_DISPLAY_CONDITION_NEAR = 20,
+    VT_DISTANCE_DISPLAY_CONDITION_FAR = 22,
+    VT_DISABLE_DEPTH_TEST_DISTANCE = 24
   };
   /// Whether the point is displayed
   bool SHOW() const {
@@ -981,6 +3163,26 @@ struct CZMPoint FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   CZMHeightReference HEIGHT_REFERENCE() const {
     return static_cast<CZMHeightReference>(GetField<int8_t>(VT_HEIGHT_REFERENCE, 0));
   }
+  /// Scale by distance
+  const CZMNearFarScalar *SCALE_BY_DISTANCE() const {
+    return GetPointer<const CZMNearFarScalar *>(VT_SCALE_BY_DISTANCE);
+  }
+  /// Translucency by distance
+  const CZMNearFarScalar *TRANSLUCENCY_BY_DISTANCE() const {
+    return GetPointer<const CZMNearFarScalar *>(VT_TRANSLUCENCY_BY_DISTANCE);
+  }
+  /// Distance display condition near
+  double DISTANCE_DISPLAY_CONDITION_NEAR() const {
+    return GetField<double>(VT_DISTANCE_DISPLAY_CONDITION_NEAR, 0.0);
+  }
+  /// Distance display condition far
+  double DISTANCE_DISPLAY_CONDITION_FAR() const {
+    return GetField<double>(VT_DISTANCE_DISPLAY_CONDITION_FAR, 0.0);
+  }
+  /// Disable depth test distance
+  double DISABLE_DEPTH_TEST_DISTANCE() const {
+    return GetField<double>(VT_DISABLE_DEPTH_TEST_DISTANCE, 0.0);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
@@ -991,6 +3193,13 @@ struct CZMPoint FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_OUTLINE_WIDTH, 8) &&
            VerifyField<double>(verifier, VT_PIXEL_SIZE, 8) &&
            VerifyField<int8_t>(verifier, VT_HEIGHT_REFERENCE, 1) &&
+           VerifyOffset(verifier, VT_SCALE_BY_DISTANCE) &&
+           verifier.VerifyTable(SCALE_BY_DISTANCE()) &&
+           VerifyOffset(verifier, VT_TRANSLUCENCY_BY_DISTANCE) &&
+           verifier.VerifyTable(TRANSLUCENCY_BY_DISTANCE()) &&
+           VerifyField<double>(verifier, VT_DISTANCE_DISPLAY_CONDITION_NEAR, 8) &&
+           VerifyField<double>(verifier, VT_DISTANCE_DISPLAY_CONDITION_FAR, 8) &&
+           VerifyField<double>(verifier, VT_DISABLE_DEPTH_TEST_DISTANCE, 8) &&
            verifier.EndTable();
   }
 };
@@ -1017,6 +3226,21 @@ struct CZMPointBuilder {
   void add_HEIGHT_REFERENCE(CZMHeightReference HEIGHT_REFERENCE) {
     fbb_.AddElement<int8_t>(CZMPoint::VT_HEIGHT_REFERENCE, static_cast<int8_t>(HEIGHT_REFERENCE), 0);
   }
+  void add_SCALE_BY_DISTANCE(::flatbuffers::Offset<CZMNearFarScalar> SCALE_BY_DISTANCE) {
+    fbb_.AddOffset(CZMPoint::VT_SCALE_BY_DISTANCE, SCALE_BY_DISTANCE);
+  }
+  void add_TRANSLUCENCY_BY_DISTANCE(::flatbuffers::Offset<CZMNearFarScalar> TRANSLUCENCY_BY_DISTANCE) {
+    fbb_.AddOffset(CZMPoint::VT_TRANSLUCENCY_BY_DISTANCE, TRANSLUCENCY_BY_DISTANCE);
+  }
+  void add_DISTANCE_DISPLAY_CONDITION_NEAR(double DISTANCE_DISPLAY_CONDITION_NEAR) {
+    fbb_.AddElement<double>(CZMPoint::VT_DISTANCE_DISPLAY_CONDITION_NEAR, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0);
+  }
+  void add_DISTANCE_DISPLAY_CONDITION_FAR(double DISTANCE_DISPLAY_CONDITION_FAR) {
+    fbb_.AddElement<double>(CZMPoint::VT_DISTANCE_DISPLAY_CONDITION_FAR, DISTANCE_DISPLAY_CONDITION_FAR, 0.0);
+  }
+  void add_DISABLE_DEPTH_TEST_DISTANCE(double DISABLE_DEPTH_TEST_DISTANCE) {
+    fbb_.AddElement<double>(CZMPoint::VT_DISABLE_DEPTH_TEST_DISTANCE, DISABLE_DEPTH_TEST_DISTANCE, 0.0);
+  }
   explicit CZMPointBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1035,10 +3259,20 @@ inline ::flatbuffers::Offset<CZMPoint> CreateCZMPoint(
     ::flatbuffers::Offset<CZMColor> OUTLINE_COLOR = 0,
     double OUTLINE_WIDTH = 0.0,
     double PIXEL_SIZE = 0.0,
-    CZMHeightReference HEIGHT_REFERENCE = CZMHeightReference_NONE) {
+    CZMHeightReference HEIGHT_REFERENCE = CZMHeightReference_NONE,
+    ::flatbuffers::Offset<CZMNearFarScalar> SCALE_BY_DISTANCE = 0,
+    ::flatbuffers::Offset<CZMNearFarScalar> TRANSLUCENCY_BY_DISTANCE = 0,
+    double DISTANCE_DISPLAY_CONDITION_NEAR = 0.0,
+    double DISTANCE_DISPLAY_CONDITION_FAR = 0.0,
+    double DISABLE_DEPTH_TEST_DISTANCE = 0.0) {
   CZMPointBuilder builder_(_fbb);
+  builder_.add_DISABLE_DEPTH_TEST_DISTANCE(DISABLE_DEPTH_TEST_DISTANCE);
+  builder_.add_DISTANCE_DISPLAY_CONDITION_FAR(DISTANCE_DISPLAY_CONDITION_FAR);
+  builder_.add_DISTANCE_DISPLAY_CONDITION_NEAR(DISTANCE_DISPLAY_CONDITION_NEAR);
   builder_.add_PIXEL_SIZE(PIXEL_SIZE);
   builder_.add_OUTLINE_WIDTH(OUTLINE_WIDTH);
+  builder_.add_TRANSLUCENCY_BY_DISTANCE(TRANSLUCENCY_BY_DISTANCE);
+  builder_.add_SCALE_BY_DISTANCE(SCALE_BY_DISTANCE);
   builder_.add_OUTLINE_COLOR(OUTLINE_COLOR);
   builder_.add_COLOR(COLOR);
   builder_.add_HEIGHT_REFERENCE(HEIGHT_REFERENCE);
@@ -1055,7 +3289,14 @@ struct CZMPolyline FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_POSITIONS_CARTESIAN = 8,
     VT_WIDTH = 10,
     VT_COLOR = 12,
-    VT_CLAMP_TO_GROUND = 14
+    VT_CLAMP_TO_GROUND = 14,
+    VT_ARC_TYPE = 16,
+    VT_GRANULARITY = 18,
+    VT_MATERIAL = 20,
+    VT_SHADOWS = 22,
+    VT_DEPTH_FAIL_MATERIAL = 24,
+    VT_CLASSIFICATION_TYPE = 26,
+    VT_Z_INDEX = 28
   };
   /// Whether the polyline is displayed
   bool SHOW() const {
@@ -1073,13 +3314,41 @@ struct CZMPolyline FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double WIDTH() const {
     return GetField<double>(VT_WIDTH, 0.0);
   }
-  /// Line color (solid color material)
+  /// Line color (solid color material, legacy)
   const CZMColor *COLOR() const {
     return GetPointer<const CZMColor *>(VT_COLOR);
   }
   /// Whether to clamp to ground
   bool CLAMP_TO_GROUND() const {
     return GetField<uint8_t>(VT_CLAMP_TO_GROUND, 0) != 0;
+  }
+  /// Arc type
+  const ::flatbuffers::String *ARC_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ARC_TYPE);
+  }
+  /// Granularity in radians
+  double GRANULARITY() const {
+    return GetField<double>(VT_GRANULARITY, 0.0);
+  }
+  /// Full polyline material
+  const CZMPolylineMaterial *MATERIAL() const {
+    return GetPointer<const CZMPolylineMaterial *>(VT_MATERIAL);
+  }
+  /// Shadow mode
+  const ::flatbuffers::String *SHADOWS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SHADOWS);
+  }
+  /// Depth fail material
+  const CZMPolylineMaterial *DEPTH_FAIL_MATERIAL() const {
+    return GetPointer<const CZMPolylineMaterial *>(VT_DEPTH_FAIL_MATERIAL);
+  }
+  /// Classification type
+  const ::flatbuffers::String *CLASSIFICATION_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CLASSIFICATION_TYPE);
+  }
+  /// Z-index for ordering
+  int32_t Z_INDEX() const {
+    return GetField<int32_t>(VT_Z_INDEX, 0);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1092,6 +3361,18 @@ struct CZMPolyline FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_COLOR) &&
            verifier.VerifyTable(COLOR()) &&
            VerifyField<uint8_t>(verifier, VT_CLAMP_TO_GROUND, 1) &&
+           VerifyOffset(verifier, VT_ARC_TYPE) &&
+           verifier.VerifyString(ARC_TYPE()) &&
+           VerifyField<double>(verifier, VT_GRANULARITY, 8) &&
+           VerifyOffset(verifier, VT_MATERIAL) &&
+           verifier.VerifyTable(MATERIAL()) &&
+           VerifyOffset(verifier, VT_SHADOWS) &&
+           verifier.VerifyString(SHADOWS()) &&
+           VerifyOffset(verifier, VT_DEPTH_FAIL_MATERIAL) &&
+           verifier.VerifyTable(DEPTH_FAIL_MATERIAL()) &&
+           VerifyOffset(verifier, VT_CLASSIFICATION_TYPE) &&
+           verifier.VerifyString(CLASSIFICATION_TYPE()) &&
+           VerifyField<int32_t>(verifier, VT_Z_INDEX, 4) &&
            verifier.EndTable();
   }
 };
@@ -1118,6 +3399,27 @@ struct CZMPolylineBuilder {
   void add_CLAMP_TO_GROUND(bool CLAMP_TO_GROUND) {
     fbb_.AddElement<uint8_t>(CZMPolyline::VT_CLAMP_TO_GROUND, static_cast<uint8_t>(CLAMP_TO_GROUND), 0);
   }
+  void add_ARC_TYPE(::flatbuffers::Offset<::flatbuffers::String> ARC_TYPE) {
+    fbb_.AddOffset(CZMPolyline::VT_ARC_TYPE, ARC_TYPE);
+  }
+  void add_GRANULARITY(double GRANULARITY) {
+    fbb_.AddElement<double>(CZMPolyline::VT_GRANULARITY, GRANULARITY, 0.0);
+  }
+  void add_MATERIAL(::flatbuffers::Offset<CZMPolylineMaterial> MATERIAL) {
+    fbb_.AddOffset(CZMPolyline::VT_MATERIAL, MATERIAL);
+  }
+  void add_SHADOWS(::flatbuffers::Offset<::flatbuffers::String> SHADOWS) {
+    fbb_.AddOffset(CZMPolyline::VT_SHADOWS, SHADOWS);
+  }
+  void add_DEPTH_FAIL_MATERIAL(::flatbuffers::Offset<CZMPolylineMaterial> DEPTH_FAIL_MATERIAL) {
+    fbb_.AddOffset(CZMPolyline::VT_DEPTH_FAIL_MATERIAL, DEPTH_FAIL_MATERIAL);
+  }
+  void add_CLASSIFICATION_TYPE(::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION_TYPE) {
+    fbb_.AddOffset(CZMPolyline::VT_CLASSIFICATION_TYPE, CLASSIFICATION_TYPE);
+  }
+  void add_Z_INDEX(int32_t Z_INDEX) {
+    fbb_.AddElement<int32_t>(CZMPolyline::VT_Z_INDEX, Z_INDEX, 0);
+  }
   explicit CZMPolylineBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1136,9 +3438,23 @@ inline ::flatbuffers::Offset<CZMPolyline> CreateCZMPolyline(
     ::flatbuffers::Offset<::flatbuffers::Vector<double>> POSITIONS_CARTESIAN = 0,
     double WIDTH = 0.0,
     ::flatbuffers::Offset<CZMColor> COLOR = 0,
-    bool CLAMP_TO_GROUND = false) {
+    bool CLAMP_TO_GROUND = false,
+    ::flatbuffers::Offset<::flatbuffers::String> ARC_TYPE = 0,
+    double GRANULARITY = 0.0,
+    ::flatbuffers::Offset<CZMPolylineMaterial> MATERIAL = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SHADOWS = 0,
+    ::flatbuffers::Offset<CZMPolylineMaterial> DEPTH_FAIL_MATERIAL = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION_TYPE = 0,
+    int32_t Z_INDEX = 0) {
   CZMPolylineBuilder builder_(_fbb);
+  builder_.add_GRANULARITY(GRANULARITY);
   builder_.add_WIDTH(WIDTH);
+  builder_.add_Z_INDEX(Z_INDEX);
+  builder_.add_CLASSIFICATION_TYPE(CLASSIFICATION_TYPE);
+  builder_.add_DEPTH_FAIL_MATERIAL(DEPTH_FAIL_MATERIAL);
+  builder_.add_SHADOWS(SHADOWS);
+  builder_.add_MATERIAL(MATERIAL);
+  builder_.add_ARC_TYPE(ARC_TYPE);
   builder_.add_COLOR(COLOR);
   builder_.add_POSITIONS_CARTESIAN(POSITIONS_CARTESIAN);
   builder_.add_POSITIONS_CARTOGRAPHIC_DEGREES(POSITIONS_CARTOGRAPHIC_DEGREES);
@@ -1154,9 +3470,19 @@ inline ::flatbuffers::Offset<CZMPolyline> CreateCZMPolylineDirect(
     const std::vector<double> *POSITIONS_CARTESIAN = nullptr,
     double WIDTH = 0.0,
     ::flatbuffers::Offset<CZMColor> COLOR = 0,
-    bool CLAMP_TO_GROUND = false) {
+    bool CLAMP_TO_GROUND = false,
+    const char *ARC_TYPE = nullptr,
+    double GRANULARITY = 0.0,
+    ::flatbuffers::Offset<CZMPolylineMaterial> MATERIAL = 0,
+    const char *SHADOWS = nullptr,
+    ::flatbuffers::Offset<CZMPolylineMaterial> DEPTH_FAIL_MATERIAL = 0,
+    const char *CLASSIFICATION_TYPE = nullptr,
+    int32_t Z_INDEX = 0) {
   auto POSITIONS_CARTOGRAPHIC_DEGREES__ = POSITIONS_CARTOGRAPHIC_DEGREES ? _fbb.CreateVector<double>(*POSITIONS_CARTOGRAPHIC_DEGREES) : 0;
   auto POSITIONS_CARTESIAN__ = POSITIONS_CARTESIAN ? _fbb.CreateVector<double>(*POSITIONS_CARTESIAN) : 0;
+  auto ARC_TYPE__ = ARC_TYPE ? _fbb.CreateString(ARC_TYPE) : 0;
+  auto SHADOWS__ = SHADOWS ? _fbb.CreateString(SHADOWS) : 0;
+  auto CLASSIFICATION_TYPE__ = CLASSIFICATION_TYPE ? _fbb.CreateString(CLASSIFICATION_TYPE) : 0;
   return CreateCZMPolyline(
       _fbb,
       SHOW,
@@ -1164,7 +3490,14 @@ inline ::flatbuffers::Offset<CZMPolyline> CreateCZMPolylineDirect(
       POSITIONS_CARTESIAN__,
       WIDTH,
       COLOR,
-      CLAMP_TO_GROUND);
+      CLAMP_TO_GROUND,
+      ARC_TYPE__,
+      GRANULARITY,
+      MATERIAL,
+      SHADOWS__,
+      DEPTH_FAIL_MATERIAL,
+      CLASSIFICATION_TYPE__,
+      Z_INDEX);
 }
 
 /// Polygon properties
@@ -1180,7 +3513,20 @@ struct CZMPolygon FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_OUTLINE_COLOR = 16,
     VT_EXTRUDED_HEIGHT = 18,
     VT_HEIGHT_REFERENCE = 20,
-    VT_CLASSIFICATION_TYPE = 22
+    VT_CLASSIFICATION_TYPE = 22,
+    VT_HOLES = 24,
+    VT_ARC_TYPE = 26,
+    VT_HEIGHT = 28,
+    VT_EXTRUDED_HEIGHT_REFERENCE = 30,
+    VT_ST_ROTATION = 32,
+    VT_GRANULARITY = 34,
+    VT_MATERIAL = 36,
+    VT_OUTLINE_WIDTH = 38,
+    VT_PER_POSITION_HEIGHT = 40,
+    VT_CLOSE_TOP = 42,
+    VT_CLOSE_BOTTOM = 44,
+    VT_SHADOWS = 46,
+    VT_Z_INDEX = 48
   };
   /// Whether the polygon is displayed
   bool SHOW() const {
@@ -1198,7 +3544,7 @@ struct CZMPolygon FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool FILL() const {
     return GetField<uint8_t>(VT_FILL, 0) != 0;
   }
-  /// Fill color (solid color material)
+  /// Fill color (solid color material, legacy)
   const CZMColor *COLOR() const {
     return GetPointer<const CZMColor *>(VT_COLOR);
   }
@@ -1222,6 +3568,58 @@ struct CZMPolygon FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   CZMClassificationType CLASSIFICATION_TYPE() const {
     return static_cast<CZMClassificationType>(GetField<int8_t>(VT_CLASSIFICATION_TYPE, 0));
   }
+  /// Holes (position lists: each hole is [lon,lat,h,...])
+  const ::flatbuffers::Vector<::flatbuffers::Offset<CZMPolygonHole>> *HOLES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<CZMPolygonHole>> *>(VT_HOLES);
+  }
+  /// Arc type
+  const ::flatbuffers::String *ARC_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ARC_TYPE);
+  }
+  /// Height in meters
+  double HEIGHT() const {
+    return GetField<double>(VT_HEIGHT, 0.0);
+  }
+  /// Extruded height reference
+  const ::flatbuffers::String *EXTRUDED_HEIGHT_REFERENCE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EXTRUDED_HEIGHT_REFERENCE);
+  }
+  /// Texture rotation in radians
+  double ST_ROTATION() const {
+    return GetField<double>(VT_ST_ROTATION, 0.0);
+  }
+  /// Granularity in radians
+  double GRANULARITY() const {
+    return GetField<double>(VT_GRANULARITY, 0.0);
+  }
+  /// Full surface material
+  const CZMMaterial *MATERIAL() const {
+    return GetPointer<const CZMMaterial *>(VT_MATERIAL);
+  }
+  /// Outline width in pixels
+  double OUTLINE_WIDTH() const {
+    return GetField<double>(VT_OUTLINE_WIDTH, 0.0);
+  }
+  /// Whether to use per-position heights
+  bool PER_POSITION_HEIGHT() const {
+    return GetField<uint8_t>(VT_PER_POSITION_HEIGHT, 0) != 0;
+  }
+  /// Whether to close the top of extruded polygon
+  bool CLOSE_TOP() const {
+    return GetField<uint8_t>(VT_CLOSE_TOP, 0) != 0;
+  }
+  /// Whether to close the bottom of extruded polygon
+  bool CLOSE_BOTTOM() const {
+    return GetField<uint8_t>(VT_CLOSE_BOTTOM, 0) != 0;
+  }
+  /// Shadow mode
+  const ::flatbuffers::String *SHADOWS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SHADOWS);
+  }
+  /// Z-index for ordering
+  int32_t Z_INDEX() const {
+    return GetField<int32_t>(VT_Z_INDEX, 0);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
@@ -1238,6 +3636,25 @@ struct CZMPolygon FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_EXTRUDED_HEIGHT, 8) &&
            VerifyField<int8_t>(verifier, VT_HEIGHT_REFERENCE, 1) &&
            VerifyField<int8_t>(verifier, VT_CLASSIFICATION_TYPE, 1) &&
+           VerifyOffset(verifier, VT_HOLES) &&
+           verifier.VerifyVector(HOLES()) &&
+           verifier.VerifyVectorOfTables(HOLES()) &&
+           VerifyOffset(verifier, VT_ARC_TYPE) &&
+           verifier.VerifyString(ARC_TYPE()) &&
+           VerifyField<double>(verifier, VT_HEIGHT, 8) &&
+           VerifyOffset(verifier, VT_EXTRUDED_HEIGHT_REFERENCE) &&
+           verifier.VerifyString(EXTRUDED_HEIGHT_REFERENCE()) &&
+           VerifyField<double>(verifier, VT_ST_ROTATION, 8) &&
+           VerifyField<double>(verifier, VT_GRANULARITY, 8) &&
+           VerifyOffset(verifier, VT_MATERIAL) &&
+           verifier.VerifyTable(MATERIAL()) &&
+           VerifyField<double>(verifier, VT_OUTLINE_WIDTH, 8) &&
+           VerifyField<uint8_t>(verifier, VT_PER_POSITION_HEIGHT, 1) &&
+           VerifyField<uint8_t>(verifier, VT_CLOSE_TOP, 1) &&
+           VerifyField<uint8_t>(verifier, VT_CLOSE_BOTTOM, 1) &&
+           VerifyOffset(verifier, VT_SHADOWS) &&
+           verifier.VerifyString(SHADOWS()) &&
+           VerifyField<int32_t>(verifier, VT_Z_INDEX, 4) &&
            verifier.EndTable();
   }
 };
@@ -1276,6 +3693,45 @@ struct CZMPolygonBuilder {
   void add_CLASSIFICATION_TYPE(CZMClassificationType CLASSIFICATION_TYPE) {
     fbb_.AddElement<int8_t>(CZMPolygon::VT_CLASSIFICATION_TYPE, static_cast<int8_t>(CLASSIFICATION_TYPE), 0);
   }
+  void add_HOLES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CZMPolygonHole>>> HOLES) {
+    fbb_.AddOffset(CZMPolygon::VT_HOLES, HOLES);
+  }
+  void add_ARC_TYPE(::flatbuffers::Offset<::flatbuffers::String> ARC_TYPE) {
+    fbb_.AddOffset(CZMPolygon::VT_ARC_TYPE, ARC_TYPE);
+  }
+  void add_HEIGHT(double HEIGHT) {
+    fbb_.AddElement<double>(CZMPolygon::VT_HEIGHT, HEIGHT, 0.0);
+  }
+  void add_EXTRUDED_HEIGHT_REFERENCE(::flatbuffers::Offset<::flatbuffers::String> EXTRUDED_HEIGHT_REFERENCE) {
+    fbb_.AddOffset(CZMPolygon::VT_EXTRUDED_HEIGHT_REFERENCE, EXTRUDED_HEIGHT_REFERENCE);
+  }
+  void add_ST_ROTATION(double ST_ROTATION) {
+    fbb_.AddElement<double>(CZMPolygon::VT_ST_ROTATION, ST_ROTATION, 0.0);
+  }
+  void add_GRANULARITY(double GRANULARITY) {
+    fbb_.AddElement<double>(CZMPolygon::VT_GRANULARITY, GRANULARITY, 0.0);
+  }
+  void add_MATERIAL(::flatbuffers::Offset<CZMMaterial> MATERIAL) {
+    fbb_.AddOffset(CZMPolygon::VT_MATERIAL, MATERIAL);
+  }
+  void add_OUTLINE_WIDTH(double OUTLINE_WIDTH) {
+    fbb_.AddElement<double>(CZMPolygon::VT_OUTLINE_WIDTH, OUTLINE_WIDTH, 0.0);
+  }
+  void add_PER_POSITION_HEIGHT(bool PER_POSITION_HEIGHT) {
+    fbb_.AddElement<uint8_t>(CZMPolygon::VT_PER_POSITION_HEIGHT, static_cast<uint8_t>(PER_POSITION_HEIGHT), 0);
+  }
+  void add_CLOSE_TOP(bool CLOSE_TOP) {
+    fbb_.AddElement<uint8_t>(CZMPolygon::VT_CLOSE_TOP, static_cast<uint8_t>(CLOSE_TOP), 0);
+  }
+  void add_CLOSE_BOTTOM(bool CLOSE_BOTTOM) {
+    fbb_.AddElement<uint8_t>(CZMPolygon::VT_CLOSE_BOTTOM, static_cast<uint8_t>(CLOSE_BOTTOM), 0);
+  }
+  void add_SHADOWS(::flatbuffers::Offset<::flatbuffers::String> SHADOWS) {
+    fbb_.AddOffset(CZMPolygon::VT_SHADOWS, SHADOWS);
+  }
+  void add_Z_INDEX(int32_t Z_INDEX) {
+    fbb_.AddElement<int32_t>(CZMPolygon::VT_Z_INDEX, Z_INDEX, 0);
+  }
   explicit CZMPolygonBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1298,13 +3754,39 @@ inline ::flatbuffers::Offset<CZMPolygon> CreateCZMPolygon(
     ::flatbuffers::Offset<CZMColor> OUTLINE_COLOR = 0,
     double EXTRUDED_HEIGHT = 0.0,
     CZMHeightReference HEIGHT_REFERENCE = CZMHeightReference_NONE,
-    CZMClassificationType CLASSIFICATION_TYPE = CZMClassificationType_TERRAIN) {
+    CZMClassificationType CLASSIFICATION_TYPE = CZMClassificationType_TERRAIN,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CZMPolygonHole>>> HOLES = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ARC_TYPE = 0,
+    double HEIGHT = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> EXTRUDED_HEIGHT_REFERENCE = 0,
+    double ST_ROTATION = 0.0,
+    double GRANULARITY = 0.0,
+    ::flatbuffers::Offset<CZMMaterial> MATERIAL = 0,
+    double OUTLINE_WIDTH = 0.0,
+    bool PER_POSITION_HEIGHT = false,
+    bool CLOSE_TOP = false,
+    bool CLOSE_BOTTOM = false,
+    ::flatbuffers::Offset<::flatbuffers::String> SHADOWS = 0,
+    int32_t Z_INDEX = 0) {
   CZMPolygonBuilder builder_(_fbb);
+  builder_.add_OUTLINE_WIDTH(OUTLINE_WIDTH);
+  builder_.add_GRANULARITY(GRANULARITY);
+  builder_.add_ST_ROTATION(ST_ROTATION);
+  builder_.add_HEIGHT(HEIGHT);
   builder_.add_EXTRUDED_HEIGHT(EXTRUDED_HEIGHT);
+  builder_.add_Z_INDEX(Z_INDEX);
+  builder_.add_SHADOWS(SHADOWS);
+  builder_.add_MATERIAL(MATERIAL);
+  builder_.add_EXTRUDED_HEIGHT_REFERENCE(EXTRUDED_HEIGHT_REFERENCE);
+  builder_.add_ARC_TYPE(ARC_TYPE);
+  builder_.add_HOLES(HOLES);
   builder_.add_OUTLINE_COLOR(OUTLINE_COLOR);
   builder_.add_COLOR(COLOR);
   builder_.add_POSITIONS_CARTESIAN(POSITIONS_CARTESIAN);
   builder_.add_POSITIONS_CARTOGRAPHIC_DEGREES(POSITIONS_CARTOGRAPHIC_DEGREES);
+  builder_.add_CLOSE_BOTTOM(CLOSE_BOTTOM);
+  builder_.add_CLOSE_TOP(CLOSE_TOP);
+  builder_.add_PER_POSITION_HEIGHT(PER_POSITION_HEIGHT);
   builder_.add_CLASSIFICATION_TYPE(CLASSIFICATION_TYPE);
   builder_.add_HEIGHT_REFERENCE(HEIGHT_REFERENCE);
   builder_.add_OUTLINE(OUTLINE);
@@ -1324,9 +3806,26 @@ inline ::flatbuffers::Offset<CZMPolygon> CreateCZMPolygonDirect(
     ::flatbuffers::Offset<CZMColor> OUTLINE_COLOR = 0,
     double EXTRUDED_HEIGHT = 0.0,
     CZMHeightReference HEIGHT_REFERENCE = CZMHeightReference_NONE,
-    CZMClassificationType CLASSIFICATION_TYPE = CZMClassificationType_TERRAIN) {
+    CZMClassificationType CLASSIFICATION_TYPE = CZMClassificationType_TERRAIN,
+    const std::vector<::flatbuffers::Offset<CZMPolygonHole>> *HOLES = nullptr,
+    const char *ARC_TYPE = nullptr,
+    double HEIGHT = 0.0,
+    const char *EXTRUDED_HEIGHT_REFERENCE = nullptr,
+    double ST_ROTATION = 0.0,
+    double GRANULARITY = 0.0,
+    ::flatbuffers::Offset<CZMMaterial> MATERIAL = 0,
+    double OUTLINE_WIDTH = 0.0,
+    bool PER_POSITION_HEIGHT = false,
+    bool CLOSE_TOP = false,
+    bool CLOSE_BOTTOM = false,
+    const char *SHADOWS = nullptr,
+    int32_t Z_INDEX = 0) {
   auto POSITIONS_CARTOGRAPHIC_DEGREES__ = POSITIONS_CARTOGRAPHIC_DEGREES ? _fbb.CreateVector<double>(*POSITIONS_CARTOGRAPHIC_DEGREES) : 0;
   auto POSITIONS_CARTESIAN__ = POSITIONS_CARTESIAN ? _fbb.CreateVector<double>(*POSITIONS_CARTESIAN) : 0;
+  auto HOLES__ = HOLES ? _fbb.CreateVector<::flatbuffers::Offset<CZMPolygonHole>>(*HOLES) : 0;
+  auto ARC_TYPE__ = ARC_TYPE ? _fbb.CreateString(ARC_TYPE) : 0;
+  auto EXTRUDED_HEIGHT_REFERENCE__ = EXTRUDED_HEIGHT_REFERENCE ? _fbb.CreateString(EXTRUDED_HEIGHT_REFERENCE) : 0;
+  auto SHADOWS__ = SHADOWS ? _fbb.CreateString(SHADOWS) : 0;
   return CreateCZMPolygon(
       _fbb,
       SHOW,
@@ -1338,7 +3837,88 @@ inline ::flatbuffers::Offset<CZMPolygon> CreateCZMPolygonDirect(
       OUTLINE_COLOR,
       EXTRUDED_HEIGHT,
       HEIGHT_REFERENCE,
-      CLASSIFICATION_TYPE);
+      CLASSIFICATION_TYPE,
+      HOLES__,
+      ARC_TYPE__,
+      HEIGHT,
+      EXTRUDED_HEIGHT_REFERENCE__,
+      ST_ROTATION,
+      GRANULARITY,
+      MATERIAL,
+      OUTLINE_WIDTH,
+      PER_POSITION_HEIGHT,
+      CLOSE_TOP,
+      CLOSE_BOTTOM,
+      SHADOWS__,
+      Z_INDEX);
+}
+
+/// Polygon hole position list
+struct CZMPolygonHole FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CZMPolygonHoleBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_POSITIONS_CARTOGRAPHIC_DEGREES = 4,
+    VT_POSITIONS_CARTESIAN = 6
+  };
+  /// Positions as cartographic degrees [lon, lat, height, ...]
+  const ::flatbuffers::Vector<double> *POSITIONS_CARTOGRAPHIC_DEGREES() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_POSITIONS_CARTOGRAPHIC_DEGREES);
+  }
+  /// Positions as Cartesian [X, Y, Z, ...]
+  const ::flatbuffers::Vector<double> *POSITIONS_CARTESIAN() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_POSITIONS_CARTESIAN);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_POSITIONS_CARTOGRAPHIC_DEGREES) &&
+           verifier.VerifyVector(POSITIONS_CARTOGRAPHIC_DEGREES()) &&
+           VerifyOffset(verifier, VT_POSITIONS_CARTESIAN) &&
+           verifier.VerifyVector(POSITIONS_CARTESIAN()) &&
+           verifier.EndTable();
+  }
+};
+
+struct CZMPolygonHoleBuilder {
+  typedef CZMPolygonHole Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_POSITIONS_CARTOGRAPHIC_DEGREES(::flatbuffers::Offset<::flatbuffers::Vector<double>> POSITIONS_CARTOGRAPHIC_DEGREES) {
+    fbb_.AddOffset(CZMPolygonHole::VT_POSITIONS_CARTOGRAPHIC_DEGREES, POSITIONS_CARTOGRAPHIC_DEGREES);
+  }
+  void add_POSITIONS_CARTESIAN(::flatbuffers::Offset<::flatbuffers::Vector<double>> POSITIONS_CARTESIAN) {
+    fbb_.AddOffset(CZMPolygonHole::VT_POSITIONS_CARTESIAN, POSITIONS_CARTESIAN);
+  }
+  explicit CZMPolygonHoleBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CZMPolygonHole> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CZMPolygonHole>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CZMPolygonHole> CreateCZMPolygonHole(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> POSITIONS_CARTOGRAPHIC_DEGREES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> POSITIONS_CARTESIAN = 0) {
+  CZMPolygonHoleBuilder builder_(_fbb);
+  builder_.add_POSITIONS_CARTESIAN(POSITIONS_CARTESIAN);
+  builder_.add_POSITIONS_CARTOGRAPHIC_DEGREES(POSITIONS_CARTOGRAPHIC_DEGREES);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<CZMPolygonHole> CreateCZMPolygonHoleDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<double> *POSITIONS_CARTOGRAPHIC_DEGREES = nullptr,
+    const std::vector<double> *POSITIONS_CARTESIAN = nullptr) {
+  auto POSITIONS_CARTOGRAPHIC_DEGREES__ = POSITIONS_CARTOGRAPHIC_DEGREES ? _fbb.CreateVector<double>(*POSITIONS_CARTOGRAPHIC_DEGREES) : 0;
+  auto POSITIONS_CARTESIAN__ = POSITIONS_CARTESIAN ? _fbb.CreateVector<double>(*POSITIONS_CARTESIAN) : 0;
+  return CreateCZMPolygonHole(
+      _fbb,
+      POSITIONS_CARTOGRAPHIC_DEGREES__,
+      POSITIONS_CARTESIAN__);
 }
 
 /// Model properties (glTF)
@@ -1351,7 +3931,14 @@ struct CZMModel FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_MINIMUM_PIXEL_SIZE = 10,
     VT_MAXIMUM_SCALE = 12,
     VT_HEIGHT_REFERENCE = 14,
-    VT_COLOR = 16
+    VT_COLOR = 16,
+    VT_INCREMENTALLY_LOAD_TEXTURES = 18,
+    VT_RUN_ANIMATIONS = 20,
+    VT_SHADOWS = 22,
+    VT_SILHOUETTE_COLOR = 24,
+    VT_SILHOUETTE_SIZE = 26,
+    VT_COLOR_BLEND_MODE = 28,
+    VT_COLOR_BLEND_AMOUNT = 30
   };
   /// Whether the model is displayed
   bool SHOW() const {
@@ -1381,6 +3968,34 @@ struct CZMModel FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const CZMColor *COLOR() const {
     return GetPointer<const CZMColor *>(VT_COLOR);
   }
+  /// Whether to incrementally load textures
+  bool INCREMENTALLY_LOAD_TEXTURES() const {
+    return GetField<uint8_t>(VT_INCREMENTALLY_LOAD_TEXTURES, 0) != 0;
+  }
+  /// Whether to run animations
+  bool RUN_ANIMATIONS() const {
+    return GetField<uint8_t>(VT_RUN_ANIMATIONS, 0) != 0;
+  }
+  /// Shadow mode
+  const ::flatbuffers::String *SHADOWS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SHADOWS);
+  }
+  /// Silhouette color
+  const CZMColor *SILHOUETTE_COLOR() const {
+    return GetPointer<const CZMColor *>(VT_SILHOUETTE_COLOR);
+  }
+  /// Silhouette size in pixels
+  double SILHOUETTE_SIZE() const {
+    return GetField<double>(VT_SILHOUETTE_SIZE, 0.0);
+  }
+  /// Color blend mode
+  const ::flatbuffers::String *COLOR_BLEND_MODE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COLOR_BLEND_MODE);
+  }
+  /// Color blend amount (0-1)
+  double COLOR_BLEND_AMOUNT() const {
+    return GetField<double>(VT_COLOR_BLEND_AMOUNT, 0.0);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
@@ -1392,6 +4007,16 @@ struct CZMModel FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<int8_t>(verifier, VT_HEIGHT_REFERENCE, 1) &&
            VerifyOffset(verifier, VT_COLOR) &&
            verifier.VerifyTable(COLOR()) &&
+           VerifyField<uint8_t>(verifier, VT_INCREMENTALLY_LOAD_TEXTURES, 1) &&
+           VerifyField<uint8_t>(verifier, VT_RUN_ANIMATIONS, 1) &&
+           VerifyOffset(verifier, VT_SHADOWS) &&
+           verifier.VerifyString(SHADOWS()) &&
+           VerifyOffset(verifier, VT_SILHOUETTE_COLOR) &&
+           verifier.VerifyTable(SILHOUETTE_COLOR()) &&
+           VerifyField<double>(verifier, VT_SILHOUETTE_SIZE, 8) &&
+           VerifyOffset(verifier, VT_COLOR_BLEND_MODE) &&
+           verifier.VerifyString(COLOR_BLEND_MODE()) &&
+           VerifyField<double>(verifier, VT_COLOR_BLEND_AMOUNT, 8) &&
            verifier.EndTable();
   }
 };
@@ -1421,6 +4046,27 @@ struct CZMModelBuilder {
   void add_COLOR(::flatbuffers::Offset<CZMColor> COLOR) {
     fbb_.AddOffset(CZMModel::VT_COLOR, COLOR);
   }
+  void add_INCREMENTALLY_LOAD_TEXTURES(bool INCREMENTALLY_LOAD_TEXTURES) {
+    fbb_.AddElement<uint8_t>(CZMModel::VT_INCREMENTALLY_LOAD_TEXTURES, static_cast<uint8_t>(INCREMENTALLY_LOAD_TEXTURES), 0);
+  }
+  void add_RUN_ANIMATIONS(bool RUN_ANIMATIONS) {
+    fbb_.AddElement<uint8_t>(CZMModel::VT_RUN_ANIMATIONS, static_cast<uint8_t>(RUN_ANIMATIONS), 0);
+  }
+  void add_SHADOWS(::flatbuffers::Offset<::flatbuffers::String> SHADOWS) {
+    fbb_.AddOffset(CZMModel::VT_SHADOWS, SHADOWS);
+  }
+  void add_SILHOUETTE_COLOR(::flatbuffers::Offset<CZMColor> SILHOUETTE_COLOR) {
+    fbb_.AddOffset(CZMModel::VT_SILHOUETTE_COLOR, SILHOUETTE_COLOR);
+  }
+  void add_SILHOUETTE_SIZE(double SILHOUETTE_SIZE) {
+    fbb_.AddElement<double>(CZMModel::VT_SILHOUETTE_SIZE, SILHOUETTE_SIZE, 0.0);
+  }
+  void add_COLOR_BLEND_MODE(::flatbuffers::Offset<::flatbuffers::String> COLOR_BLEND_MODE) {
+    fbb_.AddOffset(CZMModel::VT_COLOR_BLEND_MODE, COLOR_BLEND_MODE);
+  }
+  void add_COLOR_BLEND_AMOUNT(double COLOR_BLEND_AMOUNT) {
+    fbb_.AddElement<double>(CZMModel::VT_COLOR_BLEND_AMOUNT, COLOR_BLEND_AMOUNT, 0.0);
+  }
   explicit CZMModelBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1440,13 +4086,27 @@ inline ::flatbuffers::Offset<CZMModel> CreateCZMModel(
     double MINIMUM_PIXEL_SIZE = 0.0,
     double MAXIMUM_SCALE = 0.0,
     CZMHeightReference HEIGHT_REFERENCE = CZMHeightReference_NONE,
-    ::flatbuffers::Offset<CZMColor> COLOR = 0) {
+    ::flatbuffers::Offset<CZMColor> COLOR = 0,
+    bool INCREMENTALLY_LOAD_TEXTURES = false,
+    bool RUN_ANIMATIONS = false,
+    ::flatbuffers::Offset<::flatbuffers::String> SHADOWS = 0,
+    ::flatbuffers::Offset<CZMColor> SILHOUETTE_COLOR = 0,
+    double SILHOUETTE_SIZE = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> COLOR_BLEND_MODE = 0,
+    double COLOR_BLEND_AMOUNT = 0.0) {
   CZMModelBuilder builder_(_fbb);
+  builder_.add_COLOR_BLEND_AMOUNT(COLOR_BLEND_AMOUNT);
+  builder_.add_SILHOUETTE_SIZE(SILHOUETTE_SIZE);
   builder_.add_MAXIMUM_SCALE(MAXIMUM_SCALE);
   builder_.add_MINIMUM_PIXEL_SIZE(MINIMUM_PIXEL_SIZE);
   builder_.add_SCALE(SCALE);
+  builder_.add_COLOR_BLEND_MODE(COLOR_BLEND_MODE);
+  builder_.add_SILHOUETTE_COLOR(SILHOUETTE_COLOR);
+  builder_.add_SHADOWS(SHADOWS);
   builder_.add_COLOR(COLOR);
   builder_.add_GLTF(GLTF);
+  builder_.add_RUN_ANIMATIONS(RUN_ANIMATIONS);
+  builder_.add_INCREMENTALLY_LOAD_TEXTURES(INCREMENTALLY_LOAD_TEXTURES);
   builder_.add_HEIGHT_REFERENCE(HEIGHT_REFERENCE);
   builder_.add_SHOW(SHOW);
   return builder_.Finish();
@@ -1460,8 +4120,17 @@ inline ::flatbuffers::Offset<CZMModel> CreateCZMModelDirect(
     double MINIMUM_PIXEL_SIZE = 0.0,
     double MAXIMUM_SCALE = 0.0,
     CZMHeightReference HEIGHT_REFERENCE = CZMHeightReference_NONE,
-    ::flatbuffers::Offset<CZMColor> COLOR = 0) {
+    ::flatbuffers::Offset<CZMColor> COLOR = 0,
+    bool INCREMENTALLY_LOAD_TEXTURES = false,
+    bool RUN_ANIMATIONS = false,
+    const char *SHADOWS = nullptr,
+    ::flatbuffers::Offset<CZMColor> SILHOUETTE_COLOR = 0,
+    double SILHOUETTE_SIZE = 0.0,
+    const char *COLOR_BLEND_MODE = nullptr,
+    double COLOR_BLEND_AMOUNT = 0.0) {
   auto GLTF__ = GLTF ? _fbb.CreateString(GLTF) : 0;
+  auto SHADOWS__ = SHADOWS ? _fbb.CreateString(SHADOWS) : 0;
+  auto COLOR_BLEND_MODE__ = COLOR_BLEND_MODE ? _fbb.CreateString(COLOR_BLEND_MODE) : 0;
   return CreateCZMModel(
       _fbb,
       SHOW,
@@ -1470,7 +4139,14 @@ inline ::flatbuffers::Offset<CZMModel> CreateCZMModelDirect(
       MINIMUM_PIXEL_SIZE,
       MAXIMUM_SCALE,
       HEIGHT_REFERENCE,
-      COLOR);
+      COLOR,
+      INCREMENTALLY_LOAD_TEXTURES,
+      RUN_ANIMATIONS,
+      SHADOWS__,
+      SILHOUETTE_COLOR,
+      SILHOUETTE_SIZE,
+      COLOR_BLEND_MODE__,
+      COLOR_BLEND_AMOUNT);
 }
 
 /// Path properties (orbit trail)
@@ -1482,7 +4158,8 @@ struct CZMPath FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_TRAIL_TIME = 8,
     VT_WIDTH = 10,
     VT_COLOR = 12,
-    VT_RESOLUTION = 14
+    VT_RESOLUTION = 14,
+    VT_MATERIAL = 16
   };
   /// Whether the path is displayed
   bool SHOW() const {
@@ -1500,13 +4177,17 @@ struct CZMPath FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double WIDTH() const {
     return GetField<double>(VT_WIDTH, 0.0);
   }
-  /// Path color
+  /// Path color (legacy solid color)
   const CZMColor *COLOR() const {
     return GetPointer<const CZMColor *>(VT_COLOR);
   }
   /// Resolution in seconds
   double RESOLUTION() const {
     return GetField<double>(VT_RESOLUTION, 0.0);
+  }
+  /// Full polyline material
+  const CZMPolylineMaterial *MATERIAL() const {
+    return GetPointer<const CZMPolylineMaterial *>(VT_MATERIAL);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1517,6 +4198,8 @@ struct CZMPath FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_COLOR) &&
            verifier.VerifyTable(COLOR()) &&
            VerifyField<double>(verifier, VT_RESOLUTION, 8) &&
+           VerifyOffset(verifier, VT_MATERIAL) &&
+           verifier.VerifyTable(MATERIAL()) &&
            verifier.EndTable();
   }
 };
@@ -1543,6 +4226,9 @@ struct CZMPathBuilder {
   void add_RESOLUTION(double RESOLUTION) {
     fbb_.AddElement<double>(CZMPath::VT_RESOLUTION, RESOLUTION, 0.0);
   }
+  void add_MATERIAL(::flatbuffers::Offset<CZMPolylineMaterial> MATERIAL) {
+    fbb_.AddOffset(CZMPath::VT_MATERIAL, MATERIAL);
+  }
   explicit CZMPathBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1561,12 +4247,14 @@ inline ::flatbuffers::Offset<CZMPath> CreateCZMPath(
     double TRAIL_TIME = 0.0,
     double WIDTH = 0.0,
     ::flatbuffers::Offset<CZMColor> COLOR = 0,
-    double RESOLUTION = 0.0) {
+    double RESOLUTION = 0.0,
+    ::flatbuffers::Offset<CZMPolylineMaterial> MATERIAL = 0) {
   CZMPathBuilder builder_(_fbb);
   builder_.add_RESOLUTION(RESOLUTION);
   builder_.add_WIDTH(WIDTH);
   builder_.add_TRAIL_TIME(TRAIL_TIME);
   builder_.add_LEAD_TIME(LEAD_TIME);
+  builder_.add_MATERIAL(MATERIAL);
   builder_.add_COLOR(COLOR);
   builder_.add_SHOW(SHOW);
   return builder_.Finish();
@@ -1585,7 +4273,17 @@ struct CZMEllipse FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_OUTLINE = 16,
     VT_OUTLINE_COLOR = 18,
     VT_HEIGHT = 20,
-    VT_HEIGHT_REFERENCE = 22
+    VT_HEIGHT_REFERENCE = 22,
+    VT_EXTRUDED_HEIGHT = 24,
+    VT_EXTRUDED_HEIGHT_REFERENCE = 26,
+    VT_ST_ROTATION = 28,
+    VT_GRANULARITY = 30,
+    VT_MATERIAL = 32,
+    VT_OUTLINE_WIDTH = 34,
+    VT_NUMBER_OF_VERTICAL_LINES = 36,
+    VT_SHADOWS = 38,
+    VT_CLASSIFICATION_TYPE = 40,
+    VT_Z_INDEX = 42
   };
   /// Whether the ellipse is displayed
   bool SHOW() const {
@@ -1607,7 +4305,7 @@ struct CZMEllipse FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool FILL() const {
     return GetField<uint8_t>(VT_FILL, 0) != 0;
   }
-  /// Fill color
+  /// Fill color (legacy solid color)
   const CZMColor *COLOR() const {
     return GetPointer<const CZMColor *>(VT_COLOR);
   }
@@ -1627,6 +4325,46 @@ struct CZMEllipse FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   CZMHeightReference HEIGHT_REFERENCE() const {
     return static_cast<CZMHeightReference>(GetField<int8_t>(VT_HEIGHT_REFERENCE, 0));
   }
+  /// Extruded height in meters
+  double EXTRUDED_HEIGHT() const {
+    return GetField<double>(VT_EXTRUDED_HEIGHT, 0.0);
+  }
+  /// Extruded height reference
+  const ::flatbuffers::String *EXTRUDED_HEIGHT_REFERENCE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EXTRUDED_HEIGHT_REFERENCE);
+  }
+  /// Texture rotation in radians
+  double ST_ROTATION() const {
+    return GetField<double>(VT_ST_ROTATION, 0.0);
+  }
+  /// Granularity in radians
+  double GRANULARITY() const {
+    return GetField<double>(VT_GRANULARITY, 0.0);
+  }
+  /// Full surface material
+  const CZMMaterial *MATERIAL() const {
+    return GetPointer<const CZMMaterial *>(VT_MATERIAL);
+  }
+  /// Outline width in pixels
+  double OUTLINE_WIDTH() const {
+    return GetField<double>(VT_OUTLINE_WIDTH, 0.0);
+  }
+  /// Number of vertical lines
+  int32_t NUMBER_OF_VERTICAL_LINES() const {
+    return GetField<int32_t>(VT_NUMBER_OF_VERTICAL_LINES, 0);
+  }
+  /// Shadow mode
+  const ::flatbuffers::String *SHADOWS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SHADOWS);
+  }
+  /// Classification type
+  const ::flatbuffers::String *CLASSIFICATION_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CLASSIFICATION_TYPE);
+  }
+  /// Z-index for ordering
+  int32_t Z_INDEX() const {
+    return GetField<int32_t>(VT_Z_INDEX, 0);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
@@ -1641,6 +4379,20 @@ struct CZMEllipse FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyTable(OUTLINE_COLOR()) &&
            VerifyField<double>(verifier, VT_HEIGHT, 8) &&
            VerifyField<int8_t>(verifier, VT_HEIGHT_REFERENCE, 1) &&
+           VerifyField<double>(verifier, VT_EXTRUDED_HEIGHT, 8) &&
+           VerifyOffset(verifier, VT_EXTRUDED_HEIGHT_REFERENCE) &&
+           verifier.VerifyString(EXTRUDED_HEIGHT_REFERENCE()) &&
+           VerifyField<double>(verifier, VT_ST_ROTATION, 8) &&
+           VerifyField<double>(verifier, VT_GRANULARITY, 8) &&
+           VerifyOffset(verifier, VT_MATERIAL) &&
+           verifier.VerifyTable(MATERIAL()) &&
+           VerifyField<double>(verifier, VT_OUTLINE_WIDTH, 8) &&
+           VerifyField<int32_t>(verifier, VT_NUMBER_OF_VERTICAL_LINES, 4) &&
+           VerifyOffset(verifier, VT_SHADOWS) &&
+           verifier.VerifyString(SHADOWS()) &&
+           VerifyOffset(verifier, VT_CLASSIFICATION_TYPE) &&
+           verifier.VerifyString(CLASSIFICATION_TYPE()) &&
+           VerifyField<int32_t>(verifier, VT_Z_INDEX, 4) &&
            verifier.EndTable();
   }
 };
@@ -1679,6 +4431,36 @@ struct CZMEllipseBuilder {
   void add_HEIGHT_REFERENCE(CZMHeightReference HEIGHT_REFERENCE) {
     fbb_.AddElement<int8_t>(CZMEllipse::VT_HEIGHT_REFERENCE, static_cast<int8_t>(HEIGHT_REFERENCE), 0);
   }
+  void add_EXTRUDED_HEIGHT(double EXTRUDED_HEIGHT) {
+    fbb_.AddElement<double>(CZMEllipse::VT_EXTRUDED_HEIGHT, EXTRUDED_HEIGHT, 0.0);
+  }
+  void add_EXTRUDED_HEIGHT_REFERENCE(::flatbuffers::Offset<::flatbuffers::String> EXTRUDED_HEIGHT_REFERENCE) {
+    fbb_.AddOffset(CZMEllipse::VT_EXTRUDED_HEIGHT_REFERENCE, EXTRUDED_HEIGHT_REFERENCE);
+  }
+  void add_ST_ROTATION(double ST_ROTATION) {
+    fbb_.AddElement<double>(CZMEllipse::VT_ST_ROTATION, ST_ROTATION, 0.0);
+  }
+  void add_GRANULARITY(double GRANULARITY) {
+    fbb_.AddElement<double>(CZMEllipse::VT_GRANULARITY, GRANULARITY, 0.0);
+  }
+  void add_MATERIAL(::flatbuffers::Offset<CZMMaterial> MATERIAL) {
+    fbb_.AddOffset(CZMEllipse::VT_MATERIAL, MATERIAL);
+  }
+  void add_OUTLINE_WIDTH(double OUTLINE_WIDTH) {
+    fbb_.AddElement<double>(CZMEllipse::VT_OUTLINE_WIDTH, OUTLINE_WIDTH, 0.0);
+  }
+  void add_NUMBER_OF_VERTICAL_LINES(int32_t NUMBER_OF_VERTICAL_LINES) {
+    fbb_.AddElement<int32_t>(CZMEllipse::VT_NUMBER_OF_VERTICAL_LINES, NUMBER_OF_VERTICAL_LINES, 0);
+  }
+  void add_SHADOWS(::flatbuffers::Offset<::flatbuffers::String> SHADOWS) {
+    fbb_.AddOffset(CZMEllipse::VT_SHADOWS, SHADOWS);
+  }
+  void add_CLASSIFICATION_TYPE(::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION_TYPE) {
+    fbb_.AddOffset(CZMEllipse::VT_CLASSIFICATION_TYPE, CLASSIFICATION_TYPE);
+  }
+  void add_Z_INDEX(int32_t Z_INDEX) {
+    fbb_.AddElement<int32_t>(CZMEllipse::VT_Z_INDEX, Z_INDEX, 0);
+  }
   explicit CZMEllipseBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1701,12 +4483,32 @@ inline ::flatbuffers::Offset<CZMEllipse> CreateCZMEllipse(
     bool OUTLINE = false,
     ::flatbuffers::Offset<CZMColor> OUTLINE_COLOR = 0,
     double HEIGHT = 0.0,
-    CZMHeightReference HEIGHT_REFERENCE = CZMHeightReference_NONE) {
+    CZMHeightReference HEIGHT_REFERENCE = CZMHeightReference_NONE,
+    double EXTRUDED_HEIGHT = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> EXTRUDED_HEIGHT_REFERENCE = 0,
+    double ST_ROTATION = 0.0,
+    double GRANULARITY = 0.0,
+    ::flatbuffers::Offset<CZMMaterial> MATERIAL = 0,
+    double OUTLINE_WIDTH = 0.0,
+    int32_t NUMBER_OF_VERTICAL_LINES = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SHADOWS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION_TYPE = 0,
+    int32_t Z_INDEX = 0) {
   CZMEllipseBuilder builder_(_fbb);
+  builder_.add_OUTLINE_WIDTH(OUTLINE_WIDTH);
+  builder_.add_GRANULARITY(GRANULARITY);
+  builder_.add_ST_ROTATION(ST_ROTATION);
+  builder_.add_EXTRUDED_HEIGHT(EXTRUDED_HEIGHT);
   builder_.add_HEIGHT(HEIGHT);
   builder_.add_ROTATION(ROTATION);
   builder_.add_SEMI_MINOR_AXIS(SEMI_MINOR_AXIS);
   builder_.add_SEMI_MAJOR_AXIS(SEMI_MAJOR_AXIS);
+  builder_.add_Z_INDEX(Z_INDEX);
+  builder_.add_CLASSIFICATION_TYPE(CLASSIFICATION_TYPE);
+  builder_.add_SHADOWS(SHADOWS);
+  builder_.add_NUMBER_OF_VERTICAL_LINES(NUMBER_OF_VERTICAL_LINES);
+  builder_.add_MATERIAL(MATERIAL);
+  builder_.add_EXTRUDED_HEIGHT_REFERENCE(EXTRUDED_HEIGHT_REFERENCE);
   builder_.add_OUTLINE_COLOR(OUTLINE_COLOR);
   builder_.add_COLOR(COLOR);
   builder_.add_HEIGHT_REFERENCE(HEIGHT_REFERENCE);
@@ -1714,6 +4516,1848 @@ inline ::flatbuffers::Offset<CZMEllipse> CreateCZMEllipse(
   builder_.add_FILL(FILL);
   builder_.add_SHOW(SHOW);
   return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<CZMEllipse> CreateCZMEllipseDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    bool SHOW = false,
+    double SEMI_MAJOR_AXIS = 0.0,
+    double SEMI_MINOR_AXIS = 0.0,
+    double ROTATION = 0.0,
+    bool FILL = false,
+    ::flatbuffers::Offset<CZMColor> COLOR = 0,
+    bool OUTLINE = false,
+    ::flatbuffers::Offset<CZMColor> OUTLINE_COLOR = 0,
+    double HEIGHT = 0.0,
+    CZMHeightReference HEIGHT_REFERENCE = CZMHeightReference_NONE,
+    double EXTRUDED_HEIGHT = 0.0,
+    const char *EXTRUDED_HEIGHT_REFERENCE = nullptr,
+    double ST_ROTATION = 0.0,
+    double GRANULARITY = 0.0,
+    ::flatbuffers::Offset<CZMMaterial> MATERIAL = 0,
+    double OUTLINE_WIDTH = 0.0,
+    int32_t NUMBER_OF_VERTICAL_LINES = 0,
+    const char *SHADOWS = nullptr,
+    const char *CLASSIFICATION_TYPE = nullptr,
+    int32_t Z_INDEX = 0) {
+  auto EXTRUDED_HEIGHT_REFERENCE__ = EXTRUDED_HEIGHT_REFERENCE ? _fbb.CreateString(EXTRUDED_HEIGHT_REFERENCE) : 0;
+  auto SHADOWS__ = SHADOWS ? _fbb.CreateString(SHADOWS) : 0;
+  auto CLASSIFICATION_TYPE__ = CLASSIFICATION_TYPE ? _fbb.CreateString(CLASSIFICATION_TYPE) : 0;
+  return CreateCZMEllipse(
+      _fbb,
+      SHOW,
+      SEMI_MAJOR_AXIS,
+      SEMI_MINOR_AXIS,
+      ROTATION,
+      FILL,
+      COLOR,
+      OUTLINE,
+      OUTLINE_COLOR,
+      HEIGHT,
+      HEIGHT_REFERENCE,
+      EXTRUDED_HEIGHT,
+      EXTRUDED_HEIGHT_REFERENCE__,
+      ST_ROTATION,
+      GRANULARITY,
+      MATERIAL,
+      OUTLINE_WIDTH,
+      NUMBER_OF_VERTICAL_LINES,
+      SHADOWS__,
+      CLASSIFICATION_TYPE__,
+      Z_INDEX);
+}
+
+/// Box (rectangular cuboid)
+struct CZMBox FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CZMBoxBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_SHOW = 4,
+    VT_DIMENSIONS_X = 6,
+    VT_DIMENSIONS_Y = 8,
+    VT_DIMENSIONS_Z = 10,
+    VT_HEIGHT_REFERENCE = 12,
+    VT_FILL = 14,
+    VT_MATERIAL = 16,
+    VT_OUTLINE = 18,
+    VT_OUTLINE_COLOR = 20,
+    VT_OUTLINE_WIDTH = 22,
+    VT_SHADOWS = 24,
+    VT_DISTANCE_DISPLAY_CONDITION_NEAR = 26,
+    VT_DISTANCE_DISPLAY_CONDITION_FAR = 28
+  };
+  /// Whether the box is displayed
+  bool SHOW() const {
+    return GetField<uint8_t>(VT_SHOW, 0) != 0;
+  }
+  /// Width (X) in meters
+  double DIMENSIONS_X() const {
+    return GetField<double>(VT_DIMENSIONS_X, 0.0);
+  }
+  /// Depth (Y) in meters
+  double DIMENSIONS_Y() const {
+    return GetField<double>(VT_DIMENSIONS_Y, 0.0);
+  }
+  /// Height (Z) in meters
+  double DIMENSIONS_Z() const {
+    return GetField<double>(VT_DIMENSIONS_Z, 0.0);
+  }
+  /// Height reference
+  const ::flatbuffers::String *HEIGHT_REFERENCE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_HEIGHT_REFERENCE);
+  }
+  /// Fill flag
+  bool FILL() const {
+    return GetField<uint8_t>(VT_FILL, 0) != 0;
+  }
+  /// Surface material
+  const CZMMaterial *MATERIAL() const {
+    return GetPointer<const CZMMaterial *>(VT_MATERIAL);
+  }
+  /// Outline flag
+  bool OUTLINE() const {
+    return GetField<uint8_t>(VT_OUTLINE, 0) != 0;
+  }
+  /// Outline color
+  const CZMColor *OUTLINE_COLOR() const {
+    return GetPointer<const CZMColor *>(VT_OUTLINE_COLOR);
+  }
+  /// Outline width
+  double OUTLINE_WIDTH() const {
+    return GetField<double>(VT_OUTLINE_WIDTH, 0.0);
+  }
+  /// Shadow mode
+  const ::flatbuffers::String *SHADOWS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SHADOWS);
+  }
+  /// Distance display condition near
+  double DISTANCE_DISPLAY_CONDITION_NEAR() const {
+    return GetField<double>(VT_DISTANCE_DISPLAY_CONDITION_NEAR, 0.0);
+  }
+  /// Distance display condition far
+  double DISTANCE_DISPLAY_CONDITION_FAR() const {
+    return GetField<double>(VT_DISTANCE_DISPLAY_CONDITION_FAR, 0.0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
+           VerifyField<double>(verifier, VT_DIMENSIONS_X, 8) &&
+           VerifyField<double>(verifier, VT_DIMENSIONS_Y, 8) &&
+           VerifyField<double>(verifier, VT_DIMENSIONS_Z, 8) &&
+           VerifyOffset(verifier, VT_HEIGHT_REFERENCE) &&
+           verifier.VerifyString(HEIGHT_REFERENCE()) &&
+           VerifyField<uint8_t>(verifier, VT_FILL, 1) &&
+           VerifyOffset(verifier, VT_MATERIAL) &&
+           verifier.VerifyTable(MATERIAL()) &&
+           VerifyField<uint8_t>(verifier, VT_OUTLINE, 1) &&
+           VerifyOffset(verifier, VT_OUTLINE_COLOR) &&
+           verifier.VerifyTable(OUTLINE_COLOR()) &&
+           VerifyField<double>(verifier, VT_OUTLINE_WIDTH, 8) &&
+           VerifyOffset(verifier, VT_SHADOWS) &&
+           verifier.VerifyString(SHADOWS()) &&
+           VerifyField<double>(verifier, VT_DISTANCE_DISPLAY_CONDITION_NEAR, 8) &&
+           VerifyField<double>(verifier, VT_DISTANCE_DISPLAY_CONDITION_FAR, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct CZMBoxBuilder {
+  typedef CZMBox Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_SHOW(bool SHOW) {
+    fbb_.AddElement<uint8_t>(CZMBox::VT_SHOW, static_cast<uint8_t>(SHOW), 0);
+  }
+  void add_DIMENSIONS_X(double DIMENSIONS_X) {
+    fbb_.AddElement<double>(CZMBox::VT_DIMENSIONS_X, DIMENSIONS_X, 0.0);
+  }
+  void add_DIMENSIONS_Y(double DIMENSIONS_Y) {
+    fbb_.AddElement<double>(CZMBox::VT_DIMENSIONS_Y, DIMENSIONS_Y, 0.0);
+  }
+  void add_DIMENSIONS_Z(double DIMENSIONS_Z) {
+    fbb_.AddElement<double>(CZMBox::VT_DIMENSIONS_Z, DIMENSIONS_Z, 0.0);
+  }
+  void add_HEIGHT_REFERENCE(::flatbuffers::Offset<::flatbuffers::String> HEIGHT_REFERENCE) {
+    fbb_.AddOffset(CZMBox::VT_HEIGHT_REFERENCE, HEIGHT_REFERENCE);
+  }
+  void add_FILL(bool FILL) {
+    fbb_.AddElement<uint8_t>(CZMBox::VT_FILL, static_cast<uint8_t>(FILL), 0);
+  }
+  void add_MATERIAL(::flatbuffers::Offset<CZMMaterial> MATERIAL) {
+    fbb_.AddOffset(CZMBox::VT_MATERIAL, MATERIAL);
+  }
+  void add_OUTLINE(bool OUTLINE) {
+    fbb_.AddElement<uint8_t>(CZMBox::VT_OUTLINE, static_cast<uint8_t>(OUTLINE), 0);
+  }
+  void add_OUTLINE_COLOR(::flatbuffers::Offset<CZMColor> OUTLINE_COLOR) {
+    fbb_.AddOffset(CZMBox::VT_OUTLINE_COLOR, OUTLINE_COLOR);
+  }
+  void add_OUTLINE_WIDTH(double OUTLINE_WIDTH) {
+    fbb_.AddElement<double>(CZMBox::VT_OUTLINE_WIDTH, OUTLINE_WIDTH, 0.0);
+  }
+  void add_SHADOWS(::flatbuffers::Offset<::flatbuffers::String> SHADOWS) {
+    fbb_.AddOffset(CZMBox::VT_SHADOWS, SHADOWS);
+  }
+  void add_DISTANCE_DISPLAY_CONDITION_NEAR(double DISTANCE_DISPLAY_CONDITION_NEAR) {
+    fbb_.AddElement<double>(CZMBox::VT_DISTANCE_DISPLAY_CONDITION_NEAR, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0);
+  }
+  void add_DISTANCE_DISPLAY_CONDITION_FAR(double DISTANCE_DISPLAY_CONDITION_FAR) {
+    fbb_.AddElement<double>(CZMBox::VT_DISTANCE_DISPLAY_CONDITION_FAR, DISTANCE_DISPLAY_CONDITION_FAR, 0.0);
+  }
+  explicit CZMBoxBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CZMBox> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CZMBox>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CZMBox> CreateCZMBox(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    bool SHOW = false,
+    double DIMENSIONS_X = 0.0,
+    double DIMENSIONS_Y = 0.0,
+    double DIMENSIONS_Z = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> HEIGHT_REFERENCE = 0,
+    bool FILL = false,
+    ::flatbuffers::Offset<CZMMaterial> MATERIAL = 0,
+    bool OUTLINE = false,
+    ::flatbuffers::Offset<CZMColor> OUTLINE_COLOR = 0,
+    double OUTLINE_WIDTH = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> SHADOWS = 0,
+    double DISTANCE_DISPLAY_CONDITION_NEAR = 0.0,
+    double DISTANCE_DISPLAY_CONDITION_FAR = 0.0) {
+  CZMBoxBuilder builder_(_fbb);
+  builder_.add_DISTANCE_DISPLAY_CONDITION_FAR(DISTANCE_DISPLAY_CONDITION_FAR);
+  builder_.add_DISTANCE_DISPLAY_CONDITION_NEAR(DISTANCE_DISPLAY_CONDITION_NEAR);
+  builder_.add_OUTLINE_WIDTH(OUTLINE_WIDTH);
+  builder_.add_DIMENSIONS_Z(DIMENSIONS_Z);
+  builder_.add_DIMENSIONS_Y(DIMENSIONS_Y);
+  builder_.add_DIMENSIONS_X(DIMENSIONS_X);
+  builder_.add_SHADOWS(SHADOWS);
+  builder_.add_OUTLINE_COLOR(OUTLINE_COLOR);
+  builder_.add_MATERIAL(MATERIAL);
+  builder_.add_HEIGHT_REFERENCE(HEIGHT_REFERENCE);
+  builder_.add_OUTLINE(OUTLINE);
+  builder_.add_FILL(FILL);
+  builder_.add_SHOW(SHOW);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<CZMBox> CreateCZMBoxDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    bool SHOW = false,
+    double DIMENSIONS_X = 0.0,
+    double DIMENSIONS_Y = 0.0,
+    double DIMENSIONS_Z = 0.0,
+    const char *HEIGHT_REFERENCE = nullptr,
+    bool FILL = false,
+    ::flatbuffers::Offset<CZMMaterial> MATERIAL = 0,
+    bool OUTLINE = false,
+    ::flatbuffers::Offset<CZMColor> OUTLINE_COLOR = 0,
+    double OUTLINE_WIDTH = 0.0,
+    const char *SHADOWS = nullptr,
+    double DISTANCE_DISPLAY_CONDITION_NEAR = 0.0,
+    double DISTANCE_DISPLAY_CONDITION_FAR = 0.0) {
+  auto HEIGHT_REFERENCE__ = HEIGHT_REFERENCE ? _fbb.CreateString(HEIGHT_REFERENCE) : 0;
+  auto SHADOWS__ = SHADOWS ? _fbb.CreateString(SHADOWS) : 0;
+  return CreateCZMBox(
+      _fbb,
+      SHOW,
+      DIMENSIONS_X,
+      DIMENSIONS_Y,
+      DIMENSIONS_Z,
+      HEIGHT_REFERENCE__,
+      FILL,
+      MATERIAL,
+      OUTLINE,
+      OUTLINE_COLOR,
+      OUTLINE_WIDTH,
+      SHADOWS__,
+      DISTANCE_DISPLAY_CONDITION_NEAR,
+      DISTANCE_DISPLAY_CONDITION_FAR);
+}
+
+/// Corridor (centerline + width shape)
+struct CZMCorridor FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CZMCorridorBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_SHOW = 4,
+    VT_POSITIONS_CARTOGRAPHIC_DEGREES = 6,
+    VT_POSITIONS_CARTESIAN = 8,
+    VT_WIDTH = 10,
+    VT_HEIGHT = 12,
+    VT_HEIGHT_REFERENCE = 14,
+    VT_EXTRUDED_HEIGHT = 16,
+    VT_EXTRUDED_HEIGHT_REFERENCE = 18,
+    VT_CORNER_TYPE = 20,
+    VT_GRANULARITY = 22,
+    VT_FILL = 24,
+    VT_MATERIAL = 26,
+    VT_OUTLINE = 28,
+    VT_OUTLINE_COLOR = 30,
+    VT_OUTLINE_WIDTH = 32,
+    VT_SHADOWS = 34,
+    VT_CLASSIFICATION_TYPE = 36,
+    VT_Z_INDEX = 38
+  };
+  /// Whether the corridor is displayed
+  bool SHOW() const {
+    return GetField<uint8_t>(VT_SHOW, 0) != 0;
+  }
+  /// Positions as cartographic degrees
+  const ::flatbuffers::Vector<double> *POSITIONS_CARTOGRAPHIC_DEGREES() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_POSITIONS_CARTOGRAPHIC_DEGREES);
+  }
+  /// Positions as Cartesian
+  const ::flatbuffers::Vector<double> *POSITIONS_CARTESIAN() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_POSITIONS_CARTESIAN);
+  }
+  /// Width in meters
+  double WIDTH() const {
+    return GetField<double>(VT_WIDTH, 0.0);
+  }
+  /// Height in meters
+  double HEIGHT() const {
+    return GetField<double>(VT_HEIGHT, 0.0);
+  }
+  /// Height reference
+  const ::flatbuffers::String *HEIGHT_REFERENCE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_HEIGHT_REFERENCE);
+  }
+  /// Extruded height
+  double EXTRUDED_HEIGHT() const {
+    return GetField<double>(VT_EXTRUDED_HEIGHT, 0.0);
+  }
+  /// Extruded height reference
+  const ::flatbuffers::String *EXTRUDED_HEIGHT_REFERENCE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EXTRUDED_HEIGHT_REFERENCE);
+  }
+  /// Corner type
+  const ::flatbuffers::String *CORNER_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CORNER_TYPE);
+  }
+  /// Granularity in radians
+  double GRANULARITY() const {
+    return GetField<double>(VT_GRANULARITY, 0.0);
+  }
+  /// Fill flag
+  bool FILL() const {
+    return GetField<uint8_t>(VT_FILL, 0) != 0;
+  }
+  /// Surface material
+  const CZMMaterial *MATERIAL() const {
+    return GetPointer<const CZMMaterial *>(VT_MATERIAL);
+  }
+  /// Outline flag
+  bool OUTLINE() const {
+    return GetField<uint8_t>(VT_OUTLINE, 0) != 0;
+  }
+  /// Outline color
+  const CZMColor *OUTLINE_COLOR() const {
+    return GetPointer<const CZMColor *>(VT_OUTLINE_COLOR);
+  }
+  /// Outline width
+  double OUTLINE_WIDTH() const {
+    return GetField<double>(VT_OUTLINE_WIDTH, 0.0);
+  }
+  /// Shadow mode
+  const ::flatbuffers::String *SHADOWS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SHADOWS);
+  }
+  /// Classification type
+  const ::flatbuffers::String *CLASSIFICATION_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CLASSIFICATION_TYPE);
+  }
+  /// Z-index for ordering
+  int32_t Z_INDEX() const {
+    return GetField<int32_t>(VT_Z_INDEX, 0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
+           VerifyOffset(verifier, VT_POSITIONS_CARTOGRAPHIC_DEGREES) &&
+           verifier.VerifyVector(POSITIONS_CARTOGRAPHIC_DEGREES()) &&
+           VerifyOffset(verifier, VT_POSITIONS_CARTESIAN) &&
+           verifier.VerifyVector(POSITIONS_CARTESIAN()) &&
+           VerifyField<double>(verifier, VT_WIDTH, 8) &&
+           VerifyField<double>(verifier, VT_HEIGHT, 8) &&
+           VerifyOffset(verifier, VT_HEIGHT_REFERENCE) &&
+           verifier.VerifyString(HEIGHT_REFERENCE()) &&
+           VerifyField<double>(verifier, VT_EXTRUDED_HEIGHT, 8) &&
+           VerifyOffset(verifier, VT_EXTRUDED_HEIGHT_REFERENCE) &&
+           verifier.VerifyString(EXTRUDED_HEIGHT_REFERENCE()) &&
+           VerifyOffset(verifier, VT_CORNER_TYPE) &&
+           verifier.VerifyString(CORNER_TYPE()) &&
+           VerifyField<double>(verifier, VT_GRANULARITY, 8) &&
+           VerifyField<uint8_t>(verifier, VT_FILL, 1) &&
+           VerifyOffset(verifier, VT_MATERIAL) &&
+           verifier.VerifyTable(MATERIAL()) &&
+           VerifyField<uint8_t>(verifier, VT_OUTLINE, 1) &&
+           VerifyOffset(verifier, VT_OUTLINE_COLOR) &&
+           verifier.VerifyTable(OUTLINE_COLOR()) &&
+           VerifyField<double>(verifier, VT_OUTLINE_WIDTH, 8) &&
+           VerifyOffset(verifier, VT_SHADOWS) &&
+           verifier.VerifyString(SHADOWS()) &&
+           VerifyOffset(verifier, VT_CLASSIFICATION_TYPE) &&
+           verifier.VerifyString(CLASSIFICATION_TYPE()) &&
+           VerifyField<int32_t>(verifier, VT_Z_INDEX, 4) &&
+           verifier.EndTable();
+  }
+};
+
+struct CZMCorridorBuilder {
+  typedef CZMCorridor Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_SHOW(bool SHOW) {
+    fbb_.AddElement<uint8_t>(CZMCorridor::VT_SHOW, static_cast<uint8_t>(SHOW), 0);
+  }
+  void add_POSITIONS_CARTOGRAPHIC_DEGREES(::flatbuffers::Offset<::flatbuffers::Vector<double>> POSITIONS_CARTOGRAPHIC_DEGREES) {
+    fbb_.AddOffset(CZMCorridor::VT_POSITIONS_CARTOGRAPHIC_DEGREES, POSITIONS_CARTOGRAPHIC_DEGREES);
+  }
+  void add_POSITIONS_CARTESIAN(::flatbuffers::Offset<::flatbuffers::Vector<double>> POSITIONS_CARTESIAN) {
+    fbb_.AddOffset(CZMCorridor::VT_POSITIONS_CARTESIAN, POSITIONS_CARTESIAN);
+  }
+  void add_WIDTH(double WIDTH) {
+    fbb_.AddElement<double>(CZMCorridor::VT_WIDTH, WIDTH, 0.0);
+  }
+  void add_HEIGHT(double HEIGHT) {
+    fbb_.AddElement<double>(CZMCorridor::VT_HEIGHT, HEIGHT, 0.0);
+  }
+  void add_HEIGHT_REFERENCE(::flatbuffers::Offset<::flatbuffers::String> HEIGHT_REFERENCE) {
+    fbb_.AddOffset(CZMCorridor::VT_HEIGHT_REFERENCE, HEIGHT_REFERENCE);
+  }
+  void add_EXTRUDED_HEIGHT(double EXTRUDED_HEIGHT) {
+    fbb_.AddElement<double>(CZMCorridor::VT_EXTRUDED_HEIGHT, EXTRUDED_HEIGHT, 0.0);
+  }
+  void add_EXTRUDED_HEIGHT_REFERENCE(::flatbuffers::Offset<::flatbuffers::String> EXTRUDED_HEIGHT_REFERENCE) {
+    fbb_.AddOffset(CZMCorridor::VT_EXTRUDED_HEIGHT_REFERENCE, EXTRUDED_HEIGHT_REFERENCE);
+  }
+  void add_CORNER_TYPE(::flatbuffers::Offset<::flatbuffers::String> CORNER_TYPE) {
+    fbb_.AddOffset(CZMCorridor::VT_CORNER_TYPE, CORNER_TYPE);
+  }
+  void add_GRANULARITY(double GRANULARITY) {
+    fbb_.AddElement<double>(CZMCorridor::VT_GRANULARITY, GRANULARITY, 0.0);
+  }
+  void add_FILL(bool FILL) {
+    fbb_.AddElement<uint8_t>(CZMCorridor::VT_FILL, static_cast<uint8_t>(FILL), 0);
+  }
+  void add_MATERIAL(::flatbuffers::Offset<CZMMaterial> MATERIAL) {
+    fbb_.AddOffset(CZMCorridor::VT_MATERIAL, MATERIAL);
+  }
+  void add_OUTLINE(bool OUTLINE) {
+    fbb_.AddElement<uint8_t>(CZMCorridor::VT_OUTLINE, static_cast<uint8_t>(OUTLINE), 0);
+  }
+  void add_OUTLINE_COLOR(::flatbuffers::Offset<CZMColor> OUTLINE_COLOR) {
+    fbb_.AddOffset(CZMCorridor::VT_OUTLINE_COLOR, OUTLINE_COLOR);
+  }
+  void add_OUTLINE_WIDTH(double OUTLINE_WIDTH) {
+    fbb_.AddElement<double>(CZMCorridor::VT_OUTLINE_WIDTH, OUTLINE_WIDTH, 0.0);
+  }
+  void add_SHADOWS(::flatbuffers::Offset<::flatbuffers::String> SHADOWS) {
+    fbb_.AddOffset(CZMCorridor::VT_SHADOWS, SHADOWS);
+  }
+  void add_CLASSIFICATION_TYPE(::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION_TYPE) {
+    fbb_.AddOffset(CZMCorridor::VT_CLASSIFICATION_TYPE, CLASSIFICATION_TYPE);
+  }
+  void add_Z_INDEX(int32_t Z_INDEX) {
+    fbb_.AddElement<int32_t>(CZMCorridor::VT_Z_INDEX, Z_INDEX, 0);
+  }
+  explicit CZMCorridorBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CZMCorridor> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CZMCorridor>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CZMCorridor> CreateCZMCorridor(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    bool SHOW = false,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> POSITIONS_CARTOGRAPHIC_DEGREES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> POSITIONS_CARTESIAN = 0,
+    double WIDTH = 0.0,
+    double HEIGHT = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> HEIGHT_REFERENCE = 0,
+    double EXTRUDED_HEIGHT = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> EXTRUDED_HEIGHT_REFERENCE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CORNER_TYPE = 0,
+    double GRANULARITY = 0.0,
+    bool FILL = false,
+    ::flatbuffers::Offset<CZMMaterial> MATERIAL = 0,
+    bool OUTLINE = false,
+    ::flatbuffers::Offset<CZMColor> OUTLINE_COLOR = 0,
+    double OUTLINE_WIDTH = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> SHADOWS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION_TYPE = 0,
+    int32_t Z_INDEX = 0) {
+  CZMCorridorBuilder builder_(_fbb);
+  builder_.add_OUTLINE_WIDTH(OUTLINE_WIDTH);
+  builder_.add_GRANULARITY(GRANULARITY);
+  builder_.add_EXTRUDED_HEIGHT(EXTRUDED_HEIGHT);
+  builder_.add_HEIGHT(HEIGHT);
+  builder_.add_WIDTH(WIDTH);
+  builder_.add_Z_INDEX(Z_INDEX);
+  builder_.add_CLASSIFICATION_TYPE(CLASSIFICATION_TYPE);
+  builder_.add_SHADOWS(SHADOWS);
+  builder_.add_OUTLINE_COLOR(OUTLINE_COLOR);
+  builder_.add_MATERIAL(MATERIAL);
+  builder_.add_CORNER_TYPE(CORNER_TYPE);
+  builder_.add_EXTRUDED_HEIGHT_REFERENCE(EXTRUDED_HEIGHT_REFERENCE);
+  builder_.add_HEIGHT_REFERENCE(HEIGHT_REFERENCE);
+  builder_.add_POSITIONS_CARTESIAN(POSITIONS_CARTESIAN);
+  builder_.add_POSITIONS_CARTOGRAPHIC_DEGREES(POSITIONS_CARTOGRAPHIC_DEGREES);
+  builder_.add_OUTLINE(OUTLINE);
+  builder_.add_FILL(FILL);
+  builder_.add_SHOW(SHOW);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<CZMCorridor> CreateCZMCorridorDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    bool SHOW = false,
+    const std::vector<double> *POSITIONS_CARTOGRAPHIC_DEGREES = nullptr,
+    const std::vector<double> *POSITIONS_CARTESIAN = nullptr,
+    double WIDTH = 0.0,
+    double HEIGHT = 0.0,
+    const char *HEIGHT_REFERENCE = nullptr,
+    double EXTRUDED_HEIGHT = 0.0,
+    const char *EXTRUDED_HEIGHT_REFERENCE = nullptr,
+    const char *CORNER_TYPE = nullptr,
+    double GRANULARITY = 0.0,
+    bool FILL = false,
+    ::flatbuffers::Offset<CZMMaterial> MATERIAL = 0,
+    bool OUTLINE = false,
+    ::flatbuffers::Offset<CZMColor> OUTLINE_COLOR = 0,
+    double OUTLINE_WIDTH = 0.0,
+    const char *SHADOWS = nullptr,
+    const char *CLASSIFICATION_TYPE = nullptr,
+    int32_t Z_INDEX = 0) {
+  auto POSITIONS_CARTOGRAPHIC_DEGREES__ = POSITIONS_CARTOGRAPHIC_DEGREES ? _fbb.CreateVector<double>(*POSITIONS_CARTOGRAPHIC_DEGREES) : 0;
+  auto POSITIONS_CARTESIAN__ = POSITIONS_CARTESIAN ? _fbb.CreateVector<double>(*POSITIONS_CARTESIAN) : 0;
+  auto HEIGHT_REFERENCE__ = HEIGHT_REFERENCE ? _fbb.CreateString(HEIGHT_REFERENCE) : 0;
+  auto EXTRUDED_HEIGHT_REFERENCE__ = EXTRUDED_HEIGHT_REFERENCE ? _fbb.CreateString(EXTRUDED_HEIGHT_REFERENCE) : 0;
+  auto CORNER_TYPE__ = CORNER_TYPE ? _fbb.CreateString(CORNER_TYPE) : 0;
+  auto SHADOWS__ = SHADOWS ? _fbb.CreateString(SHADOWS) : 0;
+  auto CLASSIFICATION_TYPE__ = CLASSIFICATION_TYPE ? _fbb.CreateString(CLASSIFICATION_TYPE) : 0;
+  return CreateCZMCorridor(
+      _fbb,
+      SHOW,
+      POSITIONS_CARTOGRAPHIC_DEGREES__,
+      POSITIONS_CARTESIAN__,
+      WIDTH,
+      HEIGHT,
+      HEIGHT_REFERENCE__,
+      EXTRUDED_HEIGHT,
+      EXTRUDED_HEIGHT_REFERENCE__,
+      CORNER_TYPE__,
+      GRANULARITY,
+      FILL,
+      MATERIAL,
+      OUTLINE,
+      OUTLINE_COLOR,
+      OUTLINE_WIDTH,
+      SHADOWS__,
+      CLASSIFICATION_TYPE__,
+      Z_INDEX);
+}
+
+/// Cylinder or cone
+struct CZMCylinder FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CZMCylinderBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_SHOW = 4,
+    VT_LENGTH = 6,
+    VT_TOP_RADIUS = 8,
+    VT_BOTTOM_RADIUS = 10,
+    VT_HEIGHT_REFERENCE = 12,
+    VT_FILL = 14,
+    VT_MATERIAL = 16,
+    VT_OUTLINE = 18,
+    VT_OUTLINE_COLOR = 20,
+    VT_OUTLINE_WIDTH = 22,
+    VT_NUMBER_OF_VERTICAL_LINES = 24,
+    VT_SLICES = 26,
+    VT_SHADOWS = 28
+  };
+  /// Whether the cylinder is displayed
+  bool SHOW() const {
+    return GetField<uint8_t>(VT_SHOW, 0) != 0;
+  }
+  /// Length in meters
+  double LENGTH() const {
+    return GetField<double>(VT_LENGTH, 0.0);
+  }
+  /// Top radius in meters
+  double TOP_RADIUS() const {
+    return GetField<double>(VT_TOP_RADIUS, 0.0);
+  }
+  /// Bottom radius in meters
+  double BOTTOM_RADIUS() const {
+    return GetField<double>(VT_BOTTOM_RADIUS, 0.0);
+  }
+  /// Height reference
+  const ::flatbuffers::String *HEIGHT_REFERENCE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_HEIGHT_REFERENCE);
+  }
+  /// Fill flag
+  bool FILL() const {
+    return GetField<uint8_t>(VT_FILL, 0) != 0;
+  }
+  /// Surface material
+  const CZMMaterial *MATERIAL() const {
+    return GetPointer<const CZMMaterial *>(VT_MATERIAL);
+  }
+  /// Outline flag
+  bool OUTLINE() const {
+    return GetField<uint8_t>(VT_OUTLINE, 0) != 0;
+  }
+  /// Outline color
+  const CZMColor *OUTLINE_COLOR() const {
+    return GetPointer<const CZMColor *>(VT_OUTLINE_COLOR);
+  }
+  /// Outline width
+  double OUTLINE_WIDTH() const {
+    return GetField<double>(VT_OUTLINE_WIDTH, 0.0);
+  }
+  /// Number of vertical lines
+  int32_t NUMBER_OF_VERTICAL_LINES() const {
+    return GetField<int32_t>(VT_NUMBER_OF_VERTICAL_LINES, 0);
+  }
+  /// Number of slices
+  int32_t SLICES() const {
+    return GetField<int32_t>(VT_SLICES, 0);
+  }
+  /// Shadow mode
+  const ::flatbuffers::String *SHADOWS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SHADOWS);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
+           VerifyField<double>(verifier, VT_LENGTH, 8) &&
+           VerifyField<double>(verifier, VT_TOP_RADIUS, 8) &&
+           VerifyField<double>(verifier, VT_BOTTOM_RADIUS, 8) &&
+           VerifyOffset(verifier, VT_HEIGHT_REFERENCE) &&
+           verifier.VerifyString(HEIGHT_REFERENCE()) &&
+           VerifyField<uint8_t>(verifier, VT_FILL, 1) &&
+           VerifyOffset(verifier, VT_MATERIAL) &&
+           verifier.VerifyTable(MATERIAL()) &&
+           VerifyField<uint8_t>(verifier, VT_OUTLINE, 1) &&
+           VerifyOffset(verifier, VT_OUTLINE_COLOR) &&
+           verifier.VerifyTable(OUTLINE_COLOR()) &&
+           VerifyField<double>(verifier, VT_OUTLINE_WIDTH, 8) &&
+           VerifyField<int32_t>(verifier, VT_NUMBER_OF_VERTICAL_LINES, 4) &&
+           VerifyField<int32_t>(verifier, VT_SLICES, 4) &&
+           VerifyOffset(verifier, VT_SHADOWS) &&
+           verifier.VerifyString(SHADOWS()) &&
+           verifier.EndTable();
+  }
+};
+
+struct CZMCylinderBuilder {
+  typedef CZMCylinder Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_SHOW(bool SHOW) {
+    fbb_.AddElement<uint8_t>(CZMCylinder::VT_SHOW, static_cast<uint8_t>(SHOW), 0);
+  }
+  void add_LENGTH(double LENGTH) {
+    fbb_.AddElement<double>(CZMCylinder::VT_LENGTH, LENGTH, 0.0);
+  }
+  void add_TOP_RADIUS(double TOP_RADIUS) {
+    fbb_.AddElement<double>(CZMCylinder::VT_TOP_RADIUS, TOP_RADIUS, 0.0);
+  }
+  void add_BOTTOM_RADIUS(double BOTTOM_RADIUS) {
+    fbb_.AddElement<double>(CZMCylinder::VT_BOTTOM_RADIUS, BOTTOM_RADIUS, 0.0);
+  }
+  void add_HEIGHT_REFERENCE(::flatbuffers::Offset<::flatbuffers::String> HEIGHT_REFERENCE) {
+    fbb_.AddOffset(CZMCylinder::VT_HEIGHT_REFERENCE, HEIGHT_REFERENCE);
+  }
+  void add_FILL(bool FILL) {
+    fbb_.AddElement<uint8_t>(CZMCylinder::VT_FILL, static_cast<uint8_t>(FILL), 0);
+  }
+  void add_MATERIAL(::flatbuffers::Offset<CZMMaterial> MATERIAL) {
+    fbb_.AddOffset(CZMCylinder::VT_MATERIAL, MATERIAL);
+  }
+  void add_OUTLINE(bool OUTLINE) {
+    fbb_.AddElement<uint8_t>(CZMCylinder::VT_OUTLINE, static_cast<uint8_t>(OUTLINE), 0);
+  }
+  void add_OUTLINE_COLOR(::flatbuffers::Offset<CZMColor> OUTLINE_COLOR) {
+    fbb_.AddOffset(CZMCylinder::VT_OUTLINE_COLOR, OUTLINE_COLOR);
+  }
+  void add_OUTLINE_WIDTH(double OUTLINE_WIDTH) {
+    fbb_.AddElement<double>(CZMCylinder::VT_OUTLINE_WIDTH, OUTLINE_WIDTH, 0.0);
+  }
+  void add_NUMBER_OF_VERTICAL_LINES(int32_t NUMBER_OF_VERTICAL_LINES) {
+    fbb_.AddElement<int32_t>(CZMCylinder::VT_NUMBER_OF_VERTICAL_LINES, NUMBER_OF_VERTICAL_LINES, 0);
+  }
+  void add_SLICES(int32_t SLICES) {
+    fbb_.AddElement<int32_t>(CZMCylinder::VT_SLICES, SLICES, 0);
+  }
+  void add_SHADOWS(::flatbuffers::Offset<::flatbuffers::String> SHADOWS) {
+    fbb_.AddOffset(CZMCylinder::VT_SHADOWS, SHADOWS);
+  }
+  explicit CZMCylinderBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CZMCylinder> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CZMCylinder>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CZMCylinder> CreateCZMCylinder(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    bool SHOW = false,
+    double LENGTH = 0.0,
+    double TOP_RADIUS = 0.0,
+    double BOTTOM_RADIUS = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> HEIGHT_REFERENCE = 0,
+    bool FILL = false,
+    ::flatbuffers::Offset<CZMMaterial> MATERIAL = 0,
+    bool OUTLINE = false,
+    ::flatbuffers::Offset<CZMColor> OUTLINE_COLOR = 0,
+    double OUTLINE_WIDTH = 0.0,
+    int32_t NUMBER_OF_VERTICAL_LINES = 0,
+    int32_t SLICES = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SHADOWS = 0) {
+  CZMCylinderBuilder builder_(_fbb);
+  builder_.add_OUTLINE_WIDTH(OUTLINE_WIDTH);
+  builder_.add_BOTTOM_RADIUS(BOTTOM_RADIUS);
+  builder_.add_TOP_RADIUS(TOP_RADIUS);
+  builder_.add_LENGTH(LENGTH);
+  builder_.add_SHADOWS(SHADOWS);
+  builder_.add_SLICES(SLICES);
+  builder_.add_NUMBER_OF_VERTICAL_LINES(NUMBER_OF_VERTICAL_LINES);
+  builder_.add_OUTLINE_COLOR(OUTLINE_COLOR);
+  builder_.add_MATERIAL(MATERIAL);
+  builder_.add_HEIGHT_REFERENCE(HEIGHT_REFERENCE);
+  builder_.add_OUTLINE(OUTLINE);
+  builder_.add_FILL(FILL);
+  builder_.add_SHOW(SHOW);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<CZMCylinder> CreateCZMCylinderDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    bool SHOW = false,
+    double LENGTH = 0.0,
+    double TOP_RADIUS = 0.0,
+    double BOTTOM_RADIUS = 0.0,
+    const char *HEIGHT_REFERENCE = nullptr,
+    bool FILL = false,
+    ::flatbuffers::Offset<CZMMaterial> MATERIAL = 0,
+    bool OUTLINE = false,
+    ::flatbuffers::Offset<CZMColor> OUTLINE_COLOR = 0,
+    double OUTLINE_WIDTH = 0.0,
+    int32_t NUMBER_OF_VERTICAL_LINES = 0,
+    int32_t SLICES = 0,
+    const char *SHADOWS = nullptr) {
+  auto HEIGHT_REFERENCE__ = HEIGHT_REFERENCE ? _fbb.CreateString(HEIGHT_REFERENCE) : 0;
+  auto SHADOWS__ = SHADOWS ? _fbb.CreateString(SHADOWS) : 0;
+  return CreateCZMCylinder(
+      _fbb,
+      SHOW,
+      LENGTH,
+      TOP_RADIUS,
+      BOTTOM_RADIUS,
+      HEIGHT_REFERENCE__,
+      FILL,
+      MATERIAL,
+      OUTLINE,
+      OUTLINE_COLOR,
+      OUTLINE_WIDTH,
+      NUMBER_OF_VERTICAL_LINES,
+      SLICES,
+      SHADOWS__);
+}
+
+/// Ellipsoid (3D shape)
+struct CZMEllipsoid FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CZMEllipsoidBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_SHOW = 4,
+    VT_RADII_X = 6,
+    VT_RADII_Y = 8,
+    VT_RADII_Z = 10,
+    VT_INNER_RADII_X = 12,
+    VT_INNER_RADII_Y = 14,
+    VT_INNER_RADII_Z = 16,
+    VT_MINIMUM_CLOCK = 18,
+    VT_MAXIMUM_CLOCK = 20,
+    VT_MINIMUM_CONE = 22,
+    VT_MAXIMUM_CONE = 24,
+    VT_HEIGHT_REFERENCE = 26,
+    VT_FILL = 28,
+    VT_MATERIAL = 30,
+    VT_OUTLINE = 32,
+    VT_OUTLINE_COLOR = 34,
+    VT_OUTLINE_WIDTH = 36,
+    VT_STACK_PARTITIONS = 38,
+    VT_SLICE_PARTITIONS = 40,
+    VT_SUBDIVISIONS = 42,
+    VT_SHADOWS = 44
+  };
+  /// Whether the ellipsoid is displayed
+  bool SHOW() const {
+    return GetField<uint8_t>(VT_SHOW, 0) != 0;
+  }
+  /// X radius in meters
+  double RADII_X() const {
+    return GetField<double>(VT_RADII_X, 0.0);
+  }
+  /// Y radius in meters
+  double RADII_Y() const {
+    return GetField<double>(VT_RADII_Y, 0.0);
+  }
+  /// Z radius in meters
+  double RADII_Z() const {
+    return GetField<double>(VT_RADII_Z, 0.0);
+  }
+  /// Inner X radius
+  double INNER_RADII_X() const {
+    return GetField<double>(VT_INNER_RADII_X, 0.0);
+  }
+  /// Inner Y radius
+  double INNER_RADII_Y() const {
+    return GetField<double>(VT_INNER_RADII_Y, 0.0);
+  }
+  /// Inner Z radius
+  double INNER_RADII_Z() const {
+    return GetField<double>(VT_INNER_RADII_Z, 0.0);
+  }
+  /// Minimum clock angle in radians
+  double MINIMUM_CLOCK() const {
+    return GetField<double>(VT_MINIMUM_CLOCK, 0.0);
+  }
+  /// Maximum clock angle in radians
+  double MAXIMUM_CLOCK() const {
+    return GetField<double>(VT_MAXIMUM_CLOCK, 0.0);
+  }
+  /// Minimum cone angle in radians
+  double MINIMUM_CONE() const {
+    return GetField<double>(VT_MINIMUM_CONE, 0.0);
+  }
+  /// Maximum cone angle in radians
+  double MAXIMUM_CONE() const {
+    return GetField<double>(VT_MAXIMUM_CONE, 0.0);
+  }
+  /// Height reference
+  const ::flatbuffers::String *HEIGHT_REFERENCE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_HEIGHT_REFERENCE);
+  }
+  /// Fill flag
+  bool FILL() const {
+    return GetField<uint8_t>(VT_FILL, 0) != 0;
+  }
+  /// Surface material
+  const CZMMaterial *MATERIAL() const {
+    return GetPointer<const CZMMaterial *>(VT_MATERIAL);
+  }
+  /// Outline flag
+  bool OUTLINE() const {
+    return GetField<uint8_t>(VT_OUTLINE, 0) != 0;
+  }
+  /// Outline color
+  const CZMColor *OUTLINE_COLOR() const {
+    return GetPointer<const CZMColor *>(VT_OUTLINE_COLOR);
+  }
+  /// Outline width
+  double OUTLINE_WIDTH() const {
+    return GetField<double>(VT_OUTLINE_WIDTH, 0.0);
+  }
+  /// Stack partitions
+  int32_t STACK_PARTITIONS() const {
+    return GetField<int32_t>(VT_STACK_PARTITIONS, 0);
+  }
+  /// Slice partitions
+  int32_t SLICE_PARTITIONS() const {
+    return GetField<int32_t>(VT_SLICE_PARTITIONS, 0);
+  }
+  /// Subdivisions
+  int32_t SUBDIVISIONS() const {
+    return GetField<int32_t>(VT_SUBDIVISIONS, 0);
+  }
+  /// Shadow mode
+  const ::flatbuffers::String *SHADOWS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SHADOWS);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
+           VerifyField<double>(verifier, VT_RADII_X, 8) &&
+           VerifyField<double>(verifier, VT_RADII_Y, 8) &&
+           VerifyField<double>(verifier, VT_RADII_Z, 8) &&
+           VerifyField<double>(verifier, VT_INNER_RADII_X, 8) &&
+           VerifyField<double>(verifier, VT_INNER_RADII_Y, 8) &&
+           VerifyField<double>(verifier, VT_INNER_RADII_Z, 8) &&
+           VerifyField<double>(verifier, VT_MINIMUM_CLOCK, 8) &&
+           VerifyField<double>(verifier, VT_MAXIMUM_CLOCK, 8) &&
+           VerifyField<double>(verifier, VT_MINIMUM_CONE, 8) &&
+           VerifyField<double>(verifier, VT_MAXIMUM_CONE, 8) &&
+           VerifyOffset(verifier, VT_HEIGHT_REFERENCE) &&
+           verifier.VerifyString(HEIGHT_REFERENCE()) &&
+           VerifyField<uint8_t>(verifier, VT_FILL, 1) &&
+           VerifyOffset(verifier, VT_MATERIAL) &&
+           verifier.VerifyTable(MATERIAL()) &&
+           VerifyField<uint8_t>(verifier, VT_OUTLINE, 1) &&
+           VerifyOffset(verifier, VT_OUTLINE_COLOR) &&
+           verifier.VerifyTable(OUTLINE_COLOR()) &&
+           VerifyField<double>(verifier, VT_OUTLINE_WIDTH, 8) &&
+           VerifyField<int32_t>(verifier, VT_STACK_PARTITIONS, 4) &&
+           VerifyField<int32_t>(verifier, VT_SLICE_PARTITIONS, 4) &&
+           VerifyField<int32_t>(verifier, VT_SUBDIVISIONS, 4) &&
+           VerifyOffset(verifier, VT_SHADOWS) &&
+           verifier.VerifyString(SHADOWS()) &&
+           verifier.EndTable();
+  }
+};
+
+struct CZMEllipsoidBuilder {
+  typedef CZMEllipsoid Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_SHOW(bool SHOW) {
+    fbb_.AddElement<uint8_t>(CZMEllipsoid::VT_SHOW, static_cast<uint8_t>(SHOW), 0);
+  }
+  void add_RADII_X(double RADII_X) {
+    fbb_.AddElement<double>(CZMEllipsoid::VT_RADII_X, RADII_X, 0.0);
+  }
+  void add_RADII_Y(double RADII_Y) {
+    fbb_.AddElement<double>(CZMEllipsoid::VT_RADII_Y, RADII_Y, 0.0);
+  }
+  void add_RADII_Z(double RADII_Z) {
+    fbb_.AddElement<double>(CZMEllipsoid::VT_RADII_Z, RADII_Z, 0.0);
+  }
+  void add_INNER_RADII_X(double INNER_RADII_X) {
+    fbb_.AddElement<double>(CZMEllipsoid::VT_INNER_RADII_X, INNER_RADII_X, 0.0);
+  }
+  void add_INNER_RADII_Y(double INNER_RADII_Y) {
+    fbb_.AddElement<double>(CZMEllipsoid::VT_INNER_RADII_Y, INNER_RADII_Y, 0.0);
+  }
+  void add_INNER_RADII_Z(double INNER_RADII_Z) {
+    fbb_.AddElement<double>(CZMEllipsoid::VT_INNER_RADII_Z, INNER_RADII_Z, 0.0);
+  }
+  void add_MINIMUM_CLOCK(double MINIMUM_CLOCK) {
+    fbb_.AddElement<double>(CZMEllipsoid::VT_MINIMUM_CLOCK, MINIMUM_CLOCK, 0.0);
+  }
+  void add_MAXIMUM_CLOCK(double MAXIMUM_CLOCK) {
+    fbb_.AddElement<double>(CZMEllipsoid::VT_MAXIMUM_CLOCK, MAXIMUM_CLOCK, 0.0);
+  }
+  void add_MINIMUM_CONE(double MINIMUM_CONE) {
+    fbb_.AddElement<double>(CZMEllipsoid::VT_MINIMUM_CONE, MINIMUM_CONE, 0.0);
+  }
+  void add_MAXIMUM_CONE(double MAXIMUM_CONE) {
+    fbb_.AddElement<double>(CZMEllipsoid::VT_MAXIMUM_CONE, MAXIMUM_CONE, 0.0);
+  }
+  void add_HEIGHT_REFERENCE(::flatbuffers::Offset<::flatbuffers::String> HEIGHT_REFERENCE) {
+    fbb_.AddOffset(CZMEllipsoid::VT_HEIGHT_REFERENCE, HEIGHT_REFERENCE);
+  }
+  void add_FILL(bool FILL) {
+    fbb_.AddElement<uint8_t>(CZMEllipsoid::VT_FILL, static_cast<uint8_t>(FILL), 0);
+  }
+  void add_MATERIAL(::flatbuffers::Offset<CZMMaterial> MATERIAL) {
+    fbb_.AddOffset(CZMEllipsoid::VT_MATERIAL, MATERIAL);
+  }
+  void add_OUTLINE(bool OUTLINE) {
+    fbb_.AddElement<uint8_t>(CZMEllipsoid::VT_OUTLINE, static_cast<uint8_t>(OUTLINE), 0);
+  }
+  void add_OUTLINE_COLOR(::flatbuffers::Offset<CZMColor> OUTLINE_COLOR) {
+    fbb_.AddOffset(CZMEllipsoid::VT_OUTLINE_COLOR, OUTLINE_COLOR);
+  }
+  void add_OUTLINE_WIDTH(double OUTLINE_WIDTH) {
+    fbb_.AddElement<double>(CZMEllipsoid::VT_OUTLINE_WIDTH, OUTLINE_WIDTH, 0.0);
+  }
+  void add_STACK_PARTITIONS(int32_t STACK_PARTITIONS) {
+    fbb_.AddElement<int32_t>(CZMEllipsoid::VT_STACK_PARTITIONS, STACK_PARTITIONS, 0);
+  }
+  void add_SLICE_PARTITIONS(int32_t SLICE_PARTITIONS) {
+    fbb_.AddElement<int32_t>(CZMEllipsoid::VT_SLICE_PARTITIONS, SLICE_PARTITIONS, 0);
+  }
+  void add_SUBDIVISIONS(int32_t SUBDIVISIONS) {
+    fbb_.AddElement<int32_t>(CZMEllipsoid::VT_SUBDIVISIONS, SUBDIVISIONS, 0);
+  }
+  void add_SHADOWS(::flatbuffers::Offset<::flatbuffers::String> SHADOWS) {
+    fbb_.AddOffset(CZMEllipsoid::VT_SHADOWS, SHADOWS);
+  }
+  explicit CZMEllipsoidBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CZMEllipsoid> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CZMEllipsoid>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CZMEllipsoid> CreateCZMEllipsoid(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    bool SHOW = false,
+    double RADII_X = 0.0,
+    double RADII_Y = 0.0,
+    double RADII_Z = 0.0,
+    double INNER_RADII_X = 0.0,
+    double INNER_RADII_Y = 0.0,
+    double INNER_RADII_Z = 0.0,
+    double MINIMUM_CLOCK = 0.0,
+    double MAXIMUM_CLOCK = 0.0,
+    double MINIMUM_CONE = 0.0,
+    double MAXIMUM_CONE = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> HEIGHT_REFERENCE = 0,
+    bool FILL = false,
+    ::flatbuffers::Offset<CZMMaterial> MATERIAL = 0,
+    bool OUTLINE = false,
+    ::flatbuffers::Offset<CZMColor> OUTLINE_COLOR = 0,
+    double OUTLINE_WIDTH = 0.0,
+    int32_t STACK_PARTITIONS = 0,
+    int32_t SLICE_PARTITIONS = 0,
+    int32_t SUBDIVISIONS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SHADOWS = 0) {
+  CZMEllipsoidBuilder builder_(_fbb);
+  builder_.add_OUTLINE_WIDTH(OUTLINE_WIDTH);
+  builder_.add_MAXIMUM_CONE(MAXIMUM_CONE);
+  builder_.add_MINIMUM_CONE(MINIMUM_CONE);
+  builder_.add_MAXIMUM_CLOCK(MAXIMUM_CLOCK);
+  builder_.add_MINIMUM_CLOCK(MINIMUM_CLOCK);
+  builder_.add_INNER_RADII_Z(INNER_RADII_Z);
+  builder_.add_INNER_RADII_Y(INNER_RADII_Y);
+  builder_.add_INNER_RADII_X(INNER_RADII_X);
+  builder_.add_RADII_Z(RADII_Z);
+  builder_.add_RADII_Y(RADII_Y);
+  builder_.add_RADII_X(RADII_X);
+  builder_.add_SHADOWS(SHADOWS);
+  builder_.add_SUBDIVISIONS(SUBDIVISIONS);
+  builder_.add_SLICE_PARTITIONS(SLICE_PARTITIONS);
+  builder_.add_STACK_PARTITIONS(STACK_PARTITIONS);
+  builder_.add_OUTLINE_COLOR(OUTLINE_COLOR);
+  builder_.add_MATERIAL(MATERIAL);
+  builder_.add_HEIGHT_REFERENCE(HEIGHT_REFERENCE);
+  builder_.add_OUTLINE(OUTLINE);
+  builder_.add_FILL(FILL);
+  builder_.add_SHOW(SHOW);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<CZMEllipsoid> CreateCZMEllipsoidDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    bool SHOW = false,
+    double RADII_X = 0.0,
+    double RADII_Y = 0.0,
+    double RADII_Z = 0.0,
+    double INNER_RADII_X = 0.0,
+    double INNER_RADII_Y = 0.0,
+    double INNER_RADII_Z = 0.0,
+    double MINIMUM_CLOCK = 0.0,
+    double MAXIMUM_CLOCK = 0.0,
+    double MINIMUM_CONE = 0.0,
+    double MAXIMUM_CONE = 0.0,
+    const char *HEIGHT_REFERENCE = nullptr,
+    bool FILL = false,
+    ::flatbuffers::Offset<CZMMaterial> MATERIAL = 0,
+    bool OUTLINE = false,
+    ::flatbuffers::Offset<CZMColor> OUTLINE_COLOR = 0,
+    double OUTLINE_WIDTH = 0.0,
+    int32_t STACK_PARTITIONS = 0,
+    int32_t SLICE_PARTITIONS = 0,
+    int32_t SUBDIVISIONS = 0,
+    const char *SHADOWS = nullptr) {
+  auto HEIGHT_REFERENCE__ = HEIGHT_REFERENCE ? _fbb.CreateString(HEIGHT_REFERENCE) : 0;
+  auto SHADOWS__ = SHADOWS ? _fbb.CreateString(SHADOWS) : 0;
+  return CreateCZMEllipsoid(
+      _fbb,
+      SHOW,
+      RADII_X,
+      RADII_Y,
+      RADII_Z,
+      INNER_RADII_X,
+      INNER_RADII_Y,
+      INNER_RADII_Z,
+      MINIMUM_CLOCK,
+      MAXIMUM_CLOCK,
+      MINIMUM_CONE,
+      MAXIMUM_CONE,
+      HEIGHT_REFERENCE__,
+      FILL,
+      MATERIAL,
+      OUTLINE,
+      OUTLINE_COLOR,
+      OUTLINE_WIDTH,
+      STACK_PARTITIONS,
+      SLICE_PARTITIONS,
+      SUBDIVISIONS,
+      SHADOWS__);
+}
+
+/// Polyline volume (extruded 2D shape)
+struct CZMPolylineVolume FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CZMPolylineVolumeBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_SHOW = 4,
+    VT_POSITIONS_CARTOGRAPHIC_DEGREES = 6,
+    VT_POSITIONS_CARTESIAN = 8,
+    VT_SHAPE = 10,
+    VT_CORNER_TYPE = 12,
+    VT_GRANULARITY = 14,
+    VT_FILL = 16,
+    VT_MATERIAL = 18,
+    VT_OUTLINE = 20,
+    VT_OUTLINE_COLOR = 22,
+    VT_OUTLINE_WIDTH = 24,
+    VT_SHADOWS = 26
+  };
+  /// Whether displayed
+  bool SHOW() const {
+    return GetField<uint8_t>(VT_SHOW, 0) != 0;
+  }
+  /// Positions as cartographic degrees
+  const ::flatbuffers::Vector<double> *POSITIONS_CARTOGRAPHIC_DEGREES() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_POSITIONS_CARTOGRAPHIC_DEGREES);
+  }
+  /// Positions as Cartesian
+  const ::flatbuffers::Vector<double> *POSITIONS_CARTESIAN() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_POSITIONS_CARTESIAN);
+  }
+  /// 2D shape [x, y, x, y, ...]
+  const ::flatbuffers::Vector<double> *SHAPE() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_SHAPE);
+  }
+  /// Corner type
+  const ::flatbuffers::String *CORNER_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CORNER_TYPE);
+  }
+  /// Granularity in radians
+  double GRANULARITY() const {
+    return GetField<double>(VT_GRANULARITY, 0.0);
+  }
+  /// Fill flag
+  bool FILL() const {
+    return GetField<uint8_t>(VT_FILL, 0) != 0;
+  }
+  /// Surface material
+  const CZMMaterial *MATERIAL() const {
+    return GetPointer<const CZMMaterial *>(VT_MATERIAL);
+  }
+  /// Outline flag
+  bool OUTLINE() const {
+    return GetField<uint8_t>(VT_OUTLINE, 0) != 0;
+  }
+  /// Outline color
+  const CZMColor *OUTLINE_COLOR() const {
+    return GetPointer<const CZMColor *>(VT_OUTLINE_COLOR);
+  }
+  /// Outline width
+  double OUTLINE_WIDTH() const {
+    return GetField<double>(VT_OUTLINE_WIDTH, 0.0);
+  }
+  /// Shadow mode
+  const ::flatbuffers::String *SHADOWS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SHADOWS);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
+           VerifyOffset(verifier, VT_POSITIONS_CARTOGRAPHIC_DEGREES) &&
+           verifier.VerifyVector(POSITIONS_CARTOGRAPHIC_DEGREES()) &&
+           VerifyOffset(verifier, VT_POSITIONS_CARTESIAN) &&
+           verifier.VerifyVector(POSITIONS_CARTESIAN()) &&
+           VerifyOffset(verifier, VT_SHAPE) &&
+           verifier.VerifyVector(SHAPE()) &&
+           VerifyOffset(verifier, VT_CORNER_TYPE) &&
+           verifier.VerifyString(CORNER_TYPE()) &&
+           VerifyField<double>(verifier, VT_GRANULARITY, 8) &&
+           VerifyField<uint8_t>(verifier, VT_FILL, 1) &&
+           VerifyOffset(verifier, VT_MATERIAL) &&
+           verifier.VerifyTable(MATERIAL()) &&
+           VerifyField<uint8_t>(verifier, VT_OUTLINE, 1) &&
+           VerifyOffset(verifier, VT_OUTLINE_COLOR) &&
+           verifier.VerifyTable(OUTLINE_COLOR()) &&
+           VerifyField<double>(verifier, VT_OUTLINE_WIDTH, 8) &&
+           VerifyOffset(verifier, VT_SHADOWS) &&
+           verifier.VerifyString(SHADOWS()) &&
+           verifier.EndTable();
+  }
+};
+
+struct CZMPolylineVolumeBuilder {
+  typedef CZMPolylineVolume Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_SHOW(bool SHOW) {
+    fbb_.AddElement<uint8_t>(CZMPolylineVolume::VT_SHOW, static_cast<uint8_t>(SHOW), 0);
+  }
+  void add_POSITIONS_CARTOGRAPHIC_DEGREES(::flatbuffers::Offset<::flatbuffers::Vector<double>> POSITIONS_CARTOGRAPHIC_DEGREES) {
+    fbb_.AddOffset(CZMPolylineVolume::VT_POSITIONS_CARTOGRAPHIC_DEGREES, POSITIONS_CARTOGRAPHIC_DEGREES);
+  }
+  void add_POSITIONS_CARTESIAN(::flatbuffers::Offset<::flatbuffers::Vector<double>> POSITIONS_CARTESIAN) {
+    fbb_.AddOffset(CZMPolylineVolume::VT_POSITIONS_CARTESIAN, POSITIONS_CARTESIAN);
+  }
+  void add_SHAPE(::flatbuffers::Offset<::flatbuffers::Vector<double>> SHAPE) {
+    fbb_.AddOffset(CZMPolylineVolume::VT_SHAPE, SHAPE);
+  }
+  void add_CORNER_TYPE(::flatbuffers::Offset<::flatbuffers::String> CORNER_TYPE) {
+    fbb_.AddOffset(CZMPolylineVolume::VT_CORNER_TYPE, CORNER_TYPE);
+  }
+  void add_GRANULARITY(double GRANULARITY) {
+    fbb_.AddElement<double>(CZMPolylineVolume::VT_GRANULARITY, GRANULARITY, 0.0);
+  }
+  void add_FILL(bool FILL) {
+    fbb_.AddElement<uint8_t>(CZMPolylineVolume::VT_FILL, static_cast<uint8_t>(FILL), 0);
+  }
+  void add_MATERIAL(::flatbuffers::Offset<CZMMaterial> MATERIAL) {
+    fbb_.AddOffset(CZMPolylineVolume::VT_MATERIAL, MATERIAL);
+  }
+  void add_OUTLINE(bool OUTLINE) {
+    fbb_.AddElement<uint8_t>(CZMPolylineVolume::VT_OUTLINE, static_cast<uint8_t>(OUTLINE), 0);
+  }
+  void add_OUTLINE_COLOR(::flatbuffers::Offset<CZMColor> OUTLINE_COLOR) {
+    fbb_.AddOffset(CZMPolylineVolume::VT_OUTLINE_COLOR, OUTLINE_COLOR);
+  }
+  void add_OUTLINE_WIDTH(double OUTLINE_WIDTH) {
+    fbb_.AddElement<double>(CZMPolylineVolume::VT_OUTLINE_WIDTH, OUTLINE_WIDTH, 0.0);
+  }
+  void add_SHADOWS(::flatbuffers::Offset<::flatbuffers::String> SHADOWS) {
+    fbb_.AddOffset(CZMPolylineVolume::VT_SHADOWS, SHADOWS);
+  }
+  explicit CZMPolylineVolumeBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CZMPolylineVolume> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CZMPolylineVolume>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CZMPolylineVolume> CreateCZMPolylineVolume(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    bool SHOW = false,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> POSITIONS_CARTOGRAPHIC_DEGREES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> POSITIONS_CARTESIAN = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> SHAPE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CORNER_TYPE = 0,
+    double GRANULARITY = 0.0,
+    bool FILL = false,
+    ::flatbuffers::Offset<CZMMaterial> MATERIAL = 0,
+    bool OUTLINE = false,
+    ::flatbuffers::Offset<CZMColor> OUTLINE_COLOR = 0,
+    double OUTLINE_WIDTH = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> SHADOWS = 0) {
+  CZMPolylineVolumeBuilder builder_(_fbb);
+  builder_.add_OUTLINE_WIDTH(OUTLINE_WIDTH);
+  builder_.add_GRANULARITY(GRANULARITY);
+  builder_.add_SHADOWS(SHADOWS);
+  builder_.add_OUTLINE_COLOR(OUTLINE_COLOR);
+  builder_.add_MATERIAL(MATERIAL);
+  builder_.add_CORNER_TYPE(CORNER_TYPE);
+  builder_.add_SHAPE(SHAPE);
+  builder_.add_POSITIONS_CARTESIAN(POSITIONS_CARTESIAN);
+  builder_.add_POSITIONS_CARTOGRAPHIC_DEGREES(POSITIONS_CARTOGRAPHIC_DEGREES);
+  builder_.add_OUTLINE(OUTLINE);
+  builder_.add_FILL(FILL);
+  builder_.add_SHOW(SHOW);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<CZMPolylineVolume> CreateCZMPolylineVolumeDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    bool SHOW = false,
+    const std::vector<double> *POSITIONS_CARTOGRAPHIC_DEGREES = nullptr,
+    const std::vector<double> *POSITIONS_CARTESIAN = nullptr,
+    const std::vector<double> *SHAPE = nullptr,
+    const char *CORNER_TYPE = nullptr,
+    double GRANULARITY = 0.0,
+    bool FILL = false,
+    ::flatbuffers::Offset<CZMMaterial> MATERIAL = 0,
+    bool OUTLINE = false,
+    ::flatbuffers::Offset<CZMColor> OUTLINE_COLOR = 0,
+    double OUTLINE_WIDTH = 0.0,
+    const char *SHADOWS = nullptr) {
+  auto POSITIONS_CARTOGRAPHIC_DEGREES__ = POSITIONS_CARTOGRAPHIC_DEGREES ? _fbb.CreateVector<double>(*POSITIONS_CARTOGRAPHIC_DEGREES) : 0;
+  auto POSITIONS_CARTESIAN__ = POSITIONS_CARTESIAN ? _fbb.CreateVector<double>(*POSITIONS_CARTESIAN) : 0;
+  auto SHAPE__ = SHAPE ? _fbb.CreateVector<double>(*SHAPE) : 0;
+  auto CORNER_TYPE__ = CORNER_TYPE ? _fbb.CreateString(CORNER_TYPE) : 0;
+  auto SHADOWS__ = SHADOWS ? _fbb.CreateString(SHADOWS) : 0;
+  return CreateCZMPolylineVolume(
+      _fbb,
+      SHOW,
+      POSITIONS_CARTOGRAPHIC_DEGREES__,
+      POSITIONS_CARTESIAN__,
+      SHAPE__,
+      CORNER_TYPE__,
+      GRANULARITY,
+      FILL,
+      MATERIAL,
+      OUTLINE,
+      OUTLINE_COLOR,
+      OUTLINE_WIDTH,
+      SHADOWS__);
+}
+
+/// Rectangle (cartographic rectangle)
+struct CZMRectangle FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CZMRectangleBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_SHOW = 4,
+    VT_COORDINATES_WSEN_DEGREES = 6,
+    VT_HEIGHT = 8,
+    VT_HEIGHT_REFERENCE = 10,
+    VT_EXTRUDED_HEIGHT = 12,
+    VT_EXTRUDED_HEIGHT_REFERENCE = 14,
+    VT_ROTATION = 16,
+    VT_ST_ROTATION = 18,
+    VT_GRANULARITY = 20,
+    VT_FILL = 22,
+    VT_MATERIAL = 24,
+    VT_OUTLINE = 26,
+    VT_OUTLINE_COLOR = 28,
+    VT_OUTLINE_WIDTH = 30,
+    VT_SHADOWS = 32,
+    VT_CLASSIFICATION_TYPE = 34,
+    VT_Z_INDEX = 36
+  };
+  /// Whether the rectangle is displayed
+  bool SHOW() const {
+    return GetField<uint8_t>(VT_SHOW, 0) != 0;
+  }
+  /// Coordinates [west, south, east, north] in degrees
+  const ::flatbuffers::Vector<double> *COORDINATES_WSEN_DEGREES() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COORDINATES_WSEN_DEGREES);
+  }
+  /// Height in meters
+  double HEIGHT() const {
+    return GetField<double>(VT_HEIGHT, 0.0);
+  }
+  /// Height reference
+  const ::flatbuffers::String *HEIGHT_REFERENCE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_HEIGHT_REFERENCE);
+  }
+  /// Extruded height
+  double EXTRUDED_HEIGHT() const {
+    return GetField<double>(VT_EXTRUDED_HEIGHT, 0.0);
+  }
+  /// Extruded height reference
+  const ::flatbuffers::String *EXTRUDED_HEIGHT_REFERENCE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EXTRUDED_HEIGHT_REFERENCE);
+  }
+  /// Rotation in radians
+  double ROTATION() const {
+    return GetField<double>(VT_ROTATION, 0.0);
+  }
+  /// Texture rotation in radians
+  double ST_ROTATION() const {
+    return GetField<double>(VT_ST_ROTATION, 0.0);
+  }
+  /// Granularity in radians
+  double GRANULARITY() const {
+    return GetField<double>(VT_GRANULARITY, 0.0);
+  }
+  /// Fill flag
+  bool FILL() const {
+    return GetField<uint8_t>(VT_FILL, 0) != 0;
+  }
+  /// Surface material
+  const CZMMaterial *MATERIAL() const {
+    return GetPointer<const CZMMaterial *>(VT_MATERIAL);
+  }
+  /// Outline flag
+  bool OUTLINE() const {
+    return GetField<uint8_t>(VT_OUTLINE, 0) != 0;
+  }
+  /// Outline color
+  const CZMColor *OUTLINE_COLOR() const {
+    return GetPointer<const CZMColor *>(VT_OUTLINE_COLOR);
+  }
+  /// Outline width
+  double OUTLINE_WIDTH() const {
+    return GetField<double>(VT_OUTLINE_WIDTH, 0.0);
+  }
+  /// Shadow mode
+  const ::flatbuffers::String *SHADOWS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SHADOWS);
+  }
+  /// Classification type
+  const ::flatbuffers::String *CLASSIFICATION_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CLASSIFICATION_TYPE);
+  }
+  /// Z-index for ordering
+  int32_t Z_INDEX() const {
+    return GetField<int32_t>(VT_Z_INDEX, 0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
+           VerifyOffset(verifier, VT_COORDINATES_WSEN_DEGREES) &&
+           verifier.VerifyVector(COORDINATES_WSEN_DEGREES()) &&
+           VerifyField<double>(verifier, VT_HEIGHT, 8) &&
+           VerifyOffset(verifier, VT_HEIGHT_REFERENCE) &&
+           verifier.VerifyString(HEIGHT_REFERENCE()) &&
+           VerifyField<double>(verifier, VT_EXTRUDED_HEIGHT, 8) &&
+           VerifyOffset(verifier, VT_EXTRUDED_HEIGHT_REFERENCE) &&
+           verifier.VerifyString(EXTRUDED_HEIGHT_REFERENCE()) &&
+           VerifyField<double>(verifier, VT_ROTATION, 8) &&
+           VerifyField<double>(verifier, VT_ST_ROTATION, 8) &&
+           VerifyField<double>(verifier, VT_GRANULARITY, 8) &&
+           VerifyField<uint8_t>(verifier, VT_FILL, 1) &&
+           VerifyOffset(verifier, VT_MATERIAL) &&
+           verifier.VerifyTable(MATERIAL()) &&
+           VerifyField<uint8_t>(verifier, VT_OUTLINE, 1) &&
+           VerifyOffset(verifier, VT_OUTLINE_COLOR) &&
+           verifier.VerifyTable(OUTLINE_COLOR()) &&
+           VerifyField<double>(verifier, VT_OUTLINE_WIDTH, 8) &&
+           VerifyOffset(verifier, VT_SHADOWS) &&
+           verifier.VerifyString(SHADOWS()) &&
+           VerifyOffset(verifier, VT_CLASSIFICATION_TYPE) &&
+           verifier.VerifyString(CLASSIFICATION_TYPE()) &&
+           VerifyField<int32_t>(verifier, VT_Z_INDEX, 4) &&
+           verifier.EndTable();
+  }
+};
+
+struct CZMRectangleBuilder {
+  typedef CZMRectangle Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_SHOW(bool SHOW) {
+    fbb_.AddElement<uint8_t>(CZMRectangle::VT_SHOW, static_cast<uint8_t>(SHOW), 0);
+  }
+  void add_COORDINATES_WSEN_DEGREES(::flatbuffers::Offset<::flatbuffers::Vector<double>> COORDINATES_WSEN_DEGREES) {
+    fbb_.AddOffset(CZMRectangle::VT_COORDINATES_WSEN_DEGREES, COORDINATES_WSEN_DEGREES);
+  }
+  void add_HEIGHT(double HEIGHT) {
+    fbb_.AddElement<double>(CZMRectangle::VT_HEIGHT, HEIGHT, 0.0);
+  }
+  void add_HEIGHT_REFERENCE(::flatbuffers::Offset<::flatbuffers::String> HEIGHT_REFERENCE) {
+    fbb_.AddOffset(CZMRectangle::VT_HEIGHT_REFERENCE, HEIGHT_REFERENCE);
+  }
+  void add_EXTRUDED_HEIGHT(double EXTRUDED_HEIGHT) {
+    fbb_.AddElement<double>(CZMRectangle::VT_EXTRUDED_HEIGHT, EXTRUDED_HEIGHT, 0.0);
+  }
+  void add_EXTRUDED_HEIGHT_REFERENCE(::flatbuffers::Offset<::flatbuffers::String> EXTRUDED_HEIGHT_REFERENCE) {
+    fbb_.AddOffset(CZMRectangle::VT_EXTRUDED_HEIGHT_REFERENCE, EXTRUDED_HEIGHT_REFERENCE);
+  }
+  void add_ROTATION(double ROTATION) {
+    fbb_.AddElement<double>(CZMRectangle::VT_ROTATION, ROTATION, 0.0);
+  }
+  void add_ST_ROTATION(double ST_ROTATION) {
+    fbb_.AddElement<double>(CZMRectangle::VT_ST_ROTATION, ST_ROTATION, 0.0);
+  }
+  void add_GRANULARITY(double GRANULARITY) {
+    fbb_.AddElement<double>(CZMRectangle::VT_GRANULARITY, GRANULARITY, 0.0);
+  }
+  void add_FILL(bool FILL) {
+    fbb_.AddElement<uint8_t>(CZMRectangle::VT_FILL, static_cast<uint8_t>(FILL), 0);
+  }
+  void add_MATERIAL(::flatbuffers::Offset<CZMMaterial> MATERIAL) {
+    fbb_.AddOffset(CZMRectangle::VT_MATERIAL, MATERIAL);
+  }
+  void add_OUTLINE(bool OUTLINE) {
+    fbb_.AddElement<uint8_t>(CZMRectangle::VT_OUTLINE, static_cast<uint8_t>(OUTLINE), 0);
+  }
+  void add_OUTLINE_COLOR(::flatbuffers::Offset<CZMColor> OUTLINE_COLOR) {
+    fbb_.AddOffset(CZMRectangle::VT_OUTLINE_COLOR, OUTLINE_COLOR);
+  }
+  void add_OUTLINE_WIDTH(double OUTLINE_WIDTH) {
+    fbb_.AddElement<double>(CZMRectangle::VT_OUTLINE_WIDTH, OUTLINE_WIDTH, 0.0);
+  }
+  void add_SHADOWS(::flatbuffers::Offset<::flatbuffers::String> SHADOWS) {
+    fbb_.AddOffset(CZMRectangle::VT_SHADOWS, SHADOWS);
+  }
+  void add_CLASSIFICATION_TYPE(::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION_TYPE) {
+    fbb_.AddOffset(CZMRectangle::VT_CLASSIFICATION_TYPE, CLASSIFICATION_TYPE);
+  }
+  void add_Z_INDEX(int32_t Z_INDEX) {
+    fbb_.AddElement<int32_t>(CZMRectangle::VT_Z_INDEX, Z_INDEX, 0);
+  }
+  explicit CZMRectangleBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CZMRectangle> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CZMRectangle>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CZMRectangle> CreateCZMRectangle(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    bool SHOW = false,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> COORDINATES_WSEN_DEGREES = 0,
+    double HEIGHT = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> HEIGHT_REFERENCE = 0,
+    double EXTRUDED_HEIGHT = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> EXTRUDED_HEIGHT_REFERENCE = 0,
+    double ROTATION = 0.0,
+    double ST_ROTATION = 0.0,
+    double GRANULARITY = 0.0,
+    bool FILL = false,
+    ::flatbuffers::Offset<CZMMaterial> MATERIAL = 0,
+    bool OUTLINE = false,
+    ::flatbuffers::Offset<CZMColor> OUTLINE_COLOR = 0,
+    double OUTLINE_WIDTH = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> SHADOWS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CLASSIFICATION_TYPE = 0,
+    int32_t Z_INDEX = 0) {
+  CZMRectangleBuilder builder_(_fbb);
+  builder_.add_OUTLINE_WIDTH(OUTLINE_WIDTH);
+  builder_.add_GRANULARITY(GRANULARITY);
+  builder_.add_ST_ROTATION(ST_ROTATION);
+  builder_.add_ROTATION(ROTATION);
+  builder_.add_EXTRUDED_HEIGHT(EXTRUDED_HEIGHT);
+  builder_.add_HEIGHT(HEIGHT);
+  builder_.add_Z_INDEX(Z_INDEX);
+  builder_.add_CLASSIFICATION_TYPE(CLASSIFICATION_TYPE);
+  builder_.add_SHADOWS(SHADOWS);
+  builder_.add_OUTLINE_COLOR(OUTLINE_COLOR);
+  builder_.add_MATERIAL(MATERIAL);
+  builder_.add_EXTRUDED_HEIGHT_REFERENCE(EXTRUDED_HEIGHT_REFERENCE);
+  builder_.add_HEIGHT_REFERENCE(HEIGHT_REFERENCE);
+  builder_.add_COORDINATES_WSEN_DEGREES(COORDINATES_WSEN_DEGREES);
+  builder_.add_OUTLINE(OUTLINE);
+  builder_.add_FILL(FILL);
+  builder_.add_SHOW(SHOW);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<CZMRectangle> CreateCZMRectangleDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    bool SHOW = false,
+    const std::vector<double> *COORDINATES_WSEN_DEGREES = nullptr,
+    double HEIGHT = 0.0,
+    const char *HEIGHT_REFERENCE = nullptr,
+    double EXTRUDED_HEIGHT = 0.0,
+    const char *EXTRUDED_HEIGHT_REFERENCE = nullptr,
+    double ROTATION = 0.0,
+    double ST_ROTATION = 0.0,
+    double GRANULARITY = 0.0,
+    bool FILL = false,
+    ::flatbuffers::Offset<CZMMaterial> MATERIAL = 0,
+    bool OUTLINE = false,
+    ::flatbuffers::Offset<CZMColor> OUTLINE_COLOR = 0,
+    double OUTLINE_WIDTH = 0.0,
+    const char *SHADOWS = nullptr,
+    const char *CLASSIFICATION_TYPE = nullptr,
+    int32_t Z_INDEX = 0) {
+  auto COORDINATES_WSEN_DEGREES__ = COORDINATES_WSEN_DEGREES ? _fbb.CreateVector<double>(*COORDINATES_WSEN_DEGREES) : 0;
+  auto HEIGHT_REFERENCE__ = HEIGHT_REFERENCE ? _fbb.CreateString(HEIGHT_REFERENCE) : 0;
+  auto EXTRUDED_HEIGHT_REFERENCE__ = EXTRUDED_HEIGHT_REFERENCE ? _fbb.CreateString(EXTRUDED_HEIGHT_REFERENCE) : 0;
+  auto SHADOWS__ = SHADOWS ? _fbb.CreateString(SHADOWS) : 0;
+  auto CLASSIFICATION_TYPE__ = CLASSIFICATION_TYPE ? _fbb.CreateString(CLASSIFICATION_TYPE) : 0;
+  return CreateCZMRectangle(
+      _fbb,
+      SHOW,
+      COORDINATES_WSEN_DEGREES__,
+      HEIGHT,
+      HEIGHT_REFERENCE__,
+      EXTRUDED_HEIGHT,
+      EXTRUDED_HEIGHT_REFERENCE__,
+      ROTATION,
+      ST_ROTATION,
+      GRANULARITY,
+      FILL,
+      MATERIAL,
+      OUTLINE,
+      OUTLINE_COLOR,
+      OUTLINE_WIDTH,
+      SHADOWS__,
+      CLASSIFICATION_TYPE__,
+      Z_INDEX);
+}
+
+/// 3D Tileset
+struct CZMTileset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CZMTilesetBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_SHOW = 4,
+    VT_URI = 6,
+    VT_MAXIMUM_SCREEN_SPACE_ERROR = 8
+  };
+  /// Whether the tileset is displayed
+  bool SHOW() const {
+    return GetField<uint8_t>(VT_SHOW, 0) != 0;
+  }
+  /// URI to the tileset
+  const ::flatbuffers::String *URI() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_URI);
+  }
+  /// Maximum screen space error
+  double MAXIMUM_SCREEN_SPACE_ERROR() const {
+    return GetField<double>(VT_MAXIMUM_SCREEN_SPACE_ERROR, 0.0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
+           VerifyOffset(verifier, VT_URI) &&
+           verifier.VerifyString(URI()) &&
+           VerifyField<double>(verifier, VT_MAXIMUM_SCREEN_SPACE_ERROR, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct CZMTilesetBuilder {
+  typedef CZMTileset Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_SHOW(bool SHOW) {
+    fbb_.AddElement<uint8_t>(CZMTileset::VT_SHOW, static_cast<uint8_t>(SHOW), 0);
+  }
+  void add_URI(::flatbuffers::Offset<::flatbuffers::String> URI) {
+    fbb_.AddOffset(CZMTileset::VT_URI, URI);
+  }
+  void add_MAXIMUM_SCREEN_SPACE_ERROR(double MAXIMUM_SCREEN_SPACE_ERROR) {
+    fbb_.AddElement<double>(CZMTileset::VT_MAXIMUM_SCREEN_SPACE_ERROR, MAXIMUM_SCREEN_SPACE_ERROR, 0.0);
+  }
+  explicit CZMTilesetBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CZMTileset> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CZMTileset>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CZMTileset> CreateCZMTileset(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    bool SHOW = false,
+    ::flatbuffers::Offset<::flatbuffers::String> URI = 0,
+    double MAXIMUM_SCREEN_SPACE_ERROR = 0.0) {
+  CZMTilesetBuilder builder_(_fbb);
+  builder_.add_MAXIMUM_SCREEN_SPACE_ERROR(MAXIMUM_SCREEN_SPACE_ERROR);
+  builder_.add_URI(URI);
+  builder_.add_SHOW(SHOW);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<CZMTileset> CreateCZMTilesetDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    bool SHOW = false,
+    const char *URI = nullptr,
+    double MAXIMUM_SCREEN_SPACE_ERROR = 0.0) {
+  auto URI__ = URI ? _fbb.CreateString(URI) : 0;
+  return CreateCZMTileset(
+      _fbb,
+      SHOW,
+      URI__,
+      MAXIMUM_SCREEN_SPACE_ERROR);
+}
+
+/// Wall (vertical curtain)
+struct CZMWall FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef CZMWallBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_SHOW = 4,
+    VT_POSITIONS_CARTOGRAPHIC_DEGREES = 6,
+    VT_POSITIONS_CARTESIAN = 8,
+    VT_MINIMUM_HEIGHTS = 10,
+    VT_MAXIMUM_HEIGHTS = 12,
+    VT_GRANULARITY = 14,
+    VT_FILL = 16,
+    VT_MATERIAL = 18,
+    VT_OUTLINE = 20,
+    VT_OUTLINE_COLOR = 22,
+    VT_OUTLINE_WIDTH = 24,
+    VT_SHADOWS = 26
+  };
+  /// Whether the wall is displayed
+  bool SHOW() const {
+    return GetField<uint8_t>(VT_SHOW, 0) != 0;
+  }
+  /// Positions as cartographic degrees
+  const ::flatbuffers::Vector<double> *POSITIONS_CARTOGRAPHIC_DEGREES() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_POSITIONS_CARTOGRAPHIC_DEGREES);
+  }
+  /// Positions as Cartesian
+  const ::flatbuffers::Vector<double> *POSITIONS_CARTESIAN() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_POSITIONS_CARTESIAN);
+  }
+  /// Minimum heights per position
+  const ::flatbuffers::Vector<double> *MINIMUM_HEIGHTS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_MINIMUM_HEIGHTS);
+  }
+  /// Maximum heights per position
+  const ::flatbuffers::Vector<double> *MAXIMUM_HEIGHTS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_MAXIMUM_HEIGHTS);
+  }
+  /// Granularity in radians
+  double GRANULARITY() const {
+    return GetField<double>(VT_GRANULARITY, 0.0);
+  }
+  /// Fill flag
+  bool FILL() const {
+    return GetField<uint8_t>(VT_FILL, 0) != 0;
+  }
+  /// Surface material
+  const CZMMaterial *MATERIAL() const {
+    return GetPointer<const CZMMaterial *>(VT_MATERIAL);
+  }
+  /// Outline flag
+  bool OUTLINE() const {
+    return GetField<uint8_t>(VT_OUTLINE, 0) != 0;
+  }
+  /// Outline color
+  const CZMColor *OUTLINE_COLOR() const {
+    return GetPointer<const CZMColor *>(VT_OUTLINE_COLOR);
+  }
+  /// Outline width
+  double OUTLINE_WIDTH() const {
+    return GetField<double>(VT_OUTLINE_WIDTH, 0.0);
+  }
+  /// Shadow mode
+  const ::flatbuffers::String *SHADOWS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SHADOWS);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_SHOW, 1) &&
+           VerifyOffset(verifier, VT_POSITIONS_CARTOGRAPHIC_DEGREES) &&
+           verifier.VerifyVector(POSITIONS_CARTOGRAPHIC_DEGREES()) &&
+           VerifyOffset(verifier, VT_POSITIONS_CARTESIAN) &&
+           verifier.VerifyVector(POSITIONS_CARTESIAN()) &&
+           VerifyOffset(verifier, VT_MINIMUM_HEIGHTS) &&
+           verifier.VerifyVector(MINIMUM_HEIGHTS()) &&
+           VerifyOffset(verifier, VT_MAXIMUM_HEIGHTS) &&
+           verifier.VerifyVector(MAXIMUM_HEIGHTS()) &&
+           VerifyField<double>(verifier, VT_GRANULARITY, 8) &&
+           VerifyField<uint8_t>(verifier, VT_FILL, 1) &&
+           VerifyOffset(verifier, VT_MATERIAL) &&
+           verifier.VerifyTable(MATERIAL()) &&
+           VerifyField<uint8_t>(verifier, VT_OUTLINE, 1) &&
+           VerifyOffset(verifier, VT_OUTLINE_COLOR) &&
+           verifier.VerifyTable(OUTLINE_COLOR()) &&
+           VerifyField<double>(verifier, VT_OUTLINE_WIDTH, 8) &&
+           VerifyOffset(verifier, VT_SHADOWS) &&
+           verifier.VerifyString(SHADOWS()) &&
+           verifier.EndTable();
+  }
+};
+
+struct CZMWallBuilder {
+  typedef CZMWall Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_SHOW(bool SHOW) {
+    fbb_.AddElement<uint8_t>(CZMWall::VT_SHOW, static_cast<uint8_t>(SHOW), 0);
+  }
+  void add_POSITIONS_CARTOGRAPHIC_DEGREES(::flatbuffers::Offset<::flatbuffers::Vector<double>> POSITIONS_CARTOGRAPHIC_DEGREES) {
+    fbb_.AddOffset(CZMWall::VT_POSITIONS_CARTOGRAPHIC_DEGREES, POSITIONS_CARTOGRAPHIC_DEGREES);
+  }
+  void add_POSITIONS_CARTESIAN(::flatbuffers::Offset<::flatbuffers::Vector<double>> POSITIONS_CARTESIAN) {
+    fbb_.AddOffset(CZMWall::VT_POSITIONS_CARTESIAN, POSITIONS_CARTESIAN);
+  }
+  void add_MINIMUM_HEIGHTS(::flatbuffers::Offset<::flatbuffers::Vector<double>> MINIMUM_HEIGHTS) {
+    fbb_.AddOffset(CZMWall::VT_MINIMUM_HEIGHTS, MINIMUM_HEIGHTS);
+  }
+  void add_MAXIMUM_HEIGHTS(::flatbuffers::Offset<::flatbuffers::Vector<double>> MAXIMUM_HEIGHTS) {
+    fbb_.AddOffset(CZMWall::VT_MAXIMUM_HEIGHTS, MAXIMUM_HEIGHTS);
+  }
+  void add_GRANULARITY(double GRANULARITY) {
+    fbb_.AddElement<double>(CZMWall::VT_GRANULARITY, GRANULARITY, 0.0);
+  }
+  void add_FILL(bool FILL) {
+    fbb_.AddElement<uint8_t>(CZMWall::VT_FILL, static_cast<uint8_t>(FILL), 0);
+  }
+  void add_MATERIAL(::flatbuffers::Offset<CZMMaterial> MATERIAL) {
+    fbb_.AddOffset(CZMWall::VT_MATERIAL, MATERIAL);
+  }
+  void add_OUTLINE(bool OUTLINE) {
+    fbb_.AddElement<uint8_t>(CZMWall::VT_OUTLINE, static_cast<uint8_t>(OUTLINE), 0);
+  }
+  void add_OUTLINE_COLOR(::flatbuffers::Offset<CZMColor> OUTLINE_COLOR) {
+    fbb_.AddOffset(CZMWall::VT_OUTLINE_COLOR, OUTLINE_COLOR);
+  }
+  void add_OUTLINE_WIDTH(double OUTLINE_WIDTH) {
+    fbb_.AddElement<double>(CZMWall::VT_OUTLINE_WIDTH, OUTLINE_WIDTH, 0.0);
+  }
+  void add_SHADOWS(::flatbuffers::Offset<::flatbuffers::String> SHADOWS) {
+    fbb_.AddOffset(CZMWall::VT_SHADOWS, SHADOWS);
+  }
+  explicit CZMWallBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<CZMWall> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<CZMWall>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<CZMWall> CreateCZMWall(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    bool SHOW = false,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> POSITIONS_CARTOGRAPHIC_DEGREES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> POSITIONS_CARTESIAN = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> MINIMUM_HEIGHTS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> MAXIMUM_HEIGHTS = 0,
+    double GRANULARITY = 0.0,
+    bool FILL = false,
+    ::flatbuffers::Offset<CZMMaterial> MATERIAL = 0,
+    bool OUTLINE = false,
+    ::flatbuffers::Offset<CZMColor> OUTLINE_COLOR = 0,
+    double OUTLINE_WIDTH = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> SHADOWS = 0) {
+  CZMWallBuilder builder_(_fbb);
+  builder_.add_OUTLINE_WIDTH(OUTLINE_WIDTH);
+  builder_.add_GRANULARITY(GRANULARITY);
+  builder_.add_SHADOWS(SHADOWS);
+  builder_.add_OUTLINE_COLOR(OUTLINE_COLOR);
+  builder_.add_MATERIAL(MATERIAL);
+  builder_.add_MAXIMUM_HEIGHTS(MAXIMUM_HEIGHTS);
+  builder_.add_MINIMUM_HEIGHTS(MINIMUM_HEIGHTS);
+  builder_.add_POSITIONS_CARTESIAN(POSITIONS_CARTESIAN);
+  builder_.add_POSITIONS_CARTOGRAPHIC_DEGREES(POSITIONS_CARTOGRAPHIC_DEGREES);
+  builder_.add_OUTLINE(OUTLINE);
+  builder_.add_FILL(FILL);
+  builder_.add_SHOW(SHOW);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<CZMWall> CreateCZMWallDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    bool SHOW = false,
+    const std::vector<double> *POSITIONS_CARTOGRAPHIC_DEGREES = nullptr,
+    const std::vector<double> *POSITIONS_CARTESIAN = nullptr,
+    const std::vector<double> *MINIMUM_HEIGHTS = nullptr,
+    const std::vector<double> *MAXIMUM_HEIGHTS = nullptr,
+    double GRANULARITY = 0.0,
+    bool FILL = false,
+    ::flatbuffers::Offset<CZMMaterial> MATERIAL = 0,
+    bool OUTLINE = false,
+    ::flatbuffers::Offset<CZMColor> OUTLINE_COLOR = 0,
+    double OUTLINE_WIDTH = 0.0,
+    const char *SHADOWS = nullptr) {
+  auto POSITIONS_CARTOGRAPHIC_DEGREES__ = POSITIONS_CARTOGRAPHIC_DEGREES ? _fbb.CreateVector<double>(*POSITIONS_CARTOGRAPHIC_DEGREES) : 0;
+  auto POSITIONS_CARTESIAN__ = POSITIONS_CARTESIAN ? _fbb.CreateVector<double>(*POSITIONS_CARTESIAN) : 0;
+  auto MINIMUM_HEIGHTS__ = MINIMUM_HEIGHTS ? _fbb.CreateVector<double>(*MINIMUM_HEIGHTS) : 0;
+  auto MAXIMUM_HEIGHTS__ = MAXIMUM_HEIGHTS ? _fbb.CreateVector<double>(*MAXIMUM_HEIGHTS) : 0;
+  auto SHADOWS__ = SHADOWS ? _fbb.CreateString(SHADOWS) : 0;
+  return CreateCZMWall(
+      _fbb,
+      SHOW,
+      POSITIONS_CARTOGRAPHIC_DEGREES__,
+      POSITIONS_CARTESIAN__,
+      MINIMUM_HEIGHTS__,
+      MAXIMUM_HEIGHTS__,
+      GRANULARITY,
+      FILL,
+      MATERIAL,
+      OUTLINE,
+      OUTLINE_COLOR,
+      OUTLINE_WIDTH,
+      SHADOWS__);
 }
 
 /// A CZML Packet describing an entity and its properties
@@ -1737,7 +6381,26 @@ struct CZMPacket FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_POLYGON = 32,
     VT_MODEL = 34,
     VT_PATH = 36,
-    VT_ELLIPSE = 38
+    VT_ELLIPSE = 38,
+    VT_ORIENTATION = 40,
+    VT_VIEW_FROM = 42,
+    VT_DELETE = 44,
+    VT_BOX = 46,
+    VT_CORRIDOR = 48,
+    VT_CYLINDER = 50,
+    VT_ELLIPSOID = 52,
+    VT_POLYLINE_VOLUME = 54,
+    VT_RECTANGLE = 56,
+    VT_TILESET = 58,
+    VT_WALL = 60,
+    VT_POSITION_INTERPOLATION = 62,
+    VT_POSITION_REFERENCE_FRAME = 64,
+    VT_POSITION_REFERENCE = 66,
+    VT_ORIENTATION_EPOCH = 68,
+    VT_ORIENTATION_ARRAY = 70,
+    VT_ORIENTATION_INTERPOLATION = 72,
+    VT_ORIENTATION_REFERENCE = 74,
+    VT_DYNAMIC_PROPERTIES = 76
   };
   /// Unique identifier for this object
   const ::flatbuffers::String *ID() const {
@@ -1811,6 +6474,82 @@ struct CZMPacket FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const CZMEllipse *ELLIPSE() const {
     return GetPointer<const CZMEllipse *>(VT_ELLIPSE);
   }
+  /// Orientation (quaternion)
+  const CZMOrientation *ORIENTATION() const {
+    return GetPointer<const CZMOrientation *>(VT_ORIENTATION);
+  }
+  /// Suggested camera offset
+  const CZMViewFrom *VIEW_FROM() const {
+    return GetPointer<const CZMViewFrom *>(VT_VIEW_FROM);
+  }
+  /// Whether to delete this object
+  bool DELETE() const {
+    return GetField<uint8_t>(VT_DELETE, 0) != 0;
+  }
+  /// Box properties
+  const CZMBox *BOX() const {
+    return GetPointer<const CZMBox *>(VT_BOX);
+  }
+  /// Corridor properties
+  const CZMCorridor *CORRIDOR() const {
+    return GetPointer<const CZMCorridor *>(VT_CORRIDOR);
+  }
+  /// Cylinder properties
+  const CZMCylinder *CYLINDER() const {
+    return GetPointer<const CZMCylinder *>(VT_CYLINDER);
+  }
+  /// Ellipsoid properties
+  const CZMEllipsoid *ELLIPSOID() const {
+    return GetPointer<const CZMEllipsoid *>(VT_ELLIPSOID);
+  }
+  /// Polyline volume properties
+  const CZMPolylineVolume *POLYLINE_VOLUME() const {
+    return GetPointer<const CZMPolylineVolume *>(VT_POLYLINE_VOLUME);
+  }
+  /// Rectangle properties
+  const CZMRectangle *RECTANGLE() const {
+    return GetPointer<const CZMRectangle *>(VT_RECTANGLE);
+  }
+  /// 3D Tileset properties
+  const CZMTileset *TILESET() const {
+    return GetPointer<const CZMTileset *>(VT_TILESET);
+  }
+  /// Wall properties
+  const CZMWall *WALL() const {
+    return GetPointer<const CZMWall *>(VT_WALL);
+  }
+  /// Position interpolation settings
+  const CZMInterpolation *POSITION_INTERPOLATION() const {
+    return GetPointer<const CZMInterpolation *>(VT_POSITION_INTERPOLATION);
+  }
+  /// Position reference frame (FIXED or INERTIAL)
+  const ::flatbuffers::String *POSITION_REFERENCE_FRAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_POSITION_REFERENCE_FRAME);
+  }
+  /// Position reference to another entity
+  const ::flatbuffers::String *POSITION_REFERENCE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_POSITION_REFERENCE);
+  }
+  /// Orientation epoch (ISO 8601)
+  const ::flatbuffers::String *ORIENTATION_EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ORIENTATION_EPOCH);
+  }
+  /// Orientation sampled data [t, x, y, z, w, t, x, y, z, w, ...]
+  const ::flatbuffers::Vector<double> *ORIENTATION_ARRAY() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_ORIENTATION_ARRAY);
+  }
+  /// Orientation interpolation settings
+  const CZMInterpolation *ORIENTATION_INTERPOLATION() const {
+    return GetPointer<const CZMInterpolation *>(VT_ORIENTATION_INTERPOLATION);
+  }
+  /// Orientation reference to another entity
+  const ::flatbuffers::String *ORIENTATION_REFERENCE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ORIENTATION_REFERENCE);
+  }
+  /// Generic bag for all time-dynamic (non-static) properties
+  const ::flatbuffers::Vector<::flatbuffers::Offset<CZMDynamicProperty>> *DYNAMIC_PROPERTIES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<CZMDynamicProperty>> *>(VT_DYNAMIC_PROPERTIES);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
@@ -1849,6 +6588,44 @@ struct CZMPacket FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyTable(PATH()) &&
            VerifyOffset(verifier, VT_ELLIPSE) &&
            verifier.VerifyTable(ELLIPSE()) &&
+           VerifyOffset(verifier, VT_ORIENTATION) &&
+           verifier.VerifyTable(ORIENTATION()) &&
+           VerifyOffset(verifier, VT_VIEW_FROM) &&
+           verifier.VerifyTable(VIEW_FROM()) &&
+           VerifyField<uint8_t>(verifier, VT_DELETE, 1) &&
+           VerifyOffset(verifier, VT_BOX) &&
+           verifier.VerifyTable(BOX()) &&
+           VerifyOffset(verifier, VT_CORRIDOR) &&
+           verifier.VerifyTable(CORRIDOR()) &&
+           VerifyOffset(verifier, VT_CYLINDER) &&
+           verifier.VerifyTable(CYLINDER()) &&
+           VerifyOffset(verifier, VT_ELLIPSOID) &&
+           verifier.VerifyTable(ELLIPSOID()) &&
+           VerifyOffset(verifier, VT_POLYLINE_VOLUME) &&
+           verifier.VerifyTable(POLYLINE_VOLUME()) &&
+           VerifyOffset(verifier, VT_RECTANGLE) &&
+           verifier.VerifyTable(RECTANGLE()) &&
+           VerifyOffset(verifier, VT_TILESET) &&
+           verifier.VerifyTable(TILESET()) &&
+           VerifyOffset(verifier, VT_WALL) &&
+           verifier.VerifyTable(WALL()) &&
+           VerifyOffset(verifier, VT_POSITION_INTERPOLATION) &&
+           verifier.VerifyTable(POSITION_INTERPOLATION()) &&
+           VerifyOffset(verifier, VT_POSITION_REFERENCE_FRAME) &&
+           verifier.VerifyString(POSITION_REFERENCE_FRAME()) &&
+           VerifyOffset(verifier, VT_POSITION_REFERENCE) &&
+           verifier.VerifyString(POSITION_REFERENCE()) &&
+           VerifyOffset(verifier, VT_ORIENTATION_EPOCH) &&
+           verifier.VerifyString(ORIENTATION_EPOCH()) &&
+           VerifyOffset(verifier, VT_ORIENTATION_ARRAY) &&
+           verifier.VerifyVector(ORIENTATION_ARRAY()) &&
+           VerifyOffset(verifier, VT_ORIENTATION_INTERPOLATION) &&
+           verifier.VerifyTable(ORIENTATION_INTERPOLATION()) &&
+           VerifyOffset(verifier, VT_ORIENTATION_REFERENCE) &&
+           verifier.VerifyString(ORIENTATION_REFERENCE()) &&
+           VerifyOffset(verifier, VT_DYNAMIC_PROPERTIES) &&
+           verifier.VerifyVector(DYNAMIC_PROPERTIES()) &&
+           verifier.VerifyVectorOfTables(DYNAMIC_PROPERTIES()) &&
            verifier.EndTable();
   }
 };
@@ -1911,6 +6688,63 @@ struct CZMPacketBuilder {
   void add_ELLIPSE(::flatbuffers::Offset<CZMEllipse> ELLIPSE) {
     fbb_.AddOffset(CZMPacket::VT_ELLIPSE, ELLIPSE);
   }
+  void add_ORIENTATION(::flatbuffers::Offset<CZMOrientation> ORIENTATION) {
+    fbb_.AddOffset(CZMPacket::VT_ORIENTATION, ORIENTATION);
+  }
+  void add_VIEW_FROM(::flatbuffers::Offset<CZMViewFrom> VIEW_FROM) {
+    fbb_.AddOffset(CZMPacket::VT_VIEW_FROM, VIEW_FROM);
+  }
+  void add_DELETE(bool DELETE) {
+    fbb_.AddElement<uint8_t>(CZMPacket::VT_DELETE, static_cast<uint8_t>(DELETE), 0);
+  }
+  void add_BOX(::flatbuffers::Offset<CZMBox> BOX) {
+    fbb_.AddOffset(CZMPacket::VT_BOX, BOX);
+  }
+  void add_CORRIDOR(::flatbuffers::Offset<CZMCorridor> CORRIDOR) {
+    fbb_.AddOffset(CZMPacket::VT_CORRIDOR, CORRIDOR);
+  }
+  void add_CYLINDER(::flatbuffers::Offset<CZMCylinder> CYLINDER) {
+    fbb_.AddOffset(CZMPacket::VT_CYLINDER, CYLINDER);
+  }
+  void add_ELLIPSOID(::flatbuffers::Offset<CZMEllipsoid> ELLIPSOID) {
+    fbb_.AddOffset(CZMPacket::VT_ELLIPSOID, ELLIPSOID);
+  }
+  void add_POLYLINE_VOLUME(::flatbuffers::Offset<CZMPolylineVolume> POLYLINE_VOLUME) {
+    fbb_.AddOffset(CZMPacket::VT_POLYLINE_VOLUME, POLYLINE_VOLUME);
+  }
+  void add_RECTANGLE(::flatbuffers::Offset<CZMRectangle> RECTANGLE) {
+    fbb_.AddOffset(CZMPacket::VT_RECTANGLE, RECTANGLE);
+  }
+  void add_TILESET(::flatbuffers::Offset<CZMTileset> TILESET) {
+    fbb_.AddOffset(CZMPacket::VT_TILESET, TILESET);
+  }
+  void add_WALL(::flatbuffers::Offset<CZMWall> WALL) {
+    fbb_.AddOffset(CZMPacket::VT_WALL, WALL);
+  }
+  void add_POSITION_INTERPOLATION(::flatbuffers::Offset<CZMInterpolation> POSITION_INTERPOLATION) {
+    fbb_.AddOffset(CZMPacket::VT_POSITION_INTERPOLATION, POSITION_INTERPOLATION);
+  }
+  void add_POSITION_REFERENCE_FRAME(::flatbuffers::Offset<::flatbuffers::String> POSITION_REFERENCE_FRAME) {
+    fbb_.AddOffset(CZMPacket::VT_POSITION_REFERENCE_FRAME, POSITION_REFERENCE_FRAME);
+  }
+  void add_POSITION_REFERENCE(::flatbuffers::Offset<::flatbuffers::String> POSITION_REFERENCE) {
+    fbb_.AddOffset(CZMPacket::VT_POSITION_REFERENCE, POSITION_REFERENCE);
+  }
+  void add_ORIENTATION_EPOCH(::flatbuffers::Offset<::flatbuffers::String> ORIENTATION_EPOCH) {
+    fbb_.AddOffset(CZMPacket::VT_ORIENTATION_EPOCH, ORIENTATION_EPOCH);
+  }
+  void add_ORIENTATION_ARRAY(::flatbuffers::Offset<::flatbuffers::Vector<double>> ORIENTATION_ARRAY) {
+    fbb_.AddOffset(CZMPacket::VT_ORIENTATION_ARRAY, ORIENTATION_ARRAY);
+  }
+  void add_ORIENTATION_INTERPOLATION(::flatbuffers::Offset<CZMInterpolation> ORIENTATION_INTERPOLATION) {
+    fbb_.AddOffset(CZMPacket::VT_ORIENTATION_INTERPOLATION, ORIENTATION_INTERPOLATION);
+  }
+  void add_ORIENTATION_REFERENCE(::flatbuffers::Offset<::flatbuffers::String> ORIENTATION_REFERENCE) {
+    fbb_.AddOffset(CZMPacket::VT_ORIENTATION_REFERENCE, ORIENTATION_REFERENCE);
+  }
+  void add_DYNAMIC_PROPERTIES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CZMDynamicProperty>>> DYNAMIC_PROPERTIES) {
+    fbb_.AddOffset(CZMPacket::VT_DYNAMIC_PROPERTIES, DYNAMIC_PROPERTIES);
+  }
   explicit CZMPacketBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1941,8 +6775,45 @@ inline ::flatbuffers::Offset<CZMPacket> CreateCZMPacket(
     ::flatbuffers::Offset<CZMPolygon> POLYGON = 0,
     ::flatbuffers::Offset<CZMModel> MODEL = 0,
     ::flatbuffers::Offset<CZMPath> PATH = 0,
-    ::flatbuffers::Offset<CZMEllipse> ELLIPSE = 0) {
+    ::flatbuffers::Offset<CZMEllipse> ELLIPSE = 0,
+    ::flatbuffers::Offset<CZMOrientation> ORIENTATION = 0,
+    ::flatbuffers::Offset<CZMViewFrom> VIEW_FROM = 0,
+    bool DELETE = false,
+    ::flatbuffers::Offset<CZMBox> BOX = 0,
+    ::flatbuffers::Offset<CZMCorridor> CORRIDOR = 0,
+    ::flatbuffers::Offset<CZMCylinder> CYLINDER = 0,
+    ::flatbuffers::Offset<CZMEllipsoid> ELLIPSOID = 0,
+    ::flatbuffers::Offset<CZMPolylineVolume> POLYLINE_VOLUME = 0,
+    ::flatbuffers::Offset<CZMRectangle> RECTANGLE = 0,
+    ::flatbuffers::Offset<CZMTileset> TILESET = 0,
+    ::flatbuffers::Offset<CZMWall> WALL = 0,
+    ::flatbuffers::Offset<CZMInterpolation> POSITION_INTERPOLATION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> POSITION_REFERENCE_FRAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> POSITION_REFERENCE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIENTATION_EPOCH = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> ORIENTATION_ARRAY = 0,
+    ::flatbuffers::Offset<CZMInterpolation> ORIENTATION_INTERPOLATION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIENTATION_REFERENCE = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CZMDynamicProperty>>> DYNAMIC_PROPERTIES = 0) {
   CZMPacketBuilder builder_(_fbb);
+  builder_.add_DYNAMIC_PROPERTIES(DYNAMIC_PROPERTIES);
+  builder_.add_ORIENTATION_REFERENCE(ORIENTATION_REFERENCE);
+  builder_.add_ORIENTATION_INTERPOLATION(ORIENTATION_INTERPOLATION);
+  builder_.add_ORIENTATION_ARRAY(ORIENTATION_ARRAY);
+  builder_.add_ORIENTATION_EPOCH(ORIENTATION_EPOCH);
+  builder_.add_POSITION_REFERENCE(POSITION_REFERENCE);
+  builder_.add_POSITION_REFERENCE_FRAME(POSITION_REFERENCE_FRAME);
+  builder_.add_POSITION_INTERPOLATION(POSITION_INTERPOLATION);
+  builder_.add_WALL(WALL);
+  builder_.add_TILESET(TILESET);
+  builder_.add_RECTANGLE(RECTANGLE);
+  builder_.add_POLYLINE_VOLUME(POLYLINE_VOLUME);
+  builder_.add_ELLIPSOID(ELLIPSOID);
+  builder_.add_CYLINDER(CYLINDER);
+  builder_.add_CORRIDOR(CORRIDOR);
+  builder_.add_BOX(BOX);
+  builder_.add_VIEW_FROM(VIEW_FROM);
+  builder_.add_ORIENTATION(ORIENTATION);
   builder_.add_ELLIPSE(ELLIPSE);
   builder_.add_PATH(PATH);
   builder_.add_MODEL(MODEL);
@@ -1961,6 +6832,7 @@ inline ::flatbuffers::Offset<CZMPacket> CreateCZMPacket(
   builder_.add_PARENT(PARENT);
   builder_.add_NAME(NAME);
   builder_.add_ID(ID);
+  builder_.add_DELETE(DELETE);
   return builder_.Finish();
 }
 
@@ -1983,7 +6855,26 @@ inline ::flatbuffers::Offset<CZMPacket> CreateCZMPacketDirect(
     ::flatbuffers::Offset<CZMPolygon> POLYGON = 0,
     ::flatbuffers::Offset<CZMModel> MODEL = 0,
     ::flatbuffers::Offset<CZMPath> PATH = 0,
-    ::flatbuffers::Offset<CZMEllipse> ELLIPSE = 0) {
+    ::flatbuffers::Offset<CZMEllipse> ELLIPSE = 0,
+    ::flatbuffers::Offset<CZMOrientation> ORIENTATION = 0,
+    ::flatbuffers::Offset<CZMViewFrom> VIEW_FROM = 0,
+    bool DELETE = false,
+    ::flatbuffers::Offset<CZMBox> BOX = 0,
+    ::flatbuffers::Offset<CZMCorridor> CORRIDOR = 0,
+    ::flatbuffers::Offset<CZMCylinder> CYLINDER = 0,
+    ::flatbuffers::Offset<CZMEllipsoid> ELLIPSOID = 0,
+    ::flatbuffers::Offset<CZMPolylineVolume> POLYLINE_VOLUME = 0,
+    ::flatbuffers::Offset<CZMRectangle> RECTANGLE = 0,
+    ::flatbuffers::Offset<CZMTileset> TILESET = 0,
+    ::flatbuffers::Offset<CZMWall> WALL = 0,
+    ::flatbuffers::Offset<CZMInterpolation> POSITION_INTERPOLATION = 0,
+    const char *POSITION_REFERENCE_FRAME = nullptr,
+    const char *POSITION_REFERENCE = nullptr,
+    const char *ORIENTATION_EPOCH = nullptr,
+    const std::vector<double> *ORIENTATION_ARRAY = nullptr,
+    ::flatbuffers::Offset<CZMInterpolation> ORIENTATION_INTERPOLATION = 0,
+    const char *ORIENTATION_REFERENCE = nullptr,
+    const std::vector<::flatbuffers::Offset<CZMDynamicProperty>> *DYNAMIC_PROPERTIES = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   auto PARENT__ = PARENT ? _fbb.CreateString(PARENT) : 0;
@@ -1992,6 +6883,12 @@ inline ::flatbuffers::Offset<CZMPacket> CreateCZMPacketDirect(
   auto POSITION_EPOCH__ = POSITION_EPOCH ? _fbb.CreateString(POSITION_EPOCH) : 0;
   auto POSITION_CARTOGRAPHIC_DEGREES_ARRAY__ = POSITION_CARTOGRAPHIC_DEGREES_ARRAY ? _fbb.CreateVector<double>(*POSITION_CARTOGRAPHIC_DEGREES_ARRAY) : 0;
   auto POSITION_CARTESIAN_ARRAY__ = POSITION_CARTESIAN_ARRAY ? _fbb.CreateVector<double>(*POSITION_CARTESIAN_ARRAY) : 0;
+  auto POSITION_REFERENCE_FRAME__ = POSITION_REFERENCE_FRAME ? _fbb.CreateString(POSITION_REFERENCE_FRAME) : 0;
+  auto POSITION_REFERENCE__ = POSITION_REFERENCE ? _fbb.CreateString(POSITION_REFERENCE) : 0;
+  auto ORIENTATION_EPOCH__ = ORIENTATION_EPOCH ? _fbb.CreateString(ORIENTATION_EPOCH) : 0;
+  auto ORIENTATION_ARRAY__ = ORIENTATION_ARRAY ? _fbb.CreateVector<double>(*ORIENTATION_ARRAY) : 0;
+  auto ORIENTATION_REFERENCE__ = ORIENTATION_REFERENCE ? _fbb.CreateString(ORIENTATION_REFERENCE) : 0;
+  auto DYNAMIC_PROPERTIES__ = DYNAMIC_PROPERTIES ? _fbb.CreateVector<::flatbuffers::Offset<CZMDynamicProperty>>(*DYNAMIC_PROPERTIES) : 0;
   return CreateCZMPacket(
       _fbb,
       ID__,
@@ -2011,7 +6908,26 @@ inline ::flatbuffers::Offset<CZMPacket> CreateCZMPacketDirect(
       POLYGON,
       MODEL,
       PATH,
-      ELLIPSE);
+      ELLIPSE,
+      ORIENTATION,
+      VIEW_FROM,
+      DELETE,
+      BOX,
+      CORRIDOR,
+      CYLINDER,
+      ELLIPSOID,
+      POLYLINE_VOLUME,
+      RECTANGLE,
+      TILESET,
+      WALL,
+      POSITION_INTERPOLATION,
+      POSITION_REFERENCE_FRAME__,
+      POSITION_REFERENCE__,
+      ORIENTATION_EPOCH__,
+      ORIENTATION_ARRAY__,
+      ORIENTATION_INTERPOLATION,
+      ORIENTATION_REFERENCE__,
+      DYNAMIC_PROPERTIES__);
 }
 
 /// CZML Document
@@ -2023,7 +6939,9 @@ struct CZM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_CLOCK_CURRENT_TIME = 8,
     VT_CLOCK_INTERVAL = 10,
     VT_CLOCK_MULTIPLIER = 12,
-    VT_PACKETS = 14
+    VT_CLOCK_RANGE = 14,
+    VT_CLOCK_STEP = 16,
+    VT_PACKETS = 18
   };
   /// Document-level name
   const ::flatbuffers::String *NAME() const {
@@ -2045,6 +6963,14 @@ struct CZM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double CLOCK_MULTIPLIER() const {
     return GetField<double>(VT_CLOCK_MULTIPLIER, 0.0);
   }
+  /// Clock range
+  const ::flatbuffers::String *CLOCK_RANGE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CLOCK_RANGE);
+  }
+  /// Clock step
+  const ::flatbuffers::String *CLOCK_STEP() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CLOCK_STEP);
+  }
   /// All packets in the document
   const ::flatbuffers::Vector<::flatbuffers::Offset<CZMPacket>> *PACKETS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<CZMPacket>> *>(VT_PACKETS);
@@ -2060,6 +6986,10 @@ struct CZM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_CLOCK_INTERVAL) &&
            verifier.VerifyString(CLOCK_INTERVAL()) &&
            VerifyField<double>(verifier, VT_CLOCK_MULTIPLIER, 8) &&
+           VerifyOffset(verifier, VT_CLOCK_RANGE) &&
+           verifier.VerifyString(CLOCK_RANGE()) &&
+           VerifyOffset(verifier, VT_CLOCK_STEP) &&
+           verifier.VerifyString(CLOCK_STEP()) &&
            VerifyOffset(verifier, VT_PACKETS) &&
            verifier.VerifyVector(PACKETS()) &&
            verifier.VerifyVectorOfTables(PACKETS()) &&
@@ -2086,6 +7016,12 @@ struct CZMBuilder {
   void add_CLOCK_MULTIPLIER(double CLOCK_MULTIPLIER) {
     fbb_.AddElement<double>(CZM::VT_CLOCK_MULTIPLIER, CLOCK_MULTIPLIER, 0.0);
   }
+  void add_CLOCK_RANGE(::flatbuffers::Offset<::flatbuffers::String> CLOCK_RANGE) {
+    fbb_.AddOffset(CZM::VT_CLOCK_RANGE, CLOCK_RANGE);
+  }
+  void add_CLOCK_STEP(::flatbuffers::Offset<::flatbuffers::String> CLOCK_STEP) {
+    fbb_.AddOffset(CZM::VT_CLOCK_STEP, CLOCK_STEP);
+  }
   void add_PACKETS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CZMPacket>>> PACKETS) {
     fbb_.AddOffset(CZM::VT_PACKETS, PACKETS);
   }
@@ -2107,10 +7043,14 @@ inline ::flatbuffers::Offset<CZM> CreateCZM(
     ::flatbuffers::Offset<::flatbuffers::String> CLOCK_CURRENT_TIME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CLOCK_INTERVAL = 0,
     double CLOCK_MULTIPLIER = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> CLOCK_RANGE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CLOCK_STEP = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CZMPacket>>> PACKETS = 0) {
   CZMBuilder builder_(_fbb);
   builder_.add_CLOCK_MULTIPLIER(CLOCK_MULTIPLIER);
   builder_.add_PACKETS(PACKETS);
+  builder_.add_CLOCK_STEP(CLOCK_STEP);
+  builder_.add_CLOCK_RANGE(CLOCK_RANGE);
   builder_.add_CLOCK_INTERVAL(CLOCK_INTERVAL);
   builder_.add_CLOCK_CURRENT_TIME(CLOCK_CURRENT_TIME);
   builder_.add_VERSION(VERSION);
@@ -2125,11 +7065,15 @@ inline ::flatbuffers::Offset<CZM> CreateCZMDirect(
     const char *CLOCK_CURRENT_TIME = nullptr,
     const char *CLOCK_INTERVAL = nullptr,
     double CLOCK_MULTIPLIER = 0.0,
+    const char *CLOCK_RANGE = nullptr,
+    const char *CLOCK_STEP = nullptr,
     const std::vector<::flatbuffers::Offset<CZMPacket>> *PACKETS = nullptr) {
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   auto VERSION__ = VERSION ? _fbb.CreateString(VERSION) : 0;
   auto CLOCK_CURRENT_TIME__ = CLOCK_CURRENT_TIME ? _fbb.CreateString(CLOCK_CURRENT_TIME) : 0;
   auto CLOCK_INTERVAL__ = CLOCK_INTERVAL ? _fbb.CreateString(CLOCK_INTERVAL) : 0;
+  auto CLOCK_RANGE__ = CLOCK_RANGE ? _fbb.CreateString(CLOCK_RANGE) : 0;
+  auto CLOCK_STEP__ = CLOCK_STEP ? _fbb.CreateString(CLOCK_STEP) : 0;
   auto PACKETS__ = PACKETS ? _fbb.CreateVector<::flatbuffers::Offset<CZMPacket>>(*PACKETS) : 0;
   return CreateCZM(
       _fbb,
@@ -2138,6 +7082,8 @@ inline ::flatbuffers::Offset<CZM> CreateCZMDirect(
       CLOCK_CURRENT_TIME__,
       CLOCK_INTERVAL__,
       CLOCK_MULTIPLIER,
+      CLOCK_RANGE__,
+      CLOCK_STEP__,
       PACKETS__);
 }
 

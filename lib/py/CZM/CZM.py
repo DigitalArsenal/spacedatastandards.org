@@ -69,10 +69,26 @@ class CZM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Clock range
+    # CZM
+    def CLOCK_RANGE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Clock step
+    # CZM
+    def CLOCK_STEP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
     # All packets in the document
     # CZM
     def PACKETS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
@@ -85,18 +101,18 @@ class CZM(object):
 
     # CZM
     def PACKETSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # CZM
     def PACKETSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         return o == 0
 
 def CZMStart(builder):
-    builder.StartObject(6)
+    builder.StartObject(8)
 
 def Start(builder):
     CZMStart(builder)
@@ -131,8 +147,20 @@ def CZMAddCLOCK_MULTIPLIER(builder, CLOCK_MULTIPLIER):
 def AddCLOCK_MULTIPLIER(builder, CLOCK_MULTIPLIER):
     CZMAddCLOCK_MULTIPLIER(builder, CLOCK_MULTIPLIER)
 
+def CZMAddCLOCK_RANGE(builder, CLOCK_RANGE):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(CLOCK_RANGE), 0)
+
+def AddCLOCK_RANGE(builder, CLOCK_RANGE):
+    CZMAddCLOCK_RANGE(builder, CLOCK_RANGE)
+
+def CZMAddCLOCK_STEP(builder, CLOCK_STEP):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(CLOCK_STEP), 0)
+
+def AddCLOCK_STEP(builder, CLOCK_STEP):
+    CZMAddCLOCK_STEP(builder, CLOCK_STEP)
+
 def CZMAddPACKETS(builder, PACKETS):
-    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(PACKETS), 0)
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(PACKETS), 0)
 
 def AddPACKETS(builder, PACKETS):
     CZMAddPACKETS(builder, PACKETS)
@@ -164,6 +192,8 @@ class CZMT(object):
         self.CLOCK_CURRENT_TIME = None  # type: str
         self.CLOCK_INTERVAL = None  # type: str
         self.CLOCK_MULTIPLIER = 0.0  # type: float
+        self.CLOCK_RANGE = None  # type: str
+        self.CLOCK_STEP = None  # type: str
         self.PACKETS = None  # type: List[CZMPacket.CZMPacketT]
 
     @classmethod
@@ -192,6 +222,8 @@ class CZMT(object):
         self.CLOCK_CURRENT_TIME = CZM.CLOCK_CURRENT_TIME()
         self.CLOCK_INTERVAL = CZM.CLOCK_INTERVAL()
         self.CLOCK_MULTIPLIER = CZM.CLOCK_MULTIPLIER()
+        self.CLOCK_RANGE = CZM.CLOCK_RANGE()
+        self.CLOCK_STEP = CZM.CLOCK_STEP()
         if not CZM.PACKETSIsNone():
             self.PACKETS = []
             for i in range(CZM.PACKETSLength()):
@@ -211,6 +243,10 @@ class CZMT(object):
             CLOCK_CURRENT_TIME = builder.CreateString(self.CLOCK_CURRENT_TIME)
         if self.CLOCK_INTERVAL is not None:
             CLOCK_INTERVAL = builder.CreateString(self.CLOCK_INTERVAL)
+        if self.CLOCK_RANGE is not None:
+            CLOCK_RANGE = builder.CreateString(self.CLOCK_RANGE)
+        if self.CLOCK_STEP is not None:
+            CLOCK_STEP = builder.CreateString(self.CLOCK_STEP)
         if self.PACKETS is not None:
             PACKETSlist = []
             for i in range(len(self.PACKETS)):
@@ -229,6 +265,10 @@ class CZMT(object):
         if self.CLOCK_INTERVAL is not None:
             CZMAddCLOCK_INTERVAL(builder, CLOCK_INTERVAL)
         CZMAddCLOCK_MULTIPLIER(builder, self.CLOCK_MULTIPLIER)
+        if self.CLOCK_RANGE is not None:
+            CZMAddCLOCK_RANGE(builder, CLOCK_RANGE)
+        if self.CLOCK_STEP is not None:
+            CZMAddCLOCK_STEP(builder, CLOCK_STEP)
         if self.PACKETS is not None:
             CZMAddPACKETS(builder, PACKETS)
         CZM = CZMEnd(builder)

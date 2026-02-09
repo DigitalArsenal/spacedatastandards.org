@@ -63,8 +63,42 @@ IS_NUMERIC():boolean {
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * True if this property value is a boolean
+ */
+IS_BOOL():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Boolean value (use when IS_BOOL is true)
+ */
+BOOL_VALUE():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * True if this property value is JSON null
+ */
+IS_NULL():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Raw JSON string for complex values (objects, arrays)
+ */
+JSON_VALUE():string|null
+JSON_VALUE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+JSON_VALUE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startGJNProperty(builder:flatbuffers.Builder) {
-  builder.startObject(4);
+  builder.startObject(8);
 }
 
 static addKey(builder:flatbuffers.Builder, KEYOffset:flatbuffers.Offset) {
@@ -83,17 +117,37 @@ static addIsNumeric(builder:flatbuffers.Builder, IS_NUMERIC:boolean) {
   builder.addFieldInt8(3, +IS_NUMERIC, +false);
 }
 
+static addIsBool(builder:flatbuffers.Builder, IS_BOOL:boolean) {
+  builder.addFieldInt8(4, +IS_BOOL, +false);
+}
+
+static addBoolValue(builder:flatbuffers.Builder, BOOL_VALUE:boolean) {
+  builder.addFieldInt8(5, +BOOL_VALUE, +false);
+}
+
+static addIsNull(builder:flatbuffers.Builder, IS_NULL:boolean) {
+  builder.addFieldInt8(6, +IS_NULL, +false);
+}
+
+static addJsonValue(builder:flatbuffers.Builder, JSON_VALUEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, JSON_VALUEOffset, 0);
+}
+
 static endGJNProperty(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createGJNProperty(builder:flatbuffers.Builder, KEYOffset:flatbuffers.Offset, VALUEOffset:flatbuffers.Offset, NUM_VALUE:number, IS_NUMERIC:boolean):flatbuffers.Offset {
+static createGJNProperty(builder:flatbuffers.Builder, KEYOffset:flatbuffers.Offset, VALUEOffset:flatbuffers.Offset, NUM_VALUE:number, IS_NUMERIC:boolean, IS_BOOL:boolean, BOOL_VALUE:boolean, IS_NULL:boolean, JSON_VALUEOffset:flatbuffers.Offset):flatbuffers.Offset {
   GJNProperty.startGJNProperty(builder);
   GJNProperty.addKey(builder, KEYOffset);
   GJNProperty.addValue(builder, VALUEOffset);
   GJNProperty.addNumValue(builder, NUM_VALUE);
   GJNProperty.addIsNumeric(builder, IS_NUMERIC);
+  GJNProperty.addIsBool(builder, IS_BOOL);
+  GJNProperty.addBoolValue(builder, BOOL_VALUE);
+  GJNProperty.addIsNull(builder, IS_NULL);
+  GJNProperty.addJsonValue(builder, JSON_VALUEOffset);
   return GJNProperty.endGJNProperty(builder);
 }
 
@@ -102,7 +156,11 @@ unpack(): GJNPropertyT {
     this.KEY(),
     this.VALUE(),
     this.NUM_VALUE(),
-    this.IS_NUMERIC()
+    this.IS_NUMERIC(),
+    this.IS_BOOL(),
+    this.BOOL_VALUE(),
+    this.IS_NULL(),
+    this.JSON_VALUE()
   );
 }
 
@@ -112,6 +170,10 @@ unpackTo(_o: GJNPropertyT): void {
   _o.VALUE = this.VALUE();
   _o.NUM_VALUE = this.NUM_VALUE();
   _o.IS_NUMERIC = this.IS_NUMERIC();
+  _o.IS_BOOL = this.IS_BOOL();
+  _o.BOOL_VALUE = this.BOOL_VALUE();
+  _o.IS_NULL = this.IS_NULL();
+  _o.JSON_VALUE = this.JSON_VALUE();
 }
 }
 
@@ -120,19 +182,28 @@ constructor(
   public KEY: string|Uint8Array|null = null,
   public VALUE: string|Uint8Array|null = null,
   public NUM_VALUE: number = 0.0,
-  public IS_NUMERIC: boolean = false
+  public IS_NUMERIC: boolean = false,
+  public IS_BOOL: boolean = false,
+  public BOOL_VALUE: boolean = false,
+  public IS_NULL: boolean = false,
+  public JSON_VALUE: string|Uint8Array|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const KEY = (this.KEY !== null ? builder.createString(this.KEY!) : 0);
   const VALUE = (this.VALUE !== null ? builder.createString(this.VALUE!) : 0);
+  const JSON_VALUE = (this.JSON_VALUE !== null ? builder.createString(this.JSON_VALUE!) : 0);
 
   return GJNProperty.createGJNProperty(builder,
     KEY,
     VALUE,
     this.NUM_VALUE,
-    this.IS_NUMERIC
+    this.IS_NUMERIC,
+    this.IS_BOOL,
+    this.BOOL_VALUE,
+    this.IS_NULL,
+    JSON_VALUE
   );
 }
 }

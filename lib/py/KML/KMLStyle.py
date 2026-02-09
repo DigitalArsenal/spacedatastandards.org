@@ -97,8 +97,20 @@ class KMLStyle(object):
             return obj
         return None
 
+    # List style
+    # KMLStyle
+    def LIST_STYLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLListStyle import KMLListStyle
+            obj = KMLListStyle()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def KMLStyleStart(builder):
-    builder.StartObject(6)
+    builder.StartObject(7)
 
 def Start(builder):
     KMLStyleStart(builder)
@@ -139,6 +151,12 @@ def KMLStyleAddBALLOON_STYLE(builder, BALLOON_STYLE):
 def AddBALLOON_STYLE(builder, BALLOON_STYLE):
     KMLStyleAddBALLOON_STYLE(builder, BALLOON_STYLE)
 
+def KMLStyleAddLIST_STYLE(builder, LIST_STYLE):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(LIST_STYLE), 0)
+
+def AddLIST_STYLE(builder, LIST_STYLE):
+    KMLStyleAddLIST_STYLE(builder, LIST_STYLE)
+
 def KMLStyleEnd(builder):
     return builder.EndObject()
 
@@ -149,6 +167,7 @@ import KMLBalloonStyle
 import KMLIconStyle
 import KMLLabelStyle
 import KMLLineStyle
+import KMLListStyle
 import KMLPolyStyle
 try:
     from typing import Optional
@@ -165,6 +184,7 @@ class KMLStyleT(object):
         self.LINE_STYLE = None  # type: Optional[KMLLineStyle.KMLLineStyleT]
         self.POLY_STYLE = None  # type: Optional[KMLPolyStyle.KMLPolyStyleT]
         self.BALLOON_STYLE = None  # type: Optional[KMLBalloonStyle.KMLBalloonStyleT]
+        self.LIST_STYLE = None  # type: Optional[KMLListStyle.KMLListStyleT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -198,6 +218,8 @@ class KMLStyleT(object):
             self.POLY_STYLE = KMLPolyStyle.KMLPolyStyleT.InitFromObj(kmlstyle.POLY_STYLE())
         if kmlstyle.BALLOON_STYLE() is not None:
             self.BALLOON_STYLE = KMLBalloonStyle.KMLBalloonStyleT.InitFromObj(kmlstyle.BALLOON_STYLE())
+        if kmlstyle.LIST_STYLE() is not None:
+            self.LIST_STYLE = KMLListStyle.KMLListStyleT.InitFromObj(kmlstyle.LIST_STYLE())
 
     # KMLStyleT
     def Pack(self, builder):
@@ -213,6 +235,8 @@ class KMLStyleT(object):
             POLY_STYLE = self.POLY_STYLE.Pack(builder)
         if self.BALLOON_STYLE is not None:
             BALLOON_STYLE = self.BALLOON_STYLE.Pack(builder)
+        if self.LIST_STYLE is not None:
+            LIST_STYLE = self.LIST_STYLE.Pack(builder)
         KMLStyleStart(builder)
         if self.ID is not None:
             KMLStyleAddID(builder, ID)
@@ -226,5 +250,7 @@ class KMLStyleT(object):
             KMLStyleAddPOLY_STYLE(builder, POLY_STYLE)
         if self.BALLOON_STYLE is not None:
             KMLStyleAddBALLOON_STYLE(builder, BALLOON_STYLE)
+        if self.LIST_STYLE is not None:
+            KMLStyleAddLIST_STYLE(builder, LIST_STYLE)
         kmlstyle = KMLStyleEnd(builder)
         return kmlstyle

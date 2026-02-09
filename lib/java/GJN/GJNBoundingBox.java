@@ -52,6 +52,10 @@ public final class GJNBoundingBox extends Table {
    * Maximum altitude (optional)
    */
   public double MAX_ALTITUDE() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * True if the bbox includes altitude (6 values vs 4)
+   */
+  public boolean HAS_ALTITUDE() { int o = __offset(16); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createGJNBoundingBox(FlatBufferBuilder builder,
       double WEST,
@@ -59,24 +63,27 @@ public final class GJNBoundingBox extends Table {
       double EAST,
       double NORTH,
       double MIN_ALTITUDE,
-      double MAX_ALTITUDE) {
-    builder.startTable(6);
+      double MAX_ALTITUDE,
+      boolean HAS_ALTITUDE) {
+    builder.startTable(7);
     GJNBoundingBox.addMaxAltitude(builder, MAX_ALTITUDE);
     GJNBoundingBox.addMinAltitude(builder, MIN_ALTITUDE);
     GJNBoundingBox.addNorth(builder, NORTH);
     GJNBoundingBox.addEast(builder, EAST);
     GJNBoundingBox.addSouth(builder, SOUTH);
     GJNBoundingBox.addWest(builder, WEST);
+    GJNBoundingBox.addHasAltitude(builder, HAS_ALTITUDE);
     return GJNBoundingBox.endGJNBoundingBox(builder);
   }
 
-  public static void startGJNBoundingBox(FlatBufferBuilder builder) { builder.startTable(6); }
+  public static void startGJNBoundingBox(FlatBufferBuilder builder) { builder.startTable(7); }
   public static void addWest(FlatBufferBuilder builder, double WEST) { builder.addDouble(0, WEST, 0.0); }
   public static void addSouth(FlatBufferBuilder builder, double SOUTH) { builder.addDouble(1, SOUTH, 0.0); }
   public static void addEast(FlatBufferBuilder builder, double EAST) { builder.addDouble(2, EAST, 0.0); }
   public static void addNorth(FlatBufferBuilder builder, double NORTH) { builder.addDouble(3, NORTH, 0.0); }
   public static void addMinAltitude(FlatBufferBuilder builder, double MIN_ALTITUDE) { builder.addDouble(4, MIN_ALTITUDE, 0.0); }
   public static void addMaxAltitude(FlatBufferBuilder builder, double MAX_ALTITUDE) { builder.addDouble(5, MAX_ALTITUDE, 0.0); }
+  public static void addHasAltitude(FlatBufferBuilder builder, boolean HAS_ALTITUDE) { builder.addBoolean(6, HAS_ALTITUDE, false); }
   public static int endGJNBoundingBox(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

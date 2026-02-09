@@ -37,6 +37,12 @@ struct KMLLabelStyleBuilder;
 struct KMLBalloonStyle;
 struct KMLBalloonStyleBuilder;
 
+struct KMLItemIcon;
+struct KMLItemIconBuilder;
+
+struct KMLListStyle;
+struct KMLListStyleBuilder;
+
 struct KMLStyle;
 struct KMLStyleBuilder;
 
@@ -58,6 +64,18 @@ struct KMLLinearRingBuilder;
 struct KMLPolygon;
 struct KMLPolygonBuilder;
 
+struct KMLResourceMapAlias;
+struct KMLResourceMapAliasBuilder;
+
+struct KMLModel;
+struct KMLModelBuilder;
+
+struct KMLTrack;
+struct KMLTrackBuilder;
+
+struct KMLMultiTrack;
+struct KMLMultiTrackBuilder;
+
 struct KMLMultiGeometry;
 struct KMLMultiGeometryBuilder;
 
@@ -70,11 +88,80 @@ struct KMLTimeStampBuilder;
 struct KMLData;
 struct KMLDataBuilder;
 
+struct KMLSimpleField;
+struct KMLSimpleFieldBuilder;
+
+struct KMLSchema;
+struct KMLSchemaBuilder;
+
+struct KMLSimpleData;
+struct KMLSimpleDataBuilder;
+
+struct KMLSchemaData;
+struct KMLSchemaDataBuilder;
+
+struct KMLLatLonQuad;
+struct KMLLatLonQuadBuilder;
+
+struct KMLRegion;
+struct KMLRegionBuilder;
+
+struct KMLLatLonAltBox;
+struct KMLLatLonAltBoxBuilder;
+
+struct KMLLod;
+struct KMLLodBuilder;
+
+struct KMLLink;
+struct KMLLinkBuilder;
+
+struct KMLViewVolume;
+struct KMLViewVolumeBuilder;
+
+struct KMLImagePyramid;
+struct KMLImagePyramidBuilder;
+
 struct KMLNetworkLink;
 struct KMLNetworkLinkBuilder;
 
+struct KMLScreenOverlay;
+struct KMLScreenOverlayBuilder;
+
+struct KMLPhotoOverlay;
+struct KMLPhotoOverlayBuilder;
+
 struct KMLGroundOverlay;
 struct KMLGroundOverlayBuilder;
+
+struct KMLUpdate;
+struct KMLUpdateBuilder;
+
+struct KMLNetworkLinkControl;
+struct KMLNetworkLinkControlBuilder;
+
+struct KMLFlyTo;
+struct KMLFlyToBuilder;
+
+struct KMLWait;
+struct KMLWaitBuilder;
+
+struct KMLAnimatedUpdate;
+struct KMLAnimatedUpdateBuilder;
+
+struct KMLTourControl;
+struct KMLTourControlBuilder;
+
+struct KMLSoundCue;
+struct KMLSoundCueBuilder;
+
+struct KMLTourPrimitive;
+struct KMLTourPrimitiveBuilder;
+
+struct KMLPlaylist;
+struct KMLPlaylistBuilder;
+
+struct KMLTour;
+struct KMLTourBuilder;
 
 struct KMLPlacemark;
 struct KMLPlacemarkBuilder;
@@ -289,6 +376,165 @@ inline const char *EnumNameKMLViewRefreshMode(KMLViewRefreshMode e) {
   if (::flatbuffers::IsOutRange(e, KMLViewRefreshMode_NEVER, KMLViewRefreshMode_ON_REGION)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesKMLViewRefreshMode()[index];
+}
+
+enum KMLListItemType : int8_t {
+  KMLListItemType_CHECK = 0,
+  KMLListItemType_CHECK_OFF_ONLY = 1,
+  KMLListItemType_CHECK_HIDE_CHILDREN = 2,
+  KMLListItemType_RADIO_FOLDER = 3,
+  KMLListItemType_MIN = KMLListItemType_CHECK,
+  KMLListItemType_MAX = KMLListItemType_RADIO_FOLDER
+};
+
+inline const KMLListItemType (&EnumValuesKMLListItemType())[4] {
+  static const KMLListItemType values[] = {
+    KMLListItemType_CHECK,
+    KMLListItemType_CHECK_OFF_ONLY,
+    KMLListItemType_CHECK_HIDE_CHILDREN,
+    KMLListItemType_RADIO_FOLDER
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesKMLListItemType() {
+  static const char * const names[5] = {
+    "CHECK",
+    "CHECK_OFF_ONLY",
+    "CHECK_HIDE_CHILDREN",
+    "RADIO_FOLDER",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameKMLListItemType(KMLListItemType e) {
+  if (::flatbuffers::IsOutRange(e, KMLListItemType_CHECK, KMLListItemType_RADIO_FOLDER)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesKMLListItemType()[index];
+}
+
+enum KMLDisplayMode : int8_t {
+  KMLDisplayMode_DEFAULT = 0,
+  KMLDisplayMode_HIDE = 1,
+  KMLDisplayMode_MIN = KMLDisplayMode_DEFAULT,
+  KMLDisplayMode_MAX = KMLDisplayMode_HIDE
+};
+
+inline const KMLDisplayMode (&EnumValuesKMLDisplayMode())[2] {
+  static const KMLDisplayMode values[] = {
+    KMLDisplayMode_DEFAULT,
+    KMLDisplayMode_HIDE
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesKMLDisplayMode() {
+  static const char * const names[3] = {
+    "DEFAULT",
+    "HIDE",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameKMLDisplayMode(KMLDisplayMode e) {
+  if (::flatbuffers::IsOutRange(e, KMLDisplayMode_DEFAULT, KMLDisplayMode_HIDE)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesKMLDisplayMode()[index];
+}
+
+enum KMLGridOrigin : int8_t {
+  KMLGridOrigin_LOWER_LEFT = 0,
+  KMLGridOrigin_UPPER_LEFT = 1,
+  KMLGridOrigin_MIN = KMLGridOrigin_LOWER_LEFT,
+  KMLGridOrigin_MAX = KMLGridOrigin_UPPER_LEFT
+};
+
+inline const KMLGridOrigin (&EnumValuesKMLGridOrigin())[2] {
+  static const KMLGridOrigin values[] = {
+    KMLGridOrigin_LOWER_LEFT,
+    KMLGridOrigin_UPPER_LEFT
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesKMLGridOrigin() {
+  static const char * const names[3] = {
+    "LOWER_LEFT",
+    "UPPER_LEFT",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameKMLGridOrigin(KMLGridOrigin e) {
+  if (::flatbuffers::IsOutRange(e, KMLGridOrigin_LOWER_LEFT, KMLGridOrigin_UPPER_LEFT)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesKMLGridOrigin()[index];
+}
+
+enum KMLShape : int8_t {
+  KMLShape_RECTANGLE = 0,
+  KMLShape_CYLINDER = 1,
+  KMLShape_SPHERE = 2,
+  KMLShape_MIN = KMLShape_RECTANGLE,
+  KMLShape_MAX = KMLShape_SPHERE
+};
+
+inline const KMLShape (&EnumValuesKMLShape())[3] {
+  static const KMLShape values[] = {
+    KMLShape_RECTANGLE,
+    KMLShape_CYLINDER,
+    KMLShape_SPHERE
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesKMLShape() {
+  static const char * const names[4] = {
+    "RECTANGLE",
+    "CYLINDER",
+    "SPHERE",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameKMLShape(KMLShape e) {
+  if (::flatbuffers::IsOutRange(e, KMLShape_RECTANGLE, KMLShape_SPHERE)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesKMLShape()[index];
+}
+
+enum KMLFlyToMode : int8_t {
+  KMLFlyToMode_BOUNCE = 0,
+  KMLFlyToMode_SMOOTH = 1,
+  KMLFlyToMode_MIN = KMLFlyToMode_BOUNCE,
+  KMLFlyToMode_MAX = KMLFlyToMode_SMOOTH
+};
+
+inline const KMLFlyToMode (&EnumValuesKMLFlyToMode())[2] {
+  static const KMLFlyToMode values[] = {
+    KMLFlyToMode_BOUNCE,
+    KMLFlyToMode_SMOOTH
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesKMLFlyToMode() {
+  static const char * const names[3] = {
+    "BOUNCE",
+    "SMOOTH",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameKMLFlyToMode(KMLFlyToMode e) {
+  if (::flatbuffers::IsOutRange(e, KMLFlyToMode_BOUNCE, KMLFlyToMode_SMOOTH)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesKMLFlyToMode()[index];
 }
 
 /// KML coordinate (longitude, latitude, optional altitude)
@@ -739,7 +985,11 @@ struct KMLLineStyle FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_COLOR = 4,
     VT_COLOR_MODE = 6,
-    VT_WIDTH = 8
+    VT_WIDTH = 8,
+    VT_GX_OUTER_COLOR = 10,
+    VT_GX_OUTER_WIDTH = 12,
+    VT_GX_PHYSICAL_WIDTH = 14,
+    VT_GX_LABEL_VISIBILITY = 16
   };
   /// KML color in aabbggrr hex format
   const ::flatbuffers::String *COLOR() const {
@@ -753,12 +1003,33 @@ struct KMLLineStyle FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double WIDTH() const {
     return GetField<double>(VT_WIDTH, 0.0);
   }
+  /// gx:outerColor
+  const ::flatbuffers::String *GX_OUTER_COLOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_GX_OUTER_COLOR);
+  }
+  /// gx:outerWidth
+  double GX_OUTER_WIDTH() const {
+    return GetField<double>(VT_GX_OUTER_WIDTH, 0.0);
+  }
+  /// gx:physicalWidth
+  double GX_PHYSICAL_WIDTH() const {
+    return GetField<double>(VT_GX_PHYSICAL_WIDTH, 0.0);
+  }
+  /// gx:labelVisibility
+  bool GX_LABEL_VISIBILITY() const {
+    return GetField<uint8_t>(VT_GX_LABEL_VISIBILITY, 0) != 0;
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_COLOR) &&
            verifier.VerifyString(COLOR()) &&
            VerifyField<int8_t>(verifier, VT_COLOR_MODE, 1) &&
            VerifyField<double>(verifier, VT_WIDTH, 8) &&
+           VerifyOffset(verifier, VT_GX_OUTER_COLOR) &&
+           verifier.VerifyString(GX_OUTER_COLOR()) &&
+           VerifyField<double>(verifier, VT_GX_OUTER_WIDTH, 8) &&
+           VerifyField<double>(verifier, VT_GX_PHYSICAL_WIDTH, 8) &&
+           VerifyField<uint8_t>(verifier, VT_GX_LABEL_VISIBILITY, 1) &&
            verifier.EndTable();
   }
 };
@@ -776,6 +1047,18 @@ struct KMLLineStyleBuilder {
   void add_WIDTH(double WIDTH) {
     fbb_.AddElement<double>(KMLLineStyle::VT_WIDTH, WIDTH, 0.0);
   }
+  void add_GX_OUTER_COLOR(::flatbuffers::Offset<::flatbuffers::String> GX_OUTER_COLOR) {
+    fbb_.AddOffset(KMLLineStyle::VT_GX_OUTER_COLOR, GX_OUTER_COLOR);
+  }
+  void add_GX_OUTER_WIDTH(double GX_OUTER_WIDTH) {
+    fbb_.AddElement<double>(KMLLineStyle::VT_GX_OUTER_WIDTH, GX_OUTER_WIDTH, 0.0);
+  }
+  void add_GX_PHYSICAL_WIDTH(double GX_PHYSICAL_WIDTH) {
+    fbb_.AddElement<double>(KMLLineStyle::VT_GX_PHYSICAL_WIDTH, GX_PHYSICAL_WIDTH, 0.0);
+  }
+  void add_GX_LABEL_VISIBILITY(bool GX_LABEL_VISIBILITY) {
+    fbb_.AddElement<uint8_t>(KMLLineStyle::VT_GX_LABEL_VISIBILITY, static_cast<uint8_t>(GX_LABEL_VISIBILITY), 0);
+  }
   explicit KMLLineStyleBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -791,10 +1074,18 @@ inline ::flatbuffers::Offset<KMLLineStyle> CreateKMLLineStyle(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> COLOR = 0,
     KMLColorMode COLOR_MODE = KMLColorMode_NORMAL,
-    double WIDTH = 0.0) {
+    double WIDTH = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> GX_OUTER_COLOR = 0,
+    double GX_OUTER_WIDTH = 0.0,
+    double GX_PHYSICAL_WIDTH = 0.0,
+    bool GX_LABEL_VISIBILITY = false) {
   KMLLineStyleBuilder builder_(_fbb);
+  builder_.add_GX_PHYSICAL_WIDTH(GX_PHYSICAL_WIDTH);
+  builder_.add_GX_OUTER_WIDTH(GX_OUTER_WIDTH);
   builder_.add_WIDTH(WIDTH);
+  builder_.add_GX_OUTER_COLOR(GX_OUTER_COLOR);
   builder_.add_COLOR(COLOR);
+  builder_.add_GX_LABEL_VISIBILITY(GX_LABEL_VISIBILITY);
   builder_.add_COLOR_MODE(COLOR_MODE);
   return builder_.Finish();
 }
@@ -803,13 +1094,22 @@ inline ::flatbuffers::Offset<KMLLineStyle> CreateKMLLineStyleDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *COLOR = nullptr,
     KMLColorMode COLOR_MODE = KMLColorMode_NORMAL,
-    double WIDTH = 0.0) {
+    double WIDTH = 0.0,
+    const char *GX_OUTER_COLOR = nullptr,
+    double GX_OUTER_WIDTH = 0.0,
+    double GX_PHYSICAL_WIDTH = 0.0,
+    bool GX_LABEL_VISIBILITY = false) {
   auto COLOR__ = COLOR ? _fbb.CreateString(COLOR) : 0;
+  auto GX_OUTER_COLOR__ = GX_OUTER_COLOR ? _fbb.CreateString(GX_OUTER_COLOR) : 0;
   return CreateKMLLineStyle(
       _fbb,
       COLOR__,
       COLOR_MODE,
-      WIDTH);
+      WIDTH,
+      GX_OUTER_COLOR__,
+      GX_OUTER_WIDTH,
+      GX_PHYSICAL_WIDTH,
+      GX_LABEL_VISIBILITY);
 }
 
 /// Polygon style
@@ -989,7 +1289,8 @@ struct KMLBalloonStyle FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_BG_COLOR = 4,
     VT_TEXT_COLOR = 6,
-    VT_TEXT = 8
+    VT_TEXT = 8,
+    VT_DISPLAY_MODE = 10
   };
   /// Background color in aabbggrr hex format
   const ::flatbuffers::String *BG_COLOR() const {
@@ -1003,6 +1304,10 @@ struct KMLBalloonStyle FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *TEXT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TEXT);
   }
+  /// Display mode
+  KMLDisplayMode DISPLAY_MODE() const {
+    return static_cast<KMLDisplayMode>(GetField<int8_t>(VT_DISPLAY_MODE, 0));
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_BG_COLOR) &&
@@ -1011,6 +1316,7 @@ struct KMLBalloonStyle FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(TEXT_COLOR()) &&
            VerifyOffset(verifier, VT_TEXT) &&
            verifier.VerifyString(TEXT()) &&
+           VerifyField<int8_t>(verifier, VT_DISPLAY_MODE, 1) &&
            verifier.EndTable();
   }
 };
@@ -1028,6 +1334,9 @@ struct KMLBalloonStyleBuilder {
   void add_TEXT(::flatbuffers::Offset<::flatbuffers::String> TEXT) {
     fbb_.AddOffset(KMLBalloonStyle::VT_TEXT, TEXT);
   }
+  void add_DISPLAY_MODE(KMLDisplayMode DISPLAY_MODE) {
+    fbb_.AddElement<int8_t>(KMLBalloonStyle::VT_DISPLAY_MODE, static_cast<int8_t>(DISPLAY_MODE), 0);
+  }
   explicit KMLBalloonStyleBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1043,11 +1352,13 @@ inline ::flatbuffers::Offset<KMLBalloonStyle> CreateKMLBalloonStyle(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> BG_COLOR = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TEXT_COLOR = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TEXT = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> TEXT = 0,
+    KMLDisplayMode DISPLAY_MODE = KMLDisplayMode_DEFAULT) {
   KMLBalloonStyleBuilder builder_(_fbb);
   builder_.add_TEXT(TEXT);
   builder_.add_TEXT_COLOR(TEXT_COLOR);
   builder_.add_BG_COLOR(BG_COLOR);
+  builder_.add_DISPLAY_MODE(DISPLAY_MODE);
   return builder_.Finish();
 }
 
@@ -1055,7 +1366,8 @@ inline ::flatbuffers::Offset<KMLBalloonStyle> CreateKMLBalloonStyleDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *BG_COLOR = nullptr,
     const char *TEXT_COLOR = nullptr,
-    const char *TEXT = nullptr) {
+    const char *TEXT = nullptr,
+    KMLDisplayMode DISPLAY_MODE = KMLDisplayMode_DEFAULT) {
   auto BG_COLOR__ = BG_COLOR ? _fbb.CreateString(BG_COLOR) : 0;
   auto TEXT_COLOR__ = TEXT_COLOR ? _fbb.CreateString(TEXT_COLOR) : 0;
   auto TEXT__ = TEXT ? _fbb.CreateString(TEXT) : 0;
@@ -1063,7 +1375,171 @@ inline ::flatbuffers::Offset<KMLBalloonStyle> CreateKMLBalloonStyleDirect(
       _fbb,
       BG_COLOR__,
       TEXT_COLOR__,
-      TEXT__);
+      TEXT__,
+      DISPLAY_MODE);
+}
+
+/// Item icon for ListStyle
+struct KMLItemIcon FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLItemIconBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_STATE = 4,
+    VT_HREF = 6
+  };
+  /// State (open, closed, error, fetching0-2)
+  const ::flatbuffers::String *STATE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_STATE);
+  }
+  /// Icon URL
+  const ::flatbuffers::String *HREF() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_HREF);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_STATE) &&
+           verifier.VerifyString(STATE()) &&
+           VerifyOffset(verifier, VT_HREF) &&
+           verifier.VerifyString(HREF()) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLItemIconBuilder {
+  typedef KMLItemIcon Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_STATE(::flatbuffers::Offset<::flatbuffers::String> STATE) {
+    fbb_.AddOffset(KMLItemIcon::VT_STATE, STATE);
+  }
+  void add_HREF(::flatbuffers::Offset<::flatbuffers::String> HREF) {
+    fbb_.AddOffset(KMLItemIcon::VT_HREF, HREF);
+  }
+  explicit KMLItemIconBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLItemIcon> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLItemIcon>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLItemIcon> CreateKMLItemIcon(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> STATE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> HREF = 0) {
+  KMLItemIconBuilder builder_(_fbb);
+  builder_.add_HREF(HREF);
+  builder_.add_STATE(STATE);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<KMLItemIcon> CreateKMLItemIconDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *STATE = nullptr,
+    const char *HREF = nullptr) {
+  auto STATE__ = STATE ? _fbb.CreateString(STATE) : 0;
+  auto HREF__ = HREF ? _fbb.CreateString(HREF) : 0;
+  return CreateKMLItemIcon(
+      _fbb,
+      STATE__,
+      HREF__);
+}
+
+/// List style
+struct KMLListStyle FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLListStyleBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_LIST_ITEM_TYPE = 4,
+    VT_BG_COLOR = 6,
+    VT_ITEM_ICONS = 8,
+    VT_MAX_SNIPPET_LINES = 10
+  };
+  /// List item type
+  KMLListItemType LIST_ITEM_TYPE() const {
+    return static_cast<KMLListItemType>(GetField<int8_t>(VT_LIST_ITEM_TYPE, 0));
+  }
+  /// Background color
+  const ::flatbuffers::String *BG_COLOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_BG_COLOR);
+  }
+  /// Item icons
+  const ::flatbuffers::Vector<::flatbuffers::Offset<KMLItemIcon>> *ITEM_ICONS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLItemIcon>> *>(VT_ITEM_ICONS);
+  }
+  /// Maximum snippet lines
+  int32_t MAX_SNIPPET_LINES() const {
+    return GetField<int32_t>(VT_MAX_SNIPPET_LINES, 0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int8_t>(verifier, VT_LIST_ITEM_TYPE, 1) &&
+           VerifyOffset(verifier, VT_BG_COLOR) &&
+           verifier.VerifyString(BG_COLOR()) &&
+           VerifyOffset(verifier, VT_ITEM_ICONS) &&
+           verifier.VerifyVector(ITEM_ICONS()) &&
+           verifier.VerifyVectorOfTables(ITEM_ICONS()) &&
+           VerifyField<int32_t>(verifier, VT_MAX_SNIPPET_LINES, 4) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLListStyleBuilder {
+  typedef KMLListStyle Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_LIST_ITEM_TYPE(KMLListItemType LIST_ITEM_TYPE) {
+    fbb_.AddElement<int8_t>(KMLListStyle::VT_LIST_ITEM_TYPE, static_cast<int8_t>(LIST_ITEM_TYPE), 0);
+  }
+  void add_BG_COLOR(::flatbuffers::Offset<::flatbuffers::String> BG_COLOR) {
+    fbb_.AddOffset(KMLListStyle::VT_BG_COLOR, BG_COLOR);
+  }
+  void add_ITEM_ICONS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLItemIcon>>> ITEM_ICONS) {
+    fbb_.AddOffset(KMLListStyle::VT_ITEM_ICONS, ITEM_ICONS);
+  }
+  void add_MAX_SNIPPET_LINES(int32_t MAX_SNIPPET_LINES) {
+    fbb_.AddElement<int32_t>(KMLListStyle::VT_MAX_SNIPPET_LINES, MAX_SNIPPET_LINES, 0);
+  }
+  explicit KMLListStyleBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLListStyle> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLListStyle>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLListStyle> CreateKMLListStyle(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    KMLListItemType LIST_ITEM_TYPE = KMLListItemType_CHECK,
+    ::flatbuffers::Offset<::flatbuffers::String> BG_COLOR = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLItemIcon>>> ITEM_ICONS = 0,
+    int32_t MAX_SNIPPET_LINES = 0) {
+  KMLListStyleBuilder builder_(_fbb);
+  builder_.add_MAX_SNIPPET_LINES(MAX_SNIPPET_LINES);
+  builder_.add_ITEM_ICONS(ITEM_ICONS);
+  builder_.add_BG_COLOR(BG_COLOR);
+  builder_.add_LIST_ITEM_TYPE(LIST_ITEM_TYPE);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<KMLListStyle> CreateKMLListStyleDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    KMLListItemType LIST_ITEM_TYPE = KMLListItemType_CHECK,
+    const char *BG_COLOR = nullptr,
+    const std::vector<::flatbuffers::Offset<KMLItemIcon>> *ITEM_ICONS = nullptr,
+    int32_t MAX_SNIPPET_LINES = 0) {
+  auto BG_COLOR__ = BG_COLOR ? _fbb.CreateString(BG_COLOR) : 0;
+  auto ITEM_ICONS__ = ITEM_ICONS ? _fbb.CreateVector<::flatbuffers::Offset<KMLItemIcon>>(*ITEM_ICONS) : 0;
+  return CreateKMLListStyle(
+      _fbb,
+      LIST_ITEM_TYPE,
+      BG_COLOR__,
+      ITEM_ICONS__,
+      MAX_SNIPPET_LINES);
 }
 
 /// Style definition
@@ -1075,7 +1551,8 @@ struct KMLStyle FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_LABEL_STYLE = 8,
     VT_LINE_STYLE = 10,
     VT_POLY_STYLE = 12,
-    VT_BALLOON_STYLE = 14
+    VT_BALLOON_STYLE = 14,
+    VT_LIST_STYLE = 16
   };
   /// Style identifier
   const ::flatbuffers::String *ID() const {
@@ -1101,6 +1578,10 @@ struct KMLStyle FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const KMLBalloonStyle *BALLOON_STYLE() const {
     return GetPointer<const KMLBalloonStyle *>(VT_BALLOON_STYLE);
   }
+  /// List style
+  const KMLListStyle *LIST_STYLE() const {
+    return GetPointer<const KMLListStyle *>(VT_LIST_STYLE);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
@@ -1115,6 +1596,8 @@ struct KMLStyle FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyTable(POLY_STYLE()) &&
            VerifyOffset(verifier, VT_BALLOON_STYLE) &&
            verifier.VerifyTable(BALLOON_STYLE()) &&
+           VerifyOffset(verifier, VT_LIST_STYLE) &&
+           verifier.VerifyTable(LIST_STYLE()) &&
            verifier.EndTable();
   }
 };
@@ -1141,6 +1624,9 @@ struct KMLStyleBuilder {
   void add_BALLOON_STYLE(::flatbuffers::Offset<KMLBalloonStyle> BALLOON_STYLE) {
     fbb_.AddOffset(KMLStyle::VT_BALLOON_STYLE, BALLOON_STYLE);
   }
+  void add_LIST_STYLE(::flatbuffers::Offset<KMLListStyle> LIST_STYLE) {
+    fbb_.AddOffset(KMLStyle::VT_LIST_STYLE, LIST_STYLE);
+  }
   explicit KMLStyleBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1159,8 +1645,10 @@ inline ::flatbuffers::Offset<KMLStyle> CreateKMLStyle(
     ::flatbuffers::Offset<KMLLabelStyle> LABEL_STYLE = 0,
     ::flatbuffers::Offset<KMLLineStyle> LINE_STYLE = 0,
     ::flatbuffers::Offset<KMLPolyStyle> POLY_STYLE = 0,
-    ::flatbuffers::Offset<KMLBalloonStyle> BALLOON_STYLE = 0) {
+    ::flatbuffers::Offset<KMLBalloonStyle> BALLOON_STYLE = 0,
+    ::flatbuffers::Offset<KMLListStyle> LIST_STYLE = 0) {
   KMLStyleBuilder builder_(_fbb);
+  builder_.add_LIST_STYLE(LIST_STYLE);
   builder_.add_BALLOON_STYLE(BALLOON_STYLE);
   builder_.add_POLY_STYLE(POLY_STYLE);
   builder_.add_LINE_STYLE(LINE_STYLE);
@@ -1177,7 +1665,8 @@ inline ::flatbuffers::Offset<KMLStyle> CreateKMLStyleDirect(
     ::flatbuffers::Offset<KMLLabelStyle> LABEL_STYLE = 0,
     ::flatbuffers::Offset<KMLLineStyle> LINE_STYLE = 0,
     ::flatbuffers::Offset<KMLPolyStyle> POLY_STYLE = 0,
-    ::flatbuffers::Offset<KMLBalloonStyle> BALLOON_STYLE = 0) {
+    ::flatbuffers::Offset<KMLBalloonStyle> BALLOON_STYLE = 0,
+    ::flatbuffers::Offset<KMLListStyle> LIST_STYLE = 0) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   return CreateKMLStyle(
       _fbb,
@@ -1186,7 +1675,8 @@ inline ::flatbuffers::Offset<KMLStyle> CreateKMLStyleDirect(
       LABEL_STYLE,
       LINE_STYLE,
       POLY_STYLE,
-      BALLOON_STYLE);
+      BALLOON_STYLE,
+      LIST_STYLE);
 }
 
 /// Style map pair
@@ -1397,7 +1887,8 @@ struct KMLLineString FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_COORDINATES = 4,
     VT_ALTITUDE_MODE = 6,
     VT_EXTRUDE = 8,
-    VT_TESSELLATE = 10
+    VT_TESSELLATE = 10,
+    VT_GX_DRAW_ORDER = 12
   };
   /// Coordinates
   const ::flatbuffers::Vector<::flatbuffers::Offset<KMLCoordinate>> *COORDINATES() const {
@@ -1415,6 +1906,10 @@ struct KMLLineString FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool TESSELLATE() const {
     return GetField<uint8_t>(VT_TESSELLATE, 0) != 0;
   }
+  /// gx:drawOrder
+  int32_t GX_DRAW_ORDER() const {
+    return GetField<int32_t>(VT_GX_DRAW_ORDER, 0);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_COORDINATES) &&
@@ -1423,6 +1918,7 @@ struct KMLLineString FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<int8_t>(verifier, VT_ALTITUDE_MODE, 1) &&
            VerifyField<uint8_t>(verifier, VT_EXTRUDE, 1) &&
            VerifyField<uint8_t>(verifier, VT_TESSELLATE, 1) &&
+           VerifyField<int32_t>(verifier, VT_GX_DRAW_ORDER, 4) &&
            verifier.EndTable();
   }
 };
@@ -1443,6 +1939,9 @@ struct KMLLineStringBuilder {
   void add_TESSELLATE(bool TESSELLATE) {
     fbb_.AddElement<uint8_t>(KMLLineString::VT_TESSELLATE, static_cast<uint8_t>(TESSELLATE), 0);
   }
+  void add_GX_DRAW_ORDER(int32_t GX_DRAW_ORDER) {
+    fbb_.AddElement<int32_t>(KMLLineString::VT_GX_DRAW_ORDER, GX_DRAW_ORDER, 0);
+  }
   explicit KMLLineStringBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1459,8 +1958,10 @@ inline ::flatbuffers::Offset<KMLLineString> CreateKMLLineString(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLCoordinate>>> COORDINATES = 0,
     KMLAltitudeMode ALTITUDE_MODE = KMLAltitudeMode_CLAMP_TO_GROUND,
     bool EXTRUDE = false,
-    bool TESSELLATE = false) {
+    bool TESSELLATE = false,
+    int32_t GX_DRAW_ORDER = 0) {
   KMLLineStringBuilder builder_(_fbb);
+  builder_.add_GX_DRAW_ORDER(GX_DRAW_ORDER);
   builder_.add_COORDINATES(COORDINATES);
   builder_.add_TESSELLATE(TESSELLATE);
   builder_.add_EXTRUDE(EXTRUDE);
@@ -1473,31 +1974,51 @@ inline ::flatbuffers::Offset<KMLLineString> CreateKMLLineStringDirect(
     const std::vector<::flatbuffers::Offset<KMLCoordinate>> *COORDINATES = nullptr,
     KMLAltitudeMode ALTITUDE_MODE = KMLAltitudeMode_CLAMP_TO_GROUND,
     bool EXTRUDE = false,
-    bool TESSELLATE = false) {
+    bool TESSELLATE = false,
+    int32_t GX_DRAW_ORDER = 0) {
   auto COORDINATES__ = COORDINATES ? _fbb.CreateVector<::flatbuffers::Offset<KMLCoordinate>>(*COORDINATES) : 0;
   return CreateKMLLineString(
       _fbb,
       COORDINATES__,
       ALTITUDE_MODE,
       EXTRUDE,
-      TESSELLATE);
+      TESSELLATE,
+      GX_DRAW_ORDER);
 }
 
 /// LinearRing geometry
 struct KMLLinearRing FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef KMLLinearRingBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_COORDINATES = 4
+    VT_COORDINATES = 4,
+    VT_EXTRUDE = 6,
+    VT_TESSELLATE = 8,
+    VT_ALTITUDE_MODE = 10
   };
   /// Coordinates (first = last to close the ring)
   const ::flatbuffers::Vector<::flatbuffers::Offset<KMLCoordinate>> *COORDINATES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLCoordinate>> *>(VT_COORDINATES);
+  }
+  /// Whether to extrude to ground
+  bool EXTRUDE() const {
+    return GetField<uint8_t>(VT_EXTRUDE, 0) != 0;
+  }
+  /// Whether to tessellate
+  bool TESSELLATE() const {
+    return GetField<uint8_t>(VT_TESSELLATE, 0) != 0;
+  }
+  /// Altitude mode
+  KMLAltitudeMode ALTITUDE_MODE() const {
+    return static_cast<KMLAltitudeMode>(GetField<int8_t>(VT_ALTITUDE_MODE, 0));
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_COORDINATES) &&
            verifier.VerifyVector(COORDINATES()) &&
            verifier.VerifyVectorOfTables(COORDINATES()) &&
+           VerifyField<uint8_t>(verifier, VT_EXTRUDE, 1) &&
+           VerifyField<uint8_t>(verifier, VT_TESSELLATE, 1) &&
+           VerifyField<int8_t>(verifier, VT_ALTITUDE_MODE, 1) &&
            verifier.EndTable();
   }
 };
@@ -1508,6 +2029,15 @@ struct KMLLinearRingBuilder {
   ::flatbuffers::uoffset_t start_;
   void add_COORDINATES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLCoordinate>>> COORDINATES) {
     fbb_.AddOffset(KMLLinearRing::VT_COORDINATES, COORDINATES);
+  }
+  void add_EXTRUDE(bool EXTRUDE) {
+    fbb_.AddElement<uint8_t>(KMLLinearRing::VT_EXTRUDE, static_cast<uint8_t>(EXTRUDE), 0);
+  }
+  void add_TESSELLATE(bool TESSELLATE) {
+    fbb_.AddElement<uint8_t>(KMLLinearRing::VT_TESSELLATE, static_cast<uint8_t>(TESSELLATE), 0);
+  }
+  void add_ALTITUDE_MODE(KMLAltitudeMode ALTITUDE_MODE) {
+    fbb_.AddElement<int8_t>(KMLLinearRing::VT_ALTITUDE_MODE, static_cast<int8_t>(ALTITUDE_MODE), 0);
   }
   explicit KMLLinearRingBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -1522,19 +2052,31 @@ struct KMLLinearRingBuilder {
 
 inline ::flatbuffers::Offset<KMLLinearRing> CreateKMLLinearRing(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLCoordinate>>> COORDINATES = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLCoordinate>>> COORDINATES = 0,
+    bool EXTRUDE = false,
+    bool TESSELLATE = false,
+    KMLAltitudeMode ALTITUDE_MODE = KMLAltitudeMode_CLAMP_TO_GROUND) {
   KMLLinearRingBuilder builder_(_fbb);
   builder_.add_COORDINATES(COORDINATES);
+  builder_.add_ALTITUDE_MODE(ALTITUDE_MODE);
+  builder_.add_TESSELLATE(TESSELLATE);
+  builder_.add_EXTRUDE(EXTRUDE);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<KMLLinearRing> CreateKMLLinearRingDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<::flatbuffers::Offset<KMLCoordinate>> *COORDINATES = nullptr) {
+    const std::vector<::flatbuffers::Offset<KMLCoordinate>> *COORDINATES = nullptr,
+    bool EXTRUDE = false,
+    bool TESSELLATE = false,
+    KMLAltitudeMode ALTITUDE_MODE = KMLAltitudeMode_CLAMP_TO_GROUND) {
   auto COORDINATES__ = COORDINATES ? _fbb.CreateVector<::flatbuffers::Offset<KMLCoordinate>>(*COORDINATES) : 0;
   return CreateKMLLinearRing(
       _fbb,
-      COORDINATES__);
+      COORDINATES__,
+      EXTRUDE,
+      TESSELLATE,
+      ALTITUDE_MODE);
 }
 
 /// Polygon geometry
@@ -1644,6 +2186,492 @@ inline ::flatbuffers::Offset<KMLPolygon> CreateKMLPolygonDirect(
       TESSELLATE);
 }
 
+/// Resource map alias for Model
+struct KMLResourceMapAlias FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLResourceMapAliasBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_TARGET_HREF = 4,
+    VT_SOURCE_HREF = 6
+  };
+  /// Target href
+  const ::flatbuffers::String *TARGET_HREF() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TARGET_HREF);
+  }
+  /// Source href
+  const ::flatbuffers::String *SOURCE_HREF() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SOURCE_HREF);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_TARGET_HREF) &&
+           verifier.VerifyString(TARGET_HREF()) &&
+           VerifyOffset(verifier, VT_SOURCE_HREF) &&
+           verifier.VerifyString(SOURCE_HREF()) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLResourceMapAliasBuilder {
+  typedef KMLResourceMapAlias Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_TARGET_HREF(::flatbuffers::Offset<::flatbuffers::String> TARGET_HREF) {
+    fbb_.AddOffset(KMLResourceMapAlias::VT_TARGET_HREF, TARGET_HREF);
+  }
+  void add_SOURCE_HREF(::flatbuffers::Offset<::flatbuffers::String> SOURCE_HREF) {
+    fbb_.AddOffset(KMLResourceMapAlias::VT_SOURCE_HREF, SOURCE_HREF);
+  }
+  explicit KMLResourceMapAliasBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLResourceMapAlias> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLResourceMapAlias>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLResourceMapAlias> CreateKMLResourceMapAlias(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> TARGET_HREF = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SOURCE_HREF = 0) {
+  KMLResourceMapAliasBuilder builder_(_fbb);
+  builder_.add_SOURCE_HREF(SOURCE_HREF);
+  builder_.add_TARGET_HREF(TARGET_HREF);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<KMLResourceMapAlias> CreateKMLResourceMapAliasDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *TARGET_HREF = nullptr,
+    const char *SOURCE_HREF = nullptr) {
+  auto TARGET_HREF__ = TARGET_HREF ? _fbb.CreateString(TARGET_HREF) : 0;
+  auto SOURCE_HREF__ = SOURCE_HREF ? _fbb.CreateString(SOURCE_HREF) : 0;
+  return CreateKMLResourceMapAlias(
+      _fbb,
+      TARGET_HREF__,
+      SOURCE_HREF__);
+}
+
+/// 3D Model geometry
+struct KMLModel FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLModelBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_ALTITUDE_MODE = 4,
+    VT_LOCATION_LON = 6,
+    VT_LOCATION_LAT = 8,
+    VT_LOCATION_ALT = 10,
+    VT_ORIENTATION_HEADING = 12,
+    VT_ORIENTATION_TILT = 14,
+    VT_ORIENTATION_ROLL = 16,
+    VT_SCALE_X = 18,
+    VT_SCALE_Y = 20,
+    VT_SCALE_Z = 22,
+    VT_LINK_HREF = 24,
+    VT_RESOURCE_MAP = 26
+  };
+  /// Altitude mode
+  KMLAltitudeMode ALTITUDE_MODE() const {
+    return static_cast<KMLAltitudeMode>(GetField<int8_t>(VT_ALTITUDE_MODE, 0));
+  }
+  /// Location longitude
+  double LOCATION_LON() const {
+    return GetField<double>(VT_LOCATION_LON, 0.0);
+  }
+  /// Location latitude
+  double LOCATION_LAT() const {
+    return GetField<double>(VT_LOCATION_LAT, 0.0);
+  }
+  /// Location altitude
+  double LOCATION_ALT() const {
+    return GetField<double>(VT_LOCATION_ALT, 0.0);
+  }
+  /// Orientation heading
+  double ORIENTATION_HEADING() const {
+    return GetField<double>(VT_ORIENTATION_HEADING, 0.0);
+  }
+  /// Orientation tilt
+  double ORIENTATION_TILT() const {
+    return GetField<double>(VT_ORIENTATION_TILT, 0.0);
+  }
+  /// Orientation roll
+  double ORIENTATION_ROLL() const {
+    return GetField<double>(VT_ORIENTATION_ROLL, 0.0);
+  }
+  /// Scale X
+  double SCALE_X() const {
+    return GetField<double>(VT_SCALE_X, 0.0);
+  }
+  /// Scale Y
+  double SCALE_Y() const {
+    return GetField<double>(VT_SCALE_Y, 0.0);
+  }
+  /// Scale Z
+  double SCALE_Z() const {
+    return GetField<double>(VT_SCALE_Z, 0.0);
+  }
+  /// Link to 3D model file
+  const ::flatbuffers::String *LINK_HREF() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LINK_HREF);
+  }
+  /// Resource map aliases
+  const ::flatbuffers::Vector<::flatbuffers::Offset<KMLResourceMapAlias>> *RESOURCE_MAP() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLResourceMapAlias>> *>(VT_RESOURCE_MAP);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int8_t>(verifier, VT_ALTITUDE_MODE, 1) &&
+           VerifyField<double>(verifier, VT_LOCATION_LON, 8) &&
+           VerifyField<double>(verifier, VT_LOCATION_LAT, 8) &&
+           VerifyField<double>(verifier, VT_LOCATION_ALT, 8) &&
+           VerifyField<double>(verifier, VT_ORIENTATION_HEADING, 8) &&
+           VerifyField<double>(verifier, VT_ORIENTATION_TILT, 8) &&
+           VerifyField<double>(verifier, VT_ORIENTATION_ROLL, 8) &&
+           VerifyField<double>(verifier, VT_SCALE_X, 8) &&
+           VerifyField<double>(verifier, VT_SCALE_Y, 8) &&
+           VerifyField<double>(verifier, VT_SCALE_Z, 8) &&
+           VerifyOffset(verifier, VT_LINK_HREF) &&
+           verifier.VerifyString(LINK_HREF()) &&
+           VerifyOffset(verifier, VT_RESOURCE_MAP) &&
+           verifier.VerifyVector(RESOURCE_MAP()) &&
+           verifier.VerifyVectorOfTables(RESOURCE_MAP()) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLModelBuilder {
+  typedef KMLModel Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_ALTITUDE_MODE(KMLAltitudeMode ALTITUDE_MODE) {
+    fbb_.AddElement<int8_t>(KMLModel::VT_ALTITUDE_MODE, static_cast<int8_t>(ALTITUDE_MODE), 0);
+  }
+  void add_LOCATION_LON(double LOCATION_LON) {
+    fbb_.AddElement<double>(KMLModel::VT_LOCATION_LON, LOCATION_LON, 0.0);
+  }
+  void add_LOCATION_LAT(double LOCATION_LAT) {
+    fbb_.AddElement<double>(KMLModel::VT_LOCATION_LAT, LOCATION_LAT, 0.0);
+  }
+  void add_LOCATION_ALT(double LOCATION_ALT) {
+    fbb_.AddElement<double>(KMLModel::VT_LOCATION_ALT, LOCATION_ALT, 0.0);
+  }
+  void add_ORIENTATION_HEADING(double ORIENTATION_HEADING) {
+    fbb_.AddElement<double>(KMLModel::VT_ORIENTATION_HEADING, ORIENTATION_HEADING, 0.0);
+  }
+  void add_ORIENTATION_TILT(double ORIENTATION_TILT) {
+    fbb_.AddElement<double>(KMLModel::VT_ORIENTATION_TILT, ORIENTATION_TILT, 0.0);
+  }
+  void add_ORIENTATION_ROLL(double ORIENTATION_ROLL) {
+    fbb_.AddElement<double>(KMLModel::VT_ORIENTATION_ROLL, ORIENTATION_ROLL, 0.0);
+  }
+  void add_SCALE_X(double SCALE_X) {
+    fbb_.AddElement<double>(KMLModel::VT_SCALE_X, SCALE_X, 0.0);
+  }
+  void add_SCALE_Y(double SCALE_Y) {
+    fbb_.AddElement<double>(KMLModel::VT_SCALE_Y, SCALE_Y, 0.0);
+  }
+  void add_SCALE_Z(double SCALE_Z) {
+    fbb_.AddElement<double>(KMLModel::VT_SCALE_Z, SCALE_Z, 0.0);
+  }
+  void add_LINK_HREF(::flatbuffers::Offset<::flatbuffers::String> LINK_HREF) {
+    fbb_.AddOffset(KMLModel::VT_LINK_HREF, LINK_HREF);
+  }
+  void add_RESOURCE_MAP(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLResourceMapAlias>>> RESOURCE_MAP) {
+    fbb_.AddOffset(KMLModel::VT_RESOURCE_MAP, RESOURCE_MAP);
+  }
+  explicit KMLModelBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLModel> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLModel>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLModel> CreateKMLModel(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    KMLAltitudeMode ALTITUDE_MODE = KMLAltitudeMode_CLAMP_TO_GROUND,
+    double LOCATION_LON = 0.0,
+    double LOCATION_LAT = 0.0,
+    double LOCATION_ALT = 0.0,
+    double ORIENTATION_HEADING = 0.0,
+    double ORIENTATION_TILT = 0.0,
+    double ORIENTATION_ROLL = 0.0,
+    double SCALE_X = 0.0,
+    double SCALE_Y = 0.0,
+    double SCALE_Z = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> LINK_HREF = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLResourceMapAlias>>> RESOURCE_MAP = 0) {
+  KMLModelBuilder builder_(_fbb);
+  builder_.add_SCALE_Z(SCALE_Z);
+  builder_.add_SCALE_Y(SCALE_Y);
+  builder_.add_SCALE_X(SCALE_X);
+  builder_.add_ORIENTATION_ROLL(ORIENTATION_ROLL);
+  builder_.add_ORIENTATION_TILT(ORIENTATION_TILT);
+  builder_.add_ORIENTATION_HEADING(ORIENTATION_HEADING);
+  builder_.add_LOCATION_ALT(LOCATION_ALT);
+  builder_.add_LOCATION_LAT(LOCATION_LAT);
+  builder_.add_LOCATION_LON(LOCATION_LON);
+  builder_.add_RESOURCE_MAP(RESOURCE_MAP);
+  builder_.add_LINK_HREF(LINK_HREF);
+  builder_.add_ALTITUDE_MODE(ALTITUDE_MODE);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<KMLModel> CreateKMLModelDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    KMLAltitudeMode ALTITUDE_MODE = KMLAltitudeMode_CLAMP_TO_GROUND,
+    double LOCATION_LON = 0.0,
+    double LOCATION_LAT = 0.0,
+    double LOCATION_ALT = 0.0,
+    double ORIENTATION_HEADING = 0.0,
+    double ORIENTATION_TILT = 0.0,
+    double ORIENTATION_ROLL = 0.0,
+    double SCALE_X = 0.0,
+    double SCALE_Y = 0.0,
+    double SCALE_Z = 0.0,
+    const char *LINK_HREF = nullptr,
+    const std::vector<::flatbuffers::Offset<KMLResourceMapAlias>> *RESOURCE_MAP = nullptr) {
+  auto LINK_HREF__ = LINK_HREF ? _fbb.CreateString(LINK_HREF) : 0;
+  auto RESOURCE_MAP__ = RESOURCE_MAP ? _fbb.CreateVector<::flatbuffers::Offset<KMLResourceMapAlias>>(*RESOURCE_MAP) : 0;
+  return CreateKMLModel(
+      _fbb,
+      ALTITUDE_MODE,
+      LOCATION_LON,
+      LOCATION_LAT,
+      LOCATION_ALT,
+      ORIENTATION_HEADING,
+      ORIENTATION_TILT,
+      ORIENTATION_ROLL,
+      SCALE_X,
+      SCALE_Y,
+      SCALE_Z,
+      LINK_HREF__,
+      RESOURCE_MAP__);
+}
+
+/// gx:Track — time-stamped position track
+struct KMLTrack FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLTrackBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_EXTRUDE = 4,
+    VT_TESSELLATE = 6,
+    VT_ALTITUDE_MODE = 8,
+    VT_WHEN = 10,
+    VT_COORDS = 12,
+    VT_ANGLES = 14,
+    VT_MODEL = 16
+  };
+  /// Whether to extrude
+  bool EXTRUDE() const {
+    return GetField<uint8_t>(VT_EXTRUDE, 0) != 0;
+  }
+  /// Whether to tessellate
+  bool TESSELLATE() const {
+    return GetField<uint8_t>(VT_TESSELLATE, 0) != 0;
+  }
+  /// Altitude mode
+  KMLAltitudeMode ALTITUDE_MODE() const {
+    return static_cast<KMLAltitudeMode>(GetField<int8_t>(VT_ALTITUDE_MODE, 0));
+  }
+  /// Time stamps (ISO 8601)
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *WHEN() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_WHEN);
+  }
+  /// Coordinates (lon lat alt per entry)
+  const ::flatbuffers::Vector<::flatbuffers::Offset<KMLCoordinate>> *COORDS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLCoordinate>> *>(VT_COORDS);
+  }
+  /// Angles (heading tilt roll per entry)
+  const ::flatbuffers::Vector<::flatbuffers::Offset<KMLCoordinate>> *ANGLES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLCoordinate>> *>(VT_ANGLES);
+  }
+  /// Model for track visualization
+  const KMLModel *MODEL() const {
+    return GetPointer<const KMLModel *>(VT_MODEL);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_EXTRUDE, 1) &&
+           VerifyField<uint8_t>(verifier, VT_TESSELLATE, 1) &&
+           VerifyField<int8_t>(verifier, VT_ALTITUDE_MODE, 1) &&
+           VerifyOffset(verifier, VT_WHEN) &&
+           verifier.VerifyVector(WHEN()) &&
+           verifier.VerifyVectorOfStrings(WHEN()) &&
+           VerifyOffset(verifier, VT_COORDS) &&
+           verifier.VerifyVector(COORDS()) &&
+           verifier.VerifyVectorOfTables(COORDS()) &&
+           VerifyOffset(verifier, VT_ANGLES) &&
+           verifier.VerifyVector(ANGLES()) &&
+           verifier.VerifyVectorOfTables(ANGLES()) &&
+           VerifyOffset(verifier, VT_MODEL) &&
+           verifier.VerifyTable(MODEL()) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLTrackBuilder {
+  typedef KMLTrack Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_EXTRUDE(bool EXTRUDE) {
+    fbb_.AddElement<uint8_t>(KMLTrack::VT_EXTRUDE, static_cast<uint8_t>(EXTRUDE), 0);
+  }
+  void add_TESSELLATE(bool TESSELLATE) {
+    fbb_.AddElement<uint8_t>(KMLTrack::VT_TESSELLATE, static_cast<uint8_t>(TESSELLATE), 0);
+  }
+  void add_ALTITUDE_MODE(KMLAltitudeMode ALTITUDE_MODE) {
+    fbb_.AddElement<int8_t>(KMLTrack::VT_ALTITUDE_MODE, static_cast<int8_t>(ALTITUDE_MODE), 0);
+  }
+  void add_WHEN(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> WHEN) {
+    fbb_.AddOffset(KMLTrack::VT_WHEN, WHEN);
+  }
+  void add_COORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLCoordinate>>> COORDS) {
+    fbb_.AddOffset(KMLTrack::VT_COORDS, COORDS);
+  }
+  void add_ANGLES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLCoordinate>>> ANGLES) {
+    fbb_.AddOffset(KMLTrack::VT_ANGLES, ANGLES);
+  }
+  void add_MODEL(::flatbuffers::Offset<KMLModel> MODEL) {
+    fbb_.AddOffset(KMLTrack::VT_MODEL, MODEL);
+  }
+  explicit KMLTrackBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLTrack> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLTrack>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLTrack> CreateKMLTrack(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    bool EXTRUDE = false,
+    bool TESSELLATE = false,
+    KMLAltitudeMode ALTITUDE_MODE = KMLAltitudeMode_CLAMP_TO_GROUND,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> WHEN = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLCoordinate>>> COORDS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLCoordinate>>> ANGLES = 0,
+    ::flatbuffers::Offset<KMLModel> MODEL = 0) {
+  KMLTrackBuilder builder_(_fbb);
+  builder_.add_MODEL(MODEL);
+  builder_.add_ANGLES(ANGLES);
+  builder_.add_COORDS(COORDS);
+  builder_.add_WHEN(WHEN);
+  builder_.add_ALTITUDE_MODE(ALTITUDE_MODE);
+  builder_.add_TESSELLATE(TESSELLATE);
+  builder_.add_EXTRUDE(EXTRUDE);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<KMLTrack> CreateKMLTrackDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    bool EXTRUDE = false,
+    bool TESSELLATE = false,
+    KMLAltitudeMode ALTITUDE_MODE = KMLAltitudeMode_CLAMP_TO_GROUND,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *WHEN = nullptr,
+    const std::vector<::flatbuffers::Offset<KMLCoordinate>> *COORDS = nullptr,
+    const std::vector<::flatbuffers::Offset<KMLCoordinate>> *ANGLES = nullptr,
+    ::flatbuffers::Offset<KMLModel> MODEL = 0) {
+  auto WHEN__ = WHEN ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*WHEN) : 0;
+  auto COORDS__ = COORDS ? _fbb.CreateVector<::flatbuffers::Offset<KMLCoordinate>>(*COORDS) : 0;
+  auto ANGLES__ = ANGLES ? _fbb.CreateVector<::flatbuffers::Offset<KMLCoordinate>>(*ANGLES) : 0;
+  return CreateKMLTrack(
+      _fbb,
+      EXTRUDE,
+      TESSELLATE,
+      ALTITUDE_MODE,
+      WHEN__,
+      COORDS__,
+      ANGLES__,
+      MODEL);
+}
+
+/// gx:MultiTrack
+struct KMLMultiTrack FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLMultiTrackBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_ALTITUDE_MODE = 4,
+    VT_INTERPOLATE = 6,
+    VT_TRACKS = 8
+  };
+  /// Altitude mode
+  KMLAltitudeMode ALTITUDE_MODE() const {
+    return static_cast<KMLAltitudeMode>(GetField<int8_t>(VT_ALTITUDE_MODE, 0));
+  }
+  /// Whether to interpolate between tracks
+  bool INTERPOLATE() const {
+    return GetField<uint8_t>(VT_INTERPOLATE, 0) != 0;
+  }
+  /// Child tracks
+  const ::flatbuffers::Vector<::flatbuffers::Offset<KMLTrack>> *TRACKS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLTrack>> *>(VT_TRACKS);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int8_t>(verifier, VT_ALTITUDE_MODE, 1) &&
+           VerifyField<uint8_t>(verifier, VT_INTERPOLATE, 1) &&
+           VerifyOffset(verifier, VT_TRACKS) &&
+           verifier.VerifyVector(TRACKS()) &&
+           verifier.VerifyVectorOfTables(TRACKS()) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLMultiTrackBuilder {
+  typedef KMLMultiTrack Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_ALTITUDE_MODE(KMLAltitudeMode ALTITUDE_MODE) {
+    fbb_.AddElement<int8_t>(KMLMultiTrack::VT_ALTITUDE_MODE, static_cast<int8_t>(ALTITUDE_MODE), 0);
+  }
+  void add_INTERPOLATE(bool INTERPOLATE) {
+    fbb_.AddElement<uint8_t>(KMLMultiTrack::VT_INTERPOLATE, static_cast<uint8_t>(INTERPOLATE), 0);
+  }
+  void add_TRACKS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLTrack>>> TRACKS) {
+    fbb_.AddOffset(KMLMultiTrack::VT_TRACKS, TRACKS);
+  }
+  explicit KMLMultiTrackBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLMultiTrack> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLMultiTrack>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLMultiTrack> CreateKMLMultiTrack(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    KMLAltitudeMode ALTITUDE_MODE = KMLAltitudeMode_CLAMP_TO_GROUND,
+    bool INTERPOLATE = false,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLTrack>>> TRACKS = 0) {
+  KMLMultiTrackBuilder builder_(_fbb);
+  builder_.add_TRACKS(TRACKS);
+  builder_.add_INTERPOLATE(INTERPOLATE);
+  builder_.add_ALTITUDE_MODE(ALTITUDE_MODE);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<KMLMultiTrack> CreateKMLMultiTrackDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    KMLAltitudeMode ALTITUDE_MODE = KMLAltitudeMode_CLAMP_TO_GROUND,
+    bool INTERPOLATE = false,
+    const std::vector<::flatbuffers::Offset<KMLTrack>> *TRACKS = nullptr) {
+  auto TRACKS__ = TRACKS ? _fbb.CreateVector<::flatbuffers::Offset<KMLTrack>>(*TRACKS) : 0;
+  return CreateKMLMultiTrack(
+      _fbb,
+      ALTITUDE_MODE,
+      INTERPOLATE,
+      TRACKS__);
+}
+
 /// MultiGeometry
 struct KMLMultiGeometry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef KMLMultiGeometryBuilder Builder;
@@ -1651,7 +2679,11 @@ struct KMLMultiGeometry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_POINTS = 4,
     VT_LINE_STRINGS = 6,
     VT_POLYGONS = 8,
-    VT_MULTI_GEOMETRIES = 10
+    VT_MULTI_GEOMETRIES = 10,
+    VT_LINEAR_RINGS = 12,
+    VT_MODELS = 14,
+    VT_TRACKS = 16,
+    VT_MULTI_TRACKS = 18
   };
   /// Child points
   const ::flatbuffers::Vector<::flatbuffers::Offset<KMLPoint>> *POINTS() const {
@@ -1669,6 +2701,22 @@ struct KMLMultiGeometry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<KMLMultiGeometry>> *MULTI_GEOMETRIES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLMultiGeometry>> *>(VT_MULTI_GEOMETRIES);
   }
+  /// Child linear rings (standalone)
+  const ::flatbuffers::Vector<::flatbuffers::Offset<KMLLinearRing>> *LINEAR_RINGS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLLinearRing>> *>(VT_LINEAR_RINGS);
+  }
+  /// Child 3D models
+  const ::flatbuffers::Vector<::flatbuffers::Offset<KMLModel>> *MODELS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLModel>> *>(VT_MODELS);
+  }
+  /// Child tracks
+  const ::flatbuffers::Vector<::flatbuffers::Offset<KMLTrack>> *TRACKS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLTrack>> *>(VT_TRACKS);
+  }
+  /// Child multi-tracks
+  const ::flatbuffers::Vector<::flatbuffers::Offset<KMLMultiTrack>> *MULTI_TRACKS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLMultiTrack>> *>(VT_MULTI_TRACKS);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_POINTS) &&
@@ -1683,6 +2731,18 @@ struct KMLMultiGeometry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_MULTI_GEOMETRIES) &&
            verifier.VerifyVector(MULTI_GEOMETRIES()) &&
            verifier.VerifyVectorOfTables(MULTI_GEOMETRIES()) &&
+           VerifyOffset(verifier, VT_LINEAR_RINGS) &&
+           verifier.VerifyVector(LINEAR_RINGS()) &&
+           verifier.VerifyVectorOfTables(LINEAR_RINGS()) &&
+           VerifyOffset(verifier, VT_MODELS) &&
+           verifier.VerifyVector(MODELS()) &&
+           verifier.VerifyVectorOfTables(MODELS()) &&
+           VerifyOffset(verifier, VT_TRACKS) &&
+           verifier.VerifyVector(TRACKS()) &&
+           verifier.VerifyVectorOfTables(TRACKS()) &&
+           VerifyOffset(verifier, VT_MULTI_TRACKS) &&
+           verifier.VerifyVector(MULTI_TRACKS()) &&
+           verifier.VerifyVectorOfTables(MULTI_TRACKS()) &&
            verifier.EndTable();
   }
 };
@@ -1703,6 +2763,18 @@ struct KMLMultiGeometryBuilder {
   void add_MULTI_GEOMETRIES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLMultiGeometry>>> MULTI_GEOMETRIES) {
     fbb_.AddOffset(KMLMultiGeometry::VT_MULTI_GEOMETRIES, MULTI_GEOMETRIES);
   }
+  void add_LINEAR_RINGS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLLinearRing>>> LINEAR_RINGS) {
+    fbb_.AddOffset(KMLMultiGeometry::VT_LINEAR_RINGS, LINEAR_RINGS);
+  }
+  void add_MODELS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLModel>>> MODELS) {
+    fbb_.AddOffset(KMLMultiGeometry::VT_MODELS, MODELS);
+  }
+  void add_TRACKS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLTrack>>> TRACKS) {
+    fbb_.AddOffset(KMLMultiGeometry::VT_TRACKS, TRACKS);
+  }
+  void add_MULTI_TRACKS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLMultiTrack>>> MULTI_TRACKS) {
+    fbb_.AddOffset(KMLMultiGeometry::VT_MULTI_TRACKS, MULTI_TRACKS);
+  }
   explicit KMLMultiGeometryBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1719,8 +2791,16 @@ inline ::flatbuffers::Offset<KMLMultiGeometry> CreateKMLMultiGeometry(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLPoint>>> POINTS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLLineString>>> LINE_STRINGS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLPolygon>>> POLYGONS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLMultiGeometry>>> MULTI_GEOMETRIES = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLMultiGeometry>>> MULTI_GEOMETRIES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLLinearRing>>> LINEAR_RINGS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLModel>>> MODELS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLTrack>>> TRACKS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLMultiTrack>>> MULTI_TRACKS = 0) {
   KMLMultiGeometryBuilder builder_(_fbb);
+  builder_.add_MULTI_TRACKS(MULTI_TRACKS);
+  builder_.add_TRACKS(TRACKS);
+  builder_.add_MODELS(MODELS);
+  builder_.add_LINEAR_RINGS(LINEAR_RINGS);
   builder_.add_MULTI_GEOMETRIES(MULTI_GEOMETRIES);
   builder_.add_POLYGONS(POLYGONS);
   builder_.add_LINE_STRINGS(LINE_STRINGS);
@@ -1733,17 +2813,29 @@ inline ::flatbuffers::Offset<KMLMultiGeometry> CreateKMLMultiGeometryDirect(
     const std::vector<::flatbuffers::Offset<KMLPoint>> *POINTS = nullptr,
     const std::vector<::flatbuffers::Offset<KMLLineString>> *LINE_STRINGS = nullptr,
     const std::vector<::flatbuffers::Offset<KMLPolygon>> *POLYGONS = nullptr,
-    const std::vector<::flatbuffers::Offset<KMLMultiGeometry>> *MULTI_GEOMETRIES = nullptr) {
+    const std::vector<::flatbuffers::Offset<KMLMultiGeometry>> *MULTI_GEOMETRIES = nullptr,
+    const std::vector<::flatbuffers::Offset<KMLLinearRing>> *LINEAR_RINGS = nullptr,
+    const std::vector<::flatbuffers::Offset<KMLModel>> *MODELS = nullptr,
+    const std::vector<::flatbuffers::Offset<KMLTrack>> *TRACKS = nullptr,
+    const std::vector<::flatbuffers::Offset<KMLMultiTrack>> *MULTI_TRACKS = nullptr) {
   auto POINTS__ = POINTS ? _fbb.CreateVector<::flatbuffers::Offset<KMLPoint>>(*POINTS) : 0;
   auto LINE_STRINGS__ = LINE_STRINGS ? _fbb.CreateVector<::flatbuffers::Offset<KMLLineString>>(*LINE_STRINGS) : 0;
   auto POLYGONS__ = POLYGONS ? _fbb.CreateVector<::flatbuffers::Offset<KMLPolygon>>(*POLYGONS) : 0;
   auto MULTI_GEOMETRIES__ = MULTI_GEOMETRIES ? _fbb.CreateVector<::flatbuffers::Offset<KMLMultiGeometry>>(*MULTI_GEOMETRIES) : 0;
+  auto LINEAR_RINGS__ = LINEAR_RINGS ? _fbb.CreateVector<::flatbuffers::Offset<KMLLinearRing>>(*LINEAR_RINGS) : 0;
+  auto MODELS__ = MODELS ? _fbb.CreateVector<::flatbuffers::Offset<KMLModel>>(*MODELS) : 0;
+  auto TRACKS__ = TRACKS ? _fbb.CreateVector<::flatbuffers::Offset<KMLTrack>>(*TRACKS) : 0;
+  auto MULTI_TRACKS__ = MULTI_TRACKS ? _fbb.CreateVector<::flatbuffers::Offset<KMLMultiTrack>>(*MULTI_TRACKS) : 0;
   return CreateKMLMultiGeometry(
       _fbb,
       POINTS__,
       LINE_STRINGS__,
       POLYGONS__,
-      MULTI_GEOMETRIES__);
+      MULTI_GEOMETRIES__,
+      LINEAR_RINGS__,
+      MODELS__,
+      TRACKS__,
+      MULTI_TRACKS__);
 }
 
 /// TimeSpan
@@ -1950,25 +3042,948 @@ inline ::flatbuffers::Offset<KMLData> CreateKMLDataDirect(
       VALUE__);
 }
 
+/// Schema simple field definition
+struct KMLSimpleField FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLSimpleFieldBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_NAME = 4,
+    VT_FIELD_TYPE = 6,
+    VT_DISPLAY_NAME = 8
+  };
+  /// Field name
+  const ::flatbuffers::String *NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  /// Field type (xsd:string, xsd:int, xsd:float, etc.)
+  const ::flatbuffers::String *FIELD_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_FIELD_TYPE);
+  }
+  /// Display name
+  const ::flatbuffers::String *DISPLAY_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DISPLAY_NAME);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(NAME()) &&
+           VerifyOffset(verifier, VT_FIELD_TYPE) &&
+           verifier.VerifyString(FIELD_TYPE()) &&
+           VerifyOffset(verifier, VT_DISPLAY_NAME) &&
+           verifier.VerifyString(DISPLAY_NAME()) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLSimpleFieldBuilder {
+  typedef KMLSimpleField Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
+    fbb_.AddOffset(KMLSimpleField::VT_NAME, NAME);
+  }
+  void add_FIELD_TYPE(::flatbuffers::Offset<::flatbuffers::String> FIELD_TYPE) {
+    fbb_.AddOffset(KMLSimpleField::VT_FIELD_TYPE, FIELD_TYPE);
+  }
+  void add_DISPLAY_NAME(::flatbuffers::Offset<::flatbuffers::String> DISPLAY_NAME) {
+    fbb_.AddOffset(KMLSimpleField::VT_DISPLAY_NAME, DISPLAY_NAME);
+  }
+  explicit KMLSimpleFieldBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLSimpleField> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLSimpleField>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLSimpleField> CreateKMLSimpleField(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> FIELD_TYPE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DISPLAY_NAME = 0) {
+  KMLSimpleFieldBuilder builder_(_fbb);
+  builder_.add_DISPLAY_NAME(DISPLAY_NAME);
+  builder_.add_FIELD_TYPE(FIELD_TYPE);
+  builder_.add_NAME(NAME);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<KMLSimpleField> CreateKMLSimpleFieldDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *NAME = nullptr,
+    const char *FIELD_TYPE = nullptr,
+    const char *DISPLAY_NAME = nullptr) {
+  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
+  auto FIELD_TYPE__ = FIELD_TYPE ? _fbb.CreateString(FIELD_TYPE) : 0;
+  auto DISPLAY_NAME__ = DISPLAY_NAME ? _fbb.CreateString(DISPLAY_NAME) : 0;
+  return CreateKMLSimpleField(
+      _fbb,
+      NAME__,
+      FIELD_TYPE__,
+      DISPLAY_NAME__);
+}
+
+/// Schema definition
+struct KMLSchema FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLSchemaBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_NAME = 4,
+    VT_ID = 6,
+    VT_SIMPLE_FIELDS = 8
+  };
+  /// Schema name
+  const ::flatbuffers::String *NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  /// Schema ID
+  const ::flatbuffers::String *ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ID);
+  }
+  /// Simple field definitions
+  const ::flatbuffers::Vector<::flatbuffers::Offset<KMLSimpleField>> *SIMPLE_FIELDS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLSimpleField>> *>(VT_SIMPLE_FIELDS);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(NAME()) &&
+           VerifyOffset(verifier, VT_ID) &&
+           verifier.VerifyString(ID()) &&
+           VerifyOffset(verifier, VT_SIMPLE_FIELDS) &&
+           verifier.VerifyVector(SIMPLE_FIELDS()) &&
+           verifier.VerifyVectorOfTables(SIMPLE_FIELDS()) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLSchemaBuilder {
+  typedef KMLSchema Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
+    fbb_.AddOffset(KMLSchema::VT_NAME, NAME);
+  }
+  void add_ID(::flatbuffers::Offset<::flatbuffers::String> ID) {
+    fbb_.AddOffset(KMLSchema::VT_ID, ID);
+  }
+  void add_SIMPLE_FIELDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLSimpleField>>> SIMPLE_FIELDS) {
+    fbb_.AddOffset(KMLSchema::VT_SIMPLE_FIELDS, SIMPLE_FIELDS);
+  }
+  explicit KMLSchemaBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLSchema> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLSchema>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLSchema> CreateKMLSchema(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLSimpleField>>> SIMPLE_FIELDS = 0) {
+  KMLSchemaBuilder builder_(_fbb);
+  builder_.add_SIMPLE_FIELDS(SIMPLE_FIELDS);
+  builder_.add_ID(ID);
+  builder_.add_NAME(NAME);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<KMLSchema> CreateKMLSchemaDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *NAME = nullptr,
+    const char *ID = nullptr,
+    const std::vector<::flatbuffers::Offset<KMLSimpleField>> *SIMPLE_FIELDS = nullptr) {
+  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
+  auto ID__ = ID ? _fbb.CreateString(ID) : 0;
+  auto SIMPLE_FIELDS__ = SIMPLE_FIELDS ? _fbb.CreateVector<::flatbuffers::Offset<KMLSimpleField>>(*SIMPLE_FIELDS) : 0;
+  return CreateKMLSchema(
+      _fbb,
+      NAME__,
+      ID__,
+      SIMPLE_FIELDS__);
+}
+
+/// Simple data value for SchemaData
+struct KMLSimpleData FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLSimpleDataBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_NAME = 4,
+    VT_VALUE = 6
+  };
+  /// Field name
+  const ::flatbuffers::String *NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  /// Field value
+  const ::flatbuffers::String *VALUE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_VALUE);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(NAME()) &&
+           VerifyOffset(verifier, VT_VALUE) &&
+           verifier.VerifyString(VALUE()) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLSimpleDataBuilder {
+  typedef KMLSimpleData Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
+    fbb_.AddOffset(KMLSimpleData::VT_NAME, NAME);
+  }
+  void add_VALUE(::flatbuffers::Offset<::flatbuffers::String> VALUE) {
+    fbb_.AddOffset(KMLSimpleData::VT_VALUE, VALUE);
+  }
+  explicit KMLSimpleDataBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLSimpleData> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLSimpleData>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLSimpleData> CreateKMLSimpleData(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> VALUE = 0) {
+  KMLSimpleDataBuilder builder_(_fbb);
+  builder_.add_VALUE(VALUE);
+  builder_.add_NAME(NAME);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<KMLSimpleData> CreateKMLSimpleDataDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *NAME = nullptr,
+    const char *VALUE = nullptr) {
+  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
+  auto VALUE__ = VALUE ? _fbb.CreateString(VALUE) : 0;
+  return CreateKMLSimpleData(
+      _fbb,
+      NAME__,
+      VALUE__);
+}
+
+/// Schema data reference
+struct KMLSchemaData FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLSchemaDataBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_SCHEMA_URL = 4,
+    VT_SIMPLE_DATA = 6
+  };
+  /// Schema URL reference
+  const ::flatbuffers::String *SCHEMA_URL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SCHEMA_URL);
+  }
+  /// Simple data values
+  const ::flatbuffers::Vector<::flatbuffers::Offset<KMLSimpleData>> *SIMPLE_DATA() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLSimpleData>> *>(VT_SIMPLE_DATA);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_SCHEMA_URL) &&
+           verifier.VerifyString(SCHEMA_URL()) &&
+           VerifyOffset(verifier, VT_SIMPLE_DATA) &&
+           verifier.VerifyVector(SIMPLE_DATA()) &&
+           verifier.VerifyVectorOfTables(SIMPLE_DATA()) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLSchemaDataBuilder {
+  typedef KMLSchemaData Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_SCHEMA_URL(::flatbuffers::Offset<::flatbuffers::String> SCHEMA_URL) {
+    fbb_.AddOffset(KMLSchemaData::VT_SCHEMA_URL, SCHEMA_URL);
+  }
+  void add_SIMPLE_DATA(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLSimpleData>>> SIMPLE_DATA) {
+    fbb_.AddOffset(KMLSchemaData::VT_SIMPLE_DATA, SIMPLE_DATA);
+  }
+  explicit KMLSchemaDataBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLSchemaData> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLSchemaData>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLSchemaData> CreateKMLSchemaData(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> SCHEMA_URL = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLSimpleData>>> SIMPLE_DATA = 0) {
+  KMLSchemaDataBuilder builder_(_fbb);
+  builder_.add_SIMPLE_DATA(SIMPLE_DATA);
+  builder_.add_SCHEMA_URL(SCHEMA_URL);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<KMLSchemaData> CreateKMLSchemaDataDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *SCHEMA_URL = nullptr,
+    const std::vector<::flatbuffers::Offset<KMLSimpleData>> *SIMPLE_DATA = nullptr) {
+  auto SCHEMA_URL__ = SCHEMA_URL ? _fbb.CreateString(SCHEMA_URL) : 0;
+  auto SIMPLE_DATA__ = SIMPLE_DATA ? _fbb.CreateVector<::flatbuffers::Offset<KMLSimpleData>>(*SIMPLE_DATA) : 0;
+  return CreateKMLSchemaData(
+      _fbb,
+      SCHEMA_URL__,
+      SIMPLE_DATA__);
+}
+
+/// LatLonQuad — four corner coordinates for ground overlay
+struct KMLLatLonQuad FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLLatLonQuadBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_COORDINATES = 4
+  };
+  /// Four corner coordinates
+  const ::flatbuffers::Vector<::flatbuffers::Offset<KMLCoordinate>> *COORDINATES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLCoordinate>> *>(VT_COORDINATES);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_COORDINATES) &&
+           verifier.VerifyVector(COORDINATES()) &&
+           verifier.VerifyVectorOfTables(COORDINATES()) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLLatLonQuadBuilder {
+  typedef KMLLatLonQuad Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_COORDINATES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLCoordinate>>> COORDINATES) {
+    fbb_.AddOffset(KMLLatLonQuad::VT_COORDINATES, COORDINATES);
+  }
+  explicit KMLLatLonQuadBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLLatLonQuad> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLLatLonQuad>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLLatLonQuad> CreateKMLLatLonQuad(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLCoordinate>>> COORDINATES = 0) {
+  KMLLatLonQuadBuilder builder_(_fbb);
+  builder_.add_COORDINATES(COORDINATES);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<KMLLatLonQuad> CreateKMLLatLonQuadDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<::flatbuffers::Offset<KMLCoordinate>> *COORDINATES = nullptr) {
+  auto COORDINATES__ = COORDINATES ? _fbb.CreateVector<::flatbuffers::Offset<KMLCoordinate>>(*COORDINATES) : 0;
+  return CreateKMLLatLonQuad(
+      _fbb,
+      COORDINATES__);
+}
+
+/// Region — Level of Detail bounding region
+struct KMLRegion FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLRegionBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_LAT_LON_ALT_BOX = 4,
+    VT_LOD = 6
+  };
+  /// LatLonAltBox
+  const KMLLatLonAltBox *LAT_LON_ALT_BOX() const {
+    return GetPointer<const KMLLatLonAltBox *>(VT_LAT_LON_ALT_BOX);
+  }
+  /// Level of detail
+  const KMLLod *LOD() const {
+    return GetPointer<const KMLLod *>(VT_LOD);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_LAT_LON_ALT_BOX) &&
+           verifier.VerifyTable(LAT_LON_ALT_BOX()) &&
+           VerifyOffset(verifier, VT_LOD) &&
+           verifier.VerifyTable(LOD()) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLRegionBuilder {
+  typedef KMLRegion Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_LAT_LON_ALT_BOX(::flatbuffers::Offset<KMLLatLonAltBox> LAT_LON_ALT_BOX) {
+    fbb_.AddOffset(KMLRegion::VT_LAT_LON_ALT_BOX, LAT_LON_ALT_BOX);
+  }
+  void add_LOD(::flatbuffers::Offset<KMLLod> LOD) {
+    fbb_.AddOffset(KMLRegion::VT_LOD, LOD);
+  }
+  explicit KMLRegionBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLRegion> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLRegion>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLRegion> CreateKMLRegion(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<KMLLatLonAltBox> LAT_LON_ALT_BOX = 0,
+    ::flatbuffers::Offset<KMLLod> LOD = 0) {
+  KMLRegionBuilder builder_(_fbb);
+  builder_.add_LOD(LOD);
+  builder_.add_LAT_LON_ALT_BOX(LAT_LON_ALT_BOX);
+  return builder_.Finish();
+}
+
+/// LatLonAltBox for Region
+struct KMLLatLonAltBox FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLLatLonAltBoxBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_NORTH = 4,
+    VT_SOUTH = 6,
+    VT_EAST = 8,
+    VT_WEST = 10,
+    VT_MIN_ALTITUDE = 12,
+    VT_MAX_ALTITUDE = 14,
+    VT_ALTITUDE_MODE = 16
+  };
+  /// North latitude
+  double NORTH() const {
+    return GetField<double>(VT_NORTH, 0.0);
+  }
+  /// South latitude
+  double SOUTH() const {
+    return GetField<double>(VT_SOUTH, 0.0);
+  }
+  /// East longitude
+  double EAST() const {
+    return GetField<double>(VT_EAST, 0.0);
+  }
+  /// West longitude
+  double WEST() const {
+    return GetField<double>(VT_WEST, 0.0);
+  }
+  /// Minimum altitude
+  double MIN_ALTITUDE() const {
+    return GetField<double>(VT_MIN_ALTITUDE, 0.0);
+  }
+  /// Maximum altitude
+  double MAX_ALTITUDE() const {
+    return GetField<double>(VT_MAX_ALTITUDE, 0.0);
+  }
+  /// Altitude mode
+  KMLAltitudeMode ALTITUDE_MODE() const {
+    return static_cast<KMLAltitudeMode>(GetField<int8_t>(VT_ALTITUDE_MODE, 0));
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<double>(verifier, VT_NORTH, 8) &&
+           VerifyField<double>(verifier, VT_SOUTH, 8) &&
+           VerifyField<double>(verifier, VT_EAST, 8) &&
+           VerifyField<double>(verifier, VT_WEST, 8) &&
+           VerifyField<double>(verifier, VT_MIN_ALTITUDE, 8) &&
+           VerifyField<double>(verifier, VT_MAX_ALTITUDE, 8) &&
+           VerifyField<int8_t>(verifier, VT_ALTITUDE_MODE, 1) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLLatLonAltBoxBuilder {
+  typedef KMLLatLonAltBox Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_NORTH(double NORTH) {
+    fbb_.AddElement<double>(KMLLatLonAltBox::VT_NORTH, NORTH, 0.0);
+  }
+  void add_SOUTH(double SOUTH) {
+    fbb_.AddElement<double>(KMLLatLonAltBox::VT_SOUTH, SOUTH, 0.0);
+  }
+  void add_EAST(double EAST) {
+    fbb_.AddElement<double>(KMLLatLonAltBox::VT_EAST, EAST, 0.0);
+  }
+  void add_WEST(double WEST) {
+    fbb_.AddElement<double>(KMLLatLonAltBox::VT_WEST, WEST, 0.0);
+  }
+  void add_MIN_ALTITUDE(double MIN_ALTITUDE) {
+    fbb_.AddElement<double>(KMLLatLonAltBox::VT_MIN_ALTITUDE, MIN_ALTITUDE, 0.0);
+  }
+  void add_MAX_ALTITUDE(double MAX_ALTITUDE) {
+    fbb_.AddElement<double>(KMLLatLonAltBox::VT_MAX_ALTITUDE, MAX_ALTITUDE, 0.0);
+  }
+  void add_ALTITUDE_MODE(KMLAltitudeMode ALTITUDE_MODE) {
+    fbb_.AddElement<int8_t>(KMLLatLonAltBox::VT_ALTITUDE_MODE, static_cast<int8_t>(ALTITUDE_MODE), 0);
+  }
+  explicit KMLLatLonAltBoxBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLLatLonAltBox> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLLatLonAltBox>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLLatLonAltBox> CreateKMLLatLonAltBox(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    double NORTH = 0.0,
+    double SOUTH = 0.0,
+    double EAST = 0.0,
+    double WEST = 0.0,
+    double MIN_ALTITUDE = 0.0,
+    double MAX_ALTITUDE = 0.0,
+    KMLAltitudeMode ALTITUDE_MODE = KMLAltitudeMode_CLAMP_TO_GROUND) {
+  KMLLatLonAltBoxBuilder builder_(_fbb);
+  builder_.add_MAX_ALTITUDE(MAX_ALTITUDE);
+  builder_.add_MIN_ALTITUDE(MIN_ALTITUDE);
+  builder_.add_WEST(WEST);
+  builder_.add_EAST(EAST);
+  builder_.add_SOUTH(SOUTH);
+  builder_.add_NORTH(NORTH);
+  builder_.add_ALTITUDE_MODE(ALTITUDE_MODE);
+  return builder_.Finish();
+}
+
+/// Level of Detail parameters
+struct KMLLod FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLLodBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_MIN_LOD_PIXELS = 4,
+    VT_MAX_LOD_PIXELS = 6,
+    VT_MIN_FADE_EXTENT = 8,
+    VT_MAX_FADE_EXTENT = 10
+  };
+  /// Minimum LOD pixels
+  double MIN_LOD_PIXELS() const {
+    return GetField<double>(VT_MIN_LOD_PIXELS, 0.0);
+  }
+  /// Maximum LOD pixels (-1 = infinite)
+  double MAX_LOD_PIXELS() const {
+    return GetField<double>(VT_MAX_LOD_PIXELS, 0.0);
+  }
+  /// Minimum fade extent
+  double MIN_FADE_EXTENT() const {
+    return GetField<double>(VT_MIN_FADE_EXTENT, 0.0);
+  }
+  /// Maximum fade extent
+  double MAX_FADE_EXTENT() const {
+    return GetField<double>(VT_MAX_FADE_EXTENT, 0.0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<double>(verifier, VT_MIN_LOD_PIXELS, 8) &&
+           VerifyField<double>(verifier, VT_MAX_LOD_PIXELS, 8) &&
+           VerifyField<double>(verifier, VT_MIN_FADE_EXTENT, 8) &&
+           VerifyField<double>(verifier, VT_MAX_FADE_EXTENT, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLLodBuilder {
+  typedef KMLLod Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_MIN_LOD_PIXELS(double MIN_LOD_PIXELS) {
+    fbb_.AddElement<double>(KMLLod::VT_MIN_LOD_PIXELS, MIN_LOD_PIXELS, 0.0);
+  }
+  void add_MAX_LOD_PIXELS(double MAX_LOD_PIXELS) {
+    fbb_.AddElement<double>(KMLLod::VT_MAX_LOD_PIXELS, MAX_LOD_PIXELS, 0.0);
+  }
+  void add_MIN_FADE_EXTENT(double MIN_FADE_EXTENT) {
+    fbb_.AddElement<double>(KMLLod::VT_MIN_FADE_EXTENT, MIN_FADE_EXTENT, 0.0);
+  }
+  void add_MAX_FADE_EXTENT(double MAX_FADE_EXTENT) {
+    fbb_.AddElement<double>(KMLLod::VT_MAX_FADE_EXTENT, MAX_FADE_EXTENT, 0.0);
+  }
+  explicit KMLLodBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLLod> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLLod>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLLod> CreateKMLLod(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    double MIN_LOD_PIXELS = 0.0,
+    double MAX_LOD_PIXELS = 0.0,
+    double MIN_FADE_EXTENT = 0.0,
+    double MAX_FADE_EXTENT = 0.0) {
+  KMLLodBuilder builder_(_fbb);
+  builder_.add_MAX_FADE_EXTENT(MAX_FADE_EXTENT);
+  builder_.add_MIN_FADE_EXTENT(MIN_FADE_EXTENT);
+  builder_.add_MAX_LOD_PIXELS(MAX_LOD_PIXELS);
+  builder_.add_MIN_LOD_PIXELS(MIN_LOD_PIXELS);
+  return builder_.Finish();
+}
+
+/// Full Link element
+struct KMLLink FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLLinkBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_HREF = 4,
+    VT_REFRESH_MODE = 6,
+    VT_REFRESH_INTERVAL = 8,
+    VT_VIEW_REFRESH_MODE = 10,
+    VT_VIEW_REFRESH_TIME = 12,
+    VT_VIEW_BOUND_SCALE = 14,
+    VT_VIEW_FORMAT = 16,
+    VT_HTTP_QUERY = 18
+  };
+  /// URL
+  const ::flatbuffers::String *HREF() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_HREF);
+  }
+  /// Refresh mode
+  KMLRefreshMode REFRESH_MODE() const {
+    return static_cast<KMLRefreshMode>(GetField<int8_t>(VT_REFRESH_MODE, 0));
+  }
+  /// Refresh interval in seconds
+  double REFRESH_INTERVAL() const {
+    return GetField<double>(VT_REFRESH_INTERVAL, 0.0);
+  }
+  /// View refresh mode
+  KMLViewRefreshMode VIEW_REFRESH_MODE() const {
+    return static_cast<KMLViewRefreshMode>(GetField<int8_t>(VT_VIEW_REFRESH_MODE, 0));
+  }
+  /// View refresh time in seconds
+  double VIEW_REFRESH_TIME() const {
+    return GetField<double>(VT_VIEW_REFRESH_TIME, 0.0);
+  }
+  /// View bound scale
+  double VIEW_BOUND_SCALE() const {
+    return GetField<double>(VT_VIEW_BOUND_SCALE, 0.0);
+  }
+  /// View format string
+  const ::flatbuffers::String *VIEW_FORMAT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_VIEW_FORMAT);
+  }
+  /// HTTP query string
+  const ::flatbuffers::String *HTTP_QUERY() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_HTTP_QUERY);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_HREF) &&
+           verifier.VerifyString(HREF()) &&
+           VerifyField<int8_t>(verifier, VT_REFRESH_MODE, 1) &&
+           VerifyField<double>(verifier, VT_REFRESH_INTERVAL, 8) &&
+           VerifyField<int8_t>(verifier, VT_VIEW_REFRESH_MODE, 1) &&
+           VerifyField<double>(verifier, VT_VIEW_REFRESH_TIME, 8) &&
+           VerifyField<double>(verifier, VT_VIEW_BOUND_SCALE, 8) &&
+           VerifyOffset(verifier, VT_VIEW_FORMAT) &&
+           verifier.VerifyString(VIEW_FORMAT()) &&
+           VerifyOffset(verifier, VT_HTTP_QUERY) &&
+           verifier.VerifyString(HTTP_QUERY()) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLLinkBuilder {
+  typedef KMLLink Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_HREF(::flatbuffers::Offset<::flatbuffers::String> HREF) {
+    fbb_.AddOffset(KMLLink::VT_HREF, HREF);
+  }
+  void add_REFRESH_MODE(KMLRefreshMode REFRESH_MODE) {
+    fbb_.AddElement<int8_t>(KMLLink::VT_REFRESH_MODE, static_cast<int8_t>(REFRESH_MODE), 0);
+  }
+  void add_REFRESH_INTERVAL(double REFRESH_INTERVAL) {
+    fbb_.AddElement<double>(KMLLink::VT_REFRESH_INTERVAL, REFRESH_INTERVAL, 0.0);
+  }
+  void add_VIEW_REFRESH_MODE(KMLViewRefreshMode VIEW_REFRESH_MODE) {
+    fbb_.AddElement<int8_t>(KMLLink::VT_VIEW_REFRESH_MODE, static_cast<int8_t>(VIEW_REFRESH_MODE), 0);
+  }
+  void add_VIEW_REFRESH_TIME(double VIEW_REFRESH_TIME) {
+    fbb_.AddElement<double>(KMLLink::VT_VIEW_REFRESH_TIME, VIEW_REFRESH_TIME, 0.0);
+  }
+  void add_VIEW_BOUND_SCALE(double VIEW_BOUND_SCALE) {
+    fbb_.AddElement<double>(KMLLink::VT_VIEW_BOUND_SCALE, VIEW_BOUND_SCALE, 0.0);
+  }
+  void add_VIEW_FORMAT(::flatbuffers::Offset<::flatbuffers::String> VIEW_FORMAT) {
+    fbb_.AddOffset(KMLLink::VT_VIEW_FORMAT, VIEW_FORMAT);
+  }
+  void add_HTTP_QUERY(::flatbuffers::Offset<::flatbuffers::String> HTTP_QUERY) {
+    fbb_.AddOffset(KMLLink::VT_HTTP_QUERY, HTTP_QUERY);
+  }
+  explicit KMLLinkBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLLink> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLLink>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLLink> CreateKMLLink(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> HREF = 0,
+    KMLRefreshMode REFRESH_MODE = KMLRefreshMode_ON_CHANGE,
+    double REFRESH_INTERVAL = 0.0,
+    KMLViewRefreshMode VIEW_REFRESH_MODE = KMLViewRefreshMode_NEVER,
+    double VIEW_REFRESH_TIME = 0.0,
+    double VIEW_BOUND_SCALE = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> VIEW_FORMAT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> HTTP_QUERY = 0) {
+  KMLLinkBuilder builder_(_fbb);
+  builder_.add_VIEW_BOUND_SCALE(VIEW_BOUND_SCALE);
+  builder_.add_VIEW_REFRESH_TIME(VIEW_REFRESH_TIME);
+  builder_.add_REFRESH_INTERVAL(REFRESH_INTERVAL);
+  builder_.add_HTTP_QUERY(HTTP_QUERY);
+  builder_.add_VIEW_FORMAT(VIEW_FORMAT);
+  builder_.add_HREF(HREF);
+  builder_.add_VIEW_REFRESH_MODE(VIEW_REFRESH_MODE);
+  builder_.add_REFRESH_MODE(REFRESH_MODE);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<KMLLink> CreateKMLLinkDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *HREF = nullptr,
+    KMLRefreshMode REFRESH_MODE = KMLRefreshMode_ON_CHANGE,
+    double REFRESH_INTERVAL = 0.0,
+    KMLViewRefreshMode VIEW_REFRESH_MODE = KMLViewRefreshMode_NEVER,
+    double VIEW_REFRESH_TIME = 0.0,
+    double VIEW_BOUND_SCALE = 0.0,
+    const char *VIEW_FORMAT = nullptr,
+    const char *HTTP_QUERY = nullptr) {
+  auto HREF__ = HREF ? _fbb.CreateString(HREF) : 0;
+  auto VIEW_FORMAT__ = VIEW_FORMAT ? _fbb.CreateString(VIEW_FORMAT) : 0;
+  auto HTTP_QUERY__ = HTTP_QUERY ? _fbb.CreateString(HTTP_QUERY) : 0;
+  return CreateKMLLink(
+      _fbb,
+      HREF__,
+      REFRESH_MODE,
+      REFRESH_INTERVAL,
+      VIEW_REFRESH_MODE,
+      VIEW_REFRESH_TIME,
+      VIEW_BOUND_SCALE,
+      VIEW_FORMAT__,
+      HTTP_QUERY__);
+}
+
+/// ViewVolume for PhotoOverlay
+struct KMLViewVolume FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLViewVolumeBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_LEFT_FOV = 4,
+    VT_RIGHT_FOV = 6,
+    VT_BOTTOM_FOV = 8,
+    VT_TOP_FOV = 10,
+    VT_NEAR = 12
+  };
+  /// Left field of view angle
+  double LEFT_FOV() const {
+    return GetField<double>(VT_LEFT_FOV, 0.0);
+  }
+  /// Right field of view angle
+  double RIGHT_FOV() const {
+    return GetField<double>(VT_RIGHT_FOV, 0.0);
+  }
+  /// Bottom field of view angle
+  double BOTTOM_FOV() const {
+    return GetField<double>(VT_BOTTOM_FOV, 0.0);
+  }
+  /// Top field of view angle
+  double TOP_FOV() const {
+    return GetField<double>(VT_TOP_FOV, 0.0);
+  }
+  /// Near clipping plane
+  double NEAR() const {
+    return GetField<double>(VT_NEAR, 0.0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<double>(verifier, VT_LEFT_FOV, 8) &&
+           VerifyField<double>(verifier, VT_RIGHT_FOV, 8) &&
+           VerifyField<double>(verifier, VT_BOTTOM_FOV, 8) &&
+           VerifyField<double>(verifier, VT_TOP_FOV, 8) &&
+           VerifyField<double>(verifier, VT_NEAR, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLViewVolumeBuilder {
+  typedef KMLViewVolume Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_LEFT_FOV(double LEFT_FOV) {
+    fbb_.AddElement<double>(KMLViewVolume::VT_LEFT_FOV, LEFT_FOV, 0.0);
+  }
+  void add_RIGHT_FOV(double RIGHT_FOV) {
+    fbb_.AddElement<double>(KMLViewVolume::VT_RIGHT_FOV, RIGHT_FOV, 0.0);
+  }
+  void add_BOTTOM_FOV(double BOTTOM_FOV) {
+    fbb_.AddElement<double>(KMLViewVolume::VT_BOTTOM_FOV, BOTTOM_FOV, 0.0);
+  }
+  void add_TOP_FOV(double TOP_FOV) {
+    fbb_.AddElement<double>(KMLViewVolume::VT_TOP_FOV, TOP_FOV, 0.0);
+  }
+  void add_NEAR(double NEAR) {
+    fbb_.AddElement<double>(KMLViewVolume::VT_NEAR, NEAR, 0.0);
+  }
+  explicit KMLViewVolumeBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLViewVolume> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLViewVolume>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLViewVolume> CreateKMLViewVolume(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    double LEFT_FOV = 0.0,
+    double RIGHT_FOV = 0.0,
+    double BOTTOM_FOV = 0.0,
+    double TOP_FOV = 0.0,
+    double NEAR = 0.0) {
+  KMLViewVolumeBuilder builder_(_fbb);
+  builder_.add_NEAR(NEAR);
+  builder_.add_TOP_FOV(TOP_FOV);
+  builder_.add_BOTTOM_FOV(BOTTOM_FOV);
+  builder_.add_RIGHT_FOV(RIGHT_FOV);
+  builder_.add_LEFT_FOV(LEFT_FOV);
+  return builder_.Finish();
+}
+
+/// ImagePyramid for PhotoOverlay
+struct KMLImagePyramid FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLImagePyramidBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_TILE_SIZE = 4,
+    VT_MAX_WIDTH = 6,
+    VT_MAX_HEIGHT = 8,
+    VT_GRID_ORIGIN = 10
+  };
+  /// Tile size in pixels
+  int32_t TILE_SIZE() const {
+    return GetField<int32_t>(VT_TILE_SIZE, 0);
+  }
+  /// Maximum image width
+  int32_t MAX_WIDTH() const {
+    return GetField<int32_t>(VT_MAX_WIDTH, 0);
+  }
+  /// Maximum image height
+  int32_t MAX_HEIGHT() const {
+    return GetField<int32_t>(VT_MAX_HEIGHT, 0);
+  }
+  /// Grid origin
+  KMLGridOrigin GRID_ORIGIN() const {
+    return static_cast<KMLGridOrigin>(GetField<int8_t>(VT_GRID_ORIGIN, 0));
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int32_t>(verifier, VT_TILE_SIZE, 4) &&
+           VerifyField<int32_t>(verifier, VT_MAX_WIDTH, 4) &&
+           VerifyField<int32_t>(verifier, VT_MAX_HEIGHT, 4) &&
+           VerifyField<int8_t>(verifier, VT_GRID_ORIGIN, 1) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLImagePyramidBuilder {
+  typedef KMLImagePyramid Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_TILE_SIZE(int32_t TILE_SIZE) {
+    fbb_.AddElement<int32_t>(KMLImagePyramid::VT_TILE_SIZE, TILE_SIZE, 0);
+  }
+  void add_MAX_WIDTH(int32_t MAX_WIDTH) {
+    fbb_.AddElement<int32_t>(KMLImagePyramid::VT_MAX_WIDTH, MAX_WIDTH, 0);
+  }
+  void add_MAX_HEIGHT(int32_t MAX_HEIGHT) {
+    fbb_.AddElement<int32_t>(KMLImagePyramid::VT_MAX_HEIGHT, MAX_HEIGHT, 0);
+  }
+  void add_GRID_ORIGIN(KMLGridOrigin GRID_ORIGIN) {
+    fbb_.AddElement<int8_t>(KMLImagePyramid::VT_GRID_ORIGIN, static_cast<int8_t>(GRID_ORIGIN), 0);
+  }
+  explicit KMLImagePyramidBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLImagePyramid> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLImagePyramid>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLImagePyramid> CreateKMLImagePyramid(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t TILE_SIZE = 0,
+    int32_t MAX_WIDTH = 0,
+    int32_t MAX_HEIGHT = 0,
+    KMLGridOrigin GRID_ORIGIN = KMLGridOrigin_LOWER_LEFT) {
+  KMLImagePyramidBuilder builder_(_fbb);
+  builder_.add_MAX_HEIGHT(MAX_HEIGHT);
+  builder_.add_MAX_WIDTH(MAX_WIDTH);
+  builder_.add_TILE_SIZE(TILE_SIZE);
+  builder_.add_GRID_ORIGIN(GRID_ORIGIN);
+  return builder_.Finish();
+}
+
 /// Network link
 struct KMLNetworkLink FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef KMLNetworkLinkBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_NAME = 4,
-    VT_VISIBILITY = 6,
-    VT_HREF = 8,
-    VT_REFRESH_MODE = 10,
-    VT_REFRESH_INTERVAL = 12,
-    VT_VIEW_REFRESH_MODE = 14,
-    VT_VIEW_REFRESH_TIME = 16
+    VT_DESCRIPTION = 6,
+    VT_VISIBILITY = 8,
+    VT_OPEN = 10,
+    VT_HREF = 12,
+    VT_REFRESH_MODE = 14,
+    VT_REFRESH_INTERVAL = 16,
+    VT_VIEW_REFRESH_MODE = 18,
+    VT_VIEW_REFRESH_TIME = 20,
+    VT_REFRESH_VISIBILITY = 22,
+    VT_FLY_TO_VIEW = 24,
+    VT_LINK = 26
   };
   /// Name of the network link
   const ::flatbuffers::String *NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NAME);
   }
+  /// Description
+  const ::flatbuffers::String *DESCRIPTION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
+  }
   /// Whether the link is visible
   bool VISIBILITY() const {
     return GetField<uint8_t>(VT_VISIBILITY, 0) != 0;
+  }
+  /// Whether open in tree view
+  bool OPEN() const {
+    return GetField<uint8_t>(VT_OPEN, 0) != 0;
   }
   /// Link URL
   const ::flatbuffers::String *HREF() const {
@@ -1990,17 +4005,36 @@ struct KMLNetworkLink FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double VIEW_REFRESH_TIME() const {
     return GetField<double>(VT_VIEW_REFRESH_TIME, 0.0);
   }
+  /// Whether to refresh on visibility change
+  bool REFRESH_VISIBILITY() const {
+    return GetField<uint8_t>(VT_REFRESH_VISIBILITY, 0) != 0;
+  }
+  /// Whether to fly to view on refresh
+  bool FLY_TO_VIEW() const {
+    return GetField<uint8_t>(VT_FLY_TO_VIEW, 0) != 0;
+  }
+  /// Full link element
+  const KMLLink *LINK() const {
+    return GetPointer<const KMLLink *>(VT_LINK);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
+           VerifyOffset(verifier, VT_DESCRIPTION) &&
+           verifier.VerifyString(DESCRIPTION()) &&
            VerifyField<uint8_t>(verifier, VT_VISIBILITY, 1) &&
+           VerifyField<uint8_t>(verifier, VT_OPEN, 1) &&
            VerifyOffset(verifier, VT_HREF) &&
            verifier.VerifyString(HREF()) &&
            VerifyField<int8_t>(verifier, VT_REFRESH_MODE, 1) &&
            VerifyField<double>(verifier, VT_REFRESH_INTERVAL, 8) &&
            VerifyField<int8_t>(verifier, VT_VIEW_REFRESH_MODE, 1) &&
            VerifyField<double>(verifier, VT_VIEW_REFRESH_TIME, 8) &&
+           VerifyField<uint8_t>(verifier, VT_REFRESH_VISIBILITY, 1) &&
+           VerifyField<uint8_t>(verifier, VT_FLY_TO_VIEW, 1) &&
+           VerifyOffset(verifier, VT_LINK) &&
+           verifier.VerifyTable(LINK()) &&
            verifier.EndTable();
   }
 };
@@ -2012,8 +4046,14 @@ struct KMLNetworkLinkBuilder {
   void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
     fbb_.AddOffset(KMLNetworkLink::VT_NAME, NAME);
   }
+  void add_DESCRIPTION(::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION) {
+    fbb_.AddOffset(KMLNetworkLink::VT_DESCRIPTION, DESCRIPTION);
+  }
   void add_VISIBILITY(bool VISIBILITY) {
     fbb_.AddElement<uint8_t>(KMLNetworkLink::VT_VISIBILITY, static_cast<uint8_t>(VISIBILITY), 0);
+  }
+  void add_OPEN(bool OPEN) {
+    fbb_.AddElement<uint8_t>(KMLNetworkLink::VT_OPEN, static_cast<uint8_t>(OPEN), 0);
   }
   void add_HREF(::flatbuffers::Offset<::flatbuffers::String> HREF) {
     fbb_.AddOffset(KMLNetworkLink::VT_HREF, HREF);
@@ -2030,6 +4070,15 @@ struct KMLNetworkLinkBuilder {
   void add_VIEW_REFRESH_TIME(double VIEW_REFRESH_TIME) {
     fbb_.AddElement<double>(KMLNetworkLink::VT_VIEW_REFRESH_TIME, VIEW_REFRESH_TIME, 0.0);
   }
+  void add_REFRESH_VISIBILITY(bool REFRESH_VISIBILITY) {
+    fbb_.AddElement<uint8_t>(KMLNetworkLink::VT_REFRESH_VISIBILITY, static_cast<uint8_t>(REFRESH_VISIBILITY), 0);
+  }
+  void add_FLY_TO_VIEW(bool FLY_TO_VIEW) {
+    fbb_.AddElement<uint8_t>(KMLNetworkLink::VT_FLY_TO_VIEW, static_cast<uint8_t>(FLY_TO_VIEW), 0);
+  }
+  void add_LINK(::flatbuffers::Offset<KMLLink> LINK) {
+    fbb_.AddOffset(KMLNetworkLink::VT_LINK, LINK);
+  }
   explicit KMLNetworkLinkBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -2044,19 +4093,29 @@ struct KMLNetworkLinkBuilder {
 inline ::flatbuffers::Offset<KMLNetworkLink> CreateKMLNetworkLink(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0,
     bool VISIBILITY = false,
+    bool OPEN = false,
     ::flatbuffers::Offset<::flatbuffers::String> HREF = 0,
     KMLRefreshMode REFRESH_MODE = KMLRefreshMode_ON_CHANGE,
     double REFRESH_INTERVAL = 0.0,
     KMLViewRefreshMode VIEW_REFRESH_MODE = KMLViewRefreshMode_NEVER,
-    double VIEW_REFRESH_TIME = 0.0) {
+    double VIEW_REFRESH_TIME = 0.0,
+    bool REFRESH_VISIBILITY = false,
+    bool FLY_TO_VIEW = false,
+    ::flatbuffers::Offset<KMLLink> LINK = 0) {
   KMLNetworkLinkBuilder builder_(_fbb);
   builder_.add_VIEW_REFRESH_TIME(VIEW_REFRESH_TIME);
   builder_.add_REFRESH_INTERVAL(REFRESH_INTERVAL);
+  builder_.add_LINK(LINK);
   builder_.add_HREF(HREF);
+  builder_.add_DESCRIPTION(DESCRIPTION);
   builder_.add_NAME(NAME);
+  builder_.add_FLY_TO_VIEW(FLY_TO_VIEW);
+  builder_.add_REFRESH_VISIBILITY(REFRESH_VISIBILITY);
   builder_.add_VIEW_REFRESH_MODE(VIEW_REFRESH_MODE);
   builder_.add_REFRESH_MODE(REFRESH_MODE);
+  builder_.add_OPEN(OPEN);
   builder_.add_VISIBILITY(VISIBILITY);
   return builder_.Finish();
 }
@@ -2064,41 +4123,63 @@ inline ::flatbuffers::Offset<KMLNetworkLink> CreateKMLNetworkLink(
 inline ::flatbuffers::Offset<KMLNetworkLink> CreateKMLNetworkLinkDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *NAME = nullptr,
+    const char *DESCRIPTION = nullptr,
     bool VISIBILITY = false,
+    bool OPEN = false,
     const char *HREF = nullptr,
     KMLRefreshMode REFRESH_MODE = KMLRefreshMode_ON_CHANGE,
     double REFRESH_INTERVAL = 0.0,
     KMLViewRefreshMode VIEW_REFRESH_MODE = KMLViewRefreshMode_NEVER,
-    double VIEW_REFRESH_TIME = 0.0) {
+    double VIEW_REFRESH_TIME = 0.0,
+    bool REFRESH_VISIBILITY = false,
+    bool FLY_TO_VIEW = false,
+    ::flatbuffers::Offset<KMLLink> LINK = 0) {
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
+  auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
   auto HREF__ = HREF ? _fbb.CreateString(HREF) : 0;
   return CreateKMLNetworkLink(
       _fbb,
       NAME__,
+      DESCRIPTION__,
       VISIBILITY,
+      OPEN,
       HREF__,
       REFRESH_MODE,
       REFRESH_INTERVAL,
       VIEW_REFRESH_MODE,
-      VIEW_REFRESH_TIME);
+      VIEW_REFRESH_TIME,
+      REFRESH_VISIBILITY,
+      FLY_TO_VIEW,
+      LINK);
 }
 
-/// Ground overlay
-struct KMLGroundOverlay FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef KMLGroundOverlayBuilder Builder;
+/// Screen overlay
+struct KMLScreenOverlay FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLScreenOverlayBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_NAME = 4,
     VT_DESCRIPTION = 6,
     VT_VISIBILITY = 8,
     VT_ICON_HREF = 10,
     VT_COLOR = 12,
-    VT_NORTH = 14,
-    VT_SOUTH = 16,
-    VT_EAST = 18,
-    VT_WEST = 20,
-    VT_ROTATION = 22,
-    VT_ALTITUDE = 24,
-    VT_ALTITUDE_MODE = 26
+    VT_DRAW_ORDER = 14,
+    VT_OVERLAY_XY_X = 16,
+    VT_OVERLAY_XY_Y = 18,
+    VT_OVERLAY_XY_XUNITS = 20,
+    VT_OVERLAY_XY_YUNITS = 22,
+    VT_SCREEN_XY_X = 24,
+    VT_SCREEN_XY_Y = 26,
+    VT_SCREEN_XY_XUNITS = 28,
+    VT_SCREEN_XY_YUNITS = 30,
+    VT_ROTATION_XY_X = 32,
+    VT_ROTATION_XY_Y = 34,
+    VT_ROTATION_XY_XUNITS = 36,
+    VT_ROTATION_XY_YUNITS = 38,
+    VT_SIZE_X = 40,
+    VT_SIZE_Y = 42,
+    VT_SIZE_XUNITS = 44,
+    VT_SIZE_YUNITS = 46,
+    VT_ROTATION = 48
   };
   /// Name
   const ::flatbuffers::String *NAME() const {
@@ -2111,6 +4192,541 @@ struct KMLGroundOverlay FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// Visibility
   bool VISIBILITY() const {
     return GetField<uint8_t>(VT_VISIBILITY, 0) != 0;
+  }
+  /// Icon/image URL
+  const ::flatbuffers::String *ICON_HREF() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ICON_HREF);
+  }
+  /// Color
+  const ::flatbuffers::String *COLOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COLOR);
+  }
+  /// Draw order
+  int32_t DRAW_ORDER() const {
+    return GetField<int32_t>(VT_DRAW_ORDER, 0);
+  }
+  /// Overlay X position
+  double OVERLAY_XY_X() const {
+    return GetField<double>(VT_OVERLAY_XY_X, 0.0);
+  }
+  /// Overlay Y position
+  double OVERLAY_XY_Y() const {
+    return GetField<double>(VT_OVERLAY_XY_Y, 0.0);
+  }
+  /// Overlay X units
+  KMLUnits OVERLAY_XY_XUNITS() const {
+    return static_cast<KMLUnits>(GetField<int8_t>(VT_OVERLAY_XY_XUNITS, 0));
+  }
+  /// Overlay Y units
+  KMLUnits OVERLAY_XY_YUNITS() const {
+    return static_cast<KMLUnits>(GetField<int8_t>(VT_OVERLAY_XY_YUNITS, 0));
+  }
+  /// Screen X position
+  double SCREEN_XY_X() const {
+    return GetField<double>(VT_SCREEN_XY_X, 0.0);
+  }
+  /// Screen Y position
+  double SCREEN_XY_Y() const {
+    return GetField<double>(VT_SCREEN_XY_Y, 0.0);
+  }
+  /// Screen X units
+  KMLUnits SCREEN_XY_XUNITS() const {
+    return static_cast<KMLUnits>(GetField<int8_t>(VT_SCREEN_XY_XUNITS, 0));
+  }
+  /// Screen Y units
+  KMLUnits SCREEN_XY_YUNITS() const {
+    return static_cast<KMLUnits>(GetField<int8_t>(VT_SCREEN_XY_YUNITS, 0));
+  }
+  /// Rotation X
+  double ROTATION_XY_X() const {
+    return GetField<double>(VT_ROTATION_XY_X, 0.0);
+  }
+  /// Rotation Y
+  double ROTATION_XY_Y() const {
+    return GetField<double>(VT_ROTATION_XY_Y, 0.0);
+  }
+  /// Rotation X units
+  KMLUnits ROTATION_XY_XUNITS() const {
+    return static_cast<KMLUnits>(GetField<int8_t>(VT_ROTATION_XY_XUNITS, 0));
+  }
+  /// Rotation Y units
+  KMLUnits ROTATION_XY_YUNITS() const {
+    return static_cast<KMLUnits>(GetField<int8_t>(VT_ROTATION_XY_YUNITS, 0));
+  }
+  /// Size X
+  double SIZE_X() const {
+    return GetField<double>(VT_SIZE_X, 0.0);
+  }
+  /// Size Y
+  double SIZE_Y() const {
+    return GetField<double>(VT_SIZE_Y, 0.0);
+  }
+  /// Size X units
+  KMLUnits SIZE_XUNITS() const {
+    return static_cast<KMLUnits>(GetField<int8_t>(VT_SIZE_XUNITS, 0));
+  }
+  /// Size Y units
+  KMLUnits SIZE_YUNITS() const {
+    return static_cast<KMLUnits>(GetField<int8_t>(VT_SIZE_YUNITS, 0));
+  }
+  /// Rotation in degrees
+  double ROTATION() const {
+    return GetField<double>(VT_ROTATION, 0.0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(NAME()) &&
+           VerifyOffset(verifier, VT_DESCRIPTION) &&
+           verifier.VerifyString(DESCRIPTION()) &&
+           VerifyField<uint8_t>(verifier, VT_VISIBILITY, 1) &&
+           VerifyOffset(verifier, VT_ICON_HREF) &&
+           verifier.VerifyString(ICON_HREF()) &&
+           VerifyOffset(verifier, VT_COLOR) &&
+           verifier.VerifyString(COLOR()) &&
+           VerifyField<int32_t>(verifier, VT_DRAW_ORDER, 4) &&
+           VerifyField<double>(verifier, VT_OVERLAY_XY_X, 8) &&
+           VerifyField<double>(verifier, VT_OVERLAY_XY_Y, 8) &&
+           VerifyField<int8_t>(verifier, VT_OVERLAY_XY_XUNITS, 1) &&
+           VerifyField<int8_t>(verifier, VT_OVERLAY_XY_YUNITS, 1) &&
+           VerifyField<double>(verifier, VT_SCREEN_XY_X, 8) &&
+           VerifyField<double>(verifier, VT_SCREEN_XY_Y, 8) &&
+           VerifyField<int8_t>(verifier, VT_SCREEN_XY_XUNITS, 1) &&
+           VerifyField<int8_t>(verifier, VT_SCREEN_XY_YUNITS, 1) &&
+           VerifyField<double>(verifier, VT_ROTATION_XY_X, 8) &&
+           VerifyField<double>(verifier, VT_ROTATION_XY_Y, 8) &&
+           VerifyField<int8_t>(verifier, VT_ROTATION_XY_XUNITS, 1) &&
+           VerifyField<int8_t>(verifier, VT_ROTATION_XY_YUNITS, 1) &&
+           VerifyField<double>(verifier, VT_SIZE_X, 8) &&
+           VerifyField<double>(verifier, VT_SIZE_Y, 8) &&
+           VerifyField<int8_t>(verifier, VT_SIZE_XUNITS, 1) &&
+           VerifyField<int8_t>(verifier, VT_SIZE_YUNITS, 1) &&
+           VerifyField<double>(verifier, VT_ROTATION, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLScreenOverlayBuilder {
+  typedef KMLScreenOverlay Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
+    fbb_.AddOffset(KMLScreenOverlay::VT_NAME, NAME);
+  }
+  void add_DESCRIPTION(::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION) {
+    fbb_.AddOffset(KMLScreenOverlay::VT_DESCRIPTION, DESCRIPTION);
+  }
+  void add_VISIBILITY(bool VISIBILITY) {
+    fbb_.AddElement<uint8_t>(KMLScreenOverlay::VT_VISIBILITY, static_cast<uint8_t>(VISIBILITY), 0);
+  }
+  void add_ICON_HREF(::flatbuffers::Offset<::flatbuffers::String> ICON_HREF) {
+    fbb_.AddOffset(KMLScreenOverlay::VT_ICON_HREF, ICON_HREF);
+  }
+  void add_COLOR(::flatbuffers::Offset<::flatbuffers::String> COLOR) {
+    fbb_.AddOffset(KMLScreenOverlay::VT_COLOR, COLOR);
+  }
+  void add_DRAW_ORDER(int32_t DRAW_ORDER) {
+    fbb_.AddElement<int32_t>(KMLScreenOverlay::VT_DRAW_ORDER, DRAW_ORDER, 0);
+  }
+  void add_OVERLAY_XY_X(double OVERLAY_XY_X) {
+    fbb_.AddElement<double>(KMLScreenOverlay::VT_OVERLAY_XY_X, OVERLAY_XY_X, 0.0);
+  }
+  void add_OVERLAY_XY_Y(double OVERLAY_XY_Y) {
+    fbb_.AddElement<double>(KMLScreenOverlay::VT_OVERLAY_XY_Y, OVERLAY_XY_Y, 0.0);
+  }
+  void add_OVERLAY_XY_XUNITS(KMLUnits OVERLAY_XY_XUNITS) {
+    fbb_.AddElement<int8_t>(KMLScreenOverlay::VT_OVERLAY_XY_XUNITS, static_cast<int8_t>(OVERLAY_XY_XUNITS), 0);
+  }
+  void add_OVERLAY_XY_YUNITS(KMLUnits OVERLAY_XY_YUNITS) {
+    fbb_.AddElement<int8_t>(KMLScreenOverlay::VT_OVERLAY_XY_YUNITS, static_cast<int8_t>(OVERLAY_XY_YUNITS), 0);
+  }
+  void add_SCREEN_XY_X(double SCREEN_XY_X) {
+    fbb_.AddElement<double>(KMLScreenOverlay::VT_SCREEN_XY_X, SCREEN_XY_X, 0.0);
+  }
+  void add_SCREEN_XY_Y(double SCREEN_XY_Y) {
+    fbb_.AddElement<double>(KMLScreenOverlay::VT_SCREEN_XY_Y, SCREEN_XY_Y, 0.0);
+  }
+  void add_SCREEN_XY_XUNITS(KMLUnits SCREEN_XY_XUNITS) {
+    fbb_.AddElement<int8_t>(KMLScreenOverlay::VT_SCREEN_XY_XUNITS, static_cast<int8_t>(SCREEN_XY_XUNITS), 0);
+  }
+  void add_SCREEN_XY_YUNITS(KMLUnits SCREEN_XY_YUNITS) {
+    fbb_.AddElement<int8_t>(KMLScreenOverlay::VT_SCREEN_XY_YUNITS, static_cast<int8_t>(SCREEN_XY_YUNITS), 0);
+  }
+  void add_ROTATION_XY_X(double ROTATION_XY_X) {
+    fbb_.AddElement<double>(KMLScreenOverlay::VT_ROTATION_XY_X, ROTATION_XY_X, 0.0);
+  }
+  void add_ROTATION_XY_Y(double ROTATION_XY_Y) {
+    fbb_.AddElement<double>(KMLScreenOverlay::VT_ROTATION_XY_Y, ROTATION_XY_Y, 0.0);
+  }
+  void add_ROTATION_XY_XUNITS(KMLUnits ROTATION_XY_XUNITS) {
+    fbb_.AddElement<int8_t>(KMLScreenOverlay::VT_ROTATION_XY_XUNITS, static_cast<int8_t>(ROTATION_XY_XUNITS), 0);
+  }
+  void add_ROTATION_XY_YUNITS(KMLUnits ROTATION_XY_YUNITS) {
+    fbb_.AddElement<int8_t>(KMLScreenOverlay::VT_ROTATION_XY_YUNITS, static_cast<int8_t>(ROTATION_XY_YUNITS), 0);
+  }
+  void add_SIZE_X(double SIZE_X) {
+    fbb_.AddElement<double>(KMLScreenOverlay::VT_SIZE_X, SIZE_X, 0.0);
+  }
+  void add_SIZE_Y(double SIZE_Y) {
+    fbb_.AddElement<double>(KMLScreenOverlay::VT_SIZE_Y, SIZE_Y, 0.0);
+  }
+  void add_SIZE_XUNITS(KMLUnits SIZE_XUNITS) {
+    fbb_.AddElement<int8_t>(KMLScreenOverlay::VT_SIZE_XUNITS, static_cast<int8_t>(SIZE_XUNITS), 0);
+  }
+  void add_SIZE_YUNITS(KMLUnits SIZE_YUNITS) {
+    fbb_.AddElement<int8_t>(KMLScreenOverlay::VT_SIZE_YUNITS, static_cast<int8_t>(SIZE_YUNITS), 0);
+  }
+  void add_ROTATION(double ROTATION) {
+    fbb_.AddElement<double>(KMLScreenOverlay::VT_ROTATION, ROTATION, 0.0);
+  }
+  explicit KMLScreenOverlayBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLScreenOverlay> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLScreenOverlay>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLScreenOverlay> CreateKMLScreenOverlay(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0,
+    bool VISIBILITY = false,
+    ::flatbuffers::Offset<::flatbuffers::String> ICON_HREF = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> COLOR = 0,
+    int32_t DRAW_ORDER = 0,
+    double OVERLAY_XY_X = 0.0,
+    double OVERLAY_XY_Y = 0.0,
+    KMLUnits OVERLAY_XY_XUNITS = KMLUnits_PIXELS,
+    KMLUnits OVERLAY_XY_YUNITS = KMLUnits_PIXELS,
+    double SCREEN_XY_X = 0.0,
+    double SCREEN_XY_Y = 0.0,
+    KMLUnits SCREEN_XY_XUNITS = KMLUnits_PIXELS,
+    KMLUnits SCREEN_XY_YUNITS = KMLUnits_PIXELS,
+    double ROTATION_XY_X = 0.0,
+    double ROTATION_XY_Y = 0.0,
+    KMLUnits ROTATION_XY_XUNITS = KMLUnits_PIXELS,
+    KMLUnits ROTATION_XY_YUNITS = KMLUnits_PIXELS,
+    double SIZE_X = 0.0,
+    double SIZE_Y = 0.0,
+    KMLUnits SIZE_XUNITS = KMLUnits_PIXELS,
+    KMLUnits SIZE_YUNITS = KMLUnits_PIXELS,
+    double ROTATION = 0.0) {
+  KMLScreenOverlayBuilder builder_(_fbb);
+  builder_.add_ROTATION(ROTATION);
+  builder_.add_SIZE_Y(SIZE_Y);
+  builder_.add_SIZE_X(SIZE_X);
+  builder_.add_ROTATION_XY_Y(ROTATION_XY_Y);
+  builder_.add_ROTATION_XY_X(ROTATION_XY_X);
+  builder_.add_SCREEN_XY_Y(SCREEN_XY_Y);
+  builder_.add_SCREEN_XY_X(SCREEN_XY_X);
+  builder_.add_OVERLAY_XY_Y(OVERLAY_XY_Y);
+  builder_.add_OVERLAY_XY_X(OVERLAY_XY_X);
+  builder_.add_DRAW_ORDER(DRAW_ORDER);
+  builder_.add_COLOR(COLOR);
+  builder_.add_ICON_HREF(ICON_HREF);
+  builder_.add_DESCRIPTION(DESCRIPTION);
+  builder_.add_NAME(NAME);
+  builder_.add_SIZE_YUNITS(SIZE_YUNITS);
+  builder_.add_SIZE_XUNITS(SIZE_XUNITS);
+  builder_.add_ROTATION_XY_YUNITS(ROTATION_XY_YUNITS);
+  builder_.add_ROTATION_XY_XUNITS(ROTATION_XY_XUNITS);
+  builder_.add_SCREEN_XY_YUNITS(SCREEN_XY_YUNITS);
+  builder_.add_SCREEN_XY_XUNITS(SCREEN_XY_XUNITS);
+  builder_.add_OVERLAY_XY_YUNITS(OVERLAY_XY_YUNITS);
+  builder_.add_OVERLAY_XY_XUNITS(OVERLAY_XY_XUNITS);
+  builder_.add_VISIBILITY(VISIBILITY);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<KMLScreenOverlay> CreateKMLScreenOverlayDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *NAME = nullptr,
+    const char *DESCRIPTION = nullptr,
+    bool VISIBILITY = false,
+    const char *ICON_HREF = nullptr,
+    const char *COLOR = nullptr,
+    int32_t DRAW_ORDER = 0,
+    double OVERLAY_XY_X = 0.0,
+    double OVERLAY_XY_Y = 0.0,
+    KMLUnits OVERLAY_XY_XUNITS = KMLUnits_PIXELS,
+    KMLUnits OVERLAY_XY_YUNITS = KMLUnits_PIXELS,
+    double SCREEN_XY_X = 0.0,
+    double SCREEN_XY_Y = 0.0,
+    KMLUnits SCREEN_XY_XUNITS = KMLUnits_PIXELS,
+    KMLUnits SCREEN_XY_YUNITS = KMLUnits_PIXELS,
+    double ROTATION_XY_X = 0.0,
+    double ROTATION_XY_Y = 0.0,
+    KMLUnits ROTATION_XY_XUNITS = KMLUnits_PIXELS,
+    KMLUnits ROTATION_XY_YUNITS = KMLUnits_PIXELS,
+    double SIZE_X = 0.0,
+    double SIZE_Y = 0.0,
+    KMLUnits SIZE_XUNITS = KMLUnits_PIXELS,
+    KMLUnits SIZE_YUNITS = KMLUnits_PIXELS,
+    double ROTATION = 0.0) {
+  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
+  auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
+  auto ICON_HREF__ = ICON_HREF ? _fbb.CreateString(ICON_HREF) : 0;
+  auto COLOR__ = COLOR ? _fbb.CreateString(COLOR) : 0;
+  return CreateKMLScreenOverlay(
+      _fbb,
+      NAME__,
+      DESCRIPTION__,
+      VISIBILITY,
+      ICON_HREF__,
+      COLOR__,
+      DRAW_ORDER,
+      OVERLAY_XY_X,
+      OVERLAY_XY_Y,
+      OVERLAY_XY_XUNITS,
+      OVERLAY_XY_YUNITS,
+      SCREEN_XY_X,
+      SCREEN_XY_Y,
+      SCREEN_XY_XUNITS,
+      SCREEN_XY_YUNITS,
+      ROTATION_XY_X,
+      ROTATION_XY_Y,
+      ROTATION_XY_XUNITS,
+      ROTATION_XY_YUNITS,
+      SIZE_X,
+      SIZE_Y,
+      SIZE_XUNITS,
+      SIZE_YUNITS,
+      ROTATION);
+}
+
+/// Photo overlay
+struct KMLPhotoOverlay FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLPhotoOverlayBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_NAME = 4,
+    VT_DESCRIPTION = 6,
+    VT_VISIBILITY = 8,
+    VT_ICON_HREF = 10,
+    VT_COLOR = 12,
+    VT_DRAW_ORDER = 14,
+    VT_ROTATION = 16,
+    VT_VIEW_VOLUME = 18,
+    VT_IMAGE_PYRAMID = 20,
+    VT_POINT = 22,
+    VT_SHAPE = 24
+  };
+  /// Name
+  const ::flatbuffers::String *NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  /// Description
+  const ::flatbuffers::String *DESCRIPTION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
+  }
+  /// Visibility
+  bool VISIBILITY() const {
+    return GetField<uint8_t>(VT_VISIBILITY, 0) != 0;
+  }
+  /// Icon/image URL
+  const ::flatbuffers::String *ICON_HREF() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ICON_HREF);
+  }
+  /// Color
+  const ::flatbuffers::String *COLOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COLOR);
+  }
+  /// Draw order
+  int32_t DRAW_ORDER() const {
+    return GetField<int32_t>(VT_DRAW_ORDER, 0);
+  }
+  /// Rotation
+  double ROTATION() const {
+    return GetField<double>(VT_ROTATION, 0.0);
+  }
+  /// View volume
+  const KMLViewVolume *VIEW_VOLUME() const {
+    return GetPointer<const KMLViewVolume *>(VT_VIEW_VOLUME);
+  }
+  /// Image pyramid
+  const KMLImagePyramid *IMAGE_PYRAMID() const {
+    return GetPointer<const KMLImagePyramid *>(VT_IMAGE_PYRAMID);
+  }
+  /// Point for position
+  const KMLPoint *POINT() const {
+    return GetPointer<const KMLPoint *>(VT_POINT);
+  }
+  /// Shape
+  KMLShape SHAPE() const {
+    return static_cast<KMLShape>(GetField<int8_t>(VT_SHAPE, 0));
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(NAME()) &&
+           VerifyOffset(verifier, VT_DESCRIPTION) &&
+           verifier.VerifyString(DESCRIPTION()) &&
+           VerifyField<uint8_t>(verifier, VT_VISIBILITY, 1) &&
+           VerifyOffset(verifier, VT_ICON_HREF) &&
+           verifier.VerifyString(ICON_HREF()) &&
+           VerifyOffset(verifier, VT_COLOR) &&
+           verifier.VerifyString(COLOR()) &&
+           VerifyField<int32_t>(verifier, VT_DRAW_ORDER, 4) &&
+           VerifyField<double>(verifier, VT_ROTATION, 8) &&
+           VerifyOffset(verifier, VT_VIEW_VOLUME) &&
+           verifier.VerifyTable(VIEW_VOLUME()) &&
+           VerifyOffset(verifier, VT_IMAGE_PYRAMID) &&
+           verifier.VerifyTable(IMAGE_PYRAMID()) &&
+           VerifyOffset(verifier, VT_POINT) &&
+           verifier.VerifyTable(POINT()) &&
+           VerifyField<int8_t>(verifier, VT_SHAPE, 1) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLPhotoOverlayBuilder {
+  typedef KMLPhotoOverlay Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
+    fbb_.AddOffset(KMLPhotoOverlay::VT_NAME, NAME);
+  }
+  void add_DESCRIPTION(::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION) {
+    fbb_.AddOffset(KMLPhotoOverlay::VT_DESCRIPTION, DESCRIPTION);
+  }
+  void add_VISIBILITY(bool VISIBILITY) {
+    fbb_.AddElement<uint8_t>(KMLPhotoOverlay::VT_VISIBILITY, static_cast<uint8_t>(VISIBILITY), 0);
+  }
+  void add_ICON_HREF(::flatbuffers::Offset<::flatbuffers::String> ICON_HREF) {
+    fbb_.AddOffset(KMLPhotoOverlay::VT_ICON_HREF, ICON_HREF);
+  }
+  void add_COLOR(::flatbuffers::Offset<::flatbuffers::String> COLOR) {
+    fbb_.AddOffset(KMLPhotoOverlay::VT_COLOR, COLOR);
+  }
+  void add_DRAW_ORDER(int32_t DRAW_ORDER) {
+    fbb_.AddElement<int32_t>(KMLPhotoOverlay::VT_DRAW_ORDER, DRAW_ORDER, 0);
+  }
+  void add_ROTATION(double ROTATION) {
+    fbb_.AddElement<double>(KMLPhotoOverlay::VT_ROTATION, ROTATION, 0.0);
+  }
+  void add_VIEW_VOLUME(::flatbuffers::Offset<KMLViewVolume> VIEW_VOLUME) {
+    fbb_.AddOffset(KMLPhotoOverlay::VT_VIEW_VOLUME, VIEW_VOLUME);
+  }
+  void add_IMAGE_PYRAMID(::flatbuffers::Offset<KMLImagePyramid> IMAGE_PYRAMID) {
+    fbb_.AddOffset(KMLPhotoOverlay::VT_IMAGE_PYRAMID, IMAGE_PYRAMID);
+  }
+  void add_POINT(::flatbuffers::Offset<KMLPoint> POINT) {
+    fbb_.AddOffset(KMLPhotoOverlay::VT_POINT, POINT);
+  }
+  void add_SHAPE(KMLShape SHAPE) {
+    fbb_.AddElement<int8_t>(KMLPhotoOverlay::VT_SHAPE, static_cast<int8_t>(SHAPE), 0);
+  }
+  explicit KMLPhotoOverlayBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLPhotoOverlay> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLPhotoOverlay>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLPhotoOverlay> CreateKMLPhotoOverlay(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0,
+    bool VISIBILITY = false,
+    ::flatbuffers::Offset<::flatbuffers::String> ICON_HREF = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> COLOR = 0,
+    int32_t DRAW_ORDER = 0,
+    double ROTATION = 0.0,
+    ::flatbuffers::Offset<KMLViewVolume> VIEW_VOLUME = 0,
+    ::flatbuffers::Offset<KMLImagePyramid> IMAGE_PYRAMID = 0,
+    ::flatbuffers::Offset<KMLPoint> POINT = 0,
+    KMLShape SHAPE = KMLShape_RECTANGLE) {
+  KMLPhotoOverlayBuilder builder_(_fbb);
+  builder_.add_ROTATION(ROTATION);
+  builder_.add_POINT(POINT);
+  builder_.add_IMAGE_PYRAMID(IMAGE_PYRAMID);
+  builder_.add_VIEW_VOLUME(VIEW_VOLUME);
+  builder_.add_DRAW_ORDER(DRAW_ORDER);
+  builder_.add_COLOR(COLOR);
+  builder_.add_ICON_HREF(ICON_HREF);
+  builder_.add_DESCRIPTION(DESCRIPTION);
+  builder_.add_NAME(NAME);
+  builder_.add_SHAPE(SHAPE);
+  builder_.add_VISIBILITY(VISIBILITY);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<KMLPhotoOverlay> CreateKMLPhotoOverlayDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *NAME = nullptr,
+    const char *DESCRIPTION = nullptr,
+    bool VISIBILITY = false,
+    const char *ICON_HREF = nullptr,
+    const char *COLOR = nullptr,
+    int32_t DRAW_ORDER = 0,
+    double ROTATION = 0.0,
+    ::flatbuffers::Offset<KMLViewVolume> VIEW_VOLUME = 0,
+    ::flatbuffers::Offset<KMLImagePyramid> IMAGE_PYRAMID = 0,
+    ::flatbuffers::Offset<KMLPoint> POINT = 0,
+    KMLShape SHAPE = KMLShape_RECTANGLE) {
+  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
+  auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
+  auto ICON_HREF__ = ICON_HREF ? _fbb.CreateString(ICON_HREF) : 0;
+  auto COLOR__ = COLOR ? _fbb.CreateString(COLOR) : 0;
+  return CreateKMLPhotoOverlay(
+      _fbb,
+      NAME__,
+      DESCRIPTION__,
+      VISIBILITY,
+      ICON_HREF__,
+      COLOR__,
+      DRAW_ORDER,
+      ROTATION,
+      VIEW_VOLUME,
+      IMAGE_PYRAMID,
+      POINT,
+      SHAPE);
+}
+
+/// Ground overlay
+struct KMLGroundOverlay FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLGroundOverlayBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_NAME = 4,
+    VT_DESCRIPTION = 6,
+    VT_VISIBILITY = 8,
+    VT_OPEN = 10,
+    VT_ICON_HREF = 12,
+    VT_COLOR = 14,
+    VT_NORTH = 16,
+    VT_SOUTH = 18,
+    VT_EAST = 20,
+    VT_WEST = 22,
+    VT_ROTATION = 24,
+    VT_ALTITUDE = 26,
+    VT_ALTITUDE_MODE = 28,
+    VT_DRAW_ORDER = 30,
+    VT_LAT_LON_QUAD = 32,
+    VT_STYLE_URL = 34,
+    VT_REGION = 36
+  };
+  /// Name
+  const ::flatbuffers::String *NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  /// Description
+  const ::flatbuffers::String *DESCRIPTION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
+  }
+  /// Visibility
+  bool VISIBILITY() const {
+    return GetField<uint8_t>(VT_VISIBILITY, 0) != 0;
+  }
+  /// Whether open in tree view
+  bool OPEN() const {
+    return GetField<uint8_t>(VT_OPEN, 0) != 0;
   }
   /// Icon/image URL
   const ::flatbuffers::String *ICON_HREF() const {
@@ -2148,6 +4764,22 @@ struct KMLGroundOverlay FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   KMLAltitudeMode ALTITUDE_MODE() const {
     return static_cast<KMLAltitudeMode>(GetField<int8_t>(VT_ALTITUDE_MODE, 0));
   }
+  /// Draw order
+  int32_t DRAW_ORDER() const {
+    return GetField<int32_t>(VT_DRAW_ORDER, 0);
+  }
+  /// LatLonQuad (non-rectangular overlay)
+  const KMLLatLonQuad *LAT_LON_QUAD() const {
+    return GetPointer<const KMLLatLonQuad *>(VT_LAT_LON_QUAD);
+  }
+  /// Style URL reference
+  const ::flatbuffers::String *STYLE_URL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_STYLE_URL);
+  }
+  /// Region
+  const KMLRegion *REGION() const {
+    return GetPointer<const KMLRegion *>(VT_REGION);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
@@ -2155,6 +4787,7 @@ struct KMLGroundOverlay FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_DESCRIPTION) &&
            verifier.VerifyString(DESCRIPTION()) &&
            VerifyField<uint8_t>(verifier, VT_VISIBILITY, 1) &&
+           VerifyField<uint8_t>(verifier, VT_OPEN, 1) &&
            VerifyOffset(verifier, VT_ICON_HREF) &&
            verifier.VerifyString(ICON_HREF()) &&
            VerifyOffset(verifier, VT_COLOR) &&
@@ -2166,6 +4799,13 @@ struct KMLGroundOverlay FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_ROTATION, 8) &&
            VerifyField<double>(verifier, VT_ALTITUDE, 8) &&
            VerifyField<int8_t>(verifier, VT_ALTITUDE_MODE, 1) &&
+           VerifyField<int32_t>(verifier, VT_DRAW_ORDER, 4) &&
+           VerifyOffset(verifier, VT_LAT_LON_QUAD) &&
+           verifier.VerifyTable(LAT_LON_QUAD()) &&
+           VerifyOffset(verifier, VT_STYLE_URL) &&
+           verifier.VerifyString(STYLE_URL()) &&
+           VerifyOffset(verifier, VT_REGION) &&
+           verifier.VerifyTable(REGION()) &&
            verifier.EndTable();
   }
 };
@@ -2182,6 +4822,9 @@ struct KMLGroundOverlayBuilder {
   }
   void add_VISIBILITY(bool VISIBILITY) {
     fbb_.AddElement<uint8_t>(KMLGroundOverlay::VT_VISIBILITY, static_cast<uint8_t>(VISIBILITY), 0);
+  }
+  void add_OPEN(bool OPEN) {
+    fbb_.AddElement<uint8_t>(KMLGroundOverlay::VT_OPEN, static_cast<uint8_t>(OPEN), 0);
   }
   void add_ICON_HREF(::flatbuffers::Offset<::flatbuffers::String> ICON_HREF) {
     fbb_.AddOffset(KMLGroundOverlay::VT_ICON_HREF, ICON_HREF);
@@ -2210,6 +4853,18 @@ struct KMLGroundOverlayBuilder {
   void add_ALTITUDE_MODE(KMLAltitudeMode ALTITUDE_MODE) {
     fbb_.AddElement<int8_t>(KMLGroundOverlay::VT_ALTITUDE_MODE, static_cast<int8_t>(ALTITUDE_MODE), 0);
   }
+  void add_DRAW_ORDER(int32_t DRAW_ORDER) {
+    fbb_.AddElement<int32_t>(KMLGroundOverlay::VT_DRAW_ORDER, DRAW_ORDER, 0);
+  }
+  void add_LAT_LON_QUAD(::flatbuffers::Offset<KMLLatLonQuad> LAT_LON_QUAD) {
+    fbb_.AddOffset(KMLGroundOverlay::VT_LAT_LON_QUAD, LAT_LON_QUAD);
+  }
+  void add_STYLE_URL(::flatbuffers::Offset<::flatbuffers::String> STYLE_URL) {
+    fbb_.AddOffset(KMLGroundOverlay::VT_STYLE_URL, STYLE_URL);
+  }
+  void add_REGION(::flatbuffers::Offset<KMLRegion> REGION) {
+    fbb_.AddOffset(KMLGroundOverlay::VT_REGION, REGION);
+  }
   explicit KMLGroundOverlayBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -2226,6 +4881,7 @@ inline ::flatbuffers::Offset<KMLGroundOverlay> CreateKMLGroundOverlay(
     ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0,
     bool VISIBILITY = false,
+    bool OPEN = false,
     ::flatbuffers::Offset<::flatbuffers::String> ICON_HREF = 0,
     ::flatbuffers::Offset<::flatbuffers::String> COLOR = 0,
     double NORTH = 0.0,
@@ -2234,7 +4890,11 @@ inline ::flatbuffers::Offset<KMLGroundOverlay> CreateKMLGroundOverlay(
     double WEST = 0.0,
     double ROTATION = 0.0,
     double ALTITUDE = 0.0,
-    KMLAltitudeMode ALTITUDE_MODE = KMLAltitudeMode_CLAMP_TO_GROUND) {
+    KMLAltitudeMode ALTITUDE_MODE = KMLAltitudeMode_CLAMP_TO_GROUND,
+    int32_t DRAW_ORDER = 0,
+    ::flatbuffers::Offset<KMLLatLonQuad> LAT_LON_QUAD = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> STYLE_URL = 0,
+    ::flatbuffers::Offset<KMLRegion> REGION = 0) {
   KMLGroundOverlayBuilder builder_(_fbb);
   builder_.add_ALTITUDE(ALTITUDE);
   builder_.add_ROTATION(ROTATION);
@@ -2242,11 +4902,16 @@ inline ::flatbuffers::Offset<KMLGroundOverlay> CreateKMLGroundOverlay(
   builder_.add_EAST(EAST);
   builder_.add_SOUTH(SOUTH);
   builder_.add_NORTH(NORTH);
+  builder_.add_REGION(REGION);
+  builder_.add_STYLE_URL(STYLE_URL);
+  builder_.add_LAT_LON_QUAD(LAT_LON_QUAD);
+  builder_.add_DRAW_ORDER(DRAW_ORDER);
   builder_.add_COLOR(COLOR);
   builder_.add_ICON_HREF(ICON_HREF);
   builder_.add_DESCRIPTION(DESCRIPTION);
   builder_.add_NAME(NAME);
   builder_.add_ALTITUDE_MODE(ALTITUDE_MODE);
+  builder_.add_OPEN(OPEN);
   builder_.add_VISIBILITY(VISIBILITY);
   return builder_.Finish();
 }
@@ -2256,6 +4921,7 @@ inline ::flatbuffers::Offset<KMLGroundOverlay> CreateKMLGroundOverlayDirect(
     const char *NAME = nullptr,
     const char *DESCRIPTION = nullptr,
     bool VISIBILITY = false,
+    bool OPEN = false,
     const char *ICON_HREF = nullptr,
     const char *COLOR = nullptr,
     double NORTH = 0.0,
@@ -2264,16 +4930,22 @@ inline ::flatbuffers::Offset<KMLGroundOverlay> CreateKMLGroundOverlayDirect(
     double WEST = 0.0,
     double ROTATION = 0.0,
     double ALTITUDE = 0.0,
-    KMLAltitudeMode ALTITUDE_MODE = KMLAltitudeMode_CLAMP_TO_GROUND) {
+    KMLAltitudeMode ALTITUDE_MODE = KMLAltitudeMode_CLAMP_TO_GROUND,
+    int32_t DRAW_ORDER = 0,
+    ::flatbuffers::Offset<KMLLatLonQuad> LAT_LON_QUAD = 0,
+    const char *STYLE_URL = nullptr,
+    ::flatbuffers::Offset<KMLRegion> REGION = 0) {
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
   auto ICON_HREF__ = ICON_HREF ? _fbb.CreateString(ICON_HREF) : 0;
   auto COLOR__ = COLOR ? _fbb.CreateString(COLOR) : 0;
+  auto STYLE_URL__ = STYLE_URL ? _fbb.CreateString(STYLE_URL) : 0;
   return CreateKMLGroundOverlay(
       _fbb,
       NAME__,
       DESCRIPTION__,
       VISIBILITY,
+      OPEN,
       ICON_HREF__,
       COLOR__,
       NORTH,
@@ -2282,7 +4954,852 @@ inline ::flatbuffers::Offset<KMLGroundOverlay> CreateKMLGroundOverlayDirect(
       WEST,
       ROTATION,
       ALTITUDE,
-      ALTITUDE_MODE);
+      ALTITUDE_MODE,
+      DRAW_ORDER,
+      LAT_LON_QUAD,
+      STYLE_URL__,
+      REGION);
+}
+
+/// Update element for NetworkLinkControl
+struct KMLUpdate FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLUpdateBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_TARGET_HREF = 4,
+    VT_CHANGE_KML = 6,
+    VT_CREATE_KML = 8,
+    VT_DELETE_KML = 10
+  };
+  /// Target href
+  const ::flatbuffers::String *TARGET_HREF() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TARGET_HREF);
+  }
+  /// Change KML (raw)
+  const ::flatbuffers::String *CHANGE_KML() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CHANGE_KML);
+  }
+  /// Create KML (raw)
+  const ::flatbuffers::String *CREATE_KML() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CREATE_KML);
+  }
+  /// Delete KML (raw)
+  const ::flatbuffers::String *DELETE_KML() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DELETE_KML);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_TARGET_HREF) &&
+           verifier.VerifyString(TARGET_HREF()) &&
+           VerifyOffset(verifier, VT_CHANGE_KML) &&
+           verifier.VerifyString(CHANGE_KML()) &&
+           VerifyOffset(verifier, VT_CREATE_KML) &&
+           verifier.VerifyString(CREATE_KML()) &&
+           VerifyOffset(verifier, VT_DELETE_KML) &&
+           verifier.VerifyString(DELETE_KML()) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLUpdateBuilder {
+  typedef KMLUpdate Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_TARGET_HREF(::flatbuffers::Offset<::flatbuffers::String> TARGET_HREF) {
+    fbb_.AddOffset(KMLUpdate::VT_TARGET_HREF, TARGET_HREF);
+  }
+  void add_CHANGE_KML(::flatbuffers::Offset<::flatbuffers::String> CHANGE_KML) {
+    fbb_.AddOffset(KMLUpdate::VT_CHANGE_KML, CHANGE_KML);
+  }
+  void add_CREATE_KML(::flatbuffers::Offset<::flatbuffers::String> CREATE_KML) {
+    fbb_.AddOffset(KMLUpdate::VT_CREATE_KML, CREATE_KML);
+  }
+  void add_DELETE_KML(::flatbuffers::Offset<::flatbuffers::String> DELETE_KML) {
+    fbb_.AddOffset(KMLUpdate::VT_DELETE_KML, DELETE_KML);
+  }
+  explicit KMLUpdateBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLUpdate> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLUpdate>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLUpdate> CreateKMLUpdate(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> TARGET_HREF = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CHANGE_KML = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CREATE_KML = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DELETE_KML = 0) {
+  KMLUpdateBuilder builder_(_fbb);
+  builder_.add_DELETE_KML(DELETE_KML);
+  builder_.add_CREATE_KML(CREATE_KML);
+  builder_.add_CHANGE_KML(CHANGE_KML);
+  builder_.add_TARGET_HREF(TARGET_HREF);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<KMLUpdate> CreateKMLUpdateDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *TARGET_HREF = nullptr,
+    const char *CHANGE_KML = nullptr,
+    const char *CREATE_KML = nullptr,
+    const char *DELETE_KML = nullptr) {
+  auto TARGET_HREF__ = TARGET_HREF ? _fbb.CreateString(TARGET_HREF) : 0;
+  auto CHANGE_KML__ = CHANGE_KML ? _fbb.CreateString(CHANGE_KML) : 0;
+  auto CREATE_KML__ = CREATE_KML ? _fbb.CreateString(CREATE_KML) : 0;
+  auto DELETE_KML__ = DELETE_KML ? _fbb.CreateString(DELETE_KML) : 0;
+  return CreateKMLUpdate(
+      _fbb,
+      TARGET_HREF__,
+      CHANGE_KML__,
+      CREATE_KML__,
+      DELETE_KML__);
+}
+
+/// NetworkLinkControl
+struct KMLNetworkLinkControl FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLNetworkLinkControlBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_MIN_REFRESH_PERIOD = 4,
+    VT_MAX_SESSION_LENGTH = 6,
+    VT_COOKIE = 8,
+    VT_MESSAGE = 10,
+    VT_LINK_NAME = 12,
+    VT_LINK_DESCRIPTION = 14,
+    VT_LINK_SNIPPET = 16,
+    VT_EXPIRES = 18,
+    VT_UPDATE = 20,
+    VT_LOOK_AT = 22,
+    VT_CAMERA = 24
+  };
+  /// Minimum refresh period in seconds
+  double MIN_REFRESH_PERIOD() const {
+    return GetField<double>(VT_MIN_REFRESH_PERIOD, 0.0);
+  }
+  /// Maximum session length in seconds
+  double MAX_SESSION_LENGTH() const {
+    return GetField<double>(VT_MAX_SESSION_LENGTH, 0.0);
+  }
+  /// Cookie
+  const ::flatbuffers::String *COOKIE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COOKIE);
+  }
+  /// Message to display
+  const ::flatbuffers::String *MESSAGE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MESSAGE);
+  }
+  /// Link name override
+  const ::flatbuffers::String *LINK_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LINK_NAME);
+  }
+  /// Link description override
+  const ::flatbuffers::String *LINK_DESCRIPTION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LINK_DESCRIPTION);
+  }
+  /// Link snippet override
+  const ::flatbuffers::String *LINK_SNIPPET() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LINK_SNIPPET);
+  }
+  /// Expiration time (ISO 8601)
+  const ::flatbuffers::String *EXPIRES() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EXPIRES);
+  }
+  /// Update
+  const KMLUpdate *UPDATE() const {
+    return GetPointer<const KMLUpdate *>(VT_UPDATE);
+  }
+  /// LookAt
+  const KMLLookAt *LOOK_AT() const {
+    return GetPointer<const KMLLookAt *>(VT_LOOK_AT);
+  }
+  /// Camera
+  const KMLCamera *CAMERA() const {
+    return GetPointer<const KMLCamera *>(VT_CAMERA);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<double>(verifier, VT_MIN_REFRESH_PERIOD, 8) &&
+           VerifyField<double>(verifier, VT_MAX_SESSION_LENGTH, 8) &&
+           VerifyOffset(verifier, VT_COOKIE) &&
+           verifier.VerifyString(COOKIE()) &&
+           VerifyOffset(verifier, VT_MESSAGE) &&
+           verifier.VerifyString(MESSAGE()) &&
+           VerifyOffset(verifier, VT_LINK_NAME) &&
+           verifier.VerifyString(LINK_NAME()) &&
+           VerifyOffset(verifier, VT_LINK_DESCRIPTION) &&
+           verifier.VerifyString(LINK_DESCRIPTION()) &&
+           VerifyOffset(verifier, VT_LINK_SNIPPET) &&
+           verifier.VerifyString(LINK_SNIPPET()) &&
+           VerifyOffset(verifier, VT_EXPIRES) &&
+           verifier.VerifyString(EXPIRES()) &&
+           VerifyOffset(verifier, VT_UPDATE) &&
+           verifier.VerifyTable(UPDATE()) &&
+           VerifyOffset(verifier, VT_LOOK_AT) &&
+           verifier.VerifyTable(LOOK_AT()) &&
+           VerifyOffset(verifier, VT_CAMERA) &&
+           verifier.VerifyTable(CAMERA()) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLNetworkLinkControlBuilder {
+  typedef KMLNetworkLinkControl Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_MIN_REFRESH_PERIOD(double MIN_REFRESH_PERIOD) {
+    fbb_.AddElement<double>(KMLNetworkLinkControl::VT_MIN_REFRESH_PERIOD, MIN_REFRESH_PERIOD, 0.0);
+  }
+  void add_MAX_SESSION_LENGTH(double MAX_SESSION_LENGTH) {
+    fbb_.AddElement<double>(KMLNetworkLinkControl::VT_MAX_SESSION_LENGTH, MAX_SESSION_LENGTH, 0.0);
+  }
+  void add_COOKIE(::flatbuffers::Offset<::flatbuffers::String> COOKIE) {
+    fbb_.AddOffset(KMLNetworkLinkControl::VT_COOKIE, COOKIE);
+  }
+  void add_MESSAGE(::flatbuffers::Offset<::flatbuffers::String> MESSAGE) {
+    fbb_.AddOffset(KMLNetworkLinkControl::VT_MESSAGE, MESSAGE);
+  }
+  void add_LINK_NAME(::flatbuffers::Offset<::flatbuffers::String> LINK_NAME) {
+    fbb_.AddOffset(KMLNetworkLinkControl::VT_LINK_NAME, LINK_NAME);
+  }
+  void add_LINK_DESCRIPTION(::flatbuffers::Offset<::flatbuffers::String> LINK_DESCRIPTION) {
+    fbb_.AddOffset(KMLNetworkLinkControl::VT_LINK_DESCRIPTION, LINK_DESCRIPTION);
+  }
+  void add_LINK_SNIPPET(::flatbuffers::Offset<::flatbuffers::String> LINK_SNIPPET) {
+    fbb_.AddOffset(KMLNetworkLinkControl::VT_LINK_SNIPPET, LINK_SNIPPET);
+  }
+  void add_EXPIRES(::flatbuffers::Offset<::flatbuffers::String> EXPIRES) {
+    fbb_.AddOffset(KMLNetworkLinkControl::VT_EXPIRES, EXPIRES);
+  }
+  void add_UPDATE(::flatbuffers::Offset<KMLUpdate> UPDATE) {
+    fbb_.AddOffset(KMLNetworkLinkControl::VT_UPDATE, UPDATE);
+  }
+  void add_LOOK_AT(::flatbuffers::Offset<KMLLookAt> LOOK_AT) {
+    fbb_.AddOffset(KMLNetworkLinkControl::VT_LOOK_AT, LOOK_AT);
+  }
+  void add_CAMERA(::flatbuffers::Offset<KMLCamera> CAMERA) {
+    fbb_.AddOffset(KMLNetworkLinkControl::VT_CAMERA, CAMERA);
+  }
+  explicit KMLNetworkLinkControlBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLNetworkLinkControl> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLNetworkLinkControl>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLNetworkLinkControl> CreateKMLNetworkLinkControl(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    double MIN_REFRESH_PERIOD = 0.0,
+    double MAX_SESSION_LENGTH = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> COOKIE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MESSAGE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> LINK_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> LINK_DESCRIPTION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> LINK_SNIPPET = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EXPIRES = 0,
+    ::flatbuffers::Offset<KMLUpdate> UPDATE = 0,
+    ::flatbuffers::Offset<KMLLookAt> LOOK_AT = 0,
+    ::flatbuffers::Offset<KMLCamera> CAMERA = 0) {
+  KMLNetworkLinkControlBuilder builder_(_fbb);
+  builder_.add_MAX_SESSION_LENGTH(MAX_SESSION_LENGTH);
+  builder_.add_MIN_REFRESH_PERIOD(MIN_REFRESH_PERIOD);
+  builder_.add_CAMERA(CAMERA);
+  builder_.add_LOOK_AT(LOOK_AT);
+  builder_.add_UPDATE(UPDATE);
+  builder_.add_EXPIRES(EXPIRES);
+  builder_.add_LINK_SNIPPET(LINK_SNIPPET);
+  builder_.add_LINK_DESCRIPTION(LINK_DESCRIPTION);
+  builder_.add_LINK_NAME(LINK_NAME);
+  builder_.add_MESSAGE(MESSAGE);
+  builder_.add_COOKIE(COOKIE);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<KMLNetworkLinkControl> CreateKMLNetworkLinkControlDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    double MIN_REFRESH_PERIOD = 0.0,
+    double MAX_SESSION_LENGTH = 0.0,
+    const char *COOKIE = nullptr,
+    const char *MESSAGE = nullptr,
+    const char *LINK_NAME = nullptr,
+    const char *LINK_DESCRIPTION = nullptr,
+    const char *LINK_SNIPPET = nullptr,
+    const char *EXPIRES = nullptr,
+    ::flatbuffers::Offset<KMLUpdate> UPDATE = 0,
+    ::flatbuffers::Offset<KMLLookAt> LOOK_AT = 0,
+    ::flatbuffers::Offset<KMLCamera> CAMERA = 0) {
+  auto COOKIE__ = COOKIE ? _fbb.CreateString(COOKIE) : 0;
+  auto MESSAGE__ = MESSAGE ? _fbb.CreateString(MESSAGE) : 0;
+  auto LINK_NAME__ = LINK_NAME ? _fbb.CreateString(LINK_NAME) : 0;
+  auto LINK_DESCRIPTION__ = LINK_DESCRIPTION ? _fbb.CreateString(LINK_DESCRIPTION) : 0;
+  auto LINK_SNIPPET__ = LINK_SNIPPET ? _fbb.CreateString(LINK_SNIPPET) : 0;
+  auto EXPIRES__ = EXPIRES ? _fbb.CreateString(EXPIRES) : 0;
+  return CreateKMLNetworkLinkControl(
+      _fbb,
+      MIN_REFRESH_PERIOD,
+      MAX_SESSION_LENGTH,
+      COOKIE__,
+      MESSAGE__,
+      LINK_NAME__,
+      LINK_DESCRIPTION__,
+      LINK_SNIPPET__,
+      EXPIRES__,
+      UPDATE,
+      LOOK_AT,
+      CAMERA);
+}
+
+/// gx:FlyTo tour primitive
+struct KMLFlyTo FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLFlyToBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_DURATION = 4,
+    VT_FLY_TO_MODE = 6,
+    VT_LOOK_AT = 8,
+    VT_CAMERA = 10
+  };
+  /// Duration in seconds
+  double DURATION() const {
+    return GetField<double>(VT_DURATION, 0.0);
+  }
+  /// Fly-to mode
+  KMLFlyToMode FLY_TO_MODE() const {
+    return static_cast<KMLFlyToMode>(GetField<int8_t>(VT_FLY_TO_MODE, 0));
+  }
+  /// LookAt viewpoint
+  const KMLLookAt *LOOK_AT() const {
+    return GetPointer<const KMLLookAt *>(VT_LOOK_AT);
+  }
+  /// Camera viewpoint
+  const KMLCamera *CAMERA() const {
+    return GetPointer<const KMLCamera *>(VT_CAMERA);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<double>(verifier, VT_DURATION, 8) &&
+           VerifyField<int8_t>(verifier, VT_FLY_TO_MODE, 1) &&
+           VerifyOffset(verifier, VT_LOOK_AT) &&
+           verifier.VerifyTable(LOOK_AT()) &&
+           VerifyOffset(verifier, VT_CAMERA) &&
+           verifier.VerifyTable(CAMERA()) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLFlyToBuilder {
+  typedef KMLFlyTo Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_DURATION(double DURATION) {
+    fbb_.AddElement<double>(KMLFlyTo::VT_DURATION, DURATION, 0.0);
+  }
+  void add_FLY_TO_MODE(KMLFlyToMode FLY_TO_MODE) {
+    fbb_.AddElement<int8_t>(KMLFlyTo::VT_FLY_TO_MODE, static_cast<int8_t>(FLY_TO_MODE), 0);
+  }
+  void add_LOOK_AT(::flatbuffers::Offset<KMLLookAt> LOOK_AT) {
+    fbb_.AddOffset(KMLFlyTo::VT_LOOK_AT, LOOK_AT);
+  }
+  void add_CAMERA(::flatbuffers::Offset<KMLCamera> CAMERA) {
+    fbb_.AddOffset(KMLFlyTo::VT_CAMERA, CAMERA);
+  }
+  explicit KMLFlyToBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLFlyTo> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLFlyTo>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLFlyTo> CreateKMLFlyTo(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    double DURATION = 0.0,
+    KMLFlyToMode FLY_TO_MODE = KMLFlyToMode_BOUNCE,
+    ::flatbuffers::Offset<KMLLookAt> LOOK_AT = 0,
+    ::flatbuffers::Offset<KMLCamera> CAMERA = 0) {
+  KMLFlyToBuilder builder_(_fbb);
+  builder_.add_DURATION(DURATION);
+  builder_.add_CAMERA(CAMERA);
+  builder_.add_LOOK_AT(LOOK_AT);
+  builder_.add_FLY_TO_MODE(FLY_TO_MODE);
+  return builder_.Finish();
+}
+
+/// gx:Wait tour primitive
+struct KMLWait FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLWaitBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_DURATION = 4
+  };
+  /// Duration in seconds
+  double DURATION() const {
+    return GetField<double>(VT_DURATION, 0.0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<double>(verifier, VT_DURATION, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLWaitBuilder {
+  typedef KMLWait Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_DURATION(double DURATION) {
+    fbb_.AddElement<double>(KMLWait::VT_DURATION, DURATION, 0.0);
+  }
+  explicit KMLWaitBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLWait> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLWait>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLWait> CreateKMLWait(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    double DURATION = 0.0) {
+  KMLWaitBuilder builder_(_fbb);
+  builder_.add_DURATION(DURATION);
+  return builder_.Finish();
+}
+
+/// gx:AnimatedUpdate tour primitive
+struct KMLAnimatedUpdate FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLAnimatedUpdateBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_DURATION = 4,
+    VT_DELAYED_START = 6,
+    VT_UPDATE = 8
+  };
+  /// Duration in seconds
+  double DURATION() const {
+    return GetField<double>(VT_DURATION, 0.0);
+  }
+  /// Delayed start in seconds
+  double DELAYED_START() const {
+    return GetField<double>(VT_DELAYED_START, 0.0);
+  }
+  /// Update
+  const KMLUpdate *UPDATE() const {
+    return GetPointer<const KMLUpdate *>(VT_UPDATE);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<double>(verifier, VT_DURATION, 8) &&
+           VerifyField<double>(verifier, VT_DELAYED_START, 8) &&
+           VerifyOffset(verifier, VT_UPDATE) &&
+           verifier.VerifyTable(UPDATE()) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLAnimatedUpdateBuilder {
+  typedef KMLAnimatedUpdate Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_DURATION(double DURATION) {
+    fbb_.AddElement<double>(KMLAnimatedUpdate::VT_DURATION, DURATION, 0.0);
+  }
+  void add_DELAYED_START(double DELAYED_START) {
+    fbb_.AddElement<double>(KMLAnimatedUpdate::VT_DELAYED_START, DELAYED_START, 0.0);
+  }
+  void add_UPDATE(::flatbuffers::Offset<KMLUpdate> UPDATE) {
+    fbb_.AddOffset(KMLAnimatedUpdate::VT_UPDATE, UPDATE);
+  }
+  explicit KMLAnimatedUpdateBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLAnimatedUpdate> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLAnimatedUpdate>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLAnimatedUpdate> CreateKMLAnimatedUpdate(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    double DURATION = 0.0,
+    double DELAYED_START = 0.0,
+    ::flatbuffers::Offset<KMLUpdate> UPDATE = 0) {
+  KMLAnimatedUpdateBuilder builder_(_fbb);
+  builder_.add_DELAYED_START(DELAYED_START);
+  builder_.add_DURATION(DURATION);
+  builder_.add_UPDATE(UPDATE);
+  return builder_.Finish();
+}
+
+/// gx:TourControl tour primitive
+struct KMLTourControl FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLTourControlBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_PLAY_MODE = 4
+  };
+  /// Play mode (pause)
+  const ::flatbuffers::String *PLAY_MODE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PLAY_MODE);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_PLAY_MODE) &&
+           verifier.VerifyString(PLAY_MODE()) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLTourControlBuilder {
+  typedef KMLTourControl Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_PLAY_MODE(::flatbuffers::Offset<::flatbuffers::String> PLAY_MODE) {
+    fbb_.AddOffset(KMLTourControl::VT_PLAY_MODE, PLAY_MODE);
+  }
+  explicit KMLTourControlBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLTourControl> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLTourControl>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLTourControl> CreateKMLTourControl(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> PLAY_MODE = 0) {
+  KMLTourControlBuilder builder_(_fbb);
+  builder_.add_PLAY_MODE(PLAY_MODE);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<KMLTourControl> CreateKMLTourControlDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *PLAY_MODE = nullptr) {
+  auto PLAY_MODE__ = PLAY_MODE ? _fbb.CreateString(PLAY_MODE) : 0;
+  return CreateKMLTourControl(
+      _fbb,
+      PLAY_MODE__);
+}
+
+/// gx:SoundCue tour primitive
+struct KMLSoundCue FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLSoundCueBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_HREF = 4,
+    VT_DELAYED_START = 6
+  };
+  /// Audio file URL
+  const ::flatbuffers::String *HREF() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_HREF);
+  }
+  /// Delayed start in seconds
+  double DELAYED_START() const {
+    return GetField<double>(VT_DELAYED_START, 0.0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_HREF) &&
+           verifier.VerifyString(HREF()) &&
+           VerifyField<double>(verifier, VT_DELAYED_START, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLSoundCueBuilder {
+  typedef KMLSoundCue Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_HREF(::flatbuffers::Offset<::flatbuffers::String> HREF) {
+    fbb_.AddOffset(KMLSoundCue::VT_HREF, HREF);
+  }
+  void add_DELAYED_START(double DELAYED_START) {
+    fbb_.AddElement<double>(KMLSoundCue::VT_DELAYED_START, DELAYED_START, 0.0);
+  }
+  explicit KMLSoundCueBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLSoundCue> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLSoundCue>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLSoundCue> CreateKMLSoundCue(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> HREF = 0,
+    double DELAYED_START = 0.0) {
+  KMLSoundCueBuilder builder_(_fbb);
+  builder_.add_DELAYED_START(DELAYED_START);
+  builder_.add_HREF(HREF);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<KMLSoundCue> CreateKMLSoundCueDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *HREF = nullptr,
+    double DELAYED_START = 0.0) {
+  auto HREF__ = HREF ? _fbb.CreateString(HREF) : 0;
+  return CreateKMLSoundCue(
+      _fbb,
+      HREF__,
+      DELAYED_START);
+}
+
+/// Tour primitive (union-like)
+struct KMLTourPrimitive FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLTourPrimitiveBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_FLY_TO = 4,
+    VT_WAIT = 6,
+    VT_ANIMATED_UPDATE = 8,
+    VT_TOUR_CONTROL = 10,
+    VT_SOUND_CUE = 12
+  };
+  /// FlyTo
+  const KMLFlyTo *FLY_TO() const {
+    return GetPointer<const KMLFlyTo *>(VT_FLY_TO);
+  }
+  /// Wait
+  const KMLWait *WAIT() const {
+    return GetPointer<const KMLWait *>(VT_WAIT);
+  }
+  /// AnimatedUpdate
+  const KMLAnimatedUpdate *ANIMATED_UPDATE() const {
+    return GetPointer<const KMLAnimatedUpdate *>(VT_ANIMATED_UPDATE);
+  }
+  /// TourControl
+  const KMLTourControl *TOUR_CONTROL() const {
+    return GetPointer<const KMLTourControl *>(VT_TOUR_CONTROL);
+  }
+  /// SoundCue
+  const KMLSoundCue *SOUND_CUE() const {
+    return GetPointer<const KMLSoundCue *>(VT_SOUND_CUE);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_FLY_TO) &&
+           verifier.VerifyTable(FLY_TO()) &&
+           VerifyOffset(verifier, VT_WAIT) &&
+           verifier.VerifyTable(WAIT()) &&
+           VerifyOffset(verifier, VT_ANIMATED_UPDATE) &&
+           verifier.VerifyTable(ANIMATED_UPDATE()) &&
+           VerifyOffset(verifier, VT_TOUR_CONTROL) &&
+           verifier.VerifyTable(TOUR_CONTROL()) &&
+           VerifyOffset(verifier, VT_SOUND_CUE) &&
+           verifier.VerifyTable(SOUND_CUE()) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLTourPrimitiveBuilder {
+  typedef KMLTourPrimitive Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_FLY_TO(::flatbuffers::Offset<KMLFlyTo> FLY_TO) {
+    fbb_.AddOffset(KMLTourPrimitive::VT_FLY_TO, FLY_TO);
+  }
+  void add_WAIT(::flatbuffers::Offset<KMLWait> WAIT) {
+    fbb_.AddOffset(KMLTourPrimitive::VT_WAIT, WAIT);
+  }
+  void add_ANIMATED_UPDATE(::flatbuffers::Offset<KMLAnimatedUpdate> ANIMATED_UPDATE) {
+    fbb_.AddOffset(KMLTourPrimitive::VT_ANIMATED_UPDATE, ANIMATED_UPDATE);
+  }
+  void add_TOUR_CONTROL(::flatbuffers::Offset<KMLTourControl> TOUR_CONTROL) {
+    fbb_.AddOffset(KMLTourPrimitive::VT_TOUR_CONTROL, TOUR_CONTROL);
+  }
+  void add_SOUND_CUE(::flatbuffers::Offset<KMLSoundCue> SOUND_CUE) {
+    fbb_.AddOffset(KMLTourPrimitive::VT_SOUND_CUE, SOUND_CUE);
+  }
+  explicit KMLTourPrimitiveBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLTourPrimitive> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLTourPrimitive>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLTourPrimitive> CreateKMLTourPrimitive(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<KMLFlyTo> FLY_TO = 0,
+    ::flatbuffers::Offset<KMLWait> WAIT = 0,
+    ::flatbuffers::Offset<KMLAnimatedUpdate> ANIMATED_UPDATE = 0,
+    ::flatbuffers::Offset<KMLTourControl> TOUR_CONTROL = 0,
+    ::flatbuffers::Offset<KMLSoundCue> SOUND_CUE = 0) {
+  KMLTourPrimitiveBuilder builder_(_fbb);
+  builder_.add_SOUND_CUE(SOUND_CUE);
+  builder_.add_TOUR_CONTROL(TOUR_CONTROL);
+  builder_.add_ANIMATED_UPDATE(ANIMATED_UPDATE);
+  builder_.add_WAIT(WAIT);
+  builder_.add_FLY_TO(FLY_TO);
+  return builder_.Finish();
+}
+
+/// gx:Playlist
+struct KMLPlaylist FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLPlaylistBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_PRIMITIVES = 4
+  };
+  /// Tour primitives
+  const ::flatbuffers::Vector<::flatbuffers::Offset<KMLTourPrimitive>> *PRIMITIVES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLTourPrimitive>> *>(VT_PRIMITIVES);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_PRIMITIVES) &&
+           verifier.VerifyVector(PRIMITIVES()) &&
+           verifier.VerifyVectorOfTables(PRIMITIVES()) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLPlaylistBuilder {
+  typedef KMLPlaylist Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_PRIMITIVES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLTourPrimitive>>> PRIMITIVES) {
+    fbb_.AddOffset(KMLPlaylist::VT_PRIMITIVES, PRIMITIVES);
+  }
+  explicit KMLPlaylistBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLPlaylist> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLPlaylist>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLPlaylist> CreateKMLPlaylist(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLTourPrimitive>>> PRIMITIVES = 0) {
+  KMLPlaylistBuilder builder_(_fbb);
+  builder_.add_PRIMITIVES(PRIMITIVES);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<KMLPlaylist> CreateKMLPlaylistDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<::flatbuffers::Offset<KMLTourPrimitive>> *PRIMITIVES = nullptr) {
+  auto PRIMITIVES__ = PRIMITIVES ? _fbb.CreateVector<::flatbuffers::Offset<KMLTourPrimitive>>(*PRIMITIVES) : 0;
+  return CreateKMLPlaylist(
+      _fbb,
+      PRIMITIVES__);
+}
+
+/// gx:Tour
+struct KMLTour FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef KMLTourBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_NAME = 4,
+    VT_DESCRIPTION = 6,
+    VT_VISIBILITY = 8,
+    VT_PLAYLIST = 10
+  };
+  /// Tour name
+  const ::flatbuffers::String *NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  /// Description
+  const ::flatbuffers::String *DESCRIPTION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
+  }
+  /// Visibility
+  bool VISIBILITY() const {
+    return GetField<uint8_t>(VT_VISIBILITY, 0) != 0;
+  }
+  /// Playlist
+  const KMLPlaylist *PLAYLIST() const {
+    return GetPointer<const KMLPlaylist *>(VT_PLAYLIST);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(NAME()) &&
+           VerifyOffset(verifier, VT_DESCRIPTION) &&
+           verifier.VerifyString(DESCRIPTION()) &&
+           VerifyField<uint8_t>(verifier, VT_VISIBILITY, 1) &&
+           VerifyOffset(verifier, VT_PLAYLIST) &&
+           verifier.VerifyTable(PLAYLIST()) &&
+           verifier.EndTable();
+  }
+};
+
+struct KMLTourBuilder {
+  typedef KMLTour Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
+    fbb_.AddOffset(KMLTour::VT_NAME, NAME);
+  }
+  void add_DESCRIPTION(::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION) {
+    fbb_.AddOffset(KMLTour::VT_DESCRIPTION, DESCRIPTION);
+  }
+  void add_VISIBILITY(bool VISIBILITY) {
+    fbb_.AddElement<uint8_t>(KMLTour::VT_VISIBILITY, static_cast<uint8_t>(VISIBILITY), 0);
+  }
+  void add_PLAYLIST(::flatbuffers::Offset<KMLPlaylist> PLAYLIST) {
+    fbb_.AddOffset(KMLTour::VT_PLAYLIST, PLAYLIST);
+  }
+  explicit KMLTourBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<KMLTour> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<KMLTour>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<KMLTour> CreateKMLTour(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0,
+    bool VISIBILITY = false,
+    ::flatbuffers::Offset<KMLPlaylist> PLAYLIST = 0) {
+  KMLTourBuilder builder_(_fbb);
+  builder_.add_PLAYLIST(PLAYLIST);
+  builder_.add_DESCRIPTION(DESCRIPTION);
+  builder_.add_NAME(NAME);
+  builder_.add_VISIBILITY(VISIBILITY);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<KMLTour> CreateKMLTourDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *NAME = nullptr,
+    const char *DESCRIPTION = nullptr,
+    bool VISIBILITY = false,
+    ::flatbuffers::Offset<KMLPlaylist> PLAYLIST = 0) {
+  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
+  auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
+  return CreateKMLTour(
+      _fbb,
+      NAME__,
+      DESCRIPTION__,
+      VISIBILITY,
+      PLAYLIST);
 }
 
 /// Placemark feature
@@ -2295,15 +5812,24 @@ struct KMLPlacemark FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_STYLE_URL = 10,
     VT_STYLE = 12,
     VT_SNIPPET = 14,
-    VT_POINT = 16,
-    VT_LINE_STRING = 18,
-    VT_POLYGON = 20,
-    VT_MULTI_GEOMETRY = 22,
-    VT_LOOK_AT = 24,
-    VT_CAMERA = 26,
-    VT_TIME_SPAN = 28,
-    VT_TIME_STAMP = 30,
-    VT_EXTENDED_DATA = 32
+    VT_OPEN = 16,
+    VT_ADDRESS = 18,
+    VT_POINT = 20,
+    VT_LINE_STRING = 22,
+    VT_POLYGON = 24,
+    VT_LINEAR_RING = 26,
+    VT_MULTI_GEOMETRY = 28,
+    VT_MODEL = 30,
+    VT_TRACK = 32,
+    VT_MULTI_TRACK = 34,
+    VT_LOOK_AT = 36,
+    VT_CAMERA = 38,
+    VT_TIME_SPAN = 40,
+    VT_TIME_STAMP = 42,
+    VT_EXTENDED_DATA = 44,
+    VT_SCHEMA_DATA = 46,
+    VT_REGION = 48,
+    VT_STYLE_MAP = 50
   };
   /// Placemark name
   const ::flatbuffers::String *NAME() const {
@@ -2329,6 +5855,14 @@ struct KMLPlacemark FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *SNIPPET() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SNIPPET);
   }
+  /// Whether open in tree view
+  bool OPEN() const {
+    return GetField<uint8_t>(VT_OPEN, 0) != 0;
+  }
+  /// Address
+  const ::flatbuffers::String *ADDRESS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ADDRESS);
+  }
   /// Point geometry
   const KMLPoint *POINT() const {
     return GetPointer<const KMLPoint *>(VT_POINT);
@@ -2341,9 +5875,25 @@ struct KMLPlacemark FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const KMLPolygon *POLYGON() const {
     return GetPointer<const KMLPolygon *>(VT_POLYGON);
   }
+  /// LinearRing geometry (standalone)
+  const KMLLinearRing *LINEAR_RING() const {
+    return GetPointer<const KMLLinearRing *>(VT_LINEAR_RING);
+  }
   /// MultiGeometry
   const KMLMultiGeometry *MULTI_GEOMETRY() const {
     return GetPointer<const KMLMultiGeometry *>(VT_MULTI_GEOMETRY);
+  }
+  /// 3D Model
+  const KMLModel *MODEL() const {
+    return GetPointer<const KMLModel *>(VT_MODEL);
+  }
+  /// gx:Track
+  const KMLTrack *TRACK() const {
+    return GetPointer<const KMLTrack *>(VT_TRACK);
+  }
+  /// gx:MultiTrack
+  const KMLMultiTrack *MULTI_TRACK() const {
+    return GetPointer<const KMLMultiTrack *>(VT_MULTI_TRACK);
   }
   /// LookAt viewpoint
   const KMLLookAt *LOOK_AT() const {
@@ -2365,6 +5915,18 @@ struct KMLPlacemark FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<KMLData>> *EXTENDED_DATA() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLData>> *>(VT_EXTENDED_DATA);
   }
+  /// Schema data
+  const KMLSchemaData *SCHEMA_DATA() const {
+    return GetPointer<const KMLSchemaData *>(VT_SCHEMA_DATA);
+  }
+  /// Region
+  const KMLRegion *REGION() const {
+    return GetPointer<const KMLRegion *>(VT_REGION);
+  }
+  /// StyleMap (inline)
+  const KMLStyleMap *STYLE_MAP() const {
+    return GetPointer<const KMLStyleMap *>(VT_STYLE_MAP);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
@@ -2378,14 +5940,25 @@ struct KMLPlacemark FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyTable(STYLE()) &&
            VerifyOffset(verifier, VT_SNIPPET) &&
            verifier.VerifyString(SNIPPET()) &&
+           VerifyField<uint8_t>(verifier, VT_OPEN, 1) &&
+           VerifyOffset(verifier, VT_ADDRESS) &&
+           verifier.VerifyString(ADDRESS()) &&
            VerifyOffset(verifier, VT_POINT) &&
            verifier.VerifyTable(POINT()) &&
            VerifyOffset(verifier, VT_LINE_STRING) &&
            verifier.VerifyTable(LINE_STRING()) &&
            VerifyOffset(verifier, VT_POLYGON) &&
            verifier.VerifyTable(POLYGON()) &&
+           VerifyOffset(verifier, VT_LINEAR_RING) &&
+           verifier.VerifyTable(LINEAR_RING()) &&
            VerifyOffset(verifier, VT_MULTI_GEOMETRY) &&
            verifier.VerifyTable(MULTI_GEOMETRY()) &&
+           VerifyOffset(verifier, VT_MODEL) &&
+           verifier.VerifyTable(MODEL()) &&
+           VerifyOffset(verifier, VT_TRACK) &&
+           verifier.VerifyTable(TRACK()) &&
+           VerifyOffset(verifier, VT_MULTI_TRACK) &&
+           verifier.VerifyTable(MULTI_TRACK()) &&
            VerifyOffset(verifier, VT_LOOK_AT) &&
            verifier.VerifyTable(LOOK_AT()) &&
            VerifyOffset(verifier, VT_CAMERA) &&
@@ -2397,6 +5970,12 @@ struct KMLPlacemark FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_EXTENDED_DATA) &&
            verifier.VerifyVector(EXTENDED_DATA()) &&
            verifier.VerifyVectorOfTables(EXTENDED_DATA()) &&
+           VerifyOffset(verifier, VT_SCHEMA_DATA) &&
+           verifier.VerifyTable(SCHEMA_DATA()) &&
+           VerifyOffset(verifier, VT_REGION) &&
+           verifier.VerifyTable(REGION()) &&
+           VerifyOffset(verifier, VT_STYLE_MAP) &&
+           verifier.VerifyTable(STYLE_MAP()) &&
            verifier.EndTable();
   }
 };
@@ -2423,6 +6002,12 @@ struct KMLPlacemarkBuilder {
   void add_SNIPPET(::flatbuffers::Offset<::flatbuffers::String> SNIPPET) {
     fbb_.AddOffset(KMLPlacemark::VT_SNIPPET, SNIPPET);
   }
+  void add_OPEN(bool OPEN) {
+    fbb_.AddElement<uint8_t>(KMLPlacemark::VT_OPEN, static_cast<uint8_t>(OPEN), 0);
+  }
+  void add_ADDRESS(::flatbuffers::Offset<::flatbuffers::String> ADDRESS) {
+    fbb_.AddOffset(KMLPlacemark::VT_ADDRESS, ADDRESS);
+  }
   void add_POINT(::flatbuffers::Offset<KMLPoint> POINT) {
     fbb_.AddOffset(KMLPlacemark::VT_POINT, POINT);
   }
@@ -2432,8 +6017,20 @@ struct KMLPlacemarkBuilder {
   void add_POLYGON(::flatbuffers::Offset<KMLPolygon> POLYGON) {
     fbb_.AddOffset(KMLPlacemark::VT_POLYGON, POLYGON);
   }
+  void add_LINEAR_RING(::flatbuffers::Offset<KMLLinearRing> LINEAR_RING) {
+    fbb_.AddOffset(KMLPlacemark::VT_LINEAR_RING, LINEAR_RING);
+  }
   void add_MULTI_GEOMETRY(::flatbuffers::Offset<KMLMultiGeometry> MULTI_GEOMETRY) {
     fbb_.AddOffset(KMLPlacemark::VT_MULTI_GEOMETRY, MULTI_GEOMETRY);
+  }
+  void add_MODEL(::flatbuffers::Offset<KMLModel> MODEL) {
+    fbb_.AddOffset(KMLPlacemark::VT_MODEL, MODEL);
+  }
+  void add_TRACK(::flatbuffers::Offset<KMLTrack> TRACK) {
+    fbb_.AddOffset(KMLPlacemark::VT_TRACK, TRACK);
+  }
+  void add_MULTI_TRACK(::flatbuffers::Offset<KMLMultiTrack> MULTI_TRACK) {
+    fbb_.AddOffset(KMLPlacemark::VT_MULTI_TRACK, MULTI_TRACK);
   }
   void add_LOOK_AT(::flatbuffers::Offset<KMLLookAt> LOOK_AT) {
     fbb_.AddOffset(KMLPlacemark::VT_LOOK_AT, LOOK_AT);
@@ -2449,6 +6046,15 @@ struct KMLPlacemarkBuilder {
   }
   void add_EXTENDED_DATA(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLData>>> EXTENDED_DATA) {
     fbb_.AddOffset(KMLPlacemark::VT_EXTENDED_DATA, EXTENDED_DATA);
+  }
+  void add_SCHEMA_DATA(::flatbuffers::Offset<KMLSchemaData> SCHEMA_DATA) {
+    fbb_.AddOffset(KMLPlacemark::VT_SCHEMA_DATA, SCHEMA_DATA);
+  }
+  void add_REGION(::flatbuffers::Offset<KMLRegion> REGION) {
+    fbb_.AddOffset(KMLPlacemark::VT_REGION, REGION);
+  }
+  void add_STYLE_MAP(::flatbuffers::Offset<KMLStyleMap> STYLE_MAP) {
+    fbb_.AddOffset(KMLPlacemark::VT_STYLE_MAP, STYLE_MAP);
   }
   explicit KMLPlacemarkBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -2469,30 +6075,48 @@ inline ::flatbuffers::Offset<KMLPlacemark> CreateKMLPlacemark(
     ::flatbuffers::Offset<::flatbuffers::String> STYLE_URL = 0,
     ::flatbuffers::Offset<KMLStyle> STYLE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SNIPPET = 0,
+    bool OPEN = false,
+    ::flatbuffers::Offset<::flatbuffers::String> ADDRESS = 0,
     ::flatbuffers::Offset<KMLPoint> POINT = 0,
     ::flatbuffers::Offset<KMLLineString> LINE_STRING = 0,
     ::flatbuffers::Offset<KMLPolygon> POLYGON = 0,
+    ::flatbuffers::Offset<KMLLinearRing> LINEAR_RING = 0,
     ::flatbuffers::Offset<KMLMultiGeometry> MULTI_GEOMETRY = 0,
+    ::flatbuffers::Offset<KMLModel> MODEL = 0,
+    ::flatbuffers::Offset<KMLTrack> TRACK = 0,
+    ::flatbuffers::Offset<KMLMultiTrack> MULTI_TRACK = 0,
     ::flatbuffers::Offset<KMLLookAt> LOOK_AT = 0,
     ::flatbuffers::Offset<KMLCamera> CAMERA = 0,
     ::flatbuffers::Offset<KMLTimeSpan> TIME_SPAN = 0,
     ::flatbuffers::Offset<KMLTimeStamp> TIME_STAMP = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLData>>> EXTENDED_DATA = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLData>>> EXTENDED_DATA = 0,
+    ::flatbuffers::Offset<KMLSchemaData> SCHEMA_DATA = 0,
+    ::flatbuffers::Offset<KMLRegion> REGION = 0,
+    ::flatbuffers::Offset<KMLStyleMap> STYLE_MAP = 0) {
   KMLPlacemarkBuilder builder_(_fbb);
+  builder_.add_STYLE_MAP(STYLE_MAP);
+  builder_.add_REGION(REGION);
+  builder_.add_SCHEMA_DATA(SCHEMA_DATA);
   builder_.add_EXTENDED_DATA(EXTENDED_DATA);
   builder_.add_TIME_STAMP(TIME_STAMP);
   builder_.add_TIME_SPAN(TIME_SPAN);
   builder_.add_CAMERA(CAMERA);
   builder_.add_LOOK_AT(LOOK_AT);
+  builder_.add_MULTI_TRACK(MULTI_TRACK);
+  builder_.add_TRACK(TRACK);
+  builder_.add_MODEL(MODEL);
   builder_.add_MULTI_GEOMETRY(MULTI_GEOMETRY);
+  builder_.add_LINEAR_RING(LINEAR_RING);
   builder_.add_POLYGON(POLYGON);
   builder_.add_LINE_STRING(LINE_STRING);
   builder_.add_POINT(POINT);
+  builder_.add_ADDRESS(ADDRESS);
   builder_.add_SNIPPET(SNIPPET);
   builder_.add_STYLE(STYLE);
   builder_.add_STYLE_URL(STYLE_URL);
   builder_.add_DESCRIPTION(DESCRIPTION);
   builder_.add_NAME(NAME);
+  builder_.add_OPEN(OPEN);
   builder_.add_VISIBILITY(VISIBILITY);
   return builder_.Finish();
 }
@@ -2505,19 +6129,29 @@ inline ::flatbuffers::Offset<KMLPlacemark> CreateKMLPlacemarkDirect(
     const char *STYLE_URL = nullptr,
     ::flatbuffers::Offset<KMLStyle> STYLE = 0,
     const char *SNIPPET = nullptr,
+    bool OPEN = false,
+    const char *ADDRESS = nullptr,
     ::flatbuffers::Offset<KMLPoint> POINT = 0,
     ::flatbuffers::Offset<KMLLineString> LINE_STRING = 0,
     ::flatbuffers::Offset<KMLPolygon> POLYGON = 0,
+    ::flatbuffers::Offset<KMLLinearRing> LINEAR_RING = 0,
     ::flatbuffers::Offset<KMLMultiGeometry> MULTI_GEOMETRY = 0,
+    ::flatbuffers::Offset<KMLModel> MODEL = 0,
+    ::flatbuffers::Offset<KMLTrack> TRACK = 0,
+    ::flatbuffers::Offset<KMLMultiTrack> MULTI_TRACK = 0,
     ::flatbuffers::Offset<KMLLookAt> LOOK_AT = 0,
     ::flatbuffers::Offset<KMLCamera> CAMERA = 0,
     ::flatbuffers::Offset<KMLTimeSpan> TIME_SPAN = 0,
     ::flatbuffers::Offset<KMLTimeStamp> TIME_STAMP = 0,
-    const std::vector<::flatbuffers::Offset<KMLData>> *EXTENDED_DATA = nullptr) {
+    const std::vector<::flatbuffers::Offset<KMLData>> *EXTENDED_DATA = nullptr,
+    ::flatbuffers::Offset<KMLSchemaData> SCHEMA_DATA = 0,
+    ::flatbuffers::Offset<KMLRegion> REGION = 0,
+    ::flatbuffers::Offset<KMLStyleMap> STYLE_MAP = 0) {
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
   auto STYLE_URL__ = STYLE_URL ? _fbb.CreateString(STYLE_URL) : 0;
   auto SNIPPET__ = SNIPPET ? _fbb.CreateString(SNIPPET) : 0;
+  auto ADDRESS__ = ADDRESS ? _fbb.CreateString(ADDRESS) : 0;
   auto EXTENDED_DATA__ = EXTENDED_DATA ? _fbb.CreateVector<::flatbuffers::Offset<KMLData>>(*EXTENDED_DATA) : 0;
   return CreateKMLPlacemark(
       _fbb,
@@ -2527,15 +6161,24 @@ inline ::flatbuffers::Offset<KMLPlacemark> CreateKMLPlacemarkDirect(
       STYLE_URL__,
       STYLE,
       SNIPPET__,
+      OPEN,
+      ADDRESS__,
       POINT,
       LINE_STRING,
       POLYGON,
+      LINEAR_RING,
       MULTI_GEOMETRY,
+      MODEL,
+      TRACK,
+      MULTI_TRACK,
       LOOK_AT,
       CAMERA,
       TIME_SPAN,
       TIME_STAMP,
-      EXTENDED_DATA__);
+      EXTENDED_DATA__,
+      SCHEMA_DATA,
+      REGION,
+      STYLE_MAP);
 }
 
 /// Folder container
@@ -2549,7 +6192,19 @@ struct KMLFolder FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_PLACEMARKS = 12,
     VT_FOLDERS = 14,
     VT_NETWORK_LINKS = 16,
-    VT_GROUND_OVERLAYS = 18
+    VT_GROUND_OVERLAYS = 18,
+    VT_STYLES = 20,
+    VT_STYLE_MAPS = 22,
+    VT_SCREEN_OVERLAYS = 24,
+    VT_PHOTO_OVERLAYS = 26,
+    VT_TOURS = 28,
+    VT_STYLE_URL = 30,
+    VT_REGION = 32,
+    VT_EXTENDED_DATA = 34,
+    VT_LOOK_AT = 36,
+    VT_CAMERA = 38,
+    VT_TIME_SPAN = 40,
+    VT_TIME_STAMP = 42
   };
   /// Folder name
   const ::flatbuffers::String *NAME() const {
@@ -2583,6 +6238,54 @@ struct KMLFolder FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<KMLGroundOverlay>> *GROUND_OVERLAYS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLGroundOverlay>> *>(VT_GROUND_OVERLAYS);
   }
+  /// Shared styles
+  const ::flatbuffers::Vector<::flatbuffers::Offset<KMLStyle>> *STYLES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLStyle>> *>(VT_STYLES);
+  }
+  /// Style maps
+  const ::flatbuffers::Vector<::flatbuffers::Offset<KMLStyleMap>> *STYLE_MAPS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLStyleMap>> *>(VT_STYLE_MAPS);
+  }
+  /// Screen overlays
+  const ::flatbuffers::Vector<::flatbuffers::Offset<KMLScreenOverlay>> *SCREEN_OVERLAYS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLScreenOverlay>> *>(VT_SCREEN_OVERLAYS);
+  }
+  /// Photo overlays
+  const ::flatbuffers::Vector<::flatbuffers::Offset<KMLPhotoOverlay>> *PHOTO_OVERLAYS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLPhotoOverlay>> *>(VT_PHOTO_OVERLAYS);
+  }
+  /// Tours
+  const ::flatbuffers::Vector<::flatbuffers::Offset<KMLTour>> *TOURS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLTour>> *>(VT_TOURS);
+  }
+  /// Style URL reference
+  const ::flatbuffers::String *STYLE_URL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_STYLE_URL);
+  }
+  /// Region
+  const KMLRegion *REGION() const {
+    return GetPointer<const KMLRegion *>(VT_REGION);
+  }
+  /// Extended data
+  const ::flatbuffers::Vector<::flatbuffers::Offset<KMLData>> *EXTENDED_DATA() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLData>> *>(VT_EXTENDED_DATA);
+  }
+  /// LookAt viewpoint
+  const KMLLookAt *LOOK_AT() const {
+    return GetPointer<const KMLLookAt *>(VT_LOOK_AT);
+  }
+  /// Camera viewpoint
+  const KMLCamera *CAMERA() const {
+    return GetPointer<const KMLCamera *>(VT_CAMERA);
+  }
+  /// TimeSpan
+  const KMLTimeSpan *TIME_SPAN() const {
+    return GetPointer<const KMLTimeSpan *>(VT_TIME_SPAN);
+  }
+  /// TimeStamp
+  const KMLTimeStamp *TIME_STAMP() const {
+    return GetPointer<const KMLTimeStamp *>(VT_TIME_STAMP);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
@@ -2603,6 +6306,36 @@ struct KMLFolder FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_GROUND_OVERLAYS) &&
            verifier.VerifyVector(GROUND_OVERLAYS()) &&
            verifier.VerifyVectorOfTables(GROUND_OVERLAYS()) &&
+           VerifyOffset(verifier, VT_STYLES) &&
+           verifier.VerifyVector(STYLES()) &&
+           verifier.VerifyVectorOfTables(STYLES()) &&
+           VerifyOffset(verifier, VT_STYLE_MAPS) &&
+           verifier.VerifyVector(STYLE_MAPS()) &&
+           verifier.VerifyVectorOfTables(STYLE_MAPS()) &&
+           VerifyOffset(verifier, VT_SCREEN_OVERLAYS) &&
+           verifier.VerifyVector(SCREEN_OVERLAYS()) &&
+           verifier.VerifyVectorOfTables(SCREEN_OVERLAYS()) &&
+           VerifyOffset(verifier, VT_PHOTO_OVERLAYS) &&
+           verifier.VerifyVector(PHOTO_OVERLAYS()) &&
+           verifier.VerifyVectorOfTables(PHOTO_OVERLAYS()) &&
+           VerifyOffset(verifier, VT_TOURS) &&
+           verifier.VerifyVector(TOURS()) &&
+           verifier.VerifyVectorOfTables(TOURS()) &&
+           VerifyOffset(verifier, VT_STYLE_URL) &&
+           verifier.VerifyString(STYLE_URL()) &&
+           VerifyOffset(verifier, VT_REGION) &&
+           verifier.VerifyTable(REGION()) &&
+           VerifyOffset(verifier, VT_EXTENDED_DATA) &&
+           verifier.VerifyVector(EXTENDED_DATA()) &&
+           verifier.VerifyVectorOfTables(EXTENDED_DATA()) &&
+           VerifyOffset(verifier, VT_LOOK_AT) &&
+           verifier.VerifyTable(LOOK_AT()) &&
+           VerifyOffset(verifier, VT_CAMERA) &&
+           verifier.VerifyTable(CAMERA()) &&
+           VerifyOffset(verifier, VT_TIME_SPAN) &&
+           verifier.VerifyTable(TIME_SPAN()) &&
+           VerifyOffset(verifier, VT_TIME_STAMP) &&
+           verifier.VerifyTable(TIME_STAMP()) &&
            verifier.EndTable();
   }
 };
@@ -2635,6 +6368,42 @@ struct KMLFolderBuilder {
   void add_GROUND_OVERLAYS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLGroundOverlay>>> GROUND_OVERLAYS) {
     fbb_.AddOffset(KMLFolder::VT_GROUND_OVERLAYS, GROUND_OVERLAYS);
   }
+  void add_STYLES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLStyle>>> STYLES) {
+    fbb_.AddOffset(KMLFolder::VT_STYLES, STYLES);
+  }
+  void add_STYLE_MAPS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLStyleMap>>> STYLE_MAPS) {
+    fbb_.AddOffset(KMLFolder::VT_STYLE_MAPS, STYLE_MAPS);
+  }
+  void add_SCREEN_OVERLAYS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLScreenOverlay>>> SCREEN_OVERLAYS) {
+    fbb_.AddOffset(KMLFolder::VT_SCREEN_OVERLAYS, SCREEN_OVERLAYS);
+  }
+  void add_PHOTO_OVERLAYS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLPhotoOverlay>>> PHOTO_OVERLAYS) {
+    fbb_.AddOffset(KMLFolder::VT_PHOTO_OVERLAYS, PHOTO_OVERLAYS);
+  }
+  void add_TOURS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLTour>>> TOURS) {
+    fbb_.AddOffset(KMLFolder::VT_TOURS, TOURS);
+  }
+  void add_STYLE_URL(::flatbuffers::Offset<::flatbuffers::String> STYLE_URL) {
+    fbb_.AddOffset(KMLFolder::VT_STYLE_URL, STYLE_URL);
+  }
+  void add_REGION(::flatbuffers::Offset<KMLRegion> REGION) {
+    fbb_.AddOffset(KMLFolder::VT_REGION, REGION);
+  }
+  void add_EXTENDED_DATA(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLData>>> EXTENDED_DATA) {
+    fbb_.AddOffset(KMLFolder::VT_EXTENDED_DATA, EXTENDED_DATA);
+  }
+  void add_LOOK_AT(::flatbuffers::Offset<KMLLookAt> LOOK_AT) {
+    fbb_.AddOffset(KMLFolder::VT_LOOK_AT, LOOK_AT);
+  }
+  void add_CAMERA(::flatbuffers::Offset<KMLCamera> CAMERA) {
+    fbb_.AddOffset(KMLFolder::VT_CAMERA, CAMERA);
+  }
+  void add_TIME_SPAN(::flatbuffers::Offset<KMLTimeSpan> TIME_SPAN) {
+    fbb_.AddOffset(KMLFolder::VT_TIME_SPAN, TIME_SPAN);
+  }
+  void add_TIME_STAMP(::flatbuffers::Offset<KMLTimeStamp> TIME_STAMP) {
+    fbb_.AddOffset(KMLFolder::VT_TIME_STAMP, TIME_STAMP);
+  }
   explicit KMLFolderBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -2655,8 +6424,32 @@ inline ::flatbuffers::Offset<KMLFolder> CreateKMLFolder(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLPlacemark>>> PLACEMARKS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLFolder>>> FOLDERS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLNetworkLink>>> NETWORK_LINKS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLGroundOverlay>>> GROUND_OVERLAYS = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLGroundOverlay>>> GROUND_OVERLAYS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLStyle>>> STYLES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLStyleMap>>> STYLE_MAPS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLScreenOverlay>>> SCREEN_OVERLAYS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLPhotoOverlay>>> PHOTO_OVERLAYS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLTour>>> TOURS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> STYLE_URL = 0,
+    ::flatbuffers::Offset<KMLRegion> REGION = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLData>>> EXTENDED_DATA = 0,
+    ::flatbuffers::Offset<KMLLookAt> LOOK_AT = 0,
+    ::flatbuffers::Offset<KMLCamera> CAMERA = 0,
+    ::flatbuffers::Offset<KMLTimeSpan> TIME_SPAN = 0,
+    ::flatbuffers::Offset<KMLTimeStamp> TIME_STAMP = 0) {
   KMLFolderBuilder builder_(_fbb);
+  builder_.add_TIME_STAMP(TIME_STAMP);
+  builder_.add_TIME_SPAN(TIME_SPAN);
+  builder_.add_CAMERA(CAMERA);
+  builder_.add_LOOK_AT(LOOK_AT);
+  builder_.add_EXTENDED_DATA(EXTENDED_DATA);
+  builder_.add_REGION(REGION);
+  builder_.add_STYLE_URL(STYLE_URL);
+  builder_.add_TOURS(TOURS);
+  builder_.add_PHOTO_OVERLAYS(PHOTO_OVERLAYS);
+  builder_.add_SCREEN_OVERLAYS(SCREEN_OVERLAYS);
+  builder_.add_STYLE_MAPS(STYLE_MAPS);
+  builder_.add_STYLES(STYLES);
   builder_.add_GROUND_OVERLAYS(GROUND_OVERLAYS);
   builder_.add_NETWORK_LINKS(NETWORK_LINKS);
   builder_.add_FOLDERS(FOLDERS);
@@ -2677,13 +6470,32 @@ inline ::flatbuffers::Offset<KMLFolder> CreateKMLFolderDirect(
     const std::vector<::flatbuffers::Offset<KMLPlacemark>> *PLACEMARKS = nullptr,
     const std::vector<::flatbuffers::Offset<KMLFolder>> *FOLDERS = nullptr,
     const std::vector<::flatbuffers::Offset<KMLNetworkLink>> *NETWORK_LINKS = nullptr,
-    const std::vector<::flatbuffers::Offset<KMLGroundOverlay>> *GROUND_OVERLAYS = nullptr) {
+    const std::vector<::flatbuffers::Offset<KMLGroundOverlay>> *GROUND_OVERLAYS = nullptr,
+    const std::vector<::flatbuffers::Offset<KMLStyle>> *STYLES = nullptr,
+    const std::vector<::flatbuffers::Offset<KMLStyleMap>> *STYLE_MAPS = nullptr,
+    const std::vector<::flatbuffers::Offset<KMLScreenOverlay>> *SCREEN_OVERLAYS = nullptr,
+    const std::vector<::flatbuffers::Offset<KMLPhotoOverlay>> *PHOTO_OVERLAYS = nullptr,
+    const std::vector<::flatbuffers::Offset<KMLTour>> *TOURS = nullptr,
+    const char *STYLE_URL = nullptr,
+    ::flatbuffers::Offset<KMLRegion> REGION = 0,
+    const std::vector<::flatbuffers::Offset<KMLData>> *EXTENDED_DATA = nullptr,
+    ::flatbuffers::Offset<KMLLookAt> LOOK_AT = 0,
+    ::flatbuffers::Offset<KMLCamera> CAMERA = 0,
+    ::flatbuffers::Offset<KMLTimeSpan> TIME_SPAN = 0,
+    ::flatbuffers::Offset<KMLTimeStamp> TIME_STAMP = 0) {
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
   auto PLACEMARKS__ = PLACEMARKS ? _fbb.CreateVector<::flatbuffers::Offset<KMLPlacemark>>(*PLACEMARKS) : 0;
   auto FOLDERS__ = FOLDERS ? _fbb.CreateVector<::flatbuffers::Offset<KMLFolder>>(*FOLDERS) : 0;
   auto NETWORK_LINKS__ = NETWORK_LINKS ? _fbb.CreateVector<::flatbuffers::Offset<KMLNetworkLink>>(*NETWORK_LINKS) : 0;
   auto GROUND_OVERLAYS__ = GROUND_OVERLAYS ? _fbb.CreateVector<::flatbuffers::Offset<KMLGroundOverlay>>(*GROUND_OVERLAYS) : 0;
+  auto STYLES__ = STYLES ? _fbb.CreateVector<::flatbuffers::Offset<KMLStyle>>(*STYLES) : 0;
+  auto STYLE_MAPS__ = STYLE_MAPS ? _fbb.CreateVector<::flatbuffers::Offset<KMLStyleMap>>(*STYLE_MAPS) : 0;
+  auto SCREEN_OVERLAYS__ = SCREEN_OVERLAYS ? _fbb.CreateVector<::flatbuffers::Offset<KMLScreenOverlay>>(*SCREEN_OVERLAYS) : 0;
+  auto PHOTO_OVERLAYS__ = PHOTO_OVERLAYS ? _fbb.CreateVector<::flatbuffers::Offset<KMLPhotoOverlay>>(*PHOTO_OVERLAYS) : 0;
+  auto TOURS__ = TOURS ? _fbb.CreateVector<::flatbuffers::Offset<KMLTour>>(*TOURS) : 0;
+  auto STYLE_URL__ = STYLE_URL ? _fbb.CreateString(STYLE_URL) : 0;
+  auto EXTENDED_DATA__ = EXTENDED_DATA ? _fbb.CreateVector<::flatbuffers::Offset<KMLData>>(*EXTENDED_DATA) : 0;
   return CreateKMLFolder(
       _fbb,
       NAME__,
@@ -2693,7 +6505,19 @@ inline ::flatbuffers::Offset<KMLFolder> CreateKMLFolderDirect(
       PLACEMARKS__,
       FOLDERS__,
       NETWORK_LINKS__,
-      GROUND_OVERLAYS__);
+      GROUND_OVERLAYS__,
+      STYLES__,
+      STYLE_MAPS__,
+      SCREEN_OVERLAYS__,
+      PHOTO_OVERLAYS__,
+      TOURS__,
+      STYLE_URL__,
+      REGION,
+      EXTENDED_DATA__,
+      LOOK_AT,
+      CAMERA,
+      TIME_SPAN,
+      TIME_STAMP);
 }
 
 /// KML Document
@@ -2709,7 +6533,12 @@ struct KML FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_PLACEMARKS = 16,
     VT_FOLDERS = 18,
     VT_NETWORK_LINKS = 20,
-    VT_GROUND_OVERLAYS = 22
+    VT_GROUND_OVERLAYS = 22,
+    VT_SCHEMAS = 24,
+    VT_SCREEN_OVERLAYS = 26,
+    VT_PHOTO_OVERLAYS = 28,
+    VT_TOURS = 30,
+    VT_NETWORK_LINK_CONTROL = 32
   };
   /// Document name
   const ::flatbuffers::String *NAME() const {
@@ -2751,6 +6580,26 @@ struct KML FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<KMLGroundOverlay>> *GROUND_OVERLAYS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLGroundOverlay>> *>(VT_GROUND_OVERLAYS);
   }
+  /// Schemas
+  const ::flatbuffers::Vector<::flatbuffers::Offset<KMLSchema>> *SCHEMAS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLSchema>> *>(VT_SCHEMAS);
+  }
+  /// Screen overlays
+  const ::flatbuffers::Vector<::flatbuffers::Offset<KMLScreenOverlay>> *SCREEN_OVERLAYS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLScreenOverlay>> *>(VT_SCREEN_OVERLAYS);
+  }
+  /// Photo overlays
+  const ::flatbuffers::Vector<::flatbuffers::Offset<KMLPhotoOverlay>> *PHOTO_OVERLAYS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLPhotoOverlay>> *>(VT_PHOTO_OVERLAYS);
+  }
+  /// Tours
+  const ::flatbuffers::Vector<::flatbuffers::Offset<KMLTour>> *TOURS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<KMLTour>> *>(VT_TOURS);
+  }
+  /// NetworkLinkControl
+  const KMLNetworkLinkControl *NETWORK_LINK_CONTROL() const {
+    return GetPointer<const KMLNetworkLinkControl *>(VT_NETWORK_LINK_CONTROL);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_NAME) &&
@@ -2777,6 +6626,20 @@ struct KML FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_GROUND_OVERLAYS) &&
            verifier.VerifyVector(GROUND_OVERLAYS()) &&
            verifier.VerifyVectorOfTables(GROUND_OVERLAYS()) &&
+           VerifyOffset(verifier, VT_SCHEMAS) &&
+           verifier.VerifyVector(SCHEMAS()) &&
+           verifier.VerifyVectorOfTables(SCHEMAS()) &&
+           VerifyOffset(verifier, VT_SCREEN_OVERLAYS) &&
+           verifier.VerifyVector(SCREEN_OVERLAYS()) &&
+           verifier.VerifyVectorOfTables(SCREEN_OVERLAYS()) &&
+           VerifyOffset(verifier, VT_PHOTO_OVERLAYS) &&
+           verifier.VerifyVector(PHOTO_OVERLAYS()) &&
+           verifier.VerifyVectorOfTables(PHOTO_OVERLAYS()) &&
+           VerifyOffset(verifier, VT_TOURS) &&
+           verifier.VerifyVector(TOURS()) &&
+           verifier.VerifyVectorOfTables(TOURS()) &&
+           VerifyOffset(verifier, VT_NETWORK_LINK_CONTROL) &&
+           verifier.VerifyTable(NETWORK_LINK_CONTROL()) &&
            verifier.EndTable();
   }
 };
@@ -2815,6 +6678,21 @@ struct KMLBuilder {
   void add_GROUND_OVERLAYS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLGroundOverlay>>> GROUND_OVERLAYS) {
     fbb_.AddOffset(KML::VT_GROUND_OVERLAYS, GROUND_OVERLAYS);
   }
+  void add_SCHEMAS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLSchema>>> SCHEMAS) {
+    fbb_.AddOffset(KML::VT_SCHEMAS, SCHEMAS);
+  }
+  void add_SCREEN_OVERLAYS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLScreenOverlay>>> SCREEN_OVERLAYS) {
+    fbb_.AddOffset(KML::VT_SCREEN_OVERLAYS, SCREEN_OVERLAYS);
+  }
+  void add_PHOTO_OVERLAYS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLPhotoOverlay>>> PHOTO_OVERLAYS) {
+    fbb_.AddOffset(KML::VT_PHOTO_OVERLAYS, PHOTO_OVERLAYS);
+  }
+  void add_TOURS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLTour>>> TOURS) {
+    fbb_.AddOffset(KML::VT_TOURS, TOURS);
+  }
+  void add_NETWORK_LINK_CONTROL(::flatbuffers::Offset<KMLNetworkLinkControl> NETWORK_LINK_CONTROL) {
+    fbb_.AddOffset(KML::VT_NETWORK_LINK_CONTROL, NETWORK_LINK_CONTROL);
+  }
   explicit KMLBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -2837,8 +6715,18 @@ inline ::flatbuffers::Offset<KML> CreateKML(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLPlacemark>>> PLACEMARKS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLFolder>>> FOLDERS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLNetworkLink>>> NETWORK_LINKS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLGroundOverlay>>> GROUND_OVERLAYS = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLGroundOverlay>>> GROUND_OVERLAYS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLSchema>>> SCHEMAS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLScreenOverlay>>> SCREEN_OVERLAYS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLPhotoOverlay>>> PHOTO_OVERLAYS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<KMLTour>>> TOURS = 0,
+    ::flatbuffers::Offset<KMLNetworkLinkControl> NETWORK_LINK_CONTROL = 0) {
   KMLBuilder builder_(_fbb);
+  builder_.add_NETWORK_LINK_CONTROL(NETWORK_LINK_CONTROL);
+  builder_.add_TOURS(TOURS);
+  builder_.add_PHOTO_OVERLAYS(PHOTO_OVERLAYS);
+  builder_.add_SCREEN_OVERLAYS(SCREEN_OVERLAYS);
+  builder_.add_SCHEMAS(SCHEMAS);
   builder_.add_GROUND_OVERLAYS(GROUND_OVERLAYS);
   builder_.add_NETWORK_LINKS(NETWORK_LINKS);
   builder_.add_FOLDERS(FOLDERS);
@@ -2863,7 +6751,12 @@ inline ::flatbuffers::Offset<KML> CreateKMLDirect(
     const std::vector<::flatbuffers::Offset<KMLPlacemark>> *PLACEMARKS = nullptr,
     const std::vector<::flatbuffers::Offset<KMLFolder>> *FOLDERS = nullptr,
     const std::vector<::flatbuffers::Offset<KMLNetworkLink>> *NETWORK_LINKS = nullptr,
-    const std::vector<::flatbuffers::Offset<KMLGroundOverlay>> *GROUND_OVERLAYS = nullptr) {
+    const std::vector<::flatbuffers::Offset<KMLGroundOverlay>> *GROUND_OVERLAYS = nullptr,
+    const std::vector<::flatbuffers::Offset<KMLSchema>> *SCHEMAS = nullptr,
+    const std::vector<::flatbuffers::Offset<KMLScreenOverlay>> *SCREEN_OVERLAYS = nullptr,
+    const std::vector<::flatbuffers::Offset<KMLPhotoOverlay>> *PHOTO_OVERLAYS = nullptr,
+    const std::vector<::flatbuffers::Offset<KMLTour>> *TOURS = nullptr,
+    ::flatbuffers::Offset<KMLNetworkLinkControl> NETWORK_LINK_CONTROL = 0) {
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
   auto STYLES__ = STYLES ? _fbb.CreateVector<::flatbuffers::Offset<KMLStyle>>(*STYLES) : 0;
@@ -2872,6 +6765,10 @@ inline ::flatbuffers::Offset<KML> CreateKMLDirect(
   auto FOLDERS__ = FOLDERS ? _fbb.CreateVector<::flatbuffers::Offset<KMLFolder>>(*FOLDERS) : 0;
   auto NETWORK_LINKS__ = NETWORK_LINKS ? _fbb.CreateVector<::flatbuffers::Offset<KMLNetworkLink>>(*NETWORK_LINKS) : 0;
   auto GROUND_OVERLAYS__ = GROUND_OVERLAYS ? _fbb.CreateVector<::flatbuffers::Offset<KMLGroundOverlay>>(*GROUND_OVERLAYS) : 0;
+  auto SCHEMAS__ = SCHEMAS ? _fbb.CreateVector<::flatbuffers::Offset<KMLSchema>>(*SCHEMAS) : 0;
+  auto SCREEN_OVERLAYS__ = SCREEN_OVERLAYS ? _fbb.CreateVector<::flatbuffers::Offset<KMLScreenOverlay>>(*SCREEN_OVERLAYS) : 0;
+  auto PHOTO_OVERLAYS__ = PHOTO_OVERLAYS ? _fbb.CreateVector<::flatbuffers::Offset<KMLPhotoOverlay>>(*PHOTO_OVERLAYS) : 0;
+  auto TOURS__ = TOURS ? _fbb.CreateVector<::flatbuffers::Offset<KMLTour>>(*TOURS) : 0;
   return CreateKML(
       _fbb,
       NAME__,
@@ -2883,7 +6780,12 @@ inline ::flatbuffers::Offset<KML> CreateKMLDirect(
       PLACEMARKS__,
       FOLDERS__,
       NETWORK_LINKS__,
-      GROUND_OVERLAYS__);
+      GROUND_OVERLAYS__,
+      SCHEMAS__,
+      SCREEN_OVERLAYS__,
+      PHOTO_OVERLAYS__,
+      TOURS__,
+      NETWORK_LINK_CONTROL);
 }
 
 inline const KML *GetKML(const void *buf) {

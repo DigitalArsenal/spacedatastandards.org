@@ -71,6 +71,14 @@ class KMLBalloonStyle : Table() {
         }
     val TEXTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
     fun TEXTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    /**
+     * Display mode
+     */
+    val DISPLAY_MODE : Byte
+        get() {
+            val o = __offset(10)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsKMLBalloonStyle(_bb: ByteBuffer): KMLBalloonStyle = getRootAsKMLBalloonStyle(_bb, KMLBalloonStyle())
@@ -78,17 +86,19 @@ class KMLBalloonStyle : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLBalloonStyle(builder: FlatBufferBuilder, BG_COLOROffset: Int, TEXT_COLOROffset: Int, TEXTOffset: Int) : Int {
-            builder.startTable(3)
+        fun createKMLBalloonStyle(builder: FlatBufferBuilder, BG_COLOROffset: Int, TEXT_COLOROffset: Int, TEXTOffset: Int, DISPLAY_MODE: Byte) : Int {
+            builder.startTable(4)
             addTEXT(builder, TEXTOffset)
             addTEXT_COLOR(builder, TEXT_COLOROffset)
             addBG_COLOR(builder, BG_COLOROffset)
+            addDISPLAY_MODE(builder, DISPLAY_MODE)
             return endKMLBalloonStyle(builder)
         }
-        fun startKMLBalloonStyle(builder: FlatBufferBuilder) = builder.startTable(3)
+        fun startKMLBalloonStyle(builder: FlatBufferBuilder) = builder.startTable(4)
         fun addBG_COLOR(builder: FlatBufferBuilder, BG_COLOR: Int) = builder.addOffset(0, BG_COLOR, 0)
         fun addTEXT_COLOR(builder: FlatBufferBuilder, TEXT_COLOR: Int) = builder.addOffset(1, TEXT_COLOR, 0)
         fun addTEXT(builder: FlatBufferBuilder, TEXT: Int) = builder.addOffset(2, TEXT, 0)
+        fun addDISPLAY_MODE(builder: FlatBufferBuilder, DISPLAY_MODE: Byte) = builder.addByte(3, DISPLAY_MODE, 0)
         fun endKMLBalloonStyle(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

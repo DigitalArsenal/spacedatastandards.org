@@ -139,28 +139,37 @@ class GJNGeometry extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Bounding box (optional, per RFC 7946 Section 5)
+    public function getBBOX()
+    {
+        $obj = new GJNBoundingBox();
+        $o = $this->__offset(16);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startGJNGeometry(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(6);
+        $builder->StartObject(7);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return GJNGeometry
      */
-    public static function createGJNGeometry(FlatBufferBuilder $builder, $TYPE, $POINT, $POSITIONS, $RINGS, $POLYGON_RINGS, $GEOMETRIES)
+    public static function createGJNGeometry(FlatBufferBuilder $builder, $TYPE, $POINT, $POSITIONS, $RINGS, $POLYGON_RINGS, $GEOMETRIES, $BBOX)
     {
-        $builder->startObject(6);
+        $builder->startObject(7);
         self::addTYPE($builder, $TYPE);
         self::addPOINT($builder, $POINT);
         self::addPOSITIONS($builder, $POSITIONS);
         self::addRINGS($builder, $RINGS);
         self::addPOLYGON_RINGS($builder, $POLYGON_RINGS);
         self::addGEOMETRIES($builder, $GEOMETRIES);
+        self::addBBOX($builder, $BBOX);
         $o = $builder->endObject();
         return $o;
     }
@@ -319,6 +328,16 @@ class GJNGeometry extends Table
     public static function startGEOMETRIESVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addBBOX(FlatBufferBuilder $builder, $BBOX)
+    {
+        $builder->addOffsetX(6, $BBOX, 0);
     }
 
     /**

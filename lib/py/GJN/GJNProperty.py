@@ -61,8 +61,40 @@ class GJNProperty(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # True if this property value is a boolean
+    # GJNProperty
+    def IS_BOOL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Boolean value (use when IS_BOOL is true)
+    # GJNProperty
+    def BOOL_VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # True if this property value is JSON null
+    # GJNProperty
+    def IS_NULL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Raw JSON string for complex values (objects, arrays)
+    # GJNProperty
+    def JSON_VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def GJNPropertyStart(builder):
-    builder.StartObject(4)
+    builder.StartObject(8)
 
 def Start(builder):
     GJNPropertyStart(builder)
@@ -91,6 +123,30 @@ def GJNPropertyAddIS_NUMERIC(builder, IS_NUMERIC):
 def AddIS_NUMERIC(builder, IS_NUMERIC):
     GJNPropertyAddIS_NUMERIC(builder, IS_NUMERIC)
 
+def GJNPropertyAddIS_BOOL(builder, IS_BOOL):
+    builder.PrependBoolSlot(4, IS_BOOL, 0)
+
+def AddIS_BOOL(builder, IS_BOOL):
+    GJNPropertyAddIS_BOOL(builder, IS_BOOL)
+
+def GJNPropertyAddBOOL_VALUE(builder, BOOL_VALUE):
+    builder.PrependBoolSlot(5, BOOL_VALUE, 0)
+
+def AddBOOL_VALUE(builder, BOOL_VALUE):
+    GJNPropertyAddBOOL_VALUE(builder, BOOL_VALUE)
+
+def GJNPropertyAddIS_NULL(builder, IS_NULL):
+    builder.PrependBoolSlot(6, IS_NULL, 0)
+
+def AddIS_NULL(builder, IS_NULL):
+    GJNPropertyAddIS_NULL(builder, IS_NULL)
+
+def GJNPropertyAddJSON_VALUE(builder, JSON_VALUE):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(JSON_VALUE), 0)
+
+def AddJSON_VALUE(builder, JSON_VALUE):
+    GJNPropertyAddJSON_VALUE(builder, JSON_VALUE)
+
 def GJNPropertyEnd(builder):
     return builder.EndObject()
 
@@ -106,6 +162,10 @@ class GJNPropertyT(object):
         self.VALUE = None  # type: str
         self.NUM_VALUE = 0.0  # type: float
         self.IS_NUMERIC = False  # type: bool
+        self.IS_BOOL = False  # type: bool
+        self.BOOL_VALUE = False  # type: bool
+        self.IS_NULL = False  # type: bool
+        self.JSON_VALUE = None  # type: str
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -132,6 +192,10 @@ class GJNPropertyT(object):
         self.VALUE = gjnproperty.VALUE()
         self.NUM_VALUE = gjnproperty.NUM_VALUE()
         self.IS_NUMERIC = gjnproperty.IS_NUMERIC()
+        self.IS_BOOL = gjnproperty.IS_BOOL()
+        self.BOOL_VALUE = gjnproperty.BOOL_VALUE()
+        self.IS_NULL = gjnproperty.IS_NULL()
+        self.JSON_VALUE = gjnproperty.JSON_VALUE()
 
     # GJNPropertyT
     def Pack(self, builder):
@@ -139,6 +203,8 @@ class GJNPropertyT(object):
             KEY = builder.CreateString(self.KEY)
         if self.VALUE is not None:
             VALUE = builder.CreateString(self.VALUE)
+        if self.JSON_VALUE is not None:
+            JSON_VALUE = builder.CreateString(self.JSON_VALUE)
         GJNPropertyStart(builder)
         if self.KEY is not None:
             GJNPropertyAddKEY(builder, KEY)
@@ -146,5 +212,10 @@ class GJNPropertyT(object):
             GJNPropertyAddVALUE(builder, VALUE)
         GJNPropertyAddNUM_VALUE(builder, self.NUM_VALUE)
         GJNPropertyAddIS_NUMERIC(builder, self.IS_NUMERIC)
+        GJNPropertyAddIS_BOOL(builder, self.IS_BOOL)
+        GJNPropertyAddBOOL_VALUE(builder, self.BOOL_VALUE)
+        GJNPropertyAddIS_NULL(builder, self.IS_NULL)
+        if self.JSON_VALUE is not None:
+            GJNPropertyAddJSON_VALUE(builder, JSON_VALUE)
         gjnproperty = GJNPropertyEnd(builder)
         return gjnproperty

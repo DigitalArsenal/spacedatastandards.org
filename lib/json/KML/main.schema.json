@@ -25,6 +25,26 @@
       "type" : "string",
       "enum": ["NEVER", "ON_STOP", "ON_REQUEST", "ON_REGION"]
     },
+    "KMLListItemType" : {
+      "type" : "string",
+      "enum": ["CHECK", "CHECK_OFF_ONLY", "CHECK_HIDE_CHILDREN", "RADIO_FOLDER"]
+    },
+    "KMLDisplayMode" : {
+      "type" : "string",
+      "enum": ["DEFAULT", "HIDE"]
+    },
+    "KMLGridOrigin" : {
+      "type" : "string",
+      "enum": ["LOWER_LEFT", "UPPER_LEFT"]
+    },
+    "KMLShape" : {
+      "type" : "string",
+      "enum": ["RECTANGLE", "CYLINDER", "SPHERE"]
+    },
+    "KMLFlyToMode" : {
+      "type" : "string",
+      "enum": ["BOUNCE", "SMOOTH"]
+    },
     "KMLCoordinate" : {
       "type" : "object",
       "description" : "KML coordinate (longitude, latitude, optional altitude)",
@@ -172,6 +192,22 @@
         "WIDTH" : {
                 "type" : "number",
                 "description" : "Width in pixels"
+              },
+        "GX_OUTER_COLOR" : {
+                "type" : "string",
+                "description" : "gx:outerColor"
+              },
+        "GX_OUTER_WIDTH" : {
+                "type" : "number",
+                "description" : "gx:outerWidth"
+              },
+        "GX_PHYSICAL_WIDTH" : {
+                "type" : "number",
+                "description" : "gx:physicalWidth"
+              },
+        "GX_LABEL_VISIBILITY" : {
+                "type" : "boolean",
+                "description" : "gx:labelVisibility"
               }
       },
       "additionalProperties" : false
@@ -233,6 +269,48 @@
         "TEXT" : {
                 "type" : "string",
                 "description" : "Balloon text template (supports $[name], $[description])"
+              },
+        "DISPLAY_MODE" : {
+                "$ref" : "#/definitions/KMLDisplayMode",
+                "description" : "Display mode"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLItemIcon" : {
+      "type" : "object",
+      "description" : "Item icon for ListStyle",
+      "properties" : {
+        "STATE" : {
+                "type" : "string",
+                "description" : "State (open, closed, error, fetching0-2)"
+              },
+        "HREF" : {
+                "type" : "string",
+                "description" : "Icon URL"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLListStyle" : {
+      "type" : "object",
+      "description" : "List style",
+      "properties" : {
+        "LIST_ITEM_TYPE" : {
+                "$ref" : "#/definitions/KMLListItemType",
+                "description" : "List item type"
+              },
+        "BG_COLOR" : {
+                "type" : "string",
+                "description" : "Background color"
+              },
+        "ITEM_ICONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLItemIcon"},
+                "description" : "Item icons"
+              },
+        "MAX_SNIPPET_LINES" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Maximum snippet lines"
               }
       },
       "additionalProperties" : false
@@ -264,6 +342,10 @@
         "BALLOON_STYLE" : {
                 "$ref" : "#/definitions/KMLBalloonStyle",
                 "description" : "Balloon style"
+              },
+        "LIST_STYLE" : {
+                "$ref" : "#/definitions/KMLListStyle",
+                "description" : "List style"
               }
       },
       "additionalProperties" : false
@@ -336,6 +418,10 @@
         "TESSELLATE" : {
                 "type" : "boolean",
                 "description" : "Whether to tessellate (follow terrain)"
+              },
+        "GX_DRAW_ORDER" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "gx:drawOrder"
               }
       },
       "additionalProperties" : false
@@ -347,6 +433,18 @@
         "COORDINATES" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/KMLCoordinate"},
                 "description" : "Coordinates (first = last to close the ring)"
+              },
+        "EXTRUDE" : {
+                "type" : "boolean",
+                "description" : "Whether to extrude to ground"
+              },
+        "TESSELLATE" : {
+                "type" : "boolean",
+                "description" : "Whether to tessellate"
+              },
+        "ALTITUDE_MODE" : {
+                "$ref" : "#/definitions/KMLAltitudeMode",
+                "description" : "Altitude mode"
               }
       },
       "additionalProperties" : false
@@ -378,6 +476,130 @@
       },
       "additionalProperties" : false
     },
+    "KMLResourceMapAlias" : {
+      "type" : "object",
+      "description" : "Resource map alias for Model",
+      "properties" : {
+        "TARGET_HREF" : {
+                "type" : "string",
+                "description" : "Target href"
+              },
+        "SOURCE_HREF" : {
+                "type" : "string",
+                "description" : "Source href"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLModel" : {
+      "type" : "object",
+      "description" : "3D Model geometry",
+      "properties" : {
+        "ALTITUDE_MODE" : {
+                "$ref" : "#/definitions/KMLAltitudeMode",
+                "description" : "Altitude mode"
+              },
+        "LOCATION_LON" : {
+                "type" : "number",
+                "description" : "Location longitude"
+              },
+        "LOCATION_LAT" : {
+                "type" : "number",
+                "description" : "Location latitude"
+              },
+        "LOCATION_ALT" : {
+                "type" : "number",
+                "description" : "Location altitude"
+              },
+        "ORIENTATION_HEADING" : {
+                "type" : "number",
+                "description" : "Orientation heading"
+              },
+        "ORIENTATION_TILT" : {
+                "type" : "number",
+                "description" : "Orientation tilt"
+              },
+        "ORIENTATION_ROLL" : {
+                "type" : "number",
+                "description" : "Orientation roll"
+              },
+        "SCALE_X" : {
+                "type" : "number",
+                "description" : "Scale X"
+              },
+        "SCALE_Y" : {
+                "type" : "number",
+                "description" : "Scale Y"
+              },
+        "SCALE_Z" : {
+                "type" : "number",
+                "description" : "Scale Z"
+              },
+        "LINK_HREF" : {
+                "type" : "string",
+                "description" : "Link to 3D model file"
+              },
+        "RESOURCE_MAP" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLResourceMapAlias"},
+                "description" : "Resource map aliases"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLTrack" : {
+      "type" : "object",
+      "description" : "gx:Track — time-stamped position track",
+      "properties" : {
+        "EXTRUDE" : {
+                "type" : "boolean",
+                "description" : "Whether to extrude"
+              },
+        "TESSELLATE" : {
+                "type" : "boolean",
+                "description" : "Whether to tessellate"
+              },
+        "ALTITUDE_MODE" : {
+                "$ref" : "#/definitions/KMLAltitudeMode",
+                "description" : "Altitude mode"
+              },
+        "WHEN" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Time stamps (ISO 8601)"
+              },
+        "COORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLCoordinate"},
+                "description" : "Coordinates (lon lat alt per entry)"
+              },
+        "ANGLES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLCoordinate"},
+                "description" : "Angles (heading tilt roll per entry)"
+              },
+        "MODEL" : {
+                "$ref" : "#/definitions/KMLModel",
+                "description" : "Model for track visualization"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLMultiTrack" : {
+      "type" : "object",
+      "description" : "gx:MultiTrack",
+      "properties" : {
+        "ALTITUDE_MODE" : {
+                "$ref" : "#/definitions/KMLAltitudeMode",
+                "description" : "Altitude mode"
+              },
+        "INTERPOLATE" : {
+                "type" : "boolean",
+                "description" : "Whether to interpolate between tracks"
+              },
+        "TRACKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLTrack"},
+                "description" : "Child tracks"
+              }
+      },
+      "additionalProperties" : false
+    },
     "KMLMultiGeometry" : {
       "type" : "object",
       "description" : "MultiGeometry",
@@ -397,6 +619,22 @@
         "MULTI_GEOMETRIES" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/KMLMultiGeometry"},
                 "description" : "Nested multi-geometries"
+              },
+        "LINEAR_RINGS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLLinearRing"},
+                "description" : "Child linear rings (standalone)"
+              },
+        "MODELS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLModel"},
+                "description" : "Child 3D models"
+              },
+        "TRACKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLTrack"},
+                "description" : "Child tracks"
+              },
+        "MULTI_TRACKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLMultiTrack"},
+                "description" : "Child multi-tracks"
               }
       },
       "additionalProperties" : false
@@ -446,6 +684,247 @@
       },
       "additionalProperties" : false
     },
+    "KMLSimpleField" : {
+      "type" : "object",
+      "description" : "Schema simple field definition",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Field name"
+              },
+        "FIELD_TYPE" : {
+                "type" : "string",
+                "description" : "Field type (xsd:string, xsd:int, xsd:float, etc.)"
+              },
+        "DISPLAY_NAME" : {
+                "type" : "string",
+                "description" : "Display name"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLSchema" : {
+      "type" : "object",
+      "description" : "Schema definition",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Schema name"
+              },
+        "ID" : {
+                "type" : "string",
+                "description" : "Schema ID"
+              },
+        "SIMPLE_FIELDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLSimpleField"},
+                "description" : "Simple field definitions"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLSimpleData" : {
+      "type" : "object",
+      "description" : "Simple data value for SchemaData",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Field name"
+              },
+        "VALUE" : {
+                "type" : "string",
+                "description" : "Field value"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLSchemaData" : {
+      "type" : "object",
+      "description" : "Schema data reference",
+      "properties" : {
+        "SCHEMA_URL" : {
+                "type" : "string",
+                "description" : "Schema URL reference"
+              },
+        "SIMPLE_DATA" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLSimpleData"},
+                "description" : "Simple data values"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLLatLonQuad" : {
+      "type" : "object",
+      "description" : "LatLonQuad — four corner coordinates for ground overlay",
+      "properties" : {
+        "COORDINATES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLCoordinate"},
+                "description" : "Four corner coordinates"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLRegion" : {
+      "type" : "object",
+      "description" : "Region — Level of Detail bounding region",
+      "properties" : {
+        "LAT_LON_ALT_BOX" : {
+                "$ref" : "#/definitions/KMLLatLonAltBox",
+                "description" : "LatLonAltBox"
+              },
+        "LOD" : {
+                "$ref" : "#/definitions/KMLLod",
+                "description" : "Level of detail"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLLatLonAltBox" : {
+      "type" : "object",
+      "description" : "LatLonAltBox for Region",
+      "properties" : {
+        "NORTH" : {
+                "type" : "number",
+                "description" : "North latitude"
+              },
+        "SOUTH" : {
+                "type" : "number",
+                "description" : "South latitude"
+              },
+        "EAST" : {
+                "type" : "number",
+                "description" : "East longitude"
+              },
+        "WEST" : {
+                "type" : "number",
+                "description" : "West longitude"
+              },
+        "MIN_ALTITUDE" : {
+                "type" : "number",
+                "description" : "Minimum altitude"
+              },
+        "MAX_ALTITUDE" : {
+                "type" : "number",
+                "description" : "Maximum altitude"
+              },
+        "ALTITUDE_MODE" : {
+                "$ref" : "#/definitions/KMLAltitudeMode",
+                "description" : "Altitude mode"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLLod" : {
+      "type" : "object",
+      "description" : "Level of Detail parameters",
+      "properties" : {
+        "MIN_LOD_PIXELS" : {
+                "type" : "number",
+                "description" : "Minimum LOD pixels"
+              },
+        "MAX_LOD_PIXELS" : {
+                "type" : "number",
+                "description" : "Maximum LOD pixels (-1 = infinite)"
+              },
+        "MIN_FADE_EXTENT" : {
+                "type" : "number",
+                "description" : "Minimum fade extent"
+              },
+        "MAX_FADE_EXTENT" : {
+                "type" : "number",
+                "description" : "Maximum fade extent"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLLink" : {
+      "type" : "object",
+      "description" : "Full Link element",
+      "properties" : {
+        "HREF" : {
+                "type" : "string",
+                "description" : "URL"
+              },
+        "REFRESH_MODE" : {
+                "$ref" : "#/definitions/KMLRefreshMode",
+                "description" : "Refresh mode"
+              },
+        "REFRESH_INTERVAL" : {
+                "type" : "number",
+                "description" : "Refresh interval in seconds"
+              },
+        "VIEW_REFRESH_MODE" : {
+                "$ref" : "#/definitions/KMLViewRefreshMode",
+                "description" : "View refresh mode"
+              },
+        "VIEW_REFRESH_TIME" : {
+                "type" : "number",
+                "description" : "View refresh time in seconds"
+              },
+        "VIEW_BOUND_SCALE" : {
+                "type" : "number",
+                "description" : "View bound scale"
+              },
+        "VIEW_FORMAT" : {
+                "type" : "string",
+                "description" : "View format string"
+              },
+        "HTTP_QUERY" : {
+                "type" : "string",
+                "description" : "HTTP query string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLViewVolume" : {
+      "type" : "object",
+      "description" : "ViewVolume for PhotoOverlay",
+      "properties" : {
+        "LEFT_FOV" : {
+                "type" : "number",
+                "description" : "Left field of view angle"
+              },
+        "RIGHT_FOV" : {
+                "type" : "number",
+                "description" : "Right field of view angle"
+              },
+        "BOTTOM_FOV" : {
+                "type" : "number",
+                "description" : "Bottom field of view angle"
+              },
+        "TOP_FOV" : {
+                "type" : "number",
+                "description" : "Top field of view angle"
+              },
+        "NEAR" : {
+                "type" : "number",
+                "description" : "Near clipping plane"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLImagePyramid" : {
+      "type" : "object",
+      "description" : "ImagePyramid for PhotoOverlay",
+      "properties" : {
+        "TILE_SIZE" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Tile size in pixels"
+              },
+        "MAX_WIDTH" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Maximum image width"
+              },
+        "MAX_HEIGHT" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Maximum image height"
+              },
+        "GRID_ORIGIN" : {
+                "$ref" : "#/definitions/KMLGridOrigin",
+                "description" : "Grid origin"
+              }
+      },
+      "additionalProperties" : false
+    },
     "KMLNetworkLink" : {
       "type" : "object",
       "description" : "Network link",
@@ -454,9 +933,17 @@
                 "type" : "string",
                 "description" : "Name of the network link"
               },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Description"
+              },
         "VISIBILITY" : {
                 "type" : "boolean",
                 "description" : "Whether the link is visible"
+              },
+        "OPEN" : {
+                "type" : "boolean",
+                "description" : "Whether open in tree view"
               },
         "HREF" : {
                 "type" : "string",
@@ -477,6 +964,168 @@
         "VIEW_REFRESH_TIME" : {
                 "type" : "number",
                 "description" : "View refresh time in seconds"
+              },
+        "REFRESH_VISIBILITY" : {
+                "type" : "boolean",
+                "description" : "Whether to refresh on visibility change"
+              },
+        "FLY_TO_VIEW" : {
+                "type" : "boolean",
+                "description" : "Whether to fly to view on refresh"
+              },
+        "LINK" : {
+                "$ref" : "#/definitions/KMLLink",
+                "description" : "Full link element"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLScreenOverlay" : {
+      "type" : "object",
+      "description" : "Screen overlay",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Name"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Description"
+              },
+        "VISIBILITY" : {
+                "type" : "boolean",
+                "description" : "Visibility"
+              },
+        "ICON_HREF" : {
+                "type" : "string",
+                "description" : "Icon/image URL"
+              },
+        "COLOR" : {
+                "type" : "string",
+                "description" : "Color"
+              },
+        "DRAW_ORDER" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Draw order"
+              },
+        "OVERLAY_XY_X" : {
+                "type" : "number",
+                "description" : "Overlay X position"
+              },
+        "OVERLAY_XY_Y" : {
+                "type" : "number",
+                "description" : "Overlay Y position"
+              },
+        "OVERLAY_XY_XUNITS" : {
+                "$ref" : "#/definitions/KMLUnits",
+                "description" : "Overlay X units"
+              },
+        "OVERLAY_XY_YUNITS" : {
+                "$ref" : "#/definitions/KMLUnits",
+                "description" : "Overlay Y units"
+              },
+        "SCREEN_XY_X" : {
+                "type" : "number",
+                "description" : "Screen X position"
+              },
+        "SCREEN_XY_Y" : {
+                "type" : "number",
+                "description" : "Screen Y position"
+              },
+        "SCREEN_XY_XUNITS" : {
+                "$ref" : "#/definitions/KMLUnits",
+                "description" : "Screen X units"
+              },
+        "SCREEN_XY_YUNITS" : {
+                "$ref" : "#/definitions/KMLUnits",
+                "description" : "Screen Y units"
+              },
+        "ROTATION_XY_X" : {
+                "type" : "number",
+                "description" : "Rotation X"
+              },
+        "ROTATION_XY_Y" : {
+                "type" : "number",
+                "description" : "Rotation Y"
+              },
+        "ROTATION_XY_XUNITS" : {
+                "$ref" : "#/definitions/KMLUnits",
+                "description" : "Rotation X units"
+              },
+        "ROTATION_XY_YUNITS" : {
+                "$ref" : "#/definitions/KMLUnits",
+                "description" : "Rotation Y units"
+              },
+        "SIZE_X" : {
+                "type" : "number",
+                "description" : "Size X"
+              },
+        "SIZE_Y" : {
+                "type" : "number",
+                "description" : "Size Y"
+              },
+        "SIZE_XUNITS" : {
+                "$ref" : "#/definitions/KMLUnits",
+                "description" : "Size X units"
+              },
+        "SIZE_YUNITS" : {
+                "$ref" : "#/definitions/KMLUnits",
+                "description" : "Size Y units"
+              },
+        "ROTATION" : {
+                "type" : "number",
+                "description" : "Rotation in degrees"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLPhotoOverlay" : {
+      "type" : "object",
+      "description" : "Photo overlay",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Name"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Description"
+              },
+        "VISIBILITY" : {
+                "type" : "boolean",
+                "description" : "Visibility"
+              },
+        "ICON_HREF" : {
+                "type" : "string",
+                "description" : "Icon/image URL"
+              },
+        "COLOR" : {
+                "type" : "string",
+                "description" : "Color"
+              },
+        "DRAW_ORDER" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Draw order"
+              },
+        "ROTATION" : {
+                "type" : "number",
+                "description" : "Rotation"
+              },
+        "VIEW_VOLUME" : {
+                "$ref" : "#/definitions/KMLViewVolume",
+                "description" : "View volume"
+              },
+        "IMAGE_PYRAMID" : {
+                "$ref" : "#/definitions/KMLImagePyramid",
+                "description" : "Image pyramid"
+              },
+        "POINT" : {
+                "$ref" : "#/definitions/KMLPoint",
+                "description" : "Point for position"
+              },
+        "SHAPE" : {
+                "$ref" : "#/definitions/KMLShape",
+                "description" : "Shape"
               }
       },
       "additionalProperties" : false
@@ -496,6 +1145,10 @@
         "VISIBILITY" : {
                 "type" : "boolean",
                 "description" : "Visibility"
+              },
+        "OPEN" : {
+                "type" : "boolean",
+                "description" : "Whether open in tree view"
               },
         "ICON_HREF" : {
                 "type" : "string",
@@ -532,6 +1185,236 @@
         "ALTITUDE_MODE" : {
                 "$ref" : "#/definitions/KMLAltitudeMode",
                 "description" : "Altitude mode"
+              },
+        "DRAW_ORDER" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Draw order"
+              },
+        "LAT_LON_QUAD" : {
+                "$ref" : "#/definitions/KMLLatLonQuad",
+                "description" : "LatLonQuad (non-rectangular overlay)"
+              },
+        "STYLE_URL" : {
+                "type" : "string",
+                "description" : "Style URL reference"
+              },
+        "REGION" : {
+                "$ref" : "#/definitions/KMLRegion",
+                "description" : "Region"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLUpdate" : {
+      "type" : "object",
+      "description" : "Update element for NetworkLinkControl",
+      "properties" : {
+        "TARGET_HREF" : {
+                "type" : "string",
+                "description" : "Target href"
+              },
+        "CHANGE_KML" : {
+                "type" : "string",
+                "description" : "Change KML (raw)"
+              },
+        "CREATE_KML" : {
+                "type" : "string",
+                "description" : "Create KML (raw)"
+              },
+        "DELETE_KML" : {
+                "type" : "string",
+                "description" : "Delete KML (raw)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLNetworkLinkControl" : {
+      "type" : "object",
+      "description" : "NetworkLinkControl",
+      "properties" : {
+        "MIN_REFRESH_PERIOD" : {
+                "type" : "number",
+                "description" : "Minimum refresh period in seconds"
+              },
+        "MAX_SESSION_LENGTH" : {
+                "type" : "number",
+                "description" : "Maximum session length in seconds"
+              },
+        "COOKIE" : {
+                "type" : "string",
+                "description" : "Cookie"
+              },
+        "MESSAGE" : {
+                "type" : "string",
+                "description" : "Message to display"
+              },
+        "LINK_NAME" : {
+                "type" : "string",
+                "description" : "Link name override"
+              },
+        "LINK_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Link description override"
+              },
+        "LINK_SNIPPET" : {
+                "type" : "string",
+                "description" : "Link snippet override"
+              },
+        "EXPIRES" : {
+                "type" : "string",
+                "description" : "Expiration time (ISO 8601)"
+              },
+        "UPDATE" : {
+                "$ref" : "#/definitions/KMLUpdate",
+                "description" : "Update"
+              },
+        "LOOK_AT" : {
+                "$ref" : "#/definitions/KMLLookAt",
+                "description" : "LookAt"
+              },
+        "CAMERA" : {
+                "$ref" : "#/definitions/KMLCamera",
+                "description" : "Camera"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLFlyTo" : {
+      "type" : "object",
+      "description" : "gx:FlyTo tour primitive",
+      "properties" : {
+        "DURATION" : {
+                "type" : "number",
+                "description" : "Duration in seconds"
+              },
+        "FLY_TO_MODE" : {
+                "$ref" : "#/definitions/KMLFlyToMode",
+                "description" : "Fly-to mode"
+              },
+        "LOOK_AT" : {
+                "$ref" : "#/definitions/KMLLookAt",
+                "description" : "LookAt viewpoint"
+              },
+        "CAMERA" : {
+                "$ref" : "#/definitions/KMLCamera",
+                "description" : "Camera viewpoint"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLWait" : {
+      "type" : "object",
+      "description" : "gx:Wait tour primitive",
+      "properties" : {
+        "DURATION" : {
+                "type" : "number",
+                "description" : "Duration in seconds"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLAnimatedUpdate" : {
+      "type" : "object",
+      "description" : "gx:AnimatedUpdate tour primitive",
+      "properties" : {
+        "DURATION" : {
+                "type" : "number",
+                "description" : "Duration in seconds"
+              },
+        "DELAYED_START" : {
+                "type" : "number",
+                "description" : "Delayed start in seconds"
+              },
+        "UPDATE" : {
+                "$ref" : "#/definitions/KMLUpdate",
+                "description" : "Update"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLTourControl" : {
+      "type" : "object",
+      "description" : "gx:TourControl tour primitive",
+      "properties" : {
+        "PLAY_MODE" : {
+                "type" : "string",
+                "description" : "Play mode (pause)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLSoundCue" : {
+      "type" : "object",
+      "description" : "gx:SoundCue tour primitive",
+      "properties" : {
+        "HREF" : {
+                "type" : "string",
+                "description" : "Audio file URL"
+              },
+        "DELAYED_START" : {
+                "type" : "number",
+                "description" : "Delayed start in seconds"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLTourPrimitive" : {
+      "type" : "object",
+      "description" : "Tour primitive (union-like)",
+      "properties" : {
+        "FLY_TO" : {
+                "$ref" : "#/definitions/KMLFlyTo",
+                "description" : "FlyTo"
+              },
+        "WAIT" : {
+                "$ref" : "#/definitions/KMLWait",
+                "description" : "Wait"
+              },
+        "ANIMATED_UPDATE" : {
+                "$ref" : "#/definitions/KMLAnimatedUpdate",
+                "description" : "AnimatedUpdate"
+              },
+        "TOUR_CONTROL" : {
+                "$ref" : "#/definitions/KMLTourControl",
+                "description" : "TourControl"
+              },
+        "SOUND_CUE" : {
+                "$ref" : "#/definitions/KMLSoundCue",
+                "description" : "SoundCue"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLPlaylist" : {
+      "type" : "object",
+      "description" : "gx:Playlist",
+      "properties" : {
+        "PRIMITIVES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLTourPrimitive"},
+                "description" : "Tour primitives"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "KMLTour" : {
+      "type" : "object",
+      "description" : "gx:Tour",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Tour name"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Description"
+              },
+        "VISIBILITY" : {
+                "type" : "boolean",
+                "description" : "Visibility"
+              },
+        "PLAYLIST" : {
+                "$ref" : "#/definitions/KMLPlaylist",
+                "description" : "Playlist"
               }
       },
       "additionalProperties" : false
@@ -564,6 +1447,14 @@
                 "type" : "string",
                 "description" : "Snippet (short description)"
               },
+        "OPEN" : {
+                "type" : "boolean",
+                "description" : "Whether open in tree view"
+              },
+        "ADDRESS" : {
+                "type" : "string",
+                "description" : "Address"
+              },
         "POINT" : {
                 "$ref" : "#/definitions/KMLPoint",
                 "description" : "Point geometry"
@@ -576,9 +1467,25 @@
                 "$ref" : "#/definitions/KMLPolygon",
                 "description" : "Polygon geometry"
               },
+        "LINEAR_RING" : {
+                "$ref" : "#/definitions/KMLLinearRing",
+                "description" : "LinearRing geometry (standalone)"
+              },
         "MULTI_GEOMETRY" : {
                 "$ref" : "#/definitions/KMLMultiGeometry",
                 "description" : "MultiGeometry"
+              },
+        "MODEL" : {
+                "$ref" : "#/definitions/KMLModel",
+                "description" : "3D Model"
+              },
+        "TRACK" : {
+                "$ref" : "#/definitions/KMLTrack",
+                "description" : "gx:Track"
+              },
+        "MULTI_TRACK" : {
+                "$ref" : "#/definitions/KMLMultiTrack",
+                "description" : "gx:MultiTrack"
               },
         "LOOK_AT" : {
                 "$ref" : "#/definitions/KMLLookAt",
@@ -599,6 +1506,18 @@
         "EXTENDED_DATA" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/KMLData"},
                 "description" : "Extended data"
+              },
+        "SCHEMA_DATA" : {
+                "$ref" : "#/definitions/KMLSchemaData",
+                "description" : "Schema data"
+              },
+        "REGION" : {
+                "$ref" : "#/definitions/KMLRegion",
+                "description" : "Region"
+              },
+        "STYLE_MAP" : {
+                "$ref" : "#/definitions/KMLStyleMap",
+                "description" : "StyleMap (inline)"
               }
       },
       "additionalProperties" : false
@@ -638,6 +1557,54 @@
         "GROUND_OVERLAYS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/KMLGroundOverlay"},
                 "description" : "Ground overlays"
+              },
+        "STYLES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLStyle"},
+                "description" : "Shared styles"
+              },
+        "STYLE_MAPS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLStyleMap"},
+                "description" : "Style maps"
+              },
+        "SCREEN_OVERLAYS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLScreenOverlay"},
+                "description" : "Screen overlays"
+              },
+        "PHOTO_OVERLAYS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLPhotoOverlay"},
+                "description" : "Photo overlays"
+              },
+        "TOURS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLTour"},
+                "description" : "Tours"
+              },
+        "STYLE_URL" : {
+                "type" : "string",
+                "description" : "Style URL reference"
+              },
+        "REGION" : {
+                "$ref" : "#/definitions/KMLRegion",
+                "description" : "Region"
+              },
+        "EXTENDED_DATA" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLData"},
+                "description" : "Extended data"
+              },
+        "LOOK_AT" : {
+                "$ref" : "#/definitions/KMLLookAt",
+                "description" : "LookAt viewpoint"
+              },
+        "CAMERA" : {
+                "$ref" : "#/definitions/KMLCamera",
+                "description" : "Camera viewpoint"
+              },
+        "TIME_SPAN" : {
+                "$ref" : "#/definitions/KMLTimeSpan",
+                "description" : "TimeSpan"
+              },
+        "TIME_STAMP" : {
+                "$ref" : "#/definitions/KMLTimeStamp",
+                "description" : "TimeStamp"
               }
       },
       "additionalProperties" : false
@@ -685,6 +1652,26 @@
         "GROUND_OVERLAYS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/KMLGroundOverlay"},
                 "description" : "Ground overlays"
+              },
+        "SCHEMAS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLSchema"},
+                "description" : "Schemas"
+              },
+        "SCREEN_OVERLAYS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLScreenOverlay"},
+                "description" : "Screen overlays"
+              },
+        "PHOTO_OVERLAYS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLPhotoOverlay"},
+                "description" : "Photo overlays"
+              },
+        "TOURS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/KMLTour"},
+                "description" : "Tours"
+              },
+        "NETWORK_LINK_CONTROL" : {
+                "$ref" : "#/definitions/KMLNetworkLinkControl",
+                "description" : "NetworkLinkControl"
               }
       },
       "additionalProperties" : false

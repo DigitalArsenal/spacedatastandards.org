@@ -40,22 +40,29 @@ public final class GJNPosition extends Table {
    * Altitude in meters above WGS84 ellipsoid (optional)
    */
   public double ALTITUDE() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * True if altitude was explicitly provided (distinguishes 0 from absent)
+   */
+  public boolean HAS_ALTITUDE() { int o = __offset(10); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createGJNPosition(FlatBufferBuilder builder,
       double LONGITUDE,
       double LATITUDE,
-      double ALTITUDE) {
-    builder.startTable(3);
+      double ALTITUDE,
+      boolean HAS_ALTITUDE) {
+    builder.startTable(4);
     GJNPosition.addAltitude(builder, ALTITUDE);
     GJNPosition.addLatitude(builder, LATITUDE);
     GJNPosition.addLongitude(builder, LONGITUDE);
+    GJNPosition.addHasAltitude(builder, HAS_ALTITUDE);
     return GJNPosition.endGJNPosition(builder);
   }
 
-  public static void startGJNPosition(FlatBufferBuilder builder) { builder.startTable(3); }
+  public static void startGJNPosition(FlatBufferBuilder builder) { builder.startTable(4); }
   public static void addLongitude(FlatBufferBuilder builder, double LONGITUDE) { builder.addDouble(0, LONGITUDE, 0.0); }
   public static void addLatitude(FlatBufferBuilder builder, double LATITUDE) { builder.addDouble(1, LATITUDE, 0.0); }
   public static void addAltitude(FlatBufferBuilder builder, double ALTITUDE) { builder.addDouble(2, ALTITUDE, 0.0); }
+  public static void addHasAltitude(FlatBufferBuilder builder, boolean HAS_ALTITUDE) { builder.addBoolean(3, HAS_ALTITUDE, false); }
   public static int endGJNPosition(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

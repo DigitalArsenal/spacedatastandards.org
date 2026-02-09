@@ -123,6 +123,110 @@ class CZMBillboard : Table() {
             null
         }
     }
+    /**
+     * Rotation in radians
+     */
+    val ROTATION : Double
+        get() {
+            val o = __offset(24)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Whether size is in meters
+     */
+    val SIZE_IN_METERS : Boolean
+        get() {
+            val o = __offset(26)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Width in pixels
+     */
+    val WIDTH : Double
+        get() {
+            val o = __offset(28)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Height in pixels
+     */
+    val HEIGHT : Double
+        get() {
+            val o = __offset(30)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Eye offset X in meters
+     */
+    val EYE_OFFSET_X : Double
+        get() {
+            val o = __offset(32)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Eye offset Y in meters
+     */
+    val EYE_OFFSET_Y : Double
+        get() {
+            val o = __offset(34)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Eye offset Z in meters
+     */
+    val EYE_OFFSET_Z : Double
+        get() {
+            val o = __offset(36)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Scale by distance
+     */
+    val SCALE_BY_DISTANCE : CZMNearFarScalar? get() = SCALE_BY_DISTANCE(CZMNearFarScalar())
+    fun SCALE_BY_DISTANCE(obj: CZMNearFarScalar) : CZMNearFarScalar? {
+        val o = __offset(38)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Pixel offset scale by distance
+     */
+    val PIXEL_OFFSET_SCALE_BY_DISTANCE : CZMNearFarScalar? get() = PIXEL_OFFSET_SCALE_BY_DISTANCE(CZMNearFarScalar())
+    fun PIXEL_OFFSET_SCALE_BY_DISTANCE(obj: CZMNearFarScalar) : CZMNearFarScalar? {
+        val o = __offset(40)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Distance display condition near
+     */
+    val DISTANCE_DISPLAY_CONDITION_NEAR : Double
+        get() {
+            val o = __offset(42)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Distance display condition far
+     */
+    val DISTANCE_DISPLAY_CONDITION_FAR : Double
+        get() {
+            val o = __offset(44)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Disable depth test distance
+     */
+    val DISABLE_DEPTH_TEST_DISTANCE : Double
+        get() {
+            val o = __offset(46)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsCZMBillboard(_bb: ByteBuffer): CZMBillboard = getRootAsCZMBillboard(_bb, CZMBillboard())
@@ -130,21 +234,33 @@ class CZMBillboard : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMBillboard(builder: FlatBufferBuilder, SHOW: Boolean, IMAGEOffset: Int, SCALE: Double, COLOROffset: Int, HEIGHT_REFERENCE: Byte, PIXEL_OFFSET_X: Double, PIXEL_OFFSET_Y: Double, HORIZONTAL_ORIGIN: Byte, VERTICAL_ORIGIN: Byte, TRANSLUCENCY_BY_DISTANCEOffset: Int) : Int {
-            builder.startTable(10)
+        fun createCZMBillboard(builder: FlatBufferBuilder, SHOW: Boolean, IMAGEOffset: Int, SCALE: Double, COLOROffset: Int, HEIGHT_REFERENCE: Byte, PIXEL_OFFSET_X: Double, PIXEL_OFFSET_Y: Double, HORIZONTAL_ORIGIN: Byte, VERTICAL_ORIGIN: Byte, TRANSLUCENCY_BY_DISTANCEOffset: Int, ROTATION: Double, SIZE_IN_METERS: Boolean, WIDTH: Double, HEIGHT: Double, EYE_OFFSET_X: Double, EYE_OFFSET_Y: Double, EYE_OFFSET_Z: Double, SCALE_BY_DISTANCEOffset: Int, PIXEL_OFFSET_SCALE_BY_DISTANCEOffset: Int, DISTANCE_DISPLAY_CONDITION_NEAR: Double, DISTANCE_DISPLAY_CONDITION_FAR: Double, DISABLE_DEPTH_TEST_DISTANCE: Double) : Int {
+            builder.startTable(22)
+            addDISABLE_DEPTH_TEST_DISTANCE(builder, DISABLE_DEPTH_TEST_DISTANCE)
+            addDISTANCE_DISPLAY_CONDITION_FAR(builder, DISTANCE_DISPLAY_CONDITION_FAR)
+            addDISTANCE_DISPLAY_CONDITION_NEAR(builder, DISTANCE_DISPLAY_CONDITION_NEAR)
+            addEYE_OFFSET_Z(builder, EYE_OFFSET_Z)
+            addEYE_OFFSET_Y(builder, EYE_OFFSET_Y)
+            addEYE_OFFSET_X(builder, EYE_OFFSET_X)
+            addHEIGHT(builder, HEIGHT)
+            addWIDTH(builder, WIDTH)
+            addROTATION(builder, ROTATION)
             addPIXEL_OFFSET_Y(builder, PIXEL_OFFSET_Y)
             addPIXEL_OFFSET_X(builder, PIXEL_OFFSET_X)
             addSCALE(builder, SCALE)
+            addPIXEL_OFFSET_SCALE_BY_DISTANCE(builder, PIXEL_OFFSET_SCALE_BY_DISTANCEOffset)
+            addSCALE_BY_DISTANCE(builder, SCALE_BY_DISTANCEOffset)
             addTRANSLUCENCY_BY_DISTANCE(builder, TRANSLUCENCY_BY_DISTANCEOffset)
             addCOLOR(builder, COLOROffset)
             addIMAGE(builder, IMAGEOffset)
+            addSIZE_IN_METERS(builder, SIZE_IN_METERS)
             addVERTICAL_ORIGIN(builder, VERTICAL_ORIGIN)
             addHORIZONTAL_ORIGIN(builder, HORIZONTAL_ORIGIN)
             addHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE)
             addSHOW(builder, SHOW)
             return endCZMBillboard(builder)
         }
-        fun startCZMBillboard(builder: FlatBufferBuilder) = builder.startTable(10)
+        fun startCZMBillboard(builder: FlatBufferBuilder) = builder.startTable(22)
         fun addSHOW(builder: FlatBufferBuilder, SHOW: Boolean) = builder.addBoolean(0, SHOW, false)
         fun addIMAGE(builder: FlatBufferBuilder, IMAGE: Int) = builder.addOffset(1, IMAGE, 0)
         fun addSCALE(builder: FlatBufferBuilder, SCALE: Double) = builder.addDouble(2, SCALE, 0.0)
@@ -155,6 +271,18 @@ class CZMBillboard : Table() {
         fun addHORIZONTAL_ORIGIN(builder: FlatBufferBuilder, HORIZONTAL_ORIGIN: Byte) = builder.addByte(7, HORIZONTAL_ORIGIN, 0)
         fun addVERTICAL_ORIGIN(builder: FlatBufferBuilder, VERTICAL_ORIGIN: Byte) = builder.addByte(8, VERTICAL_ORIGIN, 0)
         fun addTRANSLUCENCY_BY_DISTANCE(builder: FlatBufferBuilder, TRANSLUCENCY_BY_DISTANCE: Int) = builder.addOffset(9, TRANSLUCENCY_BY_DISTANCE, 0)
+        fun addROTATION(builder: FlatBufferBuilder, ROTATION: Double) = builder.addDouble(10, ROTATION, 0.0)
+        fun addSIZE_IN_METERS(builder: FlatBufferBuilder, SIZE_IN_METERS: Boolean) = builder.addBoolean(11, SIZE_IN_METERS, false)
+        fun addWIDTH(builder: FlatBufferBuilder, WIDTH: Double) = builder.addDouble(12, WIDTH, 0.0)
+        fun addHEIGHT(builder: FlatBufferBuilder, HEIGHT: Double) = builder.addDouble(13, HEIGHT, 0.0)
+        fun addEYE_OFFSET_X(builder: FlatBufferBuilder, EYE_OFFSET_X: Double) = builder.addDouble(14, EYE_OFFSET_X, 0.0)
+        fun addEYE_OFFSET_Y(builder: FlatBufferBuilder, EYE_OFFSET_Y: Double) = builder.addDouble(15, EYE_OFFSET_Y, 0.0)
+        fun addEYE_OFFSET_Z(builder: FlatBufferBuilder, EYE_OFFSET_Z: Double) = builder.addDouble(16, EYE_OFFSET_Z, 0.0)
+        fun addSCALE_BY_DISTANCE(builder: FlatBufferBuilder, SCALE_BY_DISTANCE: Int) = builder.addOffset(17, SCALE_BY_DISTANCE, 0)
+        fun addPIXEL_OFFSET_SCALE_BY_DISTANCE(builder: FlatBufferBuilder, PIXEL_OFFSET_SCALE_BY_DISTANCE: Int) = builder.addOffset(18, PIXEL_OFFSET_SCALE_BY_DISTANCE, 0)
+        fun addDISTANCE_DISPLAY_CONDITION_NEAR(builder: FlatBufferBuilder, DISTANCE_DISPLAY_CONDITION_NEAR: Double) = builder.addDouble(19, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0)
+        fun addDISTANCE_DISPLAY_CONDITION_FAR(builder: FlatBufferBuilder, DISTANCE_DISPLAY_CONDITION_FAR: Double) = builder.addDouble(20, DISTANCE_DISPLAY_CONDITION_FAR, 0.0)
+        fun addDISABLE_DEPTH_TEST_DISTANCE(builder: FlatBufferBuilder, DISABLE_DEPTH_TEST_DISTANCE: Double) = builder.addDouble(21, DISABLE_DEPTH_TEST_DISTANCE, 0.0)
         fun endCZMBillboard(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

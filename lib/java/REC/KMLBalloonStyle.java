@@ -46,22 +46,29 @@ public final class KMLBalloonStyle extends Table {
   public String TEXT() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer TEXTAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer TEXTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * Display mode
+   */
+  public byte DISPLAY_MODE() { int o = __offset(10); return o != 0 ? bb.get(o + bb_pos) : 0; }
 
   public static int createKMLBalloonStyle(FlatBufferBuilder builder,
       int BG_COLOROffset,
       int TEXT_COLOROffset,
-      int TEXTOffset) {
-    builder.startTable(3);
+      int TEXTOffset,
+      byte DISPLAY_MODE) {
+    builder.startTable(4);
     KMLBalloonStyle.addText(builder, TEXTOffset);
     KMLBalloonStyle.addTextColor(builder, TEXT_COLOROffset);
     KMLBalloonStyle.addBgColor(builder, BG_COLOROffset);
+    KMLBalloonStyle.addDisplayMode(builder, DISPLAY_MODE);
     return KMLBalloonStyle.endKMLBalloonStyle(builder);
   }
 
-  public static void startKMLBalloonStyle(FlatBufferBuilder builder) { builder.startTable(3); }
+  public static void startKMLBalloonStyle(FlatBufferBuilder builder) { builder.startTable(4); }
   public static void addBgColor(FlatBufferBuilder builder, int BG_COLOROffset) { builder.addOffset(0, BG_COLOROffset, 0); }
   public static void addTextColor(FlatBufferBuilder builder, int TEXT_COLOROffset) { builder.addOffset(1, TEXT_COLOROffset, 0); }
   public static void addText(FlatBufferBuilder builder, int TEXTOffset) { builder.addOffset(2, TEXTOffset, 0); }
+  public static void addDisplayMode(FlatBufferBuilder builder, byte DISPLAY_MODE) { builder.addByte(3, DISPLAY_MODE, 0); }
   public static int endKMLBalloonStyle(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

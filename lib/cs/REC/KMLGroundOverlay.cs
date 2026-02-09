@@ -35,41 +35,58 @@ public struct KMLGroundOverlay : IFlatbufferObject
   public byte[] GetDESCRIPTIONArray() { return __p.__vector_as_array<byte>(6); }
   /// Visibility
   public bool VISIBILITY { get { int o = __p.__offset(8); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Whether open in tree view
+  public bool OPEN { get { int o = __p.__offset(10); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   /// Icon/image URL
-  public string ICON_HREF { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string ICON_HREF { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetICON_HREFBytes() { return __p.__vector_as_span<byte>(10, 1); }
+  public Span<byte> GetICON_HREFBytes() { return __p.__vector_as_span<byte>(12, 1); }
 #else
-  public ArraySegment<byte>? GetICON_HREFBytes() { return __p.__vector_as_arraysegment(10); }
+  public ArraySegment<byte>? GetICON_HREFBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
-  public byte[] GetICON_HREFArray() { return __p.__vector_as_array<byte>(10); }
+  public byte[] GetICON_HREFArray() { return __p.__vector_as_array<byte>(12); }
   /// Color in aabbggrr hex format
-  public string COLOR { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string COLOR { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetCOLORBytes() { return __p.__vector_as_span<byte>(12, 1); }
+  public Span<byte> GetCOLORBytes() { return __p.__vector_as_span<byte>(14, 1); }
 #else
-  public ArraySegment<byte>? GetCOLORBytes() { return __p.__vector_as_arraysegment(12); }
+  public ArraySegment<byte>? GetCOLORBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
-  public byte[] GetCOLORArray() { return __p.__vector_as_array<byte>(12); }
+  public byte[] GetCOLORArray() { return __p.__vector_as_array<byte>(14); }
   /// North latitude of bounding box
-  public double NORTH { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double NORTH { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// South latitude of bounding box
-  public double SOUTH { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double SOUTH { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// East longitude of bounding box
-  public double EAST { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double EAST { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// West longitude of bounding box
-  public double WEST { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double WEST { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Rotation in degrees
-  public double ROTATION { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double ROTATION { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Altitude in meters
-  public double ALTITUDE { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double ALTITUDE { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Altitude mode
-  public KMLAltitudeMode ALTITUDE_MODE { get { int o = __p.__offset(26); return o != 0 ? (KMLAltitudeMode)__p.bb.GetSbyte(o + __p.bb_pos) : KMLAltitudeMode.CLAMP_TO_GROUND; } }
+  public KMLAltitudeMode ALTITUDE_MODE { get { int o = __p.__offset(28); return o != 0 ? (KMLAltitudeMode)__p.bb.GetSbyte(o + __p.bb_pos) : KMLAltitudeMode.CLAMP_TO_GROUND; } }
+  /// Draw order
+  public int DRAW_ORDER { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  /// LatLonQuad (non-rectangular overlay)
+  public KMLLatLonQuad? LAT_LON_QUAD { get { int o = __p.__offset(32); return o != 0 ? (KMLLatLonQuad?)(new KMLLatLonQuad()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Style URL reference
+  public string STYLE_URL { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSTYLE_URLBytes() { return __p.__vector_as_span<byte>(34, 1); }
+#else
+  public ArraySegment<byte>? GetSTYLE_URLBytes() { return __p.__vector_as_arraysegment(34); }
+#endif
+  public byte[] GetSTYLE_URLArray() { return __p.__vector_as_array<byte>(34); }
+  /// Region
+  public KMLRegion? REGION { get { int o = __p.__offset(36); return o != 0 ? (KMLRegion?)(new KMLRegion()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<KMLGroundOverlay> CreateKMLGroundOverlay(FlatBufferBuilder builder,
       StringOffset NAMEOffset = default(StringOffset),
       StringOffset DESCRIPTIONOffset = default(StringOffset),
       bool VISIBILITY = false,
+      bool OPEN = false,
       StringOffset ICON_HREFOffset = default(StringOffset),
       StringOffset COLOROffset = default(StringOffset),
       double NORTH = 0.0,
@@ -78,36 +95,50 @@ public struct KMLGroundOverlay : IFlatbufferObject
       double WEST = 0.0,
       double ROTATION = 0.0,
       double ALTITUDE = 0.0,
-      KMLAltitudeMode ALTITUDE_MODE = KMLAltitudeMode.CLAMP_TO_GROUND) {
-    builder.StartTable(12);
+      KMLAltitudeMode ALTITUDE_MODE = KMLAltitudeMode.CLAMP_TO_GROUND,
+      int DRAW_ORDER = 0,
+      Offset<KMLLatLonQuad> LAT_LON_QUADOffset = default(Offset<KMLLatLonQuad>),
+      StringOffset STYLE_URLOffset = default(StringOffset),
+      Offset<KMLRegion> REGIONOffset = default(Offset<KMLRegion>)) {
+    builder.StartTable(17);
     KMLGroundOverlay.AddALTITUDE(builder, ALTITUDE);
     KMLGroundOverlay.AddROTATION(builder, ROTATION);
     KMLGroundOverlay.AddWEST(builder, WEST);
     KMLGroundOverlay.AddEAST(builder, EAST);
     KMLGroundOverlay.AddSOUTH(builder, SOUTH);
     KMLGroundOverlay.AddNORTH(builder, NORTH);
+    KMLGroundOverlay.AddREGION(builder, REGIONOffset);
+    KMLGroundOverlay.AddSTYLE_URL(builder, STYLE_URLOffset);
+    KMLGroundOverlay.AddLAT_LON_QUAD(builder, LAT_LON_QUADOffset);
+    KMLGroundOverlay.AddDRAW_ORDER(builder, DRAW_ORDER);
     KMLGroundOverlay.AddCOLOR(builder, COLOROffset);
     KMLGroundOverlay.AddICON_HREF(builder, ICON_HREFOffset);
     KMLGroundOverlay.AddDESCRIPTION(builder, DESCRIPTIONOffset);
     KMLGroundOverlay.AddNAME(builder, NAMEOffset);
     KMLGroundOverlay.AddALTITUDE_MODE(builder, ALTITUDE_MODE);
+    KMLGroundOverlay.AddOPEN(builder, OPEN);
     KMLGroundOverlay.AddVISIBILITY(builder, VISIBILITY);
     return KMLGroundOverlay.EndKMLGroundOverlay(builder);
   }
 
-  public static void StartKMLGroundOverlay(FlatBufferBuilder builder) { builder.StartTable(12); }
+  public static void StartKMLGroundOverlay(FlatBufferBuilder builder) { builder.StartTable(17); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(0, NAMEOffset.Value, 0); }
   public static void AddDESCRIPTION(FlatBufferBuilder builder, StringOffset DESCRIPTIONOffset) { builder.AddOffset(1, DESCRIPTIONOffset.Value, 0); }
   public static void AddVISIBILITY(FlatBufferBuilder builder, bool VISIBILITY) { builder.AddBool(2, VISIBILITY, false); }
-  public static void AddICON_HREF(FlatBufferBuilder builder, StringOffset ICON_HREFOffset) { builder.AddOffset(3, ICON_HREFOffset.Value, 0); }
-  public static void AddCOLOR(FlatBufferBuilder builder, StringOffset COLOROffset) { builder.AddOffset(4, COLOROffset.Value, 0); }
-  public static void AddNORTH(FlatBufferBuilder builder, double NORTH) { builder.AddDouble(5, NORTH, 0.0); }
-  public static void AddSOUTH(FlatBufferBuilder builder, double SOUTH) { builder.AddDouble(6, SOUTH, 0.0); }
-  public static void AddEAST(FlatBufferBuilder builder, double EAST) { builder.AddDouble(7, EAST, 0.0); }
-  public static void AddWEST(FlatBufferBuilder builder, double WEST) { builder.AddDouble(8, WEST, 0.0); }
-  public static void AddROTATION(FlatBufferBuilder builder, double ROTATION) { builder.AddDouble(9, ROTATION, 0.0); }
-  public static void AddALTITUDE(FlatBufferBuilder builder, double ALTITUDE) { builder.AddDouble(10, ALTITUDE, 0.0); }
-  public static void AddALTITUDE_MODE(FlatBufferBuilder builder, KMLAltitudeMode ALTITUDE_MODE) { builder.AddSbyte(11, (sbyte)ALTITUDE_MODE, 0); }
+  public static void AddOPEN(FlatBufferBuilder builder, bool OPEN) { builder.AddBool(3, OPEN, false); }
+  public static void AddICON_HREF(FlatBufferBuilder builder, StringOffset ICON_HREFOffset) { builder.AddOffset(4, ICON_HREFOffset.Value, 0); }
+  public static void AddCOLOR(FlatBufferBuilder builder, StringOffset COLOROffset) { builder.AddOffset(5, COLOROffset.Value, 0); }
+  public static void AddNORTH(FlatBufferBuilder builder, double NORTH) { builder.AddDouble(6, NORTH, 0.0); }
+  public static void AddSOUTH(FlatBufferBuilder builder, double SOUTH) { builder.AddDouble(7, SOUTH, 0.0); }
+  public static void AddEAST(FlatBufferBuilder builder, double EAST) { builder.AddDouble(8, EAST, 0.0); }
+  public static void AddWEST(FlatBufferBuilder builder, double WEST) { builder.AddDouble(9, WEST, 0.0); }
+  public static void AddROTATION(FlatBufferBuilder builder, double ROTATION) { builder.AddDouble(10, ROTATION, 0.0); }
+  public static void AddALTITUDE(FlatBufferBuilder builder, double ALTITUDE) { builder.AddDouble(11, ALTITUDE, 0.0); }
+  public static void AddALTITUDE_MODE(FlatBufferBuilder builder, KMLAltitudeMode ALTITUDE_MODE) { builder.AddSbyte(12, (sbyte)ALTITUDE_MODE, 0); }
+  public static void AddDRAW_ORDER(FlatBufferBuilder builder, int DRAW_ORDER) { builder.AddInt(13, DRAW_ORDER, 0); }
+  public static void AddLAT_LON_QUAD(FlatBufferBuilder builder, Offset<KMLLatLonQuad> LAT_LON_QUADOffset) { builder.AddOffset(14, LAT_LON_QUADOffset.Value, 0); }
+  public static void AddSTYLE_URL(FlatBufferBuilder builder, StringOffset STYLE_URLOffset) { builder.AddOffset(15, STYLE_URLOffset.Value, 0); }
+  public static void AddREGION(FlatBufferBuilder builder, Offset<KMLRegion> REGIONOffset) { builder.AddOffset(16, REGIONOffset.Value, 0); }
   public static Offset<KMLGroundOverlay> EndKMLGroundOverlay(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<KMLGroundOverlay>(o);
@@ -121,6 +152,7 @@ public struct KMLGroundOverlay : IFlatbufferObject
     _o.NAME = this.NAME;
     _o.DESCRIPTION = this.DESCRIPTION;
     _o.VISIBILITY = this.VISIBILITY;
+    _o.OPEN = this.OPEN;
     _o.ICON_HREF = this.ICON_HREF;
     _o.COLOR = this.COLOR;
     _o.NORTH = this.NORTH;
@@ -130,6 +162,10 @@ public struct KMLGroundOverlay : IFlatbufferObject
     _o.ROTATION = this.ROTATION;
     _o.ALTITUDE = this.ALTITUDE;
     _o.ALTITUDE_MODE = this.ALTITUDE_MODE;
+    _o.DRAW_ORDER = this.DRAW_ORDER;
+    _o.LAT_LON_QUAD = this.LAT_LON_QUAD.HasValue ? this.LAT_LON_QUAD.Value.UnPack() : null;
+    _o.STYLE_URL = this.STYLE_URL;
+    _o.REGION = this.REGION.HasValue ? this.REGION.Value.UnPack() : null;
   }
   public static Offset<KMLGroundOverlay> Pack(FlatBufferBuilder builder, KMLGroundOverlayT _o) {
     if (_o == null) return default(Offset<KMLGroundOverlay>);
@@ -137,11 +173,15 @@ public struct KMLGroundOverlay : IFlatbufferObject
     var _DESCRIPTION = _o.DESCRIPTION == null ? default(StringOffset) : builder.CreateString(_o.DESCRIPTION);
     var _ICON_HREF = _o.ICON_HREF == null ? default(StringOffset) : builder.CreateString(_o.ICON_HREF);
     var _COLOR = _o.COLOR == null ? default(StringOffset) : builder.CreateString(_o.COLOR);
+    var _LAT_LON_QUAD = _o.LAT_LON_QUAD == null ? default(Offset<KMLLatLonQuad>) : KMLLatLonQuad.Pack(builder, _o.LAT_LON_QUAD);
+    var _STYLE_URL = _o.STYLE_URL == null ? default(StringOffset) : builder.CreateString(_o.STYLE_URL);
+    var _REGION = _o.REGION == null ? default(Offset<KMLRegion>) : KMLRegion.Pack(builder, _o.REGION);
     return CreateKMLGroundOverlay(
       builder,
       _NAME,
       _DESCRIPTION,
       _o.VISIBILITY,
+      _o.OPEN,
       _ICON_HREF,
       _COLOR,
       _o.NORTH,
@@ -150,7 +190,11 @@ public struct KMLGroundOverlay : IFlatbufferObject
       _o.WEST,
       _o.ROTATION,
       _o.ALTITUDE,
-      _o.ALTITUDE_MODE);
+      _o.ALTITUDE_MODE,
+      _o.DRAW_ORDER,
+      _LAT_LON_QUAD,
+      _STYLE_URL,
+      _REGION);
   }
 }
 
@@ -159,6 +203,7 @@ public class KMLGroundOverlayT
   public string NAME { get; set; }
   public string DESCRIPTION { get; set; }
   public bool VISIBILITY { get; set; }
+  public bool OPEN { get; set; }
   public string ICON_HREF { get; set; }
   public string COLOR { get; set; }
   public double NORTH { get; set; }
@@ -168,11 +213,16 @@ public class KMLGroundOverlayT
   public double ROTATION { get; set; }
   public double ALTITUDE { get; set; }
   public KMLAltitudeMode ALTITUDE_MODE { get; set; }
+  public int DRAW_ORDER { get; set; }
+  public KMLLatLonQuadT LAT_LON_QUAD { get; set; }
+  public string STYLE_URL { get; set; }
+  public KMLRegionT REGION { get; set; }
 
   public KMLGroundOverlayT() {
     this.NAME = null;
     this.DESCRIPTION = null;
     this.VISIBILITY = false;
+    this.OPEN = false;
     this.ICON_HREF = null;
     this.COLOR = null;
     this.NORTH = 0.0;
@@ -182,6 +232,10 @@ public class KMLGroundOverlayT
     this.ROTATION = 0.0;
     this.ALTITUDE = 0.0;
     this.ALTITUDE_MODE = KMLAltitudeMode.CLAMP_TO_GROUND;
+    this.DRAW_ORDER = 0;
+    this.LAT_LON_QUAD = null;
+    this.STYLE_URL = null;
+    this.REGION = null;
   }
 }
 
@@ -194,15 +248,20 @@ static public class KMLGroundOverlayVerify
       && verifier.VerifyString(tablePos, 4 /*NAME*/, false)
       && verifier.VerifyString(tablePos, 6 /*DESCRIPTION*/, false)
       && verifier.VerifyField(tablePos, 8 /*VISIBILITY*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyString(tablePos, 10 /*ICON_HREF*/, false)
-      && verifier.VerifyString(tablePos, 12 /*COLOR*/, false)
-      && verifier.VerifyField(tablePos, 14 /*NORTH*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 16 /*SOUTH*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 18 /*EAST*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 20 /*WEST*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 22 /*ROTATION*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 24 /*ALTITUDE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 26 /*ALTITUDE_MODE*/, 1 /*KMLAltitudeMode*/, 1, false)
+      && verifier.VerifyField(tablePos, 10 /*OPEN*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyString(tablePos, 12 /*ICON_HREF*/, false)
+      && verifier.VerifyString(tablePos, 14 /*COLOR*/, false)
+      && verifier.VerifyField(tablePos, 16 /*NORTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 18 /*SOUTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 20 /*EAST*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 22 /*WEST*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 24 /*ROTATION*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 26 /*ALTITUDE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 28 /*ALTITUDE_MODE*/, 1 /*KMLAltitudeMode*/, 1, false)
+      && verifier.VerifyField(tablePos, 30 /*DRAW_ORDER*/, 4 /*int*/, 4, false)
+      && verifier.VerifyTable(tablePos, 32 /*LAT_LON_QUAD*/, KMLLatLonQuadVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 34 /*STYLE_URL*/, false)
+      && verifier.VerifyTable(tablePos, 36 /*REGION*/, KMLRegionVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

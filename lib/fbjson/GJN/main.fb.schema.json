@@ -56,6 +56,11 @@
           "type": "number",
           "description": "Altitude in meters above WGS84 ellipsoid (optional)",
           "x-flatbuffer-type": "double"
+        },
+        "HAS_ALTITUDE": {
+          "type": "boolean",
+          "description": "True if altitude was explicitly provided (distinguishes 0 from absent)",
+          "x-flatbuffer-type": "bool"
         }
       },
       "additionalProperties": false
@@ -159,6 +164,11 @@
           },
           "description": "Child geometries (for GeometryCollection)",
           "x-flatbuffer-type": "[GJNGeometry]"
+        },
+        "BBOX": {
+          "$ref": "#/definitions/GJNBoundingBox",
+          "description": "Bounding box (optional, per RFC 7946 Section 5)",
+          "x-flatbuffer-type": "GJNBoundingBox"
         }
       },
       "additionalProperties": false
@@ -186,6 +196,26 @@
           "type": "boolean",
           "description": "True if NUM_VALUE should be used instead of VALUE",
           "x-flatbuffer-type": "bool"
+        },
+        "IS_BOOL": {
+          "type": "boolean",
+          "description": "True if this property value is a boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "BOOL_VALUE": {
+          "type": "boolean",
+          "description": "Boolean value (use when IS_BOOL is true)",
+          "x-flatbuffer-type": "bool"
+        },
+        "IS_NULL": {
+          "type": "boolean",
+          "description": "True if this property value is JSON null",
+          "x-flatbuffer-type": "bool"
+        },
+        "JSON_VALUE": {
+          "type": "string",
+          "description": "Raw JSON string for complex values (objects, arrays)",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false
@@ -196,7 +226,7 @@
       "properties": {
         "ID": {
           "type": "string",
-          "description": "Feature identifier (optional)",
+          "description": "Feature identifier (optional, string form)",
           "x-flatbuffer-type": "string"
         },
         "GEOMETRY": {
@@ -211,6 +241,31 @@
           },
           "description": "Properties as key-value pairs",
           "x-flatbuffer-type": "[GJNProperty]"
+        },
+        "NUM_ID": {
+          "type": "number",
+          "description": "Numeric feature identifier (use when ID_IS_NUMERIC is true)",
+          "x-flatbuffer-type": "double"
+        },
+        "ID_IS_NUMERIC": {
+          "type": "boolean",
+          "description": "True if the feature id is numeric rather than string",
+          "x-flatbuffer-type": "bool"
+        },
+        "HAS_GEOMETRY": {
+          "type": "boolean",
+          "description": "True if the feature has a geometry (false means geometry was JSON null)",
+          "x-flatbuffer-type": "bool"
+        },
+        "PROPERTIES_IS_NULL": {
+          "type": "boolean",
+          "description": "True if properties was JSON null (vs empty object)",
+          "x-flatbuffer-type": "bool"
+        },
+        "BBOX": {
+          "$ref": "#/definitions/GJNBoundingBox",
+          "description": "Bounding box (optional, per RFC 7946 Section 5)",
+          "x-flatbuffer-type": "GJNBoundingBox"
         }
       },
       "additionalProperties": false
@@ -248,6 +303,11 @@
           "type": "number",
           "description": "Maximum altitude (optional)",
           "x-flatbuffer-type": "double"
+        },
+        "HAS_ALTITUDE": {
+          "type": "boolean",
+          "description": "True if the bbox includes altitude (6 values vs 4)",
+          "x-flatbuffer-type": "bool"
         }
       },
       "additionalProperties": false

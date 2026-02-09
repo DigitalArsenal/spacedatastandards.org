@@ -203,22 +203,196 @@ class CZMPacket extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Orientation (quaternion)
+    public function getORIENTATION()
+    {
+        $obj = new CZMOrientation();
+        $o = $this->__offset(40);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Suggested camera offset
+    public function getVIEW_FROM()
+    {
+        $obj = new CZMViewFrom();
+        $o = $this->__offset(42);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Whether to delete this object
+    /**
+     * @return bool
+     */
+    public function getDELETE()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Box properties
+    public function getBOX()
+    {
+        $obj = new CZMBox();
+        $o = $this->__offset(46);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Corridor properties
+    public function getCORRIDOR()
+    {
+        $obj = new CZMCorridor();
+        $o = $this->__offset(48);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Cylinder properties
+    public function getCYLINDER()
+    {
+        $obj = new CZMCylinder();
+        $o = $this->__offset(50);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Ellipsoid properties
+    public function getELLIPSOID()
+    {
+        $obj = new CZMEllipsoid();
+        $o = $this->__offset(52);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Polyline volume properties
+    public function getPOLYLINE_VOLUME()
+    {
+        $obj = new CZMPolylineVolume();
+        $o = $this->__offset(54);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Rectangle properties
+    public function getRECTANGLE()
+    {
+        $obj = new CZMRectangle();
+        $o = $this->__offset(56);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// 3D Tileset properties
+    public function getTILESET()
+    {
+        $obj = new CZMTileset();
+        $o = $this->__offset(58);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Wall properties
+    public function getWALL()
+    {
+        $obj = new CZMWall();
+        $o = $this->__offset(60);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Position interpolation settings
+    public function getPOSITION_INTERPOLATION()
+    {
+        $obj = new CZMInterpolation();
+        $o = $this->__offset(62);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Position reference frame (FIXED or INERTIAL)
+    public function getPOSITION_REFERENCE_FRAME()
+    {
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Position reference to another entity
+    public function getPOSITION_REFERENCE()
+    {
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Orientation epoch (ISO 8601)
+    public function getORIENTATION_EPOCH()
+    {
+        $o = $this->__offset(68);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Orientation sampled data [t, x, y, z, w, t, x, y, z, w, ...]
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getORIENTATION_ARRAY($j)
+    {
+        $o = $this->__offset(70);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getORIENTATION_ARRAYLength()
+    {
+        $o = $this->__offset(70);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Orientation interpolation settings
+    public function getORIENTATION_INTERPOLATION()
+    {
+        $obj = new CZMInterpolation();
+        $o = $this->__offset(72);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Orientation reference to another entity
+    public function getORIENTATION_REFERENCE()
+    {
+        $o = $this->__offset(74);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Generic bag for all time-dynamic (non-static) properties
+    /**
+     * @returnVectorOffset
+     */
+    public function getDYNAMIC_PROPERTIES($j)
+    {
+        $o = $this->__offset(76);
+        $obj = new CZMDynamicProperty();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDYNAMIC_PROPERTIESLength()
+    {
+        $o = $this->__offset(76);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCZMPacket(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(18);
+        $builder->StartObject(37);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CZMPacket
      */
-    public static function createCZMPacket(FlatBufferBuilder $builder, $ID, $NAME, $PARENT, $DESCRIPTION, $AVAILABILITY, $POSITION_CARTOGRAPHIC_DEGREES, $POSITION_CARTESIAN, $POSITION_EPOCH, $POSITION_CARTOGRAPHIC_DEGREES_ARRAY, $POSITION_CARTESIAN_ARRAY, $BILLBOARD, $LABEL, $POINT, $POLYLINE, $POLYGON, $MODEL, $PATH, $ELLIPSE)
+    public static function createCZMPacket(FlatBufferBuilder $builder, $ID, $NAME, $PARENT, $DESCRIPTION, $AVAILABILITY, $POSITION_CARTOGRAPHIC_DEGREES, $POSITION_CARTESIAN, $POSITION_EPOCH, $POSITION_CARTOGRAPHIC_DEGREES_ARRAY, $POSITION_CARTESIAN_ARRAY, $BILLBOARD, $LABEL, $POINT, $POLYLINE, $POLYGON, $MODEL, $PATH, $ELLIPSE, $ORIENTATION, $VIEW_FROM, $DELETE, $BOX, $CORRIDOR, $CYLINDER, $ELLIPSOID, $POLYLINE_VOLUME, $RECTANGLE, $TILESET, $WALL, $POSITION_INTERPOLATION, $POSITION_REFERENCE_FRAME, $POSITION_REFERENCE, $ORIENTATION_EPOCH, $ORIENTATION_ARRAY, $ORIENTATION_INTERPOLATION, $ORIENTATION_REFERENCE, $DYNAMIC_PROPERTIES)
     {
-        $builder->startObject(18);
+        $builder->startObject(37);
         self::addID($builder, $ID);
         self::addNAME($builder, $NAME);
         self::addPARENT($builder, $PARENT);
@@ -237,6 +411,25 @@ class CZMPacket extends Table
         self::addMODEL($builder, $MODEL);
         self::addPATH($builder, $PATH);
         self::addELLIPSE($builder, $ELLIPSE);
+        self::addORIENTATION($builder, $ORIENTATION);
+        self::addVIEW_FROM($builder, $VIEW_FROM);
+        self::addDELETE($builder, $DELETE);
+        self::addBOX($builder, $BOX);
+        self::addCORRIDOR($builder, $CORRIDOR);
+        self::addCYLINDER($builder, $CYLINDER);
+        self::addELLIPSOID($builder, $ELLIPSOID);
+        self::addPOLYLINE_VOLUME($builder, $POLYLINE_VOLUME);
+        self::addRECTANGLE($builder, $RECTANGLE);
+        self::addTILESET($builder, $TILESET);
+        self::addWALL($builder, $WALL);
+        self::addPOSITION_INTERPOLATION($builder, $POSITION_INTERPOLATION);
+        self::addPOSITION_REFERENCE_FRAME($builder, $POSITION_REFERENCE_FRAME);
+        self::addPOSITION_REFERENCE($builder, $POSITION_REFERENCE);
+        self::addORIENTATION_EPOCH($builder, $ORIENTATION_EPOCH);
+        self::addORIENTATION_ARRAY($builder, $ORIENTATION_ARRAY);
+        self::addORIENTATION_INTERPOLATION($builder, $ORIENTATION_INTERPOLATION);
+        self::addORIENTATION_REFERENCE($builder, $ORIENTATION_REFERENCE);
+        self::addDYNAMIC_PROPERTIES($builder, $DYNAMIC_PROPERTIES);
         $o = $builder->endObject();
         return $o;
     }
@@ -467,6 +660,244 @@ class CZMPacket extends Table
     public static function addELLIPSE(FlatBufferBuilder $builder, $ELLIPSE)
     {
         $builder->addOffsetX(17, $ELLIPSE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addORIENTATION(FlatBufferBuilder $builder, $ORIENTATION)
+    {
+        $builder->addOffsetX(18, $ORIENTATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addVIEW_FROM(FlatBufferBuilder $builder, $VIEW_FROM)
+    {
+        $builder->addOffsetX(19, $VIEW_FROM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addDELETE(FlatBufferBuilder $builder, $DELETE)
+    {
+        $builder->addBoolX(20, $DELETE, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addBOX(FlatBufferBuilder $builder, $BOX)
+    {
+        $builder->addOffsetX(21, $BOX, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCORRIDOR(FlatBufferBuilder $builder, $CORRIDOR)
+    {
+        $builder->addOffsetX(22, $CORRIDOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCYLINDER(FlatBufferBuilder $builder, $CYLINDER)
+    {
+        $builder->addOffsetX(23, $CYLINDER, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addELLIPSOID(FlatBufferBuilder $builder, $ELLIPSOID)
+    {
+        $builder->addOffsetX(24, $ELLIPSOID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPOLYLINE_VOLUME(FlatBufferBuilder $builder, $POLYLINE_VOLUME)
+    {
+        $builder->addOffsetX(25, $POLYLINE_VOLUME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addRECTANGLE(FlatBufferBuilder $builder, $RECTANGLE)
+    {
+        $builder->addOffsetX(26, $RECTANGLE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addTILESET(FlatBufferBuilder $builder, $TILESET)
+    {
+        $builder->addOffsetX(27, $TILESET, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addWALL(FlatBufferBuilder $builder, $WALL)
+    {
+        $builder->addOffsetX(28, $WALL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPOSITION_INTERPOLATION(FlatBufferBuilder $builder, $POSITION_INTERPOLATION)
+    {
+        $builder->addOffsetX(29, $POSITION_INTERPOLATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPOSITION_REFERENCE_FRAME(FlatBufferBuilder $builder, $POSITION_REFERENCE_FRAME)
+    {
+        $builder->addOffsetX(30, $POSITION_REFERENCE_FRAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPOSITION_REFERENCE(FlatBufferBuilder $builder, $POSITION_REFERENCE)
+    {
+        $builder->addOffsetX(31, $POSITION_REFERENCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addORIENTATION_EPOCH(FlatBufferBuilder $builder, $ORIENTATION_EPOCH)
+    {
+        $builder->addOffsetX(32, $ORIENTATION_EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addORIENTATION_ARRAY(FlatBufferBuilder $builder, $ORIENTATION_ARRAY)
+    {
+        $builder->addOffsetX(33, $ORIENTATION_ARRAY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createORIENTATION_ARRAYVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startORIENTATION_ARRAYVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addORIENTATION_INTERPOLATION(FlatBufferBuilder $builder, $ORIENTATION_INTERPOLATION)
+    {
+        $builder->addOffsetX(34, $ORIENTATION_INTERPOLATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addORIENTATION_REFERENCE(FlatBufferBuilder $builder, $ORIENTATION_REFERENCE)
+    {
+        $builder->addOffsetX(35, $ORIENTATION_REFERENCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addDYNAMIC_PROPERTIES(FlatBufferBuilder $builder, $DYNAMIC_PROPERTIES)
+    {
+        $builder->addOffsetX(36, $DYNAMIC_PROPERTIES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createDYNAMIC_PROPERTIESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startDYNAMIC_PROPERTIESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

@@ -79,13 +79,27 @@ class CZM extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Clock range
+    public function getCLOCK_RANGE()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Clock step
+    public function getCLOCK_STEP()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /// All packets in the document
     /**
      * @returnVectorOffset
      */
     public function getPACKETS($j)
     {
-        $o = $this->__offset(14);
+        $o = $this->__offset(18);
         $obj = new CZMPacket();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -95,7 +109,7 @@ class CZM extends Table
      */
     public function getPACKETSLength()
     {
-        $o = $this->__offset(14);
+        $o = $this->__offset(18);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -105,21 +119,23 @@ class CZM extends Table
      */
     public static function startCZM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(6);
+        $builder->StartObject(8);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CZM
      */
-    public static function createCZM(FlatBufferBuilder $builder, $NAME, $VERSION, $CLOCK_CURRENT_TIME, $CLOCK_INTERVAL, $CLOCK_MULTIPLIER, $PACKETS)
+    public static function createCZM(FlatBufferBuilder $builder, $NAME, $VERSION, $CLOCK_CURRENT_TIME, $CLOCK_INTERVAL, $CLOCK_MULTIPLIER, $CLOCK_RANGE, $CLOCK_STEP, $PACKETS)
     {
-        $builder->startObject(6);
+        $builder->startObject(8);
         self::addNAME($builder, $NAME);
         self::addVERSION($builder, $VERSION);
         self::addCLOCK_CURRENT_TIME($builder, $CLOCK_CURRENT_TIME);
         self::addCLOCK_INTERVAL($builder, $CLOCK_INTERVAL);
         self::addCLOCK_MULTIPLIER($builder, $CLOCK_MULTIPLIER);
+        self::addCLOCK_RANGE($builder, $CLOCK_RANGE);
+        self::addCLOCK_STEP($builder, $CLOCK_STEP);
         self::addPACKETS($builder, $PACKETS);
         $o = $builder->endObject();
         return $o;
@@ -177,12 +193,32 @@ class CZM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCLOCK_RANGE(FlatBufferBuilder $builder, $CLOCK_RANGE)
+    {
+        $builder->addOffsetX(5, $CLOCK_RANGE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCLOCK_STEP(FlatBufferBuilder $builder, $CLOCK_STEP)
+    {
+        $builder->addOffsetX(6, $CLOCK_STEP, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param VectorOffset
      * @return void
      */
     public static function addPACKETS(FlatBufferBuilder $builder, $PACKETS)
     {
-        $builder->addOffsetX(5, $PACKETS, 0);
+        $builder->addOffsetX(7, $PACKETS, 0);
     }
 
     /**

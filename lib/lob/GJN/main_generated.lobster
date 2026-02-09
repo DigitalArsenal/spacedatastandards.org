@@ -37,13 +37,16 @@ class GJNPosition : flatbuffers.handle
     /// Altitude in meters above WGS84 ellipsoid (optional)
     def ALTITUDE() -> float:
         return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// True if altitude was explicitly provided (distinguishes 0 from absent)
+    def HAS_ALTITUDE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 10, 0))
 
 def GetRootAsGJNPosition(buf:string): return GJNPosition { buf, flatbuffers.indirect(buf, 0) }
 
 struct GJNPositionBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(3)
+        b_.StartObject(4)
         return this
     def add_LONGITUDE(LONGITUDE:float):
         b_.PrependFloat64Slot(0, LONGITUDE, 0.0)
@@ -53,6 +56,9 @@ struct GJNPositionBuilder:
         return this
     def add_ALTITUDE(ALTITUDE:float):
         b_.PrependFloat64Slot(2, ALTITUDE, 0.0)
+        return this
+    def add_HAS_ALTITUDE(HAS_ALTITUDE:bool):
+        b_.PrependBoolSlot(3, HAS_ALTITUDE, 0)
         return this
     def end():
         return b_.EndObject()
@@ -142,13 +148,17 @@ class GJNGeometry : flatbuffers.handle
         return GJNGeometry { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 14) + i * 4) }
     def GEOMETRIES_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 14)
+    /// Bounding box (optional, per RFC 7946 Section 5)
+    def BBOX() -> GJNBoundingBox?:
+        let o = flatbuffers.field_table(buf_, pos_, 16)
+        return if o: GJNBoundingBox { buf_, o } else: nil
 
 def GetRootAsGJNGeometry(buf:string): return GJNGeometry { buf, flatbuffers.indirect(buf, 0) }
 
 struct GJNGeometryBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(6)
+        b_.StartObject(7)
         return this
     def add_TYPE(TYPE:GJNGeometryType):
         b_.PrependInt8Slot(0, TYPE, 0)
@@ -167,6 +177,9 @@ struct GJNGeometryBuilder:
         return this
     def add_GEOMETRIES(GEOMETRIES:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(5, GEOMETRIES)
+        return this
+    def add_BBOX(BBOX:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, BBOX)
         return this
     def end():
         return b_.EndObject()
@@ -213,13 +226,25 @@ class GJNProperty : flatbuffers.handle
     /// True if NUM_VALUE should be used instead of VALUE
     def IS_NUMERIC() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 10, 0))
+    /// True if this property value is a boolean
+    def IS_BOOL() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 12, 0))
+    /// Boolean value (use when IS_BOOL is true)
+    def BOOL_VALUE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 14, 0))
+    /// True if this property value is JSON null
+    def IS_NULL() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 16, 0))
+    /// Raw JSON string for complex values (objects, arrays)
+    def JSON_VALUE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 18)
 
 def GetRootAsGJNProperty(buf:string): return GJNProperty { buf, flatbuffers.indirect(buf, 0) }
 
 struct GJNPropertyBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(4)
+        b_.StartObject(8)
         return this
     def add_KEY(KEY:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, KEY)
@@ -233,12 +258,24 @@ struct GJNPropertyBuilder:
     def add_IS_NUMERIC(IS_NUMERIC:bool):
         b_.PrependBoolSlot(3, IS_NUMERIC, 0)
         return this
+    def add_IS_BOOL(IS_BOOL:bool):
+        b_.PrependBoolSlot(4, IS_BOOL, 0)
+        return this
+    def add_BOOL_VALUE(BOOL_VALUE:bool):
+        b_.PrependBoolSlot(5, BOOL_VALUE, 0)
+        return this
+    def add_IS_NULL(IS_NULL:bool):
+        b_.PrependBoolSlot(6, IS_NULL, 0)
+        return this
+    def add_JSON_VALUE(JSON_VALUE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, JSON_VALUE)
+        return this
     def end():
         return b_.EndObject()
 
 /// GeoJSON Feature object
 class GJNFeature : flatbuffers.handle
-    /// Feature identifier (optional)
+    /// Feature identifier (optional, string form)
     def ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
     /// Geometry of the feature
@@ -250,13 +287,29 @@ class GJNFeature : flatbuffers.handle
         return GJNProperty { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 8) + i * 4) }
     def PROPERTIES_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 8)
+    /// Numeric feature identifier (use when ID_IS_NUMERIC is true)
+    def NUM_ID() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    /// True if the feature id is numeric rather than string
+    def ID_IS_NUMERIC() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 12, 0))
+    /// True if the feature has a geometry (false means geometry was JSON null)
+    def HAS_GEOMETRY() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 14, 0))
+    /// True if properties was JSON null (vs empty object)
+    def PROPERTIES_IS_NULL() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 16, 0))
+    /// Bounding box (optional, per RFC 7946 Section 5)
+    def BBOX() -> GJNBoundingBox?:
+        let o = flatbuffers.field_table(buf_, pos_, 18)
+        return if o: GJNBoundingBox { buf_, o } else: nil
 
 def GetRootAsGJNFeature(buf:string): return GJNFeature { buf, flatbuffers.indirect(buf, 0) }
 
 struct GJNFeatureBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(3)
+        b_.StartObject(8)
         return this
     def add_ID(ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ID)
@@ -266,6 +319,21 @@ struct GJNFeatureBuilder:
         return this
     def add_PROPERTIES(PROPERTIES:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, PROPERTIES)
+        return this
+    def add_NUM_ID(NUM_ID:float):
+        b_.PrependFloat64Slot(3, NUM_ID, 0.0)
+        return this
+    def add_ID_IS_NUMERIC(ID_IS_NUMERIC:bool):
+        b_.PrependBoolSlot(4, ID_IS_NUMERIC, 0)
+        return this
+    def add_HAS_GEOMETRY(HAS_GEOMETRY:bool):
+        b_.PrependBoolSlot(5, HAS_GEOMETRY, 0)
+        return this
+    def add_PROPERTIES_IS_NULL(PROPERTIES_IS_NULL:bool):
+        b_.PrependBoolSlot(6, PROPERTIES_IS_NULL, 0)
+        return this
+    def add_BBOX(BBOX:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, BBOX)
         return this
     def end():
         return b_.EndObject()
@@ -297,13 +365,16 @@ class GJNBoundingBox : flatbuffers.handle
     /// Maximum altitude (optional)
     def MAX_ALTITUDE() -> float:
         return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// True if the bbox includes altitude (6 values vs 4)
+    def HAS_ALTITUDE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 16, 0))
 
 def GetRootAsGJNBoundingBox(buf:string): return GJNBoundingBox { buf, flatbuffers.indirect(buf, 0) }
 
 struct GJNBoundingBoxBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(6)
+        b_.StartObject(7)
         return this
     def add_WEST(WEST:float):
         b_.PrependFloat64Slot(0, WEST, 0.0)
@@ -322,6 +393,9 @@ struct GJNBoundingBoxBuilder:
         return this
     def add_MAX_ALTITUDE(MAX_ALTITUDE:float):
         b_.PrependFloat64Slot(5, MAX_ALTITUDE, 0.0)
+        return this
+    def add_HAS_ALTITUDE(HAS_ALTITUDE:bool):
+        b_.PrependBoolSlot(6, HAS_ALTITUDE, 0)
         return this
     def end():
         return b_.EndObject()

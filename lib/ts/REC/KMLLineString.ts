@@ -66,8 +66,16 @@ TESSELLATE():boolean {
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * gx:drawOrder
+ */
+GX_DRAW_ORDER():number {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+}
+
 static startKMLLineString(builder:flatbuffers.Builder) {
-  builder.startObject(4);
+  builder.startObject(5);
 }
 
 static addCoordinates(builder:flatbuffers.Builder, COORDINATESOffset:flatbuffers.Offset) {
@@ -98,17 +106,22 @@ static addTessellate(builder:flatbuffers.Builder, TESSELLATE:boolean) {
   builder.addFieldInt8(3, +TESSELLATE, +false);
 }
 
+static addGxDrawOrder(builder:flatbuffers.Builder, GX_DRAW_ORDER:number) {
+  builder.addFieldInt32(4, GX_DRAW_ORDER, 0);
+}
+
 static endKMLLineString(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createKMLLineString(builder:flatbuffers.Builder, COORDINATESOffset:flatbuffers.Offset, ALTITUDE_MODE:KMLAltitudeMode, EXTRUDE:boolean, TESSELLATE:boolean):flatbuffers.Offset {
+static createKMLLineString(builder:flatbuffers.Builder, COORDINATESOffset:flatbuffers.Offset, ALTITUDE_MODE:KMLAltitudeMode, EXTRUDE:boolean, TESSELLATE:boolean, GX_DRAW_ORDER:number):flatbuffers.Offset {
   KMLLineString.startKMLLineString(builder);
   KMLLineString.addCoordinates(builder, COORDINATESOffset);
   KMLLineString.addAltitudeMode(builder, ALTITUDE_MODE);
   KMLLineString.addExtrude(builder, EXTRUDE);
   KMLLineString.addTessellate(builder, TESSELLATE);
+  KMLLineString.addGxDrawOrder(builder, GX_DRAW_ORDER);
   return KMLLineString.endKMLLineString(builder);
 }
 
@@ -117,7 +130,8 @@ unpack(): KMLLineStringT {
     this.bb!.createObjList<KMLCoordinate, KMLCoordinateT>(this.COORDINATES.bind(this), this.coordinatesLength()),
     this.ALTITUDE_MODE(),
     this.EXTRUDE(),
-    this.TESSELLATE()
+    this.TESSELLATE(),
+    this.GX_DRAW_ORDER()
   );
 }
 
@@ -127,6 +141,7 @@ unpackTo(_o: KMLLineStringT): void {
   _o.ALTITUDE_MODE = this.ALTITUDE_MODE();
   _o.EXTRUDE = this.EXTRUDE();
   _o.TESSELLATE = this.TESSELLATE();
+  _o.GX_DRAW_ORDER = this.GX_DRAW_ORDER();
 }
 }
 
@@ -135,7 +150,8 @@ constructor(
   public COORDINATES: (KMLCoordinateT)[] = [],
   public ALTITUDE_MODE: KMLAltitudeMode = KMLAltitudeMode.CLAMP_TO_GROUND,
   public EXTRUDE: boolean = false,
-  public TESSELLATE: boolean = false
+  public TESSELLATE: boolean = false,
+  public GX_DRAW_ORDER: number = 0
 ){}
 
 
@@ -146,7 +162,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     COORDINATES,
     this.ALTITUDE_MODE,
     this.EXTRUDE,
-    this.TESSELLATE
+    this.TESSELLATE,
+    this.GX_DRAW_ORDER
   );
 }
 }

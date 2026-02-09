@@ -552,6 +552,443 @@ impl<'a> flatbuffers::Verifiable for KMLViewRefreshMode {
 }
 
 impl flatbuffers::SimpleToVerifyInSlice for KMLViewRefreshMode {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_KMLLIST_ITEM_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_KMLLIST_ITEM_TYPE: i8 = 3;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_KMLLIST_ITEM_TYPE: [KMLListItemType; 4] = [
+  KMLListItemType::CHECK,
+  KMLListItemType::CHECK_OFF_ONLY,
+  KMLListItemType::CHECK_HIDE_CHILDREN,
+  KMLListItemType::RADIO_FOLDER,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct KMLListItemType(pub i8);
+#[allow(non_upper_case_globals)]
+impl KMLListItemType {
+  pub const CHECK: Self = Self(0);
+  pub const CHECK_OFF_ONLY: Self = Self(1);
+  pub const CHECK_HIDE_CHILDREN: Self = Self(2);
+  pub const RADIO_FOLDER: Self = Self(3);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 3;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::CHECK,
+    Self::CHECK_OFF_ONLY,
+    Self::CHECK_HIDE_CHILDREN,
+    Self::RADIO_FOLDER,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::CHECK => Some("CHECK"),
+      Self::CHECK_OFF_ONLY => Some("CHECK_OFF_ONLY"),
+      Self::CHECK_HIDE_CHILDREN => Some("CHECK_HIDE_CHILDREN"),
+      Self::RADIO_FOLDER => Some("RADIO_FOLDER"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for KMLListItemType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for KMLListItemType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for KMLListItemType {
+    type Output = KMLListItemType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for KMLListItemType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for KMLListItemType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for KMLListItemType {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_KMLDISPLAY_MODE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_KMLDISPLAY_MODE: i8 = 1;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_KMLDISPLAY_MODE: [KMLDisplayMode; 2] = [
+  KMLDisplayMode::DEFAULT,
+  KMLDisplayMode::HIDE,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct KMLDisplayMode(pub i8);
+#[allow(non_upper_case_globals)]
+impl KMLDisplayMode {
+  pub const DEFAULT: Self = Self(0);
+  pub const HIDE: Self = Self(1);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 1;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::DEFAULT,
+    Self::HIDE,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::DEFAULT => Some("DEFAULT"),
+      Self::HIDE => Some("HIDE"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for KMLDisplayMode {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for KMLDisplayMode {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for KMLDisplayMode {
+    type Output = KMLDisplayMode;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for KMLDisplayMode {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for KMLDisplayMode {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for KMLDisplayMode {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_KMLGRID_ORIGIN: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_KMLGRID_ORIGIN: i8 = 1;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_KMLGRID_ORIGIN: [KMLGridOrigin; 2] = [
+  KMLGridOrigin::LOWER_LEFT,
+  KMLGridOrigin::UPPER_LEFT,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct KMLGridOrigin(pub i8);
+#[allow(non_upper_case_globals)]
+impl KMLGridOrigin {
+  pub const LOWER_LEFT: Self = Self(0);
+  pub const UPPER_LEFT: Self = Self(1);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 1;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::LOWER_LEFT,
+    Self::UPPER_LEFT,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::LOWER_LEFT => Some("LOWER_LEFT"),
+      Self::UPPER_LEFT => Some("UPPER_LEFT"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for KMLGridOrigin {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for KMLGridOrigin {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for KMLGridOrigin {
+    type Output = KMLGridOrigin;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for KMLGridOrigin {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for KMLGridOrigin {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for KMLGridOrigin {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_KMLSHAPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_KMLSHAPE: i8 = 2;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_KMLSHAPE: [KMLShape; 3] = [
+  KMLShape::RECTANGLE,
+  KMLShape::CYLINDER,
+  KMLShape::SPHERE,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct KMLShape(pub i8);
+#[allow(non_upper_case_globals)]
+impl KMLShape {
+  pub const RECTANGLE: Self = Self(0);
+  pub const CYLINDER: Self = Self(1);
+  pub const SPHERE: Self = Self(2);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 2;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::RECTANGLE,
+    Self::CYLINDER,
+    Self::SPHERE,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::RECTANGLE => Some("RECTANGLE"),
+      Self::CYLINDER => Some("CYLINDER"),
+      Self::SPHERE => Some("SPHERE"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for KMLShape {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for KMLShape {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for KMLShape {
+    type Output = KMLShape;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for KMLShape {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for KMLShape {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for KMLShape {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_KMLFLY_TO_MODE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_KMLFLY_TO_MODE: i8 = 1;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_KMLFLY_TO_MODE: [KMLFlyToMode; 2] = [
+  KMLFlyToMode::BOUNCE,
+  KMLFlyToMode::SMOOTH,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct KMLFlyToMode(pub i8);
+#[allow(non_upper_case_globals)]
+impl KMLFlyToMode {
+  pub const BOUNCE: Self = Self(0);
+  pub const SMOOTH: Self = Self(1);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 1;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::BOUNCE,
+    Self::SMOOTH,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::BOUNCE => Some("BOUNCE"),
+      Self::SMOOTH => Some("SMOOTH"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for KMLFlyToMode {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for KMLFlyToMode {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for KMLFlyToMode {
+    type Output = KMLFlyToMode;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for KMLFlyToMode {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for KMLFlyToMode {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for KMLFlyToMode {}
 pub enum KMLCoordinateOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -1620,6 +2057,10 @@ impl<'a> KMLLineStyle<'a> {
   pub const VT_COLOR: flatbuffers::VOffsetT = 4;
   pub const VT_COLOR_MODE: flatbuffers::VOffsetT = 6;
   pub const VT_WIDTH: flatbuffers::VOffsetT = 8;
+  pub const VT_GX_OUTER_COLOR: flatbuffers::VOffsetT = 10;
+  pub const VT_GX_OUTER_WIDTH: flatbuffers::VOffsetT = 12;
+  pub const VT_GX_PHYSICAL_WIDTH: flatbuffers::VOffsetT = 14;
+  pub const VT_GX_LABEL_VISIBILITY: flatbuffers::VOffsetT = 16;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -1631,8 +2072,12 @@ impl<'a> KMLLineStyle<'a> {
     args: &'args KMLLineStyleArgs<'args>
   ) -> flatbuffers::WIPOffset<KMLLineStyle<'bldr>> {
     let mut builder = KMLLineStyleBuilder::new(_fbb);
+    builder.add_GX_PHYSICAL_WIDTH(args.GX_PHYSICAL_WIDTH);
+    builder.add_GX_OUTER_WIDTH(args.GX_OUTER_WIDTH);
     builder.add_WIDTH(args.WIDTH);
+    if let Some(x) = args.GX_OUTER_COLOR { builder.add_GX_OUTER_COLOR(x); }
     if let Some(x) = args.COLOR { builder.add_COLOR(x); }
+    builder.add_GX_LABEL_VISIBILITY(args.GX_LABEL_VISIBILITY);
     builder.add_COLOR_MODE(args.COLOR_MODE);
     builder.finish()
   }
@@ -1643,10 +2088,20 @@ impl<'a> KMLLineStyle<'a> {
     });
     let COLOR_MODE = self.COLOR_MODE();
     let WIDTH = self.WIDTH();
+    let GX_OUTER_COLOR = self.GX_OUTER_COLOR().map(|x| {
+      x.to_string()
+    });
+    let GX_OUTER_WIDTH = self.GX_OUTER_WIDTH();
+    let GX_PHYSICAL_WIDTH = self.GX_PHYSICAL_WIDTH();
+    let GX_LABEL_VISIBILITY = self.GX_LABEL_VISIBILITY();
     KMLLineStyleT {
       COLOR,
       COLOR_MODE,
       WIDTH,
+      GX_OUTER_COLOR,
+      GX_OUTER_WIDTH,
+      GX_PHYSICAL_WIDTH,
+      GX_LABEL_VISIBILITY,
     }
   }
 
@@ -1674,6 +2129,38 @@ impl<'a> KMLLineStyle<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(KMLLineStyle::VT_WIDTH, Some(0.0)).unwrap()}
   }
+  /// gx:outerColor
+  #[inline]
+  pub fn GX_OUTER_COLOR(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLLineStyle::VT_GX_OUTER_COLOR, None)}
+  }
+  /// gx:outerWidth
+  #[inline]
+  pub fn GX_OUTER_WIDTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLLineStyle::VT_GX_OUTER_WIDTH, Some(0.0)).unwrap()}
+  }
+  /// gx:physicalWidth
+  #[inline]
+  pub fn GX_PHYSICAL_WIDTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLLineStyle::VT_GX_PHYSICAL_WIDTH, Some(0.0)).unwrap()}
+  }
+  /// gx:labelVisibility
+  #[inline]
+  pub fn GX_LABEL_VISIBILITY(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(KMLLineStyle::VT_GX_LABEL_VISIBILITY, Some(false)).unwrap()}
+  }
 }
 
 impl flatbuffers::Verifiable for KMLLineStyle<'_> {
@@ -1686,6 +2173,10 @@ impl flatbuffers::Verifiable for KMLLineStyle<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COLOR", Self::VT_COLOR, false)?
      .visit_field::<KMLColorMode>("COLOR_MODE", Self::VT_COLOR_MODE, false)?
      .visit_field::<f64>("WIDTH", Self::VT_WIDTH, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("GX_OUTER_COLOR", Self::VT_GX_OUTER_COLOR, false)?
+     .visit_field::<f64>("GX_OUTER_WIDTH", Self::VT_GX_OUTER_WIDTH, false)?
+     .visit_field::<f64>("GX_PHYSICAL_WIDTH", Self::VT_GX_PHYSICAL_WIDTH, false)?
+     .visit_field::<bool>("GX_LABEL_VISIBILITY", Self::VT_GX_LABEL_VISIBILITY, false)?
      .finish();
     Ok(())
   }
@@ -1694,6 +2185,10 @@ pub struct KMLLineStyleArgs<'a> {
     pub COLOR: Option<flatbuffers::WIPOffset<&'a str>>,
     pub COLOR_MODE: KMLColorMode,
     pub WIDTH: f64,
+    pub GX_OUTER_COLOR: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub GX_OUTER_WIDTH: f64,
+    pub GX_PHYSICAL_WIDTH: f64,
+    pub GX_LABEL_VISIBILITY: bool,
 }
 impl<'a> Default for KMLLineStyleArgs<'a> {
   #[inline]
@@ -1702,6 +2197,10 @@ impl<'a> Default for KMLLineStyleArgs<'a> {
       COLOR: None,
       COLOR_MODE: KMLColorMode::NORMAL,
       WIDTH: 0.0,
+      GX_OUTER_COLOR: None,
+      GX_OUTER_WIDTH: 0.0,
+      GX_PHYSICAL_WIDTH: 0.0,
+      GX_LABEL_VISIBILITY: false,
     }
   }
 }
@@ -1724,6 +2223,22 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLLineStyleBuilder<'a, 'b, A> 
     self.fbb_.push_slot::<f64>(KMLLineStyle::VT_WIDTH, WIDTH, 0.0);
   }
   #[inline]
+  pub fn add_GX_OUTER_COLOR(&mut self, GX_OUTER_COLOR: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLLineStyle::VT_GX_OUTER_COLOR, GX_OUTER_COLOR);
+  }
+  #[inline]
+  pub fn add_GX_OUTER_WIDTH(&mut self, GX_OUTER_WIDTH: f64) {
+    self.fbb_.push_slot::<f64>(KMLLineStyle::VT_GX_OUTER_WIDTH, GX_OUTER_WIDTH, 0.0);
+  }
+  #[inline]
+  pub fn add_GX_PHYSICAL_WIDTH(&mut self, GX_PHYSICAL_WIDTH: f64) {
+    self.fbb_.push_slot::<f64>(KMLLineStyle::VT_GX_PHYSICAL_WIDTH, GX_PHYSICAL_WIDTH, 0.0);
+  }
+  #[inline]
+  pub fn add_GX_LABEL_VISIBILITY(&mut self, GX_LABEL_VISIBILITY: bool) {
+    self.fbb_.push_slot::<bool>(KMLLineStyle::VT_GX_LABEL_VISIBILITY, GX_LABEL_VISIBILITY, false);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLLineStyleBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     KMLLineStyleBuilder {
@@ -1744,6 +2259,10 @@ impl core::fmt::Debug for KMLLineStyle<'_> {
       ds.field("COLOR", &self.COLOR());
       ds.field("COLOR_MODE", &self.COLOR_MODE());
       ds.field("WIDTH", &self.WIDTH());
+      ds.field("GX_OUTER_COLOR", &self.GX_OUTER_COLOR());
+      ds.field("GX_OUTER_WIDTH", &self.GX_OUTER_WIDTH());
+      ds.field("GX_PHYSICAL_WIDTH", &self.GX_PHYSICAL_WIDTH());
+      ds.field("GX_LABEL_VISIBILITY", &self.GX_LABEL_VISIBILITY());
       ds.finish()
   }
 }
@@ -1753,6 +2272,10 @@ pub struct KMLLineStyleT {
   pub COLOR: Option<String>,
   pub COLOR_MODE: KMLColorMode,
   pub WIDTH: f64,
+  pub GX_OUTER_COLOR: Option<String>,
+  pub GX_OUTER_WIDTH: f64,
+  pub GX_PHYSICAL_WIDTH: f64,
+  pub GX_LABEL_VISIBILITY: bool,
 }
 impl Default for KMLLineStyleT {
   fn default() -> Self {
@@ -1760,6 +2283,10 @@ impl Default for KMLLineStyleT {
       COLOR: None,
       COLOR_MODE: KMLColorMode::NORMAL,
       WIDTH: 0.0,
+      GX_OUTER_COLOR: None,
+      GX_OUTER_WIDTH: 0.0,
+      GX_PHYSICAL_WIDTH: 0.0,
+      GX_LABEL_VISIBILITY: false,
     }
   }
 }
@@ -1773,10 +2300,20 @@ impl KMLLineStyleT {
     });
     let COLOR_MODE = self.COLOR_MODE;
     let WIDTH = self.WIDTH;
+    let GX_OUTER_COLOR = self.GX_OUTER_COLOR.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let GX_OUTER_WIDTH = self.GX_OUTER_WIDTH;
+    let GX_PHYSICAL_WIDTH = self.GX_PHYSICAL_WIDTH;
+    let GX_LABEL_VISIBILITY = self.GX_LABEL_VISIBILITY;
     KMLLineStyle::create(_fbb, &KMLLineStyleArgs{
       COLOR,
       COLOR_MODE,
       WIDTH,
+      GX_OUTER_COLOR,
+      GX_OUTER_WIDTH,
+      GX_PHYSICAL_WIDTH,
+      GX_LABEL_VISIBILITY,
     })
   }
 }
@@ -2184,6 +2721,7 @@ impl<'a> KMLBalloonStyle<'a> {
   pub const VT_BG_COLOR: flatbuffers::VOffsetT = 4;
   pub const VT_TEXT_COLOR: flatbuffers::VOffsetT = 6;
   pub const VT_TEXT: flatbuffers::VOffsetT = 8;
+  pub const VT_DISPLAY_MODE: flatbuffers::VOffsetT = 10;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -2198,6 +2736,7 @@ impl<'a> KMLBalloonStyle<'a> {
     if let Some(x) = args.TEXT { builder.add_TEXT(x); }
     if let Some(x) = args.TEXT_COLOR { builder.add_TEXT_COLOR(x); }
     if let Some(x) = args.BG_COLOR { builder.add_BG_COLOR(x); }
+    builder.add_DISPLAY_MODE(args.DISPLAY_MODE);
     builder.finish()
   }
 
@@ -2211,10 +2750,12 @@ impl<'a> KMLBalloonStyle<'a> {
     let TEXT = self.TEXT().map(|x| {
       x.to_string()
     });
+    let DISPLAY_MODE = self.DISPLAY_MODE();
     KMLBalloonStyleT {
       BG_COLOR,
       TEXT_COLOR,
       TEXT,
+      DISPLAY_MODE,
     }
   }
 
@@ -2242,6 +2783,14 @@ impl<'a> KMLBalloonStyle<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLBalloonStyle::VT_TEXT, None)}
   }
+  /// Display mode
+  #[inline]
+  pub fn DISPLAY_MODE(&self) -> KMLDisplayMode {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<KMLDisplayMode>(KMLBalloonStyle::VT_DISPLAY_MODE, Some(KMLDisplayMode::DEFAULT)).unwrap()}
+  }
 }
 
 impl flatbuffers::Verifiable for KMLBalloonStyle<'_> {
@@ -2254,6 +2803,7 @@ impl flatbuffers::Verifiable for KMLBalloonStyle<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("BG_COLOR", Self::VT_BG_COLOR, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TEXT_COLOR", Self::VT_TEXT_COLOR, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TEXT", Self::VT_TEXT, false)?
+     .visit_field::<KMLDisplayMode>("DISPLAY_MODE", Self::VT_DISPLAY_MODE, false)?
      .finish();
     Ok(())
   }
@@ -2262,6 +2812,7 @@ pub struct KMLBalloonStyleArgs<'a> {
     pub BG_COLOR: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TEXT_COLOR: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TEXT: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub DISPLAY_MODE: KMLDisplayMode,
 }
 impl<'a> Default for KMLBalloonStyleArgs<'a> {
   #[inline]
@@ -2270,6 +2821,7 @@ impl<'a> Default for KMLBalloonStyleArgs<'a> {
       BG_COLOR: None,
       TEXT_COLOR: None,
       TEXT: None,
+      DISPLAY_MODE: KMLDisplayMode::DEFAULT,
     }
   }
 }
@@ -2292,6 +2844,10 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLBalloonStyleBuilder<'a, 'b, 
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLBalloonStyle::VT_TEXT, TEXT);
   }
   #[inline]
+  pub fn add_DISPLAY_MODE(&mut self, DISPLAY_MODE: KMLDisplayMode) {
+    self.fbb_.push_slot::<KMLDisplayMode>(KMLBalloonStyle::VT_DISPLAY_MODE, DISPLAY_MODE, KMLDisplayMode::DEFAULT);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLBalloonStyleBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     KMLBalloonStyleBuilder {
@@ -2312,6 +2868,7 @@ impl core::fmt::Debug for KMLBalloonStyle<'_> {
       ds.field("BG_COLOR", &self.BG_COLOR());
       ds.field("TEXT_COLOR", &self.TEXT_COLOR());
       ds.field("TEXT", &self.TEXT());
+      ds.field("DISPLAY_MODE", &self.DISPLAY_MODE());
       ds.finish()
   }
 }
@@ -2321,6 +2878,7 @@ pub struct KMLBalloonStyleT {
   pub BG_COLOR: Option<String>,
   pub TEXT_COLOR: Option<String>,
   pub TEXT: Option<String>,
+  pub DISPLAY_MODE: KMLDisplayMode,
 }
 impl Default for KMLBalloonStyleT {
   fn default() -> Self {
@@ -2328,6 +2886,7 @@ impl Default for KMLBalloonStyleT {
       BG_COLOR: None,
       TEXT_COLOR: None,
       TEXT: None,
+      DISPLAY_MODE: KMLDisplayMode::DEFAULT,
     }
   }
 }
@@ -2345,10 +2904,380 @@ impl KMLBalloonStyleT {
     let TEXT = self.TEXT.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let DISPLAY_MODE = self.DISPLAY_MODE;
     KMLBalloonStyle::create(_fbb, &KMLBalloonStyleArgs{
       BG_COLOR,
       TEXT_COLOR,
       TEXT,
+      DISPLAY_MODE,
+    })
+  }
+}
+pub enum KMLItemIconOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Item icon for ListStyle
+pub struct KMLItemIcon<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLItemIcon<'a> {
+  type Inner = KMLItemIcon<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLItemIcon<'a> {
+  pub const VT_STATE: flatbuffers::VOffsetT = 4;
+  pub const VT_HREF: flatbuffers::VOffsetT = 6;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLItemIcon { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLItemIconArgs<'args>
+  ) -> flatbuffers::WIPOffset<KMLItemIcon<'bldr>> {
+    let mut builder = KMLItemIconBuilder::new(_fbb);
+    if let Some(x) = args.HREF { builder.add_HREF(x); }
+    if let Some(x) = args.STATE { builder.add_STATE(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLItemIconT {
+    let STATE = self.STATE().map(|x| {
+      x.to_string()
+    });
+    let HREF = self.HREF().map(|x| {
+      x.to_string()
+    });
+    KMLItemIconT {
+      STATE,
+      HREF,
+    }
+  }
+
+  /// State (open, closed, error, fetching0-2)
+  #[inline]
+  pub fn STATE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLItemIcon::VT_STATE, None)}
+  }
+  /// Icon URL
+  #[inline]
+  pub fn HREF(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLItemIcon::VT_HREF, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLItemIcon<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("STATE", Self::VT_STATE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("HREF", Self::VT_HREF, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLItemIconArgs<'a> {
+    pub STATE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub HREF: Option<flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for KMLItemIconArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    KMLItemIconArgs {
+      STATE: None,
+      HREF: None,
+    }
+  }
+}
+
+pub struct KMLItemIconBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLItemIconBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_STATE(&mut self, STATE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLItemIcon::VT_STATE, STATE);
+  }
+  #[inline]
+  pub fn add_HREF(&mut self, HREF: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLItemIcon::VT_HREF, HREF);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLItemIconBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLItemIconBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLItemIcon<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLItemIcon<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLItemIcon");
+      ds.field("STATE", &self.STATE());
+      ds.field("HREF", &self.HREF());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLItemIconT {
+  pub STATE: Option<String>,
+  pub HREF: Option<String>,
+}
+impl Default for KMLItemIconT {
+  fn default() -> Self {
+    Self {
+      STATE: None,
+      HREF: None,
+    }
+  }
+}
+impl KMLItemIconT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLItemIcon<'b>> {
+    let STATE = self.STATE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let HREF = self.HREF.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    KMLItemIcon::create(_fbb, &KMLItemIconArgs{
+      STATE,
+      HREF,
+    })
+  }
+}
+pub enum KMLListStyleOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// List style
+pub struct KMLListStyle<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLListStyle<'a> {
+  type Inner = KMLListStyle<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLListStyle<'a> {
+  pub const VT_LIST_ITEM_TYPE: flatbuffers::VOffsetT = 4;
+  pub const VT_BG_COLOR: flatbuffers::VOffsetT = 6;
+  pub const VT_ITEM_ICONS: flatbuffers::VOffsetT = 8;
+  pub const VT_MAX_SNIPPET_LINES: flatbuffers::VOffsetT = 10;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLListStyle { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLListStyleArgs<'args>
+  ) -> flatbuffers::WIPOffset<KMLListStyle<'bldr>> {
+    let mut builder = KMLListStyleBuilder::new(_fbb);
+    builder.add_MAX_SNIPPET_LINES(args.MAX_SNIPPET_LINES);
+    if let Some(x) = args.ITEM_ICONS { builder.add_ITEM_ICONS(x); }
+    if let Some(x) = args.BG_COLOR { builder.add_BG_COLOR(x); }
+    builder.add_LIST_ITEM_TYPE(args.LIST_ITEM_TYPE);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLListStyleT {
+    let LIST_ITEM_TYPE = self.LIST_ITEM_TYPE();
+    let BG_COLOR = self.BG_COLOR().map(|x| {
+      x.to_string()
+    });
+    let ITEM_ICONS = self.ITEM_ICONS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let MAX_SNIPPET_LINES = self.MAX_SNIPPET_LINES();
+    KMLListStyleT {
+      LIST_ITEM_TYPE,
+      BG_COLOR,
+      ITEM_ICONS,
+      MAX_SNIPPET_LINES,
+    }
+  }
+
+  /// List item type
+  #[inline]
+  pub fn LIST_ITEM_TYPE(&self) -> KMLListItemType {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<KMLListItemType>(KMLListStyle::VT_LIST_ITEM_TYPE, Some(KMLListItemType::CHECK)).unwrap()}
+  }
+  /// Background color
+  #[inline]
+  pub fn BG_COLOR(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLListStyle::VT_BG_COLOR, None)}
+  }
+  /// Item icons
+  #[inline]
+  pub fn ITEM_ICONS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLItemIcon<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLItemIcon>>>>(KMLListStyle::VT_ITEM_ICONS, None)}
+  }
+  /// Maximum snippet lines
+  #[inline]
+  pub fn MAX_SNIPPET_LINES(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(KMLListStyle::VT_MAX_SNIPPET_LINES, Some(0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLListStyle<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<KMLListItemType>("LIST_ITEM_TYPE", Self::VT_LIST_ITEM_TYPE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("BG_COLOR", Self::VT_BG_COLOR, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLItemIcon>>>>("ITEM_ICONS", Self::VT_ITEM_ICONS, false)?
+     .visit_field::<i32>("MAX_SNIPPET_LINES", Self::VT_MAX_SNIPPET_LINES, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLListStyleArgs<'a> {
+    pub LIST_ITEM_TYPE: KMLListItemType,
+    pub BG_COLOR: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ITEM_ICONS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLItemIcon<'a>>>>>,
+    pub MAX_SNIPPET_LINES: i32,
+}
+impl<'a> Default for KMLListStyleArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    KMLListStyleArgs {
+      LIST_ITEM_TYPE: KMLListItemType::CHECK,
+      BG_COLOR: None,
+      ITEM_ICONS: None,
+      MAX_SNIPPET_LINES: 0,
+    }
+  }
+}
+
+pub struct KMLListStyleBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLListStyleBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_LIST_ITEM_TYPE(&mut self, LIST_ITEM_TYPE: KMLListItemType) {
+    self.fbb_.push_slot::<KMLListItemType>(KMLListStyle::VT_LIST_ITEM_TYPE, LIST_ITEM_TYPE, KMLListItemType::CHECK);
+  }
+  #[inline]
+  pub fn add_BG_COLOR(&mut self, BG_COLOR: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLListStyle::VT_BG_COLOR, BG_COLOR);
+  }
+  #[inline]
+  pub fn add_ITEM_ICONS(&mut self, ITEM_ICONS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<KMLItemIcon<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLListStyle::VT_ITEM_ICONS, ITEM_ICONS);
+  }
+  #[inline]
+  pub fn add_MAX_SNIPPET_LINES(&mut self, MAX_SNIPPET_LINES: i32) {
+    self.fbb_.push_slot::<i32>(KMLListStyle::VT_MAX_SNIPPET_LINES, MAX_SNIPPET_LINES, 0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLListStyleBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLListStyleBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLListStyle<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLListStyle<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLListStyle");
+      ds.field("LIST_ITEM_TYPE", &self.LIST_ITEM_TYPE());
+      ds.field("BG_COLOR", &self.BG_COLOR());
+      ds.field("ITEM_ICONS", &self.ITEM_ICONS());
+      ds.field("MAX_SNIPPET_LINES", &self.MAX_SNIPPET_LINES());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLListStyleT {
+  pub LIST_ITEM_TYPE: KMLListItemType,
+  pub BG_COLOR: Option<String>,
+  pub ITEM_ICONS: Option<Vec<KMLItemIconT>>,
+  pub MAX_SNIPPET_LINES: i32,
+}
+impl Default for KMLListStyleT {
+  fn default() -> Self {
+    Self {
+      LIST_ITEM_TYPE: KMLListItemType::CHECK,
+      BG_COLOR: None,
+      ITEM_ICONS: None,
+      MAX_SNIPPET_LINES: 0,
+    }
+  }
+}
+impl KMLListStyleT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLListStyle<'b>> {
+    let LIST_ITEM_TYPE = self.LIST_ITEM_TYPE;
+    let BG_COLOR = self.BG_COLOR.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ITEM_ICONS = self.ITEM_ICONS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let MAX_SNIPPET_LINES = self.MAX_SNIPPET_LINES;
+    KMLListStyle::create(_fbb, &KMLListStyleArgs{
+      LIST_ITEM_TYPE,
+      BG_COLOR,
+      ITEM_ICONS,
+      MAX_SNIPPET_LINES,
     })
   }
 }
@@ -2375,6 +3304,7 @@ impl<'a> KMLStyle<'a> {
   pub const VT_LINE_STYLE: flatbuffers::VOffsetT = 10;
   pub const VT_POLY_STYLE: flatbuffers::VOffsetT = 12;
   pub const VT_BALLOON_STYLE: flatbuffers::VOffsetT = 14;
+  pub const VT_LIST_STYLE: flatbuffers::VOffsetT = 16;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -2386,6 +3316,7 @@ impl<'a> KMLStyle<'a> {
     args: &'args KMLStyleArgs<'args>
   ) -> flatbuffers::WIPOffset<KMLStyle<'bldr>> {
     let mut builder = KMLStyleBuilder::new(_fbb);
+    if let Some(x) = args.LIST_STYLE { builder.add_LIST_STYLE(x); }
     if let Some(x) = args.BALLOON_STYLE { builder.add_BALLOON_STYLE(x); }
     if let Some(x) = args.POLY_STYLE { builder.add_POLY_STYLE(x); }
     if let Some(x) = args.LINE_STYLE { builder.add_LINE_STYLE(x); }
@@ -2414,6 +3345,9 @@ impl<'a> KMLStyle<'a> {
     let BALLOON_STYLE = self.BALLOON_STYLE().map(|x| {
       Box::new(x.unpack())
     });
+    let LIST_STYLE = self.LIST_STYLE().map(|x| {
+      Box::new(x.unpack())
+    });
     KMLStyleT {
       ID,
       ICON_STYLE,
@@ -2421,6 +3355,7 @@ impl<'a> KMLStyle<'a> {
       LINE_STYLE,
       POLY_STYLE,
       BALLOON_STYLE,
+      LIST_STYLE,
     }
   }
 
@@ -2472,6 +3407,14 @@ impl<'a> KMLStyle<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLBalloonStyle>>(KMLStyle::VT_BALLOON_STYLE, None)}
   }
+  /// List style
+  #[inline]
+  pub fn LIST_STYLE(&self) -> Option<KMLListStyle<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLListStyle>>(KMLStyle::VT_LIST_STYLE, None)}
+  }
 }
 
 impl flatbuffers::Verifiable for KMLStyle<'_> {
@@ -2487,6 +3430,7 @@ impl flatbuffers::Verifiable for KMLStyle<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<KMLLineStyle>>("LINE_STYLE", Self::VT_LINE_STYLE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<KMLPolyStyle>>("POLY_STYLE", Self::VT_POLY_STYLE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<KMLBalloonStyle>>("BALLOON_STYLE", Self::VT_BALLOON_STYLE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLListStyle>>("LIST_STYLE", Self::VT_LIST_STYLE, false)?
      .finish();
     Ok(())
   }
@@ -2498,6 +3442,7 @@ pub struct KMLStyleArgs<'a> {
     pub LINE_STYLE: Option<flatbuffers::WIPOffset<KMLLineStyle<'a>>>,
     pub POLY_STYLE: Option<flatbuffers::WIPOffset<KMLPolyStyle<'a>>>,
     pub BALLOON_STYLE: Option<flatbuffers::WIPOffset<KMLBalloonStyle<'a>>>,
+    pub LIST_STYLE: Option<flatbuffers::WIPOffset<KMLListStyle<'a>>>,
 }
 impl<'a> Default for KMLStyleArgs<'a> {
   #[inline]
@@ -2509,6 +3454,7 @@ impl<'a> Default for KMLStyleArgs<'a> {
       LINE_STYLE: None,
       POLY_STYLE: None,
       BALLOON_STYLE: None,
+      LIST_STYLE: None,
     }
   }
 }
@@ -2543,6 +3489,10 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLStyleBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLBalloonStyle>>(KMLStyle::VT_BALLOON_STYLE, BALLOON_STYLE);
   }
   #[inline]
+  pub fn add_LIST_STYLE(&mut self, LIST_STYLE: flatbuffers::WIPOffset<KMLListStyle<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLListStyle>>(KMLStyle::VT_LIST_STYLE, LIST_STYLE);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLStyleBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     KMLStyleBuilder {
@@ -2566,6 +3516,7 @@ impl core::fmt::Debug for KMLStyle<'_> {
       ds.field("LINE_STYLE", &self.LINE_STYLE());
       ds.field("POLY_STYLE", &self.POLY_STYLE());
       ds.field("BALLOON_STYLE", &self.BALLOON_STYLE());
+      ds.field("LIST_STYLE", &self.LIST_STYLE());
       ds.finish()
   }
 }
@@ -2578,6 +3529,7 @@ pub struct KMLStyleT {
   pub LINE_STYLE: Option<Box<KMLLineStyleT>>,
   pub POLY_STYLE: Option<Box<KMLPolyStyleT>>,
   pub BALLOON_STYLE: Option<Box<KMLBalloonStyleT>>,
+  pub LIST_STYLE: Option<Box<KMLListStyleT>>,
 }
 impl Default for KMLStyleT {
   fn default() -> Self {
@@ -2588,6 +3540,7 @@ impl Default for KMLStyleT {
       LINE_STYLE: None,
       POLY_STYLE: None,
       BALLOON_STYLE: None,
+      LIST_STYLE: None,
     }
   }
 }
@@ -2614,6 +3567,9 @@ impl KMLStyleT {
     let BALLOON_STYLE = self.BALLOON_STYLE.as_ref().map(|x|{
       x.pack(_fbb)
     });
+    let LIST_STYLE = self.LIST_STYLE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     KMLStyle::create(_fbb, &KMLStyleArgs{
       ID,
       ICON_STYLE,
@@ -2621,6 +3577,7 @@ impl KMLStyleT {
       LINE_STYLE,
       POLY_STYLE,
       BALLOON_STYLE,
+      LIST_STYLE,
     })
   }
 }
@@ -3141,6 +4098,7 @@ impl<'a> KMLLineString<'a> {
   pub const VT_ALTITUDE_MODE: flatbuffers::VOffsetT = 6;
   pub const VT_EXTRUDE: flatbuffers::VOffsetT = 8;
   pub const VT_TESSELLATE: flatbuffers::VOffsetT = 10;
+  pub const VT_GX_DRAW_ORDER: flatbuffers::VOffsetT = 12;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -3152,6 +4110,7 @@ impl<'a> KMLLineString<'a> {
     args: &'args KMLLineStringArgs<'args>
   ) -> flatbuffers::WIPOffset<KMLLineString<'bldr>> {
     let mut builder = KMLLineStringBuilder::new(_fbb);
+    builder.add_GX_DRAW_ORDER(args.GX_DRAW_ORDER);
     if let Some(x) = args.COORDINATES { builder.add_COORDINATES(x); }
     builder.add_TESSELLATE(args.TESSELLATE);
     builder.add_EXTRUDE(args.EXTRUDE);
@@ -3166,11 +4125,13 @@ impl<'a> KMLLineString<'a> {
     let ALTITUDE_MODE = self.ALTITUDE_MODE();
     let EXTRUDE = self.EXTRUDE();
     let TESSELLATE = self.TESSELLATE();
+    let GX_DRAW_ORDER = self.GX_DRAW_ORDER();
     KMLLineStringT {
       COORDINATES,
       ALTITUDE_MODE,
       EXTRUDE,
       TESSELLATE,
+      GX_DRAW_ORDER,
     }
   }
 
@@ -3206,6 +4167,14 @@ impl<'a> KMLLineString<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(KMLLineString::VT_TESSELLATE, Some(false)).unwrap()}
   }
+  /// gx:drawOrder
+  #[inline]
+  pub fn GX_DRAW_ORDER(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(KMLLineString::VT_GX_DRAW_ORDER, Some(0)).unwrap()}
+  }
 }
 
 impl flatbuffers::Verifiable for KMLLineString<'_> {
@@ -3219,6 +4188,7 @@ impl flatbuffers::Verifiable for KMLLineString<'_> {
      .visit_field::<KMLAltitudeMode>("ALTITUDE_MODE", Self::VT_ALTITUDE_MODE, false)?
      .visit_field::<bool>("EXTRUDE", Self::VT_EXTRUDE, false)?
      .visit_field::<bool>("TESSELLATE", Self::VT_TESSELLATE, false)?
+     .visit_field::<i32>("GX_DRAW_ORDER", Self::VT_GX_DRAW_ORDER, false)?
      .finish();
     Ok(())
   }
@@ -3228,6 +4198,7 @@ pub struct KMLLineStringArgs<'a> {
     pub ALTITUDE_MODE: KMLAltitudeMode,
     pub EXTRUDE: bool,
     pub TESSELLATE: bool,
+    pub GX_DRAW_ORDER: i32,
 }
 impl<'a> Default for KMLLineStringArgs<'a> {
   #[inline]
@@ -3237,6 +4208,7 @@ impl<'a> Default for KMLLineStringArgs<'a> {
       ALTITUDE_MODE: KMLAltitudeMode::CLAMP_TO_GROUND,
       EXTRUDE: false,
       TESSELLATE: false,
+      GX_DRAW_ORDER: 0,
     }
   }
 }
@@ -3263,6 +4235,10 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLLineStringBuilder<'a, 'b, A>
     self.fbb_.push_slot::<bool>(KMLLineString::VT_TESSELLATE, TESSELLATE, false);
   }
   #[inline]
+  pub fn add_GX_DRAW_ORDER(&mut self, GX_DRAW_ORDER: i32) {
+    self.fbb_.push_slot::<i32>(KMLLineString::VT_GX_DRAW_ORDER, GX_DRAW_ORDER, 0);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLLineStringBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     KMLLineStringBuilder {
@@ -3284,6 +4260,7 @@ impl core::fmt::Debug for KMLLineString<'_> {
       ds.field("ALTITUDE_MODE", &self.ALTITUDE_MODE());
       ds.field("EXTRUDE", &self.EXTRUDE());
       ds.field("TESSELLATE", &self.TESSELLATE());
+      ds.field("GX_DRAW_ORDER", &self.GX_DRAW_ORDER());
       ds.finish()
   }
 }
@@ -3294,6 +4271,7 @@ pub struct KMLLineStringT {
   pub ALTITUDE_MODE: KMLAltitudeMode,
   pub EXTRUDE: bool,
   pub TESSELLATE: bool,
+  pub GX_DRAW_ORDER: i32,
 }
 impl Default for KMLLineStringT {
   fn default() -> Self {
@@ -3302,6 +4280,7 @@ impl Default for KMLLineStringT {
       ALTITUDE_MODE: KMLAltitudeMode::CLAMP_TO_GROUND,
       EXTRUDE: false,
       TESSELLATE: false,
+      GX_DRAW_ORDER: 0,
     }
   }
 }
@@ -3316,11 +4295,13 @@ impl KMLLineStringT {
     let ALTITUDE_MODE = self.ALTITUDE_MODE;
     let EXTRUDE = self.EXTRUDE;
     let TESSELLATE = self.TESSELLATE;
+    let GX_DRAW_ORDER = self.GX_DRAW_ORDER;
     KMLLineString::create(_fbb, &KMLLineStringArgs{
       COORDINATES,
       ALTITUDE_MODE,
       EXTRUDE,
       TESSELLATE,
+      GX_DRAW_ORDER,
     })
   }
 }
@@ -3342,6 +4323,9 @@ impl<'a> flatbuffers::Follow<'a> for KMLLinearRing<'a> {
 
 impl<'a> KMLLinearRing<'a> {
   pub const VT_COORDINATES: flatbuffers::VOffsetT = 4;
+  pub const VT_EXTRUDE: flatbuffers::VOffsetT = 6;
+  pub const VT_TESSELLATE: flatbuffers::VOffsetT = 8;
+  pub const VT_ALTITUDE_MODE: flatbuffers::VOffsetT = 10;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -3354,6 +4338,9 @@ impl<'a> KMLLinearRing<'a> {
   ) -> flatbuffers::WIPOffset<KMLLinearRing<'bldr>> {
     let mut builder = KMLLinearRingBuilder::new(_fbb);
     if let Some(x) = args.COORDINATES { builder.add_COORDINATES(x); }
+    builder.add_ALTITUDE_MODE(args.ALTITUDE_MODE);
+    builder.add_TESSELLATE(args.TESSELLATE);
+    builder.add_EXTRUDE(args.EXTRUDE);
     builder.finish()
   }
 
@@ -3361,8 +4348,14 @@ impl<'a> KMLLinearRing<'a> {
     let COORDINATES = self.COORDINATES().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
+    let EXTRUDE = self.EXTRUDE();
+    let TESSELLATE = self.TESSELLATE();
+    let ALTITUDE_MODE = self.ALTITUDE_MODE();
     KMLLinearRingT {
       COORDINATES,
+      EXTRUDE,
+      TESSELLATE,
+      ALTITUDE_MODE,
     }
   }
 
@@ -3374,6 +4367,30 @@ impl<'a> KMLLinearRing<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLCoordinate>>>>(KMLLinearRing::VT_COORDINATES, None)}
   }
+  /// Whether to extrude to ground
+  #[inline]
+  pub fn EXTRUDE(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(KMLLinearRing::VT_EXTRUDE, Some(false)).unwrap()}
+  }
+  /// Whether to tessellate
+  #[inline]
+  pub fn TESSELLATE(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(KMLLinearRing::VT_TESSELLATE, Some(false)).unwrap()}
+  }
+  /// Altitude mode
+  #[inline]
+  pub fn ALTITUDE_MODE(&self) -> KMLAltitudeMode {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<KMLAltitudeMode>(KMLLinearRing::VT_ALTITUDE_MODE, Some(KMLAltitudeMode::CLAMP_TO_GROUND)).unwrap()}
+  }
 }
 
 impl flatbuffers::Verifiable for KMLLinearRing<'_> {
@@ -3384,18 +4401,27 @@ impl flatbuffers::Verifiable for KMLLinearRing<'_> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLCoordinate>>>>("COORDINATES", Self::VT_COORDINATES, false)?
+     .visit_field::<bool>("EXTRUDE", Self::VT_EXTRUDE, false)?
+     .visit_field::<bool>("TESSELLATE", Self::VT_TESSELLATE, false)?
+     .visit_field::<KMLAltitudeMode>("ALTITUDE_MODE", Self::VT_ALTITUDE_MODE, false)?
      .finish();
     Ok(())
   }
 }
 pub struct KMLLinearRingArgs<'a> {
     pub COORDINATES: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLCoordinate<'a>>>>>,
+    pub EXTRUDE: bool,
+    pub TESSELLATE: bool,
+    pub ALTITUDE_MODE: KMLAltitudeMode,
 }
 impl<'a> Default for KMLLinearRingArgs<'a> {
   #[inline]
   fn default() -> Self {
     KMLLinearRingArgs {
       COORDINATES: None,
+      EXTRUDE: false,
+      TESSELLATE: false,
+      ALTITUDE_MODE: KMLAltitudeMode::CLAMP_TO_GROUND,
     }
   }
 }
@@ -3408,6 +4434,18 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLLinearRingBuilder<'a, 'b, A>
   #[inline]
   pub fn add_COORDINATES(&mut self, COORDINATES: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<KMLCoordinate<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLLinearRing::VT_COORDINATES, COORDINATES);
+  }
+  #[inline]
+  pub fn add_EXTRUDE(&mut self, EXTRUDE: bool) {
+    self.fbb_.push_slot::<bool>(KMLLinearRing::VT_EXTRUDE, EXTRUDE, false);
+  }
+  #[inline]
+  pub fn add_TESSELLATE(&mut self, TESSELLATE: bool) {
+    self.fbb_.push_slot::<bool>(KMLLinearRing::VT_TESSELLATE, TESSELLATE, false);
+  }
+  #[inline]
+  pub fn add_ALTITUDE_MODE(&mut self, ALTITUDE_MODE: KMLAltitudeMode) {
+    self.fbb_.push_slot::<KMLAltitudeMode>(KMLLinearRing::VT_ALTITUDE_MODE, ALTITUDE_MODE, KMLAltitudeMode::CLAMP_TO_GROUND);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLLinearRingBuilder<'a, 'b, A> {
@@ -3428,6 +4466,9 @@ impl core::fmt::Debug for KMLLinearRing<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
     let mut ds = f.debug_struct("KMLLinearRing");
       ds.field("COORDINATES", &self.COORDINATES());
+      ds.field("EXTRUDE", &self.EXTRUDE());
+      ds.field("TESSELLATE", &self.TESSELLATE());
+      ds.field("ALTITUDE_MODE", &self.ALTITUDE_MODE());
       ds.finish()
   }
 }
@@ -3435,11 +4476,17 @@ impl core::fmt::Debug for KMLLinearRing<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct KMLLinearRingT {
   pub COORDINATES: Option<Vec<KMLCoordinateT>>,
+  pub EXTRUDE: bool,
+  pub TESSELLATE: bool,
+  pub ALTITUDE_MODE: KMLAltitudeMode,
 }
 impl Default for KMLLinearRingT {
   fn default() -> Self {
     Self {
       COORDINATES: None,
+      EXTRUDE: false,
+      TESSELLATE: false,
+      ALTITUDE_MODE: KMLAltitudeMode::CLAMP_TO_GROUND,
     }
   }
 }
@@ -3451,8 +4498,14 @@ impl KMLLinearRingT {
     let COORDINATES = self.COORDINATES.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
+    let EXTRUDE = self.EXTRUDE;
+    let TESSELLATE = self.TESSELLATE;
+    let ALTITUDE_MODE = self.ALTITUDE_MODE;
     KMLLinearRing::create(_fbb, &KMLLinearRingArgs{
       COORDINATES,
+      EXTRUDE,
+      TESSELLATE,
+      ALTITUDE_MODE,
     })
   }
 }
@@ -3688,6 +4741,1034 @@ impl KMLPolygonT {
     })
   }
 }
+pub enum KMLResourceMapAliasOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Resource map alias for Model
+pub struct KMLResourceMapAlias<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLResourceMapAlias<'a> {
+  type Inner = KMLResourceMapAlias<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLResourceMapAlias<'a> {
+  pub const VT_TARGET_HREF: flatbuffers::VOffsetT = 4;
+  pub const VT_SOURCE_HREF: flatbuffers::VOffsetT = 6;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLResourceMapAlias { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLResourceMapAliasArgs<'args>
+  ) -> flatbuffers::WIPOffset<KMLResourceMapAlias<'bldr>> {
+    let mut builder = KMLResourceMapAliasBuilder::new(_fbb);
+    if let Some(x) = args.SOURCE_HREF { builder.add_SOURCE_HREF(x); }
+    if let Some(x) = args.TARGET_HREF { builder.add_TARGET_HREF(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLResourceMapAliasT {
+    let TARGET_HREF = self.TARGET_HREF().map(|x| {
+      x.to_string()
+    });
+    let SOURCE_HREF = self.SOURCE_HREF().map(|x| {
+      x.to_string()
+    });
+    KMLResourceMapAliasT {
+      TARGET_HREF,
+      SOURCE_HREF,
+    }
+  }
+
+  /// Target href
+  #[inline]
+  pub fn TARGET_HREF(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLResourceMapAlias::VT_TARGET_HREF, None)}
+  }
+  /// Source href
+  #[inline]
+  pub fn SOURCE_HREF(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLResourceMapAlias::VT_SOURCE_HREF, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLResourceMapAlias<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TARGET_HREF", Self::VT_TARGET_HREF, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SOURCE_HREF", Self::VT_SOURCE_HREF, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLResourceMapAliasArgs<'a> {
+    pub TARGET_HREF: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SOURCE_HREF: Option<flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for KMLResourceMapAliasArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    KMLResourceMapAliasArgs {
+      TARGET_HREF: None,
+      SOURCE_HREF: None,
+    }
+  }
+}
+
+pub struct KMLResourceMapAliasBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLResourceMapAliasBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_TARGET_HREF(&mut self, TARGET_HREF: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLResourceMapAlias::VT_TARGET_HREF, TARGET_HREF);
+  }
+  #[inline]
+  pub fn add_SOURCE_HREF(&mut self, SOURCE_HREF: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLResourceMapAlias::VT_SOURCE_HREF, SOURCE_HREF);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLResourceMapAliasBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLResourceMapAliasBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLResourceMapAlias<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLResourceMapAlias<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLResourceMapAlias");
+      ds.field("TARGET_HREF", &self.TARGET_HREF());
+      ds.field("SOURCE_HREF", &self.SOURCE_HREF());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLResourceMapAliasT {
+  pub TARGET_HREF: Option<String>,
+  pub SOURCE_HREF: Option<String>,
+}
+impl Default for KMLResourceMapAliasT {
+  fn default() -> Self {
+    Self {
+      TARGET_HREF: None,
+      SOURCE_HREF: None,
+    }
+  }
+}
+impl KMLResourceMapAliasT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLResourceMapAlias<'b>> {
+    let TARGET_HREF = self.TARGET_HREF.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SOURCE_HREF = self.SOURCE_HREF.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    KMLResourceMapAlias::create(_fbb, &KMLResourceMapAliasArgs{
+      TARGET_HREF,
+      SOURCE_HREF,
+    })
+  }
+}
+pub enum KMLModelOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// 3D Model geometry
+pub struct KMLModel<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLModel<'a> {
+  type Inner = KMLModel<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLModel<'a> {
+  pub const VT_ALTITUDE_MODE: flatbuffers::VOffsetT = 4;
+  pub const VT_LOCATION_LON: flatbuffers::VOffsetT = 6;
+  pub const VT_LOCATION_LAT: flatbuffers::VOffsetT = 8;
+  pub const VT_LOCATION_ALT: flatbuffers::VOffsetT = 10;
+  pub const VT_ORIENTATION_HEADING: flatbuffers::VOffsetT = 12;
+  pub const VT_ORIENTATION_TILT: flatbuffers::VOffsetT = 14;
+  pub const VT_ORIENTATION_ROLL: flatbuffers::VOffsetT = 16;
+  pub const VT_SCALE_X: flatbuffers::VOffsetT = 18;
+  pub const VT_SCALE_Y: flatbuffers::VOffsetT = 20;
+  pub const VT_SCALE_Z: flatbuffers::VOffsetT = 22;
+  pub const VT_LINK_HREF: flatbuffers::VOffsetT = 24;
+  pub const VT_RESOURCE_MAP: flatbuffers::VOffsetT = 26;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLModel { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLModelArgs<'args>
+  ) -> flatbuffers::WIPOffset<KMLModel<'bldr>> {
+    let mut builder = KMLModelBuilder::new(_fbb);
+    builder.add_SCALE_Z(args.SCALE_Z);
+    builder.add_SCALE_Y(args.SCALE_Y);
+    builder.add_SCALE_X(args.SCALE_X);
+    builder.add_ORIENTATION_ROLL(args.ORIENTATION_ROLL);
+    builder.add_ORIENTATION_TILT(args.ORIENTATION_TILT);
+    builder.add_ORIENTATION_HEADING(args.ORIENTATION_HEADING);
+    builder.add_LOCATION_ALT(args.LOCATION_ALT);
+    builder.add_LOCATION_LAT(args.LOCATION_LAT);
+    builder.add_LOCATION_LON(args.LOCATION_LON);
+    if let Some(x) = args.RESOURCE_MAP { builder.add_RESOURCE_MAP(x); }
+    if let Some(x) = args.LINK_HREF { builder.add_LINK_HREF(x); }
+    builder.add_ALTITUDE_MODE(args.ALTITUDE_MODE);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLModelT {
+    let ALTITUDE_MODE = self.ALTITUDE_MODE();
+    let LOCATION_LON = self.LOCATION_LON();
+    let LOCATION_LAT = self.LOCATION_LAT();
+    let LOCATION_ALT = self.LOCATION_ALT();
+    let ORIENTATION_HEADING = self.ORIENTATION_HEADING();
+    let ORIENTATION_TILT = self.ORIENTATION_TILT();
+    let ORIENTATION_ROLL = self.ORIENTATION_ROLL();
+    let SCALE_X = self.SCALE_X();
+    let SCALE_Y = self.SCALE_Y();
+    let SCALE_Z = self.SCALE_Z();
+    let LINK_HREF = self.LINK_HREF().map(|x| {
+      x.to_string()
+    });
+    let RESOURCE_MAP = self.RESOURCE_MAP().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    KMLModelT {
+      ALTITUDE_MODE,
+      LOCATION_LON,
+      LOCATION_LAT,
+      LOCATION_ALT,
+      ORIENTATION_HEADING,
+      ORIENTATION_TILT,
+      ORIENTATION_ROLL,
+      SCALE_X,
+      SCALE_Y,
+      SCALE_Z,
+      LINK_HREF,
+      RESOURCE_MAP,
+    }
+  }
+
+  /// Altitude mode
+  #[inline]
+  pub fn ALTITUDE_MODE(&self) -> KMLAltitudeMode {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<KMLAltitudeMode>(KMLModel::VT_ALTITUDE_MODE, Some(KMLAltitudeMode::CLAMP_TO_GROUND)).unwrap()}
+  }
+  /// Location longitude
+  #[inline]
+  pub fn LOCATION_LON(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLModel::VT_LOCATION_LON, Some(0.0)).unwrap()}
+  }
+  /// Location latitude
+  #[inline]
+  pub fn LOCATION_LAT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLModel::VT_LOCATION_LAT, Some(0.0)).unwrap()}
+  }
+  /// Location altitude
+  #[inline]
+  pub fn LOCATION_ALT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLModel::VT_LOCATION_ALT, Some(0.0)).unwrap()}
+  }
+  /// Orientation heading
+  #[inline]
+  pub fn ORIENTATION_HEADING(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLModel::VT_ORIENTATION_HEADING, Some(0.0)).unwrap()}
+  }
+  /// Orientation tilt
+  #[inline]
+  pub fn ORIENTATION_TILT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLModel::VT_ORIENTATION_TILT, Some(0.0)).unwrap()}
+  }
+  /// Orientation roll
+  #[inline]
+  pub fn ORIENTATION_ROLL(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLModel::VT_ORIENTATION_ROLL, Some(0.0)).unwrap()}
+  }
+  /// Scale X
+  #[inline]
+  pub fn SCALE_X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLModel::VT_SCALE_X, Some(0.0)).unwrap()}
+  }
+  /// Scale Y
+  #[inline]
+  pub fn SCALE_Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLModel::VT_SCALE_Y, Some(0.0)).unwrap()}
+  }
+  /// Scale Z
+  #[inline]
+  pub fn SCALE_Z(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLModel::VT_SCALE_Z, Some(0.0)).unwrap()}
+  }
+  /// Link to 3D model file
+  #[inline]
+  pub fn LINK_HREF(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLModel::VT_LINK_HREF, None)}
+  }
+  /// Resource map aliases
+  #[inline]
+  pub fn RESOURCE_MAP(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLResourceMapAlias<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLResourceMapAlias>>>>(KMLModel::VT_RESOURCE_MAP, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLModel<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<KMLAltitudeMode>("ALTITUDE_MODE", Self::VT_ALTITUDE_MODE, false)?
+     .visit_field::<f64>("LOCATION_LON", Self::VT_LOCATION_LON, false)?
+     .visit_field::<f64>("LOCATION_LAT", Self::VT_LOCATION_LAT, false)?
+     .visit_field::<f64>("LOCATION_ALT", Self::VT_LOCATION_ALT, false)?
+     .visit_field::<f64>("ORIENTATION_HEADING", Self::VT_ORIENTATION_HEADING, false)?
+     .visit_field::<f64>("ORIENTATION_TILT", Self::VT_ORIENTATION_TILT, false)?
+     .visit_field::<f64>("ORIENTATION_ROLL", Self::VT_ORIENTATION_ROLL, false)?
+     .visit_field::<f64>("SCALE_X", Self::VT_SCALE_X, false)?
+     .visit_field::<f64>("SCALE_Y", Self::VT_SCALE_Y, false)?
+     .visit_field::<f64>("SCALE_Z", Self::VT_SCALE_Z, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LINK_HREF", Self::VT_LINK_HREF, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLResourceMapAlias>>>>("RESOURCE_MAP", Self::VT_RESOURCE_MAP, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLModelArgs<'a> {
+    pub ALTITUDE_MODE: KMLAltitudeMode,
+    pub LOCATION_LON: f64,
+    pub LOCATION_LAT: f64,
+    pub LOCATION_ALT: f64,
+    pub ORIENTATION_HEADING: f64,
+    pub ORIENTATION_TILT: f64,
+    pub ORIENTATION_ROLL: f64,
+    pub SCALE_X: f64,
+    pub SCALE_Y: f64,
+    pub SCALE_Z: f64,
+    pub LINK_HREF: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub RESOURCE_MAP: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLResourceMapAlias<'a>>>>>,
+}
+impl<'a> Default for KMLModelArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    KMLModelArgs {
+      ALTITUDE_MODE: KMLAltitudeMode::CLAMP_TO_GROUND,
+      LOCATION_LON: 0.0,
+      LOCATION_LAT: 0.0,
+      LOCATION_ALT: 0.0,
+      ORIENTATION_HEADING: 0.0,
+      ORIENTATION_TILT: 0.0,
+      ORIENTATION_ROLL: 0.0,
+      SCALE_X: 0.0,
+      SCALE_Y: 0.0,
+      SCALE_Z: 0.0,
+      LINK_HREF: None,
+      RESOURCE_MAP: None,
+    }
+  }
+}
+
+pub struct KMLModelBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLModelBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_ALTITUDE_MODE(&mut self, ALTITUDE_MODE: KMLAltitudeMode) {
+    self.fbb_.push_slot::<KMLAltitudeMode>(KMLModel::VT_ALTITUDE_MODE, ALTITUDE_MODE, KMLAltitudeMode::CLAMP_TO_GROUND);
+  }
+  #[inline]
+  pub fn add_LOCATION_LON(&mut self, LOCATION_LON: f64) {
+    self.fbb_.push_slot::<f64>(KMLModel::VT_LOCATION_LON, LOCATION_LON, 0.0);
+  }
+  #[inline]
+  pub fn add_LOCATION_LAT(&mut self, LOCATION_LAT: f64) {
+    self.fbb_.push_slot::<f64>(KMLModel::VT_LOCATION_LAT, LOCATION_LAT, 0.0);
+  }
+  #[inline]
+  pub fn add_LOCATION_ALT(&mut self, LOCATION_ALT: f64) {
+    self.fbb_.push_slot::<f64>(KMLModel::VT_LOCATION_ALT, LOCATION_ALT, 0.0);
+  }
+  #[inline]
+  pub fn add_ORIENTATION_HEADING(&mut self, ORIENTATION_HEADING: f64) {
+    self.fbb_.push_slot::<f64>(KMLModel::VT_ORIENTATION_HEADING, ORIENTATION_HEADING, 0.0);
+  }
+  #[inline]
+  pub fn add_ORIENTATION_TILT(&mut self, ORIENTATION_TILT: f64) {
+    self.fbb_.push_slot::<f64>(KMLModel::VT_ORIENTATION_TILT, ORIENTATION_TILT, 0.0);
+  }
+  #[inline]
+  pub fn add_ORIENTATION_ROLL(&mut self, ORIENTATION_ROLL: f64) {
+    self.fbb_.push_slot::<f64>(KMLModel::VT_ORIENTATION_ROLL, ORIENTATION_ROLL, 0.0);
+  }
+  #[inline]
+  pub fn add_SCALE_X(&mut self, SCALE_X: f64) {
+    self.fbb_.push_slot::<f64>(KMLModel::VT_SCALE_X, SCALE_X, 0.0);
+  }
+  #[inline]
+  pub fn add_SCALE_Y(&mut self, SCALE_Y: f64) {
+    self.fbb_.push_slot::<f64>(KMLModel::VT_SCALE_Y, SCALE_Y, 0.0);
+  }
+  #[inline]
+  pub fn add_SCALE_Z(&mut self, SCALE_Z: f64) {
+    self.fbb_.push_slot::<f64>(KMLModel::VT_SCALE_Z, SCALE_Z, 0.0);
+  }
+  #[inline]
+  pub fn add_LINK_HREF(&mut self, LINK_HREF: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLModel::VT_LINK_HREF, LINK_HREF);
+  }
+  #[inline]
+  pub fn add_RESOURCE_MAP(&mut self, RESOURCE_MAP: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<KMLResourceMapAlias<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLModel::VT_RESOURCE_MAP, RESOURCE_MAP);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLModelBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLModelBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLModel<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLModel<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLModel");
+      ds.field("ALTITUDE_MODE", &self.ALTITUDE_MODE());
+      ds.field("LOCATION_LON", &self.LOCATION_LON());
+      ds.field("LOCATION_LAT", &self.LOCATION_LAT());
+      ds.field("LOCATION_ALT", &self.LOCATION_ALT());
+      ds.field("ORIENTATION_HEADING", &self.ORIENTATION_HEADING());
+      ds.field("ORIENTATION_TILT", &self.ORIENTATION_TILT());
+      ds.field("ORIENTATION_ROLL", &self.ORIENTATION_ROLL());
+      ds.field("SCALE_X", &self.SCALE_X());
+      ds.field("SCALE_Y", &self.SCALE_Y());
+      ds.field("SCALE_Z", &self.SCALE_Z());
+      ds.field("LINK_HREF", &self.LINK_HREF());
+      ds.field("RESOURCE_MAP", &self.RESOURCE_MAP());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLModelT {
+  pub ALTITUDE_MODE: KMLAltitudeMode,
+  pub LOCATION_LON: f64,
+  pub LOCATION_LAT: f64,
+  pub LOCATION_ALT: f64,
+  pub ORIENTATION_HEADING: f64,
+  pub ORIENTATION_TILT: f64,
+  pub ORIENTATION_ROLL: f64,
+  pub SCALE_X: f64,
+  pub SCALE_Y: f64,
+  pub SCALE_Z: f64,
+  pub LINK_HREF: Option<String>,
+  pub RESOURCE_MAP: Option<Vec<KMLResourceMapAliasT>>,
+}
+impl Default for KMLModelT {
+  fn default() -> Self {
+    Self {
+      ALTITUDE_MODE: KMLAltitudeMode::CLAMP_TO_GROUND,
+      LOCATION_LON: 0.0,
+      LOCATION_LAT: 0.0,
+      LOCATION_ALT: 0.0,
+      ORIENTATION_HEADING: 0.0,
+      ORIENTATION_TILT: 0.0,
+      ORIENTATION_ROLL: 0.0,
+      SCALE_X: 0.0,
+      SCALE_Y: 0.0,
+      SCALE_Z: 0.0,
+      LINK_HREF: None,
+      RESOURCE_MAP: None,
+    }
+  }
+}
+impl KMLModelT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLModel<'b>> {
+    let ALTITUDE_MODE = self.ALTITUDE_MODE;
+    let LOCATION_LON = self.LOCATION_LON;
+    let LOCATION_LAT = self.LOCATION_LAT;
+    let LOCATION_ALT = self.LOCATION_ALT;
+    let ORIENTATION_HEADING = self.ORIENTATION_HEADING;
+    let ORIENTATION_TILT = self.ORIENTATION_TILT;
+    let ORIENTATION_ROLL = self.ORIENTATION_ROLL;
+    let SCALE_X = self.SCALE_X;
+    let SCALE_Y = self.SCALE_Y;
+    let SCALE_Z = self.SCALE_Z;
+    let LINK_HREF = self.LINK_HREF.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let RESOURCE_MAP = self.RESOURCE_MAP.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    KMLModel::create(_fbb, &KMLModelArgs{
+      ALTITUDE_MODE,
+      LOCATION_LON,
+      LOCATION_LAT,
+      LOCATION_ALT,
+      ORIENTATION_HEADING,
+      ORIENTATION_TILT,
+      ORIENTATION_ROLL,
+      SCALE_X,
+      SCALE_Y,
+      SCALE_Z,
+      LINK_HREF,
+      RESOURCE_MAP,
+    })
+  }
+}
+pub enum KMLTrackOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// gx:Track — time-stamped position track
+pub struct KMLTrack<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLTrack<'a> {
+  type Inner = KMLTrack<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLTrack<'a> {
+  pub const VT_EXTRUDE: flatbuffers::VOffsetT = 4;
+  pub const VT_TESSELLATE: flatbuffers::VOffsetT = 6;
+  pub const VT_ALTITUDE_MODE: flatbuffers::VOffsetT = 8;
+  pub const VT_WHEN: flatbuffers::VOffsetT = 10;
+  pub const VT_COORDS: flatbuffers::VOffsetT = 12;
+  pub const VT_ANGLES: flatbuffers::VOffsetT = 14;
+  pub const VT_MODEL: flatbuffers::VOffsetT = 16;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLTrack { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLTrackArgs<'args>
+  ) -> flatbuffers::WIPOffset<KMLTrack<'bldr>> {
+    let mut builder = KMLTrackBuilder::new(_fbb);
+    if let Some(x) = args.MODEL { builder.add_MODEL(x); }
+    if let Some(x) = args.ANGLES { builder.add_ANGLES(x); }
+    if let Some(x) = args.COORDS { builder.add_COORDS(x); }
+    if let Some(x) = args.WHEN { builder.add_WHEN(x); }
+    builder.add_ALTITUDE_MODE(args.ALTITUDE_MODE);
+    builder.add_TESSELLATE(args.TESSELLATE);
+    builder.add_EXTRUDE(args.EXTRUDE);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLTrackT {
+    let EXTRUDE = self.EXTRUDE();
+    let TESSELLATE = self.TESSELLATE();
+    let ALTITUDE_MODE = self.ALTITUDE_MODE();
+    let WHEN = self.WHEN().map(|x| {
+      x.iter().map(|s| s.to_string()).collect()
+    });
+    let COORDS = self.COORDS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let ANGLES = self.ANGLES().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let MODEL = self.MODEL().map(|x| {
+      Box::new(x.unpack())
+    });
+    KMLTrackT {
+      EXTRUDE,
+      TESSELLATE,
+      ALTITUDE_MODE,
+      WHEN,
+      COORDS,
+      ANGLES,
+      MODEL,
+    }
+  }
+
+  /// Whether to extrude
+  #[inline]
+  pub fn EXTRUDE(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(KMLTrack::VT_EXTRUDE, Some(false)).unwrap()}
+  }
+  /// Whether to tessellate
+  #[inline]
+  pub fn TESSELLATE(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(KMLTrack::VT_TESSELLATE, Some(false)).unwrap()}
+  }
+  /// Altitude mode
+  #[inline]
+  pub fn ALTITUDE_MODE(&self) -> KMLAltitudeMode {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<KMLAltitudeMode>(KMLTrack::VT_ALTITUDE_MODE, Some(KMLAltitudeMode::CLAMP_TO_GROUND)).unwrap()}
+  }
+  /// Time stamps (ISO 8601)
+  #[inline]
+  pub fn WHEN(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(KMLTrack::VT_WHEN, None)}
+  }
+  /// Coordinates (lon lat alt per entry)
+  #[inline]
+  pub fn COORDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLCoordinate<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLCoordinate>>>>(KMLTrack::VT_COORDS, None)}
+  }
+  /// Angles (heading tilt roll per entry)
+  #[inline]
+  pub fn ANGLES(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLCoordinate<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLCoordinate>>>>(KMLTrack::VT_ANGLES, None)}
+  }
+  /// Model for track visualization
+  #[inline]
+  pub fn MODEL(&self) -> Option<KMLModel<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLModel>>(KMLTrack::VT_MODEL, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLTrack<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<bool>("EXTRUDE", Self::VT_EXTRUDE, false)?
+     .visit_field::<bool>("TESSELLATE", Self::VT_TESSELLATE, false)?
+     .visit_field::<KMLAltitudeMode>("ALTITUDE_MODE", Self::VT_ALTITUDE_MODE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("WHEN", Self::VT_WHEN, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLCoordinate>>>>("COORDS", Self::VT_COORDS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLCoordinate>>>>("ANGLES", Self::VT_ANGLES, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLModel>>("MODEL", Self::VT_MODEL, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLTrackArgs<'a> {
+    pub EXTRUDE: bool,
+    pub TESSELLATE: bool,
+    pub ALTITUDE_MODE: KMLAltitudeMode,
+    pub WHEN: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub COORDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLCoordinate<'a>>>>>,
+    pub ANGLES: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLCoordinate<'a>>>>>,
+    pub MODEL: Option<flatbuffers::WIPOffset<KMLModel<'a>>>,
+}
+impl<'a> Default for KMLTrackArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    KMLTrackArgs {
+      EXTRUDE: false,
+      TESSELLATE: false,
+      ALTITUDE_MODE: KMLAltitudeMode::CLAMP_TO_GROUND,
+      WHEN: None,
+      COORDS: None,
+      ANGLES: None,
+      MODEL: None,
+    }
+  }
+}
+
+pub struct KMLTrackBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLTrackBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_EXTRUDE(&mut self, EXTRUDE: bool) {
+    self.fbb_.push_slot::<bool>(KMLTrack::VT_EXTRUDE, EXTRUDE, false);
+  }
+  #[inline]
+  pub fn add_TESSELLATE(&mut self, TESSELLATE: bool) {
+    self.fbb_.push_slot::<bool>(KMLTrack::VT_TESSELLATE, TESSELLATE, false);
+  }
+  #[inline]
+  pub fn add_ALTITUDE_MODE(&mut self, ALTITUDE_MODE: KMLAltitudeMode) {
+    self.fbb_.push_slot::<KMLAltitudeMode>(KMLTrack::VT_ALTITUDE_MODE, ALTITUDE_MODE, KMLAltitudeMode::CLAMP_TO_GROUND);
+  }
+  #[inline]
+  pub fn add_WHEN(&mut self, WHEN: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLTrack::VT_WHEN, WHEN);
+  }
+  #[inline]
+  pub fn add_COORDS(&mut self, COORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<KMLCoordinate<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLTrack::VT_COORDS, COORDS);
+  }
+  #[inline]
+  pub fn add_ANGLES(&mut self, ANGLES: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<KMLCoordinate<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLTrack::VT_ANGLES, ANGLES);
+  }
+  #[inline]
+  pub fn add_MODEL(&mut self, MODEL: flatbuffers::WIPOffset<KMLModel<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLModel>>(KMLTrack::VT_MODEL, MODEL);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLTrackBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLTrackBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLTrack<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLTrack<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLTrack");
+      ds.field("EXTRUDE", &self.EXTRUDE());
+      ds.field("TESSELLATE", &self.TESSELLATE());
+      ds.field("ALTITUDE_MODE", &self.ALTITUDE_MODE());
+      ds.field("WHEN", &self.WHEN());
+      ds.field("COORDS", &self.COORDS());
+      ds.field("ANGLES", &self.ANGLES());
+      ds.field("MODEL", &self.MODEL());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLTrackT {
+  pub EXTRUDE: bool,
+  pub TESSELLATE: bool,
+  pub ALTITUDE_MODE: KMLAltitudeMode,
+  pub WHEN: Option<Vec<String>>,
+  pub COORDS: Option<Vec<KMLCoordinateT>>,
+  pub ANGLES: Option<Vec<KMLCoordinateT>>,
+  pub MODEL: Option<Box<KMLModelT>>,
+}
+impl Default for KMLTrackT {
+  fn default() -> Self {
+    Self {
+      EXTRUDE: false,
+      TESSELLATE: false,
+      ALTITUDE_MODE: KMLAltitudeMode::CLAMP_TO_GROUND,
+      WHEN: None,
+      COORDS: None,
+      ANGLES: None,
+      MODEL: None,
+    }
+  }
+}
+impl KMLTrackT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLTrack<'b>> {
+    let EXTRUDE = self.EXTRUDE;
+    let TESSELLATE = self.TESSELLATE;
+    let ALTITUDE_MODE = self.ALTITUDE_MODE;
+    let WHEN = self.WHEN.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let COORDS = self.COORDS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let ANGLES = self.ANGLES.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let MODEL = self.MODEL.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    KMLTrack::create(_fbb, &KMLTrackArgs{
+      EXTRUDE,
+      TESSELLATE,
+      ALTITUDE_MODE,
+      WHEN,
+      COORDS,
+      ANGLES,
+      MODEL,
+    })
+  }
+}
+pub enum KMLMultiTrackOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// gx:MultiTrack
+pub struct KMLMultiTrack<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLMultiTrack<'a> {
+  type Inner = KMLMultiTrack<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLMultiTrack<'a> {
+  pub const VT_ALTITUDE_MODE: flatbuffers::VOffsetT = 4;
+  pub const VT_INTERPOLATE: flatbuffers::VOffsetT = 6;
+  pub const VT_TRACKS: flatbuffers::VOffsetT = 8;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLMultiTrack { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLMultiTrackArgs<'args>
+  ) -> flatbuffers::WIPOffset<KMLMultiTrack<'bldr>> {
+    let mut builder = KMLMultiTrackBuilder::new(_fbb);
+    if let Some(x) = args.TRACKS { builder.add_TRACKS(x); }
+    builder.add_INTERPOLATE(args.INTERPOLATE);
+    builder.add_ALTITUDE_MODE(args.ALTITUDE_MODE);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLMultiTrackT {
+    let ALTITUDE_MODE = self.ALTITUDE_MODE();
+    let INTERPOLATE = self.INTERPOLATE();
+    let TRACKS = self.TRACKS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    KMLMultiTrackT {
+      ALTITUDE_MODE,
+      INTERPOLATE,
+      TRACKS,
+    }
+  }
+
+  /// Altitude mode
+  #[inline]
+  pub fn ALTITUDE_MODE(&self) -> KMLAltitudeMode {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<KMLAltitudeMode>(KMLMultiTrack::VT_ALTITUDE_MODE, Some(KMLAltitudeMode::CLAMP_TO_GROUND)).unwrap()}
+  }
+  /// Whether to interpolate between tracks
+  #[inline]
+  pub fn INTERPOLATE(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(KMLMultiTrack::VT_INTERPOLATE, Some(false)).unwrap()}
+  }
+  /// Child tracks
+  #[inline]
+  pub fn TRACKS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLTrack<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLTrack>>>>(KMLMultiTrack::VT_TRACKS, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLMultiTrack<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<KMLAltitudeMode>("ALTITUDE_MODE", Self::VT_ALTITUDE_MODE, false)?
+     .visit_field::<bool>("INTERPOLATE", Self::VT_INTERPOLATE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLTrack>>>>("TRACKS", Self::VT_TRACKS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLMultiTrackArgs<'a> {
+    pub ALTITUDE_MODE: KMLAltitudeMode,
+    pub INTERPOLATE: bool,
+    pub TRACKS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLTrack<'a>>>>>,
+}
+impl<'a> Default for KMLMultiTrackArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    KMLMultiTrackArgs {
+      ALTITUDE_MODE: KMLAltitudeMode::CLAMP_TO_GROUND,
+      INTERPOLATE: false,
+      TRACKS: None,
+    }
+  }
+}
+
+pub struct KMLMultiTrackBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLMultiTrackBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_ALTITUDE_MODE(&mut self, ALTITUDE_MODE: KMLAltitudeMode) {
+    self.fbb_.push_slot::<KMLAltitudeMode>(KMLMultiTrack::VT_ALTITUDE_MODE, ALTITUDE_MODE, KMLAltitudeMode::CLAMP_TO_GROUND);
+  }
+  #[inline]
+  pub fn add_INTERPOLATE(&mut self, INTERPOLATE: bool) {
+    self.fbb_.push_slot::<bool>(KMLMultiTrack::VT_INTERPOLATE, INTERPOLATE, false);
+  }
+  #[inline]
+  pub fn add_TRACKS(&mut self, TRACKS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<KMLTrack<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLMultiTrack::VT_TRACKS, TRACKS);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLMultiTrackBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLMultiTrackBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLMultiTrack<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLMultiTrack<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLMultiTrack");
+      ds.field("ALTITUDE_MODE", &self.ALTITUDE_MODE());
+      ds.field("INTERPOLATE", &self.INTERPOLATE());
+      ds.field("TRACKS", &self.TRACKS());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLMultiTrackT {
+  pub ALTITUDE_MODE: KMLAltitudeMode,
+  pub INTERPOLATE: bool,
+  pub TRACKS: Option<Vec<KMLTrackT>>,
+}
+impl Default for KMLMultiTrackT {
+  fn default() -> Self {
+    Self {
+      ALTITUDE_MODE: KMLAltitudeMode::CLAMP_TO_GROUND,
+      INTERPOLATE: false,
+      TRACKS: None,
+    }
+  }
+}
+impl KMLMultiTrackT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLMultiTrack<'b>> {
+    let ALTITUDE_MODE = self.ALTITUDE_MODE;
+    let INTERPOLATE = self.INTERPOLATE;
+    let TRACKS = self.TRACKS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    KMLMultiTrack::create(_fbb, &KMLMultiTrackArgs{
+      ALTITUDE_MODE,
+      INTERPOLATE,
+      TRACKS,
+    })
+  }
+}
 pub enum KMLMultiGeometryOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -3709,6 +5790,10 @@ impl<'a> KMLMultiGeometry<'a> {
   pub const VT_LINE_STRINGS: flatbuffers::VOffsetT = 6;
   pub const VT_POLYGONS: flatbuffers::VOffsetT = 8;
   pub const VT_MULTI_GEOMETRIES: flatbuffers::VOffsetT = 10;
+  pub const VT_LINEAR_RINGS: flatbuffers::VOffsetT = 12;
+  pub const VT_MODELS: flatbuffers::VOffsetT = 14;
+  pub const VT_TRACKS: flatbuffers::VOffsetT = 16;
+  pub const VT_MULTI_TRACKS: flatbuffers::VOffsetT = 18;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -3720,6 +5805,10 @@ impl<'a> KMLMultiGeometry<'a> {
     args: &'args KMLMultiGeometryArgs<'args>
   ) -> flatbuffers::WIPOffset<KMLMultiGeometry<'bldr>> {
     let mut builder = KMLMultiGeometryBuilder::new(_fbb);
+    if let Some(x) = args.MULTI_TRACKS { builder.add_MULTI_TRACKS(x); }
+    if let Some(x) = args.TRACKS { builder.add_TRACKS(x); }
+    if let Some(x) = args.MODELS { builder.add_MODELS(x); }
+    if let Some(x) = args.LINEAR_RINGS { builder.add_LINEAR_RINGS(x); }
     if let Some(x) = args.MULTI_GEOMETRIES { builder.add_MULTI_GEOMETRIES(x); }
     if let Some(x) = args.POLYGONS { builder.add_POLYGONS(x); }
     if let Some(x) = args.LINE_STRINGS { builder.add_LINE_STRINGS(x); }
@@ -3740,11 +5829,27 @@ impl<'a> KMLMultiGeometry<'a> {
     let MULTI_GEOMETRIES = self.MULTI_GEOMETRIES().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
+    let LINEAR_RINGS = self.LINEAR_RINGS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let MODELS = self.MODELS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let TRACKS = self.TRACKS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let MULTI_TRACKS = self.MULTI_TRACKS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
     KMLMultiGeometryT {
       POINTS,
       LINE_STRINGS,
       POLYGONS,
       MULTI_GEOMETRIES,
+      LINEAR_RINGS,
+      MODELS,
+      TRACKS,
+      MULTI_TRACKS,
     }
   }
 
@@ -3780,6 +5885,38 @@ impl<'a> KMLMultiGeometry<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLMultiGeometry>>>>(KMLMultiGeometry::VT_MULTI_GEOMETRIES, None)}
   }
+  /// Child linear rings (standalone)
+  #[inline]
+  pub fn LINEAR_RINGS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLLinearRing<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLLinearRing>>>>(KMLMultiGeometry::VT_LINEAR_RINGS, None)}
+  }
+  /// Child 3D models
+  #[inline]
+  pub fn MODELS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLModel<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLModel>>>>(KMLMultiGeometry::VT_MODELS, None)}
+  }
+  /// Child tracks
+  #[inline]
+  pub fn TRACKS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLTrack<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLTrack>>>>(KMLMultiGeometry::VT_TRACKS, None)}
+  }
+  /// Child multi-tracks
+  #[inline]
+  pub fn MULTI_TRACKS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLMultiTrack<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLMultiTrack>>>>(KMLMultiGeometry::VT_MULTI_TRACKS, None)}
+  }
 }
 
 impl flatbuffers::Verifiable for KMLMultiGeometry<'_> {
@@ -3793,6 +5930,10 @@ impl flatbuffers::Verifiable for KMLMultiGeometry<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLLineString>>>>("LINE_STRINGS", Self::VT_LINE_STRINGS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLPolygon>>>>("POLYGONS", Self::VT_POLYGONS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLMultiGeometry>>>>("MULTI_GEOMETRIES", Self::VT_MULTI_GEOMETRIES, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLLinearRing>>>>("LINEAR_RINGS", Self::VT_LINEAR_RINGS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLModel>>>>("MODELS", Self::VT_MODELS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLTrack>>>>("TRACKS", Self::VT_TRACKS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLMultiTrack>>>>("MULTI_TRACKS", Self::VT_MULTI_TRACKS, false)?
      .finish();
     Ok(())
   }
@@ -3802,6 +5943,10 @@ pub struct KMLMultiGeometryArgs<'a> {
     pub LINE_STRINGS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLLineString<'a>>>>>,
     pub POLYGONS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLPolygon<'a>>>>>,
     pub MULTI_GEOMETRIES: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLMultiGeometry<'a>>>>>,
+    pub LINEAR_RINGS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLLinearRing<'a>>>>>,
+    pub MODELS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLModel<'a>>>>>,
+    pub TRACKS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLTrack<'a>>>>>,
+    pub MULTI_TRACKS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLMultiTrack<'a>>>>>,
 }
 impl<'a> Default for KMLMultiGeometryArgs<'a> {
   #[inline]
@@ -3811,6 +5956,10 @@ impl<'a> Default for KMLMultiGeometryArgs<'a> {
       LINE_STRINGS: None,
       POLYGONS: None,
       MULTI_GEOMETRIES: None,
+      LINEAR_RINGS: None,
+      MODELS: None,
+      TRACKS: None,
+      MULTI_TRACKS: None,
     }
   }
 }
@@ -3837,6 +5986,22 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLMultiGeometryBuilder<'a, 'b,
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLMultiGeometry::VT_MULTI_GEOMETRIES, MULTI_GEOMETRIES);
   }
   #[inline]
+  pub fn add_LINEAR_RINGS(&mut self, LINEAR_RINGS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<KMLLinearRing<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLMultiGeometry::VT_LINEAR_RINGS, LINEAR_RINGS);
+  }
+  #[inline]
+  pub fn add_MODELS(&mut self, MODELS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<KMLModel<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLMultiGeometry::VT_MODELS, MODELS);
+  }
+  #[inline]
+  pub fn add_TRACKS(&mut self, TRACKS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<KMLTrack<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLMultiGeometry::VT_TRACKS, TRACKS);
+  }
+  #[inline]
+  pub fn add_MULTI_TRACKS(&mut self, MULTI_TRACKS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<KMLMultiTrack<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLMultiGeometry::VT_MULTI_TRACKS, MULTI_TRACKS);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLMultiGeometryBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     KMLMultiGeometryBuilder {
@@ -3858,6 +6023,10 @@ impl core::fmt::Debug for KMLMultiGeometry<'_> {
       ds.field("LINE_STRINGS", &self.LINE_STRINGS());
       ds.field("POLYGONS", &self.POLYGONS());
       ds.field("MULTI_GEOMETRIES", &self.MULTI_GEOMETRIES());
+      ds.field("LINEAR_RINGS", &self.LINEAR_RINGS());
+      ds.field("MODELS", &self.MODELS());
+      ds.field("TRACKS", &self.TRACKS());
+      ds.field("MULTI_TRACKS", &self.MULTI_TRACKS());
       ds.finish()
   }
 }
@@ -3868,6 +6037,10 @@ pub struct KMLMultiGeometryT {
   pub LINE_STRINGS: Option<Vec<KMLLineStringT>>,
   pub POLYGONS: Option<Vec<KMLPolygonT>>,
   pub MULTI_GEOMETRIES: Option<Vec<KMLMultiGeometryT>>,
+  pub LINEAR_RINGS: Option<Vec<KMLLinearRingT>>,
+  pub MODELS: Option<Vec<KMLModelT>>,
+  pub TRACKS: Option<Vec<KMLTrackT>>,
+  pub MULTI_TRACKS: Option<Vec<KMLMultiTrackT>>,
 }
 impl Default for KMLMultiGeometryT {
   fn default() -> Self {
@@ -3876,6 +6049,10 @@ impl Default for KMLMultiGeometryT {
       LINE_STRINGS: None,
       POLYGONS: None,
       MULTI_GEOMETRIES: None,
+      LINEAR_RINGS: None,
+      MODELS: None,
+      TRACKS: None,
+      MULTI_TRACKS: None,
     }
   }
 }
@@ -3896,11 +6073,27 @@ impl KMLMultiGeometryT {
     let MULTI_GEOMETRIES = self.MULTI_GEOMETRIES.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
+    let LINEAR_RINGS = self.LINEAR_RINGS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let MODELS = self.MODELS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let TRACKS = self.TRACKS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let MULTI_TRACKS = self.MULTI_TRACKS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
     KMLMultiGeometry::create(_fbb, &KMLMultiGeometryArgs{
       POINTS,
       LINE_STRINGS,
       POLYGONS,
       MULTI_GEOMETRIES,
+      LINEAR_RINGS,
+      MODELS,
+      TRACKS,
+      MULTI_TRACKS,
     })
   }
 }
@@ -4384,6 +6577,2198 @@ impl KMLDataT {
     })
   }
 }
+pub enum KMLSimpleFieldOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Schema simple field definition
+pub struct KMLSimpleField<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLSimpleField<'a> {
+  type Inner = KMLSimpleField<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLSimpleField<'a> {
+  pub const VT_NAME: flatbuffers::VOffsetT = 4;
+  pub const VT_FIELD_TYPE: flatbuffers::VOffsetT = 6;
+  pub const VT_DISPLAY_NAME: flatbuffers::VOffsetT = 8;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLSimpleField { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLSimpleFieldArgs<'args>
+  ) -> flatbuffers::WIPOffset<KMLSimpleField<'bldr>> {
+    let mut builder = KMLSimpleFieldBuilder::new(_fbb);
+    if let Some(x) = args.DISPLAY_NAME { builder.add_DISPLAY_NAME(x); }
+    if let Some(x) = args.FIELD_TYPE { builder.add_FIELD_TYPE(x); }
+    if let Some(x) = args.NAME { builder.add_NAME(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLSimpleFieldT {
+    let NAME = self.NAME().map(|x| {
+      x.to_string()
+    });
+    let FIELD_TYPE = self.FIELD_TYPE().map(|x| {
+      x.to_string()
+    });
+    let DISPLAY_NAME = self.DISPLAY_NAME().map(|x| {
+      x.to_string()
+    });
+    KMLSimpleFieldT {
+      NAME,
+      FIELD_TYPE,
+      DISPLAY_NAME,
+    }
+  }
+
+  /// Field name
+  #[inline]
+  pub fn NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLSimpleField::VT_NAME, None)}
+  }
+  /// Field type (xsd:string, xsd:int, xsd:float, etc.)
+  #[inline]
+  pub fn FIELD_TYPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLSimpleField::VT_FIELD_TYPE, None)}
+  }
+  /// Display name
+  #[inline]
+  pub fn DISPLAY_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLSimpleField::VT_DISPLAY_NAME, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLSimpleField<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("FIELD_TYPE", Self::VT_FIELD_TYPE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DISPLAY_NAME", Self::VT_DISPLAY_NAME, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLSimpleFieldArgs<'a> {
+    pub NAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub FIELD_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub DISPLAY_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for KMLSimpleFieldArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    KMLSimpleFieldArgs {
+      NAME: None,
+      FIELD_TYPE: None,
+      DISPLAY_NAME: None,
+    }
+  }
+}
+
+pub struct KMLSimpleFieldBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLSimpleFieldBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_NAME(&mut self, NAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLSimpleField::VT_NAME, NAME);
+  }
+  #[inline]
+  pub fn add_FIELD_TYPE(&mut self, FIELD_TYPE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLSimpleField::VT_FIELD_TYPE, FIELD_TYPE);
+  }
+  #[inline]
+  pub fn add_DISPLAY_NAME(&mut self, DISPLAY_NAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLSimpleField::VT_DISPLAY_NAME, DISPLAY_NAME);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLSimpleFieldBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLSimpleFieldBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLSimpleField<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLSimpleField<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLSimpleField");
+      ds.field("NAME", &self.NAME());
+      ds.field("FIELD_TYPE", &self.FIELD_TYPE());
+      ds.field("DISPLAY_NAME", &self.DISPLAY_NAME());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLSimpleFieldT {
+  pub NAME: Option<String>,
+  pub FIELD_TYPE: Option<String>,
+  pub DISPLAY_NAME: Option<String>,
+}
+impl Default for KMLSimpleFieldT {
+  fn default() -> Self {
+    Self {
+      NAME: None,
+      FIELD_TYPE: None,
+      DISPLAY_NAME: None,
+    }
+  }
+}
+impl KMLSimpleFieldT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLSimpleField<'b>> {
+    let NAME = self.NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let FIELD_TYPE = self.FIELD_TYPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DISPLAY_NAME = self.DISPLAY_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    KMLSimpleField::create(_fbb, &KMLSimpleFieldArgs{
+      NAME,
+      FIELD_TYPE,
+      DISPLAY_NAME,
+    })
+  }
+}
+pub enum KMLSchemaOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Schema definition
+pub struct KMLSchema<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLSchema<'a> {
+  type Inner = KMLSchema<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLSchema<'a> {
+  pub const VT_NAME: flatbuffers::VOffsetT = 4;
+  pub const VT_ID: flatbuffers::VOffsetT = 6;
+  pub const VT_SIMPLE_FIELDS: flatbuffers::VOffsetT = 8;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLSchema { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLSchemaArgs<'args>
+  ) -> flatbuffers::WIPOffset<KMLSchema<'bldr>> {
+    let mut builder = KMLSchemaBuilder::new(_fbb);
+    if let Some(x) = args.SIMPLE_FIELDS { builder.add_SIMPLE_FIELDS(x); }
+    if let Some(x) = args.ID { builder.add_ID(x); }
+    if let Some(x) = args.NAME { builder.add_NAME(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLSchemaT {
+    let NAME = self.NAME().map(|x| {
+      x.to_string()
+    });
+    let ID = self.ID().map(|x| {
+      x.to_string()
+    });
+    let SIMPLE_FIELDS = self.SIMPLE_FIELDS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    KMLSchemaT {
+      NAME,
+      ID,
+      SIMPLE_FIELDS,
+    }
+  }
+
+  /// Schema name
+  #[inline]
+  pub fn NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLSchema::VT_NAME, None)}
+  }
+  /// Schema ID
+  #[inline]
+  pub fn ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLSchema::VT_ID, None)}
+  }
+  /// Simple field definitions
+  #[inline]
+  pub fn SIMPLE_FIELDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLSimpleField<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLSimpleField>>>>(KMLSchema::VT_SIMPLE_FIELDS, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLSchema<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLSimpleField>>>>("SIMPLE_FIELDS", Self::VT_SIMPLE_FIELDS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLSchemaArgs<'a> {
+    pub NAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SIMPLE_FIELDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLSimpleField<'a>>>>>,
+}
+impl<'a> Default for KMLSchemaArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    KMLSchemaArgs {
+      NAME: None,
+      ID: None,
+      SIMPLE_FIELDS: None,
+    }
+  }
+}
+
+pub struct KMLSchemaBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLSchemaBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_NAME(&mut self, NAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLSchema::VT_NAME, NAME);
+  }
+  #[inline]
+  pub fn add_ID(&mut self, ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLSchema::VT_ID, ID);
+  }
+  #[inline]
+  pub fn add_SIMPLE_FIELDS(&mut self, SIMPLE_FIELDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<KMLSimpleField<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLSchema::VT_SIMPLE_FIELDS, SIMPLE_FIELDS);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLSchemaBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLSchemaBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLSchema<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLSchema<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLSchema");
+      ds.field("NAME", &self.NAME());
+      ds.field("ID", &self.ID());
+      ds.field("SIMPLE_FIELDS", &self.SIMPLE_FIELDS());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLSchemaT {
+  pub NAME: Option<String>,
+  pub ID: Option<String>,
+  pub SIMPLE_FIELDS: Option<Vec<KMLSimpleFieldT>>,
+}
+impl Default for KMLSchemaT {
+  fn default() -> Self {
+    Self {
+      NAME: None,
+      ID: None,
+      SIMPLE_FIELDS: None,
+    }
+  }
+}
+impl KMLSchemaT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLSchema<'b>> {
+    let NAME = self.NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ID = self.ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SIMPLE_FIELDS = self.SIMPLE_FIELDS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    KMLSchema::create(_fbb, &KMLSchemaArgs{
+      NAME,
+      ID,
+      SIMPLE_FIELDS,
+    })
+  }
+}
+pub enum KMLSimpleDataOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Simple data value for SchemaData
+pub struct KMLSimpleData<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLSimpleData<'a> {
+  type Inner = KMLSimpleData<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLSimpleData<'a> {
+  pub const VT_NAME: flatbuffers::VOffsetT = 4;
+  pub const VT_VALUE: flatbuffers::VOffsetT = 6;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLSimpleData { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLSimpleDataArgs<'args>
+  ) -> flatbuffers::WIPOffset<KMLSimpleData<'bldr>> {
+    let mut builder = KMLSimpleDataBuilder::new(_fbb);
+    if let Some(x) = args.VALUE { builder.add_VALUE(x); }
+    if let Some(x) = args.NAME { builder.add_NAME(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLSimpleDataT {
+    let NAME = self.NAME().map(|x| {
+      x.to_string()
+    });
+    let VALUE = self.VALUE().map(|x| {
+      x.to_string()
+    });
+    KMLSimpleDataT {
+      NAME,
+      VALUE,
+    }
+  }
+
+  /// Field name
+  #[inline]
+  pub fn NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLSimpleData::VT_NAME, None)}
+  }
+  /// Field value
+  #[inline]
+  pub fn VALUE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLSimpleData::VT_VALUE, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLSimpleData<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("VALUE", Self::VT_VALUE, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLSimpleDataArgs<'a> {
+    pub NAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub VALUE: Option<flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for KMLSimpleDataArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    KMLSimpleDataArgs {
+      NAME: None,
+      VALUE: None,
+    }
+  }
+}
+
+pub struct KMLSimpleDataBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLSimpleDataBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_NAME(&mut self, NAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLSimpleData::VT_NAME, NAME);
+  }
+  #[inline]
+  pub fn add_VALUE(&mut self, VALUE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLSimpleData::VT_VALUE, VALUE);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLSimpleDataBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLSimpleDataBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLSimpleData<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLSimpleData<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLSimpleData");
+      ds.field("NAME", &self.NAME());
+      ds.field("VALUE", &self.VALUE());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLSimpleDataT {
+  pub NAME: Option<String>,
+  pub VALUE: Option<String>,
+}
+impl Default for KMLSimpleDataT {
+  fn default() -> Self {
+    Self {
+      NAME: None,
+      VALUE: None,
+    }
+  }
+}
+impl KMLSimpleDataT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLSimpleData<'b>> {
+    let NAME = self.NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let VALUE = self.VALUE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    KMLSimpleData::create(_fbb, &KMLSimpleDataArgs{
+      NAME,
+      VALUE,
+    })
+  }
+}
+pub enum KMLSchemaDataOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Schema data reference
+pub struct KMLSchemaData<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLSchemaData<'a> {
+  type Inner = KMLSchemaData<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLSchemaData<'a> {
+  pub const VT_SCHEMA_URL: flatbuffers::VOffsetT = 4;
+  pub const VT_SIMPLE_DATA: flatbuffers::VOffsetT = 6;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLSchemaData { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLSchemaDataArgs<'args>
+  ) -> flatbuffers::WIPOffset<KMLSchemaData<'bldr>> {
+    let mut builder = KMLSchemaDataBuilder::new(_fbb);
+    if let Some(x) = args.SIMPLE_DATA { builder.add_SIMPLE_DATA(x); }
+    if let Some(x) = args.SCHEMA_URL { builder.add_SCHEMA_URL(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLSchemaDataT {
+    let SCHEMA_URL = self.SCHEMA_URL().map(|x| {
+      x.to_string()
+    });
+    let SIMPLE_DATA = self.SIMPLE_DATA().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    KMLSchemaDataT {
+      SCHEMA_URL,
+      SIMPLE_DATA,
+    }
+  }
+
+  /// Schema URL reference
+  #[inline]
+  pub fn SCHEMA_URL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLSchemaData::VT_SCHEMA_URL, None)}
+  }
+  /// Simple data values
+  #[inline]
+  pub fn SIMPLE_DATA(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLSimpleData<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLSimpleData>>>>(KMLSchemaData::VT_SIMPLE_DATA, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLSchemaData<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SCHEMA_URL", Self::VT_SCHEMA_URL, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLSimpleData>>>>("SIMPLE_DATA", Self::VT_SIMPLE_DATA, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLSchemaDataArgs<'a> {
+    pub SCHEMA_URL: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SIMPLE_DATA: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLSimpleData<'a>>>>>,
+}
+impl<'a> Default for KMLSchemaDataArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    KMLSchemaDataArgs {
+      SCHEMA_URL: None,
+      SIMPLE_DATA: None,
+    }
+  }
+}
+
+pub struct KMLSchemaDataBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLSchemaDataBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_SCHEMA_URL(&mut self, SCHEMA_URL: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLSchemaData::VT_SCHEMA_URL, SCHEMA_URL);
+  }
+  #[inline]
+  pub fn add_SIMPLE_DATA(&mut self, SIMPLE_DATA: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<KMLSimpleData<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLSchemaData::VT_SIMPLE_DATA, SIMPLE_DATA);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLSchemaDataBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLSchemaDataBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLSchemaData<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLSchemaData<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLSchemaData");
+      ds.field("SCHEMA_URL", &self.SCHEMA_URL());
+      ds.field("SIMPLE_DATA", &self.SIMPLE_DATA());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLSchemaDataT {
+  pub SCHEMA_URL: Option<String>,
+  pub SIMPLE_DATA: Option<Vec<KMLSimpleDataT>>,
+}
+impl Default for KMLSchemaDataT {
+  fn default() -> Self {
+    Self {
+      SCHEMA_URL: None,
+      SIMPLE_DATA: None,
+    }
+  }
+}
+impl KMLSchemaDataT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLSchemaData<'b>> {
+    let SCHEMA_URL = self.SCHEMA_URL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SIMPLE_DATA = self.SIMPLE_DATA.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    KMLSchemaData::create(_fbb, &KMLSchemaDataArgs{
+      SCHEMA_URL,
+      SIMPLE_DATA,
+    })
+  }
+}
+pub enum KMLLatLonQuadOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// LatLonQuad — four corner coordinates for ground overlay
+pub struct KMLLatLonQuad<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLLatLonQuad<'a> {
+  type Inner = KMLLatLonQuad<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLLatLonQuad<'a> {
+  pub const VT_COORDINATES: flatbuffers::VOffsetT = 4;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLLatLonQuad { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLLatLonQuadArgs<'args>
+  ) -> flatbuffers::WIPOffset<KMLLatLonQuad<'bldr>> {
+    let mut builder = KMLLatLonQuadBuilder::new(_fbb);
+    if let Some(x) = args.COORDINATES { builder.add_COORDINATES(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLLatLonQuadT {
+    let COORDINATES = self.COORDINATES().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    KMLLatLonQuadT {
+      COORDINATES,
+    }
+  }
+
+  /// Four corner coordinates
+  #[inline]
+  pub fn COORDINATES(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLCoordinate<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLCoordinate>>>>(KMLLatLonQuad::VT_COORDINATES, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLLatLonQuad<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLCoordinate>>>>("COORDINATES", Self::VT_COORDINATES, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLLatLonQuadArgs<'a> {
+    pub COORDINATES: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLCoordinate<'a>>>>>,
+}
+impl<'a> Default for KMLLatLonQuadArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    KMLLatLonQuadArgs {
+      COORDINATES: None,
+    }
+  }
+}
+
+pub struct KMLLatLonQuadBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLLatLonQuadBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_COORDINATES(&mut self, COORDINATES: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<KMLCoordinate<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLLatLonQuad::VT_COORDINATES, COORDINATES);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLLatLonQuadBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLLatLonQuadBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLLatLonQuad<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLLatLonQuad<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLLatLonQuad");
+      ds.field("COORDINATES", &self.COORDINATES());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLLatLonQuadT {
+  pub COORDINATES: Option<Vec<KMLCoordinateT>>,
+}
+impl Default for KMLLatLonQuadT {
+  fn default() -> Self {
+    Self {
+      COORDINATES: None,
+    }
+  }
+}
+impl KMLLatLonQuadT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLLatLonQuad<'b>> {
+    let COORDINATES = self.COORDINATES.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    KMLLatLonQuad::create(_fbb, &KMLLatLonQuadArgs{
+      COORDINATES,
+    })
+  }
+}
+pub enum KMLRegionOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Region — Level of Detail bounding region
+pub struct KMLRegion<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLRegion<'a> {
+  type Inner = KMLRegion<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLRegion<'a> {
+  pub const VT_LAT_LON_ALT_BOX: flatbuffers::VOffsetT = 4;
+  pub const VT_LOD: flatbuffers::VOffsetT = 6;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLRegion { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLRegionArgs<'args>
+  ) -> flatbuffers::WIPOffset<KMLRegion<'bldr>> {
+    let mut builder = KMLRegionBuilder::new(_fbb);
+    if let Some(x) = args.LOD { builder.add_LOD(x); }
+    if let Some(x) = args.LAT_LON_ALT_BOX { builder.add_LAT_LON_ALT_BOX(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLRegionT {
+    let LAT_LON_ALT_BOX = self.LAT_LON_ALT_BOX().map(|x| {
+      Box::new(x.unpack())
+    });
+    let LOD = self.LOD().map(|x| {
+      Box::new(x.unpack())
+    });
+    KMLRegionT {
+      LAT_LON_ALT_BOX,
+      LOD,
+    }
+  }
+
+  /// LatLonAltBox
+  #[inline]
+  pub fn LAT_LON_ALT_BOX(&self) -> Option<KMLLatLonAltBox<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLLatLonAltBox>>(KMLRegion::VT_LAT_LON_ALT_BOX, None)}
+  }
+  /// Level of detail
+  #[inline]
+  pub fn LOD(&self) -> Option<KMLLod<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLLod>>(KMLRegion::VT_LOD, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLRegion<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLLatLonAltBox>>("LAT_LON_ALT_BOX", Self::VT_LAT_LON_ALT_BOX, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLLod>>("LOD", Self::VT_LOD, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLRegionArgs<'a> {
+    pub LAT_LON_ALT_BOX: Option<flatbuffers::WIPOffset<KMLLatLonAltBox<'a>>>,
+    pub LOD: Option<flatbuffers::WIPOffset<KMLLod<'a>>>,
+}
+impl<'a> Default for KMLRegionArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    KMLRegionArgs {
+      LAT_LON_ALT_BOX: None,
+      LOD: None,
+    }
+  }
+}
+
+pub struct KMLRegionBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLRegionBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_LAT_LON_ALT_BOX(&mut self, LAT_LON_ALT_BOX: flatbuffers::WIPOffset<KMLLatLonAltBox<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLLatLonAltBox>>(KMLRegion::VT_LAT_LON_ALT_BOX, LAT_LON_ALT_BOX);
+  }
+  #[inline]
+  pub fn add_LOD(&mut self, LOD: flatbuffers::WIPOffset<KMLLod<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLLod>>(KMLRegion::VT_LOD, LOD);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLRegionBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLRegionBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLRegion<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLRegion<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLRegion");
+      ds.field("LAT_LON_ALT_BOX", &self.LAT_LON_ALT_BOX());
+      ds.field("LOD", &self.LOD());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLRegionT {
+  pub LAT_LON_ALT_BOX: Option<Box<KMLLatLonAltBoxT>>,
+  pub LOD: Option<Box<KMLLodT>>,
+}
+impl Default for KMLRegionT {
+  fn default() -> Self {
+    Self {
+      LAT_LON_ALT_BOX: None,
+      LOD: None,
+    }
+  }
+}
+impl KMLRegionT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLRegion<'b>> {
+    let LAT_LON_ALT_BOX = self.LAT_LON_ALT_BOX.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let LOD = self.LOD.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    KMLRegion::create(_fbb, &KMLRegionArgs{
+      LAT_LON_ALT_BOX,
+      LOD,
+    })
+  }
+}
+pub enum KMLLatLonAltBoxOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// LatLonAltBox for Region
+pub struct KMLLatLonAltBox<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLLatLonAltBox<'a> {
+  type Inner = KMLLatLonAltBox<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLLatLonAltBox<'a> {
+  pub const VT_NORTH: flatbuffers::VOffsetT = 4;
+  pub const VT_SOUTH: flatbuffers::VOffsetT = 6;
+  pub const VT_EAST: flatbuffers::VOffsetT = 8;
+  pub const VT_WEST: flatbuffers::VOffsetT = 10;
+  pub const VT_MIN_ALTITUDE: flatbuffers::VOffsetT = 12;
+  pub const VT_MAX_ALTITUDE: flatbuffers::VOffsetT = 14;
+  pub const VT_ALTITUDE_MODE: flatbuffers::VOffsetT = 16;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLLatLonAltBox { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLLatLonAltBoxArgs
+  ) -> flatbuffers::WIPOffset<KMLLatLonAltBox<'bldr>> {
+    let mut builder = KMLLatLonAltBoxBuilder::new(_fbb);
+    builder.add_MAX_ALTITUDE(args.MAX_ALTITUDE);
+    builder.add_MIN_ALTITUDE(args.MIN_ALTITUDE);
+    builder.add_WEST(args.WEST);
+    builder.add_EAST(args.EAST);
+    builder.add_SOUTH(args.SOUTH);
+    builder.add_NORTH(args.NORTH);
+    builder.add_ALTITUDE_MODE(args.ALTITUDE_MODE);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLLatLonAltBoxT {
+    let NORTH = self.NORTH();
+    let SOUTH = self.SOUTH();
+    let EAST = self.EAST();
+    let WEST = self.WEST();
+    let MIN_ALTITUDE = self.MIN_ALTITUDE();
+    let MAX_ALTITUDE = self.MAX_ALTITUDE();
+    let ALTITUDE_MODE = self.ALTITUDE_MODE();
+    KMLLatLonAltBoxT {
+      NORTH,
+      SOUTH,
+      EAST,
+      WEST,
+      MIN_ALTITUDE,
+      MAX_ALTITUDE,
+      ALTITUDE_MODE,
+    }
+  }
+
+  /// North latitude
+  #[inline]
+  pub fn NORTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLLatLonAltBox::VT_NORTH, Some(0.0)).unwrap()}
+  }
+  /// South latitude
+  #[inline]
+  pub fn SOUTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLLatLonAltBox::VT_SOUTH, Some(0.0)).unwrap()}
+  }
+  /// East longitude
+  #[inline]
+  pub fn EAST(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLLatLonAltBox::VT_EAST, Some(0.0)).unwrap()}
+  }
+  /// West longitude
+  #[inline]
+  pub fn WEST(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLLatLonAltBox::VT_WEST, Some(0.0)).unwrap()}
+  }
+  /// Minimum altitude
+  #[inline]
+  pub fn MIN_ALTITUDE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLLatLonAltBox::VT_MIN_ALTITUDE, Some(0.0)).unwrap()}
+  }
+  /// Maximum altitude
+  #[inline]
+  pub fn MAX_ALTITUDE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLLatLonAltBox::VT_MAX_ALTITUDE, Some(0.0)).unwrap()}
+  }
+  /// Altitude mode
+  #[inline]
+  pub fn ALTITUDE_MODE(&self) -> KMLAltitudeMode {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<KMLAltitudeMode>(KMLLatLonAltBox::VT_ALTITUDE_MODE, Some(KMLAltitudeMode::CLAMP_TO_GROUND)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLLatLonAltBox<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<f64>("NORTH", Self::VT_NORTH, false)?
+     .visit_field::<f64>("SOUTH", Self::VT_SOUTH, false)?
+     .visit_field::<f64>("EAST", Self::VT_EAST, false)?
+     .visit_field::<f64>("WEST", Self::VT_WEST, false)?
+     .visit_field::<f64>("MIN_ALTITUDE", Self::VT_MIN_ALTITUDE, false)?
+     .visit_field::<f64>("MAX_ALTITUDE", Self::VT_MAX_ALTITUDE, false)?
+     .visit_field::<KMLAltitudeMode>("ALTITUDE_MODE", Self::VT_ALTITUDE_MODE, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLLatLonAltBoxArgs {
+    pub NORTH: f64,
+    pub SOUTH: f64,
+    pub EAST: f64,
+    pub WEST: f64,
+    pub MIN_ALTITUDE: f64,
+    pub MAX_ALTITUDE: f64,
+    pub ALTITUDE_MODE: KMLAltitudeMode,
+}
+impl<'a> Default for KMLLatLonAltBoxArgs {
+  #[inline]
+  fn default() -> Self {
+    KMLLatLonAltBoxArgs {
+      NORTH: 0.0,
+      SOUTH: 0.0,
+      EAST: 0.0,
+      WEST: 0.0,
+      MIN_ALTITUDE: 0.0,
+      MAX_ALTITUDE: 0.0,
+      ALTITUDE_MODE: KMLAltitudeMode::CLAMP_TO_GROUND,
+    }
+  }
+}
+
+pub struct KMLLatLonAltBoxBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLLatLonAltBoxBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_NORTH(&mut self, NORTH: f64) {
+    self.fbb_.push_slot::<f64>(KMLLatLonAltBox::VT_NORTH, NORTH, 0.0);
+  }
+  #[inline]
+  pub fn add_SOUTH(&mut self, SOUTH: f64) {
+    self.fbb_.push_slot::<f64>(KMLLatLonAltBox::VT_SOUTH, SOUTH, 0.0);
+  }
+  #[inline]
+  pub fn add_EAST(&mut self, EAST: f64) {
+    self.fbb_.push_slot::<f64>(KMLLatLonAltBox::VT_EAST, EAST, 0.0);
+  }
+  #[inline]
+  pub fn add_WEST(&mut self, WEST: f64) {
+    self.fbb_.push_slot::<f64>(KMLLatLonAltBox::VT_WEST, WEST, 0.0);
+  }
+  #[inline]
+  pub fn add_MIN_ALTITUDE(&mut self, MIN_ALTITUDE: f64) {
+    self.fbb_.push_slot::<f64>(KMLLatLonAltBox::VT_MIN_ALTITUDE, MIN_ALTITUDE, 0.0);
+  }
+  #[inline]
+  pub fn add_MAX_ALTITUDE(&mut self, MAX_ALTITUDE: f64) {
+    self.fbb_.push_slot::<f64>(KMLLatLonAltBox::VT_MAX_ALTITUDE, MAX_ALTITUDE, 0.0);
+  }
+  #[inline]
+  pub fn add_ALTITUDE_MODE(&mut self, ALTITUDE_MODE: KMLAltitudeMode) {
+    self.fbb_.push_slot::<KMLAltitudeMode>(KMLLatLonAltBox::VT_ALTITUDE_MODE, ALTITUDE_MODE, KMLAltitudeMode::CLAMP_TO_GROUND);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLLatLonAltBoxBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLLatLonAltBoxBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLLatLonAltBox<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLLatLonAltBox<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLLatLonAltBox");
+      ds.field("NORTH", &self.NORTH());
+      ds.field("SOUTH", &self.SOUTH());
+      ds.field("EAST", &self.EAST());
+      ds.field("WEST", &self.WEST());
+      ds.field("MIN_ALTITUDE", &self.MIN_ALTITUDE());
+      ds.field("MAX_ALTITUDE", &self.MAX_ALTITUDE());
+      ds.field("ALTITUDE_MODE", &self.ALTITUDE_MODE());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLLatLonAltBoxT {
+  pub NORTH: f64,
+  pub SOUTH: f64,
+  pub EAST: f64,
+  pub WEST: f64,
+  pub MIN_ALTITUDE: f64,
+  pub MAX_ALTITUDE: f64,
+  pub ALTITUDE_MODE: KMLAltitudeMode,
+}
+impl Default for KMLLatLonAltBoxT {
+  fn default() -> Self {
+    Self {
+      NORTH: 0.0,
+      SOUTH: 0.0,
+      EAST: 0.0,
+      WEST: 0.0,
+      MIN_ALTITUDE: 0.0,
+      MAX_ALTITUDE: 0.0,
+      ALTITUDE_MODE: KMLAltitudeMode::CLAMP_TO_GROUND,
+    }
+  }
+}
+impl KMLLatLonAltBoxT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLLatLonAltBox<'b>> {
+    let NORTH = self.NORTH;
+    let SOUTH = self.SOUTH;
+    let EAST = self.EAST;
+    let WEST = self.WEST;
+    let MIN_ALTITUDE = self.MIN_ALTITUDE;
+    let MAX_ALTITUDE = self.MAX_ALTITUDE;
+    let ALTITUDE_MODE = self.ALTITUDE_MODE;
+    KMLLatLonAltBox::create(_fbb, &KMLLatLonAltBoxArgs{
+      NORTH,
+      SOUTH,
+      EAST,
+      WEST,
+      MIN_ALTITUDE,
+      MAX_ALTITUDE,
+      ALTITUDE_MODE,
+    })
+  }
+}
+pub enum KMLLodOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Level of Detail parameters
+pub struct KMLLod<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLLod<'a> {
+  type Inner = KMLLod<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLLod<'a> {
+  pub const VT_MIN_LOD_PIXELS: flatbuffers::VOffsetT = 4;
+  pub const VT_MAX_LOD_PIXELS: flatbuffers::VOffsetT = 6;
+  pub const VT_MIN_FADE_EXTENT: flatbuffers::VOffsetT = 8;
+  pub const VT_MAX_FADE_EXTENT: flatbuffers::VOffsetT = 10;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLLod { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLLodArgs
+  ) -> flatbuffers::WIPOffset<KMLLod<'bldr>> {
+    let mut builder = KMLLodBuilder::new(_fbb);
+    builder.add_MAX_FADE_EXTENT(args.MAX_FADE_EXTENT);
+    builder.add_MIN_FADE_EXTENT(args.MIN_FADE_EXTENT);
+    builder.add_MAX_LOD_PIXELS(args.MAX_LOD_PIXELS);
+    builder.add_MIN_LOD_PIXELS(args.MIN_LOD_PIXELS);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLLodT {
+    let MIN_LOD_PIXELS = self.MIN_LOD_PIXELS();
+    let MAX_LOD_PIXELS = self.MAX_LOD_PIXELS();
+    let MIN_FADE_EXTENT = self.MIN_FADE_EXTENT();
+    let MAX_FADE_EXTENT = self.MAX_FADE_EXTENT();
+    KMLLodT {
+      MIN_LOD_PIXELS,
+      MAX_LOD_PIXELS,
+      MIN_FADE_EXTENT,
+      MAX_FADE_EXTENT,
+    }
+  }
+
+  /// Minimum LOD pixels
+  #[inline]
+  pub fn MIN_LOD_PIXELS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLLod::VT_MIN_LOD_PIXELS, Some(0.0)).unwrap()}
+  }
+  /// Maximum LOD pixels (-1 = infinite)
+  #[inline]
+  pub fn MAX_LOD_PIXELS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLLod::VT_MAX_LOD_PIXELS, Some(0.0)).unwrap()}
+  }
+  /// Minimum fade extent
+  #[inline]
+  pub fn MIN_FADE_EXTENT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLLod::VT_MIN_FADE_EXTENT, Some(0.0)).unwrap()}
+  }
+  /// Maximum fade extent
+  #[inline]
+  pub fn MAX_FADE_EXTENT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLLod::VT_MAX_FADE_EXTENT, Some(0.0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLLod<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<f64>("MIN_LOD_PIXELS", Self::VT_MIN_LOD_PIXELS, false)?
+     .visit_field::<f64>("MAX_LOD_PIXELS", Self::VT_MAX_LOD_PIXELS, false)?
+     .visit_field::<f64>("MIN_FADE_EXTENT", Self::VT_MIN_FADE_EXTENT, false)?
+     .visit_field::<f64>("MAX_FADE_EXTENT", Self::VT_MAX_FADE_EXTENT, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLLodArgs {
+    pub MIN_LOD_PIXELS: f64,
+    pub MAX_LOD_PIXELS: f64,
+    pub MIN_FADE_EXTENT: f64,
+    pub MAX_FADE_EXTENT: f64,
+}
+impl<'a> Default for KMLLodArgs {
+  #[inline]
+  fn default() -> Self {
+    KMLLodArgs {
+      MIN_LOD_PIXELS: 0.0,
+      MAX_LOD_PIXELS: 0.0,
+      MIN_FADE_EXTENT: 0.0,
+      MAX_FADE_EXTENT: 0.0,
+    }
+  }
+}
+
+pub struct KMLLodBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLLodBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_MIN_LOD_PIXELS(&mut self, MIN_LOD_PIXELS: f64) {
+    self.fbb_.push_slot::<f64>(KMLLod::VT_MIN_LOD_PIXELS, MIN_LOD_PIXELS, 0.0);
+  }
+  #[inline]
+  pub fn add_MAX_LOD_PIXELS(&mut self, MAX_LOD_PIXELS: f64) {
+    self.fbb_.push_slot::<f64>(KMLLod::VT_MAX_LOD_PIXELS, MAX_LOD_PIXELS, 0.0);
+  }
+  #[inline]
+  pub fn add_MIN_FADE_EXTENT(&mut self, MIN_FADE_EXTENT: f64) {
+    self.fbb_.push_slot::<f64>(KMLLod::VT_MIN_FADE_EXTENT, MIN_FADE_EXTENT, 0.0);
+  }
+  #[inline]
+  pub fn add_MAX_FADE_EXTENT(&mut self, MAX_FADE_EXTENT: f64) {
+    self.fbb_.push_slot::<f64>(KMLLod::VT_MAX_FADE_EXTENT, MAX_FADE_EXTENT, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLLodBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLLodBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLLod<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLLod<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLLod");
+      ds.field("MIN_LOD_PIXELS", &self.MIN_LOD_PIXELS());
+      ds.field("MAX_LOD_PIXELS", &self.MAX_LOD_PIXELS());
+      ds.field("MIN_FADE_EXTENT", &self.MIN_FADE_EXTENT());
+      ds.field("MAX_FADE_EXTENT", &self.MAX_FADE_EXTENT());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLLodT {
+  pub MIN_LOD_PIXELS: f64,
+  pub MAX_LOD_PIXELS: f64,
+  pub MIN_FADE_EXTENT: f64,
+  pub MAX_FADE_EXTENT: f64,
+}
+impl Default for KMLLodT {
+  fn default() -> Self {
+    Self {
+      MIN_LOD_PIXELS: 0.0,
+      MAX_LOD_PIXELS: 0.0,
+      MIN_FADE_EXTENT: 0.0,
+      MAX_FADE_EXTENT: 0.0,
+    }
+  }
+}
+impl KMLLodT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLLod<'b>> {
+    let MIN_LOD_PIXELS = self.MIN_LOD_PIXELS;
+    let MAX_LOD_PIXELS = self.MAX_LOD_PIXELS;
+    let MIN_FADE_EXTENT = self.MIN_FADE_EXTENT;
+    let MAX_FADE_EXTENT = self.MAX_FADE_EXTENT;
+    KMLLod::create(_fbb, &KMLLodArgs{
+      MIN_LOD_PIXELS,
+      MAX_LOD_PIXELS,
+      MIN_FADE_EXTENT,
+      MAX_FADE_EXTENT,
+    })
+  }
+}
+pub enum KMLLinkOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Full Link element
+pub struct KMLLink<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLLink<'a> {
+  type Inner = KMLLink<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLLink<'a> {
+  pub const VT_HREF: flatbuffers::VOffsetT = 4;
+  pub const VT_REFRESH_MODE: flatbuffers::VOffsetT = 6;
+  pub const VT_REFRESH_INTERVAL: flatbuffers::VOffsetT = 8;
+  pub const VT_VIEW_REFRESH_MODE: flatbuffers::VOffsetT = 10;
+  pub const VT_VIEW_REFRESH_TIME: flatbuffers::VOffsetT = 12;
+  pub const VT_VIEW_BOUND_SCALE: flatbuffers::VOffsetT = 14;
+  pub const VT_VIEW_FORMAT: flatbuffers::VOffsetT = 16;
+  pub const VT_HTTP_QUERY: flatbuffers::VOffsetT = 18;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLLink { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLLinkArgs<'args>
+  ) -> flatbuffers::WIPOffset<KMLLink<'bldr>> {
+    let mut builder = KMLLinkBuilder::new(_fbb);
+    builder.add_VIEW_BOUND_SCALE(args.VIEW_BOUND_SCALE);
+    builder.add_VIEW_REFRESH_TIME(args.VIEW_REFRESH_TIME);
+    builder.add_REFRESH_INTERVAL(args.REFRESH_INTERVAL);
+    if let Some(x) = args.HTTP_QUERY { builder.add_HTTP_QUERY(x); }
+    if let Some(x) = args.VIEW_FORMAT { builder.add_VIEW_FORMAT(x); }
+    if let Some(x) = args.HREF { builder.add_HREF(x); }
+    builder.add_VIEW_REFRESH_MODE(args.VIEW_REFRESH_MODE);
+    builder.add_REFRESH_MODE(args.REFRESH_MODE);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLLinkT {
+    let HREF = self.HREF().map(|x| {
+      x.to_string()
+    });
+    let REFRESH_MODE = self.REFRESH_MODE();
+    let REFRESH_INTERVAL = self.REFRESH_INTERVAL();
+    let VIEW_REFRESH_MODE = self.VIEW_REFRESH_MODE();
+    let VIEW_REFRESH_TIME = self.VIEW_REFRESH_TIME();
+    let VIEW_BOUND_SCALE = self.VIEW_BOUND_SCALE();
+    let VIEW_FORMAT = self.VIEW_FORMAT().map(|x| {
+      x.to_string()
+    });
+    let HTTP_QUERY = self.HTTP_QUERY().map(|x| {
+      x.to_string()
+    });
+    KMLLinkT {
+      HREF,
+      REFRESH_MODE,
+      REFRESH_INTERVAL,
+      VIEW_REFRESH_MODE,
+      VIEW_REFRESH_TIME,
+      VIEW_BOUND_SCALE,
+      VIEW_FORMAT,
+      HTTP_QUERY,
+    }
+  }
+
+  /// URL
+  #[inline]
+  pub fn HREF(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLLink::VT_HREF, None)}
+  }
+  /// Refresh mode
+  #[inline]
+  pub fn REFRESH_MODE(&self) -> KMLRefreshMode {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<KMLRefreshMode>(KMLLink::VT_REFRESH_MODE, Some(KMLRefreshMode::ON_CHANGE)).unwrap()}
+  }
+  /// Refresh interval in seconds
+  #[inline]
+  pub fn REFRESH_INTERVAL(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLLink::VT_REFRESH_INTERVAL, Some(0.0)).unwrap()}
+  }
+  /// View refresh mode
+  #[inline]
+  pub fn VIEW_REFRESH_MODE(&self) -> KMLViewRefreshMode {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<KMLViewRefreshMode>(KMLLink::VT_VIEW_REFRESH_MODE, Some(KMLViewRefreshMode::NEVER)).unwrap()}
+  }
+  /// View refresh time in seconds
+  #[inline]
+  pub fn VIEW_REFRESH_TIME(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLLink::VT_VIEW_REFRESH_TIME, Some(0.0)).unwrap()}
+  }
+  /// View bound scale
+  #[inline]
+  pub fn VIEW_BOUND_SCALE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLLink::VT_VIEW_BOUND_SCALE, Some(0.0)).unwrap()}
+  }
+  /// View format string
+  #[inline]
+  pub fn VIEW_FORMAT(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLLink::VT_VIEW_FORMAT, None)}
+  }
+  /// HTTP query string
+  #[inline]
+  pub fn HTTP_QUERY(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLLink::VT_HTTP_QUERY, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLLink<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("HREF", Self::VT_HREF, false)?
+     .visit_field::<KMLRefreshMode>("REFRESH_MODE", Self::VT_REFRESH_MODE, false)?
+     .visit_field::<f64>("REFRESH_INTERVAL", Self::VT_REFRESH_INTERVAL, false)?
+     .visit_field::<KMLViewRefreshMode>("VIEW_REFRESH_MODE", Self::VT_VIEW_REFRESH_MODE, false)?
+     .visit_field::<f64>("VIEW_REFRESH_TIME", Self::VT_VIEW_REFRESH_TIME, false)?
+     .visit_field::<f64>("VIEW_BOUND_SCALE", Self::VT_VIEW_BOUND_SCALE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("VIEW_FORMAT", Self::VT_VIEW_FORMAT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("HTTP_QUERY", Self::VT_HTTP_QUERY, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLLinkArgs<'a> {
+    pub HREF: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub REFRESH_MODE: KMLRefreshMode,
+    pub REFRESH_INTERVAL: f64,
+    pub VIEW_REFRESH_MODE: KMLViewRefreshMode,
+    pub VIEW_REFRESH_TIME: f64,
+    pub VIEW_BOUND_SCALE: f64,
+    pub VIEW_FORMAT: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub HTTP_QUERY: Option<flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for KMLLinkArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    KMLLinkArgs {
+      HREF: None,
+      REFRESH_MODE: KMLRefreshMode::ON_CHANGE,
+      REFRESH_INTERVAL: 0.0,
+      VIEW_REFRESH_MODE: KMLViewRefreshMode::NEVER,
+      VIEW_REFRESH_TIME: 0.0,
+      VIEW_BOUND_SCALE: 0.0,
+      VIEW_FORMAT: None,
+      HTTP_QUERY: None,
+    }
+  }
+}
+
+pub struct KMLLinkBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLLinkBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_HREF(&mut self, HREF: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLLink::VT_HREF, HREF);
+  }
+  #[inline]
+  pub fn add_REFRESH_MODE(&mut self, REFRESH_MODE: KMLRefreshMode) {
+    self.fbb_.push_slot::<KMLRefreshMode>(KMLLink::VT_REFRESH_MODE, REFRESH_MODE, KMLRefreshMode::ON_CHANGE);
+  }
+  #[inline]
+  pub fn add_REFRESH_INTERVAL(&mut self, REFRESH_INTERVAL: f64) {
+    self.fbb_.push_slot::<f64>(KMLLink::VT_REFRESH_INTERVAL, REFRESH_INTERVAL, 0.0);
+  }
+  #[inline]
+  pub fn add_VIEW_REFRESH_MODE(&mut self, VIEW_REFRESH_MODE: KMLViewRefreshMode) {
+    self.fbb_.push_slot::<KMLViewRefreshMode>(KMLLink::VT_VIEW_REFRESH_MODE, VIEW_REFRESH_MODE, KMLViewRefreshMode::NEVER);
+  }
+  #[inline]
+  pub fn add_VIEW_REFRESH_TIME(&mut self, VIEW_REFRESH_TIME: f64) {
+    self.fbb_.push_slot::<f64>(KMLLink::VT_VIEW_REFRESH_TIME, VIEW_REFRESH_TIME, 0.0);
+  }
+  #[inline]
+  pub fn add_VIEW_BOUND_SCALE(&mut self, VIEW_BOUND_SCALE: f64) {
+    self.fbb_.push_slot::<f64>(KMLLink::VT_VIEW_BOUND_SCALE, VIEW_BOUND_SCALE, 0.0);
+  }
+  #[inline]
+  pub fn add_VIEW_FORMAT(&mut self, VIEW_FORMAT: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLLink::VT_VIEW_FORMAT, VIEW_FORMAT);
+  }
+  #[inline]
+  pub fn add_HTTP_QUERY(&mut self, HTTP_QUERY: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLLink::VT_HTTP_QUERY, HTTP_QUERY);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLLinkBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLLinkBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLLink<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLLink<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLLink");
+      ds.field("HREF", &self.HREF());
+      ds.field("REFRESH_MODE", &self.REFRESH_MODE());
+      ds.field("REFRESH_INTERVAL", &self.REFRESH_INTERVAL());
+      ds.field("VIEW_REFRESH_MODE", &self.VIEW_REFRESH_MODE());
+      ds.field("VIEW_REFRESH_TIME", &self.VIEW_REFRESH_TIME());
+      ds.field("VIEW_BOUND_SCALE", &self.VIEW_BOUND_SCALE());
+      ds.field("VIEW_FORMAT", &self.VIEW_FORMAT());
+      ds.field("HTTP_QUERY", &self.HTTP_QUERY());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLLinkT {
+  pub HREF: Option<String>,
+  pub REFRESH_MODE: KMLRefreshMode,
+  pub REFRESH_INTERVAL: f64,
+  pub VIEW_REFRESH_MODE: KMLViewRefreshMode,
+  pub VIEW_REFRESH_TIME: f64,
+  pub VIEW_BOUND_SCALE: f64,
+  pub VIEW_FORMAT: Option<String>,
+  pub HTTP_QUERY: Option<String>,
+}
+impl Default for KMLLinkT {
+  fn default() -> Self {
+    Self {
+      HREF: None,
+      REFRESH_MODE: KMLRefreshMode::ON_CHANGE,
+      REFRESH_INTERVAL: 0.0,
+      VIEW_REFRESH_MODE: KMLViewRefreshMode::NEVER,
+      VIEW_REFRESH_TIME: 0.0,
+      VIEW_BOUND_SCALE: 0.0,
+      VIEW_FORMAT: None,
+      HTTP_QUERY: None,
+    }
+  }
+}
+impl KMLLinkT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLLink<'b>> {
+    let HREF = self.HREF.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let REFRESH_MODE = self.REFRESH_MODE;
+    let REFRESH_INTERVAL = self.REFRESH_INTERVAL;
+    let VIEW_REFRESH_MODE = self.VIEW_REFRESH_MODE;
+    let VIEW_REFRESH_TIME = self.VIEW_REFRESH_TIME;
+    let VIEW_BOUND_SCALE = self.VIEW_BOUND_SCALE;
+    let VIEW_FORMAT = self.VIEW_FORMAT.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let HTTP_QUERY = self.HTTP_QUERY.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    KMLLink::create(_fbb, &KMLLinkArgs{
+      HREF,
+      REFRESH_MODE,
+      REFRESH_INTERVAL,
+      VIEW_REFRESH_MODE,
+      VIEW_REFRESH_TIME,
+      VIEW_BOUND_SCALE,
+      VIEW_FORMAT,
+      HTTP_QUERY,
+    })
+  }
+}
+pub enum KMLViewVolumeOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// ViewVolume for PhotoOverlay
+pub struct KMLViewVolume<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLViewVolume<'a> {
+  type Inner = KMLViewVolume<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLViewVolume<'a> {
+  pub const VT_LEFT_FOV: flatbuffers::VOffsetT = 4;
+  pub const VT_RIGHT_FOV: flatbuffers::VOffsetT = 6;
+  pub const VT_BOTTOM_FOV: flatbuffers::VOffsetT = 8;
+  pub const VT_TOP_FOV: flatbuffers::VOffsetT = 10;
+  pub const VT_NEAR: flatbuffers::VOffsetT = 12;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLViewVolume { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLViewVolumeArgs
+  ) -> flatbuffers::WIPOffset<KMLViewVolume<'bldr>> {
+    let mut builder = KMLViewVolumeBuilder::new(_fbb);
+    builder.add_NEAR(args.NEAR);
+    builder.add_TOP_FOV(args.TOP_FOV);
+    builder.add_BOTTOM_FOV(args.BOTTOM_FOV);
+    builder.add_RIGHT_FOV(args.RIGHT_FOV);
+    builder.add_LEFT_FOV(args.LEFT_FOV);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLViewVolumeT {
+    let LEFT_FOV = self.LEFT_FOV();
+    let RIGHT_FOV = self.RIGHT_FOV();
+    let BOTTOM_FOV = self.BOTTOM_FOV();
+    let TOP_FOV = self.TOP_FOV();
+    let NEAR = self.NEAR();
+    KMLViewVolumeT {
+      LEFT_FOV,
+      RIGHT_FOV,
+      BOTTOM_FOV,
+      TOP_FOV,
+      NEAR,
+    }
+  }
+
+  /// Left field of view angle
+  #[inline]
+  pub fn LEFT_FOV(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLViewVolume::VT_LEFT_FOV, Some(0.0)).unwrap()}
+  }
+  /// Right field of view angle
+  #[inline]
+  pub fn RIGHT_FOV(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLViewVolume::VT_RIGHT_FOV, Some(0.0)).unwrap()}
+  }
+  /// Bottom field of view angle
+  #[inline]
+  pub fn BOTTOM_FOV(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLViewVolume::VT_BOTTOM_FOV, Some(0.0)).unwrap()}
+  }
+  /// Top field of view angle
+  #[inline]
+  pub fn TOP_FOV(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLViewVolume::VT_TOP_FOV, Some(0.0)).unwrap()}
+  }
+  /// Near clipping plane
+  #[inline]
+  pub fn NEAR(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLViewVolume::VT_NEAR, Some(0.0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLViewVolume<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<f64>("LEFT_FOV", Self::VT_LEFT_FOV, false)?
+     .visit_field::<f64>("RIGHT_FOV", Self::VT_RIGHT_FOV, false)?
+     .visit_field::<f64>("BOTTOM_FOV", Self::VT_BOTTOM_FOV, false)?
+     .visit_field::<f64>("TOP_FOV", Self::VT_TOP_FOV, false)?
+     .visit_field::<f64>("NEAR", Self::VT_NEAR, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLViewVolumeArgs {
+    pub LEFT_FOV: f64,
+    pub RIGHT_FOV: f64,
+    pub BOTTOM_FOV: f64,
+    pub TOP_FOV: f64,
+    pub NEAR: f64,
+}
+impl<'a> Default for KMLViewVolumeArgs {
+  #[inline]
+  fn default() -> Self {
+    KMLViewVolumeArgs {
+      LEFT_FOV: 0.0,
+      RIGHT_FOV: 0.0,
+      BOTTOM_FOV: 0.0,
+      TOP_FOV: 0.0,
+      NEAR: 0.0,
+    }
+  }
+}
+
+pub struct KMLViewVolumeBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLViewVolumeBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_LEFT_FOV(&mut self, LEFT_FOV: f64) {
+    self.fbb_.push_slot::<f64>(KMLViewVolume::VT_LEFT_FOV, LEFT_FOV, 0.0);
+  }
+  #[inline]
+  pub fn add_RIGHT_FOV(&mut self, RIGHT_FOV: f64) {
+    self.fbb_.push_slot::<f64>(KMLViewVolume::VT_RIGHT_FOV, RIGHT_FOV, 0.0);
+  }
+  #[inline]
+  pub fn add_BOTTOM_FOV(&mut self, BOTTOM_FOV: f64) {
+    self.fbb_.push_slot::<f64>(KMLViewVolume::VT_BOTTOM_FOV, BOTTOM_FOV, 0.0);
+  }
+  #[inline]
+  pub fn add_TOP_FOV(&mut self, TOP_FOV: f64) {
+    self.fbb_.push_slot::<f64>(KMLViewVolume::VT_TOP_FOV, TOP_FOV, 0.0);
+  }
+  #[inline]
+  pub fn add_NEAR(&mut self, NEAR: f64) {
+    self.fbb_.push_slot::<f64>(KMLViewVolume::VT_NEAR, NEAR, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLViewVolumeBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLViewVolumeBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLViewVolume<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLViewVolume<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLViewVolume");
+      ds.field("LEFT_FOV", &self.LEFT_FOV());
+      ds.field("RIGHT_FOV", &self.RIGHT_FOV());
+      ds.field("BOTTOM_FOV", &self.BOTTOM_FOV());
+      ds.field("TOP_FOV", &self.TOP_FOV());
+      ds.field("NEAR", &self.NEAR());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLViewVolumeT {
+  pub LEFT_FOV: f64,
+  pub RIGHT_FOV: f64,
+  pub BOTTOM_FOV: f64,
+  pub TOP_FOV: f64,
+  pub NEAR: f64,
+}
+impl Default for KMLViewVolumeT {
+  fn default() -> Self {
+    Self {
+      LEFT_FOV: 0.0,
+      RIGHT_FOV: 0.0,
+      BOTTOM_FOV: 0.0,
+      TOP_FOV: 0.0,
+      NEAR: 0.0,
+    }
+  }
+}
+impl KMLViewVolumeT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLViewVolume<'b>> {
+    let LEFT_FOV = self.LEFT_FOV;
+    let RIGHT_FOV = self.RIGHT_FOV;
+    let BOTTOM_FOV = self.BOTTOM_FOV;
+    let TOP_FOV = self.TOP_FOV;
+    let NEAR = self.NEAR;
+    KMLViewVolume::create(_fbb, &KMLViewVolumeArgs{
+      LEFT_FOV,
+      RIGHT_FOV,
+      BOTTOM_FOV,
+      TOP_FOV,
+      NEAR,
+    })
+  }
+}
+pub enum KMLImagePyramidOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// ImagePyramid for PhotoOverlay
+pub struct KMLImagePyramid<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLImagePyramid<'a> {
+  type Inner = KMLImagePyramid<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLImagePyramid<'a> {
+  pub const VT_TILE_SIZE: flatbuffers::VOffsetT = 4;
+  pub const VT_MAX_WIDTH: flatbuffers::VOffsetT = 6;
+  pub const VT_MAX_HEIGHT: flatbuffers::VOffsetT = 8;
+  pub const VT_GRID_ORIGIN: flatbuffers::VOffsetT = 10;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLImagePyramid { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLImagePyramidArgs
+  ) -> flatbuffers::WIPOffset<KMLImagePyramid<'bldr>> {
+    let mut builder = KMLImagePyramidBuilder::new(_fbb);
+    builder.add_MAX_HEIGHT(args.MAX_HEIGHT);
+    builder.add_MAX_WIDTH(args.MAX_WIDTH);
+    builder.add_TILE_SIZE(args.TILE_SIZE);
+    builder.add_GRID_ORIGIN(args.GRID_ORIGIN);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLImagePyramidT {
+    let TILE_SIZE = self.TILE_SIZE();
+    let MAX_WIDTH = self.MAX_WIDTH();
+    let MAX_HEIGHT = self.MAX_HEIGHT();
+    let GRID_ORIGIN = self.GRID_ORIGIN();
+    KMLImagePyramidT {
+      TILE_SIZE,
+      MAX_WIDTH,
+      MAX_HEIGHT,
+      GRID_ORIGIN,
+    }
+  }
+
+  /// Tile size in pixels
+  #[inline]
+  pub fn TILE_SIZE(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(KMLImagePyramid::VT_TILE_SIZE, Some(0)).unwrap()}
+  }
+  /// Maximum image width
+  #[inline]
+  pub fn MAX_WIDTH(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(KMLImagePyramid::VT_MAX_WIDTH, Some(0)).unwrap()}
+  }
+  /// Maximum image height
+  #[inline]
+  pub fn MAX_HEIGHT(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(KMLImagePyramid::VT_MAX_HEIGHT, Some(0)).unwrap()}
+  }
+  /// Grid origin
+  #[inline]
+  pub fn GRID_ORIGIN(&self) -> KMLGridOrigin {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<KMLGridOrigin>(KMLImagePyramid::VT_GRID_ORIGIN, Some(KMLGridOrigin::LOWER_LEFT)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLImagePyramid<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<i32>("TILE_SIZE", Self::VT_TILE_SIZE, false)?
+     .visit_field::<i32>("MAX_WIDTH", Self::VT_MAX_WIDTH, false)?
+     .visit_field::<i32>("MAX_HEIGHT", Self::VT_MAX_HEIGHT, false)?
+     .visit_field::<KMLGridOrigin>("GRID_ORIGIN", Self::VT_GRID_ORIGIN, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLImagePyramidArgs {
+    pub TILE_SIZE: i32,
+    pub MAX_WIDTH: i32,
+    pub MAX_HEIGHT: i32,
+    pub GRID_ORIGIN: KMLGridOrigin,
+}
+impl<'a> Default for KMLImagePyramidArgs {
+  #[inline]
+  fn default() -> Self {
+    KMLImagePyramidArgs {
+      TILE_SIZE: 0,
+      MAX_WIDTH: 0,
+      MAX_HEIGHT: 0,
+      GRID_ORIGIN: KMLGridOrigin::LOWER_LEFT,
+    }
+  }
+}
+
+pub struct KMLImagePyramidBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLImagePyramidBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_TILE_SIZE(&mut self, TILE_SIZE: i32) {
+    self.fbb_.push_slot::<i32>(KMLImagePyramid::VT_TILE_SIZE, TILE_SIZE, 0);
+  }
+  #[inline]
+  pub fn add_MAX_WIDTH(&mut self, MAX_WIDTH: i32) {
+    self.fbb_.push_slot::<i32>(KMLImagePyramid::VT_MAX_WIDTH, MAX_WIDTH, 0);
+  }
+  #[inline]
+  pub fn add_MAX_HEIGHT(&mut self, MAX_HEIGHT: i32) {
+    self.fbb_.push_slot::<i32>(KMLImagePyramid::VT_MAX_HEIGHT, MAX_HEIGHT, 0);
+  }
+  #[inline]
+  pub fn add_GRID_ORIGIN(&mut self, GRID_ORIGIN: KMLGridOrigin) {
+    self.fbb_.push_slot::<KMLGridOrigin>(KMLImagePyramid::VT_GRID_ORIGIN, GRID_ORIGIN, KMLGridOrigin::LOWER_LEFT);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLImagePyramidBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLImagePyramidBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLImagePyramid<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLImagePyramid<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLImagePyramid");
+      ds.field("TILE_SIZE", &self.TILE_SIZE());
+      ds.field("MAX_WIDTH", &self.MAX_WIDTH());
+      ds.field("MAX_HEIGHT", &self.MAX_HEIGHT());
+      ds.field("GRID_ORIGIN", &self.GRID_ORIGIN());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLImagePyramidT {
+  pub TILE_SIZE: i32,
+  pub MAX_WIDTH: i32,
+  pub MAX_HEIGHT: i32,
+  pub GRID_ORIGIN: KMLGridOrigin,
+}
+impl Default for KMLImagePyramidT {
+  fn default() -> Self {
+    Self {
+      TILE_SIZE: 0,
+      MAX_WIDTH: 0,
+      MAX_HEIGHT: 0,
+      GRID_ORIGIN: KMLGridOrigin::LOWER_LEFT,
+    }
+  }
+}
+impl KMLImagePyramidT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLImagePyramid<'b>> {
+    let TILE_SIZE = self.TILE_SIZE;
+    let MAX_WIDTH = self.MAX_WIDTH;
+    let MAX_HEIGHT = self.MAX_HEIGHT;
+    let GRID_ORIGIN = self.GRID_ORIGIN;
+    KMLImagePyramid::create(_fbb, &KMLImagePyramidArgs{
+      TILE_SIZE,
+      MAX_WIDTH,
+      MAX_HEIGHT,
+      GRID_ORIGIN,
+    })
+  }
+}
 pub enum KMLNetworkLinkOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -4402,12 +8787,17 @@ impl<'a> flatbuffers::Follow<'a> for KMLNetworkLink<'a> {
 
 impl<'a> KMLNetworkLink<'a> {
   pub const VT_NAME: flatbuffers::VOffsetT = 4;
-  pub const VT_VISIBILITY: flatbuffers::VOffsetT = 6;
-  pub const VT_HREF: flatbuffers::VOffsetT = 8;
-  pub const VT_REFRESH_MODE: flatbuffers::VOffsetT = 10;
-  pub const VT_REFRESH_INTERVAL: flatbuffers::VOffsetT = 12;
-  pub const VT_VIEW_REFRESH_MODE: flatbuffers::VOffsetT = 14;
-  pub const VT_VIEW_REFRESH_TIME: flatbuffers::VOffsetT = 16;
+  pub const VT_DESCRIPTION: flatbuffers::VOffsetT = 6;
+  pub const VT_VISIBILITY: flatbuffers::VOffsetT = 8;
+  pub const VT_OPEN: flatbuffers::VOffsetT = 10;
+  pub const VT_HREF: flatbuffers::VOffsetT = 12;
+  pub const VT_REFRESH_MODE: flatbuffers::VOffsetT = 14;
+  pub const VT_REFRESH_INTERVAL: flatbuffers::VOffsetT = 16;
+  pub const VT_VIEW_REFRESH_MODE: flatbuffers::VOffsetT = 18;
+  pub const VT_VIEW_REFRESH_TIME: flatbuffers::VOffsetT = 20;
+  pub const VT_REFRESH_VISIBILITY: flatbuffers::VOffsetT = 22;
+  pub const VT_FLY_TO_VIEW: flatbuffers::VOffsetT = 24;
+  pub const VT_LINK: flatbuffers::VOffsetT = 26;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -4421,10 +8811,15 @@ impl<'a> KMLNetworkLink<'a> {
     let mut builder = KMLNetworkLinkBuilder::new(_fbb);
     builder.add_VIEW_REFRESH_TIME(args.VIEW_REFRESH_TIME);
     builder.add_REFRESH_INTERVAL(args.REFRESH_INTERVAL);
+    if let Some(x) = args.LINK { builder.add_LINK(x); }
     if let Some(x) = args.HREF { builder.add_HREF(x); }
+    if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
     if let Some(x) = args.NAME { builder.add_NAME(x); }
+    builder.add_FLY_TO_VIEW(args.FLY_TO_VIEW);
+    builder.add_REFRESH_VISIBILITY(args.REFRESH_VISIBILITY);
     builder.add_VIEW_REFRESH_MODE(args.VIEW_REFRESH_MODE);
     builder.add_REFRESH_MODE(args.REFRESH_MODE);
+    builder.add_OPEN(args.OPEN);
     builder.add_VISIBILITY(args.VISIBILITY);
     builder.finish()
   }
@@ -4433,7 +8828,11 @@ impl<'a> KMLNetworkLink<'a> {
     let NAME = self.NAME().map(|x| {
       x.to_string()
     });
+    let DESCRIPTION = self.DESCRIPTION().map(|x| {
+      x.to_string()
+    });
     let VISIBILITY = self.VISIBILITY();
+    let OPEN = self.OPEN();
     let HREF = self.HREF().map(|x| {
       x.to_string()
     });
@@ -4441,14 +8840,24 @@ impl<'a> KMLNetworkLink<'a> {
     let REFRESH_INTERVAL = self.REFRESH_INTERVAL();
     let VIEW_REFRESH_MODE = self.VIEW_REFRESH_MODE();
     let VIEW_REFRESH_TIME = self.VIEW_REFRESH_TIME();
+    let REFRESH_VISIBILITY = self.REFRESH_VISIBILITY();
+    let FLY_TO_VIEW = self.FLY_TO_VIEW();
+    let LINK = self.LINK().map(|x| {
+      Box::new(x.unpack())
+    });
     KMLNetworkLinkT {
       NAME,
+      DESCRIPTION,
       VISIBILITY,
+      OPEN,
       HREF,
       REFRESH_MODE,
       REFRESH_INTERVAL,
       VIEW_REFRESH_MODE,
       VIEW_REFRESH_TIME,
+      REFRESH_VISIBILITY,
+      FLY_TO_VIEW,
+      LINK,
     }
   }
 
@@ -4460,6 +8869,14 @@ impl<'a> KMLNetworkLink<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLNetworkLink::VT_NAME, None)}
   }
+  /// Description
+  #[inline]
+  pub fn DESCRIPTION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLNetworkLink::VT_DESCRIPTION, None)}
+  }
   /// Whether the link is visible
   #[inline]
   pub fn VISIBILITY(&self) -> bool {
@@ -4467,6 +8884,14 @@ impl<'a> KMLNetworkLink<'a> {
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(KMLNetworkLink::VT_VISIBILITY, Some(false)).unwrap()}
+  }
+  /// Whether open in tree view
+  #[inline]
+  pub fn OPEN(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(KMLNetworkLink::VT_OPEN, Some(false)).unwrap()}
   }
   /// Link URL
   #[inline]
@@ -4508,6 +8933,30 @@ impl<'a> KMLNetworkLink<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(KMLNetworkLink::VT_VIEW_REFRESH_TIME, Some(0.0)).unwrap()}
   }
+  /// Whether to refresh on visibility change
+  #[inline]
+  pub fn REFRESH_VISIBILITY(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(KMLNetworkLink::VT_REFRESH_VISIBILITY, Some(false)).unwrap()}
+  }
+  /// Whether to fly to view on refresh
+  #[inline]
+  pub fn FLY_TO_VIEW(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(KMLNetworkLink::VT_FLY_TO_VIEW, Some(false)).unwrap()}
+  }
+  /// Full link element
+  #[inline]
+  pub fn LINK(&self) -> Option<KMLLink<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLLink>>(KMLNetworkLink::VT_LINK, None)}
+  }
 }
 
 impl flatbuffers::Verifiable for KMLNetworkLink<'_> {
@@ -4518,36 +8967,51 @@ impl flatbuffers::Verifiable for KMLNetworkLink<'_> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
      .visit_field::<bool>("VISIBILITY", Self::VT_VISIBILITY, false)?
+     .visit_field::<bool>("OPEN", Self::VT_OPEN, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("HREF", Self::VT_HREF, false)?
      .visit_field::<KMLRefreshMode>("REFRESH_MODE", Self::VT_REFRESH_MODE, false)?
      .visit_field::<f64>("REFRESH_INTERVAL", Self::VT_REFRESH_INTERVAL, false)?
      .visit_field::<KMLViewRefreshMode>("VIEW_REFRESH_MODE", Self::VT_VIEW_REFRESH_MODE, false)?
      .visit_field::<f64>("VIEW_REFRESH_TIME", Self::VT_VIEW_REFRESH_TIME, false)?
+     .visit_field::<bool>("REFRESH_VISIBILITY", Self::VT_REFRESH_VISIBILITY, false)?
+     .visit_field::<bool>("FLY_TO_VIEW", Self::VT_FLY_TO_VIEW, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLLink>>("LINK", Self::VT_LINK, false)?
      .finish();
     Ok(())
   }
 }
 pub struct KMLNetworkLinkArgs<'a> {
     pub NAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub DESCRIPTION: Option<flatbuffers::WIPOffset<&'a str>>,
     pub VISIBILITY: bool,
+    pub OPEN: bool,
     pub HREF: Option<flatbuffers::WIPOffset<&'a str>>,
     pub REFRESH_MODE: KMLRefreshMode,
     pub REFRESH_INTERVAL: f64,
     pub VIEW_REFRESH_MODE: KMLViewRefreshMode,
     pub VIEW_REFRESH_TIME: f64,
+    pub REFRESH_VISIBILITY: bool,
+    pub FLY_TO_VIEW: bool,
+    pub LINK: Option<flatbuffers::WIPOffset<KMLLink<'a>>>,
 }
 impl<'a> Default for KMLNetworkLinkArgs<'a> {
   #[inline]
   fn default() -> Self {
     KMLNetworkLinkArgs {
       NAME: None,
+      DESCRIPTION: None,
       VISIBILITY: false,
+      OPEN: false,
       HREF: None,
       REFRESH_MODE: KMLRefreshMode::ON_CHANGE,
       REFRESH_INTERVAL: 0.0,
       VIEW_REFRESH_MODE: KMLViewRefreshMode::NEVER,
       VIEW_REFRESH_TIME: 0.0,
+      REFRESH_VISIBILITY: false,
+      FLY_TO_VIEW: false,
+      LINK: None,
     }
   }
 }
@@ -4562,8 +9026,16 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLNetworkLinkBuilder<'a, 'b, A
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLNetworkLink::VT_NAME, NAME);
   }
   #[inline]
+  pub fn add_DESCRIPTION(&mut self, DESCRIPTION: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLNetworkLink::VT_DESCRIPTION, DESCRIPTION);
+  }
+  #[inline]
   pub fn add_VISIBILITY(&mut self, VISIBILITY: bool) {
     self.fbb_.push_slot::<bool>(KMLNetworkLink::VT_VISIBILITY, VISIBILITY, false);
+  }
+  #[inline]
+  pub fn add_OPEN(&mut self, OPEN: bool) {
+    self.fbb_.push_slot::<bool>(KMLNetworkLink::VT_OPEN, OPEN, false);
   }
   #[inline]
   pub fn add_HREF(&mut self, HREF: flatbuffers::WIPOffset<&'b  str>) {
@@ -4586,6 +9058,18 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLNetworkLinkBuilder<'a, 'b, A
     self.fbb_.push_slot::<f64>(KMLNetworkLink::VT_VIEW_REFRESH_TIME, VIEW_REFRESH_TIME, 0.0);
   }
   #[inline]
+  pub fn add_REFRESH_VISIBILITY(&mut self, REFRESH_VISIBILITY: bool) {
+    self.fbb_.push_slot::<bool>(KMLNetworkLink::VT_REFRESH_VISIBILITY, REFRESH_VISIBILITY, false);
+  }
+  #[inline]
+  pub fn add_FLY_TO_VIEW(&mut self, FLY_TO_VIEW: bool) {
+    self.fbb_.push_slot::<bool>(KMLNetworkLink::VT_FLY_TO_VIEW, FLY_TO_VIEW, false);
+  }
+  #[inline]
+  pub fn add_LINK(&mut self, LINK: flatbuffers::WIPOffset<KMLLink<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLLink>>(KMLNetworkLink::VT_LINK, LINK);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLNetworkLinkBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     KMLNetworkLinkBuilder {
@@ -4604,12 +9088,17 @@ impl core::fmt::Debug for KMLNetworkLink<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
     let mut ds = f.debug_struct("KMLNetworkLink");
       ds.field("NAME", &self.NAME());
+      ds.field("DESCRIPTION", &self.DESCRIPTION());
       ds.field("VISIBILITY", &self.VISIBILITY());
+      ds.field("OPEN", &self.OPEN());
       ds.field("HREF", &self.HREF());
       ds.field("REFRESH_MODE", &self.REFRESH_MODE());
       ds.field("REFRESH_INTERVAL", &self.REFRESH_INTERVAL());
       ds.field("VIEW_REFRESH_MODE", &self.VIEW_REFRESH_MODE());
       ds.field("VIEW_REFRESH_TIME", &self.VIEW_REFRESH_TIME());
+      ds.field("REFRESH_VISIBILITY", &self.REFRESH_VISIBILITY());
+      ds.field("FLY_TO_VIEW", &self.FLY_TO_VIEW());
+      ds.field("LINK", &self.LINK());
       ds.finish()
   }
 }
@@ -4617,23 +9106,33 @@ impl core::fmt::Debug for KMLNetworkLink<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct KMLNetworkLinkT {
   pub NAME: Option<String>,
+  pub DESCRIPTION: Option<String>,
   pub VISIBILITY: bool,
+  pub OPEN: bool,
   pub HREF: Option<String>,
   pub REFRESH_MODE: KMLRefreshMode,
   pub REFRESH_INTERVAL: f64,
   pub VIEW_REFRESH_MODE: KMLViewRefreshMode,
   pub VIEW_REFRESH_TIME: f64,
+  pub REFRESH_VISIBILITY: bool,
+  pub FLY_TO_VIEW: bool,
+  pub LINK: Option<Box<KMLLinkT>>,
 }
 impl Default for KMLNetworkLinkT {
   fn default() -> Self {
     Self {
       NAME: None,
+      DESCRIPTION: None,
       VISIBILITY: false,
+      OPEN: false,
       HREF: None,
       REFRESH_MODE: KMLRefreshMode::ON_CHANGE,
       REFRESH_INTERVAL: 0.0,
       VIEW_REFRESH_MODE: KMLViewRefreshMode::NEVER,
       VIEW_REFRESH_TIME: 0.0,
+      REFRESH_VISIBILITY: false,
+      FLY_TO_VIEW: false,
+      LINK: None,
     }
   }
 }
@@ -4645,7 +9144,11 @@ impl KMLNetworkLinkT {
     let NAME = self.NAME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let DESCRIPTION = self.DESCRIPTION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     let VISIBILITY = self.VISIBILITY;
+    let OPEN = self.OPEN;
     let HREF = self.HREF.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -4653,14 +9156,1092 @@ impl KMLNetworkLinkT {
     let REFRESH_INTERVAL = self.REFRESH_INTERVAL;
     let VIEW_REFRESH_MODE = self.VIEW_REFRESH_MODE;
     let VIEW_REFRESH_TIME = self.VIEW_REFRESH_TIME;
+    let REFRESH_VISIBILITY = self.REFRESH_VISIBILITY;
+    let FLY_TO_VIEW = self.FLY_TO_VIEW;
+    let LINK = self.LINK.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     KMLNetworkLink::create(_fbb, &KMLNetworkLinkArgs{
       NAME,
+      DESCRIPTION,
       VISIBILITY,
+      OPEN,
       HREF,
       REFRESH_MODE,
       REFRESH_INTERVAL,
       VIEW_REFRESH_MODE,
       VIEW_REFRESH_TIME,
+      REFRESH_VISIBILITY,
+      FLY_TO_VIEW,
+      LINK,
+    })
+  }
+}
+pub enum KMLScreenOverlayOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Screen overlay
+pub struct KMLScreenOverlay<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLScreenOverlay<'a> {
+  type Inner = KMLScreenOverlay<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLScreenOverlay<'a> {
+  pub const VT_NAME: flatbuffers::VOffsetT = 4;
+  pub const VT_DESCRIPTION: flatbuffers::VOffsetT = 6;
+  pub const VT_VISIBILITY: flatbuffers::VOffsetT = 8;
+  pub const VT_ICON_HREF: flatbuffers::VOffsetT = 10;
+  pub const VT_COLOR: flatbuffers::VOffsetT = 12;
+  pub const VT_DRAW_ORDER: flatbuffers::VOffsetT = 14;
+  pub const VT_OVERLAY_XY_X: flatbuffers::VOffsetT = 16;
+  pub const VT_OVERLAY_XY_Y: flatbuffers::VOffsetT = 18;
+  pub const VT_OVERLAY_XY_XUNITS: flatbuffers::VOffsetT = 20;
+  pub const VT_OVERLAY_XY_YUNITS: flatbuffers::VOffsetT = 22;
+  pub const VT_SCREEN_XY_X: flatbuffers::VOffsetT = 24;
+  pub const VT_SCREEN_XY_Y: flatbuffers::VOffsetT = 26;
+  pub const VT_SCREEN_XY_XUNITS: flatbuffers::VOffsetT = 28;
+  pub const VT_SCREEN_XY_YUNITS: flatbuffers::VOffsetT = 30;
+  pub const VT_ROTATION_XY_X: flatbuffers::VOffsetT = 32;
+  pub const VT_ROTATION_XY_Y: flatbuffers::VOffsetT = 34;
+  pub const VT_ROTATION_XY_XUNITS: flatbuffers::VOffsetT = 36;
+  pub const VT_ROTATION_XY_YUNITS: flatbuffers::VOffsetT = 38;
+  pub const VT_SIZE_X: flatbuffers::VOffsetT = 40;
+  pub const VT_SIZE_Y: flatbuffers::VOffsetT = 42;
+  pub const VT_SIZE_XUNITS: flatbuffers::VOffsetT = 44;
+  pub const VT_SIZE_YUNITS: flatbuffers::VOffsetT = 46;
+  pub const VT_ROTATION: flatbuffers::VOffsetT = 48;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLScreenOverlay { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLScreenOverlayArgs<'args>
+  ) -> flatbuffers::WIPOffset<KMLScreenOverlay<'bldr>> {
+    let mut builder = KMLScreenOverlayBuilder::new(_fbb);
+    builder.add_ROTATION(args.ROTATION);
+    builder.add_SIZE_Y(args.SIZE_Y);
+    builder.add_SIZE_X(args.SIZE_X);
+    builder.add_ROTATION_XY_Y(args.ROTATION_XY_Y);
+    builder.add_ROTATION_XY_X(args.ROTATION_XY_X);
+    builder.add_SCREEN_XY_Y(args.SCREEN_XY_Y);
+    builder.add_SCREEN_XY_X(args.SCREEN_XY_X);
+    builder.add_OVERLAY_XY_Y(args.OVERLAY_XY_Y);
+    builder.add_OVERLAY_XY_X(args.OVERLAY_XY_X);
+    builder.add_DRAW_ORDER(args.DRAW_ORDER);
+    if let Some(x) = args.COLOR { builder.add_COLOR(x); }
+    if let Some(x) = args.ICON_HREF { builder.add_ICON_HREF(x); }
+    if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
+    if let Some(x) = args.NAME { builder.add_NAME(x); }
+    builder.add_SIZE_YUNITS(args.SIZE_YUNITS);
+    builder.add_SIZE_XUNITS(args.SIZE_XUNITS);
+    builder.add_ROTATION_XY_YUNITS(args.ROTATION_XY_YUNITS);
+    builder.add_ROTATION_XY_XUNITS(args.ROTATION_XY_XUNITS);
+    builder.add_SCREEN_XY_YUNITS(args.SCREEN_XY_YUNITS);
+    builder.add_SCREEN_XY_XUNITS(args.SCREEN_XY_XUNITS);
+    builder.add_OVERLAY_XY_YUNITS(args.OVERLAY_XY_YUNITS);
+    builder.add_OVERLAY_XY_XUNITS(args.OVERLAY_XY_XUNITS);
+    builder.add_VISIBILITY(args.VISIBILITY);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLScreenOverlayT {
+    let NAME = self.NAME().map(|x| {
+      x.to_string()
+    });
+    let DESCRIPTION = self.DESCRIPTION().map(|x| {
+      x.to_string()
+    });
+    let VISIBILITY = self.VISIBILITY();
+    let ICON_HREF = self.ICON_HREF().map(|x| {
+      x.to_string()
+    });
+    let COLOR = self.COLOR().map(|x| {
+      x.to_string()
+    });
+    let DRAW_ORDER = self.DRAW_ORDER();
+    let OVERLAY_XY_X = self.OVERLAY_XY_X();
+    let OVERLAY_XY_Y = self.OVERLAY_XY_Y();
+    let OVERLAY_XY_XUNITS = self.OVERLAY_XY_XUNITS();
+    let OVERLAY_XY_YUNITS = self.OVERLAY_XY_YUNITS();
+    let SCREEN_XY_X = self.SCREEN_XY_X();
+    let SCREEN_XY_Y = self.SCREEN_XY_Y();
+    let SCREEN_XY_XUNITS = self.SCREEN_XY_XUNITS();
+    let SCREEN_XY_YUNITS = self.SCREEN_XY_YUNITS();
+    let ROTATION_XY_X = self.ROTATION_XY_X();
+    let ROTATION_XY_Y = self.ROTATION_XY_Y();
+    let ROTATION_XY_XUNITS = self.ROTATION_XY_XUNITS();
+    let ROTATION_XY_YUNITS = self.ROTATION_XY_YUNITS();
+    let SIZE_X = self.SIZE_X();
+    let SIZE_Y = self.SIZE_Y();
+    let SIZE_XUNITS = self.SIZE_XUNITS();
+    let SIZE_YUNITS = self.SIZE_YUNITS();
+    let ROTATION = self.ROTATION();
+    KMLScreenOverlayT {
+      NAME,
+      DESCRIPTION,
+      VISIBILITY,
+      ICON_HREF,
+      COLOR,
+      DRAW_ORDER,
+      OVERLAY_XY_X,
+      OVERLAY_XY_Y,
+      OVERLAY_XY_XUNITS,
+      OVERLAY_XY_YUNITS,
+      SCREEN_XY_X,
+      SCREEN_XY_Y,
+      SCREEN_XY_XUNITS,
+      SCREEN_XY_YUNITS,
+      ROTATION_XY_X,
+      ROTATION_XY_Y,
+      ROTATION_XY_XUNITS,
+      ROTATION_XY_YUNITS,
+      SIZE_X,
+      SIZE_Y,
+      SIZE_XUNITS,
+      SIZE_YUNITS,
+      ROTATION,
+    }
+  }
+
+  /// Name
+  #[inline]
+  pub fn NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLScreenOverlay::VT_NAME, None)}
+  }
+  /// Description
+  #[inline]
+  pub fn DESCRIPTION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLScreenOverlay::VT_DESCRIPTION, None)}
+  }
+  /// Visibility
+  #[inline]
+  pub fn VISIBILITY(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(KMLScreenOverlay::VT_VISIBILITY, Some(false)).unwrap()}
+  }
+  /// Icon/image URL
+  #[inline]
+  pub fn ICON_HREF(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLScreenOverlay::VT_ICON_HREF, None)}
+  }
+  /// Color
+  #[inline]
+  pub fn COLOR(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLScreenOverlay::VT_COLOR, None)}
+  }
+  /// Draw order
+  #[inline]
+  pub fn DRAW_ORDER(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(KMLScreenOverlay::VT_DRAW_ORDER, Some(0)).unwrap()}
+  }
+  /// Overlay X position
+  #[inline]
+  pub fn OVERLAY_XY_X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLScreenOverlay::VT_OVERLAY_XY_X, Some(0.0)).unwrap()}
+  }
+  /// Overlay Y position
+  #[inline]
+  pub fn OVERLAY_XY_Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLScreenOverlay::VT_OVERLAY_XY_Y, Some(0.0)).unwrap()}
+  }
+  /// Overlay X units
+  #[inline]
+  pub fn OVERLAY_XY_XUNITS(&self) -> KMLUnits {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<KMLUnits>(KMLScreenOverlay::VT_OVERLAY_XY_XUNITS, Some(KMLUnits::PIXELS)).unwrap()}
+  }
+  /// Overlay Y units
+  #[inline]
+  pub fn OVERLAY_XY_YUNITS(&self) -> KMLUnits {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<KMLUnits>(KMLScreenOverlay::VT_OVERLAY_XY_YUNITS, Some(KMLUnits::PIXELS)).unwrap()}
+  }
+  /// Screen X position
+  #[inline]
+  pub fn SCREEN_XY_X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLScreenOverlay::VT_SCREEN_XY_X, Some(0.0)).unwrap()}
+  }
+  /// Screen Y position
+  #[inline]
+  pub fn SCREEN_XY_Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLScreenOverlay::VT_SCREEN_XY_Y, Some(0.0)).unwrap()}
+  }
+  /// Screen X units
+  #[inline]
+  pub fn SCREEN_XY_XUNITS(&self) -> KMLUnits {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<KMLUnits>(KMLScreenOverlay::VT_SCREEN_XY_XUNITS, Some(KMLUnits::PIXELS)).unwrap()}
+  }
+  /// Screen Y units
+  #[inline]
+  pub fn SCREEN_XY_YUNITS(&self) -> KMLUnits {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<KMLUnits>(KMLScreenOverlay::VT_SCREEN_XY_YUNITS, Some(KMLUnits::PIXELS)).unwrap()}
+  }
+  /// Rotation X
+  #[inline]
+  pub fn ROTATION_XY_X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLScreenOverlay::VT_ROTATION_XY_X, Some(0.0)).unwrap()}
+  }
+  /// Rotation Y
+  #[inline]
+  pub fn ROTATION_XY_Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLScreenOverlay::VT_ROTATION_XY_Y, Some(0.0)).unwrap()}
+  }
+  /// Rotation X units
+  #[inline]
+  pub fn ROTATION_XY_XUNITS(&self) -> KMLUnits {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<KMLUnits>(KMLScreenOverlay::VT_ROTATION_XY_XUNITS, Some(KMLUnits::PIXELS)).unwrap()}
+  }
+  /// Rotation Y units
+  #[inline]
+  pub fn ROTATION_XY_YUNITS(&self) -> KMLUnits {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<KMLUnits>(KMLScreenOverlay::VT_ROTATION_XY_YUNITS, Some(KMLUnits::PIXELS)).unwrap()}
+  }
+  /// Size X
+  #[inline]
+  pub fn SIZE_X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLScreenOverlay::VT_SIZE_X, Some(0.0)).unwrap()}
+  }
+  /// Size Y
+  #[inline]
+  pub fn SIZE_Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLScreenOverlay::VT_SIZE_Y, Some(0.0)).unwrap()}
+  }
+  /// Size X units
+  #[inline]
+  pub fn SIZE_XUNITS(&self) -> KMLUnits {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<KMLUnits>(KMLScreenOverlay::VT_SIZE_XUNITS, Some(KMLUnits::PIXELS)).unwrap()}
+  }
+  /// Size Y units
+  #[inline]
+  pub fn SIZE_YUNITS(&self) -> KMLUnits {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<KMLUnits>(KMLScreenOverlay::VT_SIZE_YUNITS, Some(KMLUnits::PIXELS)).unwrap()}
+  }
+  /// Rotation in degrees
+  #[inline]
+  pub fn ROTATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLScreenOverlay::VT_ROTATION, Some(0.0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLScreenOverlay<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
+     .visit_field::<bool>("VISIBILITY", Self::VT_VISIBILITY, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ICON_HREF", Self::VT_ICON_HREF, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COLOR", Self::VT_COLOR, false)?
+     .visit_field::<i32>("DRAW_ORDER", Self::VT_DRAW_ORDER, false)?
+     .visit_field::<f64>("OVERLAY_XY_X", Self::VT_OVERLAY_XY_X, false)?
+     .visit_field::<f64>("OVERLAY_XY_Y", Self::VT_OVERLAY_XY_Y, false)?
+     .visit_field::<KMLUnits>("OVERLAY_XY_XUNITS", Self::VT_OVERLAY_XY_XUNITS, false)?
+     .visit_field::<KMLUnits>("OVERLAY_XY_YUNITS", Self::VT_OVERLAY_XY_YUNITS, false)?
+     .visit_field::<f64>("SCREEN_XY_X", Self::VT_SCREEN_XY_X, false)?
+     .visit_field::<f64>("SCREEN_XY_Y", Self::VT_SCREEN_XY_Y, false)?
+     .visit_field::<KMLUnits>("SCREEN_XY_XUNITS", Self::VT_SCREEN_XY_XUNITS, false)?
+     .visit_field::<KMLUnits>("SCREEN_XY_YUNITS", Self::VT_SCREEN_XY_YUNITS, false)?
+     .visit_field::<f64>("ROTATION_XY_X", Self::VT_ROTATION_XY_X, false)?
+     .visit_field::<f64>("ROTATION_XY_Y", Self::VT_ROTATION_XY_Y, false)?
+     .visit_field::<KMLUnits>("ROTATION_XY_XUNITS", Self::VT_ROTATION_XY_XUNITS, false)?
+     .visit_field::<KMLUnits>("ROTATION_XY_YUNITS", Self::VT_ROTATION_XY_YUNITS, false)?
+     .visit_field::<f64>("SIZE_X", Self::VT_SIZE_X, false)?
+     .visit_field::<f64>("SIZE_Y", Self::VT_SIZE_Y, false)?
+     .visit_field::<KMLUnits>("SIZE_XUNITS", Self::VT_SIZE_XUNITS, false)?
+     .visit_field::<KMLUnits>("SIZE_YUNITS", Self::VT_SIZE_YUNITS, false)?
+     .visit_field::<f64>("ROTATION", Self::VT_ROTATION, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLScreenOverlayArgs<'a> {
+    pub NAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub DESCRIPTION: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub VISIBILITY: bool,
+    pub ICON_HREF: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub COLOR: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub DRAW_ORDER: i32,
+    pub OVERLAY_XY_X: f64,
+    pub OVERLAY_XY_Y: f64,
+    pub OVERLAY_XY_XUNITS: KMLUnits,
+    pub OVERLAY_XY_YUNITS: KMLUnits,
+    pub SCREEN_XY_X: f64,
+    pub SCREEN_XY_Y: f64,
+    pub SCREEN_XY_XUNITS: KMLUnits,
+    pub SCREEN_XY_YUNITS: KMLUnits,
+    pub ROTATION_XY_X: f64,
+    pub ROTATION_XY_Y: f64,
+    pub ROTATION_XY_XUNITS: KMLUnits,
+    pub ROTATION_XY_YUNITS: KMLUnits,
+    pub SIZE_X: f64,
+    pub SIZE_Y: f64,
+    pub SIZE_XUNITS: KMLUnits,
+    pub SIZE_YUNITS: KMLUnits,
+    pub ROTATION: f64,
+}
+impl<'a> Default for KMLScreenOverlayArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    KMLScreenOverlayArgs {
+      NAME: None,
+      DESCRIPTION: None,
+      VISIBILITY: false,
+      ICON_HREF: None,
+      COLOR: None,
+      DRAW_ORDER: 0,
+      OVERLAY_XY_X: 0.0,
+      OVERLAY_XY_Y: 0.0,
+      OVERLAY_XY_XUNITS: KMLUnits::PIXELS,
+      OVERLAY_XY_YUNITS: KMLUnits::PIXELS,
+      SCREEN_XY_X: 0.0,
+      SCREEN_XY_Y: 0.0,
+      SCREEN_XY_XUNITS: KMLUnits::PIXELS,
+      SCREEN_XY_YUNITS: KMLUnits::PIXELS,
+      ROTATION_XY_X: 0.0,
+      ROTATION_XY_Y: 0.0,
+      ROTATION_XY_XUNITS: KMLUnits::PIXELS,
+      ROTATION_XY_YUNITS: KMLUnits::PIXELS,
+      SIZE_X: 0.0,
+      SIZE_Y: 0.0,
+      SIZE_XUNITS: KMLUnits::PIXELS,
+      SIZE_YUNITS: KMLUnits::PIXELS,
+      ROTATION: 0.0,
+    }
+  }
+}
+
+pub struct KMLScreenOverlayBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLScreenOverlayBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_NAME(&mut self, NAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLScreenOverlay::VT_NAME, NAME);
+  }
+  #[inline]
+  pub fn add_DESCRIPTION(&mut self, DESCRIPTION: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLScreenOverlay::VT_DESCRIPTION, DESCRIPTION);
+  }
+  #[inline]
+  pub fn add_VISIBILITY(&mut self, VISIBILITY: bool) {
+    self.fbb_.push_slot::<bool>(KMLScreenOverlay::VT_VISIBILITY, VISIBILITY, false);
+  }
+  #[inline]
+  pub fn add_ICON_HREF(&mut self, ICON_HREF: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLScreenOverlay::VT_ICON_HREF, ICON_HREF);
+  }
+  #[inline]
+  pub fn add_COLOR(&mut self, COLOR: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLScreenOverlay::VT_COLOR, COLOR);
+  }
+  #[inline]
+  pub fn add_DRAW_ORDER(&mut self, DRAW_ORDER: i32) {
+    self.fbb_.push_slot::<i32>(KMLScreenOverlay::VT_DRAW_ORDER, DRAW_ORDER, 0);
+  }
+  #[inline]
+  pub fn add_OVERLAY_XY_X(&mut self, OVERLAY_XY_X: f64) {
+    self.fbb_.push_slot::<f64>(KMLScreenOverlay::VT_OVERLAY_XY_X, OVERLAY_XY_X, 0.0);
+  }
+  #[inline]
+  pub fn add_OVERLAY_XY_Y(&mut self, OVERLAY_XY_Y: f64) {
+    self.fbb_.push_slot::<f64>(KMLScreenOverlay::VT_OVERLAY_XY_Y, OVERLAY_XY_Y, 0.0);
+  }
+  #[inline]
+  pub fn add_OVERLAY_XY_XUNITS(&mut self, OVERLAY_XY_XUNITS: KMLUnits) {
+    self.fbb_.push_slot::<KMLUnits>(KMLScreenOverlay::VT_OVERLAY_XY_XUNITS, OVERLAY_XY_XUNITS, KMLUnits::PIXELS);
+  }
+  #[inline]
+  pub fn add_OVERLAY_XY_YUNITS(&mut self, OVERLAY_XY_YUNITS: KMLUnits) {
+    self.fbb_.push_slot::<KMLUnits>(KMLScreenOverlay::VT_OVERLAY_XY_YUNITS, OVERLAY_XY_YUNITS, KMLUnits::PIXELS);
+  }
+  #[inline]
+  pub fn add_SCREEN_XY_X(&mut self, SCREEN_XY_X: f64) {
+    self.fbb_.push_slot::<f64>(KMLScreenOverlay::VT_SCREEN_XY_X, SCREEN_XY_X, 0.0);
+  }
+  #[inline]
+  pub fn add_SCREEN_XY_Y(&mut self, SCREEN_XY_Y: f64) {
+    self.fbb_.push_slot::<f64>(KMLScreenOverlay::VT_SCREEN_XY_Y, SCREEN_XY_Y, 0.0);
+  }
+  #[inline]
+  pub fn add_SCREEN_XY_XUNITS(&mut self, SCREEN_XY_XUNITS: KMLUnits) {
+    self.fbb_.push_slot::<KMLUnits>(KMLScreenOverlay::VT_SCREEN_XY_XUNITS, SCREEN_XY_XUNITS, KMLUnits::PIXELS);
+  }
+  #[inline]
+  pub fn add_SCREEN_XY_YUNITS(&mut self, SCREEN_XY_YUNITS: KMLUnits) {
+    self.fbb_.push_slot::<KMLUnits>(KMLScreenOverlay::VT_SCREEN_XY_YUNITS, SCREEN_XY_YUNITS, KMLUnits::PIXELS);
+  }
+  #[inline]
+  pub fn add_ROTATION_XY_X(&mut self, ROTATION_XY_X: f64) {
+    self.fbb_.push_slot::<f64>(KMLScreenOverlay::VT_ROTATION_XY_X, ROTATION_XY_X, 0.0);
+  }
+  #[inline]
+  pub fn add_ROTATION_XY_Y(&mut self, ROTATION_XY_Y: f64) {
+    self.fbb_.push_slot::<f64>(KMLScreenOverlay::VT_ROTATION_XY_Y, ROTATION_XY_Y, 0.0);
+  }
+  #[inline]
+  pub fn add_ROTATION_XY_XUNITS(&mut self, ROTATION_XY_XUNITS: KMLUnits) {
+    self.fbb_.push_slot::<KMLUnits>(KMLScreenOverlay::VT_ROTATION_XY_XUNITS, ROTATION_XY_XUNITS, KMLUnits::PIXELS);
+  }
+  #[inline]
+  pub fn add_ROTATION_XY_YUNITS(&mut self, ROTATION_XY_YUNITS: KMLUnits) {
+    self.fbb_.push_slot::<KMLUnits>(KMLScreenOverlay::VT_ROTATION_XY_YUNITS, ROTATION_XY_YUNITS, KMLUnits::PIXELS);
+  }
+  #[inline]
+  pub fn add_SIZE_X(&mut self, SIZE_X: f64) {
+    self.fbb_.push_slot::<f64>(KMLScreenOverlay::VT_SIZE_X, SIZE_X, 0.0);
+  }
+  #[inline]
+  pub fn add_SIZE_Y(&mut self, SIZE_Y: f64) {
+    self.fbb_.push_slot::<f64>(KMLScreenOverlay::VT_SIZE_Y, SIZE_Y, 0.0);
+  }
+  #[inline]
+  pub fn add_SIZE_XUNITS(&mut self, SIZE_XUNITS: KMLUnits) {
+    self.fbb_.push_slot::<KMLUnits>(KMLScreenOverlay::VT_SIZE_XUNITS, SIZE_XUNITS, KMLUnits::PIXELS);
+  }
+  #[inline]
+  pub fn add_SIZE_YUNITS(&mut self, SIZE_YUNITS: KMLUnits) {
+    self.fbb_.push_slot::<KMLUnits>(KMLScreenOverlay::VT_SIZE_YUNITS, SIZE_YUNITS, KMLUnits::PIXELS);
+  }
+  #[inline]
+  pub fn add_ROTATION(&mut self, ROTATION: f64) {
+    self.fbb_.push_slot::<f64>(KMLScreenOverlay::VT_ROTATION, ROTATION, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLScreenOverlayBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLScreenOverlayBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLScreenOverlay<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLScreenOverlay<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLScreenOverlay");
+      ds.field("NAME", &self.NAME());
+      ds.field("DESCRIPTION", &self.DESCRIPTION());
+      ds.field("VISIBILITY", &self.VISIBILITY());
+      ds.field("ICON_HREF", &self.ICON_HREF());
+      ds.field("COLOR", &self.COLOR());
+      ds.field("DRAW_ORDER", &self.DRAW_ORDER());
+      ds.field("OVERLAY_XY_X", &self.OVERLAY_XY_X());
+      ds.field("OVERLAY_XY_Y", &self.OVERLAY_XY_Y());
+      ds.field("OVERLAY_XY_XUNITS", &self.OVERLAY_XY_XUNITS());
+      ds.field("OVERLAY_XY_YUNITS", &self.OVERLAY_XY_YUNITS());
+      ds.field("SCREEN_XY_X", &self.SCREEN_XY_X());
+      ds.field("SCREEN_XY_Y", &self.SCREEN_XY_Y());
+      ds.field("SCREEN_XY_XUNITS", &self.SCREEN_XY_XUNITS());
+      ds.field("SCREEN_XY_YUNITS", &self.SCREEN_XY_YUNITS());
+      ds.field("ROTATION_XY_X", &self.ROTATION_XY_X());
+      ds.field("ROTATION_XY_Y", &self.ROTATION_XY_Y());
+      ds.field("ROTATION_XY_XUNITS", &self.ROTATION_XY_XUNITS());
+      ds.field("ROTATION_XY_YUNITS", &self.ROTATION_XY_YUNITS());
+      ds.field("SIZE_X", &self.SIZE_X());
+      ds.field("SIZE_Y", &self.SIZE_Y());
+      ds.field("SIZE_XUNITS", &self.SIZE_XUNITS());
+      ds.field("SIZE_YUNITS", &self.SIZE_YUNITS());
+      ds.field("ROTATION", &self.ROTATION());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLScreenOverlayT {
+  pub NAME: Option<String>,
+  pub DESCRIPTION: Option<String>,
+  pub VISIBILITY: bool,
+  pub ICON_HREF: Option<String>,
+  pub COLOR: Option<String>,
+  pub DRAW_ORDER: i32,
+  pub OVERLAY_XY_X: f64,
+  pub OVERLAY_XY_Y: f64,
+  pub OVERLAY_XY_XUNITS: KMLUnits,
+  pub OVERLAY_XY_YUNITS: KMLUnits,
+  pub SCREEN_XY_X: f64,
+  pub SCREEN_XY_Y: f64,
+  pub SCREEN_XY_XUNITS: KMLUnits,
+  pub SCREEN_XY_YUNITS: KMLUnits,
+  pub ROTATION_XY_X: f64,
+  pub ROTATION_XY_Y: f64,
+  pub ROTATION_XY_XUNITS: KMLUnits,
+  pub ROTATION_XY_YUNITS: KMLUnits,
+  pub SIZE_X: f64,
+  pub SIZE_Y: f64,
+  pub SIZE_XUNITS: KMLUnits,
+  pub SIZE_YUNITS: KMLUnits,
+  pub ROTATION: f64,
+}
+impl Default for KMLScreenOverlayT {
+  fn default() -> Self {
+    Self {
+      NAME: None,
+      DESCRIPTION: None,
+      VISIBILITY: false,
+      ICON_HREF: None,
+      COLOR: None,
+      DRAW_ORDER: 0,
+      OVERLAY_XY_X: 0.0,
+      OVERLAY_XY_Y: 0.0,
+      OVERLAY_XY_XUNITS: KMLUnits::PIXELS,
+      OVERLAY_XY_YUNITS: KMLUnits::PIXELS,
+      SCREEN_XY_X: 0.0,
+      SCREEN_XY_Y: 0.0,
+      SCREEN_XY_XUNITS: KMLUnits::PIXELS,
+      SCREEN_XY_YUNITS: KMLUnits::PIXELS,
+      ROTATION_XY_X: 0.0,
+      ROTATION_XY_Y: 0.0,
+      ROTATION_XY_XUNITS: KMLUnits::PIXELS,
+      ROTATION_XY_YUNITS: KMLUnits::PIXELS,
+      SIZE_X: 0.0,
+      SIZE_Y: 0.0,
+      SIZE_XUNITS: KMLUnits::PIXELS,
+      SIZE_YUNITS: KMLUnits::PIXELS,
+      ROTATION: 0.0,
+    }
+  }
+}
+impl KMLScreenOverlayT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLScreenOverlay<'b>> {
+    let NAME = self.NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DESCRIPTION = self.DESCRIPTION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let VISIBILITY = self.VISIBILITY;
+    let ICON_HREF = self.ICON_HREF.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let COLOR = self.COLOR.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DRAW_ORDER = self.DRAW_ORDER;
+    let OVERLAY_XY_X = self.OVERLAY_XY_X;
+    let OVERLAY_XY_Y = self.OVERLAY_XY_Y;
+    let OVERLAY_XY_XUNITS = self.OVERLAY_XY_XUNITS;
+    let OVERLAY_XY_YUNITS = self.OVERLAY_XY_YUNITS;
+    let SCREEN_XY_X = self.SCREEN_XY_X;
+    let SCREEN_XY_Y = self.SCREEN_XY_Y;
+    let SCREEN_XY_XUNITS = self.SCREEN_XY_XUNITS;
+    let SCREEN_XY_YUNITS = self.SCREEN_XY_YUNITS;
+    let ROTATION_XY_X = self.ROTATION_XY_X;
+    let ROTATION_XY_Y = self.ROTATION_XY_Y;
+    let ROTATION_XY_XUNITS = self.ROTATION_XY_XUNITS;
+    let ROTATION_XY_YUNITS = self.ROTATION_XY_YUNITS;
+    let SIZE_X = self.SIZE_X;
+    let SIZE_Y = self.SIZE_Y;
+    let SIZE_XUNITS = self.SIZE_XUNITS;
+    let SIZE_YUNITS = self.SIZE_YUNITS;
+    let ROTATION = self.ROTATION;
+    KMLScreenOverlay::create(_fbb, &KMLScreenOverlayArgs{
+      NAME,
+      DESCRIPTION,
+      VISIBILITY,
+      ICON_HREF,
+      COLOR,
+      DRAW_ORDER,
+      OVERLAY_XY_X,
+      OVERLAY_XY_Y,
+      OVERLAY_XY_XUNITS,
+      OVERLAY_XY_YUNITS,
+      SCREEN_XY_X,
+      SCREEN_XY_Y,
+      SCREEN_XY_XUNITS,
+      SCREEN_XY_YUNITS,
+      ROTATION_XY_X,
+      ROTATION_XY_Y,
+      ROTATION_XY_XUNITS,
+      ROTATION_XY_YUNITS,
+      SIZE_X,
+      SIZE_Y,
+      SIZE_XUNITS,
+      SIZE_YUNITS,
+      ROTATION,
+    })
+  }
+}
+pub enum KMLPhotoOverlayOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Photo overlay
+pub struct KMLPhotoOverlay<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLPhotoOverlay<'a> {
+  type Inner = KMLPhotoOverlay<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLPhotoOverlay<'a> {
+  pub const VT_NAME: flatbuffers::VOffsetT = 4;
+  pub const VT_DESCRIPTION: flatbuffers::VOffsetT = 6;
+  pub const VT_VISIBILITY: flatbuffers::VOffsetT = 8;
+  pub const VT_ICON_HREF: flatbuffers::VOffsetT = 10;
+  pub const VT_COLOR: flatbuffers::VOffsetT = 12;
+  pub const VT_DRAW_ORDER: flatbuffers::VOffsetT = 14;
+  pub const VT_ROTATION: flatbuffers::VOffsetT = 16;
+  pub const VT_VIEW_VOLUME: flatbuffers::VOffsetT = 18;
+  pub const VT_IMAGE_PYRAMID: flatbuffers::VOffsetT = 20;
+  pub const VT_POINT: flatbuffers::VOffsetT = 22;
+  pub const VT_SHAPE: flatbuffers::VOffsetT = 24;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLPhotoOverlay { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLPhotoOverlayArgs<'args>
+  ) -> flatbuffers::WIPOffset<KMLPhotoOverlay<'bldr>> {
+    let mut builder = KMLPhotoOverlayBuilder::new(_fbb);
+    builder.add_ROTATION(args.ROTATION);
+    if let Some(x) = args.POINT { builder.add_POINT(x); }
+    if let Some(x) = args.IMAGE_PYRAMID { builder.add_IMAGE_PYRAMID(x); }
+    if let Some(x) = args.VIEW_VOLUME { builder.add_VIEW_VOLUME(x); }
+    builder.add_DRAW_ORDER(args.DRAW_ORDER);
+    if let Some(x) = args.COLOR { builder.add_COLOR(x); }
+    if let Some(x) = args.ICON_HREF { builder.add_ICON_HREF(x); }
+    if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
+    if let Some(x) = args.NAME { builder.add_NAME(x); }
+    builder.add_SHAPE(args.SHAPE);
+    builder.add_VISIBILITY(args.VISIBILITY);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLPhotoOverlayT {
+    let NAME = self.NAME().map(|x| {
+      x.to_string()
+    });
+    let DESCRIPTION = self.DESCRIPTION().map(|x| {
+      x.to_string()
+    });
+    let VISIBILITY = self.VISIBILITY();
+    let ICON_HREF = self.ICON_HREF().map(|x| {
+      x.to_string()
+    });
+    let COLOR = self.COLOR().map(|x| {
+      x.to_string()
+    });
+    let DRAW_ORDER = self.DRAW_ORDER();
+    let ROTATION = self.ROTATION();
+    let VIEW_VOLUME = self.VIEW_VOLUME().map(|x| {
+      Box::new(x.unpack())
+    });
+    let IMAGE_PYRAMID = self.IMAGE_PYRAMID().map(|x| {
+      Box::new(x.unpack())
+    });
+    let POINT = self.POINT().map(|x| {
+      Box::new(x.unpack())
+    });
+    let SHAPE = self.SHAPE();
+    KMLPhotoOverlayT {
+      NAME,
+      DESCRIPTION,
+      VISIBILITY,
+      ICON_HREF,
+      COLOR,
+      DRAW_ORDER,
+      ROTATION,
+      VIEW_VOLUME,
+      IMAGE_PYRAMID,
+      POINT,
+      SHAPE,
+    }
+  }
+
+  /// Name
+  #[inline]
+  pub fn NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLPhotoOverlay::VT_NAME, None)}
+  }
+  /// Description
+  #[inline]
+  pub fn DESCRIPTION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLPhotoOverlay::VT_DESCRIPTION, None)}
+  }
+  /// Visibility
+  #[inline]
+  pub fn VISIBILITY(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(KMLPhotoOverlay::VT_VISIBILITY, Some(false)).unwrap()}
+  }
+  /// Icon/image URL
+  #[inline]
+  pub fn ICON_HREF(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLPhotoOverlay::VT_ICON_HREF, None)}
+  }
+  /// Color
+  #[inline]
+  pub fn COLOR(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLPhotoOverlay::VT_COLOR, None)}
+  }
+  /// Draw order
+  #[inline]
+  pub fn DRAW_ORDER(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(KMLPhotoOverlay::VT_DRAW_ORDER, Some(0)).unwrap()}
+  }
+  /// Rotation
+  #[inline]
+  pub fn ROTATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLPhotoOverlay::VT_ROTATION, Some(0.0)).unwrap()}
+  }
+  /// View volume
+  #[inline]
+  pub fn VIEW_VOLUME(&self) -> Option<KMLViewVolume<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLViewVolume>>(KMLPhotoOverlay::VT_VIEW_VOLUME, None)}
+  }
+  /// Image pyramid
+  #[inline]
+  pub fn IMAGE_PYRAMID(&self) -> Option<KMLImagePyramid<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLImagePyramid>>(KMLPhotoOverlay::VT_IMAGE_PYRAMID, None)}
+  }
+  /// Point for position
+  #[inline]
+  pub fn POINT(&self) -> Option<KMLPoint<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLPoint>>(KMLPhotoOverlay::VT_POINT, None)}
+  }
+  /// Shape
+  #[inline]
+  pub fn SHAPE(&self) -> KMLShape {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<KMLShape>(KMLPhotoOverlay::VT_SHAPE, Some(KMLShape::RECTANGLE)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLPhotoOverlay<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
+     .visit_field::<bool>("VISIBILITY", Self::VT_VISIBILITY, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ICON_HREF", Self::VT_ICON_HREF, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COLOR", Self::VT_COLOR, false)?
+     .visit_field::<i32>("DRAW_ORDER", Self::VT_DRAW_ORDER, false)?
+     .visit_field::<f64>("ROTATION", Self::VT_ROTATION, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLViewVolume>>("VIEW_VOLUME", Self::VT_VIEW_VOLUME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLImagePyramid>>("IMAGE_PYRAMID", Self::VT_IMAGE_PYRAMID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLPoint>>("POINT", Self::VT_POINT, false)?
+     .visit_field::<KMLShape>("SHAPE", Self::VT_SHAPE, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLPhotoOverlayArgs<'a> {
+    pub NAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub DESCRIPTION: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub VISIBILITY: bool,
+    pub ICON_HREF: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub COLOR: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub DRAW_ORDER: i32,
+    pub ROTATION: f64,
+    pub VIEW_VOLUME: Option<flatbuffers::WIPOffset<KMLViewVolume<'a>>>,
+    pub IMAGE_PYRAMID: Option<flatbuffers::WIPOffset<KMLImagePyramid<'a>>>,
+    pub POINT: Option<flatbuffers::WIPOffset<KMLPoint<'a>>>,
+    pub SHAPE: KMLShape,
+}
+impl<'a> Default for KMLPhotoOverlayArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    KMLPhotoOverlayArgs {
+      NAME: None,
+      DESCRIPTION: None,
+      VISIBILITY: false,
+      ICON_HREF: None,
+      COLOR: None,
+      DRAW_ORDER: 0,
+      ROTATION: 0.0,
+      VIEW_VOLUME: None,
+      IMAGE_PYRAMID: None,
+      POINT: None,
+      SHAPE: KMLShape::RECTANGLE,
+    }
+  }
+}
+
+pub struct KMLPhotoOverlayBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLPhotoOverlayBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_NAME(&mut self, NAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLPhotoOverlay::VT_NAME, NAME);
+  }
+  #[inline]
+  pub fn add_DESCRIPTION(&mut self, DESCRIPTION: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLPhotoOverlay::VT_DESCRIPTION, DESCRIPTION);
+  }
+  #[inline]
+  pub fn add_VISIBILITY(&mut self, VISIBILITY: bool) {
+    self.fbb_.push_slot::<bool>(KMLPhotoOverlay::VT_VISIBILITY, VISIBILITY, false);
+  }
+  #[inline]
+  pub fn add_ICON_HREF(&mut self, ICON_HREF: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLPhotoOverlay::VT_ICON_HREF, ICON_HREF);
+  }
+  #[inline]
+  pub fn add_COLOR(&mut self, COLOR: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLPhotoOverlay::VT_COLOR, COLOR);
+  }
+  #[inline]
+  pub fn add_DRAW_ORDER(&mut self, DRAW_ORDER: i32) {
+    self.fbb_.push_slot::<i32>(KMLPhotoOverlay::VT_DRAW_ORDER, DRAW_ORDER, 0);
+  }
+  #[inline]
+  pub fn add_ROTATION(&mut self, ROTATION: f64) {
+    self.fbb_.push_slot::<f64>(KMLPhotoOverlay::VT_ROTATION, ROTATION, 0.0);
+  }
+  #[inline]
+  pub fn add_VIEW_VOLUME(&mut self, VIEW_VOLUME: flatbuffers::WIPOffset<KMLViewVolume<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLViewVolume>>(KMLPhotoOverlay::VT_VIEW_VOLUME, VIEW_VOLUME);
+  }
+  #[inline]
+  pub fn add_IMAGE_PYRAMID(&mut self, IMAGE_PYRAMID: flatbuffers::WIPOffset<KMLImagePyramid<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLImagePyramid>>(KMLPhotoOverlay::VT_IMAGE_PYRAMID, IMAGE_PYRAMID);
+  }
+  #[inline]
+  pub fn add_POINT(&mut self, POINT: flatbuffers::WIPOffset<KMLPoint<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLPoint>>(KMLPhotoOverlay::VT_POINT, POINT);
+  }
+  #[inline]
+  pub fn add_SHAPE(&mut self, SHAPE: KMLShape) {
+    self.fbb_.push_slot::<KMLShape>(KMLPhotoOverlay::VT_SHAPE, SHAPE, KMLShape::RECTANGLE);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLPhotoOverlayBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLPhotoOverlayBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLPhotoOverlay<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLPhotoOverlay<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLPhotoOverlay");
+      ds.field("NAME", &self.NAME());
+      ds.field("DESCRIPTION", &self.DESCRIPTION());
+      ds.field("VISIBILITY", &self.VISIBILITY());
+      ds.field("ICON_HREF", &self.ICON_HREF());
+      ds.field("COLOR", &self.COLOR());
+      ds.field("DRAW_ORDER", &self.DRAW_ORDER());
+      ds.field("ROTATION", &self.ROTATION());
+      ds.field("VIEW_VOLUME", &self.VIEW_VOLUME());
+      ds.field("IMAGE_PYRAMID", &self.IMAGE_PYRAMID());
+      ds.field("POINT", &self.POINT());
+      ds.field("SHAPE", &self.SHAPE());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLPhotoOverlayT {
+  pub NAME: Option<String>,
+  pub DESCRIPTION: Option<String>,
+  pub VISIBILITY: bool,
+  pub ICON_HREF: Option<String>,
+  pub COLOR: Option<String>,
+  pub DRAW_ORDER: i32,
+  pub ROTATION: f64,
+  pub VIEW_VOLUME: Option<Box<KMLViewVolumeT>>,
+  pub IMAGE_PYRAMID: Option<Box<KMLImagePyramidT>>,
+  pub POINT: Option<Box<KMLPointT>>,
+  pub SHAPE: KMLShape,
+}
+impl Default for KMLPhotoOverlayT {
+  fn default() -> Self {
+    Self {
+      NAME: None,
+      DESCRIPTION: None,
+      VISIBILITY: false,
+      ICON_HREF: None,
+      COLOR: None,
+      DRAW_ORDER: 0,
+      ROTATION: 0.0,
+      VIEW_VOLUME: None,
+      IMAGE_PYRAMID: None,
+      POINT: None,
+      SHAPE: KMLShape::RECTANGLE,
+    }
+  }
+}
+impl KMLPhotoOverlayT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLPhotoOverlay<'b>> {
+    let NAME = self.NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DESCRIPTION = self.DESCRIPTION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let VISIBILITY = self.VISIBILITY;
+    let ICON_HREF = self.ICON_HREF.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let COLOR = self.COLOR.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DRAW_ORDER = self.DRAW_ORDER;
+    let ROTATION = self.ROTATION;
+    let VIEW_VOLUME = self.VIEW_VOLUME.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let IMAGE_PYRAMID = self.IMAGE_PYRAMID.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let POINT = self.POINT.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let SHAPE = self.SHAPE;
+    KMLPhotoOverlay::create(_fbb, &KMLPhotoOverlayArgs{
+      NAME,
+      DESCRIPTION,
+      VISIBILITY,
+      ICON_HREF,
+      COLOR,
+      DRAW_ORDER,
+      ROTATION,
+      VIEW_VOLUME,
+      IMAGE_PYRAMID,
+      POINT,
+      SHAPE,
     })
   }
 }
@@ -4684,15 +10265,20 @@ impl<'a> KMLGroundOverlay<'a> {
   pub const VT_NAME: flatbuffers::VOffsetT = 4;
   pub const VT_DESCRIPTION: flatbuffers::VOffsetT = 6;
   pub const VT_VISIBILITY: flatbuffers::VOffsetT = 8;
-  pub const VT_ICON_HREF: flatbuffers::VOffsetT = 10;
-  pub const VT_COLOR: flatbuffers::VOffsetT = 12;
-  pub const VT_NORTH: flatbuffers::VOffsetT = 14;
-  pub const VT_SOUTH: flatbuffers::VOffsetT = 16;
-  pub const VT_EAST: flatbuffers::VOffsetT = 18;
-  pub const VT_WEST: flatbuffers::VOffsetT = 20;
-  pub const VT_ROTATION: flatbuffers::VOffsetT = 22;
-  pub const VT_ALTITUDE: flatbuffers::VOffsetT = 24;
-  pub const VT_ALTITUDE_MODE: flatbuffers::VOffsetT = 26;
+  pub const VT_OPEN: flatbuffers::VOffsetT = 10;
+  pub const VT_ICON_HREF: flatbuffers::VOffsetT = 12;
+  pub const VT_COLOR: flatbuffers::VOffsetT = 14;
+  pub const VT_NORTH: flatbuffers::VOffsetT = 16;
+  pub const VT_SOUTH: flatbuffers::VOffsetT = 18;
+  pub const VT_EAST: flatbuffers::VOffsetT = 20;
+  pub const VT_WEST: flatbuffers::VOffsetT = 22;
+  pub const VT_ROTATION: flatbuffers::VOffsetT = 24;
+  pub const VT_ALTITUDE: flatbuffers::VOffsetT = 26;
+  pub const VT_ALTITUDE_MODE: flatbuffers::VOffsetT = 28;
+  pub const VT_DRAW_ORDER: flatbuffers::VOffsetT = 30;
+  pub const VT_LAT_LON_QUAD: flatbuffers::VOffsetT = 32;
+  pub const VT_STYLE_URL: flatbuffers::VOffsetT = 34;
+  pub const VT_REGION: flatbuffers::VOffsetT = 36;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -4710,11 +10296,16 @@ impl<'a> KMLGroundOverlay<'a> {
     builder.add_EAST(args.EAST);
     builder.add_SOUTH(args.SOUTH);
     builder.add_NORTH(args.NORTH);
+    if let Some(x) = args.REGION { builder.add_REGION(x); }
+    if let Some(x) = args.STYLE_URL { builder.add_STYLE_URL(x); }
+    if let Some(x) = args.LAT_LON_QUAD { builder.add_LAT_LON_QUAD(x); }
+    builder.add_DRAW_ORDER(args.DRAW_ORDER);
     if let Some(x) = args.COLOR { builder.add_COLOR(x); }
     if let Some(x) = args.ICON_HREF { builder.add_ICON_HREF(x); }
     if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
     if let Some(x) = args.NAME { builder.add_NAME(x); }
     builder.add_ALTITUDE_MODE(args.ALTITUDE_MODE);
+    builder.add_OPEN(args.OPEN);
     builder.add_VISIBILITY(args.VISIBILITY);
     builder.finish()
   }
@@ -4727,6 +10318,7 @@ impl<'a> KMLGroundOverlay<'a> {
       x.to_string()
     });
     let VISIBILITY = self.VISIBILITY();
+    let OPEN = self.OPEN();
     let ICON_HREF = self.ICON_HREF().map(|x| {
       x.to_string()
     });
@@ -4740,10 +10332,21 @@ impl<'a> KMLGroundOverlay<'a> {
     let ROTATION = self.ROTATION();
     let ALTITUDE = self.ALTITUDE();
     let ALTITUDE_MODE = self.ALTITUDE_MODE();
+    let DRAW_ORDER = self.DRAW_ORDER();
+    let LAT_LON_QUAD = self.LAT_LON_QUAD().map(|x| {
+      Box::new(x.unpack())
+    });
+    let STYLE_URL = self.STYLE_URL().map(|x| {
+      x.to_string()
+    });
+    let REGION = self.REGION().map(|x| {
+      Box::new(x.unpack())
+    });
     KMLGroundOverlayT {
       NAME,
       DESCRIPTION,
       VISIBILITY,
+      OPEN,
       ICON_HREF,
       COLOR,
       NORTH,
@@ -4753,6 +10356,10 @@ impl<'a> KMLGroundOverlay<'a> {
       ROTATION,
       ALTITUDE,
       ALTITUDE_MODE,
+      DRAW_ORDER,
+      LAT_LON_QUAD,
+      STYLE_URL,
+      REGION,
     }
   }
 
@@ -4779,6 +10386,14 @@ impl<'a> KMLGroundOverlay<'a> {
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(KMLGroundOverlay::VT_VISIBILITY, Some(false)).unwrap()}
+  }
+  /// Whether open in tree view
+  #[inline]
+  pub fn OPEN(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(KMLGroundOverlay::VT_OPEN, Some(false)).unwrap()}
   }
   /// Icon/image URL
   #[inline]
@@ -4852,6 +10467,38 @@ impl<'a> KMLGroundOverlay<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<KMLAltitudeMode>(KMLGroundOverlay::VT_ALTITUDE_MODE, Some(KMLAltitudeMode::CLAMP_TO_GROUND)).unwrap()}
   }
+  /// Draw order
+  #[inline]
+  pub fn DRAW_ORDER(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(KMLGroundOverlay::VT_DRAW_ORDER, Some(0)).unwrap()}
+  }
+  /// LatLonQuad (non-rectangular overlay)
+  #[inline]
+  pub fn LAT_LON_QUAD(&self) -> Option<KMLLatLonQuad<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLLatLonQuad>>(KMLGroundOverlay::VT_LAT_LON_QUAD, None)}
+  }
+  /// Style URL reference
+  #[inline]
+  pub fn STYLE_URL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLGroundOverlay::VT_STYLE_URL, None)}
+  }
+  /// Region
+  #[inline]
+  pub fn REGION(&self) -> Option<KMLRegion<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLRegion>>(KMLGroundOverlay::VT_REGION, None)}
+  }
 }
 
 impl flatbuffers::Verifiable for KMLGroundOverlay<'_> {
@@ -4864,6 +10511,7 @@ impl flatbuffers::Verifiable for KMLGroundOverlay<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
      .visit_field::<bool>("VISIBILITY", Self::VT_VISIBILITY, false)?
+     .visit_field::<bool>("OPEN", Self::VT_OPEN, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ICON_HREF", Self::VT_ICON_HREF, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COLOR", Self::VT_COLOR, false)?
      .visit_field::<f64>("NORTH", Self::VT_NORTH, false)?
@@ -4873,6 +10521,10 @@ impl flatbuffers::Verifiable for KMLGroundOverlay<'_> {
      .visit_field::<f64>("ROTATION", Self::VT_ROTATION, false)?
      .visit_field::<f64>("ALTITUDE", Self::VT_ALTITUDE, false)?
      .visit_field::<KMLAltitudeMode>("ALTITUDE_MODE", Self::VT_ALTITUDE_MODE, false)?
+     .visit_field::<i32>("DRAW_ORDER", Self::VT_DRAW_ORDER, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLLatLonQuad>>("LAT_LON_QUAD", Self::VT_LAT_LON_QUAD, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("STYLE_URL", Self::VT_STYLE_URL, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLRegion>>("REGION", Self::VT_REGION, false)?
      .finish();
     Ok(())
   }
@@ -4881,6 +10533,7 @@ pub struct KMLGroundOverlayArgs<'a> {
     pub NAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub DESCRIPTION: Option<flatbuffers::WIPOffset<&'a str>>,
     pub VISIBILITY: bool,
+    pub OPEN: bool,
     pub ICON_HREF: Option<flatbuffers::WIPOffset<&'a str>>,
     pub COLOR: Option<flatbuffers::WIPOffset<&'a str>>,
     pub NORTH: f64,
@@ -4890,6 +10543,10 @@ pub struct KMLGroundOverlayArgs<'a> {
     pub ROTATION: f64,
     pub ALTITUDE: f64,
     pub ALTITUDE_MODE: KMLAltitudeMode,
+    pub DRAW_ORDER: i32,
+    pub LAT_LON_QUAD: Option<flatbuffers::WIPOffset<KMLLatLonQuad<'a>>>,
+    pub STYLE_URL: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub REGION: Option<flatbuffers::WIPOffset<KMLRegion<'a>>>,
 }
 impl<'a> Default for KMLGroundOverlayArgs<'a> {
   #[inline]
@@ -4898,6 +10555,7 @@ impl<'a> Default for KMLGroundOverlayArgs<'a> {
       NAME: None,
       DESCRIPTION: None,
       VISIBILITY: false,
+      OPEN: false,
       ICON_HREF: None,
       COLOR: None,
       NORTH: 0.0,
@@ -4907,6 +10565,10 @@ impl<'a> Default for KMLGroundOverlayArgs<'a> {
       ROTATION: 0.0,
       ALTITUDE: 0.0,
       ALTITUDE_MODE: KMLAltitudeMode::CLAMP_TO_GROUND,
+      DRAW_ORDER: 0,
+      LAT_LON_QUAD: None,
+      STYLE_URL: None,
+      REGION: None,
     }
   }
 }
@@ -4927,6 +10589,10 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLGroundOverlayBuilder<'a, 'b,
   #[inline]
   pub fn add_VISIBILITY(&mut self, VISIBILITY: bool) {
     self.fbb_.push_slot::<bool>(KMLGroundOverlay::VT_VISIBILITY, VISIBILITY, false);
+  }
+  #[inline]
+  pub fn add_OPEN(&mut self, OPEN: bool) {
+    self.fbb_.push_slot::<bool>(KMLGroundOverlay::VT_OPEN, OPEN, false);
   }
   #[inline]
   pub fn add_ICON_HREF(&mut self, ICON_HREF: flatbuffers::WIPOffset<&'b  str>) {
@@ -4965,6 +10631,22 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLGroundOverlayBuilder<'a, 'b,
     self.fbb_.push_slot::<KMLAltitudeMode>(KMLGroundOverlay::VT_ALTITUDE_MODE, ALTITUDE_MODE, KMLAltitudeMode::CLAMP_TO_GROUND);
   }
   #[inline]
+  pub fn add_DRAW_ORDER(&mut self, DRAW_ORDER: i32) {
+    self.fbb_.push_slot::<i32>(KMLGroundOverlay::VT_DRAW_ORDER, DRAW_ORDER, 0);
+  }
+  #[inline]
+  pub fn add_LAT_LON_QUAD(&mut self, LAT_LON_QUAD: flatbuffers::WIPOffset<KMLLatLonQuad<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLLatLonQuad>>(KMLGroundOverlay::VT_LAT_LON_QUAD, LAT_LON_QUAD);
+  }
+  #[inline]
+  pub fn add_STYLE_URL(&mut self, STYLE_URL: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLGroundOverlay::VT_STYLE_URL, STYLE_URL);
+  }
+  #[inline]
+  pub fn add_REGION(&mut self, REGION: flatbuffers::WIPOffset<KMLRegion<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLRegion>>(KMLGroundOverlay::VT_REGION, REGION);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLGroundOverlayBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     KMLGroundOverlayBuilder {
@@ -4985,6 +10667,7 @@ impl core::fmt::Debug for KMLGroundOverlay<'_> {
       ds.field("NAME", &self.NAME());
       ds.field("DESCRIPTION", &self.DESCRIPTION());
       ds.field("VISIBILITY", &self.VISIBILITY());
+      ds.field("OPEN", &self.OPEN());
       ds.field("ICON_HREF", &self.ICON_HREF());
       ds.field("COLOR", &self.COLOR());
       ds.field("NORTH", &self.NORTH());
@@ -4994,6 +10677,10 @@ impl core::fmt::Debug for KMLGroundOverlay<'_> {
       ds.field("ROTATION", &self.ROTATION());
       ds.field("ALTITUDE", &self.ALTITUDE());
       ds.field("ALTITUDE_MODE", &self.ALTITUDE_MODE());
+      ds.field("DRAW_ORDER", &self.DRAW_ORDER());
+      ds.field("LAT_LON_QUAD", &self.LAT_LON_QUAD());
+      ds.field("STYLE_URL", &self.STYLE_URL());
+      ds.field("REGION", &self.REGION());
       ds.finish()
   }
 }
@@ -5003,6 +10690,7 @@ pub struct KMLGroundOverlayT {
   pub NAME: Option<String>,
   pub DESCRIPTION: Option<String>,
   pub VISIBILITY: bool,
+  pub OPEN: bool,
   pub ICON_HREF: Option<String>,
   pub COLOR: Option<String>,
   pub NORTH: f64,
@@ -5012,6 +10700,10 @@ pub struct KMLGroundOverlayT {
   pub ROTATION: f64,
   pub ALTITUDE: f64,
   pub ALTITUDE_MODE: KMLAltitudeMode,
+  pub DRAW_ORDER: i32,
+  pub LAT_LON_QUAD: Option<Box<KMLLatLonQuadT>>,
+  pub STYLE_URL: Option<String>,
+  pub REGION: Option<Box<KMLRegionT>>,
 }
 impl Default for KMLGroundOverlayT {
   fn default() -> Self {
@@ -5019,6 +10711,7 @@ impl Default for KMLGroundOverlayT {
       NAME: None,
       DESCRIPTION: None,
       VISIBILITY: false,
+      OPEN: false,
       ICON_HREF: None,
       COLOR: None,
       NORTH: 0.0,
@@ -5028,6 +10721,10 @@ impl Default for KMLGroundOverlayT {
       ROTATION: 0.0,
       ALTITUDE: 0.0,
       ALTITUDE_MODE: KMLAltitudeMode::CLAMP_TO_GROUND,
+      DRAW_ORDER: 0,
+      LAT_LON_QUAD: None,
+      STYLE_URL: None,
+      REGION: None,
     }
   }
 }
@@ -5043,6 +10740,7 @@ impl KMLGroundOverlayT {
       _fbb.create_string(x)
     });
     let VISIBILITY = self.VISIBILITY;
+    let OPEN = self.OPEN;
     let ICON_HREF = self.ICON_HREF.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -5056,10 +10754,21 @@ impl KMLGroundOverlayT {
     let ROTATION = self.ROTATION;
     let ALTITUDE = self.ALTITUDE;
     let ALTITUDE_MODE = self.ALTITUDE_MODE;
+    let DRAW_ORDER = self.DRAW_ORDER;
+    let LAT_LON_QUAD = self.LAT_LON_QUAD.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let STYLE_URL = self.STYLE_URL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let REGION = self.REGION.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     KMLGroundOverlay::create(_fbb, &KMLGroundOverlayArgs{
       NAME,
       DESCRIPTION,
       VISIBILITY,
+      OPEN,
       ICON_HREF,
       COLOR,
       NORTH,
@@ -5069,6 +10778,2022 @@ impl KMLGroundOverlayT {
       ROTATION,
       ALTITUDE,
       ALTITUDE_MODE,
+      DRAW_ORDER,
+      LAT_LON_QUAD,
+      STYLE_URL,
+      REGION,
+    })
+  }
+}
+pub enum KMLUpdateOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Update element for NetworkLinkControl
+pub struct KMLUpdate<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLUpdate<'a> {
+  type Inner = KMLUpdate<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLUpdate<'a> {
+  pub const VT_TARGET_HREF: flatbuffers::VOffsetT = 4;
+  pub const VT_CHANGE_KML: flatbuffers::VOffsetT = 6;
+  pub const VT_CREATE_KML: flatbuffers::VOffsetT = 8;
+  pub const VT_DELETE_KML: flatbuffers::VOffsetT = 10;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLUpdate { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLUpdateArgs<'args>
+  ) -> flatbuffers::WIPOffset<KMLUpdate<'bldr>> {
+    let mut builder = KMLUpdateBuilder::new(_fbb);
+    if let Some(x) = args.DELETE_KML { builder.add_DELETE_KML(x); }
+    if let Some(x) = args.CREATE_KML { builder.add_CREATE_KML(x); }
+    if let Some(x) = args.CHANGE_KML { builder.add_CHANGE_KML(x); }
+    if let Some(x) = args.TARGET_HREF { builder.add_TARGET_HREF(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLUpdateT {
+    let TARGET_HREF = self.TARGET_HREF().map(|x| {
+      x.to_string()
+    });
+    let CHANGE_KML = self.CHANGE_KML().map(|x| {
+      x.to_string()
+    });
+    let CREATE_KML = self.CREATE_KML().map(|x| {
+      x.to_string()
+    });
+    let DELETE_KML = self.DELETE_KML().map(|x| {
+      x.to_string()
+    });
+    KMLUpdateT {
+      TARGET_HREF,
+      CHANGE_KML,
+      CREATE_KML,
+      DELETE_KML,
+    }
+  }
+
+  /// Target href
+  #[inline]
+  pub fn TARGET_HREF(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLUpdate::VT_TARGET_HREF, None)}
+  }
+  /// Change KML (raw)
+  #[inline]
+  pub fn CHANGE_KML(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLUpdate::VT_CHANGE_KML, None)}
+  }
+  /// Create KML (raw)
+  #[inline]
+  pub fn CREATE_KML(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLUpdate::VT_CREATE_KML, None)}
+  }
+  /// Delete KML (raw)
+  #[inline]
+  pub fn DELETE_KML(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLUpdate::VT_DELETE_KML, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLUpdate<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TARGET_HREF", Self::VT_TARGET_HREF, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CHANGE_KML", Self::VT_CHANGE_KML, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CREATE_KML", Self::VT_CREATE_KML, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DELETE_KML", Self::VT_DELETE_KML, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLUpdateArgs<'a> {
+    pub TARGET_HREF: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub CHANGE_KML: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub CREATE_KML: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub DELETE_KML: Option<flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for KMLUpdateArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    KMLUpdateArgs {
+      TARGET_HREF: None,
+      CHANGE_KML: None,
+      CREATE_KML: None,
+      DELETE_KML: None,
+    }
+  }
+}
+
+pub struct KMLUpdateBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLUpdateBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_TARGET_HREF(&mut self, TARGET_HREF: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLUpdate::VT_TARGET_HREF, TARGET_HREF);
+  }
+  #[inline]
+  pub fn add_CHANGE_KML(&mut self, CHANGE_KML: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLUpdate::VT_CHANGE_KML, CHANGE_KML);
+  }
+  #[inline]
+  pub fn add_CREATE_KML(&mut self, CREATE_KML: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLUpdate::VT_CREATE_KML, CREATE_KML);
+  }
+  #[inline]
+  pub fn add_DELETE_KML(&mut self, DELETE_KML: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLUpdate::VT_DELETE_KML, DELETE_KML);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLUpdateBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLUpdateBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLUpdate<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLUpdate<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLUpdate");
+      ds.field("TARGET_HREF", &self.TARGET_HREF());
+      ds.field("CHANGE_KML", &self.CHANGE_KML());
+      ds.field("CREATE_KML", &self.CREATE_KML());
+      ds.field("DELETE_KML", &self.DELETE_KML());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLUpdateT {
+  pub TARGET_HREF: Option<String>,
+  pub CHANGE_KML: Option<String>,
+  pub CREATE_KML: Option<String>,
+  pub DELETE_KML: Option<String>,
+}
+impl Default for KMLUpdateT {
+  fn default() -> Self {
+    Self {
+      TARGET_HREF: None,
+      CHANGE_KML: None,
+      CREATE_KML: None,
+      DELETE_KML: None,
+    }
+  }
+}
+impl KMLUpdateT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLUpdate<'b>> {
+    let TARGET_HREF = self.TARGET_HREF.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CHANGE_KML = self.CHANGE_KML.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CREATE_KML = self.CREATE_KML.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DELETE_KML = self.DELETE_KML.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    KMLUpdate::create(_fbb, &KMLUpdateArgs{
+      TARGET_HREF,
+      CHANGE_KML,
+      CREATE_KML,
+      DELETE_KML,
+    })
+  }
+}
+pub enum KMLNetworkLinkControlOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// NetworkLinkControl
+pub struct KMLNetworkLinkControl<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLNetworkLinkControl<'a> {
+  type Inner = KMLNetworkLinkControl<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLNetworkLinkControl<'a> {
+  pub const VT_MIN_REFRESH_PERIOD: flatbuffers::VOffsetT = 4;
+  pub const VT_MAX_SESSION_LENGTH: flatbuffers::VOffsetT = 6;
+  pub const VT_COOKIE: flatbuffers::VOffsetT = 8;
+  pub const VT_MESSAGE: flatbuffers::VOffsetT = 10;
+  pub const VT_LINK_NAME: flatbuffers::VOffsetT = 12;
+  pub const VT_LINK_DESCRIPTION: flatbuffers::VOffsetT = 14;
+  pub const VT_LINK_SNIPPET: flatbuffers::VOffsetT = 16;
+  pub const VT_EXPIRES: flatbuffers::VOffsetT = 18;
+  pub const VT_UPDATE: flatbuffers::VOffsetT = 20;
+  pub const VT_LOOK_AT: flatbuffers::VOffsetT = 22;
+  pub const VT_CAMERA: flatbuffers::VOffsetT = 24;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLNetworkLinkControl { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLNetworkLinkControlArgs<'args>
+  ) -> flatbuffers::WIPOffset<KMLNetworkLinkControl<'bldr>> {
+    let mut builder = KMLNetworkLinkControlBuilder::new(_fbb);
+    builder.add_MAX_SESSION_LENGTH(args.MAX_SESSION_LENGTH);
+    builder.add_MIN_REFRESH_PERIOD(args.MIN_REFRESH_PERIOD);
+    if let Some(x) = args.CAMERA { builder.add_CAMERA(x); }
+    if let Some(x) = args.LOOK_AT { builder.add_LOOK_AT(x); }
+    if let Some(x) = args.UPDATE { builder.add_UPDATE(x); }
+    if let Some(x) = args.EXPIRES { builder.add_EXPIRES(x); }
+    if let Some(x) = args.LINK_SNIPPET { builder.add_LINK_SNIPPET(x); }
+    if let Some(x) = args.LINK_DESCRIPTION { builder.add_LINK_DESCRIPTION(x); }
+    if let Some(x) = args.LINK_NAME { builder.add_LINK_NAME(x); }
+    if let Some(x) = args.MESSAGE { builder.add_MESSAGE(x); }
+    if let Some(x) = args.COOKIE { builder.add_COOKIE(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLNetworkLinkControlT {
+    let MIN_REFRESH_PERIOD = self.MIN_REFRESH_PERIOD();
+    let MAX_SESSION_LENGTH = self.MAX_SESSION_LENGTH();
+    let COOKIE = self.COOKIE().map(|x| {
+      x.to_string()
+    });
+    let MESSAGE = self.MESSAGE().map(|x| {
+      x.to_string()
+    });
+    let LINK_NAME = self.LINK_NAME().map(|x| {
+      x.to_string()
+    });
+    let LINK_DESCRIPTION = self.LINK_DESCRIPTION().map(|x| {
+      x.to_string()
+    });
+    let LINK_SNIPPET = self.LINK_SNIPPET().map(|x| {
+      x.to_string()
+    });
+    let EXPIRES = self.EXPIRES().map(|x| {
+      x.to_string()
+    });
+    let UPDATE = self.UPDATE().map(|x| {
+      Box::new(x.unpack())
+    });
+    let LOOK_AT = self.LOOK_AT().map(|x| {
+      Box::new(x.unpack())
+    });
+    let CAMERA = self.CAMERA().map(|x| {
+      Box::new(x.unpack())
+    });
+    KMLNetworkLinkControlT {
+      MIN_REFRESH_PERIOD,
+      MAX_SESSION_LENGTH,
+      COOKIE,
+      MESSAGE,
+      LINK_NAME,
+      LINK_DESCRIPTION,
+      LINK_SNIPPET,
+      EXPIRES,
+      UPDATE,
+      LOOK_AT,
+      CAMERA,
+    }
+  }
+
+  /// Minimum refresh period in seconds
+  #[inline]
+  pub fn MIN_REFRESH_PERIOD(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLNetworkLinkControl::VT_MIN_REFRESH_PERIOD, Some(0.0)).unwrap()}
+  }
+  /// Maximum session length in seconds
+  #[inline]
+  pub fn MAX_SESSION_LENGTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLNetworkLinkControl::VT_MAX_SESSION_LENGTH, Some(0.0)).unwrap()}
+  }
+  /// Cookie
+  #[inline]
+  pub fn COOKIE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLNetworkLinkControl::VT_COOKIE, None)}
+  }
+  /// Message to display
+  #[inline]
+  pub fn MESSAGE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLNetworkLinkControl::VT_MESSAGE, None)}
+  }
+  /// Link name override
+  #[inline]
+  pub fn LINK_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLNetworkLinkControl::VT_LINK_NAME, None)}
+  }
+  /// Link description override
+  #[inline]
+  pub fn LINK_DESCRIPTION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLNetworkLinkControl::VT_LINK_DESCRIPTION, None)}
+  }
+  /// Link snippet override
+  #[inline]
+  pub fn LINK_SNIPPET(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLNetworkLinkControl::VT_LINK_SNIPPET, None)}
+  }
+  /// Expiration time (ISO 8601)
+  #[inline]
+  pub fn EXPIRES(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLNetworkLinkControl::VT_EXPIRES, None)}
+  }
+  /// Update
+  #[inline]
+  pub fn UPDATE(&self) -> Option<KMLUpdate<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLUpdate>>(KMLNetworkLinkControl::VT_UPDATE, None)}
+  }
+  /// LookAt
+  #[inline]
+  pub fn LOOK_AT(&self) -> Option<KMLLookAt<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLLookAt>>(KMLNetworkLinkControl::VT_LOOK_AT, None)}
+  }
+  /// Camera
+  #[inline]
+  pub fn CAMERA(&self) -> Option<KMLCamera<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLCamera>>(KMLNetworkLinkControl::VT_CAMERA, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLNetworkLinkControl<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<f64>("MIN_REFRESH_PERIOD", Self::VT_MIN_REFRESH_PERIOD, false)?
+     .visit_field::<f64>("MAX_SESSION_LENGTH", Self::VT_MAX_SESSION_LENGTH, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COOKIE", Self::VT_COOKIE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MESSAGE", Self::VT_MESSAGE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LINK_NAME", Self::VT_LINK_NAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LINK_DESCRIPTION", Self::VT_LINK_DESCRIPTION, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LINK_SNIPPET", Self::VT_LINK_SNIPPET, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EXPIRES", Self::VT_EXPIRES, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLUpdate>>("UPDATE", Self::VT_UPDATE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLLookAt>>("LOOK_AT", Self::VT_LOOK_AT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLCamera>>("CAMERA", Self::VT_CAMERA, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLNetworkLinkControlArgs<'a> {
+    pub MIN_REFRESH_PERIOD: f64,
+    pub MAX_SESSION_LENGTH: f64,
+    pub COOKIE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub MESSAGE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub LINK_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub LINK_DESCRIPTION: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub LINK_SNIPPET: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub EXPIRES: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub UPDATE: Option<flatbuffers::WIPOffset<KMLUpdate<'a>>>,
+    pub LOOK_AT: Option<flatbuffers::WIPOffset<KMLLookAt<'a>>>,
+    pub CAMERA: Option<flatbuffers::WIPOffset<KMLCamera<'a>>>,
+}
+impl<'a> Default for KMLNetworkLinkControlArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    KMLNetworkLinkControlArgs {
+      MIN_REFRESH_PERIOD: 0.0,
+      MAX_SESSION_LENGTH: 0.0,
+      COOKIE: None,
+      MESSAGE: None,
+      LINK_NAME: None,
+      LINK_DESCRIPTION: None,
+      LINK_SNIPPET: None,
+      EXPIRES: None,
+      UPDATE: None,
+      LOOK_AT: None,
+      CAMERA: None,
+    }
+  }
+}
+
+pub struct KMLNetworkLinkControlBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLNetworkLinkControlBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_MIN_REFRESH_PERIOD(&mut self, MIN_REFRESH_PERIOD: f64) {
+    self.fbb_.push_slot::<f64>(KMLNetworkLinkControl::VT_MIN_REFRESH_PERIOD, MIN_REFRESH_PERIOD, 0.0);
+  }
+  #[inline]
+  pub fn add_MAX_SESSION_LENGTH(&mut self, MAX_SESSION_LENGTH: f64) {
+    self.fbb_.push_slot::<f64>(KMLNetworkLinkControl::VT_MAX_SESSION_LENGTH, MAX_SESSION_LENGTH, 0.0);
+  }
+  #[inline]
+  pub fn add_COOKIE(&mut self, COOKIE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLNetworkLinkControl::VT_COOKIE, COOKIE);
+  }
+  #[inline]
+  pub fn add_MESSAGE(&mut self, MESSAGE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLNetworkLinkControl::VT_MESSAGE, MESSAGE);
+  }
+  #[inline]
+  pub fn add_LINK_NAME(&mut self, LINK_NAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLNetworkLinkControl::VT_LINK_NAME, LINK_NAME);
+  }
+  #[inline]
+  pub fn add_LINK_DESCRIPTION(&mut self, LINK_DESCRIPTION: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLNetworkLinkControl::VT_LINK_DESCRIPTION, LINK_DESCRIPTION);
+  }
+  #[inline]
+  pub fn add_LINK_SNIPPET(&mut self, LINK_SNIPPET: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLNetworkLinkControl::VT_LINK_SNIPPET, LINK_SNIPPET);
+  }
+  #[inline]
+  pub fn add_EXPIRES(&mut self, EXPIRES: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLNetworkLinkControl::VT_EXPIRES, EXPIRES);
+  }
+  #[inline]
+  pub fn add_UPDATE(&mut self, UPDATE: flatbuffers::WIPOffset<KMLUpdate<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLUpdate>>(KMLNetworkLinkControl::VT_UPDATE, UPDATE);
+  }
+  #[inline]
+  pub fn add_LOOK_AT(&mut self, LOOK_AT: flatbuffers::WIPOffset<KMLLookAt<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLLookAt>>(KMLNetworkLinkControl::VT_LOOK_AT, LOOK_AT);
+  }
+  #[inline]
+  pub fn add_CAMERA(&mut self, CAMERA: flatbuffers::WIPOffset<KMLCamera<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLCamera>>(KMLNetworkLinkControl::VT_CAMERA, CAMERA);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLNetworkLinkControlBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLNetworkLinkControlBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLNetworkLinkControl<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLNetworkLinkControl<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLNetworkLinkControl");
+      ds.field("MIN_REFRESH_PERIOD", &self.MIN_REFRESH_PERIOD());
+      ds.field("MAX_SESSION_LENGTH", &self.MAX_SESSION_LENGTH());
+      ds.field("COOKIE", &self.COOKIE());
+      ds.field("MESSAGE", &self.MESSAGE());
+      ds.field("LINK_NAME", &self.LINK_NAME());
+      ds.field("LINK_DESCRIPTION", &self.LINK_DESCRIPTION());
+      ds.field("LINK_SNIPPET", &self.LINK_SNIPPET());
+      ds.field("EXPIRES", &self.EXPIRES());
+      ds.field("UPDATE", &self.UPDATE());
+      ds.field("LOOK_AT", &self.LOOK_AT());
+      ds.field("CAMERA", &self.CAMERA());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLNetworkLinkControlT {
+  pub MIN_REFRESH_PERIOD: f64,
+  pub MAX_SESSION_LENGTH: f64,
+  pub COOKIE: Option<String>,
+  pub MESSAGE: Option<String>,
+  pub LINK_NAME: Option<String>,
+  pub LINK_DESCRIPTION: Option<String>,
+  pub LINK_SNIPPET: Option<String>,
+  pub EXPIRES: Option<String>,
+  pub UPDATE: Option<Box<KMLUpdateT>>,
+  pub LOOK_AT: Option<Box<KMLLookAtT>>,
+  pub CAMERA: Option<Box<KMLCameraT>>,
+}
+impl Default for KMLNetworkLinkControlT {
+  fn default() -> Self {
+    Self {
+      MIN_REFRESH_PERIOD: 0.0,
+      MAX_SESSION_LENGTH: 0.0,
+      COOKIE: None,
+      MESSAGE: None,
+      LINK_NAME: None,
+      LINK_DESCRIPTION: None,
+      LINK_SNIPPET: None,
+      EXPIRES: None,
+      UPDATE: None,
+      LOOK_AT: None,
+      CAMERA: None,
+    }
+  }
+}
+impl KMLNetworkLinkControlT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLNetworkLinkControl<'b>> {
+    let MIN_REFRESH_PERIOD = self.MIN_REFRESH_PERIOD;
+    let MAX_SESSION_LENGTH = self.MAX_SESSION_LENGTH;
+    let COOKIE = self.COOKIE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MESSAGE = self.MESSAGE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let LINK_NAME = self.LINK_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let LINK_DESCRIPTION = self.LINK_DESCRIPTION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let LINK_SNIPPET = self.LINK_SNIPPET.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EXPIRES = self.EXPIRES.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let UPDATE = self.UPDATE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let LOOK_AT = self.LOOK_AT.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let CAMERA = self.CAMERA.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    KMLNetworkLinkControl::create(_fbb, &KMLNetworkLinkControlArgs{
+      MIN_REFRESH_PERIOD,
+      MAX_SESSION_LENGTH,
+      COOKIE,
+      MESSAGE,
+      LINK_NAME,
+      LINK_DESCRIPTION,
+      LINK_SNIPPET,
+      EXPIRES,
+      UPDATE,
+      LOOK_AT,
+      CAMERA,
+    })
+  }
+}
+pub enum KMLFlyToOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// gx:FlyTo tour primitive
+pub struct KMLFlyTo<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLFlyTo<'a> {
+  type Inner = KMLFlyTo<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLFlyTo<'a> {
+  pub const VT_DURATION: flatbuffers::VOffsetT = 4;
+  pub const VT_FLY_TO_MODE: flatbuffers::VOffsetT = 6;
+  pub const VT_LOOK_AT: flatbuffers::VOffsetT = 8;
+  pub const VT_CAMERA: flatbuffers::VOffsetT = 10;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLFlyTo { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLFlyToArgs<'args>
+  ) -> flatbuffers::WIPOffset<KMLFlyTo<'bldr>> {
+    let mut builder = KMLFlyToBuilder::new(_fbb);
+    builder.add_DURATION(args.DURATION);
+    if let Some(x) = args.CAMERA { builder.add_CAMERA(x); }
+    if let Some(x) = args.LOOK_AT { builder.add_LOOK_AT(x); }
+    builder.add_FLY_TO_MODE(args.FLY_TO_MODE);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLFlyToT {
+    let DURATION = self.DURATION();
+    let FLY_TO_MODE = self.FLY_TO_MODE();
+    let LOOK_AT = self.LOOK_AT().map(|x| {
+      Box::new(x.unpack())
+    });
+    let CAMERA = self.CAMERA().map(|x| {
+      Box::new(x.unpack())
+    });
+    KMLFlyToT {
+      DURATION,
+      FLY_TO_MODE,
+      LOOK_AT,
+      CAMERA,
+    }
+  }
+
+  /// Duration in seconds
+  #[inline]
+  pub fn DURATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLFlyTo::VT_DURATION, Some(0.0)).unwrap()}
+  }
+  /// Fly-to mode
+  #[inline]
+  pub fn FLY_TO_MODE(&self) -> KMLFlyToMode {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<KMLFlyToMode>(KMLFlyTo::VT_FLY_TO_MODE, Some(KMLFlyToMode::BOUNCE)).unwrap()}
+  }
+  /// LookAt viewpoint
+  #[inline]
+  pub fn LOOK_AT(&self) -> Option<KMLLookAt<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLLookAt>>(KMLFlyTo::VT_LOOK_AT, None)}
+  }
+  /// Camera viewpoint
+  #[inline]
+  pub fn CAMERA(&self) -> Option<KMLCamera<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLCamera>>(KMLFlyTo::VT_CAMERA, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLFlyTo<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<f64>("DURATION", Self::VT_DURATION, false)?
+     .visit_field::<KMLFlyToMode>("FLY_TO_MODE", Self::VT_FLY_TO_MODE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLLookAt>>("LOOK_AT", Self::VT_LOOK_AT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLCamera>>("CAMERA", Self::VT_CAMERA, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLFlyToArgs<'a> {
+    pub DURATION: f64,
+    pub FLY_TO_MODE: KMLFlyToMode,
+    pub LOOK_AT: Option<flatbuffers::WIPOffset<KMLLookAt<'a>>>,
+    pub CAMERA: Option<flatbuffers::WIPOffset<KMLCamera<'a>>>,
+}
+impl<'a> Default for KMLFlyToArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    KMLFlyToArgs {
+      DURATION: 0.0,
+      FLY_TO_MODE: KMLFlyToMode::BOUNCE,
+      LOOK_AT: None,
+      CAMERA: None,
+    }
+  }
+}
+
+pub struct KMLFlyToBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLFlyToBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_DURATION(&mut self, DURATION: f64) {
+    self.fbb_.push_slot::<f64>(KMLFlyTo::VT_DURATION, DURATION, 0.0);
+  }
+  #[inline]
+  pub fn add_FLY_TO_MODE(&mut self, FLY_TO_MODE: KMLFlyToMode) {
+    self.fbb_.push_slot::<KMLFlyToMode>(KMLFlyTo::VT_FLY_TO_MODE, FLY_TO_MODE, KMLFlyToMode::BOUNCE);
+  }
+  #[inline]
+  pub fn add_LOOK_AT(&mut self, LOOK_AT: flatbuffers::WIPOffset<KMLLookAt<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLLookAt>>(KMLFlyTo::VT_LOOK_AT, LOOK_AT);
+  }
+  #[inline]
+  pub fn add_CAMERA(&mut self, CAMERA: flatbuffers::WIPOffset<KMLCamera<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLCamera>>(KMLFlyTo::VT_CAMERA, CAMERA);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLFlyToBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLFlyToBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLFlyTo<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLFlyTo<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLFlyTo");
+      ds.field("DURATION", &self.DURATION());
+      ds.field("FLY_TO_MODE", &self.FLY_TO_MODE());
+      ds.field("LOOK_AT", &self.LOOK_AT());
+      ds.field("CAMERA", &self.CAMERA());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLFlyToT {
+  pub DURATION: f64,
+  pub FLY_TO_MODE: KMLFlyToMode,
+  pub LOOK_AT: Option<Box<KMLLookAtT>>,
+  pub CAMERA: Option<Box<KMLCameraT>>,
+}
+impl Default for KMLFlyToT {
+  fn default() -> Self {
+    Self {
+      DURATION: 0.0,
+      FLY_TO_MODE: KMLFlyToMode::BOUNCE,
+      LOOK_AT: None,
+      CAMERA: None,
+    }
+  }
+}
+impl KMLFlyToT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLFlyTo<'b>> {
+    let DURATION = self.DURATION;
+    let FLY_TO_MODE = self.FLY_TO_MODE;
+    let LOOK_AT = self.LOOK_AT.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let CAMERA = self.CAMERA.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    KMLFlyTo::create(_fbb, &KMLFlyToArgs{
+      DURATION,
+      FLY_TO_MODE,
+      LOOK_AT,
+      CAMERA,
+    })
+  }
+}
+pub enum KMLWaitOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// gx:Wait tour primitive
+pub struct KMLWait<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLWait<'a> {
+  type Inner = KMLWait<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLWait<'a> {
+  pub const VT_DURATION: flatbuffers::VOffsetT = 4;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLWait { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLWaitArgs
+  ) -> flatbuffers::WIPOffset<KMLWait<'bldr>> {
+    let mut builder = KMLWaitBuilder::new(_fbb);
+    builder.add_DURATION(args.DURATION);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLWaitT {
+    let DURATION = self.DURATION();
+    KMLWaitT {
+      DURATION,
+    }
+  }
+
+  /// Duration in seconds
+  #[inline]
+  pub fn DURATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLWait::VT_DURATION, Some(0.0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLWait<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<f64>("DURATION", Self::VT_DURATION, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLWaitArgs {
+    pub DURATION: f64,
+}
+impl<'a> Default for KMLWaitArgs {
+  #[inline]
+  fn default() -> Self {
+    KMLWaitArgs {
+      DURATION: 0.0,
+    }
+  }
+}
+
+pub struct KMLWaitBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLWaitBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_DURATION(&mut self, DURATION: f64) {
+    self.fbb_.push_slot::<f64>(KMLWait::VT_DURATION, DURATION, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLWaitBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLWaitBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLWait<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLWait<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLWait");
+      ds.field("DURATION", &self.DURATION());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLWaitT {
+  pub DURATION: f64,
+}
+impl Default for KMLWaitT {
+  fn default() -> Self {
+    Self {
+      DURATION: 0.0,
+    }
+  }
+}
+impl KMLWaitT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLWait<'b>> {
+    let DURATION = self.DURATION;
+    KMLWait::create(_fbb, &KMLWaitArgs{
+      DURATION,
+    })
+  }
+}
+pub enum KMLAnimatedUpdateOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// gx:AnimatedUpdate tour primitive
+pub struct KMLAnimatedUpdate<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLAnimatedUpdate<'a> {
+  type Inner = KMLAnimatedUpdate<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLAnimatedUpdate<'a> {
+  pub const VT_DURATION: flatbuffers::VOffsetT = 4;
+  pub const VT_DELAYED_START: flatbuffers::VOffsetT = 6;
+  pub const VT_UPDATE: flatbuffers::VOffsetT = 8;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLAnimatedUpdate { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLAnimatedUpdateArgs<'args>
+  ) -> flatbuffers::WIPOffset<KMLAnimatedUpdate<'bldr>> {
+    let mut builder = KMLAnimatedUpdateBuilder::new(_fbb);
+    builder.add_DELAYED_START(args.DELAYED_START);
+    builder.add_DURATION(args.DURATION);
+    if let Some(x) = args.UPDATE { builder.add_UPDATE(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLAnimatedUpdateT {
+    let DURATION = self.DURATION();
+    let DELAYED_START = self.DELAYED_START();
+    let UPDATE = self.UPDATE().map(|x| {
+      Box::new(x.unpack())
+    });
+    KMLAnimatedUpdateT {
+      DURATION,
+      DELAYED_START,
+      UPDATE,
+    }
+  }
+
+  /// Duration in seconds
+  #[inline]
+  pub fn DURATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLAnimatedUpdate::VT_DURATION, Some(0.0)).unwrap()}
+  }
+  /// Delayed start in seconds
+  #[inline]
+  pub fn DELAYED_START(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLAnimatedUpdate::VT_DELAYED_START, Some(0.0)).unwrap()}
+  }
+  /// Update
+  #[inline]
+  pub fn UPDATE(&self) -> Option<KMLUpdate<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLUpdate>>(KMLAnimatedUpdate::VT_UPDATE, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLAnimatedUpdate<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<f64>("DURATION", Self::VT_DURATION, false)?
+     .visit_field::<f64>("DELAYED_START", Self::VT_DELAYED_START, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLUpdate>>("UPDATE", Self::VT_UPDATE, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLAnimatedUpdateArgs<'a> {
+    pub DURATION: f64,
+    pub DELAYED_START: f64,
+    pub UPDATE: Option<flatbuffers::WIPOffset<KMLUpdate<'a>>>,
+}
+impl<'a> Default for KMLAnimatedUpdateArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    KMLAnimatedUpdateArgs {
+      DURATION: 0.0,
+      DELAYED_START: 0.0,
+      UPDATE: None,
+    }
+  }
+}
+
+pub struct KMLAnimatedUpdateBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLAnimatedUpdateBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_DURATION(&mut self, DURATION: f64) {
+    self.fbb_.push_slot::<f64>(KMLAnimatedUpdate::VT_DURATION, DURATION, 0.0);
+  }
+  #[inline]
+  pub fn add_DELAYED_START(&mut self, DELAYED_START: f64) {
+    self.fbb_.push_slot::<f64>(KMLAnimatedUpdate::VT_DELAYED_START, DELAYED_START, 0.0);
+  }
+  #[inline]
+  pub fn add_UPDATE(&mut self, UPDATE: flatbuffers::WIPOffset<KMLUpdate<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLUpdate>>(KMLAnimatedUpdate::VT_UPDATE, UPDATE);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLAnimatedUpdateBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLAnimatedUpdateBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLAnimatedUpdate<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLAnimatedUpdate<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLAnimatedUpdate");
+      ds.field("DURATION", &self.DURATION());
+      ds.field("DELAYED_START", &self.DELAYED_START());
+      ds.field("UPDATE", &self.UPDATE());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLAnimatedUpdateT {
+  pub DURATION: f64,
+  pub DELAYED_START: f64,
+  pub UPDATE: Option<Box<KMLUpdateT>>,
+}
+impl Default for KMLAnimatedUpdateT {
+  fn default() -> Self {
+    Self {
+      DURATION: 0.0,
+      DELAYED_START: 0.0,
+      UPDATE: None,
+    }
+  }
+}
+impl KMLAnimatedUpdateT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLAnimatedUpdate<'b>> {
+    let DURATION = self.DURATION;
+    let DELAYED_START = self.DELAYED_START;
+    let UPDATE = self.UPDATE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    KMLAnimatedUpdate::create(_fbb, &KMLAnimatedUpdateArgs{
+      DURATION,
+      DELAYED_START,
+      UPDATE,
+    })
+  }
+}
+pub enum KMLTourControlOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// gx:TourControl tour primitive
+pub struct KMLTourControl<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLTourControl<'a> {
+  type Inner = KMLTourControl<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLTourControl<'a> {
+  pub const VT_PLAY_MODE: flatbuffers::VOffsetT = 4;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLTourControl { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLTourControlArgs<'args>
+  ) -> flatbuffers::WIPOffset<KMLTourControl<'bldr>> {
+    let mut builder = KMLTourControlBuilder::new(_fbb);
+    if let Some(x) = args.PLAY_MODE { builder.add_PLAY_MODE(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLTourControlT {
+    let PLAY_MODE = self.PLAY_MODE().map(|x| {
+      x.to_string()
+    });
+    KMLTourControlT {
+      PLAY_MODE,
+    }
+  }
+
+  /// Play mode (pause)
+  #[inline]
+  pub fn PLAY_MODE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLTourControl::VT_PLAY_MODE, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLTourControl<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("PLAY_MODE", Self::VT_PLAY_MODE, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLTourControlArgs<'a> {
+    pub PLAY_MODE: Option<flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for KMLTourControlArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    KMLTourControlArgs {
+      PLAY_MODE: None,
+    }
+  }
+}
+
+pub struct KMLTourControlBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLTourControlBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_PLAY_MODE(&mut self, PLAY_MODE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLTourControl::VT_PLAY_MODE, PLAY_MODE);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLTourControlBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLTourControlBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLTourControl<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLTourControl<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLTourControl");
+      ds.field("PLAY_MODE", &self.PLAY_MODE());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLTourControlT {
+  pub PLAY_MODE: Option<String>,
+}
+impl Default for KMLTourControlT {
+  fn default() -> Self {
+    Self {
+      PLAY_MODE: None,
+    }
+  }
+}
+impl KMLTourControlT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLTourControl<'b>> {
+    let PLAY_MODE = self.PLAY_MODE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    KMLTourControl::create(_fbb, &KMLTourControlArgs{
+      PLAY_MODE,
+    })
+  }
+}
+pub enum KMLSoundCueOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// gx:SoundCue tour primitive
+pub struct KMLSoundCue<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLSoundCue<'a> {
+  type Inner = KMLSoundCue<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLSoundCue<'a> {
+  pub const VT_HREF: flatbuffers::VOffsetT = 4;
+  pub const VT_DELAYED_START: flatbuffers::VOffsetT = 6;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLSoundCue { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLSoundCueArgs<'args>
+  ) -> flatbuffers::WIPOffset<KMLSoundCue<'bldr>> {
+    let mut builder = KMLSoundCueBuilder::new(_fbb);
+    builder.add_DELAYED_START(args.DELAYED_START);
+    if let Some(x) = args.HREF { builder.add_HREF(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLSoundCueT {
+    let HREF = self.HREF().map(|x| {
+      x.to_string()
+    });
+    let DELAYED_START = self.DELAYED_START();
+    KMLSoundCueT {
+      HREF,
+      DELAYED_START,
+    }
+  }
+
+  /// Audio file URL
+  #[inline]
+  pub fn HREF(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLSoundCue::VT_HREF, None)}
+  }
+  /// Delayed start in seconds
+  #[inline]
+  pub fn DELAYED_START(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(KMLSoundCue::VT_DELAYED_START, Some(0.0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLSoundCue<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("HREF", Self::VT_HREF, false)?
+     .visit_field::<f64>("DELAYED_START", Self::VT_DELAYED_START, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLSoundCueArgs<'a> {
+    pub HREF: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub DELAYED_START: f64,
+}
+impl<'a> Default for KMLSoundCueArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    KMLSoundCueArgs {
+      HREF: None,
+      DELAYED_START: 0.0,
+    }
+  }
+}
+
+pub struct KMLSoundCueBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLSoundCueBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_HREF(&mut self, HREF: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLSoundCue::VT_HREF, HREF);
+  }
+  #[inline]
+  pub fn add_DELAYED_START(&mut self, DELAYED_START: f64) {
+    self.fbb_.push_slot::<f64>(KMLSoundCue::VT_DELAYED_START, DELAYED_START, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLSoundCueBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLSoundCueBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLSoundCue<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLSoundCue<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLSoundCue");
+      ds.field("HREF", &self.HREF());
+      ds.field("DELAYED_START", &self.DELAYED_START());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLSoundCueT {
+  pub HREF: Option<String>,
+  pub DELAYED_START: f64,
+}
+impl Default for KMLSoundCueT {
+  fn default() -> Self {
+    Self {
+      HREF: None,
+      DELAYED_START: 0.0,
+    }
+  }
+}
+impl KMLSoundCueT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLSoundCue<'b>> {
+    let HREF = self.HREF.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DELAYED_START = self.DELAYED_START;
+    KMLSoundCue::create(_fbb, &KMLSoundCueArgs{
+      HREF,
+      DELAYED_START,
+    })
+  }
+}
+pub enum KMLTourPrimitiveOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Tour primitive (union-like)
+pub struct KMLTourPrimitive<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLTourPrimitive<'a> {
+  type Inner = KMLTourPrimitive<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLTourPrimitive<'a> {
+  pub const VT_FLY_TO: flatbuffers::VOffsetT = 4;
+  pub const VT_WAIT: flatbuffers::VOffsetT = 6;
+  pub const VT_ANIMATED_UPDATE: flatbuffers::VOffsetT = 8;
+  pub const VT_TOUR_CONTROL: flatbuffers::VOffsetT = 10;
+  pub const VT_SOUND_CUE: flatbuffers::VOffsetT = 12;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLTourPrimitive { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLTourPrimitiveArgs<'args>
+  ) -> flatbuffers::WIPOffset<KMLTourPrimitive<'bldr>> {
+    let mut builder = KMLTourPrimitiveBuilder::new(_fbb);
+    if let Some(x) = args.SOUND_CUE { builder.add_SOUND_CUE(x); }
+    if let Some(x) = args.TOUR_CONTROL { builder.add_TOUR_CONTROL(x); }
+    if let Some(x) = args.ANIMATED_UPDATE { builder.add_ANIMATED_UPDATE(x); }
+    if let Some(x) = args.WAIT { builder.add_WAIT(x); }
+    if let Some(x) = args.FLY_TO { builder.add_FLY_TO(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLTourPrimitiveT {
+    let FLY_TO = self.FLY_TO().map(|x| {
+      Box::new(x.unpack())
+    });
+    let WAIT = self.WAIT().map(|x| {
+      Box::new(x.unpack())
+    });
+    let ANIMATED_UPDATE = self.ANIMATED_UPDATE().map(|x| {
+      Box::new(x.unpack())
+    });
+    let TOUR_CONTROL = self.TOUR_CONTROL().map(|x| {
+      Box::new(x.unpack())
+    });
+    let SOUND_CUE = self.SOUND_CUE().map(|x| {
+      Box::new(x.unpack())
+    });
+    KMLTourPrimitiveT {
+      FLY_TO,
+      WAIT,
+      ANIMATED_UPDATE,
+      TOUR_CONTROL,
+      SOUND_CUE,
+    }
+  }
+
+  /// FlyTo
+  #[inline]
+  pub fn FLY_TO(&self) -> Option<KMLFlyTo<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLFlyTo>>(KMLTourPrimitive::VT_FLY_TO, None)}
+  }
+  /// Wait
+  #[inline]
+  pub fn WAIT(&self) -> Option<KMLWait<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLWait>>(KMLTourPrimitive::VT_WAIT, None)}
+  }
+  /// AnimatedUpdate
+  #[inline]
+  pub fn ANIMATED_UPDATE(&self) -> Option<KMLAnimatedUpdate<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLAnimatedUpdate>>(KMLTourPrimitive::VT_ANIMATED_UPDATE, None)}
+  }
+  /// TourControl
+  #[inline]
+  pub fn TOUR_CONTROL(&self) -> Option<KMLTourControl<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLTourControl>>(KMLTourPrimitive::VT_TOUR_CONTROL, None)}
+  }
+  /// SoundCue
+  #[inline]
+  pub fn SOUND_CUE(&self) -> Option<KMLSoundCue<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLSoundCue>>(KMLTourPrimitive::VT_SOUND_CUE, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLTourPrimitive<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLFlyTo>>("FLY_TO", Self::VT_FLY_TO, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLWait>>("WAIT", Self::VT_WAIT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLAnimatedUpdate>>("ANIMATED_UPDATE", Self::VT_ANIMATED_UPDATE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLTourControl>>("TOUR_CONTROL", Self::VT_TOUR_CONTROL, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLSoundCue>>("SOUND_CUE", Self::VT_SOUND_CUE, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLTourPrimitiveArgs<'a> {
+    pub FLY_TO: Option<flatbuffers::WIPOffset<KMLFlyTo<'a>>>,
+    pub WAIT: Option<flatbuffers::WIPOffset<KMLWait<'a>>>,
+    pub ANIMATED_UPDATE: Option<flatbuffers::WIPOffset<KMLAnimatedUpdate<'a>>>,
+    pub TOUR_CONTROL: Option<flatbuffers::WIPOffset<KMLTourControl<'a>>>,
+    pub SOUND_CUE: Option<flatbuffers::WIPOffset<KMLSoundCue<'a>>>,
+}
+impl<'a> Default for KMLTourPrimitiveArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    KMLTourPrimitiveArgs {
+      FLY_TO: None,
+      WAIT: None,
+      ANIMATED_UPDATE: None,
+      TOUR_CONTROL: None,
+      SOUND_CUE: None,
+    }
+  }
+}
+
+pub struct KMLTourPrimitiveBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLTourPrimitiveBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_FLY_TO(&mut self, FLY_TO: flatbuffers::WIPOffset<KMLFlyTo<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLFlyTo>>(KMLTourPrimitive::VT_FLY_TO, FLY_TO);
+  }
+  #[inline]
+  pub fn add_WAIT(&mut self, WAIT: flatbuffers::WIPOffset<KMLWait<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLWait>>(KMLTourPrimitive::VT_WAIT, WAIT);
+  }
+  #[inline]
+  pub fn add_ANIMATED_UPDATE(&mut self, ANIMATED_UPDATE: flatbuffers::WIPOffset<KMLAnimatedUpdate<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLAnimatedUpdate>>(KMLTourPrimitive::VT_ANIMATED_UPDATE, ANIMATED_UPDATE);
+  }
+  #[inline]
+  pub fn add_TOUR_CONTROL(&mut self, TOUR_CONTROL: flatbuffers::WIPOffset<KMLTourControl<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLTourControl>>(KMLTourPrimitive::VT_TOUR_CONTROL, TOUR_CONTROL);
+  }
+  #[inline]
+  pub fn add_SOUND_CUE(&mut self, SOUND_CUE: flatbuffers::WIPOffset<KMLSoundCue<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLSoundCue>>(KMLTourPrimitive::VT_SOUND_CUE, SOUND_CUE);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLTourPrimitiveBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLTourPrimitiveBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLTourPrimitive<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLTourPrimitive<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLTourPrimitive");
+      ds.field("FLY_TO", &self.FLY_TO());
+      ds.field("WAIT", &self.WAIT());
+      ds.field("ANIMATED_UPDATE", &self.ANIMATED_UPDATE());
+      ds.field("TOUR_CONTROL", &self.TOUR_CONTROL());
+      ds.field("SOUND_CUE", &self.SOUND_CUE());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLTourPrimitiveT {
+  pub FLY_TO: Option<Box<KMLFlyToT>>,
+  pub WAIT: Option<Box<KMLWaitT>>,
+  pub ANIMATED_UPDATE: Option<Box<KMLAnimatedUpdateT>>,
+  pub TOUR_CONTROL: Option<Box<KMLTourControlT>>,
+  pub SOUND_CUE: Option<Box<KMLSoundCueT>>,
+}
+impl Default for KMLTourPrimitiveT {
+  fn default() -> Self {
+    Self {
+      FLY_TO: None,
+      WAIT: None,
+      ANIMATED_UPDATE: None,
+      TOUR_CONTROL: None,
+      SOUND_CUE: None,
+    }
+  }
+}
+impl KMLTourPrimitiveT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLTourPrimitive<'b>> {
+    let FLY_TO = self.FLY_TO.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let WAIT = self.WAIT.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let ANIMATED_UPDATE = self.ANIMATED_UPDATE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let TOUR_CONTROL = self.TOUR_CONTROL.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let SOUND_CUE = self.SOUND_CUE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    KMLTourPrimitive::create(_fbb, &KMLTourPrimitiveArgs{
+      FLY_TO,
+      WAIT,
+      ANIMATED_UPDATE,
+      TOUR_CONTROL,
+      SOUND_CUE,
+    })
+  }
+}
+pub enum KMLPlaylistOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// gx:Playlist
+pub struct KMLPlaylist<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLPlaylist<'a> {
+  type Inner = KMLPlaylist<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLPlaylist<'a> {
+  pub const VT_PRIMITIVES: flatbuffers::VOffsetT = 4;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLPlaylist { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLPlaylistArgs<'args>
+  ) -> flatbuffers::WIPOffset<KMLPlaylist<'bldr>> {
+    let mut builder = KMLPlaylistBuilder::new(_fbb);
+    if let Some(x) = args.PRIMITIVES { builder.add_PRIMITIVES(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLPlaylistT {
+    let PRIMITIVES = self.PRIMITIVES().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    KMLPlaylistT {
+      PRIMITIVES,
+    }
+  }
+
+  /// Tour primitives
+  #[inline]
+  pub fn PRIMITIVES(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLTourPrimitive<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLTourPrimitive>>>>(KMLPlaylist::VT_PRIMITIVES, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLPlaylist<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLTourPrimitive>>>>("PRIMITIVES", Self::VT_PRIMITIVES, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLPlaylistArgs<'a> {
+    pub PRIMITIVES: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLTourPrimitive<'a>>>>>,
+}
+impl<'a> Default for KMLPlaylistArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    KMLPlaylistArgs {
+      PRIMITIVES: None,
+    }
+  }
+}
+
+pub struct KMLPlaylistBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLPlaylistBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_PRIMITIVES(&mut self, PRIMITIVES: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<KMLTourPrimitive<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLPlaylist::VT_PRIMITIVES, PRIMITIVES);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLPlaylistBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLPlaylistBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLPlaylist<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLPlaylist<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLPlaylist");
+      ds.field("PRIMITIVES", &self.PRIMITIVES());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLPlaylistT {
+  pub PRIMITIVES: Option<Vec<KMLTourPrimitiveT>>,
+}
+impl Default for KMLPlaylistT {
+  fn default() -> Self {
+    Self {
+      PRIMITIVES: None,
+    }
+  }
+}
+impl KMLPlaylistT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLPlaylist<'b>> {
+    let PRIMITIVES = self.PRIMITIVES.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    KMLPlaylist::create(_fbb, &KMLPlaylistArgs{
+      PRIMITIVES,
+    })
+  }
+}
+pub enum KMLTourOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// gx:Tour
+pub struct KMLTour<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for KMLTour<'a> {
+  type Inner = KMLTour<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> KMLTour<'a> {
+  pub const VT_NAME: flatbuffers::VOffsetT = 4;
+  pub const VT_DESCRIPTION: flatbuffers::VOffsetT = 6;
+  pub const VT_VISIBILITY: flatbuffers::VOffsetT = 8;
+  pub const VT_PLAYLIST: flatbuffers::VOffsetT = 10;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    KMLTour { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args KMLTourArgs<'args>
+  ) -> flatbuffers::WIPOffset<KMLTour<'bldr>> {
+    let mut builder = KMLTourBuilder::new(_fbb);
+    if let Some(x) = args.PLAYLIST { builder.add_PLAYLIST(x); }
+    if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
+    if let Some(x) = args.NAME { builder.add_NAME(x); }
+    builder.add_VISIBILITY(args.VISIBILITY);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> KMLTourT {
+    let NAME = self.NAME().map(|x| {
+      x.to_string()
+    });
+    let DESCRIPTION = self.DESCRIPTION().map(|x| {
+      x.to_string()
+    });
+    let VISIBILITY = self.VISIBILITY();
+    let PLAYLIST = self.PLAYLIST().map(|x| {
+      Box::new(x.unpack())
+    });
+    KMLTourT {
+      NAME,
+      DESCRIPTION,
+      VISIBILITY,
+      PLAYLIST,
+    }
+  }
+
+  /// Tour name
+  #[inline]
+  pub fn NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLTour::VT_NAME, None)}
+  }
+  /// Description
+  #[inline]
+  pub fn DESCRIPTION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLTour::VT_DESCRIPTION, None)}
+  }
+  /// Visibility
+  #[inline]
+  pub fn VISIBILITY(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(KMLTour::VT_VISIBILITY, Some(false)).unwrap()}
+  }
+  /// Playlist
+  #[inline]
+  pub fn PLAYLIST(&self) -> Option<KMLPlaylist<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLPlaylist>>(KMLTour::VT_PLAYLIST, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for KMLTour<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
+     .visit_field::<bool>("VISIBILITY", Self::VT_VISIBILITY, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLPlaylist>>("PLAYLIST", Self::VT_PLAYLIST, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct KMLTourArgs<'a> {
+    pub NAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub DESCRIPTION: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub VISIBILITY: bool,
+    pub PLAYLIST: Option<flatbuffers::WIPOffset<KMLPlaylist<'a>>>,
+}
+impl<'a> Default for KMLTourArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    KMLTourArgs {
+      NAME: None,
+      DESCRIPTION: None,
+      VISIBILITY: false,
+      PLAYLIST: None,
+    }
+  }
+}
+
+pub struct KMLTourBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLTourBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_NAME(&mut self, NAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLTour::VT_NAME, NAME);
+  }
+  #[inline]
+  pub fn add_DESCRIPTION(&mut self, DESCRIPTION: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLTour::VT_DESCRIPTION, DESCRIPTION);
+  }
+  #[inline]
+  pub fn add_VISIBILITY(&mut self, VISIBILITY: bool) {
+    self.fbb_.push_slot::<bool>(KMLTour::VT_VISIBILITY, VISIBILITY, false);
+  }
+  #[inline]
+  pub fn add_PLAYLIST(&mut self, PLAYLIST: flatbuffers::WIPOffset<KMLPlaylist<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLPlaylist>>(KMLTour::VT_PLAYLIST, PLAYLIST);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLTourBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    KMLTourBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<KMLTour<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for KMLTour<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("KMLTour");
+      ds.field("NAME", &self.NAME());
+      ds.field("DESCRIPTION", &self.DESCRIPTION());
+      ds.field("VISIBILITY", &self.VISIBILITY());
+      ds.field("PLAYLIST", &self.PLAYLIST());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct KMLTourT {
+  pub NAME: Option<String>,
+  pub DESCRIPTION: Option<String>,
+  pub VISIBILITY: bool,
+  pub PLAYLIST: Option<Box<KMLPlaylistT>>,
+}
+impl Default for KMLTourT {
+  fn default() -> Self {
+    Self {
+      NAME: None,
+      DESCRIPTION: None,
+      VISIBILITY: false,
+      PLAYLIST: None,
+    }
+  }
+}
+impl KMLTourT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<KMLTour<'b>> {
+    let NAME = self.NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DESCRIPTION = self.DESCRIPTION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let VISIBILITY = self.VISIBILITY;
+    let PLAYLIST = self.PLAYLIST.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    KMLTour::create(_fbb, &KMLTourArgs{
+      NAME,
+      DESCRIPTION,
+      VISIBILITY,
+      PLAYLIST,
     })
   }
 }
@@ -5095,15 +12820,24 @@ impl<'a> KMLPlacemark<'a> {
   pub const VT_STYLE_URL: flatbuffers::VOffsetT = 10;
   pub const VT_STYLE: flatbuffers::VOffsetT = 12;
   pub const VT_SNIPPET: flatbuffers::VOffsetT = 14;
-  pub const VT_POINT: flatbuffers::VOffsetT = 16;
-  pub const VT_LINE_STRING: flatbuffers::VOffsetT = 18;
-  pub const VT_POLYGON: flatbuffers::VOffsetT = 20;
-  pub const VT_MULTI_GEOMETRY: flatbuffers::VOffsetT = 22;
-  pub const VT_LOOK_AT: flatbuffers::VOffsetT = 24;
-  pub const VT_CAMERA: flatbuffers::VOffsetT = 26;
-  pub const VT_TIME_SPAN: flatbuffers::VOffsetT = 28;
-  pub const VT_TIME_STAMP: flatbuffers::VOffsetT = 30;
-  pub const VT_EXTENDED_DATA: flatbuffers::VOffsetT = 32;
+  pub const VT_OPEN: flatbuffers::VOffsetT = 16;
+  pub const VT_ADDRESS: flatbuffers::VOffsetT = 18;
+  pub const VT_POINT: flatbuffers::VOffsetT = 20;
+  pub const VT_LINE_STRING: flatbuffers::VOffsetT = 22;
+  pub const VT_POLYGON: flatbuffers::VOffsetT = 24;
+  pub const VT_LINEAR_RING: flatbuffers::VOffsetT = 26;
+  pub const VT_MULTI_GEOMETRY: flatbuffers::VOffsetT = 28;
+  pub const VT_MODEL: flatbuffers::VOffsetT = 30;
+  pub const VT_TRACK: flatbuffers::VOffsetT = 32;
+  pub const VT_MULTI_TRACK: flatbuffers::VOffsetT = 34;
+  pub const VT_LOOK_AT: flatbuffers::VOffsetT = 36;
+  pub const VT_CAMERA: flatbuffers::VOffsetT = 38;
+  pub const VT_TIME_SPAN: flatbuffers::VOffsetT = 40;
+  pub const VT_TIME_STAMP: flatbuffers::VOffsetT = 42;
+  pub const VT_EXTENDED_DATA: flatbuffers::VOffsetT = 44;
+  pub const VT_SCHEMA_DATA: flatbuffers::VOffsetT = 46;
+  pub const VT_REGION: flatbuffers::VOffsetT = 48;
+  pub const VT_STYLE_MAP: flatbuffers::VOffsetT = 50;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -5115,20 +12849,29 @@ impl<'a> KMLPlacemark<'a> {
     args: &'args KMLPlacemarkArgs<'args>
   ) -> flatbuffers::WIPOffset<KMLPlacemark<'bldr>> {
     let mut builder = KMLPlacemarkBuilder::new(_fbb);
+    if let Some(x) = args.STYLE_MAP { builder.add_STYLE_MAP(x); }
+    if let Some(x) = args.REGION { builder.add_REGION(x); }
+    if let Some(x) = args.SCHEMA_DATA { builder.add_SCHEMA_DATA(x); }
     if let Some(x) = args.EXTENDED_DATA { builder.add_EXTENDED_DATA(x); }
     if let Some(x) = args.TIME_STAMP { builder.add_TIME_STAMP(x); }
     if let Some(x) = args.TIME_SPAN { builder.add_TIME_SPAN(x); }
     if let Some(x) = args.CAMERA { builder.add_CAMERA(x); }
     if let Some(x) = args.LOOK_AT { builder.add_LOOK_AT(x); }
+    if let Some(x) = args.MULTI_TRACK { builder.add_MULTI_TRACK(x); }
+    if let Some(x) = args.TRACK { builder.add_TRACK(x); }
+    if let Some(x) = args.MODEL { builder.add_MODEL(x); }
     if let Some(x) = args.MULTI_GEOMETRY { builder.add_MULTI_GEOMETRY(x); }
+    if let Some(x) = args.LINEAR_RING { builder.add_LINEAR_RING(x); }
     if let Some(x) = args.POLYGON { builder.add_POLYGON(x); }
     if let Some(x) = args.LINE_STRING { builder.add_LINE_STRING(x); }
     if let Some(x) = args.POINT { builder.add_POINT(x); }
+    if let Some(x) = args.ADDRESS { builder.add_ADDRESS(x); }
     if let Some(x) = args.SNIPPET { builder.add_SNIPPET(x); }
     if let Some(x) = args.STYLE { builder.add_STYLE(x); }
     if let Some(x) = args.STYLE_URL { builder.add_STYLE_URL(x); }
     if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
     if let Some(x) = args.NAME { builder.add_NAME(x); }
+    builder.add_OPEN(args.OPEN);
     builder.add_VISIBILITY(args.VISIBILITY);
     builder.finish()
   }
@@ -5150,6 +12893,10 @@ impl<'a> KMLPlacemark<'a> {
     let SNIPPET = self.SNIPPET().map(|x| {
       x.to_string()
     });
+    let OPEN = self.OPEN();
+    let ADDRESS = self.ADDRESS().map(|x| {
+      x.to_string()
+    });
     let POINT = self.POINT().map(|x| {
       Box::new(x.unpack())
     });
@@ -5159,7 +12906,19 @@ impl<'a> KMLPlacemark<'a> {
     let POLYGON = self.POLYGON().map(|x| {
       Box::new(x.unpack())
     });
+    let LINEAR_RING = self.LINEAR_RING().map(|x| {
+      Box::new(x.unpack())
+    });
     let MULTI_GEOMETRY = self.MULTI_GEOMETRY().map(|x| {
+      Box::new(x.unpack())
+    });
+    let MODEL = self.MODEL().map(|x| {
+      Box::new(x.unpack())
+    });
+    let TRACK = self.TRACK().map(|x| {
+      Box::new(x.unpack())
+    });
+    let MULTI_TRACK = self.MULTI_TRACK().map(|x| {
       Box::new(x.unpack())
     });
     let LOOK_AT = self.LOOK_AT().map(|x| {
@@ -5177,6 +12936,15 @@ impl<'a> KMLPlacemark<'a> {
     let EXTENDED_DATA = self.EXTENDED_DATA().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
+    let SCHEMA_DATA = self.SCHEMA_DATA().map(|x| {
+      Box::new(x.unpack())
+    });
+    let REGION = self.REGION().map(|x| {
+      Box::new(x.unpack())
+    });
+    let STYLE_MAP = self.STYLE_MAP().map(|x| {
+      Box::new(x.unpack())
+    });
     KMLPlacemarkT {
       NAME,
       DESCRIPTION,
@@ -5184,15 +12952,24 @@ impl<'a> KMLPlacemark<'a> {
       STYLE_URL,
       STYLE,
       SNIPPET,
+      OPEN,
+      ADDRESS,
       POINT,
       LINE_STRING,
       POLYGON,
+      LINEAR_RING,
       MULTI_GEOMETRY,
+      MODEL,
+      TRACK,
+      MULTI_TRACK,
       LOOK_AT,
       CAMERA,
       TIME_SPAN,
       TIME_STAMP,
       EXTENDED_DATA,
+      SCHEMA_DATA,
+      REGION,
+      STYLE_MAP,
     }
   }
 
@@ -5244,6 +13021,22 @@ impl<'a> KMLPlacemark<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLPlacemark::VT_SNIPPET, None)}
   }
+  /// Whether open in tree view
+  #[inline]
+  pub fn OPEN(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(KMLPlacemark::VT_OPEN, Some(false)).unwrap()}
+  }
+  /// Address
+  #[inline]
+  pub fn ADDRESS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLPlacemark::VT_ADDRESS, None)}
+  }
   /// Point geometry
   #[inline]
   pub fn POINT(&self) -> Option<KMLPoint<'a>> {
@@ -5268,6 +13061,14 @@ impl<'a> KMLPlacemark<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLPolygon>>(KMLPlacemark::VT_POLYGON, None)}
   }
+  /// LinearRing geometry (standalone)
+  #[inline]
+  pub fn LINEAR_RING(&self) -> Option<KMLLinearRing<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLLinearRing>>(KMLPlacemark::VT_LINEAR_RING, None)}
+  }
   /// MultiGeometry
   #[inline]
   pub fn MULTI_GEOMETRY(&self) -> Option<KMLMultiGeometry<'a>> {
@@ -5275,6 +13076,30 @@ impl<'a> KMLPlacemark<'a> {
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLMultiGeometry>>(KMLPlacemark::VT_MULTI_GEOMETRY, None)}
+  }
+  /// 3D Model
+  #[inline]
+  pub fn MODEL(&self) -> Option<KMLModel<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLModel>>(KMLPlacemark::VT_MODEL, None)}
+  }
+  /// gx:Track
+  #[inline]
+  pub fn TRACK(&self) -> Option<KMLTrack<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLTrack>>(KMLPlacemark::VT_TRACK, None)}
+  }
+  /// gx:MultiTrack
+  #[inline]
+  pub fn MULTI_TRACK(&self) -> Option<KMLMultiTrack<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLMultiTrack>>(KMLPlacemark::VT_MULTI_TRACK, None)}
   }
   /// LookAt viewpoint
   #[inline]
@@ -5316,6 +13141,30 @@ impl<'a> KMLPlacemark<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLData>>>>(KMLPlacemark::VT_EXTENDED_DATA, None)}
   }
+  /// Schema data
+  #[inline]
+  pub fn SCHEMA_DATA(&self) -> Option<KMLSchemaData<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLSchemaData>>(KMLPlacemark::VT_SCHEMA_DATA, None)}
+  }
+  /// Region
+  #[inline]
+  pub fn REGION(&self) -> Option<KMLRegion<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLRegion>>(KMLPlacemark::VT_REGION, None)}
+  }
+  /// StyleMap (inline)
+  #[inline]
+  pub fn STYLE_MAP(&self) -> Option<KMLStyleMap<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLStyleMap>>(KMLPlacemark::VT_STYLE_MAP, None)}
+  }
 }
 
 impl flatbuffers::Verifiable for KMLPlacemark<'_> {
@@ -5331,15 +13180,24 @@ impl flatbuffers::Verifiable for KMLPlacemark<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("STYLE_URL", Self::VT_STYLE_URL, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<KMLStyle>>("STYLE", Self::VT_STYLE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SNIPPET", Self::VT_SNIPPET, false)?
+     .visit_field::<bool>("OPEN", Self::VT_OPEN, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ADDRESS", Self::VT_ADDRESS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<KMLPoint>>("POINT", Self::VT_POINT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<KMLLineString>>("LINE_STRING", Self::VT_LINE_STRING, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<KMLPolygon>>("POLYGON", Self::VT_POLYGON, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLLinearRing>>("LINEAR_RING", Self::VT_LINEAR_RING, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<KMLMultiGeometry>>("MULTI_GEOMETRY", Self::VT_MULTI_GEOMETRY, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLModel>>("MODEL", Self::VT_MODEL, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLTrack>>("TRACK", Self::VT_TRACK, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLMultiTrack>>("MULTI_TRACK", Self::VT_MULTI_TRACK, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<KMLLookAt>>("LOOK_AT", Self::VT_LOOK_AT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<KMLCamera>>("CAMERA", Self::VT_CAMERA, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<KMLTimeSpan>>("TIME_SPAN", Self::VT_TIME_SPAN, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<KMLTimeStamp>>("TIME_STAMP", Self::VT_TIME_STAMP, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLData>>>>("EXTENDED_DATA", Self::VT_EXTENDED_DATA, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLSchemaData>>("SCHEMA_DATA", Self::VT_SCHEMA_DATA, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLRegion>>("REGION", Self::VT_REGION, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLStyleMap>>("STYLE_MAP", Self::VT_STYLE_MAP, false)?
      .finish();
     Ok(())
   }
@@ -5351,15 +13209,24 @@ pub struct KMLPlacemarkArgs<'a> {
     pub STYLE_URL: Option<flatbuffers::WIPOffset<&'a str>>,
     pub STYLE: Option<flatbuffers::WIPOffset<KMLStyle<'a>>>,
     pub SNIPPET: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub OPEN: bool,
+    pub ADDRESS: Option<flatbuffers::WIPOffset<&'a str>>,
     pub POINT: Option<flatbuffers::WIPOffset<KMLPoint<'a>>>,
     pub LINE_STRING: Option<flatbuffers::WIPOffset<KMLLineString<'a>>>,
     pub POLYGON: Option<flatbuffers::WIPOffset<KMLPolygon<'a>>>,
+    pub LINEAR_RING: Option<flatbuffers::WIPOffset<KMLLinearRing<'a>>>,
     pub MULTI_GEOMETRY: Option<flatbuffers::WIPOffset<KMLMultiGeometry<'a>>>,
+    pub MODEL: Option<flatbuffers::WIPOffset<KMLModel<'a>>>,
+    pub TRACK: Option<flatbuffers::WIPOffset<KMLTrack<'a>>>,
+    pub MULTI_TRACK: Option<flatbuffers::WIPOffset<KMLMultiTrack<'a>>>,
     pub LOOK_AT: Option<flatbuffers::WIPOffset<KMLLookAt<'a>>>,
     pub CAMERA: Option<flatbuffers::WIPOffset<KMLCamera<'a>>>,
     pub TIME_SPAN: Option<flatbuffers::WIPOffset<KMLTimeSpan<'a>>>,
     pub TIME_STAMP: Option<flatbuffers::WIPOffset<KMLTimeStamp<'a>>>,
     pub EXTENDED_DATA: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLData<'a>>>>>,
+    pub SCHEMA_DATA: Option<flatbuffers::WIPOffset<KMLSchemaData<'a>>>,
+    pub REGION: Option<flatbuffers::WIPOffset<KMLRegion<'a>>>,
+    pub STYLE_MAP: Option<flatbuffers::WIPOffset<KMLStyleMap<'a>>>,
 }
 impl<'a> Default for KMLPlacemarkArgs<'a> {
   #[inline]
@@ -5371,15 +13238,24 @@ impl<'a> Default for KMLPlacemarkArgs<'a> {
       STYLE_URL: None,
       STYLE: None,
       SNIPPET: None,
+      OPEN: false,
+      ADDRESS: None,
       POINT: None,
       LINE_STRING: None,
       POLYGON: None,
+      LINEAR_RING: None,
       MULTI_GEOMETRY: None,
+      MODEL: None,
+      TRACK: None,
+      MULTI_TRACK: None,
       LOOK_AT: None,
       CAMERA: None,
       TIME_SPAN: None,
       TIME_STAMP: None,
       EXTENDED_DATA: None,
+      SCHEMA_DATA: None,
+      REGION: None,
+      STYLE_MAP: None,
     }
   }
 }
@@ -5414,6 +13290,14 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLPlacemarkBuilder<'a, 'b, A> 
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLPlacemark::VT_SNIPPET, SNIPPET);
   }
   #[inline]
+  pub fn add_OPEN(&mut self, OPEN: bool) {
+    self.fbb_.push_slot::<bool>(KMLPlacemark::VT_OPEN, OPEN, false);
+  }
+  #[inline]
+  pub fn add_ADDRESS(&mut self, ADDRESS: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLPlacemark::VT_ADDRESS, ADDRESS);
+  }
+  #[inline]
   pub fn add_POINT(&mut self, POINT: flatbuffers::WIPOffset<KMLPoint<'b >>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLPoint>>(KMLPlacemark::VT_POINT, POINT);
   }
@@ -5426,8 +13310,24 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLPlacemarkBuilder<'a, 'b, A> 
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLPolygon>>(KMLPlacemark::VT_POLYGON, POLYGON);
   }
   #[inline]
+  pub fn add_LINEAR_RING(&mut self, LINEAR_RING: flatbuffers::WIPOffset<KMLLinearRing<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLLinearRing>>(KMLPlacemark::VT_LINEAR_RING, LINEAR_RING);
+  }
+  #[inline]
   pub fn add_MULTI_GEOMETRY(&mut self, MULTI_GEOMETRY: flatbuffers::WIPOffset<KMLMultiGeometry<'b >>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLMultiGeometry>>(KMLPlacemark::VT_MULTI_GEOMETRY, MULTI_GEOMETRY);
+  }
+  #[inline]
+  pub fn add_MODEL(&mut self, MODEL: flatbuffers::WIPOffset<KMLModel<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLModel>>(KMLPlacemark::VT_MODEL, MODEL);
+  }
+  #[inline]
+  pub fn add_TRACK(&mut self, TRACK: flatbuffers::WIPOffset<KMLTrack<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLTrack>>(KMLPlacemark::VT_TRACK, TRACK);
+  }
+  #[inline]
+  pub fn add_MULTI_TRACK(&mut self, MULTI_TRACK: flatbuffers::WIPOffset<KMLMultiTrack<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLMultiTrack>>(KMLPlacemark::VT_MULTI_TRACK, MULTI_TRACK);
   }
   #[inline]
   pub fn add_LOOK_AT(&mut self, LOOK_AT: flatbuffers::WIPOffset<KMLLookAt<'b >>) {
@@ -5448,6 +13348,18 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLPlacemarkBuilder<'a, 'b, A> 
   #[inline]
   pub fn add_EXTENDED_DATA(&mut self, EXTENDED_DATA: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<KMLData<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLPlacemark::VT_EXTENDED_DATA, EXTENDED_DATA);
+  }
+  #[inline]
+  pub fn add_SCHEMA_DATA(&mut self, SCHEMA_DATA: flatbuffers::WIPOffset<KMLSchemaData<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLSchemaData>>(KMLPlacemark::VT_SCHEMA_DATA, SCHEMA_DATA);
+  }
+  #[inline]
+  pub fn add_REGION(&mut self, REGION: flatbuffers::WIPOffset<KMLRegion<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLRegion>>(KMLPlacemark::VT_REGION, REGION);
+  }
+  #[inline]
+  pub fn add_STYLE_MAP(&mut self, STYLE_MAP: flatbuffers::WIPOffset<KMLStyleMap<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLStyleMap>>(KMLPlacemark::VT_STYLE_MAP, STYLE_MAP);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLPlacemarkBuilder<'a, 'b, A> {
@@ -5473,15 +13385,24 @@ impl core::fmt::Debug for KMLPlacemark<'_> {
       ds.field("STYLE_URL", &self.STYLE_URL());
       ds.field("STYLE", &self.STYLE());
       ds.field("SNIPPET", &self.SNIPPET());
+      ds.field("OPEN", &self.OPEN());
+      ds.field("ADDRESS", &self.ADDRESS());
       ds.field("POINT", &self.POINT());
       ds.field("LINE_STRING", &self.LINE_STRING());
       ds.field("POLYGON", &self.POLYGON());
+      ds.field("LINEAR_RING", &self.LINEAR_RING());
       ds.field("MULTI_GEOMETRY", &self.MULTI_GEOMETRY());
+      ds.field("MODEL", &self.MODEL());
+      ds.field("TRACK", &self.TRACK());
+      ds.field("MULTI_TRACK", &self.MULTI_TRACK());
       ds.field("LOOK_AT", &self.LOOK_AT());
       ds.field("CAMERA", &self.CAMERA());
       ds.field("TIME_SPAN", &self.TIME_SPAN());
       ds.field("TIME_STAMP", &self.TIME_STAMP());
       ds.field("EXTENDED_DATA", &self.EXTENDED_DATA());
+      ds.field("SCHEMA_DATA", &self.SCHEMA_DATA());
+      ds.field("REGION", &self.REGION());
+      ds.field("STYLE_MAP", &self.STYLE_MAP());
       ds.finish()
   }
 }
@@ -5494,15 +13415,24 @@ pub struct KMLPlacemarkT {
   pub STYLE_URL: Option<String>,
   pub STYLE: Option<Box<KMLStyleT>>,
   pub SNIPPET: Option<String>,
+  pub OPEN: bool,
+  pub ADDRESS: Option<String>,
   pub POINT: Option<Box<KMLPointT>>,
   pub LINE_STRING: Option<Box<KMLLineStringT>>,
   pub POLYGON: Option<Box<KMLPolygonT>>,
+  pub LINEAR_RING: Option<Box<KMLLinearRingT>>,
   pub MULTI_GEOMETRY: Option<Box<KMLMultiGeometryT>>,
+  pub MODEL: Option<Box<KMLModelT>>,
+  pub TRACK: Option<Box<KMLTrackT>>,
+  pub MULTI_TRACK: Option<Box<KMLMultiTrackT>>,
   pub LOOK_AT: Option<Box<KMLLookAtT>>,
   pub CAMERA: Option<Box<KMLCameraT>>,
   pub TIME_SPAN: Option<Box<KMLTimeSpanT>>,
   pub TIME_STAMP: Option<Box<KMLTimeStampT>>,
   pub EXTENDED_DATA: Option<Vec<KMLDataT>>,
+  pub SCHEMA_DATA: Option<Box<KMLSchemaDataT>>,
+  pub REGION: Option<Box<KMLRegionT>>,
+  pub STYLE_MAP: Option<Box<KMLStyleMapT>>,
 }
 impl Default for KMLPlacemarkT {
   fn default() -> Self {
@@ -5513,15 +13443,24 @@ impl Default for KMLPlacemarkT {
       STYLE_URL: None,
       STYLE: None,
       SNIPPET: None,
+      OPEN: false,
+      ADDRESS: None,
       POINT: None,
       LINE_STRING: None,
       POLYGON: None,
+      LINEAR_RING: None,
       MULTI_GEOMETRY: None,
+      MODEL: None,
+      TRACK: None,
+      MULTI_TRACK: None,
       LOOK_AT: None,
       CAMERA: None,
       TIME_SPAN: None,
       TIME_STAMP: None,
       EXTENDED_DATA: None,
+      SCHEMA_DATA: None,
+      REGION: None,
+      STYLE_MAP: None,
     }
   }
 }
@@ -5546,6 +13485,10 @@ impl KMLPlacemarkT {
     let SNIPPET = self.SNIPPET.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let OPEN = self.OPEN;
+    let ADDRESS = self.ADDRESS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     let POINT = self.POINT.as_ref().map(|x|{
       x.pack(_fbb)
     });
@@ -5555,7 +13498,19 @@ impl KMLPlacemarkT {
     let POLYGON = self.POLYGON.as_ref().map(|x|{
       x.pack(_fbb)
     });
+    let LINEAR_RING = self.LINEAR_RING.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     let MULTI_GEOMETRY = self.MULTI_GEOMETRY.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let MODEL = self.MODEL.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let TRACK = self.TRACK.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let MULTI_TRACK = self.MULTI_TRACK.as_ref().map(|x|{
       x.pack(_fbb)
     });
     let LOOK_AT = self.LOOK_AT.as_ref().map(|x|{
@@ -5573,6 +13528,15 @@ impl KMLPlacemarkT {
     let EXTENDED_DATA = self.EXTENDED_DATA.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
+    let SCHEMA_DATA = self.SCHEMA_DATA.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let REGION = self.REGION.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let STYLE_MAP = self.STYLE_MAP.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     KMLPlacemark::create(_fbb, &KMLPlacemarkArgs{
       NAME,
       DESCRIPTION,
@@ -5580,15 +13544,24 @@ impl KMLPlacemarkT {
       STYLE_URL,
       STYLE,
       SNIPPET,
+      OPEN,
+      ADDRESS,
       POINT,
       LINE_STRING,
       POLYGON,
+      LINEAR_RING,
       MULTI_GEOMETRY,
+      MODEL,
+      TRACK,
+      MULTI_TRACK,
       LOOK_AT,
       CAMERA,
       TIME_SPAN,
       TIME_STAMP,
       EXTENDED_DATA,
+      SCHEMA_DATA,
+      REGION,
+      STYLE_MAP,
     })
   }
 }
@@ -5617,6 +13590,18 @@ impl<'a> KMLFolder<'a> {
   pub const VT_FOLDERS: flatbuffers::VOffsetT = 14;
   pub const VT_NETWORK_LINKS: flatbuffers::VOffsetT = 16;
   pub const VT_GROUND_OVERLAYS: flatbuffers::VOffsetT = 18;
+  pub const VT_STYLES: flatbuffers::VOffsetT = 20;
+  pub const VT_STYLE_MAPS: flatbuffers::VOffsetT = 22;
+  pub const VT_SCREEN_OVERLAYS: flatbuffers::VOffsetT = 24;
+  pub const VT_PHOTO_OVERLAYS: flatbuffers::VOffsetT = 26;
+  pub const VT_TOURS: flatbuffers::VOffsetT = 28;
+  pub const VT_STYLE_URL: flatbuffers::VOffsetT = 30;
+  pub const VT_REGION: flatbuffers::VOffsetT = 32;
+  pub const VT_EXTENDED_DATA: flatbuffers::VOffsetT = 34;
+  pub const VT_LOOK_AT: flatbuffers::VOffsetT = 36;
+  pub const VT_CAMERA: flatbuffers::VOffsetT = 38;
+  pub const VT_TIME_SPAN: flatbuffers::VOffsetT = 40;
+  pub const VT_TIME_STAMP: flatbuffers::VOffsetT = 42;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -5628,6 +13613,18 @@ impl<'a> KMLFolder<'a> {
     args: &'args KMLFolderArgs<'args>
   ) -> flatbuffers::WIPOffset<KMLFolder<'bldr>> {
     let mut builder = KMLFolderBuilder::new(_fbb);
+    if let Some(x) = args.TIME_STAMP { builder.add_TIME_STAMP(x); }
+    if let Some(x) = args.TIME_SPAN { builder.add_TIME_SPAN(x); }
+    if let Some(x) = args.CAMERA { builder.add_CAMERA(x); }
+    if let Some(x) = args.LOOK_AT { builder.add_LOOK_AT(x); }
+    if let Some(x) = args.EXTENDED_DATA { builder.add_EXTENDED_DATA(x); }
+    if let Some(x) = args.REGION { builder.add_REGION(x); }
+    if let Some(x) = args.STYLE_URL { builder.add_STYLE_URL(x); }
+    if let Some(x) = args.TOURS { builder.add_TOURS(x); }
+    if let Some(x) = args.PHOTO_OVERLAYS { builder.add_PHOTO_OVERLAYS(x); }
+    if let Some(x) = args.SCREEN_OVERLAYS { builder.add_SCREEN_OVERLAYS(x); }
+    if let Some(x) = args.STYLE_MAPS { builder.add_STYLE_MAPS(x); }
+    if let Some(x) = args.STYLES { builder.add_STYLES(x); }
     if let Some(x) = args.GROUND_OVERLAYS { builder.add_GROUND_OVERLAYS(x); }
     if let Some(x) = args.NETWORK_LINKS { builder.add_NETWORK_LINKS(x); }
     if let Some(x) = args.FOLDERS { builder.add_FOLDERS(x); }
@@ -5660,6 +13657,42 @@ impl<'a> KMLFolder<'a> {
     let GROUND_OVERLAYS = self.GROUND_OVERLAYS().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
+    let STYLES = self.STYLES().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let STYLE_MAPS = self.STYLE_MAPS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let SCREEN_OVERLAYS = self.SCREEN_OVERLAYS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let PHOTO_OVERLAYS = self.PHOTO_OVERLAYS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let TOURS = self.TOURS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let STYLE_URL = self.STYLE_URL().map(|x| {
+      x.to_string()
+    });
+    let REGION = self.REGION().map(|x| {
+      Box::new(x.unpack())
+    });
+    let EXTENDED_DATA = self.EXTENDED_DATA().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let LOOK_AT = self.LOOK_AT().map(|x| {
+      Box::new(x.unpack())
+    });
+    let CAMERA = self.CAMERA().map(|x| {
+      Box::new(x.unpack())
+    });
+    let TIME_SPAN = self.TIME_SPAN().map(|x| {
+      Box::new(x.unpack())
+    });
+    let TIME_STAMP = self.TIME_STAMP().map(|x| {
+      Box::new(x.unpack())
+    });
     KMLFolderT {
       NAME,
       DESCRIPTION,
@@ -5669,6 +13702,18 @@ impl<'a> KMLFolder<'a> {
       FOLDERS,
       NETWORK_LINKS,
       GROUND_OVERLAYS,
+      STYLES,
+      STYLE_MAPS,
+      SCREEN_OVERLAYS,
+      PHOTO_OVERLAYS,
+      TOURS,
+      STYLE_URL,
+      REGION,
+      EXTENDED_DATA,
+      LOOK_AT,
+      CAMERA,
+      TIME_SPAN,
+      TIME_STAMP,
     }
   }
 
@@ -5736,6 +13781,102 @@ impl<'a> KMLFolder<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLGroundOverlay>>>>(KMLFolder::VT_GROUND_OVERLAYS, None)}
   }
+  /// Shared styles
+  #[inline]
+  pub fn STYLES(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLStyle<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLStyle>>>>(KMLFolder::VT_STYLES, None)}
+  }
+  /// Style maps
+  #[inline]
+  pub fn STYLE_MAPS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLStyleMap<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLStyleMap>>>>(KMLFolder::VT_STYLE_MAPS, None)}
+  }
+  /// Screen overlays
+  #[inline]
+  pub fn SCREEN_OVERLAYS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLScreenOverlay<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLScreenOverlay>>>>(KMLFolder::VT_SCREEN_OVERLAYS, None)}
+  }
+  /// Photo overlays
+  #[inline]
+  pub fn PHOTO_OVERLAYS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLPhotoOverlay<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLPhotoOverlay>>>>(KMLFolder::VT_PHOTO_OVERLAYS, None)}
+  }
+  /// Tours
+  #[inline]
+  pub fn TOURS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLTour<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLTour>>>>(KMLFolder::VT_TOURS, None)}
+  }
+  /// Style URL reference
+  #[inline]
+  pub fn STYLE_URL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(KMLFolder::VT_STYLE_URL, None)}
+  }
+  /// Region
+  #[inline]
+  pub fn REGION(&self) -> Option<KMLRegion<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLRegion>>(KMLFolder::VT_REGION, None)}
+  }
+  /// Extended data
+  #[inline]
+  pub fn EXTENDED_DATA(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLData<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLData>>>>(KMLFolder::VT_EXTENDED_DATA, None)}
+  }
+  /// LookAt viewpoint
+  #[inline]
+  pub fn LOOK_AT(&self) -> Option<KMLLookAt<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLLookAt>>(KMLFolder::VT_LOOK_AT, None)}
+  }
+  /// Camera viewpoint
+  #[inline]
+  pub fn CAMERA(&self) -> Option<KMLCamera<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLCamera>>(KMLFolder::VT_CAMERA, None)}
+  }
+  /// TimeSpan
+  #[inline]
+  pub fn TIME_SPAN(&self) -> Option<KMLTimeSpan<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLTimeSpan>>(KMLFolder::VT_TIME_SPAN, None)}
+  }
+  /// TimeStamp
+  #[inline]
+  pub fn TIME_STAMP(&self) -> Option<KMLTimeStamp<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLTimeStamp>>(KMLFolder::VT_TIME_STAMP, None)}
+  }
 }
 
 impl flatbuffers::Verifiable for KMLFolder<'_> {
@@ -5753,6 +13894,18 @@ impl flatbuffers::Verifiable for KMLFolder<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLFolder>>>>("FOLDERS", Self::VT_FOLDERS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLNetworkLink>>>>("NETWORK_LINKS", Self::VT_NETWORK_LINKS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLGroundOverlay>>>>("GROUND_OVERLAYS", Self::VT_GROUND_OVERLAYS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLStyle>>>>("STYLES", Self::VT_STYLES, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLStyleMap>>>>("STYLE_MAPS", Self::VT_STYLE_MAPS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLScreenOverlay>>>>("SCREEN_OVERLAYS", Self::VT_SCREEN_OVERLAYS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLPhotoOverlay>>>>("PHOTO_OVERLAYS", Self::VT_PHOTO_OVERLAYS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLTour>>>>("TOURS", Self::VT_TOURS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("STYLE_URL", Self::VT_STYLE_URL, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLRegion>>("REGION", Self::VT_REGION, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLData>>>>("EXTENDED_DATA", Self::VT_EXTENDED_DATA, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLLookAt>>("LOOK_AT", Self::VT_LOOK_AT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLCamera>>("CAMERA", Self::VT_CAMERA, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLTimeSpan>>("TIME_SPAN", Self::VT_TIME_SPAN, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLTimeStamp>>("TIME_STAMP", Self::VT_TIME_STAMP, false)?
      .finish();
     Ok(())
   }
@@ -5766,6 +13919,18 @@ pub struct KMLFolderArgs<'a> {
     pub FOLDERS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLFolder<'a>>>>>,
     pub NETWORK_LINKS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLNetworkLink<'a>>>>>,
     pub GROUND_OVERLAYS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLGroundOverlay<'a>>>>>,
+    pub STYLES: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLStyle<'a>>>>>,
+    pub STYLE_MAPS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLStyleMap<'a>>>>>,
+    pub SCREEN_OVERLAYS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLScreenOverlay<'a>>>>>,
+    pub PHOTO_OVERLAYS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLPhotoOverlay<'a>>>>>,
+    pub TOURS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLTour<'a>>>>>,
+    pub STYLE_URL: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub REGION: Option<flatbuffers::WIPOffset<KMLRegion<'a>>>,
+    pub EXTENDED_DATA: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLData<'a>>>>>,
+    pub LOOK_AT: Option<flatbuffers::WIPOffset<KMLLookAt<'a>>>,
+    pub CAMERA: Option<flatbuffers::WIPOffset<KMLCamera<'a>>>,
+    pub TIME_SPAN: Option<flatbuffers::WIPOffset<KMLTimeSpan<'a>>>,
+    pub TIME_STAMP: Option<flatbuffers::WIPOffset<KMLTimeStamp<'a>>>,
 }
 impl<'a> Default for KMLFolderArgs<'a> {
   #[inline]
@@ -5779,6 +13944,18 @@ impl<'a> Default for KMLFolderArgs<'a> {
       FOLDERS: None,
       NETWORK_LINKS: None,
       GROUND_OVERLAYS: None,
+      STYLES: None,
+      STYLE_MAPS: None,
+      SCREEN_OVERLAYS: None,
+      PHOTO_OVERLAYS: None,
+      TOURS: None,
+      STYLE_URL: None,
+      REGION: None,
+      EXTENDED_DATA: None,
+      LOOK_AT: None,
+      CAMERA: None,
+      TIME_SPAN: None,
+      TIME_STAMP: None,
     }
   }
 }
@@ -5821,6 +13998,54 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLFolderBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLFolder::VT_GROUND_OVERLAYS, GROUND_OVERLAYS);
   }
   #[inline]
+  pub fn add_STYLES(&mut self, STYLES: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<KMLStyle<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLFolder::VT_STYLES, STYLES);
+  }
+  #[inline]
+  pub fn add_STYLE_MAPS(&mut self, STYLE_MAPS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<KMLStyleMap<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLFolder::VT_STYLE_MAPS, STYLE_MAPS);
+  }
+  #[inline]
+  pub fn add_SCREEN_OVERLAYS(&mut self, SCREEN_OVERLAYS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<KMLScreenOverlay<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLFolder::VT_SCREEN_OVERLAYS, SCREEN_OVERLAYS);
+  }
+  #[inline]
+  pub fn add_PHOTO_OVERLAYS(&mut self, PHOTO_OVERLAYS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<KMLPhotoOverlay<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLFolder::VT_PHOTO_OVERLAYS, PHOTO_OVERLAYS);
+  }
+  #[inline]
+  pub fn add_TOURS(&mut self, TOURS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<KMLTour<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLFolder::VT_TOURS, TOURS);
+  }
+  #[inline]
+  pub fn add_STYLE_URL(&mut self, STYLE_URL: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLFolder::VT_STYLE_URL, STYLE_URL);
+  }
+  #[inline]
+  pub fn add_REGION(&mut self, REGION: flatbuffers::WIPOffset<KMLRegion<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLRegion>>(KMLFolder::VT_REGION, REGION);
+  }
+  #[inline]
+  pub fn add_EXTENDED_DATA(&mut self, EXTENDED_DATA: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<KMLData<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KMLFolder::VT_EXTENDED_DATA, EXTENDED_DATA);
+  }
+  #[inline]
+  pub fn add_LOOK_AT(&mut self, LOOK_AT: flatbuffers::WIPOffset<KMLLookAt<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLLookAt>>(KMLFolder::VT_LOOK_AT, LOOK_AT);
+  }
+  #[inline]
+  pub fn add_CAMERA(&mut self, CAMERA: flatbuffers::WIPOffset<KMLCamera<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLCamera>>(KMLFolder::VT_CAMERA, CAMERA);
+  }
+  #[inline]
+  pub fn add_TIME_SPAN(&mut self, TIME_SPAN: flatbuffers::WIPOffset<KMLTimeSpan<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLTimeSpan>>(KMLFolder::VT_TIME_SPAN, TIME_SPAN);
+  }
+  #[inline]
+  pub fn add_TIME_STAMP(&mut self, TIME_STAMP: flatbuffers::WIPOffset<KMLTimeStamp<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLTimeStamp>>(KMLFolder::VT_TIME_STAMP, TIME_STAMP);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLFolderBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     KMLFolderBuilder {
@@ -5846,6 +14071,18 @@ impl core::fmt::Debug for KMLFolder<'_> {
       ds.field("FOLDERS", &self.FOLDERS());
       ds.field("NETWORK_LINKS", &self.NETWORK_LINKS());
       ds.field("GROUND_OVERLAYS", &self.GROUND_OVERLAYS());
+      ds.field("STYLES", &self.STYLES());
+      ds.field("STYLE_MAPS", &self.STYLE_MAPS());
+      ds.field("SCREEN_OVERLAYS", &self.SCREEN_OVERLAYS());
+      ds.field("PHOTO_OVERLAYS", &self.PHOTO_OVERLAYS());
+      ds.field("TOURS", &self.TOURS());
+      ds.field("STYLE_URL", &self.STYLE_URL());
+      ds.field("REGION", &self.REGION());
+      ds.field("EXTENDED_DATA", &self.EXTENDED_DATA());
+      ds.field("LOOK_AT", &self.LOOK_AT());
+      ds.field("CAMERA", &self.CAMERA());
+      ds.field("TIME_SPAN", &self.TIME_SPAN());
+      ds.field("TIME_STAMP", &self.TIME_STAMP());
       ds.finish()
   }
 }
@@ -5860,6 +14097,18 @@ pub struct KMLFolderT {
   pub FOLDERS: Option<Vec<KMLFolderT>>,
   pub NETWORK_LINKS: Option<Vec<KMLNetworkLinkT>>,
   pub GROUND_OVERLAYS: Option<Vec<KMLGroundOverlayT>>,
+  pub STYLES: Option<Vec<KMLStyleT>>,
+  pub STYLE_MAPS: Option<Vec<KMLStyleMapT>>,
+  pub SCREEN_OVERLAYS: Option<Vec<KMLScreenOverlayT>>,
+  pub PHOTO_OVERLAYS: Option<Vec<KMLPhotoOverlayT>>,
+  pub TOURS: Option<Vec<KMLTourT>>,
+  pub STYLE_URL: Option<String>,
+  pub REGION: Option<Box<KMLRegionT>>,
+  pub EXTENDED_DATA: Option<Vec<KMLDataT>>,
+  pub LOOK_AT: Option<Box<KMLLookAtT>>,
+  pub CAMERA: Option<Box<KMLCameraT>>,
+  pub TIME_SPAN: Option<Box<KMLTimeSpanT>>,
+  pub TIME_STAMP: Option<Box<KMLTimeStampT>>,
 }
 impl Default for KMLFolderT {
   fn default() -> Self {
@@ -5872,6 +14121,18 @@ impl Default for KMLFolderT {
       FOLDERS: None,
       NETWORK_LINKS: None,
       GROUND_OVERLAYS: None,
+      STYLES: None,
+      STYLE_MAPS: None,
+      SCREEN_OVERLAYS: None,
+      PHOTO_OVERLAYS: None,
+      TOURS: None,
+      STYLE_URL: None,
+      REGION: None,
+      EXTENDED_DATA: None,
+      LOOK_AT: None,
+      CAMERA: None,
+      TIME_SPAN: None,
+      TIME_STAMP: None,
     }
   }
 }
@@ -5900,6 +14161,42 @@ impl KMLFolderT {
     let GROUND_OVERLAYS = self.GROUND_OVERLAYS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
+    let STYLES = self.STYLES.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let STYLE_MAPS = self.STYLE_MAPS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let SCREEN_OVERLAYS = self.SCREEN_OVERLAYS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let PHOTO_OVERLAYS = self.PHOTO_OVERLAYS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let TOURS = self.TOURS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let STYLE_URL = self.STYLE_URL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let REGION = self.REGION.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let EXTENDED_DATA = self.EXTENDED_DATA.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let LOOK_AT = self.LOOK_AT.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let CAMERA = self.CAMERA.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let TIME_SPAN = self.TIME_SPAN.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let TIME_STAMP = self.TIME_STAMP.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     KMLFolder::create(_fbb, &KMLFolderArgs{
       NAME,
       DESCRIPTION,
@@ -5909,6 +14206,18 @@ impl KMLFolderT {
       FOLDERS,
       NETWORK_LINKS,
       GROUND_OVERLAYS,
+      STYLES,
+      STYLE_MAPS,
+      SCREEN_OVERLAYS,
+      PHOTO_OVERLAYS,
+      TOURS,
+      STYLE_URL,
+      REGION,
+      EXTENDED_DATA,
+      LOOK_AT,
+      CAMERA,
+      TIME_SPAN,
+      TIME_STAMP,
     })
   }
 }
@@ -5939,6 +14248,11 @@ impl<'a> KML<'a> {
   pub const VT_FOLDERS: flatbuffers::VOffsetT = 18;
   pub const VT_NETWORK_LINKS: flatbuffers::VOffsetT = 20;
   pub const VT_GROUND_OVERLAYS: flatbuffers::VOffsetT = 22;
+  pub const VT_SCHEMAS: flatbuffers::VOffsetT = 24;
+  pub const VT_SCREEN_OVERLAYS: flatbuffers::VOffsetT = 26;
+  pub const VT_PHOTO_OVERLAYS: flatbuffers::VOffsetT = 28;
+  pub const VT_TOURS: flatbuffers::VOffsetT = 30;
+  pub const VT_NETWORK_LINK_CONTROL: flatbuffers::VOffsetT = 32;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -5950,6 +14264,11 @@ impl<'a> KML<'a> {
     args: &'args KMLArgs<'args>
   ) -> flatbuffers::WIPOffset<KML<'bldr>> {
     let mut builder = KMLBuilder::new(_fbb);
+    if let Some(x) = args.NETWORK_LINK_CONTROL { builder.add_NETWORK_LINK_CONTROL(x); }
+    if let Some(x) = args.TOURS { builder.add_TOURS(x); }
+    if let Some(x) = args.PHOTO_OVERLAYS { builder.add_PHOTO_OVERLAYS(x); }
+    if let Some(x) = args.SCREEN_OVERLAYS { builder.add_SCREEN_OVERLAYS(x); }
+    if let Some(x) = args.SCHEMAS { builder.add_SCHEMAS(x); }
     if let Some(x) = args.GROUND_OVERLAYS { builder.add_GROUND_OVERLAYS(x); }
     if let Some(x) = args.NETWORK_LINKS { builder.add_NETWORK_LINKS(x); }
     if let Some(x) = args.FOLDERS { builder.add_FOLDERS(x); }
@@ -5990,6 +14309,21 @@ impl<'a> KML<'a> {
     let GROUND_OVERLAYS = self.GROUND_OVERLAYS().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
+    let SCHEMAS = self.SCHEMAS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let SCREEN_OVERLAYS = self.SCREEN_OVERLAYS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let PHOTO_OVERLAYS = self.PHOTO_OVERLAYS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let TOURS = self.TOURS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let NETWORK_LINK_CONTROL = self.NETWORK_LINK_CONTROL().map(|x| {
+      Box::new(x.unpack())
+    });
     KMLT {
       NAME,
       DESCRIPTION,
@@ -6001,6 +14335,11 @@ impl<'a> KML<'a> {
       FOLDERS,
       NETWORK_LINKS,
       GROUND_OVERLAYS,
+      SCHEMAS,
+      SCREEN_OVERLAYS,
+      PHOTO_OVERLAYS,
+      TOURS,
+      NETWORK_LINK_CONTROL,
     }
   }
 
@@ -6084,6 +14423,46 @@ impl<'a> KML<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLGroundOverlay>>>>(KML::VT_GROUND_OVERLAYS, None)}
   }
+  /// Schemas
+  #[inline]
+  pub fn SCHEMAS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLSchema<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLSchema>>>>(KML::VT_SCHEMAS, None)}
+  }
+  /// Screen overlays
+  #[inline]
+  pub fn SCREEN_OVERLAYS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLScreenOverlay<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLScreenOverlay>>>>(KML::VT_SCREEN_OVERLAYS, None)}
+  }
+  /// Photo overlays
+  #[inline]
+  pub fn PHOTO_OVERLAYS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLPhotoOverlay<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLPhotoOverlay>>>>(KML::VT_PHOTO_OVERLAYS, None)}
+  }
+  /// Tours
+  #[inline]
+  pub fn TOURS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLTour<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLTour>>>>(KML::VT_TOURS, None)}
+  }
+  /// NetworkLinkControl
+  #[inline]
+  pub fn NETWORK_LINK_CONTROL(&self) -> Option<KMLNetworkLinkControl<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<KMLNetworkLinkControl>>(KML::VT_NETWORK_LINK_CONTROL, None)}
+  }
 }
 
 impl flatbuffers::Verifiable for KML<'_> {
@@ -6103,6 +14482,11 @@ impl flatbuffers::Verifiable for KML<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLFolder>>>>("FOLDERS", Self::VT_FOLDERS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLNetworkLink>>>>("NETWORK_LINKS", Self::VT_NETWORK_LINKS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLGroundOverlay>>>>("GROUND_OVERLAYS", Self::VT_GROUND_OVERLAYS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLSchema>>>>("SCHEMAS", Self::VT_SCHEMAS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLScreenOverlay>>>>("SCREEN_OVERLAYS", Self::VT_SCREEN_OVERLAYS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLPhotoOverlay>>>>("PHOTO_OVERLAYS", Self::VT_PHOTO_OVERLAYS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<KMLTour>>>>("TOURS", Self::VT_TOURS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<KMLNetworkLinkControl>>("NETWORK_LINK_CONTROL", Self::VT_NETWORK_LINK_CONTROL, false)?
      .finish();
     Ok(())
   }
@@ -6118,6 +14502,11 @@ pub struct KMLArgs<'a> {
     pub FOLDERS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLFolder<'a>>>>>,
     pub NETWORK_LINKS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLNetworkLink<'a>>>>>,
     pub GROUND_OVERLAYS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLGroundOverlay<'a>>>>>,
+    pub SCHEMAS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLSchema<'a>>>>>,
+    pub SCREEN_OVERLAYS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLScreenOverlay<'a>>>>>,
+    pub PHOTO_OVERLAYS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLPhotoOverlay<'a>>>>>,
+    pub TOURS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<KMLTour<'a>>>>>,
+    pub NETWORK_LINK_CONTROL: Option<flatbuffers::WIPOffset<KMLNetworkLinkControl<'a>>>,
 }
 impl<'a> Default for KMLArgs<'a> {
   #[inline]
@@ -6133,6 +14522,11 @@ impl<'a> Default for KMLArgs<'a> {
       FOLDERS: None,
       NETWORK_LINKS: None,
       GROUND_OVERLAYS: None,
+      SCHEMAS: None,
+      SCREEN_OVERLAYS: None,
+      PHOTO_OVERLAYS: None,
+      TOURS: None,
+      NETWORK_LINK_CONTROL: None,
     }
   }
 }
@@ -6183,6 +14577,26 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> KMLBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KML::VT_GROUND_OVERLAYS, GROUND_OVERLAYS);
   }
   #[inline]
+  pub fn add_SCHEMAS(&mut self, SCHEMAS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<KMLSchema<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KML::VT_SCHEMAS, SCHEMAS);
+  }
+  #[inline]
+  pub fn add_SCREEN_OVERLAYS(&mut self, SCREEN_OVERLAYS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<KMLScreenOverlay<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KML::VT_SCREEN_OVERLAYS, SCREEN_OVERLAYS);
+  }
+  #[inline]
+  pub fn add_PHOTO_OVERLAYS(&mut self, PHOTO_OVERLAYS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<KMLPhotoOverlay<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KML::VT_PHOTO_OVERLAYS, PHOTO_OVERLAYS);
+  }
+  #[inline]
+  pub fn add_TOURS(&mut self, TOURS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<KMLTour<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(KML::VT_TOURS, TOURS);
+  }
+  #[inline]
+  pub fn add_NETWORK_LINK_CONTROL(&mut self, NETWORK_LINK_CONTROL: flatbuffers::WIPOffset<KMLNetworkLinkControl<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<KMLNetworkLinkControl>>(KML::VT_NETWORK_LINK_CONTROL, NETWORK_LINK_CONTROL);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> KMLBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     KMLBuilder {
@@ -6210,6 +14624,11 @@ impl core::fmt::Debug for KML<'_> {
       ds.field("FOLDERS", &self.FOLDERS());
       ds.field("NETWORK_LINKS", &self.NETWORK_LINKS());
       ds.field("GROUND_OVERLAYS", &self.GROUND_OVERLAYS());
+      ds.field("SCHEMAS", &self.SCHEMAS());
+      ds.field("SCREEN_OVERLAYS", &self.SCREEN_OVERLAYS());
+      ds.field("PHOTO_OVERLAYS", &self.PHOTO_OVERLAYS());
+      ds.field("TOURS", &self.TOURS());
+      ds.field("NETWORK_LINK_CONTROL", &self.NETWORK_LINK_CONTROL());
       ds.finish()
   }
 }
@@ -6226,6 +14645,11 @@ pub struct KMLT {
   pub FOLDERS: Option<Vec<KMLFolderT>>,
   pub NETWORK_LINKS: Option<Vec<KMLNetworkLinkT>>,
   pub GROUND_OVERLAYS: Option<Vec<KMLGroundOverlayT>>,
+  pub SCHEMAS: Option<Vec<KMLSchemaT>>,
+  pub SCREEN_OVERLAYS: Option<Vec<KMLScreenOverlayT>>,
+  pub PHOTO_OVERLAYS: Option<Vec<KMLPhotoOverlayT>>,
+  pub TOURS: Option<Vec<KMLTourT>>,
+  pub NETWORK_LINK_CONTROL: Option<Box<KMLNetworkLinkControlT>>,
 }
 impl Default for KMLT {
   fn default() -> Self {
@@ -6240,6 +14664,11 @@ impl Default for KMLT {
       FOLDERS: None,
       NETWORK_LINKS: None,
       GROUND_OVERLAYS: None,
+      SCHEMAS: None,
+      SCREEN_OVERLAYS: None,
+      PHOTO_OVERLAYS: None,
+      TOURS: None,
+      NETWORK_LINK_CONTROL: None,
     }
   }
 }
@@ -6274,6 +14703,21 @@ impl KMLT {
     let GROUND_OVERLAYS = self.GROUND_OVERLAYS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
+    let SCHEMAS = self.SCHEMAS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let SCREEN_OVERLAYS = self.SCREEN_OVERLAYS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let PHOTO_OVERLAYS = self.PHOTO_OVERLAYS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let TOURS = self.TOURS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let NETWORK_LINK_CONTROL = self.NETWORK_LINK_CONTROL.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     KML::create(_fbb, &KMLArgs{
       NAME,
       DESCRIPTION,
@@ -6285,6 +14729,11 @@ impl KMLT {
       FOLDERS,
       NETWORK_LINKS,
       GROUND_OVERLAYS,
+      SCHEMAS,
+      SCREEN_OVERLAYS,
+      PHOTO_OVERLAYS,
+      TOURS,
+      NETWORK_LINK_CONTROL,
     })
   }
 }

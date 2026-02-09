@@ -458,6 +458,739 @@ impl<'a> flatbuffers::Verifiable for CZMVerticalOrigin {
 }
 
 impl flatbuffers::SimpleToVerifyInSlice for CZMVerticalOrigin {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_CZMSHADOW_MODE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_CZMSHADOW_MODE: i8 = 3;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_CZMSHADOW_MODE: [CZMShadowMode; 4] = [
+  CZMShadowMode::DISABLED,
+  CZMShadowMode::ENABLED,
+  CZMShadowMode::CAST_ONLY,
+  CZMShadowMode::RECEIVE_ONLY,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct CZMShadowMode(pub i8);
+#[allow(non_upper_case_globals)]
+impl CZMShadowMode {
+  pub const DISABLED: Self = Self(0);
+  pub const ENABLED: Self = Self(1);
+  pub const CAST_ONLY: Self = Self(2);
+  pub const RECEIVE_ONLY: Self = Self(3);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 3;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::DISABLED,
+    Self::ENABLED,
+    Self::CAST_ONLY,
+    Self::RECEIVE_ONLY,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::DISABLED => Some("DISABLED"),
+      Self::ENABLED => Some("ENABLED"),
+      Self::CAST_ONLY => Some("CAST_ONLY"),
+      Self::RECEIVE_ONLY => Some("RECEIVE_ONLY"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for CZMShadowMode {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for CZMShadowMode {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for CZMShadowMode {
+    type Output = CZMShadowMode;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for CZMShadowMode {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for CZMShadowMode {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for CZMShadowMode {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_CZMCOLOR_BLEND_MODE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_CZMCOLOR_BLEND_MODE: i8 = 2;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_CZMCOLOR_BLEND_MODE: [CZMColorBlendMode; 3] = [
+  CZMColorBlendMode::HIGHLIGHT,
+  CZMColorBlendMode::REPLACE,
+  CZMColorBlendMode::MIX,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct CZMColorBlendMode(pub i8);
+#[allow(non_upper_case_globals)]
+impl CZMColorBlendMode {
+  pub const HIGHLIGHT: Self = Self(0);
+  pub const REPLACE: Self = Self(1);
+  pub const MIX: Self = Self(2);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 2;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::HIGHLIGHT,
+    Self::REPLACE,
+    Self::MIX,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::HIGHLIGHT => Some("HIGHLIGHT"),
+      Self::REPLACE => Some("REPLACE"),
+      Self::MIX => Some("MIX"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for CZMColorBlendMode {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for CZMColorBlendMode {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for CZMColorBlendMode {
+    type Output = CZMColorBlendMode;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for CZMColorBlendMode {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for CZMColorBlendMode {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for CZMColorBlendMode {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_CZMCORNER_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_CZMCORNER_TYPE: i8 = 2;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_CZMCORNER_TYPE: [CZMCornerType; 3] = [
+  CZMCornerType::ROUNDED,
+  CZMCornerType::MITERED,
+  CZMCornerType::BEVELED,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct CZMCornerType(pub i8);
+#[allow(non_upper_case_globals)]
+impl CZMCornerType {
+  pub const ROUNDED: Self = Self(0);
+  pub const MITERED: Self = Self(1);
+  pub const BEVELED: Self = Self(2);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 2;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::ROUNDED,
+    Self::MITERED,
+    Self::BEVELED,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::ROUNDED => Some("ROUNDED"),
+      Self::MITERED => Some("MITERED"),
+      Self::BEVELED => Some("BEVELED"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for CZMCornerType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for CZMCornerType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for CZMCornerType {
+    type Output = CZMCornerType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for CZMCornerType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for CZMCornerType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for CZMCornerType {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_CZMARC_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_CZMARC_TYPE: i8 = 2;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_CZMARC_TYPE: [CZMArcType; 3] = [
+  CZMArcType::NONE,
+  CZMArcType::GEODESIC,
+  CZMArcType::RHUMB,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct CZMArcType(pub i8);
+#[allow(non_upper_case_globals)]
+impl CZMArcType {
+  pub const NONE: Self = Self(0);
+  pub const GEODESIC: Self = Self(1);
+  pub const RHUMB: Self = Self(2);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 2;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::NONE,
+    Self::GEODESIC,
+    Self::RHUMB,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::NONE => Some("NONE"),
+      Self::GEODESIC => Some("GEODESIC"),
+      Self::RHUMB => Some("RHUMB"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for CZMArcType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for CZMArcType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for CZMArcType {
+    type Output = CZMArcType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for CZMArcType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for CZMArcType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for CZMArcType {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_CZMSTRIPE_ORIENTATION: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_CZMSTRIPE_ORIENTATION: i8 = 1;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_CZMSTRIPE_ORIENTATION: [CZMStripeOrientation; 2] = [
+  CZMStripeOrientation::HORIZONTAL,
+  CZMStripeOrientation::VERTICAL,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct CZMStripeOrientation(pub i8);
+#[allow(non_upper_case_globals)]
+impl CZMStripeOrientation {
+  pub const HORIZONTAL: Self = Self(0);
+  pub const VERTICAL: Self = Self(1);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 1;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::HORIZONTAL,
+    Self::VERTICAL,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::HORIZONTAL => Some("HORIZONTAL"),
+      Self::VERTICAL => Some("VERTICAL"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for CZMStripeOrientation {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for CZMStripeOrientation {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for CZMStripeOrientation {
+    type Output = CZMStripeOrientation;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for CZMStripeOrientation {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for CZMStripeOrientation {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for CZMStripeOrientation {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_CZMCLOCK_RANGE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_CZMCLOCK_RANGE: i8 = 2;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_CZMCLOCK_RANGE: [CZMClockRange; 3] = [
+  CZMClockRange::UNBOUNDED,
+  CZMClockRange::CLAMPED,
+  CZMClockRange::LOOP_STOP,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct CZMClockRange(pub i8);
+#[allow(non_upper_case_globals)]
+impl CZMClockRange {
+  pub const UNBOUNDED: Self = Self(0);
+  pub const CLAMPED: Self = Self(1);
+  pub const LOOP_STOP: Self = Self(2);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 2;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::UNBOUNDED,
+    Self::CLAMPED,
+    Self::LOOP_STOP,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::UNBOUNDED => Some("UNBOUNDED"),
+      Self::CLAMPED => Some("CLAMPED"),
+      Self::LOOP_STOP => Some("LOOP_STOP"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for CZMClockRange {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for CZMClockRange {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for CZMClockRange {
+    type Output = CZMClockRange;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for CZMClockRange {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for CZMClockRange {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for CZMClockRange {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_CZMCLOCK_STEP: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_CZMCLOCK_STEP: i8 = 2;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_CZMCLOCK_STEP: [CZMClockStep; 3] = [
+  CZMClockStep::TICK_DEPENDENT,
+  CZMClockStep::SYSTEM_CLOCK_MULTIPLIER,
+  CZMClockStep::SYSTEM_CLOCK,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct CZMClockStep(pub i8);
+#[allow(non_upper_case_globals)]
+impl CZMClockStep {
+  pub const TICK_DEPENDENT: Self = Self(0);
+  pub const SYSTEM_CLOCK_MULTIPLIER: Self = Self(1);
+  pub const SYSTEM_CLOCK: Self = Self(2);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 2;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::TICK_DEPENDENT,
+    Self::SYSTEM_CLOCK_MULTIPLIER,
+    Self::SYSTEM_CLOCK,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::TICK_DEPENDENT => Some("TICK_DEPENDENT"),
+      Self::SYSTEM_CLOCK_MULTIPLIER => Some("SYSTEM_CLOCK_MULTIPLIER"),
+      Self::SYSTEM_CLOCK => Some("SYSTEM_CLOCK"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for CZMClockStep {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for CZMClockStep {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for CZMClockStep {
+    type Output = CZMClockStep;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for CZMClockStep {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for CZMClockStep {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for CZMClockStep {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_CZMDYN_VALUE_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_CZMDYN_VALUE_TYPE: i8 = 7;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_CZMDYN_VALUE_TYPE: [CZMDynValueType; 8] = [
+  CZMDynValueType::NUMBER,
+  CZMDynValueType::BOOLEAN,
+  CZMDynValueType::STRING,
+  CZMDynValueType::COLOR,
+  CZMDynValueType::CARTESIAN3,
+  CZMDynValueType::CARTESIAN2,
+  CZMDynValueType::NEAR_FAR_SCALAR,
+  CZMDynValueType::UNIT_QUATERNION,
+];
+
+/// Dynamic value types for time-varying properties
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct CZMDynValueType(pub i8);
+#[allow(non_upper_case_globals)]
+impl CZMDynValueType {
+  pub const NUMBER: Self = Self(0);
+  pub const BOOLEAN: Self = Self(1);
+  pub const STRING: Self = Self(2);
+  pub const COLOR: Self = Self(3);
+  pub const CARTESIAN3: Self = Self(4);
+  pub const CARTESIAN2: Self = Self(5);
+  pub const NEAR_FAR_SCALAR: Self = Self(6);
+  pub const UNIT_QUATERNION: Self = Self(7);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 7;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::NUMBER,
+    Self::BOOLEAN,
+    Self::STRING,
+    Self::COLOR,
+    Self::CARTESIAN3,
+    Self::CARTESIAN2,
+    Self::NEAR_FAR_SCALAR,
+    Self::UNIT_QUATERNION,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::NUMBER => Some("NUMBER"),
+      Self::BOOLEAN => Some("BOOLEAN"),
+      Self::STRING => Some("STRING"),
+      Self::COLOR => Some("COLOR"),
+      Self::CARTESIAN3 => Some("CARTESIAN3"),
+      Self::CARTESIAN2 => Some("CARTESIAN2"),
+      Self::NEAR_FAR_SCALAR => Some("NEAR_FAR_SCALAR"),
+      Self::UNIT_QUATERNION => Some("UNIT_QUATERNION"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for CZMDynValueType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for CZMDynValueType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for CZMDynValueType {
+    type Output = CZMDynValueType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for CZMDynValueType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for CZMDynValueType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for CZMDynValueType {}
 pub enum CZMIntervalOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -587,6 +1320,878 @@ impl CZMIntervalT {
     });
     CZMInterval::create(_fbb, &CZMIntervalArgs{
       INTERVAL,
+    })
+  }
+}
+pub enum CZMInterpolationOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Interpolation settings for sampled data
+pub struct CZMInterpolation<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CZMInterpolation<'a> {
+  type Inner = CZMInterpolation<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CZMInterpolation<'a> {
+  pub const VT_ALGORITHM: flatbuffers::VOffsetT = 4;
+  pub const VT_DEGREE: flatbuffers::VOffsetT = 6;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CZMInterpolation { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CZMInterpolationArgs<'args>
+  ) -> flatbuffers::WIPOffset<CZMInterpolation<'bldr>> {
+    let mut builder = CZMInterpolationBuilder::new(_fbb);
+    builder.add_DEGREE(args.DEGREE);
+    if let Some(x) = args.ALGORITHM { builder.add_ALGORITHM(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CZMInterpolationT {
+    let ALGORITHM = self.ALGORITHM().map(|x| {
+      x.to_string()
+    });
+    let DEGREE = self.DEGREE();
+    CZMInterpolationT {
+      ALGORITHM,
+      DEGREE,
+    }
+  }
+
+  /// Algorithm: LINEAR, LAGRANGE, HERMITE
+  #[inline]
+  pub fn ALGORITHM(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMInterpolation::VT_ALGORITHM, None)}
+  }
+  /// Polynomial degree (1=linear, 5=typical Lagrange)
+  #[inline]
+  pub fn DEGREE(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(CZMInterpolation::VT_DEGREE, Some(0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for CZMInterpolation<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ALGORITHM", Self::VT_ALGORITHM, false)?
+     .visit_field::<i32>("DEGREE", Self::VT_DEGREE, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CZMInterpolationArgs<'a> {
+    pub ALGORITHM: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub DEGREE: i32,
+}
+impl<'a> Default for CZMInterpolationArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CZMInterpolationArgs {
+      ALGORITHM: None,
+      DEGREE: 0,
+    }
+  }
+}
+
+pub struct CZMInterpolationBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMInterpolationBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_ALGORITHM(&mut self, ALGORITHM: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMInterpolation::VT_ALGORITHM, ALGORITHM);
+  }
+  #[inline]
+  pub fn add_DEGREE(&mut self, DEGREE: i32) {
+    self.fbb_.push_slot::<i32>(CZMInterpolation::VT_DEGREE, DEGREE, 0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMInterpolationBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CZMInterpolationBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CZMInterpolation<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CZMInterpolation<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CZMInterpolation");
+      ds.field("ALGORITHM", &self.ALGORITHM());
+      ds.field("DEGREE", &self.DEGREE());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CZMInterpolationT {
+  pub ALGORITHM: Option<String>,
+  pub DEGREE: i32,
+}
+impl Default for CZMInterpolationT {
+  fn default() -> Self {
+    Self {
+      ALGORITHM: None,
+      DEGREE: 0,
+    }
+  }
+}
+impl CZMInterpolationT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CZMInterpolation<'b>> {
+    let ALGORITHM = self.ALGORITHM.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DEGREE = self.DEGREE;
+    CZMInterpolation::create(_fbb, &CZMInterpolationArgs{
+      ALGORITHM,
+      DEGREE,
+    })
+  }
+}
+pub enum CZMDynIntervalOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// A single interval in a time-varying property
+pub struct CZMDynInterval<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CZMDynInterval<'a> {
+  type Inner = CZMDynInterval<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CZMDynInterval<'a> {
+  pub const VT_INTERVAL: flatbuffers::VOffsetT = 4;
+  pub const VT_VALUE_TYPE: flatbuffers::VOffsetT = 6;
+  pub const VT_NUMBER_VALUE: flatbuffers::VOffsetT = 8;
+  pub const VT_BOOLEAN_VALUE: flatbuffers::VOffsetT = 10;
+  pub const VT_STRING_VALUE: flatbuffers::VOffsetT = 12;
+  pub const VT_COLOR_VALUE: flatbuffers::VOffsetT = 14;
+  pub const VT_ARRAY_VALUE: flatbuffers::VOffsetT = 16;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CZMDynInterval { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CZMDynIntervalArgs<'args>
+  ) -> flatbuffers::WIPOffset<CZMDynInterval<'bldr>> {
+    let mut builder = CZMDynIntervalBuilder::new(_fbb);
+    builder.add_NUMBER_VALUE(args.NUMBER_VALUE);
+    if let Some(x) = args.ARRAY_VALUE { builder.add_ARRAY_VALUE(x); }
+    if let Some(x) = args.COLOR_VALUE { builder.add_COLOR_VALUE(x); }
+    if let Some(x) = args.STRING_VALUE { builder.add_STRING_VALUE(x); }
+    if let Some(x) = args.INTERVAL { builder.add_INTERVAL(x); }
+    builder.add_BOOLEAN_VALUE(args.BOOLEAN_VALUE);
+    builder.add_VALUE_TYPE(args.VALUE_TYPE);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CZMDynIntervalT {
+    let INTERVAL = self.INTERVAL().map(|x| {
+      x.to_string()
+    });
+    let VALUE_TYPE = self.VALUE_TYPE();
+    let NUMBER_VALUE = self.NUMBER_VALUE();
+    let BOOLEAN_VALUE = self.BOOLEAN_VALUE();
+    let STRING_VALUE = self.STRING_VALUE().map(|x| {
+      x.to_string()
+    });
+    let COLOR_VALUE = self.COLOR_VALUE().map(|x| {
+      Box::new(x.unpack())
+    });
+    let ARRAY_VALUE = self.ARRAY_VALUE().map(|x| {
+      x.into_iter().collect()
+    });
+    CZMDynIntervalT {
+      INTERVAL,
+      VALUE_TYPE,
+      NUMBER_VALUE,
+      BOOLEAN_VALUE,
+      STRING_VALUE,
+      COLOR_VALUE,
+      ARRAY_VALUE,
+    }
+  }
+
+  /// ISO 8601 interval string
+  #[inline]
+  pub fn INTERVAL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMDynInterval::VT_INTERVAL, None)}
+  }
+  /// Value type
+  #[inline]
+  pub fn VALUE_TYPE(&self) -> CZMDynValueType {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<CZMDynValueType>(CZMDynInterval::VT_VALUE_TYPE, Some(CZMDynValueType::NUMBER)).unwrap()}
+  }
+  /// Numeric value (when VALUE_TYPE is NUMBER)
+  #[inline]
+  pub fn NUMBER_VALUE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMDynInterval::VT_NUMBER_VALUE, Some(0.0)).unwrap()}
+  }
+  /// Boolean value (when VALUE_TYPE is BOOLEAN)
+  #[inline]
+  pub fn BOOLEAN_VALUE(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMDynInterval::VT_BOOLEAN_VALUE, Some(false)).unwrap()}
+  }
+  /// String value (when VALUE_TYPE is STRING)
+  #[inline]
+  pub fn STRING_VALUE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMDynInterval::VT_STRING_VALUE, None)}
+  }
+  /// Color value (when VALUE_TYPE is COLOR)
+  #[inline]
+  pub fn COLOR_VALUE(&self) -> Option<CZMColor<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMColor>>(CZMDynInterval::VT_COLOR_VALUE, None)}
+  }
+  /// Array value for cartesian/nearFarScalar types
+  #[inline]
+  pub fn ARRAY_VALUE(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(CZMDynInterval::VT_ARRAY_VALUE, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for CZMDynInterval<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("INTERVAL", Self::VT_INTERVAL, false)?
+     .visit_field::<CZMDynValueType>("VALUE_TYPE", Self::VT_VALUE_TYPE, false)?
+     .visit_field::<f64>("NUMBER_VALUE", Self::VT_NUMBER_VALUE, false)?
+     .visit_field::<bool>("BOOLEAN_VALUE", Self::VT_BOOLEAN_VALUE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("STRING_VALUE", Self::VT_STRING_VALUE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMColor>>("COLOR_VALUE", Self::VT_COLOR_VALUE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("ARRAY_VALUE", Self::VT_ARRAY_VALUE, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CZMDynIntervalArgs<'a> {
+    pub INTERVAL: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub VALUE_TYPE: CZMDynValueType,
+    pub NUMBER_VALUE: f64,
+    pub BOOLEAN_VALUE: bool,
+    pub STRING_VALUE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub COLOR_VALUE: Option<flatbuffers::WIPOffset<CZMColor<'a>>>,
+    pub ARRAY_VALUE: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+}
+impl<'a> Default for CZMDynIntervalArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CZMDynIntervalArgs {
+      INTERVAL: None,
+      VALUE_TYPE: CZMDynValueType::NUMBER,
+      NUMBER_VALUE: 0.0,
+      BOOLEAN_VALUE: false,
+      STRING_VALUE: None,
+      COLOR_VALUE: None,
+      ARRAY_VALUE: None,
+    }
+  }
+}
+
+pub struct CZMDynIntervalBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMDynIntervalBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_INTERVAL(&mut self, INTERVAL: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMDynInterval::VT_INTERVAL, INTERVAL);
+  }
+  #[inline]
+  pub fn add_VALUE_TYPE(&mut self, VALUE_TYPE: CZMDynValueType) {
+    self.fbb_.push_slot::<CZMDynValueType>(CZMDynInterval::VT_VALUE_TYPE, VALUE_TYPE, CZMDynValueType::NUMBER);
+  }
+  #[inline]
+  pub fn add_NUMBER_VALUE(&mut self, NUMBER_VALUE: f64) {
+    self.fbb_.push_slot::<f64>(CZMDynInterval::VT_NUMBER_VALUE, NUMBER_VALUE, 0.0);
+  }
+  #[inline]
+  pub fn add_BOOLEAN_VALUE(&mut self, BOOLEAN_VALUE: bool) {
+    self.fbb_.push_slot::<bool>(CZMDynInterval::VT_BOOLEAN_VALUE, BOOLEAN_VALUE, false);
+  }
+  #[inline]
+  pub fn add_STRING_VALUE(&mut self, STRING_VALUE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMDynInterval::VT_STRING_VALUE, STRING_VALUE);
+  }
+  #[inline]
+  pub fn add_COLOR_VALUE(&mut self, COLOR_VALUE: flatbuffers::WIPOffset<CZMColor<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMColor>>(CZMDynInterval::VT_COLOR_VALUE, COLOR_VALUE);
+  }
+  #[inline]
+  pub fn add_ARRAY_VALUE(&mut self, ARRAY_VALUE: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMDynInterval::VT_ARRAY_VALUE, ARRAY_VALUE);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMDynIntervalBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CZMDynIntervalBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CZMDynInterval<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CZMDynInterval<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CZMDynInterval");
+      ds.field("INTERVAL", &self.INTERVAL());
+      ds.field("VALUE_TYPE", &self.VALUE_TYPE());
+      ds.field("NUMBER_VALUE", &self.NUMBER_VALUE());
+      ds.field("BOOLEAN_VALUE", &self.BOOLEAN_VALUE());
+      ds.field("STRING_VALUE", &self.STRING_VALUE());
+      ds.field("COLOR_VALUE", &self.COLOR_VALUE());
+      ds.field("ARRAY_VALUE", &self.ARRAY_VALUE());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CZMDynIntervalT {
+  pub INTERVAL: Option<String>,
+  pub VALUE_TYPE: CZMDynValueType,
+  pub NUMBER_VALUE: f64,
+  pub BOOLEAN_VALUE: bool,
+  pub STRING_VALUE: Option<String>,
+  pub COLOR_VALUE: Option<Box<CZMColorT>>,
+  pub ARRAY_VALUE: Option<Vec<f64>>,
+}
+impl Default for CZMDynIntervalT {
+  fn default() -> Self {
+    Self {
+      INTERVAL: None,
+      VALUE_TYPE: CZMDynValueType::NUMBER,
+      NUMBER_VALUE: 0.0,
+      BOOLEAN_VALUE: false,
+      STRING_VALUE: None,
+      COLOR_VALUE: None,
+      ARRAY_VALUE: None,
+    }
+  }
+}
+impl CZMDynIntervalT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CZMDynInterval<'b>> {
+    let INTERVAL = self.INTERVAL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let VALUE_TYPE = self.VALUE_TYPE;
+    let NUMBER_VALUE = self.NUMBER_VALUE;
+    let BOOLEAN_VALUE = self.BOOLEAN_VALUE;
+    let STRING_VALUE = self.STRING_VALUE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let COLOR_VALUE = self.COLOR_VALUE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let ARRAY_VALUE = self.ARRAY_VALUE.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    CZMDynInterval::create(_fbb, &CZMDynIntervalArgs{
+      INTERVAL,
+      VALUE_TYPE,
+      NUMBER_VALUE,
+      BOOLEAN_VALUE,
+      STRING_VALUE,
+      COLOR_VALUE,
+      ARRAY_VALUE,
+    })
+  }
+}
+pub enum CZMDynSampledOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Sampled time-varying data
+pub struct CZMDynSampled<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CZMDynSampled<'a> {
+  type Inner = CZMDynSampled<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CZMDynSampled<'a> {
+  pub const VT_EPOCH: flatbuffers::VOffsetT = 4;
+  pub const VT_VALUE_TYPE: flatbuffers::VOffsetT = 6;
+  pub const VT_DATA: flatbuffers::VOffsetT = 8;
+  pub const VT_INTERPOLATION: flatbuffers::VOffsetT = 10;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CZMDynSampled { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CZMDynSampledArgs<'args>
+  ) -> flatbuffers::WIPOffset<CZMDynSampled<'bldr>> {
+    let mut builder = CZMDynSampledBuilder::new(_fbb);
+    if let Some(x) = args.INTERPOLATION { builder.add_INTERPOLATION(x); }
+    if let Some(x) = args.DATA { builder.add_DATA(x); }
+    if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
+    builder.add_VALUE_TYPE(args.VALUE_TYPE);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CZMDynSampledT {
+    let EPOCH = self.EPOCH().map(|x| {
+      x.to_string()
+    });
+    let VALUE_TYPE = self.VALUE_TYPE();
+    let DATA = self.DATA().map(|x| {
+      x.into_iter().collect()
+    });
+    let INTERPOLATION = self.INTERPOLATION().map(|x| {
+      Box::new(x.unpack())
+    });
+    CZMDynSampledT {
+      EPOCH,
+      VALUE_TYPE,
+      DATA,
+      INTERPOLATION,
+    }
+  }
+
+  /// Reference epoch (ISO 8601)
+  #[inline]
+  pub fn EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMDynSampled::VT_EPOCH, None)}
+  }
+  /// Value type determines stride through DATA
+  #[inline]
+  pub fn VALUE_TYPE(&self) -> CZMDynValueType {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<CZMDynValueType>(CZMDynSampled::VT_VALUE_TYPE, Some(CZMDynValueType::NUMBER)).unwrap()}
+  }
+  /// Interleaved [time, value(s), ...] — stride depends on VALUE_TYPE
+  #[inline]
+  pub fn DATA(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(CZMDynSampled::VT_DATA, None)}
+  }
+  /// Interpolation settings
+  #[inline]
+  pub fn INTERPOLATION(&self) -> Option<CZMInterpolation<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMInterpolation>>(CZMDynSampled::VT_INTERPOLATION, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for CZMDynSampled<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
+     .visit_field::<CZMDynValueType>("VALUE_TYPE", Self::VT_VALUE_TYPE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("DATA", Self::VT_DATA, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMInterpolation>>("INTERPOLATION", Self::VT_INTERPOLATION, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CZMDynSampledArgs<'a> {
+    pub EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub VALUE_TYPE: CZMDynValueType,
+    pub DATA: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub INTERPOLATION: Option<flatbuffers::WIPOffset<CZMInterpolation<'a>>>,
+}
+impl<'a> Default for CZMDynSampledArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CZMDynSampledArgs {
+      EPOCH: None,
+      VALUE_TYPE: CZMDynValueType::NUMBER,
+      DATA: None,
+      INTERPOLATION: None,
+    }
+  }
+}
+
+pub struct CZMDynSampledBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMDynSampledBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_EPOCH(&mut self, EPOCH: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMDynSampled::VT_EPOCH, EPOCH);
+  }
+  #[inline]
+  pub fn add_VALUE_TYPE(&mut self, VALUE_TYPE: CZMDynValueType) {
+    self.fbb_.push_slot::<CZMDynValueType>(CZMDynSampled::VT_VALUE_TYPE, VALUE_TYPE, CZMDynValueType::NUMBER);
+  }
+  #[inline]
+  pub fn add_DATA(&mut self, DATA: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMDynSampled::VT_DATA, DATA);
+  }
+  #[inline]
+  pub fn add_INTERPOLATION(&mut self, INTERPOLATION: flatbuffers::WIPOffset<CZMInterpolation<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMInterpolation>>(CZMDynSampled::VT_INTERPOLATION, INTERPOLATION);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMDynSampledBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CZMDynSampledBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CZMDynSampled<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CZMDynSampled<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CZMDynSampled");
+      ds.field("EPOCH", &self.EPOCH());
+      ds.field("VALUE_TYPE", &self.VALUE_TYPE());
+      ds.field("DATA", &self.DATA());
+      ds.field("INTERPOLATION", &self.INTERPOLATION());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CZMDynSampledT {
+  pub EPOCH: Option<String>,
+  pub VALUE_TYPE: CZMDynValueType,
+  pub DATA: Option<Vec<f64>>,
+  pub INTERPOLATION: Option<Box<CZMInterpolationT>>,
+}
+impl Default for CZMDynSampledT {
+  fn default() -> Self {
+    Self {
+      EPOCH: None,
+      VALUE_TYPE: CZMDynValueType::NUMBER,
+      DATA: None,
+      INTERPOLATION: None,
+    }
+  }
+}
+impl CZMDynSampledT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CZMDynSampled<'b>> {
+    let EPOCH = self.EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let VALUE_TYPE = self.VALUE_TYPE;
+    let DATA = self.DATA.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let INTERPOLATION = self.INTERPOLATION.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    CZMDynSampled::create(_fbb, &CZMDynSampledArgs{
+      EPOCH,
+      VALUE_TYPE,
+      DATA,
+      INTERPOLATION,
+    })
+  }
+}
+pub enum CZMDynamicPropertyOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// A single time-dynamic property (non-static value)
+pub struct CZMDynamicProperty<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CZMDynamicProperty<'a> {
+  type Inner = CZMDynamicProperty<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CZMDynamicProperty<'a> {
+  pub const VT_NAME: flatbuffers::VOffsetT = 4;
+  pub const VT_SAMPLED: flatbuffers::VOffsetT = 6;
+  pub const VT_INTERVALS: flatbuffers::VOffsetT = 8;
+  pub const VT_REFERENCE: flatbuffers::VOffsetT = 10;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CZMDynamicProperty { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CZMDynamicPropertyArgs<'args>
+  ) -> flatbuffers::WIPOffset<CZMDynamicProperty<'bldr>> {
+    let mut builder = CZMDynamicPropertyBuilder::new(_fbb);
+    if let Some(x) = args.REFERENCE { builder.add_REFERENCE(x); }
+    if let Some(x) = args.INTERVALS { builder.add_INTERVALS(x); }
+    if let Some(x) = args.SAMPLED { builder.add_SAMPLED(x); }
+    if let Some(x) = args.NAME { builder.add_NAME(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CZMDynamicPropertyT {
+    let NAME = self.NAME().map(|x| {
+      x.to_string()
+    });
+    let SAMPLED = self.SAMPLED().map(|x| {
+      Box::new(x.unpack())
+    });
+    let INTERVALS = self.INTERVALS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let REFERENCE = self.REFERENCE().map(|x| {
+      x.to_string()
+    });
+    CZMDynamicPropertyT {
+      NAME,
+      SAMPLED,
+      INTERVALS,
+      REFERENCE,
+    }
+  }
+
+  /// Dotted path name, e.g. "billboard.scale", "point.color"
+  #[inline]
+  pub fn NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMDynamicProperty::VT_NAME, None)}
+  }
+  /// Sampled data (when property uses epoch + data array)
+  #[inline]
+  pub fn SAMPLED(&self) -> Option<CZMDynSampled<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMDynSampled>>(CZMDynamicProperty::VT_SAMPLED, None)}
+  }
+  /// Interval-based values
+  #[inline]
+  pub fn INTERVALS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<CZMDynInterval<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<CZMDynInterval>>>>(CZMDynamicProperty::VT_INTERVALS, None)}
+  }
+  /// Reference to another entity's property
+  #[inline]
+  pub fn REFERENCE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMDynamicProperty::VT_REFERENCE, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for CZMDynamicProperty<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMDynSampled>>("SAMPLED", Self::VT_SAMPLED, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<CZMDynInterval>>>>("INTERVALS", Self::VT_INTERVALS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REFERENCE", Self::VT_REFERENCE, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CZMDynamicPropertyArgs<'a> {
+    pub NAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SAMPLED: Option<flatbuffers::WIPOffset<CZMDynSampled<'a>>>,
+    pub INTERVALS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<CZMDynInterval<'a>>>>>,
+    pub REFERENCE: Option<flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for CZMDynamicPropertyArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CZMDynamicPropertyArgs {
+      NAME: None,
+      SAMPLED: None,
+      INTERVALS: None,
+      REFERENCE: None,
+    }
+  }
+}
+
+pub struct CZMDynamicPropertyBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMDynamicPropertyBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_NAME(&mut self, NAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMDynamicProperty::VT_NAME, NAME);
+  }
+  #[inline]
+  pub fn add_SAMPLED(&mut self, SAMPLED: flatbuffers::WIPOffset<CZMDynSampled<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMDynSampled>>(CZMDynamicProperty::VT_SAMPLED, SAMPLED);
+  }
+  #[inline]
+  pub fn add_INTERVALS(&mut self, INTERVALS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<CZMDynInterval<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMDynamicProperty::VT_INTERVALS, INTERVALS);
+  }
+  #[inline]
+  pub fn add_REFERENCE(&mut self, REFERENCE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMDynamicProperty::VT_REFERENCE, REFERENCE);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMDynamicPropertyBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CZMDynamicPropertyBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CZMDynamicProperty<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CZMDynamicProperty<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CZMDynamicProperty");
+      ds.field("NAME", &self.NAME());
+      ds.field("SAMPLED", &self.SAMPLED());
+      ds.field("INTERVALS", &self.INTERVALS());
+      ds.field("REFERENCE", &self.REFERENCE());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CZMDynamicPropertyT {
+  pub NAME: Option<String>,
+  pub SAMPLED: Option<Box<CZMDynSampledT>>,
+  pub INTERVALS: Option<Vec<CZMDynIntervalT>>,
+  pub REFERENCE: Option<String>,
+}
+impl Default for CZMDynamicPropertyT {
+  fn default() -> Self {
+    Self {
+      NAME: None,
+      SAMPLED: None,
+      INTERVALS: None,
+      REFERENCE: None,
+    }
+  }
+}
+impl CZMDynamicPropertyT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CZMDynamicProperty<'b>> {
+    let NAME = self.NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SAMPLED = self.SAMPLED.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let INTERVALS = self.INTERVALS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let REFERENCE = self.REFERENCE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    CZMDynamicProperty::create(_fbb, &CZMDynamicPropertyArgs{
+      NAME,
+      SAMPLED,
+      INTERVALS,
+      REFERENCE,
     })
   }
 }
@@ -1342,6 +2947,2834 @@ impl CZMNearFarScalarT {
     })
   }
 }
+pub enum CZMDistanceDisplayConditionOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Distance display condition
+pub struct CZMDistanceDisplayCondition<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CZMDistanceDisplayCondition<'a> {
+  type Inner = CZMDistanceDisplayCondition<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CZMDistanceDisplayCondition<'a> {
+  pub const VT_NEAR_DISTANCE: flatbuffers::VOffsetT = 4;
+  pub const VT_FAR_DISTANCE: flatbuffers::VOffsetT = 6;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CZMDistanceDisplayCondition { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CZMDistanceDisplayConditionArgs
+  ) -> flatbuffers::WIPOffset<CZMDistanceDisplayCondition<'bldr>> {
+    let mut builder = CZMDistanceDisplayConditionBuilder::new(_fbb);
+    builder.add_FAR_DISTANCE(args.FAR_DISTANCE);
+    builder.add_NEAR_DISTANCE(args.NEAR_DISTANCE);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CZMDistanceDisplayConditionT {
+    let NEAR_DISTANCE = self.NEAR_DISTANCE();
+    let FAR_DISTANCE = self.FAR_DISTANCE();
+    CZMDistanceDisplayConditionT {
+      NEAR_DISTANCE,
+      FAR_DISTANCE,
+    }
+  }
+
+  /// Near distance in meters
+  #[inline]
+  pub fn NEAR_DISTANCE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMDistanceDisplayCondition::VT_NEAR_DISTANCE, Some(0.0)).unwrap()}
+  }
+  /// Far distance in meters
+  #[inline]
+  pub fn FAR_DISTANCE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMDistanceDisplayCondition::VT_FAR_DISTANCE, Some(0.0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for CZMDistanceDisplayCondition<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<f64>("NEAR_DISTANCE", Self::VT_NEAR_DISTANCE, false)?
+     .visit_field::<f64>("FAR_DISTANCE", Self::VT_FAR_DISTANCE, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CZMDistanceDisplayConditionArgs {
+    pub NEAR_DISTANCE: f64,
+    pub FAR_DISTANCE: f64,
+}
+impl<'a> Default for CZMDistanceDisplayConditionArgs {
+  #[inline]
+  fn default() -> Self {
+    CZMDistanceDisplayConditionArgs {
+      NEAR_DISTANCE: 0.0,
+      FAR_DISTANCE: 0.0,
+    }
+  }
+}
+
+pub struct CZMDistanceDisplayConditionBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMDistanceDisplayConditionBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_NEAR_DISTANCE(&mut self, NEAR_DISTANCE: f64) {
+    self.fbb_.push_slot::<f64>(CZMDistanceDisplayCondition::VT_NEAR_DISTANCE, NEAR_DISTANCE, 0.0);
+  }
+  #[inline]
+  pub fn add_FAR_DISTANCE(&mut self, FAR_DISTANCE: f64) {
+    self.fbb_.push_slot::<f64>(CZMDistanceDisplayCondition::VT_FAR_DISTANCE, FAR_DISTANCE, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMDistanceDisplayConditionBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CZMDistanceDisplayConditionBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CZMDistanceDisplayCondition<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CZMDistanceDisplayCondition<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CZMDistanceDisplayCondition");
+      ds.field("NEAR_DISTANCE", &self.NEAR_DISTANCE());
+      ds.field("FAR_DISTANCE", &self.FAR_DISTANCE());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CZMDistanceDisplayConditionT {
+  pub NEAR_DISTANCE: f64,
+  pub FAR_DISTANCE: f64,
+}
+impl Default for CZMDistanceDisplayConditionT {
+  fn default() -> Self {
+    Self {
+      NEAR_DISTANCE: 0.0,
+      FAR_DISTANCE: 0.0,
+    }
+  }
+}
+impl CZMDistanceDisplayConditionT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CZMDistanceDisplayCondition<'b>> {
+    let NEAR_DISTANCE = self.NEAR_DISTANCE;
+    let FAR_DISTANCE = self.FAR_DISTANCE;
+    CZMDistanceDisplayCondition::create(_fbb, &CZMDistanceDisplayConditionArgs{
+      NEAR_DISTANCE,
+      FAR_DISTANCE,
+    })
+  }
+}
+pub enum CZMOrientationOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Orientation as unit quaternion
+pub struct CZMOrientation<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CZMOrientation<'a> {
+  type Inner = CZMOrientation<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CZMOrientation<'a> {
+  pub const VT_UNIT_QUATERNION_X: flatbuffers::VOffsetT = 4;
+  pub const VT_UNIT_QUATERNION_Y: flatbuffers::VOffsetT = 6;
+  pub const VT_UNIT_QUATERNION_Z: flatbuffers::VOffsetT = 8;
+  pub const VT_UNIT_QUATERNION_W: flatbuffers::VOffsetT = 10;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CZMOrientation { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CZMOrientationArgs
+  ) -> flatbuffers::WIPOffset<CZMOrientation<'bldr>> {
+    let mut builder = CZMOrientationBuilder::new(_fbb);
+    builder.add_UNIT_QUATERNION_W(args.UNIT_QUATERNION_W);
+    builder.add_UNIT_QUATERNION_Z(args.UNIT_QUATERNION_Z);
+    builder.add_UNIT_QUATERNION_Y(args.UNIT_QUATERNION_Y);
+    builder.add_UNIT_QUATERNION_X(args.UNIT_QUATERNION_X);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CZMOrientationT {
+    let UNIT_QUATERNION_X = self.UNIT_QUATERNION_X();
+    let UNIT_QUATERNION_Y = self.UNIT_QUATERNION_Y();
+    let UNIT_QUATERNION_Z = self.UNIT_QUATERNION_Z();
+    let UNIT_QUATERNION_W = self.UNIT_QUATERNION_W();
+    CZMOrientationT {
+      UNIT_QUATERNION_X,
+      UNIT_QUATERNION_Y,
+      UNIT_QUATERNION_Z,
+      UNIT_QUATERNION_W,
+    }
+  }
+
+  /// X component
+  #[inline]
+  pub fn UNIT_QUATERNION_X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMOrientation::VT_UNIT_QUATERNION_X, Some(0.0)).unwrap()}
+  }
+  /// Y component
+  #[inline]
+  pub fn UNIT_QUATERNION_Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMOrientation::VT_UNIT_QUATERNION_Y, Some(0.0)).unwrap()}
+  }
+  /// Z component
+  #[inline]
+  pub fn UNIT_QUATERNION_Z(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMOrientation::VT_UNIT_QUATERNION_Z, Some(0.0)).unwrap()}
+  }
+  /// W component
+  #[inline]
+  pub fn UNIT_QUATERNION_W(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMOrientation::VT_UNIT_QUATERNION_W, Some(0.0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for CZMOrientation<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<f64>("UNIT_QUATERNION_X", Self::VT_UNIT_QUATERNION_X, false)?
+     .visit_field::<f64>("UNIT_QUATERNION_Y", Self::VT_UNIT_QUATERNION_Y, false)?
+     .visit_field::<f64>("UNIT_QUATERNION_Z", Self::VT_UNIT_QUATERNION_Z, false)?
+     .visit_field::<f64>("UNIT_QUATERNION_W", Self::VT_UNIT_QUATERNION_W, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CZMOrientationArgs {
+    pub UNIT_QUATERNION_X: f64,
+    pub UNIT_QUATERNION_Y: f64,
+    pub UNIT_QUATERNION_Z: f64,
+    pub UNIT_QUATERNION_W: f64,
+}
+impl<'a> Default for CZMOrientationArgs {
+  #[inline]
+  fn default() -> Self {
+    CZMOrientationArgs {
+      UNIT_QUATERNION_X: 0.0,
+      UNIT_QUATERNION_Y: 0.0,
+      UNIT_QUATERNION_Z: 0.0,
+      UNIT_QUATERNION_W: 0.0,
+    }
+  }
+}
+
+pub struct CZMOrientationBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMOrientationBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_UNIT_QUATERNION_X(&mut self, UNIT_QUATERNION_X: f64) {
+    self.fbb_.push_slot::<f64>(CZMOrientation::VT_UNIT_QUATERNION_X, UNIT_QUATERNION_X, 0.0);
+  }
+  #[inline]
+  pub fn add_UNIT_QUATERNION_Y(&mut self, UNIT_QUATERNION_Y: f64) {
+    self.fbb_.push_slot::<f64>(CZMOrientation::VT_UNIT_QUATERNION_Y, UNIT_QUATERNION_Y, 0.0);
+  }
+  #[inline]
+  pub fn add_UNIT_QUATERNION_Z(&mut self, UNIT_QUATERNION_Z: f64) {
+    self.fbb_.push_slot::<f64>(CZMOrientation::VT_UNIT_QUATERNION_Z, UNIT_QUATERNION_Z, 0.0);
+  }
+  #[inline]
+  pub fn add_UNIT_QUATERNION_W(&mut self, UNIT_QUATERNION_W: f64) {
+    self.fbb_.push_slot::<f64>(CZMOrientation::VT_UNIT_QUATERNION_W, UNIT_QUATERNION_W, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMOrientationBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CZMOrientationBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CZMOrientation<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CZMOrientation<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CZMOrientation");
+      ds.field("UNIT_QUATERNION_X", &self.UNIT_QUATERNION_X());
+      ds.field("UNIT_QUATERNION_Y", &self.UNIT_QUATERNION_Y());
+      ds.field("UNIT_QUATERNION_Z", &self.UNIT_QUATERNION_Z());
+      ds.field("UNIT_QUATERNION_W", &self.UNIT_QUATERNION_W());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CZMOrientationT {
+  pub UNIT_QUATERNION_X: f64,
+  pub UNIT_QUATERNION_Y: f64,
+  pub UNIT_QUATERNION_Z: f64,
+  pub UNIT_QUATERNION_W: f64,
+}
+impl Default for CZMOrientationT {
+  fn default() -> Self {
+    Self {
+      UNIT_QUATERNION_X: 0.0,
+      UNIT_QUATERNION_Y: 0.0,
+      UNIT_QUATERNION_Z: 0.0,
+      UNIT_QUATERNION_W: 0.0,
+    }
+  }
+}
+impl CZMOrientationT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CZMOrientation<'b>> {
+    let UNIT_QUATERNION_X = self.UNIT_QUATERNION_X;
+    let UNIT_QUATERNION_Y = self.UNIT_QUATERNION_Y;
+    let UNIT_QUATERNION_Z = self.UNIT_QUATERNION_Z;
+    let UNIT_QUATERNION_W = self.UNIT_QUATERNION_W;
+    CZMOrientation::create(_fbb, &CZMOrientationArgs{
+      UNIT_QUATERNION_X,
+      UNIT_QUATERNION_Y,
+      UNIT_QUATERNION_Z,
+      UNIT_QUATERNION_W,
+    })
+  }
+}
+pub enum CZMViewFromOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Suggested camera offset from entity
+pub struct CZMViewFrom<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CZMViewFrom<'a> {
+  type Inner = CZMViewFrom<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CZMViewFrom<'a> {
+  pub const VT_X: flatbuffers::VOffsetT = 4;
+  pub const VT_Y: flatbuffers::VOffsetT = 6;
+  pub const VT_Z: flatbuffers::VOffsetT = 8;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CZMViewFrom { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CZMViewFromArgs
+  ) -> flatbuffers::WIPOffset<CZMViewFrom<'bldr>> {
+    let mut builder = CZMViewFromBuilder::new(_fbb);
+    builder.add_Z(args.Z);
+    builder.add_Y(args.Y);
+    builder.add_X(args.X);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CZMViewFromT {
+    let X = self.X();
+    let Y = self.Y();
+    let Z = self.Z();
+    CZMViewFromT {
+      X,
+      Y,
+      Z,
+    }
+  }
+
+  /// X offset in meters
+  #[inline]
+  pub fn X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMViewFrom::VT_X, Some(0.0)).unwrap()}
+  }
+  /// Y offset in meters
+  #[inline]
+  pub fn Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMViewFrom::VT_Y, Some(0.0)).unwrap()}
+  }
+  /// Z offset in meters
+  #[inline]
+  pub fn Z(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMViewFrom::VT_Z, Some(0.0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for CZMViewFrom<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<f64>("X", Self::VT_X, false)?
+     .visit_field::<f64>("Y", Self::VT_Y, false)?
+     .visit_field::<f64>("Z", Self::VT_Z, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CZMViewFromArgs {
+    pub X: f64,
+    pub Y: f64,
+    pub Z: f64,
+}
+impl<'a> Default for CZMViewFromArgs {
+  #[inline]
+  fn default() -> Self {
+    CZMViewFromArgs {
+      X: 0.0,
+      Y: 0.0,
+      Z: 0.0,
+    }
+  }
+}
+
+pub struct CZMViewFromBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMViewFromBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_X(&mut self, X: f64) {
+    self.fbb_.push_slot::<f64>(CZMViewFrom::VT_X, X, 0.0);
+  }
+  #[inline]
+  pub fn add_Y(&mut self, Y: f64) {
+    self.fbb_.push_slot::<f64>(CZMViewFrom::VT_Y, Y, 0.0);
+  }
+  #[inline]
+  pub fn add_Z(&mut self, Z: f64) {
+    self.fbb_.push_slot::<f64>(CZMViewFrom::VT_Z, Z, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMViewFromBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CZMViewFromBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CZMViewFrom<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CZMViewFrom<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CZMViewFrom");
+      ds.field("X", &self.X());
+      ds.field("Y", &self.Y());
+      ds.field("Z", &self.Z());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CZMViewFromT {
+  pub X: f64,
+  pub Y: f64,
+  pub Z: f64,
+}
+impl Default for CZMViewFromT {
+  fn default() -> Self {
+    Self {
+      X: 0.0,
+      Y: 0.0,
+      Z: 0.0,
+    }
+  }
+}
+impl CZMViewFromT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CZMViewFrom<'b>> {
+    let X = self.X;
+    let Y = self.Y;
+    let Z = self.Z;
+    CZMViewFrom::create(_fbb, &CZMViewFromArgs{
+      X,
+      Y,
+      Z,
+    })
+  }
+}
+pub enum CZMSolidColorMaterialOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Solid color material
+pub struct CZMSolidColorMaterial<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CZMSolidColorMaterial<'a> {
+  type Inner = CZMSolidColorMaterial<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CZMSolidColorMaterial<'a> {
+  pub const VT_COLOR: flatbuffers::VOffsetT = 4;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CZMSolidColorMaterial { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CZMSolidColorMaterialArgs<'args>
+  ) -> flatbuffers::WIPOffset<CZMSolidColorMaterial<'bldr>> {
+    let mut builder = CZMSolidColorMaterialBuilder::new(_fbb);
+    if let Some(x) = args.COLOR { builder.add_COLOR(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CZMSolidColorMaterialT {
+    let COLOR = self.COLOR().map(|x| {
+      Box::new(x.unpack())
+    });
+    CZMSolidColorMaterialT {
+      COLOR,
+    }
+  }
+
+  /// Color
+  #[inline]
+  pub fn COLOR(&self) -> Option<CZMColor<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMColor>>(CZMSolidColorMaterial::VT_COLOR, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for CZMSolidColorMaterial<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMColor>>("COLOR", Self::VT_COLOR, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CZMSolidColorMaterialArgs<'a> {
+    pub COLOR: Option<flatbuffers::WIPOffset<CZMColor<'a>>>,
+}
+impl<'a> Default for CZMSolidColorMaterialArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CZMSolidColorMaterialArgs {
+      COLOR: None,
+    }
+  }
+}
+
+pub struct CZMSolidColorMaterialBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMSolidColorMaterialBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_COLOR(&mut self, COLOR: flatbuffers::WIPOffset<CZMColor<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMColor>>(CZMSolidColorMaterial::VT_COLOR, COLOR);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMSolidColorMaterialBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CZMSolidColorMaterialBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CZMSolidColorMaterial<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CZMSolidColorMaterial<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CZMSolidColorMaterial");
+      ds.field("COLOR", &self.COLOR());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CZMSolidColorMaterialT {
+  pub COLOR: Option<Box<CZMColorT>>,
+}
+impl Default for CZMSolidColorMaterialT {
+  fn default() -> Self {
+    Self {
+      COLOR: None,
+    }
+  }
+}
+impl CZMSolidColorMaterialT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CZMSolidColorMaterial<'b>> {
+    let COLOR = self.COLOR.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    CZMSolidColorMaterial::create(_fbb, &CZMSolidColorMaterialArgs{
+      COLOR,
+    })
+  }
+}
+pub enum CZMImageMaterialOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Image material
+pub struct CZMImageMaterial<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CZMImageMaterial<'a> {
+  type Inner = CZMImageMaterial<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CZMImageMaterial<'a> {
+  pub const VT_IMAGE: flatbuffers::VOffsetT = 4;
+  pub const VT_REPEAT_X: flatbuffers::VOffsetT = 6;
+  pub const VT_REPEAT_Y: flatbuffers::VOffsetT = 8;
+  pub const VT_COLOR: flatbuffers::VOffsetT = 10;
+  pub const VT_TRANSPARENT: flatbuffers::VOffsetT = 12;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CZMImageMaterial { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CZMImageMaterialArgs<'args>
+  ) -> flatbuffers::WIPOffset<CZMImageMaterial<'bldr>> {
+    let mut builder = CZMImageMaterialBuilder::new(_fbb);
+    builder.add_REPEAT_Y(args.REPEAT_Y);
+    builder.add_REPEAT_X(args.REPEAT_X);
+    if let Some(x) = args.COLOR { builder.add_COLOR(x); }
+    if let Some(x) = args.IMAGE { builder.add_IMAGE(x); }
+    builder.add_TRANSPARENT(args.TRANSPARENT);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CZMImageMaterialT {
+    let IMAGE = self.IMAGE().map(|x| {
+      x.to_string()
+    });
+    let REPEAT_X = self.REPEAT_X();
+    let REPEAT_Y = self.REPEAT_Y();
+    let COLOR = self.COLOR().map(|x| {
+      Box::new(x.unpack())
+    });
+    let TRANSPARENT = self.TRANSPARENT();
+    CZMImageMaterialT {
+      IMAGE,
+      REPEAT_X,
+      REPEAT_Y,
+      COLOR,
+      TRANSPARENT,
+    }
+  }
+
+  /// Image URI
+  #[inline]
+  pub fn IMAGE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMImageMaterial::VT_IMAGE, None)}
+  }
+  /// Repeat X
+  #[inline]
+  pub fn REPEAT_X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMImageMaterial::VT_REPEAT_X, Some(0.0)).unwrap()}
+  }
+  /// Repeat Y
+  #[inline]
+  pub fn REPEAT_Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMImageMaterial::VT_REPEAT_Y, Some(0.0)).unwrap()}
+  }
+  /// Color tint
+  #[inline]
+  pub fn COLOR(&self) -> Option<CZMColor<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMColor>>(CZMImageMaterial::VT_COLOR, None)}
+  }
+  /// Whether the image has transparency
+  #[inline]
+  pub fn TRANSPARENT(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMImageMaterial::VT_TRANSPARENT, Some(false)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for CZMImageMaterial<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("IMAGE", Self::VT_IMAGE, false)?
+     .visit_field::<f64>("REPEAT_X", Self::VT_REPEAT_X, false)?
+     .visit_field::<f64>("REPEAT_Y", Self::VT_REPEAT_Y, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMColor>>("COLOR", Self::VT_COLOR, false)?
+     .visit_field::<bool>("TRANSPARENT", Self::VT_TRANSPARENT, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CZMImageMaterialArgs<'a> {
+    pub IMAGE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub REPEAT_X: f64,
+    pub REPEAT_Y: f64,
+    pub COLOR: Option<flatbuffers::WIPOffset<CZMColor<'a>>>,
+    pub TRANSPARENT: bool,
+}
+impl<'a> Default for CZMImageMaterialArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CZMImageMaterialArgs {
+      IMAGE: None,
+      REPEAT_X: 0.0,
+      REPEAT_Y: 0.0,
+      COLOR: None,
+      TRANSPARENT: false,
+    }
+  }
+}
+
+pub struct CZMImageMaterialBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMImageMaterialBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_IMAGE(&mut self, IMAGE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMImageMaterial::VT_IMAGE, IMAGE);
+  }
+  #[inline]
+  pub fn add_REPEAT_X(&mut self, REPEAT_X: f64) {
+    self.fbb_.push_slot::<f64>(CZMImageMaterial::VT_REPEAT_X, REPEAT_X, 0.0);
+  }
+  #[inline]
+  pub fn add_REPEAT_Y(&mut self, REPEAT_Y: f64) {
+    self.fbb_.push_slot::<f64>(CZMImageMaterial::VT_REPEAT_Y, REPEAT_Y, 0.0);
+  }
+  #[inline]
+  pub fn add_COLOR(&mut self, COLOR: flatbuffers::WIPOffset<CZMColor<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMColor>>(CZMImageMaterial::VT_COLOR, COLOR);
+  }
+  #[inline]
+  pub fn add_TRANSPARENT(&mut self, TRANSPARENT: bool) {
+    self.fbb_.push_slot::<bool>(CZMImageMaterial::VT_TRANSPARENT, TRANSPARENT, false);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMImageMaterialBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CZMImageMaterialBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CZMImageMaterial<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CZMImageMaterial<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CZMImageMaterial");
+      ds.field("IMAGE", &self.IMAGE());
+      ds.field("REPEAT_X", &self.REPEAT_X());
+      ds.field("REPEAT_Y", &self.REPEAT_Y());
+      ds.field("COLOR", &self.COLOR());
+      ds.field("TRANSPARENT", &self.TRANSPARENT());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CZMImageMaterialT {
+  pub IMAGE: Option<String>,
+  pub REPEAT_X: f64,
+  pub REPEAT_Y: f64,
+  pub COLOR: Option<Box<CZMColorT>>,
+  pub TRANSPARENT: bool,
+}
+impl Default for CZMImageMaterialT {
+  fn default() -> Self {
+    Self {
+      IMAGE: None,
+      REPEAT_X: 0.0,
+      REPEAT_Y: 0.0,
+      COLOR: None,
+      TRANSPARENT: false,
+    }
+  }
+}
+impl CZMImageMaterialT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CZMImageMaterial<'b>> {
+    let IMAGE = self.IMAGE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let REPEAT_X = self.REPEAT_X;
+    let REPEAT_Y = self.REPEAT_Y;
+    let COLOR = self.COLOR.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let TRANSPARENT = self.TRANSPARENT;
+    CZMImageMaterial::create(_fbb, &CZMImageMaterialArgs{
+      IMAGE,
+      REPEAT_X,
+      REPEAT_Y,
+      COLOR,
+      TRANSPARENT,
+    })
+  }
+}
+pub enum CZMGridMaterialOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Grid material
+pub struct CZMGridMaterial<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CZMGridMaterial<'a> {
+  type Inner = CZMGridMaterial<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CZMGridMaterial<'a> {
+  pub const VT_COLOR: flatbuffers::VOffsetT = 4;
+  pub const VT_CELL_ALPHA: flatbuffers::VOffsetT = 6;
+  pub const VT_LINE_COUNT_X: flatbuffers::VOffsetT = 8;
+  pub const VT_LINE_COUNT_Y: flatbuffers::VOffsetT = 10;
+  pub const VT_LINE_THICKNESS_X: flatbuffers::VOffsetT = 12;
+  pub const VT_LINE_THICKNESS_Y: flatbuffers::VOffsetT = 14;
+  pub const VT_LINE_OFFSET_X: flatbuffers::VOffsetT = 16;
+  pub const VT_LINE_OFFSET_Y: flatbuffers::VOffsetT = 18;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CZMGridMaterial { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CZMGridMaterialArgs<'args>
+  ) -> flatbuffers::WIPOffset<CZMGridMaterial<'bldr>> {
+    let mut builder = CZMGridMaterialBuilder::new(_fbb);
+    builder.add_LINE_OFFSET_Y(args.LINE_OFFSET_Y);
+    builder.add_LINE_OFFSET_X(args.LINE_OFFSET_X);
+    builder.add_LINE_THICKNESS_Y(args.LINE_THICKNESS_Y);
+    builder.add_LINE_THICKNESS_X(args.LINE_THICKNESS_X);
+    builder.add_LINE_COUNT_Y(args.LINE_COUNT_Y);
+    builder.add_LINE_COUNT_X(args.LINE_COUNT_X);
+    builder.add_CELL_ALPHA(args.CELL_ALPHA);
+    if let Some(x) = args.COLOR { builder.add_COLOR(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CZMGridMaterialT {
+    let COLOR = self.COLOR().map(|x| {
+      Box::new(x.unpack())
+    });
+    let CELL_ALPHA = self.CELL_ALPHA();
+    let LINE_COUNT_X = self.LINE_COUNT_X();
+    let LINE_COUNT_Y = self.LINE_COUNT_Y();
+    let LINE_THICKNESS_X = self.LINE_THICKNESS_X();
+    let LINE_THICKNESS_Y = self.LINE_THICKNESS_Y();
+    let LINE_OFFSET_X = self.LINE_OFFSET_X();
+    let LINE_OFFSET_Y = self.LINE_OFFSET_Y();
+    CZMGridMaterialT {
+      COLOR,
+      CELL_ALPHA,
+      LINE_COUNT_X,
+      LINE_COUNT_Y,
+      LINE_THICKNESS_X,
+      LINE_THICKNESS_Y,
+      LINE_OFFSET_X,
+      LINE_OFFSET_Y,
+    }
+  }
+
+  /// Grid line color
+  #[inline]
+  pub fn COLOR(&self) -> Option<CZMColor<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMColor>>(CZMGridMaterial::VT_COLOR, None)}
+  }
+  /// Cell alpha
+  #[inline]
+  pub fn CELL_ALPHA(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMGridMaterial::VT_CELL_ALPHA, Some(0.0)).unwrap()}
+  }
+  /// Number of grid lines along X
+  #[inline]
+  pub fn LINE_COUNT_X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMGridMaterial::VT_LINE_COUNT_X, Some(0.0)).unwrap()}
+  }
+  /// Number of grid lines along Y
+  #[inline]
+  pub fn LINE_COUNT_Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMGridMaterial::VT_LINE_COUNT_Y, Some(0.0)).unwrap()}
+  }
+  /// Thickness of grid lines along X
+  #[inline]
+  pub fn LINE_THICKNESS_X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMGridMaterial::VT_LINE_THICKNESS_X, Some(0.0)).unwrap()}
+  }
+  /// Thickness of grid lines along Y
+  #[inline]
+  pub fn LINE_THICKNESS_Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMGridMaterial::VT_LINE_THICKNESS_Y, Some(0.0)).unwrap()}
+  }
+  /// Offset of grid lines along X
+  #[inline]
+  pub fn LINE_OFFSET_X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMGridMaterial::VT_LINE_OFFSET_X, Some(0.0)).unwrap()}
+  }
+  /// Offset of grid lines along Y
+  #[inline]
+  pub fn LINE_OFFSET_Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMGridMaterial::VT_LINE_OFFSET_Y, Some(0.0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for CZMGridMaterial<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMColor>>("COLOR", Self::VT_COLOR, false)?
+     .visit_field::<f64>("CELL_ALPHA", Self::VT_CELL_ALPHA, false)?
+     .visit_field::<f64>("LINE_COUNT_X", Self::VT_LINE_COUNT_X, false)?
+     .visit_field::<f64>("LINE_COUNT_Y", Self::VT_LINE_COUNT_Y, false)?
+     .visit_field::<f64>("LINE_THICKNESS_X", Self::VT_LINE_THICKNESS_X, false)?
+     .visit_field::<f64>("LINE_THICKNESS_Y", Self::VT_LINE_THICKNESS_Y, false)?
+     .visit_field::<f64>("LINE_OFFSET_X", Self::VT_LINE_OFFSET_X, false)?
+     .visit_field::<f64>("LINE_OFFSET_Y", Self::VT_LINE_OFFSET_Y, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CZMGridMaterialArgs<'a> {
+    pub COLOR: Option<flatbuffers::WIPOffset<CZMColor<'a>>>,
+    pub CELL_ALPHA: f64,
+    pub LINE_COUNT_X: f64,
+    pub LINE_COUNT_Y: f64,
+    pub LINE_THICKNESS_X: f64,
+    pub LINE_THICKNESS_Y: f64,
+    pub LINE_OFFSET_X: f64,
+    pub LINE_OFFSET_Y: f64,
+}
+impl<'a> Default for CZMGridMaterialArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CZMGridMaterialArgs {
+      COLOR: None,
+      CELL_ALPHA: 0.0,
+      LINE_COUNT_X: 0.0,
+      LINE_COUNT_Y: 0.0,
+      LINE_THICKNESS_X: 0.0,
+      LINE_THICKNESS_Y: 0.0,
+      LINE_OFFSET_X: 0.0,
+      LINE_OFFSET_Y: 0.0,
+    }
+  }
+}
+
+pub struct CZMGridMaterialBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMGridMaterialBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_COLOR(&mut self, COLOR: flatbuffers::WIPOffset<CZMColor<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMColor>>(CZMGridMaterial::VT_COLOR, COLOR);
+  }
+  #[inline]
+  pub fn add_CELL_ALPHA(&mut self, CELL_ALPHA: f64) {
+    self.fbb_.push_slot::<f64>(CZMGridMaterial::VT_CELL_ALPHA, CELL_ALPHA, 0.0);
+  }
+  #[inline]
+  pub fn add_LINE_COUNT_X(&mut self, LINE_COUNT_X: f64) {
+    self.fbb_.push_slot::<f64>(CZMGridMaterial::VT_LINE_COUNT_X, LINE_COUNT_X, 0.0);
+  }
+  #[inline]
+  pub fn add_LINE_COUNT_Y(&mut self, LINE_COUNT_Y: f64) {
+    self.fbb_.push_slot::<f64>(CZMGridMaterial::VT_LINE_COUNT_Y, LINE_COUNT_Y, 0.0);
+  }
+  #[inline]
+  pub fn add_LINE_THICKNESS_X(&mut self, LINE_THICKNESS_X: f64) {
+    self.fbb_.push_slot::<f64>(CZMGridMaterial::VT_LINE_THICKNESS_X, LINE_THICKNESS_X, 0.0);
+  }
+  #[inline]
+  pub fn add_LINE_THICKNESS_Y(&mut self, LINE_THICKNESS_Y: f64) {
+    self.fbb_.push_slot::<f64>(CZMGridMaterial::VT_LINE_THICKNESS_Y, LINE_THICKNESS_Y, 0.0);
+  }
+  #[inline]
+  pub fn add_LINE_OFFSET_X(&mut self, LINE_OFFSET_X: f64) {
+    self.fbb_.push_slot::<f64>(CZMGridMaterial::VT_LINE_OFFSET_X, LINE_OFFSET_X, 0.0);
+  }
+  #[inline]
+  pub fn add_LINE_OFFSET_Y(&mut self, LINE_OFFSET_Y: f64) {
+    self.fbb_.push_slot::<f64>(CZMGridMaterial::VT_LINE_OFFSET_Y, LINE_OFFSET_Y, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMGridMaterialBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CZMGridMaterialBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CZMGridMaterial<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CZMGridMaterial<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CZMGridMaterial");
+      ds.field("COLOR", &self.COLOR());
+      ds.field("CELL_ALPHA", &self.CELL_ALPHA());
+      ds.field("LINE_COUNT_X", &self.LINE_COUNT_X());
+      ds.field("LINE_COUNT_Y", &self.LINE_COUNT_Y());
+      ds.field("LINE_THICKNESS_X", &self.LINE_THICKNESS_X());
+      ds.field("LINE_THICKNESS_Y", &self.LINE_THICKNESS_Y());
+      ds.field("LINE_OFFSET_X", &self.LINE_OFFSET_X());
+      ds.field("LINE_OFFSET_Y", &self.LINE_OFFSET_Y());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CZMGridMaterialT {
+  pub COLOR: Option<Box<CZMColorT>>,
+  pub CELL_ALPHA: f64,
+  pub LINE_COUNT_X: f64,
+  pub LINE_COUNT_Y: f64,
+  pub LINE_THICKNESS_X: f64,
+  pub LINE_THICKNESS_Y: f64,
+  pub LINE_OFFSET_X: f64,
+  pub LINE_OFFSET_Y: f64,
+}
+impl Default for CZMGridMaterialT {
+  fn default() -> Self {
+    Self {
+      COLOR: None,
+      CELL_ALPHA: 0.0,
+      LINE_COUNT_X: 0.0,
+      LINE_COUNT_Y: 0.0,
+      LINE_THICKNESS_X: 0.0,
+      LINE_THICKNESS_Y: 0.0,
+      LINE_OFFSET_X: 0.0,
+      LINE_OFFSET_Y: 0.0,
+    }
+  }
+}
+impl CZMGridMaterialT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CZMGridMaterial<'b>> {
+    let COLOR = self.COLOR.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let CELL_ALPHA = self.CELL_ALPHA;
+    let LINE_COUNT_X = self.LINE_COUNT_X;
+    let LINE_COUNT_Y = self.LINE_COUNT_Y;
+    let LINE_THICKNESS_X = self.LINE_THICKNESS_X;
+    let LINE_THICKNESS_Y = self.LINE_THICKNESS_Y;
+    let LINE_OFFSET_X = self.LINE_OFFSET_X;
+    let LINE_OFFSET_Y = self.LINE_OFFSET_Y;
+    CZMGridMaterial::create(_fbb, &CZMGridMaterialArgs{
+      COLOR,
+      CELL_ALPHA,
+      LINE_COUNT_X,
+      LINE_COUNT_Y,
+      LINE_THICKNESS_X,
+      LINE_THICKNESS_Y,
+      LINE_OFFSET_X,
+      LINE_OFFSET_Y,
+    })
+  }
+}
+pub enum CZMStripeMaterialOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Stripe material
+pub struct CZMStripeMaterial<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CZMStripeMaterial<'a> {
+  type Inner = CZMStripeMaterial<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CZMStripeMaterial<'a> {
+  pub const VT_ORIENTATION: flatbuffers::VOffsetT = 4;
+  pub const VT_EVEN_COLOR: flatbuffers::VOffsetT = 6;
+  pub const VT_ODD_COLOR: flatbuffers::VOffsetT = 8;
+  pub const VT_OFFSET: flatbuffers::VOffsetT = 10;
+  pub const VT_REPEAT_COUNT: flatbuffers::VOffsetT = 12;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CZMStripeMaterial { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CZMStripeMaterialArgs<'args>
+  ) -> flatbuffers::WIPOffset<CZMStripeMaterial<'bldr>> {
+    let mut builder = CZMStripeMaterialBuilder::new(_fbb);
+    builder.add_REPEAT_COUNT(args.REPEAT_COUNT);
+    builder.add_OFFSET(args.OFFSET);
+    if let Some(x) = args.ODD_COLOR { builder.add_ODD_COLOR(x); }
+    if let Some(x) = args.EVEN_COLOR { builder.add_EVEN_COLOR(x); }
+    if let Some(x) = args.ORIENTATION { builder.add_ORIENTATION(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CZMStripeMaterialT {
+    let ORIENTATION = self.ORIENTATION().map(|x| {
+      x.to_string()
+    });
+    let EVEN_COLOR = self.EVEN_COLOR().map(|x| {
+      Box::new(x.unpack())
+    });
+    let ODD_COLOR = self.ODD_COLOR().map(|x| {
+      Box::new(x.unpack())
+    });
+    let OFFSET = self.OFFSET();
+    let REPEAT_COUNT = self.REPEAT_COUNT();
+    CZMStripeMaterialT {
+      ORIENTATION,
+      EVEN_COLOR,
+      ODD_COLOR,
+      OFFSET,
+      REPEAT_COUNT,
+    }
+  }
+
+  /// Stripe orientation
+  #[inline]
+  pub fn ORIENTATION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMStripeMaterial::VT_ORIENTATION, None)}
+  }
+  /// Even color
+  #[inline]
+  pub fn EVEN_COLOR(&self) -> Option<CZMColor<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMColor>>(CZMStripeMaterial::VT_EVEN_COLOR, None)}
+  }
+  /// Odd color
+  #[inline]
+  pub fn ODD_COLOR(&self) -> Option<CZMColor<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMColor>>(CZMStripeMaterial::VT_ODD_COLOR, None)}
+  }
+  /// Offset
+  #[inline]
+  pub fn OFFSET(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMStripeMaterial::VT_OFFSET, Some(0.0)).unwrap()}
+  }
+  /// Number of times to repeat
+  #[inline]
+  pub fn REPEAT_COUNT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMStripeMaterial::VT_REPEAT_COUNT, Some(0.0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for CZMStripeMaterial<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIENTATION", Self::VT_ORIENTATION, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMColor>>("EVEN_COLOR", Self::VT_EVEN_COLOR, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMColor>>("ODD_COLOR", Self::VT_ODD_COLOR, false)?
+     .visit_field::<f64>("OFFSET", Self::VT_OFFSET, false)?
+     .visit_field::<f64>("REPEAT_COUNT", Self::VT_REPEAT_COUNT, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CZMStripeMaterialArgs<'a> {
+    pub ORIENTATION: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub EVEN_COLOR: Option<flatbuffers::WIPOffset<CZMColor<'a>>>,
+    pub ODD_COLOR: Option<flatbuffers::WIPOffset<CZMColor<'a>>>,
+    pub OFFSET: f64,
+    pub REPEAT_COUNT: f64,
+}
+impl<'a> Default for CZMStripeMaterialArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CZMStripeMaterialArgs {
+      ORIENTATION: None,
+      EVEN_COLOR: None,
+      ODD_COLOR: None,
+      OFFSET: 0.0,
+      REPEAT_COUNT: 0.0,
+    }
+  }
+}
+
+pub struct CZMStripeMaterialBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMStripeMaterialBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_ORIENTATION(&mut self, ORIENTATION: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMStripeMaterial::VT_ORIENTATION, ORIENTATION);
+  }
+  #[inline]
+  pub fn add_EVEN_COLOR(&mut self, EVEN_COLOR: flatbuffers::WIPOffset<CZMColor<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMColor>>(CZMStripeMaterial::VT_EVEN_COLOR, EVEN_COLOR);
+  }
+  #[inline]
+  pub fn add_ODD_COLOR(&mut self, ODD_COLOR: flatbuffers::WIPOffset<CZMColor<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMColor>>(CZMStripeMaterial::VT_ODD_COLOR, ODD_COLOR);
+  }
+  #[inline]
+  pub fn add_OFFSET(&mut self, OFFSET: f64) {
+    self.fbb_.push_slot::<f64>(CZMStripeMaterial::VT_OFFSET, OFFSET, 0.0);
+  }
+  #[inline]
+  pub fn add_REPEAT_COUNT(&mut self, REPEAT_COUNT: f64) {
+    self.fbb_.push_slot::<f64>(CZMStripeMaterial::VT_REPEAT_COUNT, REPEAT_COUNT, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMStripeMaterialBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CZMStripeMaterialBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CZMStripeMaterial<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CZMStripeMaterial<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CZMStripeMaterial");
+      ds.field("ORIENTATION", &self.ORIENTATION());
+      ds.field("EVEN_COLOR", &self.EVEN_COLOR());
+      ds.field("ODD_COLOR", &self.ODD_COLOR());
+      ds.field("OFFSET", &self.OFFSET());
+      ds.field("REPEAT_COUNT", &self.REPEAT_COUNT());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CZMStripeMaterialT {
+  pub ORIENTATION: Option<String>,
+  pub EVEN_COLOR: Option<Box<CZMColorT>>,
+  pub ODD_COLOR: Option<Box<CZMColorT>>,
+  pub OFFSET: f64,
+  pub REPEAT_COUNT: f64,
+}
+impl Default for CZMStripeMaterialT {
+  fn default() -> Self {
+    Self {
+      ORIENTATION: None,
+      EVEN_COLOR: None,
+      ODD_COLOR: None,
+      OFFSET: 0.0,
+      REPEAT_COUNT: 0.0,
+    }
+  }
+}
+impl CZMStripeMaterialT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CZMStripeMaterial<'b>> {
+    let ORIENTATION = self.ORIENTATION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EVEN_COLOR = self.EVEN_COLOR.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let ODD_COLOR = self.ODD_COLOR.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let OFFSET = self.OFFSET;
+    let REPEAT_COUNT = self.REPEAT_COUNT;
+    CZMStripeMaterial::create(_fbb, &CZMStripeMaterialArgs{
+      ORIENTATION,
+      EVEN_COLOR,
+      ODD_COLOR,
+      OFFSET,
+      REPEAT_COUNT,
+    })
+  }
+}
+pub enum CZMCheckerboardMaterialOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Checkerboard material
+pub struct CZMCheckerboardMaterial<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CZMCheckerboardMaterial<'a> {
+  type Inner = CZMCheckerboardMaterial<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CZMCheckerboardMaterial<'a> {
+  pub const VT_EVEN_COLOR: flatbuffers::VOffsetT = 4;
+  pub const VT_ODD_COLOR: flatbuffers::VOffsetT = 6;
+  pub const VT_REPEAT_X: flatbuffers::VOffsetT = 8;
+  pub const VT_REPEAT_Y: flatbuffers::VOffsetT = 10;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CZMCheckerboardMaterial { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CZMCheckerboardMaterialArgs<'args>
+  ) -> flatbuffers::WIPOffset<CZMCheckerboardMaterial<'bldr>> {
+    let mut builder = CZMCheckerboardMaterialBuilder::new(_fbb);
+    builder.add_REPEAT_Y(args.REPEAT_Y);
+    builder.add_REPEAT_X(args.REPEAT_X);
+    if let Some(x) = args.ODD_COLOR { builder.add_ODD_COLOR(x); }
+    if let Some(x) = args.EVEN_COLOR { builder.add_EVEN_COLOR(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CZMCheckerboardMaterialT {
+    let EVEN_COLOR = self.EVEN_COLOR().map(|x| {
+      Box::new(x.unpack())
+    });
+    let ODD_COLOR = self.ODD_COLOR().map(|x| {
+      Box::new(x.unpack())
+    });
+    let REPEAT_X = self.REPEAT_X();
+    let REPEAT_Y = self.REPEAT_Y();
+    CZMCheckerboardMaterialT {
+      EVEN_COLOR,
+      ODD_COLOR,
+      REPEAT_X,
+      REPEAT_Y,
+    }
+  }
+
+  /// Even color
+  #[inline]
+  pub fn EVEN_COLOR(&self) -> Option<CZMColor<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMColor>>(CZMCheckerboardMaterial::VT_EVEN_COLOR, None)}
+  }
+  /// Odd color
+  #[inline]
+  pub fn ODD_COLOR(&self) -> Option<CZMColor<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMColor>>(CZMCheckerboardMaterial::VT_ODD_COLOR, None)}
+  }
+  /// Repeat X
+  #[inline]
+  pub fn REPEAT_X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMCheckerboardMaterial::VT_REPEAT_X, Some(0.0)).unwrap()}
+  }
+  /// Repeat Y
+  #[inline]
+  pub fn REPEAT_Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMCheckerboardMaterial::VT_REPEAT_Y, Some(0.0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for CZMCheckerboardMaterial<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMColor>>("EVEN_COLOR", Self::VT_EVEN_COLOR, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMColor>>("ODD_COLOR", Self::VT_ODD_COLOR, false)?
+     .visit_field::<f64>("REPEAT_X", Self::VT_REPEAT_X, false)?
+     .visit_field::<f64>("REPEAT_Y", Self::VT_REPEAT_Y, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CZMCheckerboardMaterialArgs<'a> {
+    pub EVEN_COLOR: Option<flatbuffers::WIPOffset<CZMColor<'a>>>,
+    pub ODD_COLOR: Option<flatbuffers::WIPOffset<CZMColor<'a>>>,
+    pub REPEAT_X: f64,
+    pub REPEAT_Y: f64,
+}
+impl<'a> Default for CZMCheckerboardMaterialArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CZMCheckerboardMaterialArgs {
+      EVEN_COLOR: None,
+      ODD_COLOR: None,
+      REPEAT_X: 0.0,
+      REPEAT_Y: 0.0,
+    }
+  }
+}
+
+pub struct CZMCheckerboardMaterialBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMCheckerboardMaterialBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_EVEN_COLOR(&mut self, EVEN_COLOR: flatbuffers::WIPOffset<CZMColor<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMColor>>(CZMCheckerboardMaterial::VT_EVEN_COLOR, EVEN_COLOR);
+  }
+  #[inline]
+  pub fn add_ODD_COLOR(&mut self, ODD_COLOR: flatbuffers::WIPOffset<CZMColor<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMColor>>(CZMCheckerboardMaterial::VT_ODD_COLOR, ODD_COLOR);
+  }
+  #[inline]
+  pub fn add_REPEAT_X(&mut self, REPEAT_X: f64) {
+    self.fbb_.push_slot::<f64>(CZMCheckerboardMaterial::VT_REPEAT_X, REPEAT_X, 0.0);
+  }
+  #[inline]
+  pub fn add_REPEAT_Y(&mut self, REPEAT_Y: f64) {
+    self.fbb_.push_slot::<f64>(CZMCheckerboardMaterial::VT_REPEAT_Y, REPEAT_Y, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMCheckerboardMaterialBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CZMCheckerboardMaterialBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CZMCheckerboardMaterial<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CZMCheckerboardMaterial<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CZMCheckerboardMaterial");
+      ds.field("EVEN_COLOR", &self.EVEN_COLOR());
+      ds.field("ODD_COLOR", &self.ODD_COLOR());
+      ds.field("REPEAT_X", &self.REPEAT_X());
+      ds.field("REPEAT_Y", &self.REPEAT_Y());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CZMCheckerboardMaterialT {
+  pub EVEN_COLOR: Option<Box<CZMColorT>>,
+  pub ODD_COLOR: Option<Box<CZMColorT>>,
+  pub REPEAT_X: f64,
+  pub REPEAT_Y: f64,
+}
+impl Default for CZMCheckerboardMaterialT {
+  fn default() -> Self {
+    Self {
+      EVEN_COLOR: None,
+      ODD_COLOR: None,
+      REPEAT_X: 0.0,
+      REPEAT_Y: 0.0,
+    }
+  }
+}
+impl CZMCheckerboardMaterialT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CZMCheckerboardMaterial<'b>> {
+    let EVEN_COLOR = self.EVEN_COLOR.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let ODD_COLOR = self.ODD_COLOR.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let REPEAT_X = self.REPEAT_X;
+    let REPEAT_Y = self.REPEAT_Y;
+    CZMCheckerboardMaterial::create(_fbb, &CZMCheckerboardMaterialArgs{
+      EVEN_COLOR,
+      ODD_COLOR,
+      REPEAT_X,
+      REPEAT_Y,
+    })
+  }
+}
+pub enum CZMMaterialOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Surface material (used by polygon, ellipse, box, etc.)
+pub struct CZMMaterial<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CZMMaterial<'a> {
+  type Inner = CZMMaterial<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CZMMaterial<'a> {
+  pub const VT_SOLID_COLOR: flatbuffers::VOffsetT = 4;
+  pub const VT_IMAGE: flatbuffers::VOffsetT = 6;
+  pub const VT_GRID: flatbuffers::VOffsetT = 8;
+  pub const VT_STRIPE: flatbuffers::VOffsetT = 10;
+  pub const VT_CHECKERBOARD: flatbuffers::VOffsetT = 12;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CZMMaterial { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CZMMaterialArgs<'args>
+  ) -> flatbuffers::WIPOffset<CZMMaterial<'bldr>> {
+    let mut builder = CZMMaterialBuilder::new(_fbb);
+    if let Some(x) = args.CHECKERBOARD { builder.add_CHECKERBOARD(x); }
+    if let Some(x) = args.STRIPE { builder.add_STRIPE(x); }
+    if let Some(x) = args.GRID { builder.add_GRID(x); }
+    if let Some(x) = args.IMAGE { builder.add_IMAGE(x); }
+    if let Some(x) = args.SOLID_COLOR { builder.add_SOLID_COLOR(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CZMMaterialT {
+    let SOLID_COLOR = self.SOLID_COLOR().map(|x| {
+      Box::new(x.unpack())
+    });
+    let IMAGE = self.IMAGE().map(|x| {
+      Box::new(x.unpack())
+    });
+    let GRID = self.GRID().map(|x| {
+      Box::new(x.unpack())
+    });
+    let STRIPE = self.STRIPE().map(|x| {
+      Box::new(x.unpack())
+    });
+    let CHECKERBOARD = self.CHECKERBOARD().map(|x| {
+      Box::new(x.unpack())
+    });
+    CZMMaterialT {
+      SOLID_COLOR,
+      IMAGE,
+      GRID,
+      STRIPE,
+      CHECKERBOARD,
+    }
+  }
+
+  /// Solid color material
+  #[inline]
+  pub fn SOLID_COLOR(&self) -> Option<CZMSolidColorMaterial<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMSolidColorMaterial>>(CZMMaterial::VT_SOLID_COLOR, None)}
+  }
+  /// Image material
+  #[inline]
+  pub fn IMAGE(&self) -> Option<CZMImageMaterial<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMImageMaterial>>(CZMMaterial::VT_IMAGE, None)}
+  }
+  /// Grid material
+  #[inline]
+  pub fn GRID(&self) -> Option<CZMGridMaterial<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMGridMaterial>>(CZMMaterial::VT_GRID, None)}
+  }
+  /// Stripe material
+  #[inline]
+  pub fn STRIPE(&self) -> Option<CZMStripeMaterial<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMStripeMaterial>>(CZMMaterial::VT_STRIPE, None)}
+  }
+  /// Checkerboard material
+  #[inline]
+  pub fn CHECKERBOARD(&self) -> Option<CZMCheckerboardMaterial<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMCheckerboardMaterial>>(CZMMaterial::VT_CHECKERBOARD, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for CZMMaterial<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMSolidColorMaterial>>("SOLID_COLOR", Self::VT_SOLID_COLOR, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMImageMaterial>>("IMAGE", Self::VT_IMAGE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMGridMaterial>>("GRID", Self::VT_GRID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMStripeMaterial>>("STRIPE", Self::VT_STRIPE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMCheckerboardMaterial>>("CHECKERBOARD", Self::VT_CHECKERBOARD, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CZMMaterialArgs<'a> {
+    pub SOLID_COLOR: Option<flatbuffers::WIPOffset<CZMSolidColorMaterial<'a>>>,
+    pub IMAGE: Option<flatbuffers::WIPOffset<CZMImageMaterial<'a>>>,
+    pub GRID: Option<flatbuffers::WIPOffset<CZMGridMaterial<'a>>>,
+    pub STRIPE: Option<flatbuffers::WIPOffset<CZMStripeMaterial<'a>>>,
+    pub CHECKERBOARD: Option<flatbuffers::WIPOffset<CZMCheckerboardMaterial<'a>>>,
+}
+impl<'a> Default for CZMMaterialArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CZMMaterialArgs {
+      SOLID_COLOR: None,
+      IMAGE: None,
+      GRID: None,
+      STRIPE: None,
+      CHECKERBOARD: None,
+    }
+  }
+}
+
+pub struct CZMMaterialBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMMaterialBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_SOLID_COLOR(&mut self, SOLID_COLOR: flatbuffers::WIPOffset<CZMSolidColorMaterial<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMSolidColorMaterial>>(CZMMaterial::VT_SOLID_COLOR, SOLID_COLOR);
+  }
+  #[inline]
+  pub fn add_IMAGE(&mut self, IMAGE: flatbuffers::WIPOffset<CZMImageMaterial<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMImageMaterial>>(CZMMaterial::VT_IMAGE, IMAGE);
+  }
+  #[inline]
+  pub fn add_GRID(&mut self, GRID: flatbuffers::WIPOffset<CZMGridMaterial<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMGridMaterial>>(CZMMaterial::VT_GRID, GRID);
+  }
+  #[inline]
+  pub fn add_STRIPE(&mut self, STRIPE: flatbuffers::WIPOffset<CZMStripeMaterial<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMStripeMaterial>>(CZMMaterial::VT_STRIPE, STRIPE);
+  }
+  #[inline]
+  pub fn add_CHECKERBOARD(&mut self, CHECKERBOARD: flatbuffers::WIPOffset<CZMCheckerboardMaterial<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMCheckerboardMaterial>>(CZMMaterial::VT_CHECKERBOARD, CHECKERBOARD);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMMaterialBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CZMMaterialBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CZMMaterial<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CZMMaterial<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CZMMaterial");
+      ds.field("SOLID_COLOR", &self.SOLID_COLOR());
+      ds.field("IMAGE", &self.IMAGE());
+      ds.field("GRID", &self.GRID());
+      ds.field("STRIPE", &self.STRIPE());
+      ds.field("CHECKERBOARD", &self.CHECKERBOARD());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CZMMaterialT {
+  pub SOLID_COLOR: Option<Box<CZMSolidColorMaterialT>>,
+  pub IMAGE: Option<Box<CZMImageMaterialT>>,
+  pub GRID: Option<Box<CZMGridMaterialT>>,
+  pub STRIPE: Option<Box<CZMStripeMaterialT>>,
+  pub CHECKERBOARD: Option<Box<CZMCheckerboardMaterialT>>,
+}
+impl Default for CZMMaterialT {
+  fn default() -> Self {
+    Self {
+      SOLID_COLOR: None,
+      IMAGE: None,
+      GRID: None,
+      STRIPE: None,
+      CHECKERBOARD: None,
+    }
+  }
+}
+impl CZMMaterialT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CZMMaterial<'b>> {
+    let SOLID_COLOR = self.SOLID_COLOR.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let IMAGE = self.IMAGE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let GRID = self.GRID.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let STRIPE = self.STRIPE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let CHECKERBOARD = self.CHECKERBOARD.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    CZMMaterial::create(_fbb, &CZMMaterialArgs{
+      SOLID_COLOR,
+      IMAGE,
+      GRID,
+      STRIPE,
+      CHECKERBOARD,
+    })
+  }
+}
+pub enum CZMPolylineOutlineMaterialOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Polyline outline material
+pub struct CZMPolylineOutlineMaterial<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CZMPolylineOutlineMaterial<'a> {
+  type Inner = CZMPolylineOutlineMaterial<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CZMPolylineOutlineMaterial<'a> {
+  pub const VT_COLOR: flatbuffers::VOffsetT = 4;
+  pub const VT_OUTLINE_COLOR: flatbuffers::VOffsetT = 6;
+  pub const VT_OUTLINE_WIDTH: flatbuffers::VOffsetT = 8;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CZMPolylineOutlineMaterial { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CZMPolylineOutlineMaterialArgs<'args>
+  ) -> flatbuffers::WIPOffset<CZMPolylineOutlineMaterial<'bldr>> {
+    let mut builder = CZMPolylineOutlineMaterialBuilder::new(_fbb);
+    builder.add_OUTLINE_WIDTH(args.OUTLINE_WIDTH);
+    if let Some(x) = args.OUTLINE_COLOR { builder.add_OUTLINE_COLOR(x); }
+    if let Some(x) = args.COLOR { builder.add_COLOR(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CZMPolylineOutlineMaterialT {
+    let COLOR = self.COLOR().map(|x| {
+      Box::new(x.unpack())
+    });
+    let OUTLINE_COLOR = self.OUTLINE_COLOR().map(|x| {
+      Box::new(x.unpack())
+    });
+    let OUTLINE_WIDTH = self.OUTLINE_WIDTH();
+    CZMPolylineOutlineMaterialT {
+      COLOR,
+      OUTLINE_COLOR,
+      OUTLINE_WIDTH,
+    }
+  }
+
+  /// Line color
+  #[inline]
+  pub fn COLOR(&self) -> Option<CZMColor<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMColor>>(CZMPolylineOutlineMaterial::VT_COLOR, None)}
+  }
+  /// Outline color
+  #[inline]
+  pub fn OUTLINE_COLOR(&self) -> Option<CZMColor<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMColor>>(CZMPolylineOutlineMaterial::VT_OUTLINE_COLOR, None)}
+  }
+  /// Outline width
+  #[inline]
+  pub fn OUTLINE_WIDTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMPolylineOutlineMaterial::VT_OUTLINE_WIDTH, Some(0.0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for CZMPolylineOutlineMaterial<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMColor>>("COLOR", Self::VT_COLOR, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMColor>>("OUTLINE_COLOR", Self::VT_OUTLINE_COLOR, false)?
+     .visit_field::<f64>("OUTLINE_WIDTH", Self::VT_OUTLINE_WIDTH, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CZMPolylineOutlineMaterialArgs<'a> {
+    pub COLOR: Option<flatbuffers::WIPOffset<CZMColor<'a>>>,
+    pub OUTLINE_COLOR: Option<flatbuffers::WIPOffset<CZMColor<'a>>>,
+    pub OUTLINE_WIDTH: f64,
+}
+impl<'a> Default for CZMPolylineOutlineMaterialArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CZMPolylineOutlineMaterialArgs {
+      COLOR: None,
+      OUTLINE_COLOR: None,
+      OUTLINE_WIDTH: 0.0,
+    }
+  }
+}
+
+pub struct CZMPolylineOutlineMaterialBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMPolylineOutlineMaterialBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_COLOR(&mut self, COLOR: flatbuffers::WIPOffset<CZMColor<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMColor>>(CZMPolylineOutlineMaterial::VT_COLOR, COLOR);
+  }
+  #[inline]
+  pub fn add_OUTLINE_COLOR(&mut self, OUTLINE_COLOR: flatbuffers::WIPOffset<CZMColor<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMColor>>(CZMPolylineOutlineMaterial::VT_OUTLINE_COLOR, OUTLINE_COLOR);
+  }
+  #[inline]
+  pub fn add_OUTLINE_WIDTH(&mut self, OUTLINE_WIDTH: f64) {
+    self.fbb_.push_slot::<f64>(CZMPolylineOutlineMaterial::VT_OUTLINE_WIDTH, OUTLINE_WIDTH, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMPolylineOutlineMaterialBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CZMPolylineOutlineMaterialBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CZMPolylineOutlineMaterial<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CZMPolylineOutlineMaterial<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CZMPolylineOutlineMaterial");
+      ds.field("COLOR", &self.COLOR());
+      ds.field("OUTLINE_COLOR", &self.OUTLINE_COLOR());
+      ds.field("OUTLINE_WIDTH", &self.OUTLINE_WIDTH());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CZMPolylineOutlineMaterialT {
+  pub COLOR: Option<Box<CZMColorT>>,
+  pub OUTLINE_COLOR: Option<Box<CZMColorT>>,
+  pub OUTLINE_WIDTH: f64,
+}
+impl Default for CZMPolylineOutlineMaterialT {
+  fn default() -> Self {
+    Self {
+      COLOR: None,
+      OUTLINE_COLOR: None,
+      OUTLINE_WIDTH: 0.0,
+    }
+  }
+}
+impl CZMPolylineOutlineMaterialT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CZMPolylineOutlineMaterial<'b>> {
+    let COLOR = self.COLOR.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let OUTLINE_COLOR = self.OUTLINE_COLOR.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let OUTLINE_WIDTH = self.OUTLINE_WIDTH;
+    CZMPolylineOutlineMaterial::create(_fbb, &CZMPolylineOutlineMaterialArgs{
+      COLOR,
+      OUTLINE_COLOR,
+      OUTLINE_WIDTH,
+    })
+  }
+}
+pub enum CZMPolylineArrowMaterialOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Polyline arrow material
+pub struct CZMPolylineArrowMaterial<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CZMPolylineArrowMaterial<'a> {
+  type Inner = CZMPolylineArrowMaterial<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CZMPolylineArrowMaterial<'a> {
+  pub const VT_COLOR: flatbuffers::VOffsetT = 4;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CZMPolylineArrowMaterial { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CZMPolylineArrowMaterialArgs<'args>
+  ) -> flatbuffers::WIPOffset<CZMPolylineArrowMaterial<'bldr>> {
+    let mut builder = CZMPolylineArrowMaterialBuilder::new(_fbb);
+    if let Some(x) = args.COLOR { builder.add_COLOR(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CZMPolylineArrowMaterialT {
+    let COLOR = self.COLOR().map(|x| {
+      Box::new(x.unpack())
+    });
+    CZMPolylineArrowMaterialT {
+      COLOR,
+    }
+  }
+
+  /// Arrow color
+  #[inline]
+  pub fn COLOR(&self) -> Option<CZMColor<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMColor>>(CZMPolylineArrowMaterial::VT_COLOR, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for CZMPolylineArrowMaterial<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMColor>>("COLOR", Self::VT_COLOR, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CZMPolylineArrowMaterialArgs<'a> {
+    pub COLOR: Option<flatbuffers::WIPOffset<CZMColor<'a>>>,
+}
+impl<'a> Default for CZMPolylineArrowMaterialArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CZMPolylineArrowMaterialArgs {
+      COLOR: None,
+    }
+  }
+}
+
+pub struct CZMPolylineArrowMaterialBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMPolylineArrowMaterialBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_COLOR(&mut self, COLOR: flatbuffers::WIPOffset<CZMColor<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMColor>>(CZMPolylineArrowMaterial::VT_COLOR, COLOR);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMPolylineArrowMaterialBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CZMPolylineArrowMaterialBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CZMPolylineArrowMaterial<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CZMPolylineArrowMaterial<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CZMPolylineArrowMaterial");
+      ds.field("COLOR", &self.COLOR());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CZMPolylineArrowMaterialT {
+  pub COLOR: Option<Box<CZMColorT>>,
+}
+impl Default for CZMPolylineArrowMaterialT {
+  fn default() -> Self {
+    Self {
+      COLOR: None,
+    }
+  }
+}
+impl CZMPolylineArrowMaterialT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CZMPolylineArrowMaterial<'b>> {
+    let COLOR = self.COLOR.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    CZMPolylineArrowMaterial::create(_fbb, &CZMPolylineArrowMaterialArgs{
+      COLOR,
+    })
+  }
+}
+pub enum CZMPolylineDashMaterialOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Polyline dash material
+pub struct CZMPolylineDashMaterial<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CZMPolylineDashMaterial<'a> {
+  type Inner = CZMPolylineDashMaterial<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CZMPolylineDashMaterial<'a> {
+  pub const VT_COLOR: flatbuffers::VOffsetT = 4;
+  pub const VT_GAP_COLOR: flatbuffers::VOffsetT = 6;
+  pub const VT_DASH_LENGTH: flatbuffers::VOffsetT = 8;
+  pub const VT_DASH_PATTERN: flatbuffers::VOffsetT = 10;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CZMPolylineDashMaterial { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CZMPolylineDashMaterialArgs<'args>
+  ) -> flatbuffers::WIPOffset<CZMPolylineDashMaterial<'bldr>> {
+    let mut builder = CZMPolylineDashMaterialBuilder::new(_fbb);
+    builder.add_DASH_LENGTH(args.DASH_LENGTH);
+    builder.add_DASH_PATTERN(args.DASH_PATTERN);
+    if let Some(x) = args.GAP_COLOR { builder.add_GAP_COLOR(x); }
+    if let Some(x) = args.COLOR { builder.add_COLOR(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CZMPolylineDashMaterialT {
+    let COLOR = self.COLOR().map(|x| {
+      Box::new(x.unpack())
+    });
+    let GAP_COLOR = self.GAP_COLOR().map(|x| {
+      Box::new(x.unpack())
+    });
+    let DASH_LENGTH = self.DASH_LENGTH();
+    let DASH_PATTERN = self.DASH_PATTERN();
+    CZMPolylineDashMaterialT {
+      COLOR,
+      GAP_COLOR,
+      DASH_LENGTH,
+      DASH_PATTERN,
+    }
+  }
+
+  /// Dash color
+  #[inline]
+  pub fn COLOR(&self) -> Option<CZMColor<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMColor>>(CZMPolylineDashMaterial::VT_COLOR, None)}
+  }
+  /// Gap color
+  #[inline]
+  pub fn GAP_COLOR(&self) -> Option<CZMColor<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMColor>>(CZMPolylineDashMaterial::VT_GAP_COLOR, None)}
+  }
+  /// Dash length in pixels
+  #[inline]
+  pub fn DASH_LENGTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMPolylineDashMaterial::VT_DASH_LENGTH, Some(0.0)).unwrap()}
+  }
+  /// Dash pattern (bitmask)
+  #[inline]
+  pub fn DASH_PATTERN(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(CZMPolylineDashMaterial::VT_DASH_PATTERN, Some(0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for CZMPolylineDashMaterial<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMColor>>("COLOR", Self::VT_COLOR, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMColor>>("GAP_COLOR", Self::VT_GAP_COLOR, false)?
+     .visit_field::<f64>("DASH_LENGTH", Self::VT_DASH_LENGTH, false)?
+     .visit_field::<i32>("DASH_PATTERN", Self::VT_DASH_PATTERN, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CZMPolylineDashMaterialArgs<'a> {
+    pub COLOR: Option<flatbuffers::WIPOffset<CZMColor<'a>>>,
+    pub GAP_COLOR: Option<flatbuffers::WIPOffset<CZMColor<'a>>>,
+    pub DASH_LENGTH: f64,
+    pub DASH_PATTERN: i32,
+}
+impl<'a> Default for CZMPolylineDashMaterialArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CZMPolylineDashMaterialArgs {
+      COLOR: None,
+      GAP_COLOR: None,
+      DASH_LENGTH: 0.0,
+      DASH_PATTERN: 0,
+    }
+  }
+}
+
+pub struct CZMPolylineDashMaterialBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMPolylineDashMaterialBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_COLOR(&mut self, COLOR: flatbuffers::WIPOffset<CZMColor<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMColor>>(CZMPolylineDashMaterial::VT_COLOR, COLOR);
+  }
+  #[inline]
+  pub fn add_GAP_COLOR(&mut self, GAP_COLOR: flatbuffers::WIPOffset<CZMColor<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMColor>>(CZMPolylineDashMaterial::VT_GAP_COLOR, GAP_COLOR);
+  }
+  #[inline]
+  pub fn add_DASH_LENGTH(&mut self, DASH_LENGTH: f64) {
+    self.fbb_.push_slot::<f64>(CZMPolylineDashMaterial::VT_DASH_LENGTH, DASH_LENGTH, 0.0);
+  }
+  #[inline]
+  pub fn add_DASH_PATTERN(&mut self, DASH_PATTERN: i32) {
+    self.fbb_.push_slot::<i32>(CZMPolylineDashMaterial::VT_DASH_PATTERN, DASH_PATTERN, 0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMPolylineDashMaterialBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CZMPolylineDashMaterialBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CZMPolylineDashMaterial<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CZMPolylineDashMaterial<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CZMPolylineDashMaterial");
+      ds.field("COLOR", &self.COLOR());
+      ds.field("GAP_COLOR", &self.GAP_COLOR());
+      ds.field("DASH_LENGTH", &self.DASH_LENGTH());
+      ds.field("DASH_PATTERN", &self.DASH_PATTERN());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CZMPolylineDashMaterialT {
+  pub COLOR: Option<Box<CZMColorT>>,
+  pub GAP_COLOR: Option<Box<CZMColorT>>,
+  pub DASH_LENGTH: f64,
+  pub DASH_PATTERN: i32,
+}
+impl Default for CZMPolylineDashMaterialT {
+  fn default() -> Self {
+    Self {
+      COLOR: None,
+      GAP_COLOR: None,
+      DASH_LENGTH: 0.0,
+      DASH_PATTERN: 0,
+    }
+  }
+}
+impl CZMPolylineDashMaterialT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CZMPolylineDashMaterial<'b>> {
+    let COLOR = self.COLOR.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let GAP_COLOR = self.GAP_COLOR.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let DASH_LENGTH = self.DASH_LENGTH;
+    let DASH_PATTERN = self.DASH_PATTERN;
+    CZMPolylineDashMaterial::create(_fbb, &CZMPolylineDashMaterialArgs{
+      COLOR,
+      GAP_COLOR,
+      DASH_LENGTH,
+      DASH_PATTERN,
+    })
+  }
+}
+pub enum CZMPolylineGlowMaterialOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Polyline glow material
+pub struct CZMPolylineGlowMaterial<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CZMPolylineGlowMaterial<'a> {
+  type Inner = CZMPolylineGlowMaterial<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CZMPolylineGlowMaterial<'a> {
+  pub const VT_COLOR: flatbuffers::VOffsetT = 4;
+  pub const VT_GLOW_POWER: flatbuffers::VOffsetT = 6;
+  pub const VT_TAPER_POWER: flatbuffers::VOffsetT = 8;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CZMPolylineGlowMaterial { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CZMPolylineGlowMaterialArgs<'args>
+  ) -> flatbuffers::WIPOffset<CZMPolylineGlowMaterial<'bldr>> {
+    let mut builder = CZMPolylineGlowMaterialBuilder::new(_fbb);
+    builder.add_TAPER_POWER(args.TAPER_POWER);
+    builder.add_GLOW_POWER(args.GLOW_POWER);
+    if let Some(x) = args.COLOR { builder.add_COLOR(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CZMPolylineGlowMaterialT {
+    let COLOR = self.COLOR().map(|x| {
+      Box::new(x.unpack())
+    });
+    let GLOW_POWER = self.GLOW_POWER();
+    let TAPER_POWER = self.TAPER_POWER();
+    CZMPolylineGlowMaterialT {
+      COLOR,
+      GLOW_POWER,
+      TAPER_POWER,
+    }
+  }
+
+  /// Glow color
+  #[inline]
+  pub fn COLOR(&self) -> Option<CZMColor<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMColor>>(CZMPolylineGlowMaterial::VT_COLOR, None)}
+  }
+  /// Glow power
+  #[inline]
+  pub fn GLOW_POWER(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMPolylineGlowMaterial::VT_GLOW_POWER, Some(0.0)).unwrap()}
+  }
+  /// Taper power
+  #[inline]
+  pub fn TAPER_POWER(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMPolylineGlowMaterial::VT_TAPER_POWER, Some(0.0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for CZMPolylineGlowMaterial<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMColor>>("COLOR", Self::VT_COLOR, false)?
+     .visit_field::<f64>("GLOW_POWER", Self::VT_GLOW_POWER, false)?
+     .visit_field::<f64>("TAPER_POWER", Self::VT_TAPER_POWER, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CZMPolylineGlowMaterialArgs<'a> {
+    pub COLOR: Option<flatbuffers::WIPOffset<CZMColor<'a>>>,
+    pub GLOW_POWER: f64,
+    pub TAPER_POWER: f64,
+}
+impl<'a> Default for CZMPolylineGlowMaterialArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CZMPolylineGlowMaterialArgs {
+      COLOR: None,
+      GLOW_POWER: 0.0,
+      TAPER_POWER: 0.0,
+    }
+  }
+}
+
+pub struct CZMPolylineGlowMaterialBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMPolylineGlowMaterialBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_COLOR(&mut self, COLOR: flatbuffers::WIPOffset<CZMColor<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMColor>>(CZMPolylineGlowMaterial::VT_COLOR, COLOR);
+  }
+  #[inline]
+  pub fn add_GLOW_POWER(&mut self, GLOW_POWER: f64) {
+    self.fbb_.push_slot::<f64>(CZMPolylineGlowMaterial::VT_GLOW_POWER, GLOW_POWER, 0.0);
+  }
+  #[inline]
+  pub fn add_TAPER_POWER(&mut self, TAPER_POWER: f64) {
+    self.fbb_.push_slot::<f64>(CZMPolylineGlowMaterial::VT_TAPER_POWER, TAPER_POWER, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMPolylineGlowMaterialBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CZMPolylineGlowMaterialBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CZMPolylineGlowMaterial<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CZMPolylineGlowMaterial<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CZMPolylineGlowMaterial");
+      ds.field("COLOR", &self.COLOR());
+      ds.field("GLOW_POWER", &self.GLOW_POWER());
+      ds.field("TAPER_POWER", &self.TAPER_POWER());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CZMPolylineGlowMaterialT {
+  pub COLOR: Option<Box<CZMColorT>>,
+  pub GLOW_POWER: f64,
+  pub TAPER_POWER: f64,
+}
+impl Default for CZMPolylineGlowMaterialT {
+  fn default() -> Self {
+    Self {
+      COLOR: None,
+      GLOW_POWER: 0.0,
+      TAPER_POWER: 0.0,
+    }
+  }
+}
+impl CZMPolylineGlowMaterialT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CZMPolylineGlowMaterial<'b>> {
+    let COLOR = self.COLOR.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let GLOW_POWER = self.GLOW_POWER;
+    let TAPER_POWER = self.TAPER_POWER;
+    CZMPolylineGlowMaterial::create(_fbb, &CZMPolylineGlowMaterialArgs{
+      COLOR,
+      GLOW_POWER,
+      TAPER_POWER,
+    })
+  }
+}
+pub enum CZMPolylineMaterialOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Polyline material (used by polyline, path)
+pub struct CZMPolylineMaterial<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CZMPolylineMaterial<'a> {
+  type Inner = CZMPolylineMaterial<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CZMPolylineMaterial<'a> {
+  pub const VT_SOLID_COLOR: flatbuffers::VOffsetT = 4;
+  pub const VT_POLYLINE_OUTLINE: flatbuffers::VOffsetT = 6;
+  pub const VT_POLYLINE_ARROW: flatbuffers::VOffsetT = 8;
+  pub const VT_POLYLINE_DASH: flatbuffers::VOffsetT = 10;
+  pub const VT_POLYLINE_GLOW: flatbuffers::VOffsetT = 12;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CZMPolylineMaterial { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CZMPolylineMaterialArgs<'args>
+  ) -> flatbuffers::WIPOffset<CZMPolylineMaterial<'bldr>> {
+    let mut builder = CZMPolylineMaterialBuilder::new(_fbb);
+    if let Some(x) = args.POLYLINE_GLOW { builder.add_POLYLINE_GLOW(x); }
+    if let Some(x) = args.POLYLINE_DASH { builder.add_POLYLINE_DASH(x); }
+    if let Some(x) = args.POLYLINE_ARROW { builder.add_POLYLINE_ARROW(x); }
+    if let Some(x) = args.POLYLINE_OUTLINE { builder.add_POLYLINE_OUTLINE(x); }
+    if let Some(x) = args.SOLID_COLOR { builder.add_SOLID_COLOR(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CZMPolylineMaterialT {
+    let SOLID_COLOR = self.SOLID_COLOR().map(|x| {
+      Box::new(x.unpack())
+    });
+    let POLYLINE_OUTLINE = self.POLYLINE_OUTLINE().map(|x| {
+      Box::new(x.unpack())
+    });
+    let POLYLINE_ARROW = self.POLYLINE_ARROW().map(|x| {
+      Box::new(x.unpack())
+    });
+    let POLYLINE_DASH = self.POLYLINE_DASH().map(|x| {
+      Box::new(x.unpack())
+    });
+    let POLYLINE_GLOW = self.POLYLINE_GLOW().map(|x| {
+      Box::new(x.unpack())
+    });
+    CZMPolylineMaterialT {
+      SOLID_COLOR,
+      POLYLINE_OUTLINE,
+      POLYLINE_ARROW,
+      POLYLINE_DASH,
+      POLYLINE_GLOW,
+    }
+  }
+
+  /// Solid color material
+  #[inline]
+  pub fn SOLID_COLOR(&self) -> Option<CZMSolidColorMaterial<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMSolidColorMaterial>>(CZMPolylineMaterial::VT_SOLID_COLOR, None)}
+  }
+  /// Polyline outline material
+  #[inline]
+  pub fn POLYLINE_OUTLINE(&self) -> Option<CZMPolylineOutlineMaterial<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMPolylineOutlineMaterial>>(CZMPolylineMaterial::VT_POLYLINE_OUTLINE, None)}
+  }
+  /// Polyline arrow material
+  #[inline]
+  pub fn POLYLINE_ARROW(&self) -> Option<CZMPolylineArrowMaterial<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMPolylineArrowMaterial>>(CZMPolylineMaterial::VT_POLYLINE_ARROW, None)}
+  }
+  /// Polyline dash material
+  #[inline]
+  pub fn POLYLINE_DASH(&self) -> Option<CZMPolylineDashMaterial<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMPolylineDashMaterial>>(CZMPolylineMaterial::VT_POLYLINE_DASH, None)}
+  }
+  /// Polyline glow material
+  #[inline]
+  pub fn POLYLINE_GLOW(&self) -> Option<CZMPolylineGlowMaterial<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMPolylineGlowMaterial>>(CZMPolylineMaterial::VT_POLYLINE_GLOW, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for CZMPolylineMaterial<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMSolidColorMaterial>>("SOLID_COLOR", Self::VT_SOLID_COLOR, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMPolylineOutlineMaterial>>("POLYLINE_OUTLINE", Self::VT_POLYLINE_OUTLINE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMPolylineArrowMaterial>>("POLYLINE_ARROW", Self::VT_POLYLINE_ARROW, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMPolylineDashMaterial>>("POLYLINE_DASH", Self::VT_POLYLINE_DASH, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMPolylineGlowMaterial>>("POLYLINE_GLOW", Self::VT_POLYLINE_GLOW, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CZMPolylineMaterialArgs<'a> {
+    pub SOLID_COLOR: Option<flatbuffers::WIPOffset<CZMSolidColorMaterial<'a>>>,
+    pub POLYLINE_OUTLINE: Option<flatbuffers::WIPOffset<CZMPolylineOutlineMaterial<'a>>>,
+    pub POLYLINE_ARROW: Option<flatbuffers::WIPOffset<CZMPolylineArrowMaterial<'a>>>,
+    pub POLYLINE_DASH: Option<flatbuffers::WIPOffset<CZMPolylineDashMaterial<'a>>>,
+    pub POLYLINE_GLOW: Option<flatbuffers::WIPOffset<CZMPolylineGlowMaterial<'a>>>,
+}
+impl<'a> Default for CZMPolylineMaterialArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CZMPolylineMaterialArgs {
+      SOLID_COLOR: None,
+      POLYLINE_OUTLINE: None,
+      POLYLINE_ARROW: None,
+      POLYLINE_DASH: None,
+      POLYLINE_GLOW: None,
+    }
+  }
+}
+
+pub struct CZMPolylineMaterialBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMPolylineMaterialBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_SOLID_COLOR(&mut self, SOLID_COLOR: flatbuffers::WIPOffset<CZMSolidColorMaterial<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMSolidColorMaterial>>(CZMPolylineMaterial::VT_SOLID_COLOR, SOLID_COLOR);
+  }
+  #[inline]
+  pub fn add_POLYLINE_OUTLINE(&mut self, POLYLINE_OUTLINE: flatbuffers::WIPOffset<CZMPolylineOutlineMaterial<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMPolylineOutlineMaterial>>(CZMPolylineMaterial::VT_POLYLINE_OUTLINE, POLYLINE_OUTLINE);
+  }
+  #[inline]
+  pub fn add_POLYLINE_ARROW(&mut self, POLYLINE_ARROW: flatbuffers::WIPOffset<CZMPolylineArrowMaterial<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMPolylineArrowMaterial>>(CZMPolylineMaterial::VT_POLYLINE_ARROW, POLYLINE_ARROW);
+  }
+  #[inline]
+  pub fn add_POLYLINE_DASH(&mut self, POLYLINE_DASH: flatbuffers::WIPOffset<CZMPolylineDashMaterial<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMPolylineDashMaterial>>(CZMPolylineMaterial::VT_POLYLINE_DASH, POLYLINE_DASH);
+  }
+  #[inline]
+  pub fn add_POLYLINE_GLOW(&mut self, POLYLINE_GLOW: flatbuffers::WIPOffset<CZMPolylineGlowMaterial<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMPolylineGlowMaterial>>(CZMPolylineMaterial::VT_POLYLINE_GLOW, POLYLINE_GLOW);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMPolylineMaterialBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CZMPolylineMaterialBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CZMPolylineMaterial<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CZMPolylineMaterial<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CZMPolylineMaterial");
+      ds.field("SOLID_COLOR", &self.SOLID_COLOR());
+      ds.field("POLYLINE_OUTLINE", &self.POLYLINE_OUTLINE());
+      ds.field("POLYLINE_ARROW", &self.POLYLINE_ARROW());
+      ds.field("POLYLINE_DASH", &self.POLYLINE_DASH());
+      ds.field("POLYLINE_GLOW", &self.POLYLINE_GLOW());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CZMPolylineMaterialT {
+  pub SOLID_COLOR: Option<Box<CZMSolidColorMaterialT>>,
+  pub POLYLINE_OUTLINE: Option<Box<CZMPolylineOutlineMaterialT>>,
+  pub POLYLINE_ARROW: Option<Box<CZMPolylineArrowMaterialT>>,
+  pub POLYLINE_DASH: Option<Box<CZMPolylineDashMaterialT>>,
+  pub POLYLINE_GLOW: Option<Box<CZMPolylineGlowMaterialT>>,
+}
+impl Default for CZMPolylineMaterialT {
+  fn default() -> Self {
+    Self {
+      SOLID_COLOR: None,
+      POLYLINE_OUTLINE: None,
+      POLYLINE_ARROW: None,
+      POLYLINE_DASH: None,
+      POLYLINE_GLOW: None,
+    }
+  }
+}
+impl CZMPolylineMaterialT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CZMPolylineMaterial<'b>> {
+    let SOLID_COLOR = self.SOLID_COLOR.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let POLYLINE_OUTLINE = self.POLYLINE_OUTLINE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let POLYLINE_ARROW = self.POLYLINE_ARROW.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let POLYLINE_DASH = self.POLYLINE_DASH.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let POLYLINE_GLOW = self.POLYLINE_GLOW.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    CZMPolylineMaterial::create(_fbb, &CZMPolylineMaterialArgs{
+      SOLID_COLOR,
+      POLYLINE_OUTLINE,
+      POLYLINE_ARROW,
+      POLYLINE_DASH,
+      POLYLINE_GLOW,
+    })
+  }
+}
 pub enum CZMBillboardOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -1369,6 +5802,18 @@ impl<'a> CZMBillboard<'a> {
   pub const VT_HORIZONTAL_ORIGIN: flatbuffers::VOffsetT = 18;
   pub const VT_VERTICAL_ORIGIN: flatbuffers::VOffsetT = 20;
   pub const VT_TRANSLUCENCY_BY_DISTANCE: flatbuffers::VOffsetT = 22;
+  pub const VT_ROTATION: flatbuffers::VOffsetT = 24;
+  pub const VT_SIZE_IN_METERS: flatbuffers::VOffsetT = 26;
+  pub const VT_WIDTH: flatbuffers::VOffsetT = 28;
+  pub const VT_HEIGHT: flatbuffers::VOffsetT = 30;
+  pub const VT_EYE_OFFSET_X: flatbuffers::VOffsetT = 32;
+  pub const VT_EYE_OFFSET_Y: flatbuffers::VOffsetT = 34;
+  pub const VT_EYE_OFFSET_Z: flatbuffers::VOffsetT = 36;
+  pub const VT_SCALE_BY_DISTANCE: flatbuffers::VOffsetT = 38;
+  pub const VT_PIXEL_OFFSET_SCALE_BY_DISTANCE: flatbuffers::VOffsetT = 40;
+  pub const VT_DISTANCE_DISPLAY_CONDITION_NEAR: flatbuffers::VOffsetT = 42;
+  pub const VT_DISTANCE_DISPLAY_CONDITION_FAR: flatbuffers::VOffsetT = 44;
+  pub const VT_DISABLE_DEPTH_TEST_DISTANCE: flatbuffers::VOffsetT = 46;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -1380,12 +5825,24 @@ impl<'a> CZMBillboard<'a> {
     args: &'args CZMBillboardArgs<'args>
   ) -> flatbuffers::WIPOffset<CZMBillboard<'bldr>> {
     let mut builder = CZMBillboardBuilder::new(_fbb);
+    builder.add_DISABLE_DEPTH_TEST_DISTANCE(args.DISABLE_DEPTH_TEST_DISTANCE);
+    builder.add_DISTANCE_DISPLAY_CONDITION_FAR(args.DISTANCE_DISPLAY_CONDITION_FAR);
+    builder.add_DISTANCE_DISPLAY_CONDITION_NEAR(args.DISTANCE_DISPLAY_CONDITION_NEAR);
+    builder.add_EYE_OFFSET_Z(args.EYE_OFFSET_Z);
+    builder.add_EYE_OFFSET_Y(args.EYE_OFFSET_Y);
+    builder.add_EYE_OFFSET_X(args.EYE_OFFSET_X);
+    builder.add_HEIGHT(args.HEIGHT);
+    builder.add_WIDTH(args.WIDTH);
+    builder.add_ROTATION(args.ROTATION);
     builder.add_PIXEL_OFFSET_Y(args.PIXEL_OFFSET_Y);
     builder.add_PIXEL_OFFSET_X(args.PIXEL_OFFSET_X);
     builder.add_SCALE(args.SCALE);
+    if let Some(x) = args.PIXEL_OFFSET_SCALE_BY_DISTANCE { builder.add_PIXEL_OFFSET_SCALE_BY_DISTANCE(x); }
+    if let Some(x) = args.SCALE_BY_DISTANCE { builder.add_SCALE_BY_DISTANCE(x); }
     if let Some(x) = args.TRANSLUCENCY_BY_DISTANCE { builder.add_TRANSLUCENCY_BY_DISTANCE(x); }
     if let Some(x) = args.COLOR { builder.add_COLOR(x); }
     if let Some(x) = args.IMAGE { builder.add_IMAGE(x); }
+    builder.add_SIZE_IN_METERS(args.SIZE_IN_METERS);
     builder.add_VERTICAL_ORIGIN(args.VERTICAL_ORIGIN);
     builder.add_HORIZONTAL_ORIGIN(args.HORIZONTAL_ORIGIN);
     builder.add_HEIGHT_REFERENCE(args.HEIGHT_REFERENCE);
@@ -1410,6 +5867,22 @@ impl<'a> CZMBillboard<'a> {
     let TRANSLUCENCY_BY_DISTANCE = self.TRANSLUCENCY_BY_DISTANCE().map(|x| {
       Box::new(x.unpack())
     });
+    let ROTATION = self.ROTATION();
+    let SIZE_IN_METERS = self.SIZE_IN_METERS();
+    let WIDTH = self.WIDTH();
+    let HEIGHT = self.HEIGHT();
+    let EYE_OFFSET_X = self.EYE_OFFSET_X();
+    let EYE_OFFSET_Y = self.EYE_OFFSET_Y();
+    let EYE_OFFSET_Z = self.EYE_OFFSET_Z();
+    let SCALE_BY_DISTANCE = self.SCALE_BY_DISTANCE().map(|x| {
+      Box::new(x.unpack())
+    });
+    let PIXEL_OFFSET_SCALE_BY_DISTANCE = self.PIXEL_OFFSET_SCALE_BY_DISTANCE().map(|x| {
+      Box::new(x.unpack())
+    });
+    let DISTANCE_DISPLAY_CONDITION_NEAR = self.DISTANCE_DISPLAY_CONDITION_NEAR();
+    let DISTANCE_DISPLAY_CONDITION_FAR = self.DISTANCE_DISPLAY_CONDITION_FAR();
+    let DISABLE_DEPTH_TEST_DISTANCE = self.DISABLE_DEPTH_TEST_DISTANCE();
     CZMBillboardT {
       SHOW,
       IMAGE,
@@ -1421,6 +5894,18 @@ impl<'a> CZMBillboard<'a> {
       HORIZONTAL_ORIGIN,
       VERTICAL_ORIGIN,
       TRANSLUCENCY_BY_DISTANCE,
+      ROTATION,
+      SIZE_IN_METERS,
+      WIDTH,
+      HEIGHT,
+      EYE_OFFSET_X,
+      EYE_OFFSET_Y,
+      EYE_OFFSET_Z,
+      SCALE_BY_DISTANCE,
+      PIXEL_OFFSET_SCALE_BY_DISTANCE,
+      DISTANCE_DISPLAY_CONDITION_NEAR,
+      DISTANCE_DISPLAY_CONDITION_FAR,
+      DISABLE_DEPTH_TEST_DISTANCE,
     }
   }
 
@@ -1504,6 +5989,102 @@ impl<'a> CZMBillboard<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMNearFarScalar>>(CZMBillboard::VT_TRANSLUCENCY_BY_DISTANCE, None)}
   }
+  /// Rotation in radians
+  #[inline]
+  pub fn ROTATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMBillboard::VT_ROTATION, Some(0.0)).unwrap()}
+  }
+  /// Whether size is in meters
+  #[inline]
+  pub fn SIZE_IN_METERS(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMBillboard::VT_SIZE_IN_METERS, Some(false)).unwrap()}
+  }
+  /// Width in pixels
+  #[inline]
+  pub fn WIDTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMBillboard::VT_WIDTH, Some(0.0)).unwrap()}
+  }
+  /// Height in pixels
+  #[inline]
+  pub fn HEIGHT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMBillboard::VT_HEIGHT, Some(0.0)).unwrap()}
+  }
+  /// Eye offset X in meters
+  #[inline]
+  pub fn EYE_OFFSET_X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMBillboard::VT_EYE_OFFSET_X, Some(0.0)).unwrap()}
+  }
+  /// Eye offset Y in meters
+  #[inline]
+  pub fn EYE_OFFSET_Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMBillboard::VT_EYE_OFFSET_Y, Some(0.0)).unwrap()}
+  }
+  /// Eye offset Z in meters
+  #[inline]
+  pub fn EYE_OFFSET_Z(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMBillboard::VT_EYE_OFFSET_Z, Some(0.0)).unwrap()}
+  }
+  /// Scale by distance
+  #[inline]
+  pub fn SCALE_BY_DISTANCE(&self) -> Option<CZMNearFarScalar<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMNearFarScalar>>(CZMBillboard::VT_SCALE_BY_DISTANCE, None)}
+  }
+  /// Pixel offset scale by distance
+  #[inline]
+  pub fn PIXEL_OFFSET_SCALE_BY_DISTANCE(&self) -> Option<CZMNearFarScalar<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMNearFarScalar>>(CZMBillboard::VT_PIXEL_OFFSET_SCALE_BY_DISTANCE, None)}
+  }
+  /// Distance display condition near
+  #[inline]
+  pub fn DISTANCE_DISPLAY_CONDITION_NEAR(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMBillboard::VT_DISTANCE_DISPLAY_CONDITION_NEAR, Some(0.0)).unwrap()}
+  }
+  /// Distance display condition far
+  #[inline]
+  pub fn DISTANCE_DISPLAY_CONDITION_FAR(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMBillboard::VT_DISTANCE_DISPLAY_CONDITION_FAR, Some(0.0)).unwrap()}
+  }
+  /// Disable depth test distance
+  #[inline]
+  pub fn DISABLE_DEPTH_TEST_DISTANCE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMBillboard::VT_DISABLE_DEPTH_TEST_DISTANCE, Some(0.0)).unwrap()}
+  }
 }
 
 impl flatbuffers::Verifiable for CZMBillboard<'_> {
@@ -1523,6 +6104,18 @@ impl flatbuffers::Verifiable for CZMBillboard<'_> {
      .visit_field::<CZMHorizontalOrigin>("HORIZONTAL_ORIGIN", Self::VT_HORIZONTAL_ORIGIN, false)?
      .visit_field::<CZMVerticalOrigin>("VERTICAL_ORIGIN", Self::VT_VERTICAL_ORIGIN, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<CZMNearFarScalar>>("TRANSLUCENCY_BY_DISTANCE", Self::VT_TRANSLUCENCY_BY_DISTANCE, false)?
+     .visit_field::<f64>("ROTATION", Self::VT_ROTATION, false)?
+     .visit_field::<bool>("SIZE_IN_METERS", Self::VT_SIZE_IN_METERS, false)?
+     .visit_field::<f64>("WIDTH", Self::VT_WIDTH, false)?
+     .visit_field::<f64>("HEIGHT", Self::VT_HEIGHT, false)?
+     .visit_field::<f64>("EYE_OFFSET_X", Self::VT_EYE_OFFSET_X, false)?
+     .visit_field::<f64>("EYE_OFFSET_Y", Self::VT_EYE_OFFSET_Y, false)?
+     .visit_field::<f64>("EYE_OFFSET_Z", Self::VT_EYE_OFFSET_Z, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMNearFarScalar>>("SCALE_BY_DISTANCE", Self::VT_SCALE_BY_DISTANCE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMNearFarScalar>>("PIXEL_OFFSET_SCALE_BY_DISTANCE", Self::VT_PIXEL_OFFSET_SCALE_BY_DISTANCE, false)?
+     .visit_field::<f64>("DISTANCE_DISPLAY_CONDITION_NEAR", Self::VT_DISTANCE_DISPLAY_CONDITION_NEAR, false)?
+     .visit_field::<f64>("DISTANCE_DISPLAY_CONDITION_FAR", Self::VT_DISTANCE_DISPLAY_CONDITION_FAR, false)?
+     .visit_field::<f64>("DISABLE_DEPTH_TEST_DISTANCE", Self::VT_DISABLE_DEPTH_TEST_DISTANCE, false)?
      .finish();
     Ok(())
   }
@@ -1538,6 +6131,18 @@ pub struct CZMBillboardArgs<'a> {
     pub HORIZONTAL_ORIGIN: CZMHorizontalOrigin,
     pub VERTICAL_ORIGIN: CZMVerticalOrigin,
     pub TRANSLUCENCY_BY_DISTANCE: Option<flatbuffers::WIPOffset<CZMNearFarScalar<'a>>>,
+    pub ROTATION: f64,
+    pub SIZE_IN_METERS: bool,
+    pub WIDTH: f64,
+    pub HEIGHT: f64,
+    pub EYE_OFFSET_X: f64,
+    pub EYE_OFFSET_Y: f64,
+    pub EYE_OFFSET_Z: f64,
+    pub SCALE_BY_DISTANCE: Option<flatbuffers::WIPOffset<CZMNearFarScalar<'a>>>,
+    pub PIXEL_OFFSET_SCALE_BY_DISTANCE: Option<flatbuffers::WIPOffset<CZMNearFarScalar<'a>>>,
+    pub DISTANCE_DISPLAY_CONDITION_NEAR: f64,
+    pub DISTANCE_DISPLAY_CONDITION_FAR: f64,
+    pub DISABLE_DEPTH_TEST_DISTANCE: f64,
 }
 impl<'a> Default for CZMBillboardArgs<'a> {
   #[inline]
@@ -1553,6 +6158,18 @@ impl<'a> Default for CZMBillboardArgs<'a> {
       HORIZONTAL_ORIGIN: CZMHorizontalOrigin::LEFT,
       VERTICAL_ORIGIN: CZMVerticalOrigin::BASELINE,
       TRANSLUCENCY_BY_DISTANCE: None,
+      ROTATION: 0.0,
+      SIZE_IN_METERS: false,
+      WIDTH: 0.0,
+      HEIGHT: 0.0,
+      EYE_OFFSET_X: 0.0,
+      EYE_OFFSET_Y: 0.0,
+      EYE_OFFSET_Z: 0.0,
+      SCALE_BY_DISTANCE: None,
+      PIXEL_OFFSET_SCALE_BY_DISTANCE: None,
+      DISTANCE_DISPLAY_CONDITION_NEAR: 0.0,
+      DISTANCE_DISPLAY_CONDITION_FAR: 0.0,
+      DISABLE_DEPTH_TEST_DISTANCE: 0.0,
     }
   }
 }
@@ -1603,6 +6220,54 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMBillboardBuilder<'a, 'b, A> 
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMNearFarScalar>>(CZMBillboard::VT_TRANSLUCENCY_BY_DISTANCE, TRANSLUCENCY_BY_DISTANCE);
   }
   #[inline]
+  pub fn add_ROTATION(&mut self, ROTATION: f64) {
+    self.fbb_.push_slot::<f64>(CZMBillboard::VT_ROTATION, ROTATION, 0.0);
+  }
+  #[inline]
+  pub fn add_SIZE_IN_METERS(&mut self, SIZE_IN_METERS: bool) {
+    self.fbb_.push_slot::<bool>(CZMBillboard::VT_SIZE_IN_METERS, SIZE_IN_METERS, false);
+  }
+  #[inline]
+  pub fn add_WIDTH(&mut self, WIDTH: f64) {
+    self.fbb_.push_slot::<f64>(CZMBillboard::VT_WIDTH, WIDTH, 0.0);
+  }
+  #[inline]
+  pub fn add_HEIGHT(&mut self, HEIGHT: f64) {
+    self.fbb_.push_slot::<f64>(CZMBillboard::VT_HEIGHT, HEIGHT, 0.0);
+  }
+  #[inline]
+  pub fn add_EYE_OFFSET_X(&mut self, EYE_OFFSET_X: f64) {
+    self.fbb_.push_slot::<f64>(CZMBillboard::VT_EYE_OFFSET_X, EYE_OFFSET_X, 0.0);
+  }
+  #[inline]
+  pub fn add_EYE_OFFSET_Y(&mut self, EYE_OFFSET_Y: f64) {
+    self.fbb_.push_slot::<f64>(CZMBillboard::VT_EYE_OFFSET_Y, EYE_OFFSET_Y, 0.0);
+  }
+  #[inline]
+  pub fn add_EYE_OFFSET_Z(&mut self, EYE_OFFSET_Z: f64) {
+    self.fbb_.push_slot::<f64>(CZMBillboard::VT_EYE_OFFSET_Z, EYE_OFFSET_Z, 0.0);
+  }
+  #[inline]
+  pub fn add_SCALE_BY_DISTANCE(&mut self, SCALE_BY_DISTANCE: flatbuffers::WIPOffset<CZMNearFarScalar<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMNearFarScalar>>(CZMBillboard::VT_SCALE_BY_DISTANCE, SCALE_BY_DISTANCE);
+  }
+  #[inline]
+  pub fn add_PIXEL_OFFSET_SCALE_BY_DISTANCE(&mut self, PIXEL_OFFSET_SCALE_BY_DISTANCE: flatbuffers::WIPOffset<CZMNearFarScalar<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMNearFarScalar>>(CZMBillboard::VT_PIXEL_OFFSET_SCALE_BY_DISTANCE, PIXEL_OFFSET_SCALE_BY_DISTANCE);
+  }
+  #[inline]
+  pub fn add_DISTANCE_DISPLAY_CONDITION_NEAR(&mut self, DISTANCE_DISPLAY_CONDITION_NEAR: f64) {
+    self.fbb_.push_slot::<f64>(CZMBillboard::VT_DISTANCE_DISPLAY_CONDITION_NEAR, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0);
+  }
+  #[inline]
+  pub fn add_DISTANCE_DISPLAY_CONDITION_FAR(&mut self, DISTANCE_DISPLAY_CONDITION_FAR: f64) {
+    self.fbb_.push_slot::<f64>(CZMBillboard::VT_DISTANCE_DISPLAY_CONDITION_FAR, DISTANCE_DISPLAY_CONDITION_FAR, 0.0);
+  }
+  #[inline]
+  pub fn add_DISABLE_DEPTH_TEST_DISTANCE(&mut self, DISABLE_DEPTH_TEST_DISTANCE: f64) {
+    self.fbb_.push_slot::<f64>(CZMBillboard::VT_DISABLE_DEPTH_TEST_DISTANCE, DISABLE_DEPTH_TEST_DISTANCE, 0.0);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMBillboardBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     CZMBillboardBuilder {
@@ -1630,6 +6295,18 @@ impl core::fmt::Debug for CZMBillboard<'_> {
       ds.field("HORIZONTAL_ORIGIN", &self.HORIZONTAL_ORIGIN());
       ds.field("VERTICAL_ORIGIN", &self.VERTICAL_ORIGIN());
       ds.field("TRANSLUCENCY_BY_DISTANCE", &self.TRANSLUCENCY_BY_DISTANCE());
+      ds.field("ROTATION", &self.ROTATION());
+      ds.field("SIZE_IN_METERS", &self.SIZE_IN_METERS());
+      ds.field("WIDTH", &self.WIDTH());
+      ds.field("HEIGHT", &self.HEIGHT());
+      ds.field("EYE_OFFSET_X", &self.EYE_OFFSET_X());
+      ds.field("EYE_OFFSET_Y", &self.EYE_OFFSET_Y());
+      ds.field("EYE_OFFSET_Z", &self.EYE_OFFSET_Z());
+      ds.field("SCALE_BY_DISTANCE", &self.SCALE_BY_DISTANCE());
+      ds.field("PIXEL_OFFSET_SCALE_BY_DISTANCE", &self.PIXEL_OFFSET_SCALE_BY_DISTANCE());
+      ds.field("DISTANCE_DISPLAY_CONDITION_NEAR", &self.DISTANCE_DISPLAY_CONDITION_NEAR());
+      ds.field("DISTANCE_DISPLAY_CONDITION_FAR", &self.DISTANCE_DISPLAY_CONDITION_FAR());
+      ds.field("DISABLE_DEPTH_TEST_DISTANCE", &self.DISABLE_DEPTH_TEST_DISTANCE());
       ds.finish()
   }
 }
@@ -1646,6 +6323,18 @@ pub struct CZMBillboardT {
   pub HORIZONTAL_ORIGIN: CZMHorizontalOrigin,
   pub VERTICAL_ORIGIN: CZMVerticalOrigin,
   pub TRANSLUCENCY_BY_DISTANCE: Option<Box<CZMNearFarScalarT>>,
+  pub ROTATION: f64,
+  pub SIZE_IN_METERS: bool,
+  pub WIDTH: f64,
+  pub HEIGHT: f64,
+  pub EYE_OFFSET_X: f64,
+  pub EYE_OFFSET_Y: f64,
+  pub EYE_OFFSET_Z: f64,
+  pub SCALE_BY_DISTANCE: Option<Box<CZMNearFarScalarT>>,
+  pub PIXEL_OFFSET_SCALE_BY_DISTANCE: Option<Box<CZMNearFarScalarT>>,
+  pub DISTANCE_DISPLAY_CONDITION_NEAR: f64,
+  pub DISTANCE_DISPLAY_CONDITION_FAR: f64,
+  pub DISABLE_DEPTH_TEST_DISTANCE: f64,
 }
 impl Default for CZMBillboardT {
   fn default() -> Self {
@@ -1660,6 +6349,18 @@ impl Default for CZMBillboardT {
       HORIZONTAL_ORIGIN: CZMHorizontalOrigin::LEFT,
       VERTICAL_ORIGIN: CZMVerticalOrigin::BASELINE,
       TRANSLUCENCY_BY_DISTANCE: None,
+      ROTATION: 0.0,
+      SIZE_IN_METERS: false,
+      WIDTH: 0.0,
+      HEIGHT: 0.0,
+      EYE_OFFSET_X: 0.0,
+      EYE_OFFSET_Y: 0.0,
+      EYE_OFFSET_Z: 0.0,
+      SCALE_BY_DISTANCE: None,
+      PIXEL_OFFSET_SCALE_BY_DISTANCE: None,
+      DISTANCE_DISPLAY_CONDITION_NEAR: 0.0,
+      DISTANCE_DISPLAY_CONDITION_FAR: 0.0,
+      DISABLE_DEPTH_TEST_DISTANCE: 0.0,
     }
   }
 }
@@ -1684,6 +6385,22 @@ impl CZMBillboardT {
     let TRANSLUCENCY_BY_DISTANCE = self.TRANSLUCENCY_BY_DISTANCE.as_ref().map(|x|{
       x.pack(_fbb)
     });
+    let ROTATION = self.ROTATION;
+    let SIZE_IN_METERS = self.SIZE_IN_METERS;
+    let WIDTH = self.WIDTH;
+    let HEIGHT = self.HEIGHT;
+    let EYE_OFFSET_X = self.EYE_OFFSET_X;
+    let EYE_OFFSET_Y = self.EYE_OFFSET_Y;
+    let EYE_OFFSET_Z = self.EYE_OFFSET_Z;
+    let SCALE_BY_DISTANCE = self.SCALE_BY_DISTANCE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let PIXEL_OFFSET_SCALE_BY_DISTANCE = self.PIXEL_OFFSET_SCALE_BY_DISTANCE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let DISTANCE_DISPLAY_CONDITION_NEAR = self.DISTANCE_DISPLAY_CONDITION_NEAR;
+    let DISTANCE_DISPLAY_CONDITION_FAR = self.DISTANCE_DISPLAY_CONDITION_FAR;
+    let DISABLE_DEPTH_TEST_DISTANCE = self.DISABLE_DEPTH_TEST_DISTANCE;
     CZMBillboard::create(_fbb, &CZMBillboardArgs{
       SHOW,
       IMAGE,
@@ -1695,6 +6412,18 @@ impl CZMBillboardT {
       HORIZONTAL_ORIGIN,
       VERTICAL_ORIGIN,
       TRANSLUCENCY_BY_DISTANCE,
+      ROTATION,
+      SIZE_IN_METERS,
+      WIDTH,
+      HEIGHT,
+      EYE_OFFSET_X,
+      EYE_OFFSET_Y,
+      EYE_OFFSET_Z,
+      SCALE_BY_DISTANCE,
+      PIXEL_OFFSET_SCALE_BY_DISTANCE,
+      DISTANCE_DISPLAY_CONDITION_NEAR,
+      DISTANCE_DISPLAY_CONDITION_FAR,
+      DISABLE_DEPTH_TEST_DISTANCE,
     })
   }
 }
@@ -1728,6 +6457,19 @@ impl<'a> CZMLabel<'a> {
   pub const VT_HORIZONTAL_ORIGIN: flatbuffers::VOffsetT = 24;
   pub const VT_VERTICAL_ORIGIN: flatbuffers::VOffsetT = 26;
   pub const VT_HEIGHT_REFERENCE: flatbuffers::VOffsetT = 28;
+  pub const VT_SHOW_BACKGROUND: flatbuffers::VOffsetT = 30;
+  pub const VT_BACKGROUND_COLOR: flatbuffers::VOffsetT = 32;
+  pub const VT_BACKGROUND_PADDING_X: flatbuffers::VOffsetT = 34;
+  pub const VT_BACKGROUND_PADDING_Y: flatbuffers::VOffsetT = 36;
+  pub const VT_EYE_OFFSET_X: flatbuffers::VOffsetT = 38;
+  pub const VT_EYE_OFFSET_Y: flatbuffers::VOffsetT = 40;
+  pub const VT_EYE_OFFSET_Z: flatbuffers::VOffsetT = 42;
+  pub const VT_TRANSLUCENCY_BY_DISTANCE: flatbuffers::VOffsetT = 44;
+  pub const VT_PIXEL_OFFSET_SCALE_BY_DISTANCE: flatbuffers::VOffsetT = 46;
+  pub const VT_SCALE_BY_DISTANCE: flatbuffers::VOffsetT = 48;
+  pub const VT_DISTANCE_DISPLAY_CONDITION_NEAR: flatbuffers::VOffsetT = 50;
+  pub const VT_DISTANCE_DISPLAY_CONDITION_FAR: flatbuffers::VOffsetT = 52;
+  pub const VT_DISABLE_DEPTH_TEST_DISTANCE: flatbuffers::VOffsetT = 54;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -1739,14 +6481,27 @@ impl<'a> CZMLabel<'a> {
     args: &'args CZMLabelArgs<'args>
   ) -> flatbuffers::WIPOffset<CZMLabel<'bldr>> {
     let mut builder = CZMLabelBuilder::new(_fbb);
+    builder.add_DISABLE_DEPTH_TEST_DISTANCE(args.DISABLE_DEPTH_TEST_DISTANCE);
+    builder.add_DISTANCE_DISPLAY_CONDITION_FAR(args.DISTANCE_DISPLAY_CONDITION_FAR);
+    builder.add_DISTANCE_DISPLAY_CONDITION_NEAR(args.DISTANCE_DISPLAY_CONDITION_NEAR);
+    builder.add_EYE_OFFSET_Z(args.EYE_OFFSET_Z);
+    builder.add_EYE_OFFSET_Y(args.EYE_OFFSET_Y);
+    builder.add_EYE_OFFSET_X(args.EYE_OFFSET_X);
+    builder.add_BACKGROUND_PADDING_Y(args.BACKGROUND_PADDING_Y);
+    builder.add_BACKGROUND_PADDING_X(args.BACKGROUND_PADDING_X);
     builder.add_SCALE(args.SCALE);
     builder.add_PIXEL_OFFSET_Y(args.PIXEL_OFFSET_Y);
     builder.add_PIXEL_OFFSET_X(args.PIXEL_OFFSET_X);
     builder.add_OUTLINE_WIDTH(args.OUTLINE_WIDTH);
+    if let Some(x) = args.SCALE_BY_DISTANCE { builder.add_SCALE_BY_DISTANCE(x); }
+    if let Some(x) = args.PIXEL_OFFSET_SCALE_BY_DISTANCE { builder.add_PIXEL_OFFSET_SCALE_BY_DISTANCE(x); }
+    if let Some(x) = args.TRANSLUCENCY_BY_DISTANCE { builder.add_TRANSLUCENCY_BY_DISTANCE(x); }
+    if let Some(x) = args.BACKGROUND_COLOR { builder.add_BACKGROUND_COLOR(x); }
     if let Some(x) = args.OUTLINE_COLOR { builder.add_OUTLINE_COLOR(x); }
     if let Some(x) = args.FILL_COLOR { builder.add_FILL_COLOR(x); }
     if let Some(x) = args.FONT { builder.add_FONT(x); }
     if let Some(x) = args.TEXT { builder.add_TEXT(x); }
+    builder.add_SHOW_BACKGROUND(args.SHOW_BACKGROUND);
     builder.add_HEIGHT_REFERENCE(args.HEIGHT_REFERENCE);
     builder.add_VERTICAL_ORIGIN(args.VERTICAL_ORIGIN);
     builder.add_HORIZONTAL_ORIGIN(args.HORIZONTAL_ORIGIN);
@@ -1777,6 +6532,27 @@ impl<'a> CZMLabel<'a> {
     let HORIZONTAL_ORIGIN = self.HORIZONTAL_ORIGIN();
     let VERTICAL_ORIGIN = self.VERTICAL_ORIGIN();
     let HEIGHT_REFERENCE = self.HEIGHT_REFERENCE();
+    let SHOW_BACKGROUND = self.SHOW_BACKGROUND();
+    let BACKGROUND_COLOR = self.BACKGROUND_COLOR().map(|x| {
+      Box::new(x.unpack())
+    });
+    let BACKGROUND_PADDING_X = self.BACKGROUND_PADDING_X();
+    let BACKGROUND_PADDING_Y = self.BACKGROUND_PADDING_Y();
+    let EYE_OFFSET_X = self.EYE_OFFSET_X();
+    let EYE_OFFSET_Y = self.EYE_OFFSET_Y();
+    let EYE_OFFSET_Z = self.EYE_OFFSET_Z();
+    let TRANSLUCENCY_BY_DISTANCE = self.TRANSLUCENCY_BY_DISTANCE().map(|x| {
+      Box::new(x.unpack())
+    });
+    let PIXEL_OFFSET_SCALE_BY_DISTANCE = self.PIXEL_OFFSET_SCALE_BY_DISTANCE().map(|x| {
+      Box::new(x.unpack())
+    });
+    let SCALE_BY_DISTANCE = self.SCALE_BY_DISTANCE().map(|x| {
+      Box::new(x.unpack())
+    });
+    let DISTANCE_DISPLAY_CONDITION_NEAR = self.DISTANCE_DISPLAY_CONDITION_NEAR();
+    let DISTANCE_DISPLAY_CONDITION_FAR = self.DISTANCE_DISPLAY_CONDITION_FAR();
+    let DISABLE_DEPTH_TEST_DISTANCE = self.DISABLE_DEPTH_TEST_DISTANCE();
     CZMLabelT {
       SHOW,
       TEXT,
@@ -1791,6 +6567,19 @@ impl<'a> CZMLabel<'a> {
       HORIZONTAL_ORIGIN,
       VERTICAL_ORIGIN,
       HEIGHT_REFERENCE,
+      SHOW_BACKGROUND,
+      BACKGROUND_COLOR,
+      BACKGROUND_PADDING_X,
+      BACKGROUND_PADDING_Y,
+      EYE_OFFSET_X,
+      EYE_OFFSET_Y,
+      EYE_OFFSET_Z,
+      TRANSLUCENCY_BY_DISTANCE,
+      PIXEL_OFFSET_SCALE_BY_DISTANCE,
+      SCALE_BY_DISTANCE,
+      DISTANCE_DISPLAY_CONDITION_NEAR,
+      DISTANCE_DISPLAY_CONDITION_FAR,
+      DISABLE_DEPTH_TEST_DISTANCE,
     }
   }
 
@@ -1898,6 +6687,110 @@ impl<'a> CZMLabel<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<CZMHeightReference>(CZMLabel::VT_HEIGHT_REFERENCE, Some(CZMHeightReference::NONE)).unwrap()}
   }
+  /// Whether to show background
+  #[inline]
+  pub fn SHOW_BACKGROUND(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMLabel::VT_SHOW_BACKGROUND, Some(false)).unwrap()}
+  }
+  /// Background color
+  #[inline]
+  pub fn BACKGROUND_COLOR(&self) -> Option<CZMColor<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMColor>>(CZMLabel::VT_BACKGROUND_COLOR, None)}
+  }
+  /// Background padding X
+  #[inline]
+  pub fn BACKGROUND_PADDING_X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMLabel::VT_BACKGROUND_PADDING_X, Some(0.0)).unwrap()}
+  }
+  /// Background padding Y
+  #[inline]
+  pub fn BACKGROUND_PADDING_Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMLabel::VT_BACKGROUND_PADDING_Y, Some(0.0)).unwrap()}
+  }
+  /// Eye offset X in meters
+  #[inline]
+  pub fn EYE_OFFSET_X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMLabel::VT_EYE_OFFSET_X, Some(0.0)).unwrap()}
+  }
+  /// Eye offset Y in meters
+  #[inline]
+  pub fn EYE_OFFSET_Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMLabel::VT_EYE_OFFSET_Y, Some(0.0)).unwrap()}
+  }
+  /// Eye offset Z in meters
+  #[inline]
+  pub fn EYE_OFFSET_Z(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMLabel::VT_EYE_OFFSET_Z, Some(0.0)).unwrap()}
+  }
+  /// Translucency by distance
+  #[inline]
+  pub fn TRANSLUCENCY_BY_DISTANCE(&self) -> Option<CZMNearFarScalar<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMNearFarScalar>>(CZMLabel::VT_TRANSLUCENCY_BY_DISTANCE, None)}
+  }
+  /// Pixel offset scale by distance
+  #[inline]
+  pub fn PIXEL_OFFSET_SCALE_BY_DISTANCE(&self) -> Option<CZMNearFarScalar<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMNearFarScalar>>(CZMLabel::VT_PIXEL_OFFSET_SCALE_BY_DISTANCE, None)}
+  }
+  /// Scale by distance
+  #[inline]
+  pub fn SCALE_BY_DISTANCE(&self) -> Option<CZMNearFarScalar<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMNearFarScalar>>(CZMLabel::VT_SCALE_BY_DISTANCE, None)}
+  }
+  /// Distance display condition near
+  #[inline]
+  pub fn DISTANCE_DISPLAY_CONDITION_NEAR(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMLabel::VT_DISTANCE_DISPLAY_CONDITION_NEAR, Some(0.0)).unwrap()}
+  }
+  /// Distance display condition far
+  #[inline]
+  pub fn DISTANCE_DISPLAY_CONDITION_FAR(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMLabel::VT_DISTANCE_DISPLAY_CONDITION_FAR, Some(0.0)).unwrap()}
+  }
+  /// Disable depth test distance
+  #[inline]
+  pub fn DISABLE_DEPTH_TEST_DISTANCE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMLabel::VT_DISABLE_DEPTH_TEST_DISTANCE, Some(0.0)).unwrap()}
+  }
 }
 
 impl flatbuffers::Verifiable for CZMLabel<'_> {
@@ -1920,6 +6813,19 @@ impl flatbuffers::Verifiable for CZMLabel<'_> {
      .visit_field::<CZMHorizontalOrigin>("HORIZONTAL_ORIGIN", Self::VT_HORIZONTAL_ORIGIN, false)?
      .visit_field::<CZMVerticalOrigin>("VERTICAL_ORIGIN", Self::VT_VERTICAL_ORIGIN, false)?
      .visit_field::<CZMHeightReference>("HEIGHT_REFERENCE", Self::VT_HEIGHT_REFERENCE, false)?
+     .visit_field::<bool>("SHOW_BACKGROUND", Self::VT_SHOW_BACKGROUND, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMColor>>("BACKGROUND_COLOR", Self::VT_BACKGROUND_COLOR, false)?
+     .visit_field::<f64>("BACKGROUND_PADDING_X", Self::VT_BACKGROUND_PADDING_X, false)?
+     .visit_field::<f64>("BACKGROUND_PADDING_Y", Self::VT_BACKGROUND_PADDING_Y, false)?
+     .visit_field::<f64>("EYE_OFFSET_X", Self::VT_EYE_OFFSET_X, false)?
+     .visit_field::<f64>("EYE_OFFSET_Y", Self::VT_EYE_OFFSET_Y, false)?
+     .visit_field::<f64>("EYE_OFFSET_Z", Self::VT_EYE_OFFSET_Z, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMNearFarScalar>>("TRANSLUCENCY_BY_DISTANCE", Self::VT_TRANSLUCENCY_BY_DISTANCE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMNearFarScalar>>("PIXEL_OFFSET_SCALE_BY_DISTANCE", Self::VT_PIXEL_OFFSET_SCALE_BY_DISTANCE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMNearFarScalar>>("SCALE_BY_DISTANCE", Self::VT_SCALE_BY_DISTANCE, false)?
+     .visit_field::<f64>("DISTANCE_DISPLAY_CONDITION_NEAR", Self::VT_DISTANCE_DISPLAY_CONDITION_NEAR, false)?
+     .visit_field::<f64>("DISTANCE_DISPLAY_CONDITION_FAR", Self::VT_DISTANCE_DISPLAY_CONDITION_FAR, false)?
+     .visit_field::<f64>("DISABLE_DEPTH_TEST_DISTANCE", Self::VT_DISABLE_DEPTH_TEST_DISTANCE, false)?
      .finish();
     Ok(())
   }
@@ -1938,6 +6844,19 @@ pub struct CZMLabelArgs<'a> {
     pub HORIZONTAL_ORIGIN: CZMHorizontalOrigin,
     pub VERTICAL_ORIGIN: CZMVerticalOrigin,
     pub HEIGHT_REFERENCE: CZMHeightReference,
+    pub SHOW_BACKGROUND: bool,
+    pub BACKGROUND_COLOR: Option<flatbuffers::WIPOffset<CZMColor<'a>>>,
+    pub BACKGROUND_PADDING_X: f64,
+    pub BACKGROUND_PADDING_Y: f64,
+    pub EYE_OFFSET_X: f64,
+    pub EYE_OFFSET_Y: f64,
+    pub EYE_OFFSET_Z: f64,
+    pub TRANSLUCENCY_BY_DISTANCE: Option<flatbuffers::WIPOffset<CZMNearFarScalar<'a>>>,
+    pub PIXEL_OFFSET_SCALE_BY_DISTANCE: Option<flatbuffers::WIPOffset<CZMNearFarScalar<'a>>>,
+    pub SCALE_BY_DISTANCE: Option<flatbuffers::WIPOffset<CZMNearFarScalar<'a>>>,
+    pub DISTANCE_DISPLAY_CONDITION_NEAR: f64,
+    pub DISTANCE_DISPLAY_CONDITION_FAR: f64,
+    pub DISABLE_DEPTH_TEST_DISTANCE: f64,
 }
 impl<'a> Default for CZMLabelArgs<'a> {
   #[inline]
@@ -1956,6 +6875,19 @@ impl<'a> Default for CZMLabelArgs<'a> {
       HORIZONTAL_ORIGIN: CZMHorizontalOrigin::LEFT,
       VERTICAL_ORIGIN: CZMVerticalOrigin::BASELINE,
       HEIGHT_REFERENCE: CZMHeightReference::NONE,
+      SHOW_BACKGROUND: false,
+      BACKGROUND_COLOR: None,
+      BACKGROUND_PADDING_X: 0.0,
+      BACKGROUND_PADDING_Y: 0.0,
+      EYE_OFFSET_X: 0.0,
+      EYE_OFFSET_Y: 0.0,
+      EYE_OFFSET_Z: 0.0,
+      TRANSLUCENCY_BY_DISTANCE: None,
+      PIXEL_OFFSET_SCALE_BY_DISTANCE: None,
+      SCALE_BY_DISTANCE: None,
+      DISTANCE_DISPLAY_CONDITION_NEAR: 0.0,
+      DISTANCE_DISPLAY_CONDITION_FAR: 0.0,
+      DISABLE_DEPTH_TEST_DISTANCE: 0.0,
     }
   }
 }
@@ -2018,6 +6950,58 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMLabelBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<CZMHeightReference>(CZMLabel::VT_HEIGHT_REFERENCE, HEIGHT_REFERENCE, CZMHeightReference::NONE);
   }
   #[inline]
+  pub fn add_SHOW_BACKGROUND(&mut self, SHOW_BACKGROUND: bool) {
+    self.fbb_.push_slot::<bool>(CZMLabel::VT_SHOW_BACKGROUND, SHOW_BACKGROUND, false);
+  }
+  #[inline]
+  pub fn add_BACKGROUND_COLOR(&mut self, BACKGROUND_COLOR: flatbuffers::WIPOffset<CZMColor<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMColor>>(CZMLabel::VT_BACKGROUND_COLOR, BACKGROUND_COLOR);
+  }
+  #[inline]
+  pub fn add_BACKGROUND_PADDING_X(&mut self, BACKGROUND_PADDING_X: f64) {
+    self.fbb_.push_slot::<f64>(CZMLabel::VT_BACKGROUND_PADDING_X, BACKGROUND_PADDING_X, 0.0);
+  }
+  #[inline]
+  pub fn add_BACKGROUND_PADDING_Y(&mut self, BACKGROUND_PADDING_Y: f64) {
+    self.fbb_.push_slot::<f64>(CZMLabel::VT_BACKGROUND_PADDING_Y, BACKGROUND_PADDING_Y, 0.0);
+  }
+  #[inline]
+  pub fn add_EYE_OFFSET_X(&mut self, EYE_OFFSET_X: f64) {
+    self.fbb_.push_slot::<f64>(CZMLabel::VT_EYE_OFFSET_X, EYE_OFFSET_X, 0.0);
+  }
+  #[inline]
+  pub fn add_EYE_OFFSET_Y(&mut self, EYE_OFFSET_Y: f64) {
+    self.fbb_.push_slot::<f64>(CZMLabel::VT_EYE_OFFSET_Y, EYE_OFFSET_Y, 0.0);
+  }
+  #[inline]
+  pub fn add_EYE_OFFSET_Z(&mut self, EYE_OFFSET_Z: f64) {
+    self.fbb_.push_slot::<f64>(CZMLabel::VT_EYE_OFFSET_Z, EYE_OFFSET_Z, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSLUCENCY_BY_DISTANCE(&mut self, TRANSLUCENCY_BY_DISTANCE: flatbuffers::WIPOffset<CZMNearFarScalar<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMNearFarScalar>>(CZMLabel::VT_TRANSLUCENCY_BY_DISTANCE, TRANSLUCENCY_BY_DISTANCE);
+  }
+  #[inline]
+  pub fn add_PIXEL_OFFSET_SCALE_BY_DISTANCE(&mut self, PIXEL_OFFSET_SCALE_BY_DISTANCE: flatbuffers::WIPOffset<CZMNearFarScalar<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMNearFarScalar>>(CZMLabel::VT_PIXEL_OFFSET_SCALE_BY_DISTANCE, PIXEL_OFFSET_SCALE_BY_DISTANCE);
+  }
+  #[inline]
+  pub fn add_SCALE_BY_DISTANCE(&mut self, SCALE_BY_DISTANCE: flatbuffers::WIPOffset<CZMNearFarScalar<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMNearFarScalar>>(CZMLabel::VT_SCALE_BY_DISTANCE, SCALE_BY_DISTANCE);
+  }
+  #[inline]
+  pub fn add_DISTANCE_DISPLAY_CONDITION_NEAR(&mut self, DISTANCE_DISPLAY_CONDITION_NEAR: f64) {
+    self.fbb_.push_slot::<f64>(CZMLabel::VT_DISTANCE_DISPLAY_CONDITION_NEAR, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0);
+  }
+  #[inline]
+  pub fn add_DISTANCE_DISPLAY_CONDITION_FAR(&mut self, DISTANCE_DISPLAY_CONDITION_FAR: f64) {
+    self.fbb_.push_slot::<f64>(CZMLabel::VT_DISTANCE_DISPLAY_CONDITION_FAR, DISTANCE_DISPLAY_CONDITION_FAR, 0.0);
+  }
+  #[inline]
+  pub fn add_DISABLE_DEPTH_TEST_DISTANCE(&mut self, DISABLE_DEPTH_TEST_DISTANCE: f64) {
+    self.fbb_.push_slot::<f64>(CZMLabel::VT_DISABLE_DEPTH_TEST_DISTANCE, DISABLE_DEPTH_TEST_DISTANCE, 0.0);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMLabelBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     CZMLabelBuilder {
@@ -2048,6 +7032,19 @@ impl core::fmt::Debug for CZMLabel<'_> {
       ds.field("HORIZONTAL_ORIGIN", &self.HORIZONTAL_ORIGIN());
       ds.field("VERTICAL_ORIGIN", &self.VERTICAL_ORIGIN());
       ds.field("HEIGHT_REFERENCE", &self.HEIGHT_REFERENCE());
+      ds.field("SHOW_BACKGROUND", &self.SHOW_BACKGROUND());
+      ds.field("BACKGROUND_COLOR", &self.BACKGROUND_COLOR());
+      ds.field("BACKGROUND_PADDING_X", &self.BACKGROUND_PADDING_X());
+      ds.field("BACKGROUND_PADDING_Y", &self.BACKGROUND_PADDING_Y());
+      ds.field("EYE_OFFSET_X", &self.EYE_OFFSET_X());
+      ds.field("EYE_OFFSET_Y", &self.EYE_OFFSET_Y());
+      ds.field("EYE_OFFSET_Z", &self.EYE_OFFSET_Z());
+      ds.field("TRANSLUCENCY_BY_DISTANCE", &self.TRANSLUCENCY_BY_DISTANCE());
+      ds.field("PIXEL_OFFSET_SCALE_BY_DISTANCE", &self.PIXEL_OFFSET_SCALE_BY_DISTANCE());
+      ds.field("SCALE_BY_DISTANCE", &self.SCALE_BY_DISTANCE());
+      ds.field("DISTANCE_DISPLAY_CONDITION_NEAR", &self.DISTANCE_DISPLAY_CONDITION_NEAR());
+      ds.field("DISTANCE_DISPLAY_CONDITION_FAR", &self.DISTANCE_DISPLAY_CONDITION_FAR());
+      ds.field("DISABLE_DEPTH_TEST_DISTANCE", &self.DISABLE_DEPTH_TEST_DISTANCE());
       ds.finish()
   }
 }
@@ -2067,6 +7064,19 @@ pub struct CZMLabelT {
   pub HORIZONTAL_ORIGIN: CZMHorizontalOrigin,
   pub VERTICAL_ORIGIN: CZMVerticalOrigin,
   pub HEIGHT_REFERENCE: CZMHeightReference,
+  pub SHOW_BACKGROUND: bool,
+  pub BACKGROUND_COLOR: Option<Box<CZMColorT>>,
+  pub BACKGROUND_PADDING_X: f64,
+  pub BACKGROUND_PADDING_Y: f64,
+  pub EYE_OFFSET_X: f64,
+  pub EYE_OFFSET_Y: f64,
+  pub EYE_OFFSET_Z: f64,
+  pub TRANSLUCENCY_BY_DISTANCE: Option<Box<CZMNearFarScalarT>>,
+  pub PIXEL_OFFSET_SCALE_BY_DISTANCE: Option<Box<CZMNearFarScalarT>>,
+  pub SCALE_BY_DISTANCE: Option<Box<CZMNearFarScalarT>>,
+  pub DISTANCE_DISPLAY_CONDITION_NEAR: f64,
+  pub DISTANCE_DISPLAY_CONDITION_FAR: f64,
+  pub DISABLE_DEPTH_TEST_DISTANCE: f64,
 }
 impl Default for CZMLabelT {
   fn default() -> Self {
@@ -2084,6 +7094,19 @@ impl Default for CZMLabelT {
       HORIZONTAL_ORIGIN: CZMHorizontalOrigin::LEFT,
       VERTICAL_ORIGIN: CZMVerticalOrigin::BASELINE,
       HEIGHT_REFERENCE: CZMHeightReference::NONE,
+      SHOW_BACKGROUND: false,
+      BACKGROUND_COLOR: None,
+      BACKGROUND_PADDING_X: 0.0,
+      BACKGROUND_PADDING_Y: 0.0,
+      EYE_OFFSET_X: 0.0,
+      EYE_OFFSET_Y: 0.0,
+      EYE_OFFSET_Z: 0.0,
+      TRANSLUCENCY_BY_DISTANCE: None,
+      PIXEL_OFFSET_SCALE_BY_DISTANCE: None,
+      SCALE_BY_DISTANCE: None,
+      DISTANCE_DISPLAY_CONDITION_NEAR: 0.0,
+      DISTANCE_DISPLAY_CONDITION_FAR: 0.0,
+      DISABLE_DEPTH_TEST_DISTANCE: 0.0,
     }
   }
 }
@@ -2113,6 +7136,27 @@ impl CZMLabelT {
     let HORIZONTAL_ORIGIN = self.HORIZONTAL_ORIGIN;
     let VERTICAL_ORIGIN = self.VERTICAL_ORIGIN;
     let HEIGHT_REFERENCE = self.HEIGHT_REFERENCE;
+    let SHOW_BACKGROUND = self.SHOW_BACKGROUND;
+    let BACKGROUND_COLOR = self.BACKGROUND_COLOR.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let BACKGROUND_PADDING_X = self.BACKGROUND_PADDING_X;
+    let BACKGROUND_PADDING_Y = self.BACKGROUND_PADDING_Y;
+    let EYE_OFFSET_X = self.EYE_OFFSET_X;
+    let EYE_OFFSET_Y = self.EYE_OFFSET_Y;
+    let EYE_OFFSET_Z = self.EYE_OFFSET_Z;
+    let TRANSLUCENCY_BY_DISTANCE = self.TRANSLUCENCY_BY_DISTANCE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let PIXEL_OFFSET_SCALE_BY_DISTANCE = self.PIXEL_OFFSET_SCALE_BY_DISTANCE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let SCALE_BY_DISTANCE = self.SCALE_BY_DISTANCE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let DISTANCE_DISPLAY_CONDITION_NEAR = self.DISTANCE_DISPLAY_CONDITION_NEAR;
+    let DISTANCE_DISPLAY_CONDITION_FAR = self.DISTANCE_DISPLAY_CONDITION_FAR;
+    let DISABLE_DEPTH_TEST_DISTANCE = self.DISABLE_DEPTH_TEST_DISTANCE;
     CZMLabel::create(_fbb, &CZMLabelArgs{
       SHOW,
       TEXT,
@@ -2127,6 +7171,19 @@ impl CZMLabelT {
       HORIZONTAL_ORIGIN,
       VERTICAL_ORIGIN,
       HEIGHT_REFERENCE,
+      SHOW_BACKGROUND,
+      BACKGROUND_COLOR,
+      BACKGROUND_PADDING_X,
+      BACKGROUND_PADDING_Y,
+      EYE_OFFSET_X,
+      EYE_OFFSET_Y,
+      EYE_OFFSET_Z,
+      TRANSLUCENCY_BY_DISTANCE,
+      PIXEL_OFFSET_SCALE_BY_DISTANCE,
+      SCALE_BY_DISTANCE,
+      DISTANCE_DISPLAY_CONDITION_NEAR,
+      DISTANCE_DISPLAY_CONDITION_FAR,
+      DISABLE_DEPTH_TEST_DISTANCE,
     })
   }
 }
@@ -2153,6 +7210,11 @@ impl<'a> CZMPoint<'a> {
   pub const VT_OUTLINE_WIDTH: flatbuffers::VOffsetT = 10;
   pub const VT_PIXEL_SIZE: flatbuffers::VOffsetT = 12;
   pub const VT_HEIGHT_REFERENCE: flatbuffers::VOffsetT = 14;
+  pub const VT_SCALE_BY_DISTANCE: flatbuffers::VOffsetT = 16;
+  pub const VT_TRANSLUCENCY_BY_DISTANCE: flatbuffers::VOffsetT = 18;
+  pub const VT_DISTANCE_DISPLAY_CONDITION_NEAR: flatbuffers::VOffsetT = 20;
+  pub const VT_DISTANCE_DISPLAY_CONDITION_FAR: flatbuffers::VOffsetT = 22;
+  pub const VT_DISABLE_DEPTH_TEST_DISTANCE: flatbuffers::VOffsetT = 24;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -2164,8 +7226,13 @@ impl<'a> CZMPoint<'a> {
     args: &'args CZMPointArgs<'args>
   ) -> flatbuffers::WIPOffset<CZMPoint<'bldr>> {
     let mut builder = CZMPointBuilder::new(_fbb);
+    builder.add_DISABLE_DEPTH_TEST_DISTANCE(args.DISABLE_DEPTH_TEST_DISTANCE);
+    builder.add_DISTANCE_DISPLAY_CONDITION_FAR(args.DISTANCE_DISPLAY_CONDITION_FAR);
+    builder.add_DISTANCE_DISPLAY_CONDITION_NEAR(args.DISTANCE_DISPLAY_CONDITION_NEAR);
     builder.add_PIXEL_SIZE(args.PIXEL_SIZE);
     builder.add_OUTLINE_WIDTH(args.OUTLINE_WIDTH);
+    if let Some(x) = args.TRANSLUCENCY_BY_DISTANCE { builder.add_TRANSLUCENCY_BY_DISTANCE(x); }
+    if let Some(x) = args.SCALE_BY_DISTANCE { builder.add_SCALE_BY_DISTANCE(x); }
     if let Some(x) = args.OUTLINE_COLOR { builder.add_OUTLINE_COLOR(x); }
     if let Some(x) = args.COLOR { builder.add_COLOR(x); }
     builder.add_HEIGHT_REFERENCE(args.HEIGHT_REFERENCE);
@@ -2184,6 +7251,15 @@ impl<'a> CZMPoint<'a> {
     let OUTLINE_WIDTH = self.OUTLINE_WIDTH();
     let PIXEL_SIZE = self.PIXEL_SIZE();
     let HEIGHT_REFERENCE = self.HEIGHT_REFERENCE();
+    let SCALE_BY_DISTANCE = self.SCALE_BY_DISTANCE().map(|x| {
+      Box::new(x.unpack())
+    });
+    let TRANSLUCENCY_BY_DISTANCE = self.TRANSLUCENCY_BY_DISTANCE().map(|x| {
+      Box::new(x.unpack())
+    });
+    let DISTANCE_DISPLAY_CONDITION_NEAR = self.DISTANCE_DISPLAY_CONDITION_NEAR();
+    let DISTANCE_DISPLAY_CONDITION_FAR = self.DISTANCE_DISPLAY_CONDITION_FAR();
+    let DISABLE_DEPTH_TEST_DISTANCE = self.DISABLE_DEPTH_TEST_DISTANCE();
     CZMPointT {
       SHOW,
       COLOR,
@@ -2191,6 +7267,11 @@ impl<'a> CZMPoint<'a> {
       OUTLINE_WIDTH,
       PIXEL_SIZE,
       HEIGHT_REFERENCE,
+      SCALE_BY_DISTANCE,
+      TRANSLUCENCY_BY_DISTANCE,
+      DISTANCE_DISPLAY_CONDITION_NEAR,
+      DISTANCE_DISPLAY_CONDITION_FAR,
+      DISABLE_DEPTH_TEST_DISTANCE,
     }
   }
 
@@ -2242,6 +7323,46 @@ impl<'a> CZMPoint<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<CZMHeightReference>(CZMPoint::VT_HEIGHT_REFERENCE, Some(CZMHeightReference::NONE)).unwrap()}
   }
+  /// Scale by distance
+  #[inline]
+  pub fn SCALE_BY_DISTANCE(&self) -> Option<CZMNearFarScalar<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMNearFarScalar>>(CZMPoint::VT_SCALE_BY_DISTANCE, None)}
+  }
+  /// Translucency by distance
+  #[inline]
+  pub fn TRANSLUCENCY_BY_DISTANCE(&self) -> Option<CZMNearFarScalar<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMNearFarScalar>>(CZMPoint::VT_TRANSLUCENCY_BY_DISTANCE, None)}
+  }
+  /// Distance display condition near
+  #[inline]
+  pub fn DISTANCE_DISPLAY_CONDITION_NEAR(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMPoint::VT_DISTANCE_DISPLAY_CONDITION_NEAR, Some(0.0)).unwrap()}
+  }
+  /// Distance display condition far
+  #[inline]
+  pub fn DISTANCE_DISPLAY_CONDITION_FAR(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMPoint::VT_DISTANCE_DISPLAY_CONDITION_FAR, Some(0.0)).unwrap()}
+  }
+  /// Disable depth test distance
+  #[inline]
+  pub fn DISABLE_DEPTH_TEST_DISTANCE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMPoint::VT_DISABLE_DEPTH_TEST_DISTANCE, Some(0.0)).unwrap()}
+  }
 }
 
 impl flatbuffers::Verifiable for CZMPoint<'_> {
@@ -2257,6 +7378,11 @@ impl flatbuffers::Verifiable for CZMPoint<'_> {
      .visit_field::<f64>("OUTLINE_WIDTH", Self::VT_OUTLINE_WIDTH, false)?
      .visit_field::<f64>("PIXEL_SIZE", Self::VT_PIXEL_SIZE, false)?
      .visit_field::<CZMHeightReference>("HEIGHT_REFERENCE", Self::VT_HEIGHT_REFERENCE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMNearFarScalar>>("SCALE_BY_DISTANCE", Self::VT_SCALE_BY_DISTANCE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMNearFarScalar>>("TRANSLUCENCY_BY_DISTANCE", Self::VT_TRANSLUCENCY_BY_DISTANCE, false)?
+     .visit_field::<f64>("DISTANCE_DISPLAY_CONDITION_NEAR", Self::VT_DISTANCE_DISPLAY_CONDITION_NEAR, false)?
+     .visit_field::<f64>("DISTANCE_DISPLAY_CONDITION_FAR", Self::VT_DISTANCE_DISPLAY_CONDITION_FAR, false)?
+     .visit_field::<f64>("DISABLE_DEPTH_TEST_DISTANCE", Self::VT_DISABLE_DEPTH_TEST_DISTANCE, false)?
      .finish();
     Ok(())
   }
@@ -2268,6 +7394,11 @@ pub struct CZMPointArgs<'a> {
     pub OUTLINE_WIDTH: f64,
     pub PIXEL_SIZE: f64,
     pub HEIGHT_REFERENCE: CZMHeightReference,
+    pub SCALE_BY_DISTANCE: Option<flatbuffers::WIPOffset<CZMNearFarScalar<'a>>>,
+    pub TRANSLUCENCY_BY_DISTANCE: Option<flatbuffers::WIPOffset<CZMNearFarScalar<'a>>>,
+    pub DISTANCE_DISPLAY_CONDITION_NEAR: f64,
+    pub DISTANCE_DISPLAY_CONDITION_FAR: f64,
+    pub DISABLE_DEPTH_TEST_DISTANCE: f64,
 }
 impl<'a> Default for CZMPointArgs<'a> {
   #[inline]
@@ -2279,6 +7410,11 @@ impl<'a> Default for CZMPointArgs<'a> {
       OUTLINE_WIDTH: 0.0,
       PIXEL_SIZE: 0.0,
       HEIGHT_REFERENCE: CZMHeightReference::NONE,
+      SCALE_BY_DISTANCE: None,
+      TRANSLUCENCY_BY_DISTANCE: None,
+      DISTANCE_DISPLAY_CONDITION_NEAR: 0.0,
+      DISTANCE_DISPLAY_CONDITION_FAR: 0.0,
+      DISABLE_DEPTH_TEST_DISTANCE: 0.0,
     }
   }
 }
@@ -2313,6 +7449,26 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMPointBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<CZMHeightReference>(CZMPoint::VT_HEIGHT_REFERENCE, HEIGHT_REFERENCE, CZMHeightReference::NONE);
   }
   #[inline]
+  pub fn add_SCALE_BY_DISTANCE(&mut self, SCALE_BY_DISTANCE: flatbuffers::WIPOffset<CZMNearFarScalar<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMNearFarScalar>>(CZMPoint::VT_SCALE_BY_DISTANCE, SCALE_BY_DISTANCE);
+  }
+  #[inline]
+  pub fn add_TRANSLUCENCY_BY_DISTANCE(&mut self, TRANSLUCENCY_BY_DISTANCE: flatbuffers::WIPOffset<CZMNearFarScalar<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMNearFarScalar>>(CZMPoint::VT_TRANSLUCENCY_BY_DISTANCE, TRANSLUCENCY_BY_DISTANCE);
+  }
+  #[inline]
+  pub fn add_DISTANCE_DISPLAY_CONDITION_NEAR(&mut self, DISTANCE_DISPLAY_CONDITION_NEAR: f64) {
+    self.fbb_.push_slot::<f64>(CZMPoint::VT_DISTANCE_DISPLAY_CONDITION_NEAR, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0);
+  }
+  #[inline]
+  pub fn add_DISTANCE_DISPLAY_CONDITION_FAR(&mut self, DISTANCE_DISPLAY_CONDITION_FAR: f64) {
+    self.fbb_.push_slot::<f64>(CZMPoint::VT_DISTANCE_DISPLAY_CONDITION_FAR, DISTANCE_DISPLAY_CONDITION_FAR, 0.0);
+  }
+  #[inline]
+  pub fn add_DISABLE_DEPTH_TEST_DISTANCE(&mut self, DISABLE_DEPTH_TEST_DISTANCE: f64) {
+    self.fbb_.push_slot::<f64>(CZMPoint::VT_DISABLE_DEPTH_TEST_DISTANCE, DISABLE_DEPTH_TEST_DISTANCE, 0.0);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMPointBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     CZMPointBuilder {
@@ -2336,6 +7492,11 @@ impl core::fmt::Debug for CZMPoint<'_> {
       ds.field("OUTLINE_WIDTH", &self.OUTLINE_WIDTH());
       ds.field("PIXEL_SIZE", &self.PIXEL_SIZE());
       ds.field("HEIGHT_REFERENCE", &self.HEIGHT_REFERENCE());
+      ds.field("SCALE_BY_DISTANCE", &self.SCALE_BY_DISTANCE());
+      ds.field("TRANSLUCENCY_BY_DISTANCE", &self.TRANSLUCENCY_BY_DISTANCE());
+      ds.field("DISTANCE_DISPLAY_CONDITION_NEAR", &self.DISTANCE_DISPLAY_CONDITION_NEAR());
+      ds.field("DISTANCE_DISPLAY_CONDITION_FAR", &self.DISTANCE_DISPLAY_CONDITION_FAR());
+      ds.field("DISABLE_DEPTH_TEST_DISTANCE", &self.DISABLE_DEPTH_TEST_DISTANCE());
       ds.finish()
   }
 }
@@ -2348,6 +7509,11 @@ pub struct CZMPointT {
   pub OUTLINE_WIDTH: f64,
   pub PIXEL_SIZE: f64,
   pub HEIGHT_REFERENCE: CZMHeightReference,
+  pub SCALE_BY_DISTANCE: Option<Box<CZMNearFarScalarT>>,
+  pub TRANSLUCENCY_BY_DISTANCE: Option<Box<CZMNearFarScalarT>>,
+  pub DISTANCE_DISPLAY_CONDITION_NEAR: f64,
+  pub DISTANCE_DISPLAY_CONDITION_FAR: f64,
+  pub DISABLE_DEPTH_TEST_DISTANCE: f64,
 }
 impl Default for CZMPointT {
   fn default() -> Self {
@@ -2358,6 +7524,11 @@ impl Default for CZMPointT {
       OUTLINE_WIDTH: 0.0,
       PIXEL_SIZE: 0.0,
       HEIGHT_REFERENCE: CZMHeightReference::NONE,
+      SCALE_BY_DISTANCE: None,
+      TRANSLUCENCY_BY_DISTANCE: None,
+      DISTANCE_DISPLAY_CONDITION_NEAR: 0.0,
+      DISTANCE_DISPLAY_CONDITION_FAR: 0.0,
+      DISABLE_DEPTH_TEST_DISTANCE: 0.0,
     }
   }
 }
@@ -2376,6 +7547,15 @@ impl CZMPointT {
     let OUTLINE_WIDTH = self.OUTLINE_WIDTH;
     let PIXEL_SIZE = self.PIXEL_SIZE;
     let HEIGHT_REFERENCE = self.HEIGHT_REFERENCE;
+    let SCALE_BY_DISTANCE = self.SCALE_BY_DISTANCE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let TRANSLUCENCY_BY_DISTANCE = self.TRANSLUCENCY_BY_DISTANCE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let DISTANCE_DISPLAY_CONDITION_NEAR = self.DISTANCE_DISPLAY_CONDITION_NEAR;
+    let DISTANCE_DISPLAY_CONDITION_FAR = self.DISTANCE_DISPLAY_CONDITION_FAR;
+    let DISABLE_DEPTH_TEST_DISTANCE = self.DISABLE_DEPTH_TEST_DISTANCE;
     CZMPoint::create(_fbb, &CZMPointArgs{
       SHOW,
       COLOR,
@@ -2383,6 +7563,11 @@ impl CZMPointT {
       OUTLINE_WIDTH,
       PIXEL_SIZE,
       HEIGHT_REFERENCE,
+      SCALE_BY_DISTANCE,
+      TRANSLUCENCY_BY_DISTANCE,
+      DISTANCE_DISPLAY_CONDITION_NEAR,
+      DISTANCE_DISPLAY_CONDITION_FAR,
+      DISABLE_DEPTH_TEST_DISTANCE,
     })
   }
 }
@@ -2409,6 +7594,13 @@ impl<'a> CZMPolyline<'a> {
   pub const VT_WIDTH: flatbuffers::VOffsetT = 10;
   pub const VT_COLOR: flatbuffers::VOffsetT = 12;
   pub const VT_CLAMP_TO_GROUND: flatbuffers::VOffsetT = 14;
+  pub const VT_ARC_TYPE: flatbuffers::VOffsetT = 16;
+  pub const VT_GRANULARITY: flatbuffers::VOffsetT = 18;
+  pub const VT_MATERIAL: flatbuffers::VOffsetT = 20;
+  pub const VT_SHADOWS: flatbuffers::VOffsetT = 22;
+  pub const VT_DEPTH_FAIL_MATERIAL: flatbuffers::VOffsetT = 24;
+  pub const VT_CLASSIFICATION_TYPE: flatbuffers::VOffsetT = 26;
+  pub const VT_Z_INDEX: flatbuffers::VOffsetT = 28;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -2420,7 +7612,14 @@ impl<'a> CZMPolyline<'a> {
     args: &'args CZMPolylineArgs<'args>
   ) -> flatbuffers::WIPOffset<CZMPolyline<'bldr>> {
     let mut builder = CZMPolylineBuilder::new(_fbb);
+    builder.add_GRANULARITY(args.GRANULARITY);
     builder.add_WIDTH(args.WIDTH);
+    builder.add_Z_INDEX(args.Z_INDEX);
+    if let Some(x) = args.CLASSIFICATION_TYPE { builder.add_CLASSIFICATION_TYPE(x); }
+    if let Some(x) = args.DEPTH_FAIL_MATERIAL { builder.add_DEPTH_FAIL_MATERIAL(x); }
+    if let Some(x) = args.SHADOWS { builder.add_SHADOWS(x); }
+    if let Some(x) = args.MATERIAL { builder.add_MATERIAL(x); }
+    if let Some(x) = args.ARC_TYPE { builder.add_ARC_TYPE(x); }
     if let Some(x) = args.COLOR { builder.add_COLOR(x); }
     if let Some(x) = args.POSITIONS_CARTESIAN { builder.add_POSITIONS_CARTESIAN(x); }
     if let Some(x) = args.POSITIONS_CARTOGRAPHIC_DEGREES { builder.add_POSITIONS_CARTOGRAPHIC_DEGREES(x); }
@@ -2442,6 +7641,23 @@ impl<'a> CZMPolyline<'a> {
       Box::new(x.unpack())
     });
     let CLAMP_TO_GROUND = self.CLAMP_TO_GROUND();
+    let ARC_TYPE = self.ARC_TYPE().map(|x| {
+      x.to_string()
+    });
+    let GRANULARITY = self.GRANULARITY();
+    let MATERIAL = self.MATERIAL().map(|x| {
+      Box::new(x.unpack())
+    });
+    let SHADOWS = self.SHADOWS().map(|x| {
+      x.to_string()
+    });
+    let DEPTH_FAIL_MATERIAL = self.DEPTH_FAIL_MATERIAL().map(|x| {
+      Box::new(x.unpack())
+    });
+    let CLASSIFICATION_TYPE = self.CLASSIFICATION_TYPE().map(|x| {
+      x.to_string()
+    });
+    let Z_INDEX = self.Z_INDEX();
     CZMPolylineT {
       SHOW,
       POSITIONS_CARTOGRAPHIC_DEGREES,
@@ -2449,6 +7665,13 @@ impl<'a> CZMPolyline<'a> {
       WIDTH,
       COLOR,
       CLAMP_TO_GROUND,
+      ARC_TYPE,
+      GRANULARITY,
+      MATERIAL,
+      SHADOWS,
+      DEPTH_FAIL_MATERIAL,
+      CLASSIFICATION_TYPE,
+      Z_INDEX,
     }
   }
 
@@ -2484,7 +7707,7 @@ impl<'a> CZMPolyline<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(CZMPolyline::VT_WIDTH, Some(0.0)).unwrap()}
   }
-  /// Line color (solid color material)
+  /// Line color (solid color material, legacy)
   #[inline]
   pub fn COLOR(&self) -> Option<CZMColor<'a>> {
     // Safety:
@@ -2499,6 +7722,62 @@ impl<'a> CZMPolyline<'a> {
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(CZMPolyline::VT_CLAMP_TO_GROUND, Some(false)).unwrap()}
+  }
+  /// Arc type
+  #[inline]
+  pub fn ARC_TYPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMPolyline::VT_ARC_TYPE, None)}
+  }
+  /// Granularity in radians
+  #[inline]
+  pub fn GRANULARITY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMPolyline::VT_GRANULARITY, Some(0.0)).unwrap()}
+  }
+  /// Full polyline material
+  #[inline]
+  pub fn MATERIAL(&self) -> Option<CZMPolylineMaterial<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMPolylineMaterial>>(CZMPolyline::VT_MATERIAL, None)}
+  }
+  /// Shadow mode
+  #[inline]
+  pub fn SHADOWS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMPolyline::VT_SHADOWS, None)}
+  }
+  /// Depth fail material
+  #[inline]
+  pub fn DEPTH_FAIL_MATERIAL(&self) -> Option<CZMPolylineMaterial<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMPolylineMaterial>>(CZMPolyline::VT_DEPTH_FAIL_MATERIAL, None)}
+  }
+  /// Classification type
+  #[inline]
+  pub fn CLASSIFICATION_TYPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMPolyline::VT_CLASSIFICATION_TYPE, None)}
+  }
+  /// Z-index for ordering
+  #[inline]
+  pub fn Z_INDEX(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(CZMPolyline::VT_Z_INDEX, Some(0)).unwrap()}
   }
 }
 
@@ -2515,6 +7794,13 @@ impl flatbuffers::Verifiable for CZMPolyline<'_> {
      .visit_field::<f64>("WIDTH", Self::VT_WIDTH, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<CZMColor>>("COLOR", Self::VT_COLOR, false)?
      .visit_field::<bool>("CLAMP_TO_GROUND", Self::VT_CLAMP_TO_GROUND, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ARC_TYPE", Self::VT_ARC_TYPE, false)?
+     .visit_field::<f64>("GRANULARITY", Self::VT_GRANULARITY, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMPolylineMaterial>>("MATERIAL", Self::VT_MATERIAL, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SHADOWS", Self::VT_SHADOWS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMPolylineMaterial>>("DEPTH_FAIL_MATERIAL", Self::VT_DEPTH_FAIL_MATERIAL, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CLASSIFICATION_TYPE", Self::VT_CLASSIFICATION_TYPE, false)?
+     .visit_field::<i32>("Z_INDEX", Self::VT_Z_INDEX, false)?
      .finish();
     Ok(())
   }
@@ -2526,6 +7812,13 @@ pub struct CZMPolylineArgs<'a> {
     pub WIDTH: f64,
     pub COLOR: Option<flatbuffers::WIPOffset<CZMColor<'a>>>,
     pub CLAMP_TO_GROUND: bool,
+    pub ARC_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub GRANULARITY: f64,
+    pub MATERIAL: Option<flatbuffers::WIPOffset<CZMPolylineMaterial<'a>>>,
+    pub SHADOWS: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub DEPTH_FAIL_MATERIAL: Option<flatbuffers::WIPOffset<CZMPolylineMaterial<'a>>>,
+    pub CLASSIFICATION_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub Z_INDEX: i32,
 }
 impl<'a> Default for CZMPolylineArgs<'a> {
   #[inline]
@@ -2537,6 +7830,13 @@ impl<'a> Default for CZMPolylineArgs<'a> {
       WIDTH: 0.0,
       COLOR: None,
       CLAMP_TO_GROUND: false,
+      ARC_TYPE: None,
+      GRANULARITY: 0.0,
+      MATERIAL: None,
+      SHADOWS: None,
+      DEPTH_FAIL_MATERIAL: None,
+      CLASSIFICATION_TYPE: None,
+      Z_INDEX: 0,
     }
   }
 }
@@ -2571,6 +7871,34 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMPolylineBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<bool>(CZMPolyline::VT_CLAMP_TO_GROUND, CLAMP_TO_GROUND, false);
   }
   #[inline]
+  pub fn add_ARC_TYPE(&mut self, ARC_TYPE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMPolyline::VT_ARC_TYPE, ARC_TYPE);
+  }
+  #[inline]
+  pub fn add_GRANULARITY(&mut self, GRANULARITY: f64) {
+    self.fbb_.push_slot::<f64>(CZMPolyline::VT_GRANULARITY, GRANULARITY, 0.0);
+  }
+  #[inline]
+  pub fn add_MATERIAL(&mut self, MATERIAL: flatbuffers::WIPOffset<CZMPolylineMaterial<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMPolylineMaterial>>(CZMPolyline::VT_MATERIAL, MATERIAL);
+  }
+  #[inline]
+  pub fn add_SHADOWS(&mut self, SHADOWS: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMPolyline::VT_SHADOWS, SHADOWS);
+  }
+  #[inline]
+  pub fn add_DEPTH_FAIL_MATERIAL(&mut self, DEPTH_FAIL_MATERIAL: flatbuffers::WIPOffset<CZMPolylineMaterial<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMPolylineMaterial>>(CZMPolyline::VT_DEPTH_FAIL_MATERIAL, DEPTH_FAIL_MATERIAL);
+  }
+  #[inline]
+  pub fn add_CLASSIFICATION_TYPE(&mut self, CLASSIFICATION_TYPE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMPolyline::VT_CLASSIFICATION_TYPE, CLASSIFICATION_TYPE);
+  }
+  #[inline]
+  pub fn add_Z_INDEX(&mut self, Z_INDEX: i32) {
+    self.fbb_.push_slot::<i32>(CZMPolyline::VT_Z_INDEX, Z_INDEX, 0);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMPolylineBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     CZMPolylineBuilder {
@@ -2594,6 +7922,13 @@ impl core::fmt::Debug for CZMPolyline<'_> {
       ds.field("WIDTH", &self.WIDTH());
       ds.field("COLOR", &self.COLOR());
       ds.field("CLAMP_TO_GROUND", &self.CLAMP_TO_GROUND());
+      ds.field("ARC_TYPE", &self.ARC_TYPE());
+      ds.field("GRANULARITY", &self.GRANULARITY());
+      ds.field("MATERIAL", &self.MATERIAL());
+      ds.field("SHADOWS", &self.SHADOWS());
+      ds.field("DEPTH_FAIL_MATERIAL", &self.DEPTH_FAIL_MATERIAL());
+      ds.field("CLASSIFICATION_TYPE", &self.CLASSIFICATION_TYPE());
+      ds.field("Z_INDEX", &self.Z_INDEX());
       ds.finish()
   }
 }
@@ -2606,6 +7941,13 @@ pub struct CZMPolylineT {
   pub WIDTH: f64,
   pub COLOR: Option<Box<CZMColorT>>,
   pub CLAMP_TO_GROUND: bool,
+  pub ARC_TYPE: Option<String>,
+  pub GRANULARITY: f64,
+  pub MATERIAL: Option<Box<CZMPolylineMaterialT>>,
+  pub SHADOWS: Option<String>,
+  pub DEPTH_FAIL_MATERIAL: Option<Box<CZMPolylineMaterialT>>,
+  pub CLASSIFICATION_TYPE: Option<String>,
+  pub Z_INDEX: i32,
 }
 impl Default for CZMPolylineT {
   fn default() -> Self {
@@ -2616,6 +7958,13 @@ impl Default for CZMPolylineT {
       WIDTH: 0.0,
       COLOR: None,
       CLAMP_TO_GROUND: false,
+      ARC_TYPE: None,
+      GRANULARITY: 0.0,
+      MATERIAL: None,
+      SHADOWS: None,
+      DEPTH_FAIL_MATERIAL: None,
+      CLASSIFICATION_TYPE: None,
+      Z_INDEX: 0,
     }
   }
 }
@@ -2636,6 +7985,23 @@ impl CZMPolylineT {
       x.pack(_fbb)
     });
     let CLAMP_TO_GROUND = self.CLAMP_TO_GROUND;
+    let ARC_TYPE = self.ARC_TYPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let GRANULARITY = self.GRANULARITY;
+    let MATERIAL = self.MATERIAL.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let SHADOWS = self.SHADOWS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DEPTH_FAIL_MATERIAL = self.DEPTH_FAIL_MATERIAL.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let CLASSIFICATION_TYPE = self.CLASSIFICATION_TYPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let Z_INDEX = self.Z_INDEX;
     CZMPolyline::create(_fbb, &CZMPolylineArgs{
       SHOW,
       POSITIONS_CARTOGRAPHIC_DEGREES,
@@ -2643,6 +8009,13 @@ impl CZMPolylineT {
       WIDTH,
       COLOR,
       CLAMP_TO_GROUND,
+      ARC_TYPE,
+      GRANULARITY,
+      MATERIAL,
+      SHADOWS,
+      DEPTH_FAIL_MATERIAL,
+      CLASSIFICATION_TYPE,
+      Z_INDEX,
     })
   }
 }
@@ -2673,6 +8046,19 @@ impl<'a> CZMPolygon<'a> {
   pub const VT_EXTRUDED_HEIGHT: flatbuffers::VOffsetT = 18;
   pub const VT_HEIGHT_REFERENCE: flatbuffers::VOffsetT = 20;
   pub const VT_CLASSIFICATION_TYPE: flatbuffers::VOffsetT = 22;
+  pub const VT_HOLES: flatbuffers::VOffsetT = 24;
+  pub const VT_ARC_TYPE: flatbuffers::VOffsetT = 26;
+  pub const VT_HEIGHT: flatbuffers::VOffsetT = 28;
+  pub const VT_EXTRUDED_HEIGHT_REFERENCE: flatbuffers::VOffsetT = 30;
+  pub const VT_ST_ROTATION: flatbuffers::VOffsetT = 32;
+  pub const VT_GRANULARITY: flatbuffers::VOffsetT = 34;
+  pub const VT_MATERIAL: flatbuffers::VOffsetT = 36;
+  pub const VT_OUTLINE_WIDTH: flatbuffers::VOffsetT = 38;
+  pub const VT_PER_POSITION_HEIGHT: flatbuffers::VOffsetT = 40;
+  pub const VT_CLOSE_TOP: flatbuffers::VOffsetT = 42;
+  pub const VT_CLOSE_BOTTOM: flatbuffers::VOffsetT = 44;
+  pub const VT_SHADOWS: flatbuffers::VOffsetT = 46;
+  pub const VT_Z_INDEX: flatbuffers::VOffsetT = 48;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -2684,11 +8070,24 @@ impl<'a> CZMPolygon<'a> {
     args: &'args CZMPolygonArgs<'args>
   ) -> flatbuffers::WIPOffset<CZMPolygon<'bldr>> {
     let mut builder = CZMPolygonBuilder::new(_fbb);
+    builder.add_OUTLINE_WIDTH(args.OUTLINE_WIDTH);
+    builder.add_GRANULARITY(args.GRANULARITY);
+    builder.add_ST_ROTATION(args.ST_ROTATION);
+    builder.add_HEIGHT(args.HEIGHT);
     builder.add_EXTRUDED_HEIGHT(args.EXTRUDED_HEIGHT);
+    builder.add_Z_INDEX(args.Z_INDEX);
+    if let Some(x) = args.SHADOWS { builder.add_SHADOWS(x); }
+    if let Some(x) = args.MATERIAL { builder.add_MATERIAL(x); }
+    if let Some(x) = args.EXTRUDED_HEIGHT_REFERENCE { builder.add_EXTRUDED_HEIGHT_REFERENCE(x); }
+    if let Some(x) = args.ARC_TYPE { builder.add_ARC_TYPE(x); }
+    if let Some(x) = args.HOLES { builder.add_HOLES(x); }
     if let Some(x) = args.OUTLINE_COLOR { builder.add_OUTLINE_COLOR(x); }
     if let Some(x) = args.COLOR { builder.add_COLOR(x); }
     if let Some(x) = args.POSITIONS_CARTESIAN { builder.add_POSITIONS_CARTESIAN(x); }
     if let Some(x) = args.POSITIONS_CARTOGRAPHIC_DEGREES { builder.add_POSITIONS_CARTOGRAPHIC_DEGREES(x); }
+    builder.add_CLOSE_BOTTOM(args.CLOSE_BOTTOM);
+    builder.add_CLOSE_TOP(args.CLOSE_TOP);
+    builder.add_PER_POSITION_HEIGHT(args.PER_POSITION_HEIGHT);
     builder.add_CLASSIFICATION_TYPE(args.CLASSIFICATION_TYPE);
     builder.add_HEIGHT_REFERENCE(args.HEIGHT_REFERENCE);
     builder.add_OUTLINE(args.OUTLINE);
@@ -2716,6 +8115,29 @@ impl<'a> CZMPolygon<'a> {
     let EXTRUDED_HEIGHT = self.EXTRUDED_HEIGHT();
     let HEIGHT_REFERENCE = self.HEIGHT_REFERENCE();
     let CLASSIFICATION_TYPE = self.CLASSIFICATION_TYPE();
+    let HOLES = self.HOLES().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let ARC_TYPE = self.ARC_TYPE().map(|x| {
+      x.to_string()
+    });
+    let HEIGHT = self.HEIGHT();
+    let EXTRUDED_HEIGHT_REFERENCE = self.EXTRUDED_HEIGHT_REFERENCE().map(|x| {
+      x.to_string()
+    });
+    let ST_ROTATION = self.ST_ROTATION();
+    let GRANULARITY = self.GRANULARITY();
+    let MATERIAL = self.MATERIAL().map(|x| {
+      Box::new(x.unpack())
+    });
+    let OUTLINE_WIDTH = self.OUTLINE_WIDTH();
+    let PER_POSITION_HEIGHT = self.PER_POSITION_HEIGHT();
+    let CLOSE_TOP = self.CLOSE_TOP();
+    let CLOSE_BOTTOM = self.CLOSE_BOTTOM();
+    let SHADOWS = self.SHADOWS().map(|x| {
+      x.to_string()
+    });
+    let Z_INDEX = self.Z_INDEX();
     CZMPolygonT {
       SHOW,
       POSITIONS_CARTOGRAPHIC_DEGREES,
@@ -2727,6 +8149,19 @@ impl<'a> CZMPolygon<'a> {
       EXTRUDED_HEIGHT,
       HEIGHT_REFERENCE,
       CLASSIFICATION_TYPE,
+      HOLES,
+      ARC_TYPE,
+      HEIGHT,
+      EXTRUDED_HEIGHT_REFERENCE,
+      ST_ROTATION,
+      GRANULARITY,
+      MATERIAL,
+      OUTLINE_WIDTH,
+      PER_POSITION_HEIGHT,
+      CLOSE_TOP,
+      CLOSE_BOTTOM,
+      SHADOWS,
+      Z_INDEX,
     }
   }
 
@@ -2762,7 +8197,7 @@ impl<'a> CZMPolygon<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(CZMPolygon::VT_FILL, Some(false)).unwrap()}
   }
-  /// Fill color (solid color material)
+  /// Fill color (solid color material, legacy)
   #[inline]
   pub fn COLOR(&self) -> Option<CZMColor<'a>> {
     // Safety:
@@ -2810,6 +8245,110 @@ impl<'a> CZMPolygon<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<CZMClassificationType>(CZMPolygon::VT_CLASSIFICATION_TYPE, Some(CZMClassificationType::TERRAIN)).unwrap()}
   }
+  /// Holes (position lists: each hole is [lon,lat,h,...])
+  #[inline]
+  pub fn HOLES(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<CZMPolygonHole<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<CZMPolygonHole>>>>(CZMPolygon::VT_HOLES, None)}
+  }
+  /// Arc type
+  #[inline]
+  pub fn ARC_TYPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMPolygon::VT_ARC_TYPE, None)}
+  }
+  /// Height in meters
+  #[inline]
+  pub fn HEIGHT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMPolygon::VT_HEIGHT, Some(0.0)).unwrap()}
+  }
+  /// Extruded height reference
+  #[inline]
+  pub fn EXTRUDED_HEIGHT_REFERENCE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMPolygon::VT_EXTRUDED_HEIGHT_REFERENCE, None)}
+  }
+  /// Texture rotation in radians
+  #[inline]
+  pub fn ST_ROTATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMPolygon::VT_ST_ROTATION, Some(0.0)).unwrap()}
+  }
+  /// Granularity in radians
+  #[inline]
+  pub fn GRANULARITY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMPolygon::VT_GRANULARITY, Some(0.0)).unwrap()}
+  }
+  /// Full surface material
+  #[inline]
+  pub fn MATERIAL(&self) -> Option<CZMMaterial<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMMaterial>>(CZMPolygon::VT_MATERIAL, None)}
+  }
+  /// Outline width in pixels
+  #[inline]
+  pub fn OUTLINE_WIDTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMPolygon::VT_OUTLINE_WIDTH, Some(0.0)).unwrap()}
+  }
+  /// Whether to use per-position heights
+  #[inline]
+  pub fn PER_POSITION_HEIGHT(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMPolygon::VT_PER_POSITION_HEIGHT, Some(false)).unwrap()}
+  }
+  /// Whether to close the top of extruded polygon
+  #[inline]
+  pub fn CLOSE_TOP(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMPolygon::VT_CLOSE_TOP, Some(false)).unwrap()}
+  }
+  /// Whether to close the bottom of extruded polygon
+  #[inline]
+  pub fn CLOSE_BOTTOM(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMPolygon::VT_CLOSE_BOTTOM, Some(false)).unwrap()}
+  }
+  /// Shadow mode
+  #[inline]
+  pub fn SHADOWS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMPolygon::VT_SHADOWS, None)}
+  }
+  /// Z-index for ordering
+  #[inline]
+  pub fn Z_INDEX(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(CZMPolygon::VT_Z_INDEX, Some(0)).unwrap()}
+  }
 }
 
 impl flatbuffers::Verifiable for CZMPolygon<'_> {
@@ -2829,6 +8368,19 @@ impl flatbuffers::Verifiable for CZMPolygon<'_> {
      .visit_field::<f64>("EXTRUDED_HEIGHT", Self::VT_EXTRUDED_HEIGHT, false)?
      .visit_field::<CZMHeightReference>("HEIGHT_REFERENCE", Self::VT_HEIGHT_REFERENCE, false)?
      .visit_field::<CZMClassificationType>("CLASSIFICATION_TYPE", Self::VT_CLASSIFICATION_TYPE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<CZMPolygonHole>>>>("HOLES", Self::VT_HOLES, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ARC_TYPE", Self::VT_ARC_TYPE, false)?
+     .visit_field::<f64>("HEIGHT", Self::VT_HEIGHT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EXTRUDED_HEIGHT_REFERENCE", Self::VT_EXTRUDED_HEIGHT_REFERENCE, false)?
+     .visit_field::<f64>("ST_ROTATION", Self::VT_ST_ROTATION, false)?
+     .visit_field::<f64>("GRANULARITY", Self::VT_GRANULARITY, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMMaterial>>("MATERIAL", Self::VT_MATERIAL, false)?
+     .visit_field::<f64>("OUTLINE_WIDTH", Self::VT_OUTLINE_WIDTH, false)?
+     .visit_field::<bool>("PER_POSITION_HEIGHT", Self::VT_PER_POSITION_HEIGHT, false)?
+     .visit_field::<bool>("CLOSE_TOP", Self::VT_CLOSE_TOP, false)?
+     .visit_field::<bool>("CLOSE_BOTTOM", Self::VT_CLOSE_BOTTOM, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SHADOWS", Self::VT_SHADOWS, false)?
+     .visit_field::<i32>("Z_INDEX", Self::VT_Z_INDEX, false)?
      .finish();
     Ok(())
   }
@@ -2844,6 +8396,19 @@ pub struct CZMPolygonArgs<'a> {
     pub EXTRUDED_HEIGHT: f64,
     pub HEIGHT_REFERENCE: CZMHeightReference,
     pub CLASSIFICATION_TYPE: CZMClassificationType,
+    pub HOLES: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<CZMPolygonHole<'a>>>>>,
+    pub ARC_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub HEIGHT: f64,
+    pub EXTRUDED_HEIGHT_REFERENCE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ST_ROTATION: f64,
+    pub GRANULARITY: f64,
+    pub MATERIAL: Option<flatbuffers::WIPOffset<CZMMaterial<'a>>>,
+    pub OUTLINE_WIDTH: f64,
+    pub PER_POSITION_HEIGHT: bool,
+    pub CLOSE_TOP: bool,
+    pub CLOSE_BOTTOM: bool,
+    pub SHADOWS: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub Z_INDEX: i32,
 }
 impl<'a> Default for CZMPolygonArgs<'a> {
   #[inline]
@@ -2859,6 +8424,19 @@ impl<'a> Default for CZMPolygonArgs<'a> {
       EXTRUDED_HEIGHT: 0.0,
       HEIGHT_REFERENCE: CZMHeightReference::NONE,
       CLASSIFICATION_TYPE: CZMClassificationType::TERRAIN,
+      HOLES: None,
+      ARC_TYPE: None,
+      HEIGHT: 0.0,
+      EXTRUDED_HEIGHT_REFERENCE: None,
+      ST_ROTATION: 0.0,
+      GRANULARITY: 0.0,
+      MATERIAL: None,
+      OUTLINE_WIDTH: 0.0,
+      PER_POSITION_HEIGHT: false,
+      CLOSE_TOP: false,
+      CLOSE_BOTTOM: false,
+      SHADOWS: None,
+      Z_INDEX: 0,
     }
   }
 }
@@ -2909,6 +8487,58 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMPolygonBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<CZMClassificationType>(CZMPolygon::VT_CLASSIFICATION_TYPE, CLASSIFICATION_TYPE, CZMClassificationType::TERRAIN);
   }
   #[inline]
+  pub fn add_HOLES(&mut self, HOLES: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<CZMPolygonHole<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMPolygon::VT_HOLES, HOLES);
+  }
+  #[inline]
+  pub fn add_ARC_TYPE(&mut self, ARC_TYPE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMPolygon::VT_ARC_TYPE, ARC_TYPE);
+  }
+  #[inline]
+  pub fn add_HEIGHT(&mut self, HEIGHT: f64) {
+    self.fbb_.push_slot::<f64>(CZMPolygon::VT_HEIGHT, HEIGHT, 0.0);
+  }
+  #[inline]
+  pub fn add_EXTRUDED_HEIGHT_REFERENCE(&mut self, EXTRUDED_HEIGHT_REFERENCE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMPolygon::VT_EXTRUDED_HEIGHT_REFERENCE, EXTRUDED_HEIGHT_REFERENCE);
+  }
+  #[inline]
+  pub fn add_ST_ROTATION(&mut self, ST_ROTATION: f64) {
+    self.fbb_.push_slot::<f64>(CZMPolygon::VT_ST_ROTATION, ST_ROTATION, 0.0);
+  }
+  #[inline]
+  pub fn add_GRANULARITY(&mut self, GRANULARITY: f64) {
+    self.fbb_.push_slot::<f64>(CZMPolygon::VT_GRANULARITY, GRANULARITY, 0.0);
+  }
+  #[inline]
+  pub fn add_MATERIAL(&mut self, MATERIAL: flatbuffers::WIPOffset<CZMMaterial<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMMaterial>>(CZMPolygon::VT_MATERIAL, MATERIAL);
+  }
+  #[inline]
+  pub fn add_OUTLINE_WIDTH(&mut self, OUTLINE_WIDTH: f64) {
+    self.fbb_.push_slot::<f64>(CZMPolygon::VT_OUTLINE_WIDTH, OUTLINE_WIDTH, 0.0);
+  }
+  #[inline]
+  pub fn add_PER_POSITION_HEIGHT(&mut self, PER_POSITION_HEIGHT: bool) {
+    self.fbb_.push_slot::<bool>(CZMPolygon::VT_PER_POSITION_HEIGHT, PER_POSITION_HEIGHT, false);
+  }
+  #[inline]
+  pub fn add_CLOSE_TOP(&mut self, CLOSE_TOP: bool) {
+    self.fbb_.push_slot::<bool>(CZMPolygon::VT_CLOSE_TOP, CLOSE_TOP, false);
+  }
+  #[inline]
+  pub fn add_CLOSE_BOTTOM(&mut self, CLOSE_BOTTOM: bool) {
+    self.fbb_.push_slot::<bool>(CZMPolygon::VT_CLOSE_BOTTOM, CLOSE_BOTTOM, false);
+  }
+  #[inline]
+  pub fn add_SHADOWS(&mut self, SHADOWS: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMPolygon::VT_SHADOWS, SHADOWS);
+  }
+  #[inline]
+  pub fn add_Z_INDEX(&mut self, Z_INDEX: i32) {
+    self.fbb_.push_slot::<i32>(CZMPolygon::VT_Z_INDEX, Z_INDEX, 0);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMPolygonBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     CZMPolygonBuilder {
@@ -2936,6 +8566,19 @@ impl core::fmt::Debug for CZMPolygon<'_> {
       ds.field("EXTRUDED_HEIGHT", &self.EXTRUDED_HEIGHT());
       ds.field("HEIGHT_REFERENCE", &self.HEIGHT_REFERENCE());
       ds.field("CLASSIFICATION_TYPE", &self.CLASSIFICATION_TYPE());
+      ds.field("HOLES", &self.HOLES());
+      ds.field("ARC_TYPE", &self.ARC_TYPE());
+      ds.field("HEIGHT", &self.HEIGHT());
+      ds.field("EXTRUDED_HEIGHT_REFERENCE", &self.EXTRUDED_HEIGHT_REFERENCE());
+      ds.field("ST_ROTATION", &self.ST_ROTATION());
+      ds.field("GRANULARITY", &self.GRANULARITY());
+      ds.field("MATERIAL", &self.MATERIAL());
+      ds.field("OUTLINE_WIDTH", &self.OUTLINE_WIDTH());
+      ds.field("PER_POSITION_HEIGHT", &self.PER_POSITION_HEIGHT());
+      ds.field("CLOSE_TOP", &self.CLOSE_TOP());
+      ds.field("CLOSE_BOTTOM", &self.CLOSE_BOTTOM());
+      ds.field("SHADOWS", &self.SHADOWS());
+      ds.field("Z_INDEX", &self.Z_INDEX());
       ds.finish()
   }
 }
@@ -2952,6 +8595,19 @@ pub struct CZMPolygonT {
   pub EXTRUDED_HEIGHT: f64,
   pub HEIGHT_REFERENCE: CZMHeightReference,
   pub CLASSIFICATION_TYPE: CZMClassificationType,
+  pub HOLES: Option<Vec<CZMPolygonHoleT>>,
+  pub ARC_TYPE: Option<String>,
+  pub HEIGHT: f64,
+  pub EXTRUDED_HEIGHT_REFERENCE: Option<String>,
+  pub ST_ROTATION: f64,
+  pub GRANULARITY: f64,
+  pub MATERIAL: Option<Box<CZMMaterialT>>,
+  pub OUTLINE_WIDTH: f64,
+  pub PER_POSITION_HEIGHT: bool,
+  pub CLOSE_TOP: bool,
+  pub CLOSE_BOTTOM: bool,
+  pub SHADOWS: Option<String>,
+  pub Z_INDEX: i32,
 }
 impl Default for CZMPolygonT {
   fn default() -> Self {
@@ -2966,6 +8622,19 @@ impl Default for CZMPolygonT {
       EXTRUDED_HEIGHT: 0.0,
       HEIGHT_REFERENCE: CZMHeightReference::NONE,
       CLASSIFICATION_TYPE: CZMClassificationType::TERRAIN,
+      HOLES: None,
+      ARC_TYPE: None,
+      HEIGHT: 0.0,
+      EXTRUDED_HEIGHT_REFERENCE: None,
+      ST_ROTATION: 0.0,
+      GRANULARITY: 0.0,
+      MATERIAL: None,
+      OUTLINE_WIDTH: 0.0,
+      PER_POSITION_HEIGHT: false,
+      CLOSE_TOP: false,
+      CLOSE_BOTTOM: false,
+      SHADOWS: None,
+      Z_INDEX: 0,
     }
   }
 }
@@ -2992,6 +8661,29 @@ impl CZMPolygonT {
     let EXTRUDED_HEIGHT = self.EXTRUDED_HEIGHT;
     let HEIGHT_REFERENCE = self.HEIGHT_REFERENCE;
     let CLASSIFICATION_TYPE = self.CLASSIFICATION_TYPE;
+    let HOLES = self.HOLES.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let ARC_TYPE = self.ARC_TYPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let HEIGHT = self.HEIGHT;
+    let EXTRUDED_HEIGHT_REFERENCE = self.EXTRUDED_HEIGHT_REFERENCE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ST_ROTATION = self.ST_ROTATION;
+    let GRANULARITY = self.GRANULARITY;
+    let MATERIAL = self.MATERIAL.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let OUTLINE_WIDTH = self.OUTLINE_WIDTH;
+    let PER_POSITION_HEIGHT = self.PER_POSITION_HEIGHT;
+    let CLOSE_TOP = self.CLOSE_TOP;
+    let CLOSE_BOTTOM = self.CLOSE_BOTTOM;
+    let SHADOWS = self.SHADOWS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let Z_INDEX = self.Z_INDEX;
     CZMPolygon::create(_fbb, &CZMPolygonArgs{
       SHOW,
       POSITIONS_CARTOGRAPHIC_DEGREES,
@@ -3003,6 +8695,179 @@ impl CZMPolygonT {
       EXTRUDED_HEIGHT,
       HEIGHT_REFERENCE,
       CLASSIFICATION_TYPE,
+      HOLES,
+      ARC_TYPE,
+      HEIGHT,
+      EXTRUDED_HEIGHT_REFERENCE,
+      ST_ROTATION,
+      GRANULARITY,
+      MATERIAL,
+      OUTLINE_WIDTH,
+      PER_POSITION_HEIGHT,
+      CLOSE_TOP,
+      CLOSE_BOTTOM,
+      SHADOWS,
+      Z_INDEX,
+    })
+  }
+}
+pub enum CZMPolygonHoleOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Polygon hole position list
+pub struct CZMPolygonHole<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CZMPolygonHole<'a> {
+  type Inner = CZMPolygonHole<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CZMPolygonHole<'a> {
+  pub const VT_POSITIONS_CARTOGRAPHIC_DEGREES: flatbuffers::VOffsetT = 4;
+  pub const VT_POSITIONS_CARTESIAN: flatbuffers::VOffsetT = 6;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CZMPolygonHole { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CZMPolygonHoleArgs<'args>
+  ) -> flatbuffers::WIPOffset<CZMPolygonHole<'bldr>> {
+    let mut builder = CZMPolygonHoleBuilder::new(_fbb);
+    if let Some(x) = args.POSITIONS_CARTESIAN { builder.add_POSITIONS_CARTESIAN(x); }
+    if let Some(x) = args.POSITIONS_CARTOGRAPHIC_DEGREES { builder.add_POSITIONS_CARTOGRAPHIC_DEGREES(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CZMPolygonHoleT {
+    let POSITIONS_CARTOGRAPHIC_DEGREES = self.POSITIONS_CARTOGRAPHIC_DEGREES().map(|x| {
+      x.into_iter().collect()
+    });
+    let POSITIONS_CARTESIAN = self.POSITIONS_CARTESIAN().map(|x| {
+      x.into_iter().collect()
+    });
+    CZMPolygonHoleT {
+      POSITIONS_CARTOGRAPHIC_DEGREES,
+      POSITIONS_CARTESIAN,
+    }
+  }
+
+  /// Positions as cartographic degrees [lon, lat, height, ...]
+  #[inline]
+  pub fn POSITIONS_CARTOGRAPHIC_DEGREES(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(CZMPolygonHole::VT_POSITIONS_CARTOGRAPHIC_DEGREES, None)}
+  }
+  /// Positions as Cartesian [X, Y, Z, ...]
+  #[inline]
+  pub fn POSITIONS_CARTESIAN(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(CZMPolygonHole::VT_POSITIONS_CARTESIAN, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for CZMPolygonHole<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("POSITIONS_CARTOGRAPHIC_DEGREES", Self::VT_POSITIONS_CARTOGRAPHIC_DEGREES, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("POSITIONS_CARTESIAN", Self::VT_POSITIONS_CARTESIAN, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CZMPolygonHoleArgs<'a> {
+    pub POSITIONS_CARTOGRAPHIC_DEGREES: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub POSITIONS_CARTESIAN: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+}
+impl<'a> Default for CZMPolygonHoleArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CZMPolygonHoleArgs {
+      POSITIONS_CARTOGRAPHIC_DEGREES: None,
+      POSITIONS_CARTESIAN: None,
+    }
+  }
+}
+
+pub struct CZMPolygonHoleBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMPolygonHoleBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_POSITIONS_CARTOGRAPHIC_DEGREES(&mut self, POSITIONS_CARTOGRAPHIC_DEGREES: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMPolygonHole::VT_POSITIONS_CARTOGRAPHIC_DEGREES, POSITIONS_CARTOGRAPHIC_DEGREES);
+  }
+  #[inline]
+  pub fn add_POSITIONS_CARTESIAN(&mut self, POSITIONS_CARTESIAN: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMPolygonHole::VT_POSITIONS_CARTESIAN, POSITIONS_CARTESIAN);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMPolygonHoleBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CZMPolygonHoleBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CZMPolygonHole<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CZMPolygonHole<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CZMPolygonHole");
+      ds.field("POSITIONS_CARTOGRAPHIC_DEGREES", &self.POSITIONS_CARTOGRAPHIC_DEGREES());
+      ds.field("POSITIONS_CARTESIAN", &self.POSITIONS_CARTESIAN());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CZMPolygonHoleT {
+  pub POSITIONS_CARTOGRAPHIC_DEGREES: Option<Vec<f64>>,
+  pub POSITIONS_CARTESIAN: Option<Vec<f64>>,
+}
+impl Default for CZMPolygonHoleT {
+  fn default() -> Self {
+    Self {
+      POSITIONS_CARTOGRAPHIC_DEGREES: None,
+      POSITIONS_CARTESIAN: None,
+    }
+  }
+}
+impl CZMPolygonHoleT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CZMPolygonHole<'b>> {
+    let POSITIONS_CARTOGRAPHIC_DEGREES = self.POSITIONS_CARTOGRAPHIC_DEGREES.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let POSITIONS_CARTESIAN = self.POSITIONS_CARTESIAN.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    CZMPolygonHole::create(_fbb, &CZMPolygonHoleArgs{
+      POSITIONS_CARTOGRAPHIC_DEGREES,
+      POSITIONS_CARTESIAN,
     })
   }
 }
@@ -3030,6 +8895,13 @@ impl<'a> CZMModel<'a> {
   pub const VT_MAXIMUM_SCALE: flatbuffers::VOffsetT = 12;
   pub const VT_HEIGHT_REFERENCE: flatbuffers::VOffsetT = 14;
   pub const VT_COLOR: flatbuffers::VOffsetT = 16;
+  pub const VT_INCREMENTALLY_LOAD_TEXTURES: flatbuffers::VOffsetT = 18;
+  pub const VT_RUN_ANIMATIONS: flatbuffers::VOffsetT = 20;
+  pub const VT_SHADOWS: flatbuffers::VOffsetT = 22;
+  pub const VT_SILHOUETTE_COLOR: flatbuffers::VOffsetT = 24;
+  pub const VT_SILHOUETTE_SIZE: flatbuffers::VOffsetT = 26;
+  pub const VT_COLOR_BLEND_MODE: flatbuffers::VOffsetT = 28;
+  pub const VT_COLOR_BLEND_AMOUNT: flatbuffers::VOffsetT = 30;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -3041,11 +8913,18 @@ impl<'a> CZMModel<'a> {
     args: &'args CZMModelArgs<'args>
   ) -> flatbuffers::WIPOffset<CZMModel<'bldr>> {
     let mut builder = CZMModelBuilder::new(_fbb);
+    builder.add_COLOR_BLEND_AMOUNT(args.COLOR_BLEND_AMOUNT);
+    builder.add_SILHOUETTE_SIZE(args.SILHOUETTE_SIZE);
     builder.add_MAXIMUM_SCALE(args.MAXIMUM_SCALE);
     builder.add_MINIMUM_PIXEL_SIZE(args.MINIMUM_PIXEL_SIZE);
     builder.add_SCALE(args.SCALE);
+    if let Some(x) = args.COLOR_BLEND_MODE { builder.add_COLOR_BLEND_MODE(x); }
+    if let Some(x) = args.SILHOUETTE_COLOR { builder.add_SILHOUETTE_COLOR(x); }
+    if let Some(x) = args.SHADOWS { builder.add_SHADOWS(x); }
     if let Some(x) = args.COLOR { builder.add_COLOR(x); }
     if let Some(x) = args.GLTF { builder.add_GLTF(x); }
+    builder.add_RUN_ANIMATIONS(args.RUN_ANIMATIONS);
+    builder.add_INCREMENTALLY_LOAD_TEXTURES(args.INCREMENTALLY_LOAD_TEXTURES);
     builder.add_HEIGHT_REFERENCE(args.HEIGHT_REFERENCE);
     builder.add_SHOW(args.SHOW);
     builder.finish()
@@ -3063,6 +8942,19 @@ impl<'a> CZMModel<'a> {
     let COLOR = self.COLOR().map(|x| {
       Box::new(x.unpack())
     });
+    let INCREMENTALLY_LOAD_TEXTURES = self.INCREMENTALLY_LOAD_TEXTURES();
+    let RUN_ANIMATIONS = self.RUN_ANIMATIONS();
+    let SHADOWS = self.SHADOWS().map(|x| {
+      x.to_string()
+    });
+    let SILHOUETTE_COLOR = self.SILHOUETTE_COLOR().map(|x| {
+      Box::new(x.unpack())
+    });
+    let SILHOUETTE_SIZE = self.SILHOUETTE_SIZE();
+    let COLOR_BLEND_MODE = self.COLOR_BLEND_MODE().map(|x| {
+      x.to_string()
+    });
+    let COLOR_BLEND_AMOUNT = self.COLOR_BLEND_AMOUNT();
     CZMModelT {
       SHOW,
       GLTF,
@@ -3071,6 +8963,13 @@ impl<'a> CZMModel<'a> {
       MAXIMUM_SCALE,
       HEIGHT_REFERENCE,
       COLOR,
+      INCREMENTALLY_LOAD_TEXTURES,
+      RUN_ANIMATIONS,
+      SHADOWS,
+      SILHOUETTE_COLOR,
+      SILHOUETTE_SIZE,
+      COLOR_BLEND_MODE,
+      COLOR_BLEND_AMOUNT,
     }
   }
 
@@ -3130,6 +9029,62 @@ impl<'a> CZMModel<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMColor>>(CZMModel::VT_COLOR, None)}
   }
+  /// Whether to incrementally load textures
+  #[inline]
+  pub fn INCREMENTALLY_LOAD_TEXTURES(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMModel::VT_INCREMENTALLY_LOAD_TEXTURES, Some(false)).unwrap()}
+  }
+  /// Whether to run animations
+  #[inline]
+  pub fn RUN_ANIMATIONS(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMModel::VT_RUN_ANIMATIONS, Some(false)).unwrap()}
+  }
+  /// Shadow mode
+  #[inline]
+  pub fn SHADOWS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMModel::VT_SHADOWS, None)}
+  }
+  /// Silhouette color
+  #[inline]
+  pub fn SILHOUETTE_COLOR(&self) -> Option<CZMColor<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMColor>>(CZMModel::VT_SILHOUETTE_COLOR, None)}
+  }
+  /// Silhouette size in pixels
+  #[inline]
+  pub fn SILHOUETTE_SIZE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMModel::VT_SILHOUETTE_SIZE, Some(0.0)).unwrap()}
+  }
+  /// Color blend mode
+  #[inline]
+  pub fn COLOR_BLEND_MODE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMModel::VT_COLOR_BLEND_MODE, None)}
+  }
+  /// Color blend amount (0-1)
+  #[inline]
+  pub fn COLOR_BLEND_AMOUNT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMModel::VT_COLOR_BLEND_AMOUNT, Some(0.0)).unwrap()}
+  }
 }
 
 impl flatbuffers::Verifiable for CZMModel<'_> {
@@ -3146,6 +9101,13 @@ impl flatbuffers::Verifiable for CZMModel<'_> {
      .visit_field::<f64>("MAXIMUM_SCALE", Self::VT_MAXIMUM_SCALE, false)?
      .visit_field::<CZMHeightReference>("HEIGHT_REFERENCE", Self::VT_HEIGHT_REFERENCE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<CZMColor>>("COLOR", Self::VT_COLOR, false)?
+     .visit_field::<bool>("INCREMENTALLY_LOAD_TEXTURES", Self::VT_INCREMENTALLY_LOAD_TEXTURES, false)?
+     .visit_field::<bool>("RUN_ANIMATIONS", Self::VT_RUN_ANIMATIONS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SHADOWS", Self::VT_SHADOWS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMColor>>("SILHOUETTE_COLOR", Self::VT_SILHOUETTE_COLOR, false)?
+     .visit_field::<f64>("SILHOUETTE_SIZE", Self::VT_SILHOUETTE_SIZE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COLOR_BLEND_MODE", Self::VT_COLOR_BLEND_MODE, false)?
+     .visit_field::<f64>("COLOR_BLEND_AMOUNT", Self::VT_COLOR_BLEND_AMOUNT, false)?
      .finish();
     Ok(())
   }
@@ -3158,6 +9120,13 @@ pub struct CZMModelArgs<'a> {
     pub MAXIMUM_SCALE: f64,
     pub HEIGHT_REFERENCE: CZMHeightReference,
     pub COLOR: Option<flatbuffers::WIPOffset<CZMColor<'a>>>,
+    pub INCREMENTALLY_LOAD_TEXTURES: bool,
+    pub RUN_ANIMATIONS: bool,
+    pub SHADOWS: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SILHOUETTE_COLOR: Option<flatbuffers::WIPOffset<CZMColor<'a>>>,
+    pub SILHOUETTE_SIZE: f64,
+    pub COLOR_BLEND_MODE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub COLOR_BLEND_AMOUNT: f64,
 }
 impl<'a> Default for CZMModelArgs<'a> {
   #[inline]
@@ -3170,6 +9139,13 @@ impl<'a> Default for CZMModelArgs<'a> {
       MAXIMUM_SCALE: 0.0,
       HEIGHT_REFERENCE: CZMHeightReference::NONE,
       COLOR: None,
+      INCREMENTALLY_LOAD_TEXTURES: false,
+      RUN_ANIMATIONS: false,
+      SHADOWS: None,
+      SILHOUETTE_COLOR: None,
+      SILHOUETTE_SIZE: 0.0,
+      COLOR_BLEND_MODE: None,
+      COLOR_BLEND_AMOUNT: 0.0,
     }
   }
 }
@@ -3208,6 +9184,34 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMModelBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMColor>>(CZMModel::VT_COLOR, COLOR);
   }
   #[inline]
+  pub fn add_INCREMENTALLY_LOAD_TEXTURES(&mut self, INCREMENTALLY_LOAD_TEXTURES: bool) {
+    self.fbb_.push_slot::<bool>(CZMModel::VT_INCREMENTALLY_LOAD_TEXTURES, INCREMENTALLY_LOAD_TEXTURES, false);
+  }
+  #[inline]
+  pub fn add_RUN_ANIMATIONS(&mut self, RUN_ANIMATIONS: bool) {
+    self.fbb_.push_slot::<bool>(CZMModel::VT_RUN_ANIMATIONS, RUN_ANIMATIONS, false);
+  }
+  #[inline]
+  pub fn add_SHADOWS(&mut self, SHADOWS: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMModel::VT_SHADOWS, SHADOWS);
+  }
+  #[inline]
+  pub fn add_SILHOUETTE_COLOR(&mut self, SILHOUETTE_COLOR: flatbuffers::WIPOffset<CZMColor<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMColor>>(CZMModel::VT_SILHOUETTE_COLOR, SILHOUETTE_COLOR);
+  }
+  #[inline]
+  pub fn add_SILHOUETTE_SIZE(&mut self, SILHOUETTE_SIZE: f64) {
+    self.fbb_.push_slot::<f64>(CZMModel::VT_SILHOUETTE_SIZE, SILHOUETTE_SIZE, 0.0);
+  }
+  #[inline]
+  pub fn add_COLOR_BLEND_MODE(&mut self, COLOR_BLEND_MODE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMModel::VT_COLOR_BLEND_MODE, COLOR_BLEND_MODE);
+  }
+  #[inline]
+  pub fn add_COLOR_BLEND_AMOUNT(&mut self, COLOR_BLEND_AMOUNT: f64) {
+    self.fbb_.push_slot::<f64>(CZMModel::VT_COLOR_BLEND_AMOUNT, COLOR_BLEND_AMOUNT, 0.0);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMModelBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     CZMModelBuilder {
@@ -3232,6 +9236,13 @@ impl core::fmt::Debug for CZMModel<'_> {
       ds.field("MAXIMUM_SCALE", &self.MAXIMUM_SCALE());
       ds.field("HEIGHT_REFERENCE", &self.HEIGHT_REFERENCE());
       ds.field("COLOR", &self.COLOR());
+      ds.field("INCREMENTALLY_LOAD_TEXTURES", &self.INCREMENTALLY_LOAD_TEXTURES());
+      ds.field("RUN_ANIMATIONS", &self.RUN_ANIMATIONS());
+      ds.field("SHADOWS", &self.SHADOWS());
+      ds.field("SILHOUETTE_COLOR", &self.SILHOUETTE_COLOR());
+      ds.field("SILHOUETTE_SIZE", &self.SILHOUETTE_SIZE());
+      ds.field("COLOR_BLEND_MODE", &self.COLOR_BLEND_MODE());
+      ds.field("COLOR_BLEND_AMOUNT", &self.COLOR_BLEND_AMOUNT());
       ds.finish()
   }
 }
@@ -3245,6 +9256,13 @@ pub struct CZMModelT {
   pub MAXIMUM_SCALE: f64,
   pub HEIGHT_REFERENCE: CZMHeightReference,
   pub COLOR: Option<Box<CZMColorT>>,
+  pub INCREMENTALLY_LOAD_TEXTURES: bool,
+  pub RUN_ANIMATIONS: bool,
+  pub SHADOWS: Option<String>,
+  pub SILHOUETTE_COLOR: Option<Box<CZMColorT>>,
+  pub SILHOUETTE_SIZE: f64,
+  pub COLOR_BLEND_MODE: Option<String>,
+  pub COLOR_BLEND_AMOUNT: f64,
 }
 impl Default for CZMModelT {
   fn default() -> Self {
@@ -3256,6 +9274,13 @@ impl Default for CZMModelT {
       MAXIMUM_SCALE: 0.0,
       HEIGHT_REFERENCE: CZMHeightReference::NONE,
       COLOR: None,
+      INCREMENTALLY_LOAD_TEXTURES: false,
+      RUN_ANIMATIONS: false,
+      SHADOWS: None,
+      SILHOUETTE_COLOR: None,
+      SILHOUETTE_SIZE: 0.0,
+      COLOR_BLEND_MODE: None,
+      COLOR_BLEND_AMOUNT: 0.0,
     }
   }
 }
@@ -3275,6 +9300,19 @@ impl CZMModelT {
     let COLOR = self.COLOR.as_ref().map(|x|{
       x.pack(_fbb)
     });
+    let INCREMENTALLY_LOAD_TEXTURES = self.INCREMENTALLY_LOAD_TEXTURES;
+    let RUN_ANIMATIONS = self.RUN_ANIMATIONS;
+    let SHADOWS = self.SHADOWS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SILHOUETTE_COLOR = self.SILHOUETTE_COLOR.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let SILHOUETTE_SIZE = self.SILHOUETTE_SIZE;
+    let COLOR_BLEND_MODE = self.COLOR_BLEND_MODE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let COLOR_BLEND_AMOUNT = self.COLOR_BLEND_AMOUNT;
     CZMModel::create(_fbb, &CZMModelArgs{
       SHOW,
       GLTF,
@@ -3283,6 +9321,13 @@ impl CZMModelT {
       MAXIMUM_SCALE,
       HEIGHT_REFERENCE,
       COLOR,
+      INCREMENTALLY_LOAD_TEXTURES,
+      RUN_ANIMATIONS,
+      SHADOWS,
+      SILHOUETTE_COLOR,
+      SILHOUETTE_SIZE,
+      COLOR_BLEND_MODE,
+      COLOR_BLEND_AMOUNT,
     })
   }
 }
@@ -3309,6 +9354,7 @@ impl<'a> CZMPath<'a> {
   pub const VT_WIDTH: flatbuffers::VOffsetT = 10;
   pub const VT_COLOR: flatbuffers::VOffsetT = 12;
   pub const VT_RESOLUTION: flatbuffers::VOffsetT = 14;
+  pub const VT_MATERIAL: flatbuffers::VOffsetT = 16;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -3324,6 +9370,7 @@ impl<'a> CZMPath<'a> {
     builder.add_WIDTH(args.WIDTH);
     builder.add_TRAIL_TIME(args.TRAIL_TIME);
     builder.add_LEAD_TIME(args.LEAD_TIME);
+    if let Some(x) = args.MATERIAL { builder.add_MATERIAL(x); }
     if let Some(x) = args.COLOR { builder.add_COLOR(x); }
     builder.add_SHOW(args.SHOW);
     builder.finish()
@@ -3338,6 +9385,9 @@ impl<'a> CZMPath<'a> {
       Box::new(x.unpack())
     });
     let RESOLUTION = self.RESOLUTION();
+    let MATERIAL = self.MATERIAL().map(|x| {
+      Box::new(x.unpack())
+    });
     CZMPathT {
       SHOW,
       LEAD_TIME,
@@ -3345,6 +9395,7 @@ impl<'a> CZMPath<'a> {
       WIDTH,
       COLOR,
       RESOLUTION,
+      MATERIAL,
     }
   }
 
@@ -3380,7 +9431,7 @@ impl<'a> CZMPath<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(CZMPath::VT_WIDTH, Some(0.0)).unwrap()}
   }
-  /// Path color
+  /// Path color (legacy solid color)
   #[inline]
   pub fn COLOR(&self) -> Option<CZMColor<'a>> {
     // Safety:
@@ -3395,6 +9446,14 @@ impl<'a> CZMPath<'a> {
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(CZMPath::VT_RESOLUTION, Some(0.0)).unwrap()}
+  }
+  /// Full polyline material
+  #[inline]
+  pub fn MATERIAL(&self) -> Option<CZMPolylineMaterial<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMPolylineMaterial>>(CZMPath::VT_MATERIAL, None)}
   }
 }
 
@@ -3411,6 +9470,7 @@ impl flatbuffers::Verifiable for CZMPath<'_> {
      .visit_field::<f64>("WIDTH", Self::VT_WIDTH, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<CZMColor>>("COLOR", Self::VT_COLOR, false)?
      .visit_field::<f64>("RESOLUTION", Self::VT_RESOLUTION, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMPolylineMaterial>>("MATERIAL", Self::VT_MATERIAL, false)?
      .finish();
     Ok(())
   }
@@ -3422,6 +9482,7 @@ pub struct CZMPathArgs<'a> {
     pub WIDTH: f64,
     pub COLOR: Option<flatbuffers::WIPOffset<CZMColor<'a>>>,
     pub RESOLUTION: f64,
+    pub MATERIAL: Option<flatbuffers::WIPOffset<CZMPolylineMaterial<'a>>>,
 }
 impl<'a> Default for CZMPathArgs<'a> {
   #[inline]
@@ -3433,6 +9494,7 @@ impl<'a> Default for CZMPathArgs<'a> {
       WIDTH: 0.0,
       COLOR: None,
       RESOLUTION: 0.0,
+      MATERIAL: None,
     }
   }
 }
@@ -3467,6 +9529,10 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMPathBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(CZMPath::VT_RESOLUTION, RESOLUTION, 0.0);
   }
   #[inline]
+  pub fn add_MATERIAL(&mut self, MATERIAL: flatbuffers::WIPOffset<CZMPolylineMaterial<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMPolylineMaterial>>(CZMPath::VT_MATERIAL, MATERIAL);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMPathBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     CZMPathBuilder {
@@ -3490,6 +9556,7 @@ impl core::fmt::Debug for CZMPath<'_> {
       ds.field("WIDTH", &self.WIDTH());
       ds.field("COLOR", &self.COLOR());
       ds.field("RESOLUTION", &self.RESOLUTION());
+      ds.field("MATERIAL", &self.MATERIAL());
       ds.finish()
   }
 }
@@ -3502,6 +9569,7 @@ pub struct CZMPathT {
   pub WIDTH: f64,
   pub COLOR: Option<Box<CZMColorT>>,
   pub RESOLUTION: f64,
+  pub MATERIAL: Option<Box<CZMPolylineMaterialT>>,
 }
 impl Default for CZMPathT {
   fn default() -> Self {
@@ -3512,6 +9580,7 @@ impl Default for CZMPathT {
       WIDTH: 0.0,
       COLOR: None,
       RESOLUTION: 0.0,
+      MATERIAL: None,
     }
   }
 }
@@ -3528,6 +9597,9 @@ impl CZMPathT {
       x.pack(_fbb)
     });
     let RESOLUTION = self.RESOLUTION;
+    let MATERIAL = self.MATERIAL.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     CZMPath::create(_fbb, &CZMPathArgs{
       SHOW,
       LEAD_TIME,
@@ -3535,6 +9607,7 @@ impl CZMPathT {
       WIDTH,
       COLOR,
       RESOLUTION,
+      MATERIAL,
     })
   }
 }
@@ -3565,6 +9638,16 @@ impl<'a> CZMEllipse<'a> {
   pub const VT_OUTLINE_COLOR: flatbuffers::VOffsetT = 18;
   pub const VT_HEIGHT: flatbuffers::VOffsetT = 20;
   pub const VT_HEIGHT_REFERENCE: flatbuffers::VOffsetT = 22;
+  pub const VT_EXTRUDED_HEIGHT: flatbuffers::VOffsetT = 24;
+  pub const VT_EXTRUDED_HEIGHT_REFERENCE: flatbuffers::VOffsetT = 26;
+  pub const VT_ST_ROTATION: flatbuffers::VOffsetT = 28;
+  pub const VT_GRANULARITY: flatbuffers::VOffsetT = 30;
+  pub const VT_MATERIAL: flatbuffers::VOffsetT = 32;
+  pub const VT_OUTLINE_WIDTH: flatbuffers::VOffsetT = 34;
+  pub const VT_NUMBER_OF_VERTICAL_LINES: flatbuffers::VOffsetT = 36;
+  pub const VT_SHADOWS: flatbuffers::VOffsetT = 38;
+  pub const VT_CLASSIFICATION_TYPE: flatbuffers::VOffsetT = 40;
+  pub const VT_Z_INDEX: flatbuffers::VOffsetT = 42;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -3576,10 +9659,20 @@ impl<'a> CZMEllipse<'a> {
     args: &'args CZMEllipseArgs<'args>
   ) -> flatbuffers::WIPOffset<CZMEllipse<'bldr>> {
     let mut builder = CZMEllipseBuilder::new(_fbb);
+    builder.add_OUTLINE_WIDTH(args.OUTLINE_WIDTH);
+    builder.add_GRANULARITY(args.GRANULARITY);
+    builder.add_ST_ROTATION(args.ST_ROTATION);
+    builder.add_EXTRUDED_HEIGHT(args.EXTRUDED_HEIGHT);
     builder.add_HEIGHT(args.HEIGHT);
     builder.add_ROTATION(args.ROTATION);
     builder.add_SEMI_MINOR_AXIS(args.SEMI_MINOR_AXIS);
     builder.add_SEMI_MAJOR_AXIS(args.SEMI_MAJOR_AXIS);
+    builder.add_Z_INDEX(args.Z_INDEX);
+    if let Some(x) = args.CLASSIFICATION_TYPE { builder.add_CLASSIFICATION_TYPE(x); }
+    if let Some(x) = args.SHADOWS { builder.add_SHADOWS(x); }
+    builder.add_NUMBER_OF_VERTICAL_LINES(args.NUMBER_OF_VERTICAL_LINES);
+    if let Some(x) = args.MATERIAL { builder.add_MATERIAL(x); }
+    if let Some(x) = args.EXTRUDED_HEIGHT_REFERENCE { builder.add_EXTRUDED_HEIGHT_REFERENCE(x); }
     if let Some(x) = args.OUTLINE_COLOR { builder.add_OUTLINE_COLOR(x); }
     if let Some(x) = args.COLOR { builder.add_COLOR(x); }
     builder.add_HEIGHT_REFERENCE(args.HEIGHT_REFERENCE);
@@ -3604,6 +9697,24 @@ impl<'a> CZMEllipse<'a> {
     });
     let HEIGHT = self.HEIGHT();
     let HEIGHT_REFERENCE = self.HEIGHT_REFERENCE();
+    let EXTRUDED_HEIGHT = self.EXTRUDED_HEIGHT();
+    let EXTRUDED_HEIGHT_REFERENCE = self.EXTRUDED_HEIGHT_REFERENCE().map(|x| {
+      x.to_string()
+    });
+    let ST_ROTATION = self.ST_ROTATION();
+    let GRANULARITY = self.GRANULARITY();
+    let MATERIAL = self.MATERIAL().map(|x| {
+      Box::new(x.unpack())
+    });
+    let OUTLINE_WIDTH = self.OUTLINE_WIDTH();
+    let NUMBER_OF_VERTICAL_LINES = self.NUMBER_OF_VERTICAL_LINES();
+    let SHADOWS = self.SHADOWS().map(|x| {
+      x.to_string()
+    });
+    let CLASSIFICATION_TYPE = self.CLASSIFICATION_TYPE().map(|x| {
+      x.to_string()
+    });
+    let Z_INDEX = self.Z_INDEX();
     CZMEllipseT {
       SHOW,
       SEMI_MAJOR_AXIS,
@@ -3615,6 +9726,16 @@ impl<'a> CZMEllipse<'a> {
       OUTLINE_COLOR,
       HEIGHT,
       HEIGHT_REFERENCE,
+      EXTRUDED_HEIGHT,
+      EXTRUDED_HEIGHT_REFERENCE,
+      ST_ROTATION,
+      GRANULARITY,
+      MATERIAL,
+      OUTLINE_WIDTH,
+      NUMBER_OF_VERTICAL_LINES,
+      SHADOWS,
+      CLASSIFICATION_TYPE,
+      Z_INDEX,
     }
   }
 
@@ -3658,7 +9779,7 @@ impl<'a> CZMEllipse<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(CZMEllipse::VT_FILL, Some(false)).unwrap()}
   }
-  /// Fill color
+  /// Fill color (legacy solid color)
   #[inline]
   pub fn COLOR(&self) -> Option<CZMColor<'a>> {
     // Safety:
@@ -3698,6 +9819,86 @@ impl<'a> CZMEllipse<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<CZMHeightReference>(CZMEllipse::VT_HEIGHT_REFERENCE, Some(CZMHeightReference::NONE)).unwrap()}
   }
+  /// Extruded height in meters
+  #[inline]
+  pub fn EXTRUDED_HEIGHT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMEllipse::VT_EXTRUDED_HEIGHT, Some(0.0)).unwrap()}
+  }
+  /// Extruded height reference
+  #[inline]
+  pub fn EXTRUDED_HEIGHT_REFERENCE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMEllipse::VT_EXTRUDED_HEIGHT_REFERENCE, None)}
+  }
+  /// Texture rotation in radians
+  #[inline]
+  pub fn ST_ROTATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMEllipse::VT_ST_ROTATION, Some(0.0)).unwrap()}
+  }
+  /// Granularity in radians
+  #[inline]
+  pub fn GRANULARITY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMEllipse::VT_GRANULARITY, Some(0.0)).unwrap()}
+  }
+  /// Full surface material
+  #[inline]
+  pub fn MATERIAL(&self) -> Option<CZMMaterial<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMMaterial>>(CZMEllipse::VT_MATERIAL, None)}
+  }
+  /// Outline width in pixels
+  #[inline]
+  pub fn OUTLINE_WIDTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMEllipse::VT_OUTLINE_WIDTH, Some(0.0)).unwrap()}
+  }
+  /// Number of vertical lines
+  #[inline]
+  pub fn NUMBER_OF_VERTICAL_LINES(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(CZMEllipse::VT_NUMBER_OF_VERTICAL_LINES, Some(0)).unwrap()}
+  }
+  /// Shadow mode
+  #[inline]
+  pub fn SHADOWS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMEllipse::VT_SHADOWS, None)}
+  }
+  /// Classification type
+  #[inline]
+  pub fn CLASSIFICATION_TYPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMEllipse::VT_CLASSIFICATION_TYPE, None)}
+  }
+  /// Z-index for ordering
+  #[inline]
+  pub fn Z_INDEX(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(CZMEllipse::VT_Z_INDEX, Some(0)).unwrap()}
+  }
 }
 
 impl flatbuffers::Verifiable for CZMEllipse<'_> {
@@ -3717,6 +9918,16 @@ impl flatbuffers::Verifiable for CZMEllipse<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<CZMColor>>("OUTLINE_COLOR", Self::VT_OUTLINE_COLOR, false)?
      .visit_field::<f64>("HEIGHT", Self::VT_HEIGHT, false)?
      .visit_field::<CZMHeightReference>("HEIGHT_REFERENCE", Self::VT_HEIGHT_REFERENCE, false)?
+     .visit_field::<f64>("EXTRUDED_HEIGHT", Self::VT_EXTRUDED_HEIGHT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EXTRUDED_HEIGHT_REFERENCE", Self::VT_EXTRUDED_HEIGHT_REFERENCE, false)?
+     .visit_field::<f64>("ST_ROTATION", Self::VT_ST_ROTATION, false)?
+     .visit_field::<f64>("GRANULARITY", Self::VT_GRANULARITY, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMMaterial>>("MATERIAL", Self::VT_MATERIAL, false)?
+     .visit_field::<f64>("OUTLINE_WIDTH", Self::VT_OUTLINE_WIDTH, false)?
+     .visit_field::<i32>("NUMBER_OF_VERTICAL_LINES", Self::VT_NUMBER_OF_VERTICAL_LINES, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SHADOWS", Self::VT_SHADOWS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CLASSIFICATION_TYPE", Self::VT_CLASSIFICATION_TYPE, false)?
+     .visit_field::<i32>("Z_INDEX", Self::VT_Z_INDEX, false)?
      .finish();
     Ok(())
   }
@@ -3732,6 +9943,16 @@ pub struct CZMEllipseArgs<'a> {
     pub OUTLINE_COLOR: Option<flatbuffers::WIPOffset<CZMColor<'a>>>,
     pub HEIGHT: f64,
     pub HEIGHT_REFERENCE: CZMHeightReference,
+    pub EXTRUDED_HEIGHT: f64,
+    pub EXTRUDED_HEIGHT_REFERENCE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ST_ROTATION: f64,
+    pub GRANULARITY: f64,
+    pub MATERIAL: Option<flatbuffers::WIPOffset<CZMMaterial<'a>>>,
+    pub OUTLINE_WIDTH: f64,
+    pub NUMBER_OF_VERTICAL_LINES: i32,
+    pub SHADOWS: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub CLASSIFICATION_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub Z_INDEX: i32,
 }
 impl<'a> Default for CZMEllipseArgs<'a> {
   #[inline]
@@ -3747,6 +9968,16 @@ impl<'a> Default for CZMEllipseArgs<'a> {
       OUTLINE_COLOR: None,
       HEIGHT: 0.0,
       HEIGHT_REFERENCE: CZMHeightReference::NONE,
+      EXTRUDED_HEIGHT: 0.0,
+      EXTRUDED_HEIGHT_REFERENCE: None,
+      ST_ROTATION: 0.0,
+      GRANULARITY: 0.0,
+      MATERIAL: None,
+      OUTLINE_WIDTH: 0.0,
+      NUMBER_OF_VERTICAL_LINES: 0,
+      SHADOWS: None,
+      CLASSIFICATION_TYPE: None,
+      Z_INDEX: 0,
     }
   }
 }
@@ -3797,6 +10028,46 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMEllipseBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<CZMHeightReference>(CZMEllipse::VT_HEIGHT_REFERENCE, HEIGHT_REFERENCE, CZMHeightReference::NONE);
   }
   #[inline]
+  pub fn add_EXTRUDED_HEIGHT(&mut self, EXTRUDED_HEIGHT: f64) {
+    self.fbb_.push_slot::<f64>(CZMEllipse::VT_EXTRUDED_HEIGHT, EXTRUDED_HEIGHT, 0.0);
+  }
+  #[inline]
+  pub fn add_EXTRUDED_HEIGHT_REFERENCE(&mut self, EXTRUDED_HEIGHT_REFERENCE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMEllipse::VT_EXTRUDED_HEIGHT_REFERENCE, EXTRUDED_HEIGHT_REFERENCE);
+  }
+  #[inline]
+  pub fn add_ST_ROTATION(&mut self, ST_ROTATION: f64) {
+    self.fbb_.push_slot::<f64>(CZMEllipse::VT_ST_ROTATION, ST_ROTATION, 0.0);
+  }
+  #[inline]
+  pub fn add_GRANULARITY(&mut self, GRANULARITY: f64) {
+    self.fbb_.push_slot::<f64>(CZMEllipse::VT_GRANULARITY, GRANULARITY, 0.0);
+  }
+  #[inline]
+  pub fn add_MATERIAL(&mut self, MATERIAL: flatbuffers::WIPOffset<CZMMaterial<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMMaterial>>(CZMEllipse::VT_MATERIAL, MATERIAL);
+  }
+  #[inline]
+  pub fn add_OUTLINE_WIDTH(&mut self, OUTLINE_WIDTH: f64) {
+    self.fbb_.push_slot::<f64>(CZMEllipse::VT_OUTLINE_WIDTH, OUTLINE_WIDTH, 0.0);
+  }
+  #[inline]
+  pub fn add_NUMBER_OF_VERTICAL_LINES(&mut self, NUMBER_OF_VERTICAL_LINES: i32) {
+    self.fbb_.push_slot::<i32>(CZMEllipse::VT_NUMBER_OF_VERTICAL_LINES, NUMBER_OF_VERTICAL_LINES, 0);
+  }
+  #[inline]
+  pub fn add_SHADOWS(&mut self, SHADOWS: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMEllipse::VT_SHADOWS, SHADOWS);
+  }
+  #[inline]
+  pub fn add_CLASSIFICATION_TYPE(&mut self, CLASSIFICATION_TYPE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMEllipse::VT_CLASSIFICATION_TYPE, CLASSIFICATION_TYPE);
+  }
+  #[inline]
+  pub fn add_Z_INDEX(&mut self, Z_INDEX: i32) {
+    self.fbb_.push_slot::<i32>(CZMEllipse::VT_Z_INDEX, Z_INDEX, 0);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMEllipseBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     CZMEllipseBuilder {
@@ -3824,6 +10095,16 @@ impl core::fmt::Debug for CZMEllipse<'_> {
       ds.field("OUTLINE_COLOR", &self.OUTLINE_COLOR());
       ds.field("HEIGHT", &self.HEIGHT());
       ds.field("HEIGHT_REFERENCE", &self.HEIGHT_REFERENCE());
+      ds.field("EXTRUDED_HEIGHT", &self.EXTRUDED_HEIGHT());
+      ds.field("EXTRUDED_HEIGHT_REFERENCE", &self.EXTRUDED_HEIGHT_REFERENCE());
+      ds.field("ST_ROTATION", &self.ST_ROTATION());
+      ds.field("GRANULARITY", &self.GRANULARITY());
+      ds.field("MATERIAL", &self.MATERIAL());
+      ds.field("OUTLINE_WIDTH", &self.OUTLINE_WIDTH());
+      ds.field("NUMBER_OF_VERTICAL_LINES", &self.NUMBER_OF_VERTICAL_LINES());
+      ds.field("SHADOWS", &self.SHADOWS());
+      ds.field("CLASSIFICATION_TYPE", &self.CLASSIFICATION_TYPE());
+      ds.field("Z_INDEX", &self.Z_INDEX());
       ds.finish()
   }
 }
@@ -3840,6 +10121,16 @@ pub struct CZMEllipseT {
   pub OUTLINE_COLOR: Option<Box<CZMColorT>>,
   pub HEIGHT: f64,
   pub HEIGHT_REFERENCE: CZMHeightReference,
+  pub EXTRUDED_HEIGHT: f64,
+  pub EXTRUDED_HEIGHT_REFERENCE: Option<String>,
+  pub ST_ROTATION: f64,
+  pub GRANULARITY: f64,
+  pub MATERIAL: Option<Box<CZMMaterialT>>,
+  pub OUTLINE_WIDTH: f64,
+  pub NUMBER_OF_VERTICAL_LINES: i32,
+  pub SHADOWS: Option<String>,
+  pub CLASSIFICATION_TYPE: Option<String>,
+  pub Z_INDEX: i32,
 }
 impl Default for CZMEllipseT {
   fn default() -> Self {
@@ -3854,6 +10145,16 @@ impl Default for CZMEllipseT {
       OUTLINE_COLOR: None,
       HEIGHT: 0.0,
       HEIGHT_REFERENCE: CZMHeightReference::NONE,
+      EXTRUDED_HEIGHT: 0.0,
+      EXTRUDED_HEIGHT_REFERENCE: None,
+      ST_ROTATION: 0.0,
+      GRANULARITY: 0.0,
+      MATERIAL: None,
+      OUTLINE_WIDTH: 0.0,
+      NUMBER_OF_VERTICAL_LINES: 0,
+      SHADOWS: None,
+      CLASSIFICATION_TYPE: None,
+      Z_INDEX: 0,
     }
   }
 }
@@ -3876,6 +10177,24 @@ impl CZMEllipseT {
     });
     let HEIGHT = self.HEIGHT;
     let HEIGHT_REFERENCE = self.HEIGHT_REFERENCE;
+    let EXTRUDED_HEIGHT = self.EXTRUDED_HEIGHT;
+    let EXTRUDED_HEIGHT_REFERENCE = self.EXTRUDED_HEIGHT_REFERENCE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ST_ROTATION = self.ST_ROTATION;
+    let GRANULARITY = self.GRANULARITY;
+    let MATERIAL = self.MATERIAL.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let OUTLINE_WIDTH = self.OUTLINE_WIDTH;
+    let NUMBER_OF_VERTICAL_LINES = self.NUMBER_OF_VERTICAL_LINES;
+    let SHADOWS = self.SHADOWS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CLASSIFICATION_TYPE = self.CLASSIFICATION_TYPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let Z_INDEX = self.Z_INDEX;
     CZMEllipse::create(_fbb, &CZMEllipseArgs{
       SHOW,
       SEMI_MAJOR_AXIS,
@@ -3887,6 +10206,3636 @@ impl CZMEllipseT {
       OUTLINE_COLOR,
       HEIGHT,
       HEIGHT_REFERENCE,
+      EXTRUDED_HEIGHT,
+      EXTRUDED_HEIGHT_REFERENCE,
+      ST_ROTATION,
+      GRANULARITY,
+      MATERIAL,
+      OUTLINE_WIDTH,
+      NUMBER_OF_VERTICAL_LINES,
+      SHADOWS,
+      CLASSIFICATION_TYPE,
+      Z_INDEX,
+    })
+  }
+}
+pub enum CZMBoxOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Box (rectangular cuboid)
+pub struct CZMBox<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CZMBox<'a> {
+  type Inner = CZMBox<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CZMBox<'a> {
+  pub const VT_SHOW: flatbuffers::VOffsetT = 4;
+  pub const VT_DIMENSIONS_X: flatbuffers::VOffsetT = 6;
+  pub const VT_DIMENSIONS_Y: flatbuffers::VOffsetT = 8;
+  pub const VT_DIMENSIONS_Z: flatbuffers::VOffsetT = 10;
+  pub const VT_HEIGHT_REFERENCE: flatbuffers::VOffsetT = 12;
+  pub const VT_FILL: flatbuffers::VOffsetT = 14;
+  pub const VT_MATERIAL: flatbuffers::VOffsetT = 16;
+  pub const VT_OUTLINE: flatbuffers::VOffsetT = 18;
+  pub const VT_OUTLINE_COLOR: flatbuffers::VOffsetT = 20;
+  pub const VT_OUTLINE_WIDTH: flatbuffers::VOffsetT = 22;
+  pub const VT_SHADOWS: flatbuffers::VOffsetT = 24;
+  pub const VT_DISTANCE_DISPLAY_CONDITION_NEAR: flatbuffers::VOffsetT = 26;
+  pub const VT_DISTANCE_DISPLAY_CONDITION_FAR: flatbuffers::VOffsetT = 28;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CZMBox { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CZMBoxArgs<'args>
+  ) -> flatbuffers::WIPOffset<CZMBox<'bldr>> {
+    let mut builder = CZMBoxBuilder::new(_fbb);
+    builder.add_DISTANCE_DISPLAY_CONDITION_FAR(args.DISTANCE_DISPLAY_CONDITION_FAR);
+    builder.add_DISTANCE_DISPLAY_CONDITION_NEAR(args.DISTANCE_DISPLAY_CONDITION_NEAR);
+    builder.add_OUTLINE_WIDTH(args.OUTLINE_WIDTH);
+    builder.add_DIMENSIONS_Z(args.DIMENSIONS_Z);
+    builder.add_DIMENSIONS_Y(args.DIMENSIONS_Y);
+    builder.add_DIMENSIONS_X(args.DIMENSIONS_X);
+    if let Some(x) = args.SHADOWS { builder.add_SHADOWS(x); }
+    if let Some(x) = args.OUTLINE_COLOR { builder.add_OUTLINE_COLOR(x); }
+    if let Some(x) = args.MATERIAL { builder.add_MATERIAL(x); }
+    if let Some(x) = args.HEIGHT_REFERENCE { builder.add_HEIGHT_REFERENCE(x); }
+    builder.add_OUTLINE(args.OUTLINE);
+    builder.add_FILL(args.FILL);
+    builder.add_SHOW(args.SHOW);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CZMBoxT {
+    let SHOW = self.SHOW();
+    let DIMENSIONS_X = self.DIMENSIONS_X();
+    let DIMENSIONS_Y = self.DIMENSIONS_Y();
+    let DIMENSIONS_Z = self.DIMENSIONS_Z();
+    let HEIGHT_REFERENCE = self.HEIGHT_REFERENCE().map(|x| {
+      x.to_string()
+    });
+    let FILL = self.FILL();
+    let MATERIAL = self.MATERIAL().map(|x| {
+      Box::new(x.unpack())
+    });
+    let OUTLINE = self.OUTLINE();
+    let OUTLINE_COLOR = self.OUTLINE_COLOR().map(|x| {
+      Box::new(x.unpack())
+    });
+    let OUTLINE_WIDTH = self.OUTLINE_WIDTH();
+    let SHADOWS = self.SHADOWS().map(|x| {
+      x.to_string()
+    });
+    let DISTANCE_DISPLAY_CONDITION_NEAR = self.DISTANCE_DISPLAY_CONDITION_NEAR();
+    let DISTANCE_DISPLAY_CONDITION_FAR = self.DISTANCE_DISPLAY_CONDITION_FAR();
+    CZMBoxT {
+      SHOW,
+      DIMENSIONS_X,
+      DIMENSIONS_Y,
+      DIMENSIONS_Z,
+      HEIGHT_REFERENCE,
+      FILL,
+      MATERIAL,
+      OUTLINE,
+      OUTLINE_COLOR,
+      OUTLINE_WIDTH,
+      SHADOWS,
+      DISTANCE_DISPLAY_CONDITION_NEAR,
+      DISTANCE_DISPLAY_CONDITION_FAR,
+    }
+  }
+
+  /// Whether the box is displayed
+  #[inline]
+  pub fn SHOW(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMBox::VT_SHOW, Some(false)).unwrap()}
+  }
+  /// Width (X) in meters
+  #[inline]
+  pub fn DIMENSIONS_X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMBox::VT_DIMENSIONS_X, Some(0.0)).unwrap()}
+  }
+  /// Depth (Y) in meters
+  #[inline]
+  pub fn DIMENSIONS_Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMBox::VT_DIMENSIONS_Y, Some(0.0)).unwrap()}
+  }
+  /// Height (Z) in meters
+  #[inline]
+  pub fn DIMENSIONS_Z(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMBox::VT_DIMENSIONS_Z, Some(0.0)).unwrap()}
+  }
+  /// Height reference
+  #[inline]
+  pub fn HEIGHT_REFERENCE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMBox::VT_HEIGHT_REFERENCE, None)}
+  }
+  /// Fill flag
+  #[inline]
+  pub fn FILL(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMBox::VT_FILL, Some(false)).unwrap()}
+  }
+  /// Surface material
+  #[inline]
+  pub fn MATERIAL(&self) -> Option<CZMMaterial<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMMaterial>>(CZMBox::VT_MATERIAL, None)}
+  }
+  /// Outline flag
+  #[inline]
+  pub fn OUTLINE(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMBox::VT_OUTLINE, Some(false)).unwrap()}
+  }
+  /// Outline color
+  #[inline]
+  pub fn OUTLINE_COLOR(&self) -> Option<CZMColor<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMColor>>(CZMBox::VT_OUTLINE_COLOR, None)}
+  }
+  /// Outline width
+  #[inline]
+  pub fn OUTLINE_WIDTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMBox::VT_OUTLINE_WIDTH, Some(0.0)).unwrap()}
+  }
+  /// Shadow mode
+  #[inline]
+  pub fn SHADOWS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMBox::VT_SHADOWS, None)}
+  }
+  /// Distance display condition near
+  #[inline]
+  pub fn DISTANCE_DISPLAY_CONDITION_NEAR(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMBox::VT_DISTANCE_DISPLAY_CONDITION_NEAR, Some(0.0)).unwrap()}
+  }
+  /// Distance display condition far
+  #[inline]
+  pub fn DISTANCE_DISPLAY_CONDITION_FAR(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMBox::VT_DISTANCE_DISPLAY_CONDITION_FAR, Some(0.0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for CZMBox<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<bool>("SHOW", Self::VT_SHOW, false)?
+     .visit_field::<f64>("DIMENSIONS_X", Self::VT_DIMENSIONS_X, false)?
+     .visit_field::<f64>("DIMENSIONS_Y", Self::VT_DIMENSIONS_Y, false)?
+     .visit_field::<f64>("DIMENSIONS_Z", Self::VT_DIMENSIONS_Z, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("HEIGHT_REFERENCE", Self::VT_HEIGHT_REFERENCE, false)?
+     .visit_field::<bool>("FILL", Self::VT_FILL, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMMaterial>>("MATERIAL", Self::VT_MATERIAL, false)?
+     .visit_field::<bool>("OUTLINE", Self::VT_OUTLINE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMColor>>("OUTLINE_COLOR", Self::VT_OUTLINE_COLOR, false)?
+     .visit_field::<f64>("OUTLINE_WIDTH", Self::VT_OUTLINE_WIDTH, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SHADOWS", Self::VT_SHADOWS, false)?
+     .visit_field::<f64>("DISTANCE_DISPLAY_CONDITION_NEAR", Self::VT_DISTANCE_DISPLAY_CONDITION_NEAR, false)?
+     .visit_field::<f64>("DISTANCE_DISPLAY_CONDITION_FAR", Self::VT_DISTANCE_DISPLAY_CONDITION_FAR, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CZMBoxArgs<'a> {
+    pub SHOW: bool,
+    pub DIMENSIONS_X: f64,
+    pub DIMENSIONS_Y: f64,
+    pub DIMENSIONS_Z: f64,
+    pub HEIGHT_REFERENCE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub FILL: bool,
+    pub MATERIAL: Option<flatbuffers::WIPOffset<CZMMaterial<'a>>>,
+    pub OUTLINE: bool,
+    pub OUTLINE_COLOR: Option<flatbuffers::WIPOffset<CZMColor<'a>>>,
+    pub OUTLINE_WIDTH: f64,
+    pub SHADOWS: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub DISTANCE_DISPLAY_CONDITION_NEAR: f64,
+    pub DISTANCE_DISPLAY_CONDITION_FAR: f64,
+}
+impl<'a> Default for CZMBoxArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CZMBoxArgs {
+      SHOW: false,
+      DIMENSIONS_X: 0.0,
+      DIMENSIONS_Y: 0.0,
+      DIMENSIONS_Z: 0.0,
+      HEIGHT_REFERENCE: None,
+      FILL: false,
+      MATERIAL: None,
+      OUTLINE: false,
+      OUTLINE_COLOR: None,
+      OUTLINE_WIDTH: 0.0,
+      SHADOWS: None,
+      DISTANCE_DISPLAY_CONDITION_NEAR: 0.0,
+      DISTANCE_DISPLAY_CONDITION_FAR: 0.0,
+    }
+  }
+}
+
+pub struct CZMBoxBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMBoxBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_SHOW(&mut self, SHOW: bool) {
+    self.fbb_.push_slot::<bool>(CZMBox::VT_SHOW, SHOW, false);
+  }
+  #[inline]
+  pub fn add_DIMENSIONS_X(&mut self, DIMENSIONS_X: f64) {
+    self.fbb_.push_slot::<f64>(CZMBox::VT_DIMENSIONS_X, DIMENSIONS_X, 0.0);
+  }
+  #[inline]
+  pub fn add_DIMENSIONS_Y(&mut self, DIMENSIONS_Y: f64) {
+    self.fbb_.push_slot::<f64>(CZMBox::VT_DIMENSIONS_Y, DIMENSIONS_Y, 0.0);
+  }
+  #[inline]
+  pub fn add_DIMENSIONS_Z(&mut self, DIMENSIONS_Z: f64) {
+    self.fbb_.push_slot::<f64>(CZMBox::VT_DIMENSIONS_Z, DIMENSIONS_Z, 0.0);
+  }
+  #[inline]
+  pub fn add_HEIGHT_REFERENCE(&mut self, HEIGHT_REFERENCE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMBox::VT_HEIGHT_REFERENCE, HEIGHT_REFERENCE);
+  }
+  #[inline]
+  pub fn add_FILL(&mut self, FILL: bool) {
+    self.fbb_.push_slot::<bool>(CZMBox::VT_FILL, FILL, false);
+  }
+  #[inline]
+  pub fn add_MATERIAL(&mut self, MATERIAL: flatbuffers::WIPOffset<CZMMaterial<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMMaterial>>(CZMBox::VT_MATERIAL, MATERIAL);
+  }
+  #[inline]
+  pub fn add_OUTLINE(&mut self, OUTLINE: bool) {
+    self.fbb_.push_slot::<bool>(CZMBox::VT_OUTLINE, OUTLINE, false);
+  }
+  #[inline]
+  pub fn add_OUTLINE_COLOR(&mut self, OUTLINE_COLOR: flatbuffers::WIPOffset<CZMColor<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMColor>>(CZMBox::VT_OUTLINE_COLOR, OUTLINE_COLOR);
+  }
+  #[inline]
+  pub fn add_OUTLINE_WIDTH(&mut self, OUTLINE_WIDTH: f64) {
+    self.fbb_.push_slot::<f64>(CZMBox::VT_OUTLINE_WIDTH, OUTLINE_WIDTH, 0.0);
+  }
+  #[inline]
+  pub fn add_SHADOWS(&mut self, SHADOWS: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMBox::VT_SHADOWS, SHADOWS);
+  }
+  #[inline]
+  pub fn add_DISTANCE_DISPLAY_CONDITION_NEAR(&mut self, DISTANCE_DISPLAY_CONDITION_NEAR: f64) {
+    self.fbb_.push_slot::<f64>(CZMBox::VT_DISTANCE_DISPLAY_CONDITION_NEAR, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0);
+  }
+  #[inline]
+  pub fn add_DISTANCE_DISPLAY_CONDITION_FAR(&mut self, DISTANCE_DISPLAY_CONDITION_FAR: f64) {
+    self.fbb_.push_slot::<f64>(CZMBox::VT_DISTANCE_DISPLAY_CONDITION_FAR, DISTANCE_DISPLAY_CONDITION_FAR, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMBoxBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CZMBoxBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CZMBox<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CZMBox<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CZMBox");
+      ds.field("SHOW", &self.SHOW());
+      ds.field("DIMENSIONS_X", &self.DIMENSIONS_X());
+      ds.field("DIMENSIONS_Y", &self.DIMENSIONS_Y());
+      ds.field("DIMENSIONS_Z", &self.DIMENSIONS_Z());
+      ds.field("HEIGHT_REFERENCE", &self.HEIGHT_REFERENCE());
+      ds.field("FILL", &self.FILL());
+      ds.field("MATERIAL", &self.MATERIAL());
+      ds.field("OUTLINE", &self.OUTLINE());
+      ds.field("OUTLINE_COLOR", &self.OUTLINE_COLOR());
+      ds.field("OUTLINE_WIDTH", &self.OUTLINE_WIDTH());
+      ds.field("SHADOWS", &self.SHADOWS());
+      ds.field("DISTANCE_DISPLAY_CONDITION_NEAR", &self.DISTANCE_DISPLAY_CONDITION_NEAR());
+      ds.field("DISTANCE_DISPLAY_CONDITION_FAR", &self.DISTANCE_DISPLAY_CONDITION_FAR());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CZMBoxT {
+  pub SHOW: bool,
+  pub DIMENSIONS_X: f64,
+  pub DIMENSIONS_Y: f64,
+  pub DIMENSIONS_Z: f64,
+  pub HEIGHT_REFERENCE: Option<String>,
+  pub FILL: bool,
+  pub MATERIAL: Option<Box<CZMMaterialT>>,
+  pub OUTLINE: bool,
+  pub OUTLINE_COLOR: Option<Box<CZMColorT>>,
+  pub OUTLINE_WIDTH: f64,
+  pub SHADOWS: Option<String>,
+  pub DISTANCE_DISPLAY_CONDITION_NEAR: f64,
+  pub DISTANCE_DISPLAY_CONDITION_FAR: f64,
+}
+impl Default for CZMBoxT {
+  fn default() -> Self {
+    Self {
+      SHOW: false,
+      DIMENSIONS_X: 0.0,
+      DIMENSIONS_Y: 0.0,
+      DIMENSIONS_Z: 0.0,
+      HEIGHT_REFERENCE: None,
+      FILL: false,
+      MATERIAL: None,
+      OUTLINE: false,
+      OUTLINE_COLOR: None,
+      OUTLINE_WIDTH: 0.0,
+      SHADOWS: None,
+      DISTANCE_DISPLAY_CONDITION_NEAR: 0.0,
+      DISTANCE_DISPLAY_CONDITION_FAR: 0.0,
+    }
+  }
+}
+impl CZMBoxT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CZMBox<'b>> {
+    let SHOW = self.SHOW;
+    let DIMENSIONS_X = self.DIMENSIONS_X;
+    let DIMENSIONS_Y = self.DIMENSIONS_Y;
+    let DIMENSIONS_Z = self.DIMENSIONS_Z;
+    let HEIGHT_REFERENCE = self.HEIGHT_REFERENCE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let FILL = self.FILL;
+    let MATERIAL = self.MATERIAL.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let OUTLINE = self.OUTLINE;
+    let OUTLINE_COLOR = self.OUTLINE_COLOR.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let OUTLINE_WIDTH = self.OUTLINE_WIDTH;
+    let SHADOWS = self.SHADOWS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DISTANCE_DISPLAY_CONDITION_NEAR = self.DISTANCE_DISPLAY_CONDITION_NEAR;
+    let DISTANCE_DISPLAY_CONDITION_FAR = self.DISTANCE_DISPLAY_CONDITION_FAR;
+    CZMBox::create(_fbb, &CZMBoxArgs{
+      SHOW,
+      DIMENSIONS_X,
+      DIMENSIONS_Y,
+      DIMENSIONS_Z,
+      HEIGHT_REFERENCE,
+      FILL,
+      MATERIAL,
+      OUTLINE,
+      OUTLINE_COLOR,
+      OUTLINE_WIDTH,
+      SHADOWS,
+      DISTANCE_DISPLAY_CONDITION_NEAR,
+      DISTANCE_DISPLAY_CONDITION_FAR,
+    })
+  }
+}
+pub enum CZMCorridorOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Corridor (centerline + width shape)
+pub struct CZMCorridor<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CZMCorridor<'a> {
+  type Inner = CZMCorridor<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CZMCorridor<'a> {
+  pub const VT_SHOW: flatbuffers::VOffsetT = 4;
+  pub const VT_POSITIONS_CARTOGRAPHIC_DEGREES: flatbuffers::VOffsetT = 6;
+  pub const VT_POSITIONS_CARTESIAN: flatbuffers::VOffsetT = 8;
+  pub const VT_WIDTH: flatbuffers::VOffsetT = 10;
+  pub const VT_HEIGHT: flatbuffers::VOffsetT = 12;
+  pub const VT_HEIGHT_REFERENCE: flatbuffers::VOffsetT = 14;
+  pub const VT_EXTRUDED_HEIGHT: flatbuffers::VOffsetT = 16;
+  pub const VT_EXTRUDED_HEIGHT_REFERENCE: flatbuffers::VOffsetT = 18;
+  pub const VT_CORNER_TYPE: flatbuffers::VOffsetT = 20;
+  pub const VT_GRANULARITY: flatbuffers::VOffsetT = 22;
+  pub const VT_FILL: flatbuffers::VOffsetT = 24;
+  pub const VT_MATERIAL: flatbuffers::VOffsetT = 26;
+  pub const VT_OUTLINE: flatbuffers::VOffsetT = 28;
+  pub const VT_OUTLINE_COLOR: flatbuffers::VOffsetT = 30;
+  pub const VT_OUTLINE_WIDTH: flatbuffers::VOffsetT = 32;
+  pub const VT_SHADOWS: flatbuffers::VOffsetT = 34;
+  pub const VT_CLASSIFICATION_TYPE: flatbuffers::VOffsetT = 36;
+  pub const VT_Z_INDEX: flatbuffers::VOffsetT = 38;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CZMCorridor { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CZMCorridorArgs<'args>
+  ) -> flatbuffers::WIPOffset<CZMCorridor<'bldr>> {
+    let mut builder = CZMCorridorBuilder::new(_fbb);
+    builder.add_OUTLINE_WIDTH(args.OUTLINE_WIDTH);
+    builder.add_GRANULARITY(args.GRANULARITY);
+    builder.add_EXTRUDED_HEIGHT(args.EXTRUDED_HEIGHT);
+    builder.add_HEIGHT(args.HEIGHT);
+    builder.add_WIDTH(args.WIDTH);
+    builder.add_Z_INDEX(args.Z_INDEX);
+    if let Some(x) = args.CLASSIFICATION_TYPE { builder.add_CLASSIFICATION_TYPE(x); }
+    if let Some(x) = args.SHADOWS { builder.add_SHADOWS(x); }
+    if let Some(x) = args.OUTLINE_COLOR { builder.add_OUTLINE_COLOR(x); }
+    if let Some(x) = args.MATERIAL { builder.add_MATERIAL(x); }
+    if let Some(x) = args.CORNER_TYPE { builder.add_CORNER_TYPE(x); }
+    if let Some(x) = args.EXTRUDED_HEIGHT_REFERENCE { builder.add_EXTRUDED_HEIGHT_REFERENCE(x); }
+    if let Some(x) = args.HEIGHT_REFERENCE { builder.add_HEIGHT_REFERENCE(x); }
+    if let Some(x) = args.POSITIONS_CARTESIAN { builder.add_POSITIONS_CARTESIAN(x); }
+    if let Some(x) = args.POSITIONS_CARTOGRAPHIC_DEGREES { builder.add_POSITIONS_CARTOGRAPHIC_DEGREES(x); }
+    builder.add_OUTLINE(args.OUTLINE);
+    builder.add_FILL(args.FILL);
+    builder.add_SHOW(args.SHOW);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CZMCorridorT {
+    let SHOW = self.SHOW();
+    let POSITIONS_CARTOGRAPHIC_DEGREES = self.POSITIONS_CARTOGRAPHIC_DEGREES().map(|x| {
+      x.into_iter().collect()
+    });
+    let POSITIONS_CARTESIAN = self.POSITIONS_CARTESIAN().map(|x| {
+      x.into_iter().collect()
+    });
+    let WIDTH = self.WIDTH();
+    let HEIGHT = self.HEIGHT();
+    let HEIGHT_REFERENCE = self.HEIGHT_REFERENCE().map(|x| {
+      x.to_string()
+    });
+    let EXTRUDED_HEIGHT = self.EXTRUDED_HEIGHT();
+    let EXTRUDED_HEIGHT_REFERENCE = self.EXTRUDED_HEIGHT_REFERENCE().map(|x| {
+      x.to_string()
+    });
+    let CORNER_TYPE = self.CORNER_TYPE().map(|x| {
+      x.to_string()
+    });
+    let GRANULARITY = self.GRANULARITY();
+    let FILL = self.FILL();
+    let MATERIAL = self.MATERIAL().map(|x| {
+      Box::new(x.unpack())
+    });
+    let OUTLINE = self.OUTLINE();
+    let OUTLINE_COLOR = self.OUTLINE_COLOR().map(|x| {
+      Box::new(x.unpack())
+    });
+    let OUTLINE_WIDTH = self.OUTLINE_WIDTH();
+    let SHADOWS = self.SHADOWS().map(|x| {
+      x.to_string()
+    });
+    let CLASSIFICATION_TYPE = self.CLASSIFICATION_TYPE().map(|x| {
+      x.to_string()
+    });
+    let Z_INDEX = self.Z_INDEX();
+    CZMCorridorT {
+      SHOW,
+      POSITIONS_CARTOGRAPHIC_DEGREES,
+      POSITIONS_CARTESIAN,
+      WIDTH,
+      HEIGHT,
+      HEIGHT_REFERENCE,
+      EXTRUDED_HEIGHT,
+      EXTRUDED_HEIGHT_REFERENCE,
+      CORNER_TYPE,
+      GRANULARITY,
+      FILL,
+      MATERIAL,
+      OUTLINE,
+      OUTLINE_COLOR,
+      OUTLINE_WIDTH,
+      SHADOWS,
+      CLASSIFICATION_TYPE,
+      Z_INDEX,
+    }
+  }
+
+  /// Whether the corridor is displayed
+  #[inline]
+  pub fn SHOW(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMCorridor::VT_SHOW, Some(false)).unwrap()}
+  }
+  /// Positions as cartographic degrees
+  #[inline]
+  pub fn POSITIONS_CARTOGRAPHIC_DEGREES(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(CZMCorridor::VT_POSITIONS_CARTOGRAPHIC_DEGREES, None)}
+  }
+  /// Positions as Cartesian
+  #[inline]
+  pub fn POSITIONS_CARTESIAN(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(CZMCorridor::VT_POSITIONS_CARTESIAN, None)}
+  }
+  /// Width in meters
+  #[inline]
+  pub fn WIDTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMCorridor::VT_WIDTH, Some(0.0)).unwrap()}
+  }
+  /// Height in meters
+  #[inline]
+  pub fn HEIGHT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMCorridor::VT_HEIGHT, Some(0.0)).unwrap()}
+  }
+  /// Height reference
+  #[inline]
+  pub fn HEIGHT_REFERENCE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMCorridor::VT_HEIGHT_REFERENCE, None)}
+  }
+  /// Extruded height
+  #[inline]
+  pub fn EXTRUDED_HEIGHT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMCorridor::VT_EXTRUDED_HEIGHT, Some(0.0)).unwrap()}
+  }
+  /// Extruded height reference
+  #[inline]
+  pub fn EXTRUDED_HEIGHT_REFERENCE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMCorridor::VT_EXTRUDED_HEIGHT_REFERENCE, None)}
+  }
+  /// Corner type
+  #[inline]
+  pub fn CORNER_TYPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMCorridor::VT_CORNER_TYPE, None)}
+  }
+  /// Granularity in radians
+  #[inline]
+  pub fn GRANULARITY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMCorridor::VT_GRANULARITY, Some(0.0)).unwrap()}
+  }
+  /// Fill flag
+  #[inline]
+  pub fn FILL(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMCorridor::VT_FILL, Some(false)).unwrap()}
+  }
+  /// Surface material
+  #[inline]
+  pub fn MATERIAL(&self) -> Option<CZMMaterial<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMMaterial>>(CZMCorridor::VT_MATERIAL, None)}
+  }
+  /// Outline flag
+  #[inline]
+  pub fn OUTLINE(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMCorridor::VT_OUTLINE, Some(false)).unwrap()}
+  }
+  /// Outline color
+  #[inline]
+  pub fn OUTLINE_COLOR(&self) -> Option<CZMColor<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMColor>>(CZMCorridor::VT_OUTLINE_COLOR, None)}
+  }
+  /// Outline width
+  #[inline]
+  pub fn OUTLINE_WIDTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMCorridor::VT_OUTLINE_WIDTH, Some(0.0)).unwrap()}
+  }
+  /// Shadow mode
+  #[inline]
+  pub fn SHADOWS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMCorridor::VT_SHADOWS, None)}
+  }
+  /// Classification type
+  #[inline]
+  pub fn CLASSIFICATION_TYPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMCorridor::VT_CLASSIFICATION_TYPE, None)}
+  }
+  /// Z-index for ordering
+  #[inline]
+  pub fn Z_INDEX(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(CZMCorridor::VT_Z_INDEX, Some(0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for CZMCorridor<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<bool>("SHOW", Self::VT_SHOW, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("POSITIONS_CARTOGRAPHIC_DEGREES", Self::VT_POSITIONS_CARTOGRAPHIC_DEGREES, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("POSITIONS_CARTESIAN", Self::VT_POSITIONS_CARTESIAN, false)?
+     .visit_field::<f64>("WIDTH", Self::VT_WIDTH, false)?
+     .visit_field::<f64>("HEIGHT", Self::VT_HEIGHT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("HEIGHT_REFERENCE", Self::VT_HEIGHT_REFERENCE, false)?
+     .visit_field::<f64>("EXTRUDED_HEIGHT", Self::VT_EXTRUDED_HEIGHT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EXTRUDED_HEIGHT_REFERENCE", Self::VT_EXTRUDED_HEIGHT_REFERENCE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CORNER_TYPE", Self::VT_CORNER_TYPE, false)?
+     .visit_field::<f64>("GRANULARITY", Self::VT_GRANULARITY, false)?
+     .visit_field::<bool>("FILL", Self::VT_FILL, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMMaterial>>("MATERIAL", Self::VT_MATERIAL, false)?
+     .visit_field::<bool>("OUTLINE", Self::VT_OUTLINE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMColor>>("OUTLINE_COLOR", Self::VT_OUTLINE_COLOR, false)?
+     .visit_field::<f64>("OUTLINE_WIDTH", Self::VT_OUTLINE_WIDTH, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SHADOWS", Self::VT_SHADOWS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CLASSIFICATION_TYPE", Self::VT_CLASSIFICATION_TYPE, false)?
+     .visit_field::<i32>("Z_INDEX", Self::VT_Z_INDEX, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CZMCorridorArgs<'a> {
+    pub SHOW: bool,
+    pub POSITIONS_CARTOGRAPHIC_DEGREES: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub POSITIONS_CARTESIAN: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub WIDTH: f64,
+    pub HEIGHT: f64,
+    pub HEIGHT_REFERENCE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub EXTRUDED_HEIGHT: f64,
+    pub EXTRUDED_HEIGHT_REFERENCE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub CORNER_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub GRANULARITY: f64,
+    pub FILL: bool,
+    pub MATERIAL: Option<flatbuffers::WIPOffset<CZMMaterial<'a>>>,
+    pub OUTLINE: bool,
+    pub OUTLINE_COLOR: Option<flatbuffers::WIPOffset<CZMColor<'a>>>,
+    pub OUTLINE_WIDTH: f64,
+    pub SHADOWS: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub CLASSIFICATION_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub Z_INDEX: i32,
+}
+impl<'a> Default for CZMCorridorArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CZMCorridorArgs {
+      SHOW: false,
+      POSITIONS_CARTOGRAPHIC_DEGREES: None,
+      POSITIONS_CARTESIAN: None,
+      WIDTH: 0.0,
+      HEIGHT: 0.0,
+      HEIGHT_REFERENCE: None,
+      EXTRUDED_HEIGHT: 0.0,
+      EXTRUDED_HEIGHT_REFERENCE: None,
+      CORNER_TYPE: None,
+      GRANULARITY: 0.0,
+      FILL: false,
+      MATERIAL: None,
+      OUTLINE: false,
+      OUTLINE_COLOR: None,
+      OUTLINE_WIDTH: 0.0,
+      SHADOWS: None,
+      CLASSIFICATION_TYPE: None,
+      Z_INDEX: 0,
+    }
+  }
+}
+
+pub struct CZMCorridorBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMCorridorBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_SHOW(&mut self, SHOW: bool) {
+    self.fbb_.push_slot::<bool>(CZMCorridor::VT_SHOW, SHOW, false);
+  }
+  #[inline]
+  pub fn add_POSITIONS_CARTOGRAPHIC_DEGREES(&mut self, POSITIONS_CARTOGRAPHIC_DEGREES: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMCorridor::VT_POSITIONS_CARTOGRAPHIC_DEGREES, POSITIONS_CARTOGRAPHIC_DEGREES);
+  }
+  #[inline]
+  pub fn add_POSITIONS_CARTESIAN(&mut self, POSITIONS_CARTESIAN: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMCorridor::VT_POSITIONS_CARTESIAN, POSITIONS_CARTESIAN);
+  }
+  #[inline]
+  pub fn add_WIDTH(&mut self, WIDTH: f64) {
+    self.fbb_.push_slot::<f64>(CZMCorridor::VT_WIDTH, WIDTH, 0.0);
+  }
+  #[inline]
+  pub fn add_HEIGHT(&mut self, HEIGHT: f64) {
+    self.fbb_.push_slot::<f64>(CZMCorridor::VT_HEIGHT, HEIGHT, 0.0);
+  }
+  #[inline]
+  pub fn add_HEIGHT_REFERENCE(&mut self, HEIGHT_REFERENCE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMCorridor::VT_HEIGHT_REFERENCE, HEIGHT_REFERENCE);
+  }
+  #[inline]
+  pub fn add_EXTRUDED_HEIGHT(&mut self, EXTRUDED_HEIGHT: f64) {
+    self.fbb_.push_slot::<f64>(CZMCorridor::VT_EXTRUDED_HEIGHT, EXTRUDED_HEIGHT, 0.0);
+  }
+  #[inline]
+  pub fn add_EXTRUDED_HEIGHT_REFERENCE(&mut self, EXTRUDED_HEIGHT_REFERENCE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMCorridor::VT_EXTRUDED_HEIGHT_REFERENCE, EXTRUDED_HEIGHT_REFERENCE);
+  }
+  #[inline]
+  pub fn add_CORNER_TYPE(&mut self, CORNER_TYPE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMCorridor::VT_CORNER_TYPE, CORNER_TYPE);
+  }
+  #[inline]
+  pub fn add_GRANULARITY(&mut self, GRANULARITY: f64) {
+    self.fbb_.push_slot::<f64>(CZMCorridor::VT_GRANULARITY, GRANULARITY, 0.0);
+  }
+  #[inline]
+  pub fn add_FILL(&mut self, FILL: bool) {
+    self.fbb_.push_slot::<bool>(CZMCorridor::VT_FILL, FILL, false);
+  }
+  #[inline]
+  pub fn add_MATERIAL(&mut self, MATERIAL: flatbuffers::WIPOffset<CZMMaterial<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMMaterial>>(CZMCorridor::VT_MATERIAL, MATERIAL);
+  }
+  #[inline]
+  pub fn add_OUTLINE(&mut self, OUTLINE: bool) {
+    self.fbb_.push_slot::<bool>(CZMCorridor::VT_OUTLINE, OUTLINE, false);
+  }
+  #[inline]
+  pub fn add_OUTLINE_COLOR(&mut self, OUTLINE_COLOR: flatbuffers::WIPOffset<CZMColor<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMColor>>(CZMCorridor::VT_OUTLINE_COLOR, OUTLINE_COLOR);
+  }
+  #[inline]
+  pub fn add_OUTLINE_WIDTH(&mut self, OUTLINE_WIDTH: f64) {
+    self.fbb_.push_slot::<f64>(CZMCorridor::VT_OUTLINE_WIDTH, OUTLINE_WIDTH, 0.0);
+  }
+  #[inline]
+  pub fn add_SHADOWS(&mut self, SHADOWS: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMCorridor::VT_SHADOWS, SHADOWS);
+  }
+  #[inline]
+  pub fn add_CLASSIFICATION_TYPE(&mut self, CLASSIFICATION_TYPE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMCorridor::VT_CLASSIFICATION_TYPE, CLASSIFICATION_TYPE);
+  }
+  #[inline]
+  pub fn add_Z_INDEX(&mut self, Z_INDEX: i32) {
+    self.fbb_.push_slot::<i32>(CZMCorridor::VT_Z_INDEX, Z_INDEX, 0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMCorridorBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CZMCorridorBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CZMCorridor<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CZMCorridor<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CZMCorridor");
+      ds.field("SHOW", &self.SHOW());
+      ds.field("POSITIONS_CARTOGRAPHIC_DEGREES", &self.POSITIONS_CARTOGRAPHIC_DEGREES());
+      ds.field("POSITIONS_CARTESIAN", &self.POSITIONS_CARTESIAN());
+      ds.field("WIDTH", &self.WIDTH());
+      ds.field("HEIGHT", &self.HEIGHT());
+      ds.field("HEIGHT_REFERENCE", &self.HEIGHT_REFERENCE());
+      ds.field("EXTRUDED_HEIGHT", &self.EXTRUDED_HEIGHT());
+      ds.field("EXTRUDED_HEIGHT_REFERENCE", &self.EXTRUDED_HEIGHT_REFERENCE());
+      ds.field("CORNER_TYPE", &self.CORNER_TYPE());
+      ds.field("GRANULARITY", &self.GRANULARITY());
+      ds.field("FILL", &self.FILL());
+      ds.field("MATERIAL", &self.MATERIAL());
+      ds.field("OUTLINE", &self.OUTLINE());
+      ds.field("OUTLINE_COLOR", &self.OUTLINE_COLOR());
+      ds.field("OUTLINE_WIDTH", &self.OUTLINE_WIDTH());
+      ds.field("SHADOWS", &self.SHADOWS());
+      ds.field("CLASSIFICATION_TYPE", &self.CLASSIFICATION_TYPE());
+      ds.field("Z_INDEX", &self.Z_INDEX());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CZMCorridorT {
+  pub SHOW: bool,
+  pub POSITIONS_CARTOGRAPHIC_DEGREES: Option<Vec<f64>>,
+  pub POSITIONS_CARTESIAN: Option<Vec<f64>>,
+  pub WIDTH: f64,
+  pub HEIGHT: f64,
+  pub HEIGHT_REFERENCE: Option<String>,
+  pub EXTRUDED_HEIGHT: f64,
+  pub EXTRUDED_HEIGHT_REFERENCE: Option<String>,
+  pub CORNER_TYPE: Option<String>,
+  pub GRANULARITY: f64,
+  pub FILL: bool,
+  pub MATERIAL: Option<Box<CZMMaterialT>>,
+  pub OUTLINE: bool,
+  pub OUTLINE_COLOR: Option<Box<CZMColorT>>,
+  pub OUTLINE_WIDTH: f64,
+  pub SHADOWS: Option<String>,
+  pub CLASSIFICATION_TYPE: Option<String>,
+  pub Z_INDEX: i32,
+}
+impl Default for CZMCorridorT {
+  fn default() -> Self {
+    Self {
+      SHOW: false,
+      POSITIONS_CARTOGRAPHIC_DEGREES: None,
+      POSITIONS_CARTESIAN: None,
+      WIDTH: 0.0,
+      HEIGHT: 0.0,
+      HEIGHT_REFERENCE: None,
+      EXTRUDED_HEIGHT: 0.0,
+      EXTRUDED_HEIGHT_REFERENCE: None,
+      CORNER_TYPE: None,
+      GRANULARITY: 0.0,
+      FILL: false,
+      MATERIAL: None,
+      OUTLINE: false,
+      OUTLINE_COLOR: None,
+      OUTLINE_WIDTH: 0.0,
+      SHADOWS: None,
+      CLASSIFICATION_TYPE: None,
+      Z_INDEX: 0,
+    }
+  }
+}
+impl CZMCorridorT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CZMCorridor<'b>> {
+    let SHOW = self.SHOW;
+    let POSITIONS_CARTOGRAPHIC_DEGREES = self.POSITIONS_CARTOGRAPHIC_DEGREES.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let POSITIONS_CARTESIAN = self.POSITIONS_CARTESIAN.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let WIDTH = self.WIDTH;
+    let HEIGHT = self.HEIGHT;
+    let HEIGHT_REFERENCE = self.HEIGHT_REFERENCE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EXTRUDED_HEIGHT = self.EXTRUDED_HEIGHT;
+    let EXTRUDED_HEIGHT_REFERENCE = self.EXTRUDED_HEIGHT_REFERENCE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CORNER_TYPE = self.CORNER_TYPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let GRANULARITY = self.GRANULARITY;
+    let FILL = self.FILL;
+    let MATERIAL = self.MATERIAL.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let OUTLINE = self.OUTLINE;
+    let OUTLINE_COLOR = self.OUTLINE_COLOR.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let OUTLINE_WIDTH = self.OUTLINE_WIDTH;
+    let SHADOWS = self.SHADOWS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CLASSIFICATION_TYPE = self.CLASSIFICATION_TYPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let Z_INDEX = self.Z_INDEX;
+    CZMCorridor::create(_fbb, &CZMCorridorArgs{
+      SHOW,
+      POSITIONS_CARTOGRAPHIC_DEGREES,
+      POSITIONS_CARTESIAN,
+      WIDTH,
+      HEIGHT,
+      HEIGHT_REFERENCE,
+      EXTRUDED_HEIGHT,
+      EXTRUDED_HEIGHT_REFERENCE,
+      CORNER_TYPE,
+      GRANULARITY,
+      FILL,
+      MATERIAL,
+      OUTLINE,
+      OUTLINE_COLOR,
+      OUTLINE_WIDTH,
+      SHADOWS,
+      CLASSIFICATION_TYPE,
+      Z_INDEX,
+    })
+  }
+}
+pub enum CZMCylinderOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Cylinder or cone
+pub struct CZMCylinder<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CZMCylinder<'a> {
+  type Inner = CZMCylinder<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CZMCylinder<'a> {
+  pub const VT_SHOW: flatbuffers::VOffsetT = 4;
+  pub const VT_LENGTH: flatbuffers::VOffsetT = 6;
+  pub const VT_TOP_RADIUS: flatbuffers::VOffsetT = 8;
+  pub const VT_BOTTOM_RADIUS: flatbuffers::VOffsetT = 10;
+  pub const VT_HEIGHT_REFERENCE: flatbuffers::VOffsetT = 12;
+  pub const VT_FILL: flatbuffers::VOffsetT = 14;
+  pub const VT_MATERIAL: flatbuffers::VOffsetT = 16;
+  pub const VT_OUTLINE: flatbuffers::VOffsetT = 18;
+  pub const VT_OUTLINE_COLOR: flatbuffers::VOffsetT = 20;
+  pub const VT_OUTLINE_WIDTH: flatbuffers::VOffsetT = 22;
+  pub const VT_NUMBER_OF_VERTICAL_LINES: flatbuffers::VOffsetT = 24;
+  pub const VT_SLICES: flatbuffers::VOffsetT = 26;
+  pub const VT_SHADOWS: flatbuffers::VOffsetT = 28;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CZMCylinder { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CZMCylinderArgs<'args>
+  ) -> flatbuffers::WIPOffset<CZMCylinder<'bldr>> {
+    let mut builder = CZMCylinderBuilder::new(_fbb);
+    builder.add_OUTLINE_WIDTH(args.OUTLINE_WIDTH);
+    builder.add_BOTTOM_RADIUS(args.BOTTOM_RADIUS);
+    builder.add_TOP_RADIUS(args.TOP_RADIUS);
+    builder.add_LENGTH(args.LENGTH);
+    if let Some(x) = args.SHADOWS { builder.add_SHADOWS(x); }
+    builder.add_SLICES(args.SLICES);
+    builder.add_NUMBER_OF_VERTICAL_LINES(args.NUMBER_OF_VERTICAL_LINES);
+    if let Some(x) = args.OUTLINE_COLOR { builder.add_OUTLINE_COLOR(x); }
+    if let Some(x) = args.MATERIAL { builder.add_MATERIAL(x); }
+    if let Some(x) = args.HEIGHT_REFERENCE { builder.add_HEIGHT_REFERENCE(x); }
+    builder.add_OUTLINE(args.OUTLINE);
+    builder.add_FILL(args.FILL);
+    builder.add_SHOW(args.SHOW);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CZMCylinderT {
+    let SHOW = self.SHOW();
+    let LENGTH = self.LENGTH();
+    let TOP_RADIUS = self.TOP_RADIUS();
+    let BOTTOM_RADIUS = self.BOTTOM_RADIUS();
+    let HEIGHT_REFERENCE = self.HEIGHT_REFERENCE().map(|x| {
+      x.to_string()
+    });
+    let FILL = self.FILL();
+    let MATERIAL = self.MATERIAL().map(|x| {
+      Box::new(x.unpack())
+    });
+    let OUTLINE = self.OUTLINE();
+    let OUTLINE_COLOR = self.OUTLINE_COLOR().map(|x| {
+      Box::new(x.unpack())
+    });
+    let OUTLINE_WIDTH = self.OUTLINE_WIDTH();
+    let NUMBER_OF_VERTICAL_LINES = self.NUMBER_OF_VERTICAL_LINES();
+    let SLICES = self.SLICES();
+    let SHADOWS = self.SHADOWS().map(|x| {
+      x.to_string()
+    });
+    CZMCylinderT {
+      SHOW,
+      LENGTH,
+      TOP_RADIUS,
+      BOTTOM_RADIUS,
+      HEIGHT_REFERENCE,
+      FILL,
+      MATERIAL,
+      OUTLINE,
+      OUTLINE_COLOR,
+      OUTLINE_WIDTH,
+      NUMBER_OF_VERTICAL_LINES,
+      SLICES,
+      SHADOWS,
+    }
+  }
+
+  /// Whether the cylinder is displayed
+  #[inline]
+  pub fn SHOW(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMCylinder::VT_SHOW, Some(false)).unwrap()}
+  }
+  /// Length in meters
+  #[inline]
+  pub fn LENGTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMCylinder::VT_LENGTH, Some(0.0)).unwrap()}
+  }
+  /// Top radius in meters
+  #[inline]
+  pub fn TOP_RADIUS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMCylinder::VT_TOP_RADIUS, Some(0.0)).unwrap()}
+  }
+  /// Bottom radius in meters
+  #[inline]
+  pub fn BOTTOM_RADIUS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMCylinder::VT_BOTTOM_RADIUS, Some(0.0)).unwrap()}
+  }
+  /// Height reference
+  #[inline]
+  pub fn HEIGHT_REFERENCE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMCylinder::VT_HEIGHT_REFERENCE, None)}
+  }
+  /// Fill flag
+  #[inline]
+  pub fn FILL(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMCylinder::VT_FILL, Some(false)).unwrap()}
+  }
+  /// Surface material
+  #[inline]
+  pub fn MATERIAL(&self) -> Option<CZMMaterial<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMMaterial>>(CZMCylinder::VT_MATERIAL, None)}
+  }
+  /// Outline flag
+  #[inline]
+  pub fn OUTLINE(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMCylinder::VT_OUTLINE, Some(false)).unwrap()}
+  }
+  /// Outline color
+  #[inline]
+  pub fn OUTLINE_COLOR(&self) -> Option<CZMColor<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMColor>>(CZMCylinder::VT_OUTLINE_COLOR, None)}
+  }
+  /// Outline width
+  #[inline]
+  pub fn OUTLINE_WIDTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMCylinder::VT_OUTLINE_WIDTH, Some(0.0)).unwrap()}
+  }
+  /// Number of vertical lines
+  #[inline]
+  pub fn NUMBER_OF_VERTICAL_LINES(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(CZMCylinder::VT_NUMBER_OF_VERTICAL_LINES, Some(0)).unwrap()}
+  }
+  /// Number of slices
+  #[inline]
+  pub fn SLICES(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(CZMCylinder::VT_SLICES, Some(0)).unwrap()}
+  }
+  /// Shadow mode
+  #[inline]
+  pub fn SHADOWS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMCylinder::VT_SHADOWS, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for CZMCylinder<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<bool>("SHOW", Self::VT_SHOW, false)?
+     .visit_field::<f64>("LENGTH", Self::VT_LENGTH, false)?
+     .visit_field::<f64>("TOP_RADIUS", Self::VT_TOP_RADIUS, false)?
+     .visit_field::<f64>("BOTTOM_RADIUS", Self::VT_BOTTOM_RADIUS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("HEIGHT_REFERENCE", Self::VT_HEIGHT_REFERENCE, false)?
+     .visit_field::<bool>("FILL", Self::VT_FILL, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMMaterial>>("MATERIAL", Self::VT_MATERIAL, false)?
+     .visit_field::<bool>("OUTLINE", Self::VT_OUTLINE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMColor>>("OUTLINE_COLOR", Self::VT_OUTLINE_COLOR, false)?
+     .visit_field::<f64>("OUTLINE_WIDTH", Self::VT_OUTLINE_WIDTH, false)?
+     .visit_field::<i32>("NUMBER_OF_VERTICAL_LINES", Self::VT_NUMBER_OF_VERTICAL_LINES, false)?
+     .visit_field::<i32>("SLICES", Self::VT_SLICES, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SHADOWS", Self::VT_SHADOWS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CZMCylinderArgs<'a> {
+    pub SHOW: bool,
+    pub LENGTH: f64,
+    pub TOP_RADIUS: f64,
+    pub BOTTOM_RADIUS: f64,
+    pub HEIGHT_REFERENCE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub FILL: bool,
+    pub MATERIAL: Option<flatbuffers::WIPOffset<CZMMaterial<'a>>>,
+    pub OUTLINE: bool,
+    pub OUTLINE_COLOR: Option<flatbuffers::WIPOffset<CZMColor<'a>>>,
+    pub OUTLINE_WIDTH: f64,
+    pub NUMBER_OF_VERTICAL_LINES: i32,
+    pub SLICES: i32,
+    pub SHADOWS: Option<flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for CZMCylinderArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CZMCylinderArgs {
+      SHOW: false,
+      LENGTH: 0.0,
+      TOP_RADIUS: 0.0,
+      BOTTOM_RADIUS: 0.0,
+      HEIGHT_REFERENCE: None,
+      FILL: false,
+      MATERIAL: None,
+      OUTLINE: false,
+      OUTLINE_COLOR: None,
+      OUTLINE_WIDTH: 0.0,
+      NUMBER_OF_VERTICAL_LINES: 0,
+      SLICES: 0,
+      SHADOWS: None,
+    }
+  }
+}
+
+pub struct CZMCylinderBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMCylinderBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_SHOW(&mut self, SHOW: bool) {
+    self.fbb_.push_slot::<bool>(CZMCylinder::VT_SHOW, SHOW, false);
+  }
+  #[inline]
+  pub fn add_LENGTH(&mut self, LENGTH: f64) {
+    self.fbb_.push_slot::<f64>(CZMCylinder::VT_LENGTH, LENGTH, 0.0);
+  }
+  #[inline]
+  pub fn add_TOP_RADIUS(&mut self, TOP_RADIUS: f64) {
+    self.fbb_.push_slot::<f64>(CZMCylinder::VT_TOP_RADIUS, TOP_RADIUS, 0.0);
+  }
+  #[inline]
+  pub fn add_BOTTOM_RADIUS(&mut self, BOTTOM_RADIUS: f64) {
+    self.fbb_.push_slot::<f64>(CZMCylinder::VT_BOTTOM_RADIUS, BOTTOM_RADIUS, 0.0);
+  }
+  #[inline]
+  pub fn add_HEIGHT_REFERENCE(&mut self, HEIGHT_REFERENCE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMCylinder::VT_HEIGHT_REFERENCE, HEIGHT_REFERENCE);
+  }
+  #[inline]
+  pub fn add_FILL(&mut self, FILL: bool) {
+    self.fbb_.push_slot::<bool>(CZMCylinder::VT_FILL, FILL, false);
+  }
+  #[inline]
+  pub fn add_MATERIAL(&mut self, MATERIAL: flatbuffers::WIPOffset<CZMMaterial<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMMaterial>>(CZMCylinder::VT_MATERIAL, MATERIAL);
+  }
+  #[inline]
+  pub fn add_OUTLINE(&mut self, OUTLINE: bool) {
+    self.fbb_.push_slot::<bool>(CZMCylinder::VT_OUTLINE, OUTLINE, false);
+  }
+  #[inline]
+  pub fn add_OUTLINE_COLOR(&mut self, OUTLINE_COLOR: flatbuffers::WIPOffset<CZMColor<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMColor>>(CZMCylinder::VT_OUTLINE_COLOR, OUTLINE_COLOR);
+  }
+  #[inline]
+  pub fn add_OUTLINE_WIDTH(&mut self, OUTLINE_WIDTH: f64) {
+    self.fbb_.push_slot::<f64>(CZMCylinder::VT_OUTLINE_WIDTH, OUTLINE_WIDTH, 0.0);
+  }
+  #[inline]
+  pub fn add_NUMBER_OF_VERTICAL_LINES(&mut self, NUMBER_OF_VERTICAL_LINES: i32) {
+    self.fbb_.push_slot::<i32>(CZMCylinder::VT_NUMBER_OF_VERTICAL_LINES, NUMBER_OF_VERTICAL_LINES, 0);
+  }
+  #[inline]
+  pub fn add_SLICES(&mut self, SLICES: i32) {
+    self.fbb_.push_slot::<i32>(CZMCylinder::VT_SLICES, SLICES, 0);
+  }
+  #[inline]
+  pub fn add_SHADOWS(&mut self, SHADOWS: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMCylinder::VT_SHADOWS, SHADOWS);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMCylinderBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CZMCylinderBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CZMCylinder<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CZMCylinder<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CZMCylinder");
+      ds.field("SHOW", &self.SHOW());
+      ds.field("LENGTH", &self.LENGTH());
+      ds.field("TOP_RADIUS", &self.TOP_RADIUS());
+      ds.field("BOTTOM_RADIUS", &self.BOTTOM_RADIUS());
+      ds.field("HEIGHT_REFERENCE", &self.HEIGHT_REFERENCE());
+      ds.field("FILL", &self.FILL());
+      ds.field("MATERIAL", &self.MATERIAL());
+      ds.field("OUTLINE", &self.OUTLINE());
+      ds.field("OUTLINE_COLOR", &self.OUTLINE_COLOR());
+      ds.field("OUTLINE_WIDTH", &self.OUTLINE_WIDTH());
+      ds.field("NUMBER_OF_VERTICAL_LINES", &self.NUMBER_OF_VERTICAL_LINES());
+      ds.field("SLICES", &self.SLICES());
+      ds.field("SHADOWS", &self.SHADOWS());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CZMCylinderT {
+  pub SHOW: bool,
+  pub LENGTH: f64,
+  pub TOP_RADIUS: f64,
+  pub BOTTOM_RADIUS: f64,
+  pub HEIGHT_REFERENCE: Option<String>,
+  pub FILL: bool,
+  pub MATERIAL: Option<Box<CZMMaterialT>>,
+  pub OUTLINE: bool,
+  pub OUTLINE_COLOR: Option<Box<CZMColorT>>,
+  pub OUTLINE_WIDTH: f64,
+  pub NUMBER_OF_VERTICAL_LINES: i32,
+  pub SLICES: i32,
+  pub SHADOWS: Option<String>,
+}
+impl Default for CZMCylinderT {
+  fn default() -> Self {
+    Self {
+      SHOW: false,
+      LENGTH: 0.0,
+      TOP_RADIUS: 0.0,
+      BOTTOM_RADIUS: 0.0,
+      HEIGHT_REFERENCE: None,
+      FILL: false,
+      MATERIAL: None,
+      OUTLINE: false,
+      OUTLINE_COLOR: None,
+      OUTLINE_WIDTH: 0.0,
+      NUMBER_OF_VERTICAL_LINES: 0,
+      SLICES: 0,
+      SHADOWS: None,
+    }
+  }
+}
+impl CZMCylinderT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CZMCylinder<'b>> {
+    let SHOW = self.SHOW;
+    let LENGTH = self.LENGTH;
+    let TOP_RADIUS = self.TOP_RADIUS;
+    let BOTTOM_RADIUS = self.BOTTOM_RADIUS;
+    let HEIGHT_REFERENCE = self.HEIGHT_REFERENCE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let FILL = self.FILL;
+    let MATERIAL = self.MATERIAL.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let OUTLINE = self.OUTLINE;
+    let OUTLINE_COLOR = self.OUTLINE_COLOR.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let OUTLINE_WIDTH = self.OUTLINE_WIDTH;
+    let NUMBER_OF_VERTICAL_LINES = self.NUMBER_OF_VERTICAL_LINES;
+    let SLICES = self.SLICES;
+    let SHADOWS = self.SHADOWS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    CZMCylinder::create(_fbb, &CZMCylinderArgs{
+      SHOW,
+      LENGTH,
+      TOP_RADIUS,
+      BOTTOM_RADIUS,
+      HEIGHT_REFERENCE,
+      FILL,
+      MATERIAL,
+      OUTLINE,
+      OUTLINE_COLOR,
+      OUTLINE_WIDTH,
+      NUMBER_OF_VERTICAL_LINES,
+      SLICES,
+      SHADOWS,
+    })
+  }
+}
+pub enum CZMEllipsoidOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Ellipsoid (3D shape)
+pub struct CZMEllipsoid<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CZMEllipsoid<'a> {
+  type Inner = CZMEllipsoid<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CZMEllipsoid<'a> {
+  pub const VT_SHOW: flatbuffers::VOffsetT = 4;
+  pub const VT_RADII_X: flatbuffers::VOffsetT = 6;
+  pub const VT_RADII_Y: flatbuffers::VOffsetT = 8;
+  pub const VT_RADII_Z: flatbuffers::VOffsetT = 10;
+  pub const VT_INNER_RADII_X: flatbuffers::VOffsetT = 12;
+  pub const VT_INNER_RADII_Y: flatbuffers::VOffsetT = 14;
+  pub const VT_INNER_RADII_Z: flatbuffers::VOffsetT = 16;
+  pub const VT_MINIMUM_CLOCK: flatbuffers::VOffsetT = 18;
+  pub const VT_MAXIMUM_CLOCK: flatbuffers::VOffsetT = 20;
+  pub const VT_MINIMUM_CONE: flatbuffers::VOffsetT = 22;
+  pub const VT_MAXIMUM_CONE: flatbuffers::VOffsetT = 24;
+  pub const VT_HEIGHT_REFERENCE: flatbuffers::VOffsetT = 26;
+  pub const VT_FILL: flatbuffers::VOffsetT = 28;
+  pub const VT_MATERIAL: flatbuffers::VOffsetT = 30;
+  pub const VT_OUTLINE: flatbuffers::VOffsetT = 32;
+  pub const VT_OUTLINE_COLOR: flatbuffers::VOffsetT = 34;
+  pub const VT_OUTLINE_WIDTH: flatbuffers::VOffsetT = 36;
+  pub const VT_STACK_PARTITIONS: flatbuffers::VOffsetT = 38;
+  pub const VT_SLICE_PARTITIONS: flatbuffers::VOffsetT = 40;
+  pub const VT_SUBDIVISIONS: flatbuffers::VOffsetT = 42;
+  pub const VT_SHADOWS: flatbuffers::VOffsetT = 44;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CZMEllipsoid { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CZMEllipsoidArgs<'args>
+  ) -> flatbuffers::WIPOffset<CZMEllipsoid<'bldr>> {
+    let mut builder = CZMEllipsoidBuilder::new(_fbb);
+    builder.add_OUTLINE_WIDTH(args.OUTLINE_WIDTH);
+    builder.add_MAXIMUM_CONE(args.MAXIMUM_CONE);
+    builder.add_MINIMUM_CONE(args.MINIMUM_CONE);
+    builder.add_MAXIMUM_CLOCK(args.MAXIMUM_CLOCK);
+    builder.add_MINIMUM_CLOCK(args.MINIMUM_CLOCK);
+    builder.add_INNER_RADII_Z(args.INNER_RADII_Z);
+    builder.add_INNER_RADII_Y(args.INNER_RADII_Y);
+    builder.add_INNER_RADII_X(args.INNER_RADII_X);
+    builder.add_RADII_Z(args.RADII_Z);
+    builder.add_RADII_Y(args.RADII_Y);
+    builder.add_RADII_X(args.RADII_X);
+    if let Some(x) = args.SHADOWS { builder.add_SHADOWS(x); }
+    builder.add_SUBDIVISIONS(args.SUBDIVISIONS);
+    builder.add_SLICE_PARTITIONS(args.SLICE_PARTITIONS);
+    builder.add_STACK_PARTITIONS(args.STACK_PARTITIONS);
+    if let Some(x) = args.OUTLINE_COLOR { builder.add_OUTLINE_COLOR(x); }
+    if let Some(x) = args.MATERIAL { builder.add_MATERIAL(x); }
+    if let Some(x) = args.HEIGHT_REFERENCE { builder.add_HEIGHT_REFERENCE(x); }
+    builder.add_OUTLINE(args.OUTLINE);
+    builder.add_FILL(args.FILL);
+    builder.add_SHOW(args.SHOW);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CZMEllipsoidT {
+    let SHOW = self.SHOW();
+    let RADII_X = self.RADII_X();
+    let RADII_Y = self.RADII_Y();
+    let RADII_Z = self.RADII_Z();
+    let INNER_RADII_X = self.INNER_RADII_X();
+    let INNER_RADII_Y = self.INNER_RADII_Y();
+    let INNER_RADII_Z = self.INNER_RADII_Z();
+    let MINIMUM_CLOCK = self.MINIMUM_CLOCK();
+    let MAXIMUM_CLOCK = self.MAXIMUM_CLOCK();
+    let MINIMUM_CONE = self.MINIMUM_CONE();
+    let MAXIMUM_CONE = self.MAXIMUM_CONE();
+    let HEIGHT_REFERENCE = self.HEIGHT_REFERENCE().map(|x| {
+      x.to_string()
+    });
+    let FILL = self.FILL();
+    let MATERIAL = self.MATERIAL().map(|x| {
+      Box::new(x.unpack())
+    });
+    let OUTLINE = self.OUTLINE();
+    let OUTLINE_COLOR = self.OUTLINE_COLOR().map(|x| {
+      Box::new(x.unpack())
+    });
+    let OUTLINE_WIDTH = self.OUTLINE_WIDTH();
+    let STACK_PARTITIONS = self.STACK_PARTITIONS();
+    let SLICE_PARTITIONS = self.SLICE_PARTITIONS();
+    let SUBDIVISIONS = self.SUBDIVISIONS();
+    let SHADOWS = self.SHADOWS().map(|x| {
+      x.to_string()
+    });
+    CZMEllipsoidT {
+      SHOW,
+      RADII_X,
+      RADII_Y,
+      RADII_Z,
+      INNER_RADII_X,
+      INNER_RADII_Y,
+      INNER_RADII_Z,
+      MINIMUM_CLOCK,
+      MAXIMUM_CLOCK,
+      MINIMUM_CONE,
+      MAXIMUM_CONE,
+      HEIGHT_REFERENCE,
+      FILL,
+      MATERIAL,
+      OUTLINE,
+      OUTLINE_COLOR,
+      OUTLINE_WIDTH,
+      STACK_PARTITIONS,
+      SLICE_PARTITIONS,
+      SUBDIVISIONS,
+      SHADOWS,
+    }
+  }
+
+  /// Whether the ellipsoid is displayed
+  #[inline]
+  pub fn SHOW(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMEllipsoid::VT_SHOW, Some(false)).unwrap()}
+  }
+  /// X radius in meters
+  #[inline]
+  pub fn RADII_X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMEllipsoid::VT_RADII_X, Some(0.0)).unwrap()}
+  }
+  /// Y radius in meters
+  #[inline]
+  pub fn RADII_Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMEllipsoid::VT_RADII_Y, Some(0.0)).unwrap()}
+  }
+  /// Z radius in meters
+  #[inline]
+  pub fn RADII_Z(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMEllipsoid::VT_RADII_Z, Some(0.0)).unwrap()}
+  }
+  /// Inner X radius
+  #[inline]
+  pub fn INNER_RADII_X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMEllipsoid::VT_INNER_RADII_X, Some(0.0)).unwrap()}
+  }
+  /// Inner Y radius
+  #[inline]
+  pub fn INNER_RADII_Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMEllipsoid::VT_INNER_RADII_Y, Some(0.0)).unwrap()}
+  }
+  /// Inner Z radius
+  #[inline]
+  pub fn INNER_RADII_Z(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMEllipsoid::VT_INNER_RADII_Z, Some(0.0)).unwrap()}
+  }
+  /// Minimum clock angle in radians
+  #[inline]
+  pub fn MINIMUM_CLOCK(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMEllipsoid::VT_MINIMUM_CLOCK, Some(0.0)).unwrap()}
+  }
+  /// Maximum clock angle in radians
+  #[inline]
+  pub fn MAXIMUM_CLOCK(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMEllipsoid::VT_MAXIMUM_CLOCK, Some(0.0)).unwrap()}
+  }
+  /// Minimum cone angle in radians
+  #[inline]
+  pub fn MINIMUM_CONE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMEllipsoid::VT_MINIMUM_CONE, Some(0.0)).unwrap()}
+  }
+  /// Maximum cone angle in radians
+  #[inline]
+  pub fn MAXIMUM_CONE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMEllipsoid::VT_MAXIMUM_CONE, Some(0.0)).unwrap()}
+  }
+  /// Height reference
+  #[inline]
+  pub fn HEIGHT_REFERENCE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMEllipsoid::VT_HEIGHT_REFERENCE, None)}
+  }
+  /// Fill flag
+  #[inline]
+  pub fn FILL(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMEllipsoid::VT_FILL, Some(false)).unwrap()}
+  }
+  /// Surface material
+  #[inline]
+  pub fn MATERIAL(&self) -> Option<CZMMaterial<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMMaterial>>(CZMEllipsoid::VT_MATERIAL, None)}
+  }
+  /// Outline flag
+  #[inline]
+  pub fn OUTLINE(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMEllipsoid::VT_OUTLINE, Some(false)).unwrap()}
+  }
+  /// Outline color
+  #[inline]
+  pub fn OUTLINE_COLOR(&self) -> Option<CZMColor<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMColor>>(CZMEllipsoid::VT_OUTLINE_COLOR, None)}
+  }
+  /// Outline width
+  #[inline]
+  pub fn OUTLINE_WIDTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMEllipsoid::VT_OUTLINE_WIDTH, Some(0.0)).unwrap()}
+  }
+  /// Stack partitions
+  #[inline]
+  pub fn STACK_PARTITIONS(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(CZMEllipsoid::VT_STACK_PARTITIONS, Some(0)).unwrap()}
+  }
+  /// Slice partitions
+  #[inline]
+  pub fn SLICE_PARTITIONS(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(CZMEllipsoid::VT_SLICE_PARTITIONS, Some(0)).unwrap()}
+  }
+  /// Subdivisions
+  #[inline]
+  pub fn SUBDIVISIONS(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(CZMEllipsoid::VT_SUBDIVISIONS, Some(0)).unwrap()}
+  }
+  /// Shadow mode
+  #[inline]
+  pub fn SHADOWS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMEllipsoid::VT_SHADOWS, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for CZMEllipsoid<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<bool>("SHOW", Self::VT_SHOW, false)?
+     .visit_field::<f64>("RADII_X", Self::VT_RADII_X, false)?
+     .visit_field::<f64>("RADII_Y", Self::VT_RADII_Y, false)?
+     .visit_field::<f64>("RADII_Z", Self::VT_RADII_Z, false)?
+     .visit_field::<f64>("INNER_RADII_X", Self::VT_INNER_RADII_X, false)?
+     .visit_field::<f64>("INNER_RADII_Y", Self::VT_INNER_RADII_Y, false)?
+     .visit_field::<f64>("INNER_RADII_Z", Self::VT_INNER_RADII_Z, false)?
+     .visit_field::<f64>("MINIMUM_CLOCK", Self::VT_MINIMUM_CLOCK, false)?
+     .visit_field::<f64>("MAXIMUM_CLOCK", Self::VT_MAXIMUM_CLOCK, false)?
+     .visit_field::<f64>("MINIMUM_CONE", Self::VT_MINIMUM_CONE, false)?
+     .visit_field::<f64>("MAXIMUM_CONE", Self::VT_MAXIMUM_CONE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("HEIGHT_REFERENCE", Self::VT_HEIGHT_REFERENCE, false)?
+     .visit_field::<bool>("FILL", Self::VT_FILL, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMMaterial>>("MATERIAL", Self::VT_MATERIAL, false)?
+     .visit_field::<bool>("OUTLINE", Self::VT_OUTLINE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMColor>>("OUTLINE_COLOR", Self::VT_OUTLINE_COLOR, false)?
+     .visit_field::<f64>("OUTLINE_WIDTH", Self::VT_OUTLINE_WIDTH, false)?
+     .visit_field::<i32>("STACK_PARTITIONS", Self::VT_STACK_PARTITIONS, false)?
+     .visit_field::<i32>("SLICE_PARTITIONS", Self::VT_SLICE_PARTITIONS, false)?
+     .visit_field::<i32>("SUBDIVISIONS", Self::VT_SUBDIVISIONS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SHADOWS", Self::VT_SHADOWS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CZMEllipsoidArgs<'a> {
+    pub SHOW: bool,
+    pub RADII_X: f64,
+    pub RADII_Y: f64,
+    pub RADII_Z: f64,
+    pub INNER_RADII_X: f64,
+    pub INNER_RADII_Y: f64,
+    pub INNER_RADII_Z: f64,
+    pub MINIMUM_CLOCK: f64,
+    pub MAXIMUM_CLOCK: f64,
+    pub MINIMUM_CONE: f64,
+    pub MAXIMUM_CONE: f64,
+    pub HEIGHT_REFERENCE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub FILL: bool,
+    pub MATERIAL: Option<flatbuffers::WIPOffset<CZMMaterial<'a>>>,
+    pub OUTLINE: bool,
+    pub OUTLINE_COLOR: Option<flatbuffers::WIPOffset<CZMColor<'a>>>,
+    pub OUTLINE_WIDTH: f64,
+    pub STACK_PARTITIONS: i32,
+    pub SLICE_PARTITIONS: i32,
+    pub SUBDIVISIONS: i32,
+    pub SHADOWS: Option<flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for CZMEllipsoidArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CZMEllipsoidArgs {
+      SHOW: false,
+      RADII_X: 0.0,
+      RADII_Y: 0.0,
+      RADII_Z: 0.0,
+      INNER_RADII_X: 0.0,
+      INNER_RADII_Y: 0.0,
+      INNER_RADII_Z: 0.0,
+      MINIMUM_CLOCK: 0.0,
+      MAXIMUM_CLOCK: 0.0,
+      MINIMUM_CONE: 0.0,
+      MAXIMUM_CONE: 0.0,
+      HEIGHT_REFERENCE: None,
+      FILL: false,
+      MATERIAL: None,
+      OUTLINE: false,
+      OUTLINE_COLOR: None,
+      OUTLINE_WIDTH: 0.0,
+      STACK_PARTITIONS: 0,
+      SLICE_PARTITIONS: 0,
+      SUBDIVISIONS: 0,
+      SHADOWS: None,
+    }
+  }
+}
+
+pub struct CZMEllipsoidBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMEllipsoidBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_SHOW(&mut self, SHOW: bool) {
+    self.fbb_.push_slot::<bool>(CZMEllipsoid::VT_SHOW, SHOW, false);
+  }
+  #[inline]
+  pub fn add_RADII_X(&mut self, RADII_X: f64) {
+    self.fbb_.push_slot::<f64>(CZMEllipsoid::VT_RADII_X, RADII_X, 0.0);
+  }
+  #[inline]
+  pub fn add_RADII_Y(&mut self, RADII_Y: f64) {
+    self.fbb_.push_slot::<f64>(CZMEllipsoid::VT_RADII_Y, RADII_Y, 0.0);
+  }
+  #[inline]
+  pub fn add_RADII_Z(&mut self, RADII_Z: f64) {
+    self.fbb_.push_slot::<f64>(CZMEllipsoid::VT_RADII_Z, RADII_Z, 0.0);
+  }
+  #[inline]
+  pub fn add_INNER_RADII_X(&mut self, INNER_RADII_X: f64) {
+    self.fbb_.push_slot::<f64>(CZMEllipsoid::VT_INNER_RADII_X, INNER_RADII_X, 0.0);
+  }
+  #[inline]
+  pub fn add_INNER_RADII_Y(&mut self, INNER_RADII_Y: f64) {
+    self.fbb_.push_slot::<f64>(CZMEllipsoid::VT_INNER_RADII_Y, INNER_RADII_Y, 0.0);
+  }
+  #[inline]
+  pub fn add_INNER_RADII_Z(&mut self, INNER_RADII_Z: f64) {
+    self.fbb_.push_slot::<f64>(CZMEllipsoid::VT_INNER_RADII_Z, INNER_RADII_Z, 0.0);
+  }
+  #[inline]
+  pub fn add_MINIMUM_CLOCK(&mut self, MINIMUM_CLOCK: f64) {
+    self.fbb_.push_slot::<f64>(CZMEllipsoid::VT_MINIMUM_CLOCK, MINIMUM_CLOCK, 0.0);
+  }
+  #[inline]
+  pub fn add_MAXIMUM_CLOCK(&mut self, MAXIMUM_CLOCK: f64) {
+    self.fbb_.push_slot::<f64>(CZMEllipsoid::VT_MAXIMUM_CLOCK, MAXIMUM_CLOCK, 0.0);
+  }
+  #[inline]
+  pub fn add_MINIMUM_CONE(&mut self, MINIMUM_CONE: f64) {
+    self.fbb_.push_slot::<f64>(CZMEllipsoid::VT_MINIMUM_CONE, MINIMUM_CONE, 0.0);
+  }
+  #[inline]
+  pub fn add_MAXIMUM_CONE(&mut self, MAXIMUM_CONE: f64) {
+    self.fbb_.push_slot::<f64>(CZMEllipsoid::VT_MAXIMUM_CONE, MAXIMUM_CONE, 0.0);
+  }
+  #[inline]
+  pub fn add_HEIGHT_REFERENCE(&mut self, HEIGHT_REFERENCE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMEllipsoid::VT_HEIGHT_REFERENCE, HEIGHT_REFERENCE);
+  }
+  #[inline]
+  pub fn add_FILL(&mut self, FILL: bool) {
+    self.fbb_.push_slot::<bool>(CZMEllipsoid::VT_FILL, FILL, false);
+  }
+  #[inline]
+  pub fn add_MATERIAL(&mut self, MATERIAL: flatbuffers::WIPOffset<CZMMaterial<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMMaterial>>(CZMEllipsoid::VT_MATERIAL, MATERIAL);
+  }
+  #[inline]
+  pub fn add_OUTLINE(&mut self, OUTLINE: bool) {
+    self.fbb_.push_slot::<bool>(CZMEllipsoid::VT_OUTLINE, OUTLINE, false);
+  }
+  #[inline]
+  pub fn add_OUTLINE_COLOR(&mut self, OUTLINE_COLOR: flatbuffers::WIPOffset<CZMColor<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMColor>>(CZMEllipsoid::VT_OUTLINE_COLOR, OUTLINE_COLOR);
+  }
+  #[inline]
+  pub fn add_OUTLINE_WIDTH(&mut self, OUTLINE_WIDTH: f64) {
+    self.fbb_.push_slot::<f64>(CZMEllipsoid::VT_OUTLINE_WIDTH, OUTLINE_WIDTH, 0.0);
+  }
+  #[inline]
+  pub fn add_STACK_PARTITIONS(&mut self, STACK_PARTITIONS: i32) {
+    self.fbb_.push_slot::<i32>(CZMEllipsoid::VT_STACK_PARTITIONS, STACK_PARTITIONS, 0);
+  }
+  #[inline]
+  pub fn add_SLICE_PARTITIONS(&mut self, SLICE_PARTITIONS: i32) {
+    self.fbb_.push_slot::<i32>(CZMEllipsoid::VT_SLICE_PARTITIONS, SLICE_PARTITIONS, 0);
+  }
+  #[inline]
+  pub fn add_SUBDIVISIONS(&mut self, SUBDIVISIONS: i32) {
+    self.fbb_.push_slot::<i32>(CZMEllipsoid::VT_SUBDIVISIONS, SUBDIVISIONS, 0);
+  }
+  #[inline]
+  pub fn add_SHADOWS(&mut self, SHADOWS: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMEllipsoid::VT_SHADOWS, SHADOWS);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMEllipsoidBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CZMEllipsoidBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CZMEllipsoid<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CZMEllipsoid<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CZMEllipsoid");
+      ds.field("SHOW", &self.SHOW());
+      ds.field("RADII_X", &self.RADII_X());
+      ds.field("RADII_Y", &self.RADII_Y());
+      ds.field("RADII_Z", &self.RADII_Z());
+      ds.field("INNER_RADII_X", &self.INNER_RADII_X());
+      ds.field("INNER_RADII_Y", &self.INNER_RADII_Y());
+      ds.field("INNER_RADII_Z", &self.INNER_RADII_Z());
+      ds.field("MINIMUM_CLOCK", &self.MINIMUM_CLOCK());
+      ds.field("MAXIMUM_CLOCK", &self.MAXIMUM_CLOCK());
+      ds.field("MINIMUM_CONE", &self.MINIMUM_CONE());
+      ds.field("MAXIMUM_CONE", &self.MAXIMUM_CONE());
+      ds.field("HEIGHT_REFERENCE", &self.HEIGHT_REFERENCE());
+      ds.field("FILL", &self.FILL());
+      ds.field("MATERIAL", &self.MATERIAL());
+      ds.field("OUTLINE", &self.OUTLINE());
+      ds.field("OUTLINE_COLOR", &self.OUTLINE_COLOR());
+      ds.field("OUTLINE_WIDTH", &self.OUTLINE_WIDTH());
+      ds.field("STACK_PARTITIONS", &self.STACK_PARTITIONS());
+      ds.field("SLICE_PARTITIONS", &self.SLICE_PARTITIONS());
+      ds.field("SUBDIVISIONS", &self.SUBDIVISIONS());
+      ds.field("SHADOWS", &self.SHADOWS());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CZMEllipsoidT {
+  pub SHOW: bool,
+  pub RADII_X: f64,
+  pub RADII_Y: f64,
+  pub RADII_Z: f64,
+  pub INNER_RADII_X: f64,
+  pub INNER_RADII_Y: f64,
+  pub INNER_RADII_Z: f64,
+  pub MINIMUM_CLOCK: f64,
+  pub MAXIMUM_CLOCK: f64,
+  pub MINIMUM_CONE: f64,
+  pub MAXIMUM_CONE: f64,
+  pub HEIGHT_REFERENCE: Option<String>,
+  pub FILL: bool,
+  pub MATERIAL: Option<Box<CZMMaterialT>>,
+  pub OUTLINE: bool,
+  pub OUTLINE_COLOR: Option<Box<CZMColorT>>,
+  pub OUTLINE_WIDTH: f64,
+  pub STACK_PARTITIONS: i32,
+  pub SLICE_PARTITIONS: i32,
+  pub SUBDIVISIONS: i32,
+  pub SHADOWS: Option<String>,
+}
+impl Default for CZMEllipsoidT {
+  fn default() -> Self {
+    Self {
+      SHOW: false,
+      RADII_X: 0.0,
+      RADII_Y: 0.0,
+      RADII_Z: 0.0,
+      INNER_RADII_X: 0.0,
+      INNER_RADII_Y: 0.0,
+      INNER_RADII_Z: 0.0,
+      MINIMUM_CLOCK: 0.0,
+      MAXIMUM_CLOCK: 0.0,
+      MINIMUM_CONE: 0.0,
+      MAXIMUM_CONE: 0.0,
+      HEIGHT_REFERENCE: None,
+      FILL: false,
+      MATERIAL: None,
+      OUTLINE: false,
+      OUTLINE_COLOR: None,
+      OUTLINE_WIDTH: 0.0,
+      STACK_PARTITIONS: 0,
+      SLICE_PARTITIONS: 0,
+      SUBDIVISIONS: 0,
+      SHADOWS: None,
+    }
+  }
+}
+impl CZMEllipsoidT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CZMEllipsoid<'b>> {
+    let SHOW = self.SHOW;
+    let RADII_X = self.RADII_X;
+    let RADII_Y = self.RADII_Y;
+    let RADII_Z = self.RADII_Z;
+    let INNER_RADII_X = self.INNER_RADII_X;
+    let INNER_RADII_Y = self.INNER_RADII_Y;
+    let INNER_RADII_Z = self.INNER_RADII_Z;
+    let MINIMUM_CLOCK = self.MINIMUM_CLOCK;
+    let MAXIMUM_CLOCK = self.MAXIMUM_CLOCK;
+    let MINIMUM_CONE = self.MINIMUM_CONE;
+    let MAXIMUM_CONE = self.MAXIMUM_CONE;
+    let HEIGHT_REFERENCE = self.HEIGHT_REFERENCE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let FILL = self.FILL;
+    let MATERIAL = self.MATERIAL.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let OUTLINE = self.OUTLINE;
+    let OUTLINE_COLOR = self.OUTLINE_COLOR.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let OUTLINE_WIDTH = self.OUTLINE_WIDTH;
+    let STACK_PARTITIONS = self.STACK_PARTITIONS;
+    let SLICE_PARTITIONS = self.SLICE_PARTITIONS;
+    let SUBDIVISIONS = self.SUBDIVISIONS;
+    let SHADOWS = self.SHADOWS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    CZMEllipsoid::create(_fbb, &CZMEllipsoidArgs{
+      SHOW,
+      RADII_X,
+      RADII_Y,
+      RADII_Z,
+      INNER_RADII_X,
+      INNER_RADII_Y,
+      INNER_RADII_Z,
+      MINIMUM_CLOCK,
+      MAXIMUM_CLOCK,
+      MINIMUM_CONE,
+      MAXIMUM_CONE,
+      HEIGHT_REFERENCE,
+      FILL,
+      MATERIAL,
+      OUTLINE,
+      OUTLINE_COLOR,
+      OUTLINE_WIDTH,
+      STACK_PARTITIONS,
+      SLICE_PARTITIONS,
+      SUBDIVISIONS,
+      SHADOWS,
+    })
+  }
+}
+pub enum CZMPolylineVolumeOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Polyline volume (extruded 2D shape)
+pub struct CZMPolylineVolume<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CZMPolylineVolume<'a> {
+  type Inner = CZMPolylineVolume<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CZMPolylineVolume<'a> {
+  pub const VT_SHOW: flatbuffers::VOffsetT = 4;
+  pub const VT_POSITIONS_CARTOGRAPHIC_DEGREES: flatbuffers::VOffsetT = 6;
+  pub const VT_POSITIONS_CARTESIAN: flatbuffers::VOffsetT = 8;
+  pub const VT_SHAPE: flatbuffers::VOffsetT = 10;
+  pub const VT_CORNER_TYPE: flatbuffers::VOffsetT = 12;
+  pub const VT_GRANULARITY: flatbuffers::VOffsetT = 14;
+  pub const VT_FILL: flatbuffers::VOffsetT = 16;
+  pub const VT_MATERIAL: flatbuffers::VOffsetT = 18;
+  pub const VT_OUTLINE: flatbuffers::VOffsetT = 20;
+  pub const VT_OUTLINE_COLOR: flatbuffers::VOffsetT = 22;
+  pub const VT_OUTLINE_WIDTH: flatbuffers::VOffsetT = 24;
+  pub const VT_SHADOWS: flatbuffers::VOffsetT = 26;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CZMPolylineVolume { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CZMPolylineVolumeArgs<'args>
+  ) -> flatbuffers::WIPOffset<CZMPolylineVolume<'bldr>> {
+    let mut builder = CZMPolylineVolumeBuilder::new(_fbb);
+    builder.add_OUTLINE_WIDTH(args.OUTLINE_WIDTH);
+    builder.add_GRANULARITY(args.GRANULARITY);
+    if let Some(x) = args.SHADOWS { builder.add_SHADOWS(x); }
+    if let Some(x) = args.OUTLINE_COLOR { builder.add_OUTLINE_COLOR(x); }
+    if let Some(x) = args.MATERIAL { builder.add_MATERIAL(x); }
+    if let Some(x) = args.CORNER_TYPE { builder.add_CORNER_TYPE(x); }
+    if let Some(x) = args.SHAPE { builder.add_SHAPE(x); }
+    if let Some(x) = args.POSITIONS_CARTESIAN { builder.add_POSITIONS_CARTESIAN(x); }
+    if let Some(x) = args.POSITIONS_CARTOGRAPHIC_DEGREES { builder.add_POSITIONS_CARTOGRAPHIC_DEGREES(x); }
+    builder.add_OUTLINE(args.OUTLINE);
+    builder.add_FILL(args.FILL);
+    builder.add_SHOW(args.SHOW);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CZMPolylineVolumeT {
+    let SHOW = self.SHOW();
+    let POSITIONS_CARTOGRAPHIC_DEGREES = self.POSITIONS_CARTOGRAPHIC_DEGREES().map(|x| {
+      x.into_iter().collect()
+    });
+    let POSITIONS_CARTESIAN = self.POSITIONS_CARTESIAN().map(|x| {
+      x.into_iter().collect()
+    });
+    let SHAPE = self.SHAPE().map(|x| {
+      x.into_iter().collect()
+    });
+    let CORNER_TYPE = self.CORNER_TYPE().map(|x| {
+      x.to_string()
+    });
+    let GRANULARITY = self.GRANULARITY();
+    let FILL = self.FILL();
+    let MATERIAL = self.MATERIAL().map(|x| {
+      Box::new(x.unpack())
+    });
+    let OUTLINE = self.OUTLINE();
+    let OUTLINE_COLOR = self.OUTLINE_COLOR().map(|x| {
+      Box::new(x.unpack())
+    });
+    let OUTLINE_WIDTH = self.OUTLINE_WIDTH();
+    let SHADOWS = self.SHADOWS().map(|x| {
+      x.to_string()
+    });
+    CZMPolylineVolumeT {
+      SHOW,
+      POSITIONS_CARTOGRAPHIC_DEGREES,
+      POSITIONS_CARTESIAN,
+      SHAPE,
+      CORNER_TYPE,
+      GRANULARITY,
+      FILL,
+      MATERIAL,
+      OUTLINE,
+      OUTLINE_COLOR,
+      OUTLINE_WIDTH,
+      SHADOWS,
+    }
+  }
+
+  /// Whether displayed
+  #[inline]
+  pub fn SHOW(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMPolylineVolume::VT_SHOW, Some(false)).unwrap()}
+  }
+  /// Positions as cartographic degrees
+  #[inline]
+  pub fn POSITIONS_CARTOGRAPHIC_DEGREES(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(CZMPolylineVolume::VT_POSITIONS_CARTOGRAPHIC_DEGREES, None)}
+  }
+  /// Positions as Cartesian
+  #[inline]
+  pub fn POSITIONS_CARTESIAN(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(CZMPolylineVolume::VT_POSITIONS_CARTESIAN, None)}
+  }
+  /// 2D shape [x, y, x, y, ...]
+  #[inline]
+  pub fn SHAPE(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(CZMPolylineVolume::VT_SHAPE, None)}
+  }
+  /// Corner type
+  #[inline]
+  pub fn CORNER_TYPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMPolylineVolume::VT_CORNER_TYPE, None)}
+  }
+  /// Granularity in radians
+  #[inline]
+  pub fn GRANULARITY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMPolylineVolume::VT_GRANULARITY, Some(0.0)).unwrap()}
+  }
+  /// Fill flag
+  #[inline]
+  pub fn FILL(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMPolylineVolume::VT_FILL, Some(false)).unwrap()}
+  }
+  /// Surface material
+  #[inline]
+  pub fn MATERIAL(&self) -> Option<CZMMaterial<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMMaterial>>(CZMPolylineVolume::VT_MATERIAL, None)}
+  }
+  /// Outline flag
+  #[inline]
+  pub fn OUTLINE(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMPolylineVolume::VT_OUTLINE, Some(false)).unwrap()}
+  }
+  /// Outline color
+  #[inline]
+  pub fn OUTLINE_COLOR(&self) -> Option<CZMColor<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMColor>>(CZMPolylineVolume::VT_OUTLINE_COLOR, None)}
+  }
+  /// Outline width
+  #[inline]
+  pub fn OUTLINE_WIDTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMPolylineVolume::VT_OUTLINE_WIDTH, Some(0.0)).unwrap()}
+  }
+  /// Shadow mode
+  #[inline]
+  pub fn SHADOWS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMPolylineVolume::VT_SHADOWS, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for CZMPolylineVolume<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<bool>("SHOW", Self::VT_SHOW, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("POSITIONS_CARTOGRAPHIC_DEGREES", Self::VT_POSITIONS_CARTOGRAPHIC_DEGREES, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("POSITIONS_CARTESIAN", Self::VT_POSITIONS_CARTESIAN, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("SHAPE", Self::VT_SHAPE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CORNER_TYPE", Self::VT_CORNER_TYPE, false)?
+     .visit_field::<f64>("GRANULARITY", Self::VT_GRANULARITY, false)?
+     .visit_field::<bool>("FILL", Self::VT_FILL, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMMaterial>>("MATERIAL", Self::VT_MATERIAL, false)?
+     .visit_field::<bool>("OUTLINE", Self::VT_OUTLINE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMColor>>("OUTLINE_COLOR", Self::VT_OUTLINE_COLOR, false)?
+     .visit_field::<f64>("OUTLINE_WIDTH", Self::VT_OUTLINE_WIDTH, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SHADOWS", Self::VT_SHADOWS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CZMPolylineVolumeArgs<'a> {
+    pub SHOW: bool,
+    pub POSITIONS_CARTOGRAPHIC_DEGREES: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub POSITIONS_CARTESIAN: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub SHAPE: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub CORNER_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub GRANULARITY: f64,
+    pub FILL: bool,
+    pub MATERIAL: Option<flatbuffers::WIPOffset<CZMMaterial<'a>>>,
+    pub OUTLINE: bool,
+    pub OUTLINE_COLOR: Option<flatbuffers::WIPOffset<CZMColor<'a>>>,
+    pub OUTLINE_WIDTH: f64,
+    pub SHADOWS: Option<flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for CZMPolylineVolumeArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CZMPolylineVolumeArgs {
+      SHOW: false,
+      POSITIONS_CARTOGRAPHIC_DEGREES: None,
+      POSITIONS_CARTESIAN: None,
+      SHAPE: None,
+      CORNER_TYPE: None,
+      GRANULARITY: 0.0,
+      FILL: false,
+      MATERIAL: None,
+      OUTLINE: false,
+      OUTLINE_COLOR: None,
+      OUTLINE_WIDTH: 0.0,
+      SHADOWS: None,
+    }
+  }
+}
+
+pub struct CZMPolylineVolumeBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMPolylineVolumeBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_SHOW(&mut self, SHOW: bool) {
+    self.fbb_.push_slot::<bool>(CZMPolylineVolume::VT_SHOW, SHOW, false);
+  }
+  #[inline]
+  pub fn add_POSITIONS_CARTOGRAPHIC_DEGREES(&mut self, POSITIONS_CARTOGRAPHIC_DEGREES: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMPolylineVolume::VT_POSITIONS_CARTOGRAPHIC_DEGREES, POSITIONS_CARTOGRAPHIC_DEGREES);
+  }
+  #[inline]
+  pub fn add_POSITIONS_CARTESIAN(&mut self, POSITIONS_CARTESIAN: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMPolylineVolume::VT_POSITIONS_CARTESIAN, POSITIONS_CARTESIAN);
+  }
+  #[inline]
+  pub fn add_SHAPE(&mut self, SHAPE: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMPolylineVolume::VT_SHAPE, SHAPE);
+  }
+  #[inline]
+  pub fn add_CORNER_TYPE(&mut self, CORNER_TYPE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMPolylineVolume::VT_CORNER_TYPE, CORNER_TYPE);
+  }
+  #[inline]
+  pub fn add_GRANULARITY(&mut self, GRANULARITY: f64) {
+    self.fbb_.push_slot::<f64>(CZMPolylineVolume::VT_GRANULARITY, GRANULARITY, 0.0);
+  }
+  #[inline]
+  pub fn add_FILL(&mut self, FILL: bool) {
+    self.fbb_.push_slot::<bool>(CZMPolylineVolume::VT_FILL, FILL, false);
+  }
+  #[inline]
+  pub fn add_MATERIAL(&mut self, MATERIAL: flatbuffers::WIPOffset<CZMMaterial<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMMaterial>>(CZMPolylineVolume::VT_MATERIAL, MATERIAL);
+  }
+  #[inline]
+  pub fn add_OUTLINE(&mut self, OUTLINE: bool) {
+    self.fbb_.push_slot::<bool>(CZMPolylineVolume::VT_OUTLINE, OUTLINE, false);
+  }
+  #[inline]
+  pub fn add_OUTLINE_COLOR(&mut self, OUTLINE_COLOR: flatbuffers::WIPOffset<CZMColor<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMColor>>(CZMPolylineVolume::VT_OUTLINE_COLOR, OUTLINE_COLOR);
+  }
+  #[inline]
+  pub fn add_OUTLINE_WIDTH(&mut self, OUTLINE_WIDTH: f64) {
+    self.fbb_.push_slot::<f64>(CZMPolylineVolume::VT_OUTLINE_WIDTH, OUTLINE_WIDTH, 0.0);
+  }
+  #[inline]
+  pub fn add_SHADOWS(&mut self, SHADOWS: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMPolylineVolume::VT_SHADOWS, SHADOWS);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMPolylineVolumeBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CZMPolylineVolumeBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CZMPolylineVolume<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CZMPolylineVolume<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CZMPolylineVolume");
+      ds.field("SHOW", &self.SHOW());
+      ds.field("POSITIONS_CARTOGRAPHIC_DEGREES", &self.POSITIONS_CARTOGRAPHIC_DEGREES());
+      ds.field("POSITIONS_CARTESIAN", &self.POSITIONS_CARTESIAN());
+      ds.field("SHAPE", &self.SHAPE());
+      ds.field("CORNER_TYPE", &self.CORNER_TYPE());
+      ds.field("GRANULARITY", &self.GRANULARITY());
+      ds.field("FILL", &self.FILL());
+      ds.field("MATERIAL", &self.MATERIAL());
+      ds.field("OUTLINE", &self.OUTLINE());
+      ds.field("OUTLINE_COLOR", &self.OUTLINE_COLOR());
+      ds.field("OUTLINE_WIDTH", &self.OUTLINE_WIDTH());
+      ds.field("SHADOWS", &self.SHADOWS());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CZMPolylineVolumeT {
+  pub SHOW: bool,
+  pub POSITIONS_CARTOGRAPHIC_DEGREES: Option<Vec<f64>>,
+  pub POSITIONS_CARTESIAN: Option<Vec<f64>>,
+  pub SHAPE: Option<Vec<f64>>,
+  pub CORNER_TYPE: Option<String>,
+  pub GRANULARITY: f64,
+  pub FILL: bool,
+  pub MATERIAL: Option<Box<CZMMaterialT>>,
+  pub OUTLINE: bool,
+  pub OUTLINE_COLOR: Option<Box<CZMColorT>>,
+  pub OUTLINE_WIDTH: f64,
+  pub SHADOWS: Option<String>,
+}
+impl Default for CZMPolylineVolumeT {
+  fn default() -> Self {
+    Self {
+      SHOW: false,
+      POSITIONS_CARTOGRAPHIC_DEGREES: None,
+      POSITIONS_CARTESIAN: None,
+      SHAPE: None,
+      CORNER_TYPE: None,
+      GRANULARITY: 0.0,
+      FILL: false,
+      MATERIAL: None,
+      OUTLINE: false,
+      OUTLINE_COLOR: None,
+      OUTLINE_WIDTH: 0.0,
+      SHADOWS: None,
+    }
+  }
+}
+impl CZMPolylineVolumeT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CZMPolylineVolume<'b>> {
+    let SHOW = self.SHOW;
+    let POSITIONS_CARTOGRAPHIC_DEGREES = self.POSITIONS_CARTOGRAPHIC_DEGREES.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let POSITIONS_CARTESIAN = self.POSITIONS_CARTESIAN.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let SHAPE = self.SHAPE.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let CORNER_TYPE = self.CORNER_TYPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let GRANULARITY = self.GRANULARITY;
+    let FILL = self.FILL;
+    let MATERIAL = self.MATERIAL.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let OUTLINE = self.OUTLINE;
+    let OUTLINE_COLOR = self.OUTLINE_COLOR.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let OUTLINE_WIDTH = self.OUTLINE_WIDTH;
+    let SHADOWS = self.SHADOWS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    CZMPolylineVolume::create(_fbb, &CZMPolylineVolumeArgs{
+      SHOW,
+      POSITIONS_CARTOGRAPHIC_DEGREES,
+      POSITIONS_CARTESIAN,
+      SHAPE,
+      CORNER_TYPE,
+      GRANULARITY,
+      FILL,
+      MATERIAL,
+      OUTLINE,
+      OUTLINE_COLOR,
+      OUTLINE_WIDTH,
+      SHADOWS,
+    })
+  }
+}
+pub enum CZMRectangleOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Rectangle (cartographic rectangle)
+pub struct CZMRectangle<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CZMRectangle<'a> {
+  type Inner = CZMRectangle<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CZMRectangle<'a> {
+  pub const VT_SHOW: flatbuffers::VOffsetT = 4;
+  pub const VT_COORDINATES_WSEN_DEGREES: flatbuffers::VOffsetT = 6;
+  pub const VT_HEIGHT: flatbuffers::VOffsetT = 8;
+  pub const VT_HEIGHT_REFERENCE: flatbuffers::VOffsetT = 10;
+  pub const VT_EXTRUDED_HEIGHT: flatbuffers::VOffsetT = 12;
+  pub const VT_EXTRUDED_HEIGHT_REFERENCE: flatbuffers::VOffsetT = 14;
+  pub const VT_ROTATION: flatbuffers::VOffsetT = 16;
+  pub const VT_ST_ROTATION: flatbuffers::VOffsetT = 18;
+  pub const VT_GRANULARITY: flatbuffers::VOffsetT = 20;
+  pub const VT_FILL: flatbuffers::VOffsetT = 22;
+  pub const VT_MATERIAL: flatbuffers::VOffsetT = 24;
+  pub const VT_OUTLINE: flatbuffers::VOffsetT = 26;
+  pub const VT_OUTLINE_COLOR: flatbuffers::VOffsetT = 28;
+  pub const VT_OUTLINE_WIDTH: flatbuffers::VOffsetT = 30;
+  pub const VT_SHADOWS: flatbuffers::VOffsetT = 32;
+  pub const VT_CLASSIFICATION_TYPE: flatbuffers::VOffsetT = 34;
+  pub const VT_Z_INDEX: flatbuffers::VOffsetT = 36;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CZMRectangle { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CZMRectangleArgs<'args>
+  ) -> flatbuffers::WIPOffset<CZMRectangle<'bldr>> {
+    let mut builder = CZMRectangleBuilder::new(_fbb);
+    builder.add_OUTLINE_WIDTH(args.OUTLINE_WIDTH);
+    builder.add_GRANULARITY(args.GRANULARITY);
+    builder.add_ST_ROTATION(args.ST_ROTATION);
+    builder.add_ROTATION(args.ROTATION);
+    builder.add_EXTRUDED_HEIGHT(args.EXTRUDED_HEIGHT);
+    builder.add_HEIGHT(args.HEIGHT);
+    builder.add_Z_INDEX(args.Z_INDEX);
+    if let Some(x) = args.CLASSIFICATION_TYPE { builder.add_CLASSIFICATION_TYPE(x); }
+    if let Some(x) = args.SHADOWS { builder.add_SHADOWS(x); }
+    if let Some(x) = args.OUTLINE_COLOR { builder.add_OUTLINE_COLOR(x); }
+    if let Some(x) = args.MATERIAL { builder.add_MATERIAL(x); }
+    if let Some(x) = args.EXTRUDED_HEIGHT_REFERENCE { builder.add_EXTRUDED_HEIGHT_REFERENCE(x); }
+    if let Some(x) = args.HEIGHT_REFERENCE { builder.add_HEIGHT_REFERENCE(x); }
+    if let Some(x) = args.COORDINATES_WSEN_DEGREES { builder.add_COORDINATES_WSEN_DEGREES(x); }
+    builder.add_OUTLINE(args.OUTLINE);
+    builder.add_FILL(args.FILL);
+    builder.add_SHOW(args.SHOW);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CZMRectangleT {
+    let SHOW = self.SHOW();
+    let COORDINATES_WSEN_DEGREES = self.COORDINATES_WSEN_DEGREES().map(|x| {
+      x.into_iter().collect()
+    });
+    let HEIGHT = self.HEIGHT();
+    let HEIGHT_REFERENCE = self.HEIGHT_REFERENCE().map(|x| {
+      x.to_string()
+    });
+    let EXTRUDED_HEIGHT = self.EXTRUDED_HEIGHT();
+    let EXTRUDED_HEIGHT_REFERENCE = self.EXTRUDED_HEIGHT_REFERENCE().map(|x| {
+      x.to_string()
+    });
+    let ROTATION = self.ROTATION();
+    let ST_ROTATION = self.ST_ROTATION();
+    let GRANULARITY = self.GRANULARITY();
+    let FILL = self.FILL();
+    let MATERIAL = self.MATERIAL().map(|x| {
+      Box::new(x.unpack())
+    });
+    let OUTLINE = self.OUTLINE();
+    let OUTLINE_COLOR = self.OUTLINE_COLOR().map(|x| {
+      Box::new(x.unpack())
+    });
+    let OUTLINE_WIDTH = self.OUTLINE_WIDTH();
+    let SHADOWS = self.SHADOWS().map(|x| {
+      x.to_string()
+    });
+    let CLASSIFICATION_TYPE = self.CLASSIFICATION_TYPE().map(|x| {
+      x.to_string()
+    });
+    let Z_INDEX = self.Z_INDEX();
+    CZMRectangleT {
+      SHOW,
+      COORDINATES_WSEN_DEGREES,
+      HEIGHT,
+      HEIGHT_REFERENCE,
+      EXTRUDED_HEIGHT,
+      EXTRUDED_HEIGHT_REFERENCE,
+      ROTATION,
+      ST_ROTATION,
+      GRANULARITY,
+      FILL,
+      MATERIAL,
+      OUTLINE,
+      OUTLINE_COLOR,
+      OUTLINE_WIDTH,
+      SHADOWS,
+      CLASSIFICATION_TYPE,
+      Z_INDEX,
+    }
+  }
+
+  /// Whether the rectangle is displayed
+  #[inline]
+  pub fn SHOW(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMRectangle::VT_SHOW, Some(false)).unwrap()}
+  }
+  /// Coordinates [west, south, east, north] in degrees
+  #[inline]
+  pub fn COORDINATES_WSEN_DEGREES(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(CZMRectangle::VT_COORDINATES_WSEN_DEGREES, None)}
+  }
+  /// Height in meters
+  #[inline]
+  pub fn HEIGHT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMRectangle::VT_HEIGHT, Some(0.0)).unwrap()}
+  }
+  /// Height reference
+  #[inline]
+  pub fn HEIGHT_REFERENCE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMRectangle::VT_HEIGHT_REFERENCE, None)}
+  }
+  /// Extruded height
+  #[inline]
+  pub fn EXTRUDED_HEIGHT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMRectangle::VT_EXTRUDED_HEIGHT, Some(0.0)).unwrap()}
+  }
+  /// Extruded height reference
+  #[inline]
+  pub fn EXTRUDED_HEIGHT_REFERENCE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMRectangle::VT_EXTRUDED_HEIGHT_REFERENCE, None)}
+  }
+  /// Rotation in radians
+  #[inline]
+  pub fn ROTATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMRectangle::VT_ROTATION, Some(0.0)).unwrap()}
+  }
+  /// Texture rotation in radians
+  #[inline]
+  pub fn ST_ROTATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMRectangle::VT_ST_ROTATION, Some(0.0)).unwrap()}
+  }
+  /// Granularity in radians
+  #[inline]
+  pub fn GRANULARITY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMRectangle::VT_GRANULARITY, Some(0.0)).unwrap()}
+  }
+  /// Fill flag
+  #[inline]
+  pub fn FILL(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMRectangle::VT_FILL, Some(false)).unwrap()}
+  }
+  /// Surface material
+  #[inline]
+  pub fn MATERIAL(&self) -> Option<CZMMaterial<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMMaterial>>(CZMRectangle::VT_MATERIAL, None)}
+  }
+  /// Outline flag
+  #[inline]
+  pub fn OUTLINE(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMRectangle::VT_OUTLINE, Some(false)).unwrap()}
+  }
+  /// Outline color
+  #[inline]
+  pub fn OUTLINE_COLOR(&self) -> Option<CZMColor<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMColor>>(CZMRectangle::VT_OUTLINE_COLOR, None)}
+  }
+  /// Outline width
+  #[inline]
+  pub fn OUTLINE_WIDTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMRectangle::VT_OUTLINE_WIDTH, Some(0.0)).unwrap()}
+  }
+  /// Shadow mode
+  #[inline]
+  pub fn SHADOWS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMRectangle::VT_SHADOWS, None)}
+  }
+  /// Classification type
+  #[inline]
+  pub fn CLASSIFICATION_TYPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMRectangle::VT_CLASSIFICATION_TYPE, None)}
+  }
+  /// Z-index for ordering
+  #[inline]
+  pub fn Z_INDEX(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(CZMRectangle::VT_Z_INDEX, Some(0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for CZMRectangle<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<bool>("SHOW", Self::VT_SHOW, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("COORDINATES_WSEN_DEGREES", Self::VT_COORDINATES_WSEN_DEGREES, false)?
+     .visit_field::<f64>("HEIGHT", Self::VT_HEIGHT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("HEIGHT_REFERENCE", Self::VT_HEIGHT_REFERENCE, false)?
+     .visit_field::<f64>("EXTRUDED_HEIGHT", Self::VT_EXTRUDED_HEIGHT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EXTRUDED_HEIGHT_REFERENCE", Self::VT_EXTRUDED_HEIGHT_REFERENCE, false)?
+     .visit_field::<f64>("ROTATION", Self::VT_ROTATION, false)?
+     .visit_field::<f64>("ST_ROTATION", Self::VT_ST_ROTATION, false)?
+     .visit_field::<f64>("GRANULARITY", Self::VT_GRANULARITY, false)?
+     .visit_field::<bool>("FILL", Self::VT_FILL, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMMaterial>>("MATERIAL", Self::VT_MATERIAL, false)?
+     .visit_field::<bool>("OUTLINE", Self::VT_OUTLINE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMColor>>("OUTLINE_COLOR", Self::VT_OUTLINE_COLOR, false)?
+     .visit_field::<f64>("OUTLINE_WIDTH", Self::VT_OUTLINE_WIDTH, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SHADOWS", Self::VT_SHADOWS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CLASSIFICATION_TYPE", Self::VT_CLASSIFICATION_TYPE, false)?
+     .visit_field::<i32>("Z_INDEX", Self::VT_Z_INDEX, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CZMRectangleArgs<'a> {
+    pub SHOW: bool,
+    pub COORDINATES_WSEN_DEGREES: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub HEIGHT: f64,
+    pub HEIGHT_REFERENCE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub EXTRUDED_HEIGHT: f64,
+    pub EXTRUDED_HEIGHT_REFERENCE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ROTATION: f64,
+    pub ST_ROTATION: f64,
+    pub GRANULARITY: f64,
+    pub FILL: bool,
+    pub MATERIAL: Option<flatbuffers::WIPOffset<CZMMaterial<'a>>>,
+    pub OUTLINE: bool,
+    pub OUTLINE_COLOR: Option<flatbuffers::WIPOffset<CZMColor<'a>>>,
+    pub OUTLINE_WIDTH: f64,
+    pub SHADOWS: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub CLASSIFICATION_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub Z_INDEX: i32,
+}
+impl<'a> Default for CZMRectangleArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CZMRectangleArgs {
+      SHOW: false,
+      COORDINATES_WSEN_DEGREES: None,
+      HEIGHT: 0.0,
+      HEIGHT_REFERENCE: None,
+      EXTRUDED_HEIGHT: 0.0,
+      EXTRUDED_HEIGHT_REFERENCE: None,
+      ROTATION: 0.0,
+      ST_ROTATION: 0.0,
+      GRANULARITY: 0.0,
+      FILL: false,
+      MATERIAL: None,
+      OUTLINE: false,
+      OUTLINE_COLOR: None,
+      OUTLINE_WIDTH: 0.0,
+      SHADOWS: None,
+      CLASSIFICATION_TYPE: None,
+      Z_INDEX: 0,
+    }
+  }
+}
+
+pub struct CZMRectangleBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMRectangleBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_SHOW(&mut self, SHOW: bool) {
+    self.fbb_.push_slot::<bool>(CZMRectangle::VT_SHOW, SHOW, false);
+  }
+  #[inline]
+  pub fn add_COORDINATES_WSEN_DEGREES(&mut self, COORDINATES_WSEN_DEGREES: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMRectangle::VT_COORDINATES_WSEN_DEGREES, COORDINATES_WSEN_DEGREES);
+  }
+  #[inline]
+  pub fn add_HEIGHT(&mut self, HEIGHT: f64) {
+    self.fbb_.push_slot::<f64>(CZMRectangle::VT_HEIGHT, HEIGHT, 0.0);
+  }
+  #[inline]
+  pub fn add_HEIGHT_REFERENCE(&mut self, HEIGHT_REFERENCE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMRectangle::VT_HEIGHT_REFERENCE, HEIGHT_REFERENCE);
+  }
+  #[inline]
+  pub fn add_EXTRUDED_HEIGHT(&mut self, EXTRUDED_HEIGHT: f64) {
+    self.fbb_.push_slot::<f64>(CZMRectangle::VT_EXTRUDED_HEIGHT, EXTRUDED_HEIGHT, 0.0);
+  }
+  #[inline]
+  pub fn add_EXTRUDED_HEIGHT_REFERENCE(&mut self, EXTRUDED_HEIGHT_REFERENCE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMRectangle::VT_EXTRUDED_HEIGHT_REFERENCE, EXTRUDED_HEIGHT_REFERENCE);
+  }
+  #[inline]
+  pub fn add_ROTATION(&mut self, ROTATION: f64) {
+    self.fbb_.push_slot::<f64>(CZMRectangle::VT_ROTATION, ROTATION, 0.0);
+  }
+  #[inline]
+  pub fn add_ST_ROTATION(&mut self, ST_ROTATION: f64) {
+    self.fbb_.push_slot::<f64>(CZMRectangle::VT_ST_ROTATION, ST_ROTATION, 0.0);
+  }
+  #[inline]
+  pub fn add_GRANULARITY(&mut self, GRANULARITY: f64) {
+    self.fbb_.push_slot::<f64>(CZMRectangle::VT_GRANULARITY, GRANULARITY, 0.0);
+  }
+  #[inline]
+  pub fn add_FILL(&mut self, FILL: bool) {
+    self.fbb_.push_slot::<bool>(CZMRectangle::VT_FILL, FILL, false);
+  }
+  #[inline]
+  pub fn add_MATERIAL(&mut self, MATERIAL: flatbuffers::WIPOffset<CZMMaterial<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMMaterial>>(CZMRectangle::VT_MATERIAL, MATERIAL);
+  }
+  #[inline]
+  pub fn add_OUTLINE(&mut self, OUTLINE: bool) {
+    self.fbb_.push_slot::<bool>(CZMRectangle::VT_OUTLINE, OUTLINE, false);
+  }
+  #[inline]
+  pub fn add_OUTLINE_COLOR(&mut self, OUTLINE_COLOR: flatbuffers::WIPOffset<CZMColor<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMColor>>(CZMRectangle::VT_OUTLINE_COLOR, OUTLINE_COLOR);
+  }
+  #[inline]
+  pub fn add_OUTLINE_WIDTH(&mut self, OUTLINE_WIDTH: f64) {
+    self.fbb_.push_slot::<f64>(CZMRectangle::VT_OUTLINE_WIDTH, OUTLINE_WIDTH, 0.0);
+  }
+  #[inline]
+  pub fn add_SHADOWS(&mut self, SHADOWS: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMRectangle::VT_SHADOWS, SHADOWS);
+  }
+  #[inline]
+  pub fn add_CLASSIFICATION_TYPE(&mut self, CLASSIFICATION_TYPE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMRectangle::VT_CLASSIFICATION_TYPE, CLASSIFICATION_TYPE);
+  }
+  #[inline]
+  pub fn add_Z_INDEX(&mut self, Z_INDEX: i32) {
+    self.fbb_.push_slot::<i32>(CZMRectangle::VT_Z_INDEX, Z_INDEX, 0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMRectangleBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CZMRectangleBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CZMRectangle<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CZMRectangle<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CZMRectangle");
+      ds.field("SHOW", &self.SHOW());
+      ds.field("COORDINATES_WSEN_DEGREES", &self.COORDINATES_WSEN_DEGREES());
+      ds.field("HEIGHT", &self.HEIGHT());
+      ds.field("HEIGHT_REFERENCE", &self.HEIGHT_REFERENCE());
+      ds.field("EXTRUDED_HEIGHT", &self.EXTRUDED_HEIGHT());
+      ds.field("EXTRUDED_HEIGHT_REFERENCE", &self.EXTRUDED_HEIGHT_REFERENCE());
+      ds.field("ROTATION", &self.ROTATION());
+      ds.field("ST_ROTATION", &self.ST_ROTATION());
+      ds.field("GRANULARITY", &self.GRANULARITY());
+      ds.field("FILL", &self.FILL());
+      ds.field("MATERIAL", &self.MATERIAL());
+      ds.field("OUTLINE", &self.OUTLINE());
+      ds.field("OUTLINE_COLOR", &self.OUTLINE_COLOR());
+      ds.field("OUTLINE_WIDTH", &self.OUTLINE_WIDTH());
+      ds.field("SHADOWS", &self.SHADOWS());
+      ds.field("CLASSIFICATION_TYPE", &self.CLASSIFICATION_TYPE());
+      ds.field("Z_INDEX", &self.Z_INDEX());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CZMRectangleT {
+  pub SHOW: bool,
+  pub COORDINATES_WSEN_DEGREES: Option<Vec<f64>>,
+  pub HEIGHT: f64,
+  pub HEIGHT_REFERENCE: Option<String>,
+  pub EXTRUDED_HEIGHT: f64,
+  pub EXTRUDED_HEIGHT_REFERENCE: Option<String>,
+  pub ROTATION: f64,
+  pub ST_ROTATION: f64,
+  pub GRANULARITY: f64,
+  pub FILL: bool,
+  pub MATERIAL: Option<Box<CZMMaterialT>>,
+  pub OUTLINE: bool,
+  pub OUTLINE_COLOR: Option<Box<CZMColorT>>,
+  pub OUTLINE_WIDTH: f64,
+  pub SHADOWS: Option<String>,
+  pub CLASSIFICATION_TYPE: Option<String>,
+  pub Z_INDEX: i32,
+}
+impl Default for CZMRectangleT {
+  fn default() -> Self {
+    Self {
+      SHOW: false,
+      COORDINATES_WSEN_DEGREES: None,
+      HEIGHT: 0.0,
+      HEIGHT_REFERENCE: None,
+      EXTRUDED_HEIGHT: 0.0,
+      EXTRUDED_HEIGHT_REFERENCE: None,
+      ROTATION: 0.0,
+      ST_ROTATION: 0.0,
+      GRANULARITY: 0.0,
+      FILL: false,
+      MATERIAL: None,
+      OUTLINE: false,
+      OUTLINE_COLOR: None,
+      OUTLINE_WIDTH: 0.0,
+      SHADOWS: None,
+      CLASSIFICATION_TYPE: None,
+      Z_INDEX: 0,
+    }
+  }
+}
+impl CZMRectangleT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CZMRectangle<'b>> {
+    let SHOW = self.SHOW;
+    let COORDINATES_WSEN_DEGREES = self.COORDINATES_WSEN_DEGREES.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let HEIGHT = self.HEIGHT;
+    let HEIGHT_REFERENCE = self.HEIGHT_REFERENCE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EXTRUDED_HEIGHT = self.EXTRUDED_HEIGHT;
+    let EXTRUDED_HEIGHT_REFERENCE = self.EXTRUDED_HEIGHT_REFERENCE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ROTATION = self.ROTATION;
+    let ST_ROTATION = self.ST_ROTATION;
+    let GRANULARITY = self.GRANULARITY;
+    let FILL = self.FILL;
+    let MATERIAL = self.MATERIAL.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let OUTLINE = self.OUTLINE;
+    let OUTLINE_COLOR = self.OUTLINE_COLOR.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let OUTLINE_WIDTH = self.OUTLINE_WIDTH;
+    let SHADOWS = self.SHADOWS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CLASSIFICATION_TYPE = self.CLASSIFICATION_TYPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let Z_INDEX = self.Z_INDEX;
+    CZMRectangle::create(_fbb, &CZMRectangleArgs{
+      SHOW,
+      COORDINATES_WSEN_DEGREES,
+      HEIGHT,
+      HEIGHT_REFERENCE,
+      EXTRUDED_HEIGHT,
+      EXTRUDED_HEIGHT_REFERENCE,
+      ROTATION,
+      ST_ROTATION,
+      GRANULARITY,
+      FILL,
+      MATERIAL,
+      OUTLINE,
+      OUTLINE_COLOR,
+      OUTLINE_WIDTH,
+      SHADOWS,
+      CLASSIFICATION_TYPE,
+      Z_INDEX,
+    })
+  }
+}
+pub enum CZMTilesetOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// 3D Tileset
+pub struct CZMTileset<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CZMTileset<'a> {
+  type Inner = CZMTileset<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CZMTileset<'a> {
+  pub const VT_SHOW: flatbuffers::VOffsetT = 4;
+  pub const VT_URI: flatbuffers::VOffsetT = 6;
+  pub const VT_MAXIMUM_SCREEN_SPACE_ERROR: flatbuffers::VOffsetT = 8;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CZMTileset { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CZMTilesetArgs<'args>
+  ) -> flatbuffers::WIPOffset<CZMTileset<'bldr>> {
+    let mut builder = CZMTilesetBuilder::new(_fbb);
+    builder.add_MAXIMUM_SCREEN_SPACE_ERROR(args.MAXIMUM_SCREEN_SPACE_ERROR);
+    if let Some(x) = args.URI { builder.add_URI(x); }
+    builder.add_SHOW(args.SHOW);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CZMTilesetT {
+    let SHOW = self.SHOW();
+    let URI = self.URI().map(|x| {
+      x.to_string()
+    });
+    let MAXIMUM_SCREEN_SPACE_ERROR = self.MAXIMUM_SCREEN_SPACE_ERROR();
+    CZMTilesetT {
+      SHOW,
+      URI,
+      MAXIMUM_SCREEN_SPACE_ERROR,
+    }
+  }
+
+  /// Whether the tileset is displayed
+  #[inline]
+  pub fn SHOW(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMTileset::VT_SHOW, Some(false)).unwrap()}
+  }
+  /// URI to the tileset
+  #[inline]
+  pub fn URI(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMTileset::VT_URI, None)}
+  }
+  /// Maximum screen space error
+  #[inline]
+  pub fn MAXIMUM_SCREEN_SPACE_ERROR(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMTileset::VT_MAXIMUM_SCREEN_SPACE_ERROR, Some(0.0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for CZMTileset<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<bool>("SHOW", Self::VT_SHOW, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("URI", Self::VT_URI, false)?
+     .visit_field::<f64>("MAXIMUM_SCREEN_SPACE_ERROR", Self::VT_MAXIMUM_SCREEN_SPACE_ERROR, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CZMTilesetArgs<'a> {
+    pub SHOW: bool,
+    pub URI: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub MAXIMUM_SCREEN_SPACE_ERROR: f64,
+}
+impl<'a> Default for CZMTilesetArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CZMTilesetArgs {
+      SHOW: false,
+      URI: None,
+      MAXIMUM_SCREEN_SPACE_ERROR: 0.0,
+    }
+  }
+}
+
+pub struct CZMTilesetBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMTilesetBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_SHOW(&mut self, SHOW: bool) {
+    self.fbb_.push_slot::<bool>(CZMTileset::VT_SHOW, SHOW, false);
+  }
+  #[inline]
+  pub fn add_URI(&mut self, URI: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMTileset::VT_URI, URI);
+  }
+  #[inline]
+  pub fn add_MAXIMUM_SCREEN_SPACE_ERROR(&mut self, MAXIMUM_SCREEN_SPACE_ERROR: f64) {
+    self.fbb_.push_slot::<f64>(CZMTileset::VT_MAXIMUM_SCREEN_SPACE_ERROR, MAXIMUM_SCREEN_SPACE_ERROR, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMTilesetBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CZMTilesetBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CZMTileset<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CZMTileset<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CZMTileset");
+      ds.field("SHOW", &self.SHOW());
+      ds.field("URI", &self.URI());
+      ds.field("MAXIMUM_SCREEN_SPACE_ERROR", &self.MAXIMUM_SCREEN_SPACE_ERROR());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CZMTilesetT {
+  pub SHOW: bool,
+  pub URI: Option<String>,
+  pub MAXIMUM_SCREEN_SPACE_ERROR: f64,
+}
+impl Default for CZMTilesetT {
+  fn default() -> Self {
+    Self {
+      SHOW: false,
+      URI: None,
+      MAXIMUM_SCREEN_SPACE_ERROR: 0.0,
+    }
+  }
+}
+impl CZMTilesetT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CZMTileset<'b>> {
+    let SHOW = self.SHOW;
+    let URI = self.URI.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MAXIMUM_SCREEN_SPACE_ERROR = self.MAXIMUM_SCREEN_SPACE_ERROR;
+    CZMTileset::create(_fbb, &CZMTilesetArgs{
+      SHOW,
+      URI,
+      MAXIMUM_SCREEN_SPACE_ERROR,
+    })
+  }
+}
+pub enum CZMWallOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Wall (vertical curtain)
+pub struct CZMWall<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for CZMWall<'a> {
+  type Inner = CZMWall<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> CZMWall<'a> {
+  pub const VT_SHOW: flatbuffers::VOffsetT = 4;
+  pub const VT_POSITIONS_CARTOGRAPHIC_DEGREES: flatbuffers::VOffsetT = 6;
+  pub const VT_POSITIONS_CARTESIAN: flatbuffers::VOffsetT = 8;
+  pub const VT_MINIMUM_HEIGHTS: flatbuffers::VOffsetT = 10;
+  pub const VT_MAXIMUM_HEIGHTS: flatbuffers::VOffsetT = 12;
+  pub const VT_GRANULARITY: flatbuffers::VOffsetT = 14;
+  pub const VT_FILL: flatbuffers::VOffsetT = 16;
+  pub const VT_MATERIAL: flatbuffers::VOffsetT = 18;
+  pub const VT_OUTLINE: flatbuffers::VOffsetT = 20;
+  pub const VT_OUTLINE_COLOR: flatbuffers::VOffsetT = 22;
+  pub const VT_OUTLINE_WIDTH: flatbuffers::VOffsetT = 24;
+  pub const VT_SHADOWS: flatbuffers::VOffsetT = 26;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    CZMWall { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args CZMWallArgs<'args>
+  ) -> flatbuffers::WIPOffset<CZMWall<'bldr>> {
+    let mut builder = CZMWallBuilder::new(_fbb);
+    builder.add_OUTLINE_WIDTH(args.OUTLINE_WIDTH);
+    builder.add_GRANULARITY(args.GRANULARITY);
+    if let Some(x) = args.SHADOWS { builder.add_SHADOWS(x); }
+    if let Some(x) = args.OUTLINE_COLOR { builder.add_OUTLINE_COLOR(x); }
+    if let Some(x) = args.MATERIAL { builder.add_MATERIAL(x); }
+    if let Some(x) = args.MAXIMUM_HEIGHTS { builder.add_MAXIMUM_HEIGHTS(x); }
+    if let Some(x) = args.MINIMUM_HEIGHTS { builder.add_MINIMUM_HEIGHTS(x); }
+    if let Some(x) = args.POSITIONS_CARTESIAN { builder.add_POSITIONS_CARTESIAN(x); }
+    if let Some(x) = args.POSITIONS_CARTOGRAPHIC_DEGREES { builder.add_POSITIONS_CARTOGRAPHIC_DEGREES(x); }
+    builder.add_OUTLINE(args.OUTLINE);
+    builder.add_FILL(args.FILL);
+    builder.add_SHOW(args.SHOW);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> CZMWallT {
+    let SHOW = self.SHOW();
+    let POSITIONS_CARTOGRAPHIC_DEGREES = self.POSITIONS_CARTOGRAPHIC_DEGREES().map(|x| {
+      x.into_iter().collect()
+    });
+    let POSITIONS_CARTESIAN = self.POSITIONS_CARTESIAN().map(|x| {
+      x.into_iter().collect()
+    });
+    let MINIMUM_HEIGHTS = self.MINIMUM_HEIGHTS().map(|x| {
+      x.into_iter().collect()
+    });
+    let MAXIMUM_HEIGHTS = self.MAXIMUM_HEIGHTS().map(|x| {
+      x.into_iter().collect()
+    });
+    let GRANULARITY = self.GRANULARITY();
+    let FILL = self.FILL();
+    let MATERIAL = self.MATERIAL().map(|x| {
+      Box::new(x.unpack())
+    });
+    let OUTLINE = self.OUTLINE();
+    let OUTLINE_COLOR = self.OUTLINE_COLOR().map(|x| {
+      Box::new(x.unpack())
+    });
+    let OUTLINE_WIDTH = self.OUTLINE_WIDTH();
+    let SHADOWS = self.SHADOWS().map(|x| {
+      x.to_string()
+    });
+    CZMWallT {
+      SHOW,
+      POSITIONS_CARTOGRAPHIC_DEGREES,
+      POSITIONS_CARTESIAN,
+      MINIMUM_HEIGHTS,
+      MAXIMUM_HEIGHTS,
+      GRANULARITY,
+      FILL,
+      MATERIAL,
+      OUTLINE,
+      OUTLINE_COLOR,
+      OUTLINE_WIDTH,
+      SHADOWS,
+    }
+  }
+
+  /// Whether the wall is displayed
+  #[inline]
+  pub fn SHOW(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMWall::VT_SHOW, Some(false)).unwrap()}
+  }
+  /// Positions as cartographic degrees
+  #[inline]
+  pub fn POSITIONS_CARTOGRAPHIC_DEGREES(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(CZMWall::VT_POSITIONS_CARTOGRAPHIC_DEGREES, None)}
+  }
+  /// Positions as Cartesian
+  #[inline]
+  pub fn POSITIONS_CARTESIAN(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(CZMWall::VT_POSITIONS_CARTESIAN, None)}
+  }
+  /// Minimum heights per position
+  #[inline]
+  pub fn MINIMUM_HEIGHTS(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(CZMWall::VT_MINIMUM_HEIGHTS, None)}
+  }
+  /// Maximum heights per position
+  #[inline]
+  pub fn MAXIMUM_HEIGHTS(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(CZMWall::VT_MAXIMUM_HEIGHTS, None)}
+  }
+  /// Granularity in radians
+  #[inline]
+  pub fn GRANULARITY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMWall::VT_GRANULARITY, Some(0.0)).unwrap()}
+  }
+  /// Fill flag
+  #[inline]
+  pub fn FILL(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMWall::VT_FILL, Some(false)).unwrap()}
+  }
+  /// Surface material
+  #[inline]
+  pub fn MATERIAL(&self) -> Option<CZMMaterial<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMMaterial>>(CZMWall::VT_MATERIAL, None)}
+  }
+  /// Outline flag
+  #[inline]
+  pub fn OUTLINE(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMWall::VT_OUTLINE, Some(false)).unwrap()}
+  }
+  /// Outline color
+  #[inline]
+  pub fn OUTLINE_COLOR(&self) -> Option<CZMColor<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMColor>>(CZMWall::VT_OUTLINE_COLOR, None)}
+  }
+  /// Outline width
+  #[inline]
+  pub fn OUTLINE_WIDTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CZMWall::VT_OUTLINE_WIDTH, Some(0.0)).unwrap()}
+  }
+  /// Shadow mode
+  #[inline]
+  pub fn SHADOWS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMWall::VT_SHADOWS, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for CZMWall<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<bool>("SHOW", Self::VT_SHOW, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("POSITIONS_CARTOGRAPHIC_DEGREES", Self::VT_POSITIONS_CARTOGRAPHIC_DEGREES, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("POSITIONS_CARTESIAN", Self::VT_POSITIONS_CARTESIAN, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("MINIMUM_HEIGHTS", Self::VT_MINIMUM_HEIGHTS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("MAXIMUM_HEIGHTS", Self::VT_MAXIMUM_HEIGHTS, false)?
+     .visit_field::<f64>("GRANULARITY", Self::VT_GRANULARITY, false)?
+     .visit_field::<bool>("FILL", Self::VT_FILL, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMMaterial>>("MATERIAL", Self::VT_MATERIAL, false)?
+     .visit_field::<bool>("OUTLINE", Self::VT_OUTLINE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMColor>>("OUTLINE_COLOR", Self::VT_OUTLINE_COLOR, false)?
+     .visit_field::<f64>("OUTLINE_WIDTH", Self::VT_OUTLINE_WIDTH, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SHADOWS", Self::VT_SHADOWS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct CZMWallArgs<'a> {
+    pub SHOW: bool,
+    pub POSITIONS_CARTOGRAPHIC_DEGREES: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub POSITIONS_CARTESIAN: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub MINIMUM_HEIGHTS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub MAXIMUM_HEIGHTS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub GRANULARITY: f64,
+    pub FILL: bool,
+    pub MATERIAL: Option<flatbuffers::WIPOffset<CZMMaterial<'a>>>,
+    pub OUTLINE: bool,
+    pub OUTLINE_COLOR: Option<flatbuffers::WIPOffset<CZMColor<'a>>>,
+    pub OUTLINE_WIDTH: f64,
+    pub SHADOWS: Option<flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for CZMWallArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    CZMWallArgs {
+      SHOW: false,
+      POSITIONS_CARTOGRAPHIC_DEGREES: None,
+      POSITIONS_CARTESIAN: None,
+      MINIMUM_HEIGHTS: None,
+      MAXIMUM_HEIGHTS: None,
+      GRANULARITY: 0.0,
+      FILL: false,
+      MATERIAL: None,
+      OUTLINE: false,
+      OUTLINE_COLOR: None,
+      OUTLINE_WIDTH: 0.0,
+      SHADOWS: None,
+    }
+  }
+}
+
+pub struct CZMWallBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMWallBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_SHOW(&mut self, SHOW: bool) {
+    self.fbb_.push_slot::<bool>(CZMWall::VT_SHOW, SHOW, false);
+  }
+  #[inline]
+  pub fn add_POSITIONS_CARTOGRAPHIC_DEGREES(&mut self, POSITIONS_CARTOGRAPHIC_DEGREES: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMWall::VT_POSITIONS_CARTOGRAPHIC_DEGREES, POSITIONS_CARTOGRAPHIC_DEGREES);
+  }
+  #[inline]
+  pub fn add_POSITIONS_CARTESIAN(&mut self, POSITIONS_CARTESIAN: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMWall::VT_POSITIONS_CARTESIAN, POSITIONS_CARTESIAN);
+  }
+  #[inline]
+  pub fn add_MINIMUM_HEIGHTS(&mut self, MINIMUM_HEIGHTS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMWall::VT_MINIMUM_HEIGHTS, MINIMUM_HEIGHTS);
+  }
+  #[inline]
+  pub fn add_MAXIMUM_HEIGHTS(&mut self, MAXIMUM_HEIGHTS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMWall::VT_MAXIMUM_HEIGHTS, MAXIMUM_HEIGHTS);
+  }
+  #[inline]
+  pub fn add_GRANULARITY(&mut self, GRANULARITY: f64) {
+    self.fbb_.push_slot::<f64>(CZMWall::VT_GRANULARITY, GRANULARITY, 0.0);
+  }
+  #[inline]
+  pub fn add_FILL(&mut self, FILL: bool) {
+    self.fbb_.push_slot::<bool>(CZMWall::VT_FILL, FILL, false);
+  }
+  #[inline]
+  pub fn add_MATERIAL(&mut self, MATERIAL: flatbuffers::WIPOffset<CZMMaterial<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMMaterial>>(CZMWall::VT_MATERIAL, MATERIAL);
+  }
+  #[inline]
+  pub fn add_OUTLINE(&mut self, OUTLINE: bool) {
+    self.fbb_.push_slot::<bool>(CZMWall::VT_OUTLINE, OUTLINE, false);
+  }
+  #[inline]
+  pub fn add_OUTLINE_COLOR(&mut self, OUTLINE_COLOR: flatbuffers::WIPOffset<CZMColor<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMColor>>(CZMWall::VT_OUTLINE_COLOR, OUTLINE_COLOR);
+  }
+  #[inline]
+  pub fn add_OUTLINE_WIDTH(&mut self, OUTLINE_WIDTH: f64) {
+    self.fbb_.push_slot::<f64>(CZMWall::VT_OUTLINE_WIDTH, OUTLINE_WIDTH, 0.0);
+  }
+  #[inline]
+  pub fn add_SHADOWS(&mut self, SHADOWS: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMWall::VT_SHADOWS, SHADOWS);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMWallBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    CZMWallBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<CZMWall<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for CZMWall<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("CZMWall");
+      ds.field("SHOW", &self.SHOW());
+      ds.field("POSITIONS_CARTOGRAPHIC_DEGREES", &self.POSITIONS_CARTOGRAPHIC_DEGREES());
+      ds.field("POSITIONS_CARTESIAN", &self.POSITIONS_CARTESIAN());
+      ds.field("MINIMUM_HEIGHTS", &self.MINIMUM_HEIGHTS());
+      ds.field("MAXIMUM_HEIGHTS", &self.MAXIMUM_HEIGHTS());
+      ds.field("GRANULARITY", &self.GRANULARITY());
+      ds.field("FILL", &self.FILL());
+      ds.field("MATERIAL", &self.MATERIAL());
+      ds.field("OUTLINE", &self.OUTLINE());
+      ds.field("OUTLINE_COLOR", &self.OUTLINE_COLOR());
+      ds.field("OUTLINE_WIDTH", &self.OUTLINE_WIDTH());
+      ds.field("SHADOWS", &self.SHADOWS());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct CZMWallT {
+  pub SHOW: bool,
+  pub POSITIONS_CARTOGRAPHIC_DEGREES: Option<Vec<f64>>,
+  pub POSITIONS_CARTESIAN: Option<Vec<f64>>,
+  pub MINIMUM_HEIGHTS: Option<Vec<f64>>,
+  pub MAXIMUM_HEIGHTS: Option<Vec<f64>>,
+  pub GRANULARITY: f64,
+  pub FILL: bool,
+  pub MATERIAL: Option<Box<CZMMaterialT>>,
+  pub OUTLINE: bool,
+  pub OUTLINE_COLOR: Option<Box<CZMColorT>>,
+  pub OUTLINE_WIDTH: f64,
+  pub SHADOWS: Option<String>,
+}
+impl Default for CZMWallT {
+  fn default() -> Self {
+    Self {
+      SHOW: false,
+      POSITIONS_CARTOGRAPHIC_DEGREES: None,
+      POSITIONS_CARTESIAN: None,
+      MINIMUM_HEIGHTS: None,
+      MAXIMUM_HEIGHTS: None,
+      GRANULARITY: 0.0,
+      FILL: false,
+      MATERIAL: None,
+      OUTLINE: false,
+      OUTLINE_COLOR: None,
+      OUTLINE_WIDTH: 0.0,
+      SHADOWS: None,
+    }
+  }
+}
+impl CZMWallT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<CZMWall<'b>> {
+    let SHOW = self.SHOW;
+    let POSITIONS_CARTOGRAPHIC_DEGREES = self.POSITIONS_CARTOGRAPHIC_DEGREES.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let POSITIONS_CARTESIAN = self.POSITIONS_CARTESIAN.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let MINIMUM_HEIGHTS = self.MINIMUM_HEIGHTS.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let MAXIMUM_HEIGHTS = self.MAXIMUM_HEIGHTS.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let GRANULARITY = self.GRANULARITY;
+    let FILL = self.FILL;
+    let MATERIAL = self.MATERIAL.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let OUTLINE = self.OUTLINE;
+    let OUTLINE_COLOR = self.OUTLINE_COLOR.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let OUTLINE_WIDTH = self.OUTLINE_WIDTH;
+    let SHADOWS = self.SHADOWS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    CZMWall::create(_fbb, &CZMWallArgs{
+      SHOW,
+      POSITIONS_CARTOGRAPHIC_DEGREES,
+      POSITIONS_CARTESIAN,
+      MINIMUM_HEIGHTS,
+      MAXIMUM_HEIGHTS,
+      GRANULARITY,
+      FILL,
+      MATERIAL,
+      OUTLINE,
+      OUTLINE_COLOR,
+      OUTLINE_WIDTH,
+      SHADOWS,
     })
   }
 }
@@ -3925,6 +13874,25 @@ impl<'a> CZMPacket<'a> {
   pub const VT_MODEL: flatbuffers::VOffsetT = 34;
   pub const VT_PATH: flatbuffers::VOffsetT = 36;
   pub const VT_ELLIPSE: flatbuffers::VOffsetT = 38;
+  pub const VT_ORIENTATION: flatbuffers::VOffsetT = 40;
+  pub const VT_VIEW_FROM: flatbuffers::VOffsetT = 42;
+  pub const VT_DELETE: flatbuffers::VOffsetT = 44;
+  pub const VT_BOX: flatbuffers::VOffsetT = 46;
+  pub const VT_CORRIDOR: flatbuffers::VOffsetT = 48;
+  pub const VT_CYLINDER: flatbuffers::VOffsetT = 50;
+  pub const VT_ELLIPSOID: flatbuffers::VOffsetT = 52;
+  pub const VT_POLYLINE_VOLUME: flatbuffers::VOffsetT = 54;
+  pub const VT_RECTANGLE: flatbuffers::VOffsetT = 56;
+  pub const VT_TILESET: flatbuffers::VOffsetT = 58;
+  pub const VT_WALL: flatbuffers::VOffsetT = 60;
+  pub const VT_POSITION_INTERPOLATION: flatbuffers::VOffsetT = 62;
+  pub const VT_POSITION_REFERENCE_FRAME: flatbuffers::VOffsetT = 64;
+  pub const VT_POSITION_REFERENCE: flatbuffers::VOffsetT = 66;
+  pub const VT_ORIENTATION_EPOCH: flatbuffers::VOffsetT = 68;
+  pub const VT_ORIENTATION_ARRAY: flatbuffers::VOffsetT = 70;
+  pub const VT_ORIENTATION_INTERPOLATION: flatbuffers::VOffsetT = 72;
+  pub const VT_ORIENTATION_REFERENCE: flatbuffers::VOffsetT = 74;
+  pub const VT_DYNAMIC_PROPERTIES: flatbuffers::VOffsetT = 76;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -3936,6 +13904,24 @@ impl<'a> CZMPacket<'a> {
     args: &'args CZMPacketArgs<'args>
   ) -> flatbuffers::WIPOffset<CZMPacket<'bldr>> {
     let mut builder = CZMPacketBuilder::new(_fbb);
+    if let Some(x) = args.DYNAMIC_PROPERTIES { builder.add_DYNAMIC_PROPERTIES(x); }
+    if let Some(x) = args.ORIENTATION_REFERENCE { builder.add_ORIENTATION_REFERENCE(x); }
+    if let Some(x) = args.ORIENTATION_INTERPOLATION { builder.add_ORIENTATION_INTERPOLATION(x); }
+    if let Some(x) = args.ORIENTATION_ARRAY { builder.add_ORIENTATION_ARRAY(x); }
+    if let Some(x) = args.ORIENTATION_EPOCH { builder.add_ORIENTATION_EPOCH(x); }
+    if let Some(x) = args.POSITION_REFERENCE { builder.add_POSITION_REFERENCE(x); }
+    if let Some(x) = args.POSITION_REFERENCE_FRAME { builder.add_POSITION_REFERENCE_FRAME(x); }
+    if let Some(x) = args.POSITION_INTERPOLATION { builder.add_POSITION_INTERPOLATION(x); }
+    if let Some(x) = args.WALL { builder.add_WALL(x); }
+    if let Some(x) = args.TILESET { builder.add_TILESET(x); }
+    if let Some(x) = args.RECTANGLE { builder.add_RECTANGLE(x); }
+    if let Some(x) = args.POLYLINE_VOLUME { builder.add_POLYLINE_VOLUME(x); }
+    if let Some(x) = args.ELLIPSOID { builder.add_ELLIPSOID(x); }
+    if let Some(x) = args.CYLINDER { builder.add_CYLINDER(x); }
+    if let Some(x) = args.CORRIDOR { builder.add_CORRIDOR(x); }
+    if let Some(x) = args.BOX { builder.add_BOX(x); }
+    if let Some(x) = args.VIEW_FROM { builder.add_VIEW_FROM(x); }
+    if let Some(x) = args.ORIENTATION { builder.add_ORIENTATION(x); }
     if let Some(x) = args.ELLIPSE { builder.add_ELLIPSE(x); }
     if let Some(x) = args.PATH { builder.add_PATH(x); }
     if let Some(x) = args.MODEL { builder.add_MODEL(x); }
@@ -3954,6 +13940,7 @@ impl<'a> CZMPacket<'a> {
     if let Some(x) = args.PARENT { builder.add_PARENT(x); }
     if let Some(x) = args.NAME { builder.add_NAME(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_DELETE(args.DELETE);
     builder.finish()
   }
 
@@ -4012,6 +13999,61 @@ impl<'a> CZMPacket<'a> {
     let ELLIPSE = self.ELLIPSE().map(|x| {
       Box::new(x.unpack())
     });
+    let ORIENTATION = self.ORIENTATION().map(|x| {
+      Box::new(x.unpack())
+    });
+    let VIEW_FROM = self.VIEW_FROM().map(|x| {
+      Box::new(x.unpack())
+    });
+    let DELETE = self.DELETE();
+    let BOX = self.BOX().map(|x| {
+      Box::new(x.unpack())
+    });
+    let CORRIDOR = self.CORRIDOR().map(|x| {
+      Box::new(x.unpack())
+    });
+    let CYLINDER = self.CYLINDER().map(|x| {
+      Box::new(x.unpack())
+    });
+    let ELLIPSOID = self.ELLIPSOID().map(|x| {
+      Box::new(x.unpack())
+    });
+    let POLYLINE_VOLUME = self.POLYLINE_VOLUME().map(|x| {
+      Box::new(x.unpack())
+    });
+    let RECTANGLE = self.RECTANGLE().map(|x| {
+      Box::new(x.unpack())
+    });
+    let TILESET = self.TILESET().map(|x| {
+      Box::new(x.unpack())
+    });
+    let WALL = self.WALL().map(|x| {
+      Box::new(x.unpack())
+    });
+    let POSITION_INTERPOLATION = self.POSITION_INTERPOLATION().map(|x| {
+      Box::new(x.unpack())
+    });
+    let POSITION_REFERENCE_FRAME = self.POSITION_REFERENCE_FRAME().map(|x| {
+      x.to_string()
+    });
+    let POSITION_REFERENCE = self.POSITION_REFERENCE().map(|x| {
+      x.to_string()
+    });
+    let ORIENTATION_EPOCH = self.ORIENTATION_EPOCH().map(|x| {
+      x.to_string()
+    });
+    let ORIENTATION_ARRAY = self.ORIENTATION_ARRAY().map(|x| {
+      x.into_iter().collect()
+    });
+    let ORIENTATION_INTERPOLATION = self.ORIENTATION_INTERPOLATION().map(|x| {
+      Box::new(x.unpack())
+    });
+    let ORIENTATION_REFERENCE = self.ORIENTATION_REFERENCE().map(|x| {
+      x.to_string()
+    });
+    let DYNAMIC_PROPERTIES = self.DYNAMIC_PROPERTIES().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
     CZMPacketT {
       ID,
       NAME,
@@ -4031,6 +14073,25 @@ impl<'a> CZMPacket<'a> {
       MODEL,
       PATH,
       ELLIPSE,
+      ORIENTATION,
+      VIEW_FROM,
+      DELETE,
+      BOX,
+      CORRIDOR,
+      CYLINDER,
+      ELLIPSOID,
+      POLYLINE_VOLUME,
+      RECTANGLE,
+      TILESET,
+      WALL,
+      POSITION_INTERPOLATION,
+      POSITION_REFERENCE_FRAME,
+      POSITION_REFERENCE,
+      ORIENTATION_EPOCH,
+      ORIENTATION_ARRAY,
+      ORIENTATION_INTERPOLATION,
+      ORIENTATION_REFERENCE,
+      DYNAMIC_PROPERTIES,
     }
   }
 
@@ -4178,6 +14239,158 @@ impl<'a> CZMPacket<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMEllipse>>(CZMPacket::VT_ELLIPSE, None)}
   }
+  /// Orientation (quaternion)
+  #[inline]
+  pub fn ORIENTATION(&self) -> Option<CZMOrientation<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMOrientation>>(CZMPacket::VT_ORIENTATION, None)}
+  }
+  /// Suggested camera offset
+  #[inline]
+  pub fn VIEW_FROM(&self) -> Option<CZMViewFrom<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMViewFrom>>(CZMPacket::VT_VIEW_FROM, None)}
+  }
+  /// Whether to delete this object
+  #[inline]
+  pub fn DELETE(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(CZMPacket::VT_DELETE, Some(false)).unwrap()}
+  }
+  /// Box properties
+  #[inline]
+  pub fn BOX(&self) -> Option<CZMBox<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMBox>>(CZMPacket::VT_BOX, None)}
+  }
+  /// Corridor properties
+  #[inline]
+  pub fn CORRIDOR(&self) -> Option<CZMCorridor<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMCorridor>>(CZMPacket::VT_CORRIDOR, None)}
+  }
+  /// Cylinder properties
+  #[inline]
+  pub fn CYLINDER(&self) -> Option<CZMCylinder<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMCylinder>>(CZMPacket::VT_CYLINDER, None)}
+  }
+  /// Ellipsoid properties
+  #[inline]
+  pub fn ELLIPSOID(&self) -> Option<CZMEllipsoid<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMEllipsoid>>(CZMPacket::VT_ELLIPSOID, None)}
+  }
+  /// Polyline volume properties
+  #[inline]
+  pub fn POLYLINE_VOLUME(&self) -> Option<CZMPolylineVolume<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMPolylineVolume>>(CZMPacket::VT_POLYLINE_VOLUME, None)}
+  }
+  /// Rectangle properties
+  #[inline]
+  pub fn RECTANGLE(&self) -> Option<CZMRectangle<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMRectangle>>(CZMPacket::VT_RECTANGLE, None)}
+  }
+  /// 3D Tileset properties
+  #[inline]
+  pub fn TILESET(&self) -> Option<CZMTileset<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMTileset>>(CZMPacket::VT_TILESET, None)}
+  }
+  /// Wall properties
+  #[inline]
+  pub fn WALL(&self) -> Option<CZMWall<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMWall>>(CZMPacket::VT_WALL, None)}
+  }
+  /// Position interpolation settings
+  #[inline]
+  pub fn POSITION_INTERPOLATION(&self) -> Option<CZMInterpolation<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMInterpolation>>(CZMPacket::VT_POSITION_INTERPOLATION, None)}
+  }
+  /// Position reference frame (FIXED or INERTIAL)
+  #[inline]
+  pub fn POSITION_REFERENCE_FRAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMPacket::VT_POSITION_REFERENCE_FRAME, None)}
+  }
+  /// Position reference to another entity
+  #[inline]
+  pub fn POSITION_REFERENCE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMPacket::VT_POSITION_REFERENCE, None)}
+  }
+  /// Orientation epoch (ISO 8601)
+  #[inline]
+  pub fn ORIENTATION_EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMPacket::VT_ORIENTATION_EPOCH, None)}
+  }
+  /// Orientation sampled data [t, x, y, z, w, t, x, y, z, w, ...]
+  #[inline]
+  pub fn ORIENTATION_ARRAY(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(CZMPacket::VT_ORIENTATION_ARRAY, None)}
+  }
+  /// Orientation interpolation settings
+  #[inline]
+  pub fn ORIENTATION_INTERPOLATION(&self) -> Option<CZMInterpolation<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<CZMInterpolation>>(CZMPacket::VT_ORIENTATION_INTERPOLATION, None)}
+  }
+  /// Orientation reference to another entity
+  #[inline]
+  pub fn ORIENTATION_REFERENCE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZMPacket::VT_ORIENTATION_REFERENCE, None)}
+  }
+  /// Generic bag for all time-dynamic (non-static) properties
+  #[inline]
+  pub fn DYNAMIC_PROPERTIES(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<CZMDynamicProperty<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<CZMDynamicProperty>>>>(CZMPacket::VT_DYNAMIC_PROPERTIES, None)}
+  }
 }
 
 impl flatbuffers::Verifiable for CZMPacket<'_> {
@@ -4205,6 +14418,25 @@ impl flatbuffers::Verifiable for CZMPacket<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<CZMModel>>("MODEL", Self::VT_MODEL, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<CZMPath>>("PATH", Self::VT_PATH, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<CZMEllipse>>("ELLIPSE", Self::VT_ELLIPSE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMOrientation>>("ORIENTATION", Self::VT_ORIENTATION, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMViewFrom>>("VIEW_FROM", Self::VT_VIEW_FROM, false)?
+     .visit_field::<bool>("DELETE", Self::VT_DELETE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMBox>>("BOX", Self::VT_BOX, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMCorridor>>("CORRIDOR", Self::VT_CORRIDOR, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMCylinder>>("CYLINDER", Self::VT_CYLINDER, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMEllipsoid>>("ELLIPSOID", Self::VT_ELLIPSOID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMPolylineVolume>>("POLYLINE_VOLUME", Self::VT_POLYLINE_VOLUME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMRectangle>>("RECTANGLE", Self::VT_RECTANGLE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMTileset>>("TILESET", Self::VT_TILESET, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMWall>>("WALL", Self::VT_WALL, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMInterpolation>>("POSITION_INTERPOLATION", Self::VT_POSITION_INTERPOLATION, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("POSITION_REFERENCE_FRAME", Self::VT_POSITION_REFERENCE_FRAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("POSITION_REFERENCE", Self::VT_POSITION_REFERENCE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIENTATION_EPOCH", Self::VT_ORIENTATION_EPOCH, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("ORIENTATION_ARRAY", Self::VT_ORIENTATION_ARRAY, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<CZMInterpolation>>("ORIENTATION_INTERPOLATION", Self::VT_ORIENTATION_INTERPOLATION, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIENTATION_REFERENCE", Self::VT_ORIENTATION_REFERENCE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<CZMDynamicProperty>>>>("DYNAMIC_PROPERTIES", Self::VT_DYNAMIC_PROPERTIES, false)?
      .finish();
     Ok(())
   }
@@ -4228,6 +14460,25 @@ pub struct CZMPacketArgs<'a> {
     pub MODEL: Option<flatbuffers::WIPOffset<CZMModel<'a>>>,
     pub PATH: Option<flatbuffers::WIPOffset<CZMPath<'a>>>,
     pub ELLIPSE: Option<flatbuffers::WIPOffset<CZMEllipse<'a>>>,
+    pub ORIENTATION: Option<flatbuffers::WIPOffset<CZMOrientation<'a>>>,
+    pub VIEW_FROM: Option<flatbuffers::WIPOffset<CZMViewFrom<'a>>>,
+    pub DELETE: bool,
+    pub BOX: Option<flatbuffers::WIPOffset<CZMBox<'a>>>,
+    pub CORRIDOR: Option<flatbuffers::WIPOffset<CZMCorridor<'a>>>,
+    pub CYLINDER: Option<flatbuffers::WIPOffset<CZMCylinder<'a>>>,
+    pub ELLIPSOID: Option<flatbuffers::WIPOffset<CZMEllipsoid<'a>>>,
+    pub POLYLINE_VOLUME: Option<flatbuffers::WIPOffset<CZMPolylineVolume<'a>>>,
+    pub RECTANGLE: Option<flatbuffers::WIPOffset<CZMRectangle<'a>>>,
+    pub TILESET: Option<flatbuffers::WIPOffset<CZMTileset<'a>>>,
+    pub WALL: Option<flatbuffers::WIPOffset<CZMWall<'a>>>,
+    pub POSITION_INTERPOLATION: Option<flatbuffers::WIPOffset<CZMInterpolation<'a>>>,
+    pub POSITION_REFERENCE_FRAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub POSITION_REFERENCE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ORIENTATION_EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ORIENTATION_ARRAY: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub ORIENTATION_INTERPOLATION: Option<flatbuffers::WIPOffset<CZMInterpolation<'a>>>,
+    pub ORIENTATION_REFERENCE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub DYNAMIC_PROPERTIES: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<CZMDynamicProperty<'a>>>>>,
 }
 impl<'a> Default for CZMPacketArgs<'a> {
   #[inline]
@@ -4251,6 +14502,25 @@ impl<'a> Default for CZMPacketArgs<'a> {
       MODEL: None,
       PATH: None,
       ELLIPSE: None,
+      ORIENTATION: None,
+      VIEW_FROM: None,
+      DELETE: false,
+      BOX: None,
+      CORRIDOR: None,
+      CYLINDER: None,
+      ELLIPSOID: None,
+      POLYLINE_VOLUME: None,
+      RECTANGLE: None,
+      TILESET: None,
+      WALL: None,
+      POSITION_INTERPOLATION: None,
+      POSITION_REFERENCE_FRAME: None,
+      POSITION_REFERENCE: None,
+      ORIENTATION_EPOCH: None,
+      ORIENTATION_ARRAY: None,
+      ORIENTATION_INTERPOLATION: None,
+      ORIENTATION_REFERENCE: None,
+      DYNAMIC_PROPERTIES: None,
     }
   }
 }
@@ -4333,6 +14603,82 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMPacketBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMEllipse>>(CZMPacket::VT_ELLIPSE, ELLIPSE);
   }
   #[inline]
+  pub fn add_ORIENTATION(&mut self, ORIENTATION: flatbuffers::WIPOffset<CZMOrientation<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMOrientation>>(CZMPacket::VT_ORIENTATION, ORIENTATION);
+  }
+  #[inline]
+  pub fn add_VIEW_FROM(&mut self, VIEW_FROM: flatbuffers::WIPOffset<CZMViewFrom<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMViewFrom>>(CZMPacket::VT_VIEW_FROM, VIEW_FROM);
+  }
+  #[inline]
+  pub fn add_DELETE(&mut self, DELETE: bool) {
+    self.fbb_.push_slot::<bool>(CZMPacket::VT_DELETE, DELETE, false);
+  }
+  #[inline]
+  pub fn add_BOX(&mut self, BOX: flatbuffers::WIPOffset<CZMBox<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMBox>>(CZMPacket::VT_BOX, BOX);
+  }
+  #[inline]
+  pub fn add_CORRIDOR(&mut self, CORRIDOR: flatbuffers::WIPOffset<CZMCorridor<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMCorridor>>(CZMPacket::VT_CORRIDOR, CORRIDOR);
+  }
+  #[inline]
+  pub fn add_CYLINDER(&mut self, CYLINDER: flatbuffers::WIPOffset<CZMCylinder<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMCylinder>>(CZMPacket::VT_CYLINDER, CYLINDER);
+  }
+  #[inline]
+  pub fn add_ELLIPSOID(&mut self, ELLIPSOID: flatbuffers::WIPOffset<CZMEllipsoid<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMEllipsoid>>(CZMPacket::VT_ELLIPSOID, ELLIPSOID);
+  }
+  #[inline]
+  pub fn add_POLYLINE_VOLUME(&mut self, POLYLINE_VOLUME: flatbuffers::WIPOffset<CZMPolylineVolume<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMPolylineVolume>>(CZMPacket::VT_POLYLINE_VOLUME, POLYLINE_VOLUME);
+  }
+  #[inline]
+  pub fn add_RECTANGLE(&mut self, RECTANGLE: flatbuffers::WIPOffset<CZMRectangle<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMRectangle>>(CZMPacket::VT_RECTANGLE, RECTANGLE);
+  }
+  #[inline]
+  pub fn add_TILESET(&mut self, TILESET: flatbuffers::WIPOffset<CZMTileset<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMTileset>>(CZMPacket::VT_TILESET, TILESET);
+  }
+  #[inline]
+  pub fn add_WALL(&mut self, WALL: flatbuffers::WIPOffset<CZMWall<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMWall>>(CZMPacket::VT_WALL, WALL);
+  }
+  #[inline]
+  pub fn add_POSITION_INTERPOLATION(&mut self, POSITION_INTERPOLATION: flatbuffers::WIPOffset<CZMInterpolation<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMInterpolation>>(CZMPacket::VT_POSITION_INTERPOLATION, POSITION_INTERPOLATION);
+  }
+  #[inline]
+  pub fn add_POSITION_REFERENCE_FRAME(&mut self, POSITION_REFERENCE_FRAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMPacket::VT_POSITION_REFERENCE_FRAME, POSITION_REFERENCE_FRAME);
+  }
+  #[inline]
+  pub fn add_POSITION_REFERENCE(&mut self, POSITION_REFERENCE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMPacket::VT_POSITION_REFERENCE, POSITION_REFERENCE);
+  }
+  #[inline]
+  pub fn add_ORIENTATION_EPOCH(&mut self, ORIENTATION_EPOCH: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMPacket::VT_ORIENTATION_EPOCH, ORIENTATION_EPOCH);
+  }
+  #[inline]
+  pub fn add_ORIENTATION_ARRAY(&mut self, ORIENTATION_ARRAY: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMPacket::VT_ORIENTATION_ARRAY, ORIENTATION_ARRAY);
+  }
+  #[inline]
+  pub fn add_ORIENTATION_INTERPOLATION(&mut self, ORIENTATION_INTERPOLATION: flatbuffers::WIPOffset<CZMInterpolation<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<CZMInterpolation>>(CZMPacket::VT_ORIENTATION_INTERPOLATION, ORIENTATION_INTERPOLATION);
+  }
+  #[inline]
+  pub fn add_ORIENTATION_REFERENCE(&mut self, ORIENTATION_REFERENCE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMPacket::VT_ORIENTATION_REFERENCE, ORIENTATION_REFERENCE);
+  }
+  #[inline]
+  pub fn add_DYNAMIC_PROPERTIES(&mut self, DYNAMIC_PROPERTIES: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<CZMDynamicProperty<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZMPacket::VT_DYNAMIC_PROPERTIES, DYNAMIC_PROPERTIES);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CZMPacketBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     CZMPacketBuilder {
@@ -4368,6 +14714,25 @@ impl core::fmt::Debug for CZMPacket<'_> {
       ds.field("MODEL", &self.MODEL());
       ds.field("PATH", &self.PATH());
       ds.field("ELLIPSE", &self.ELLIPSE());
+      ds.field("ORIENTATION", &self.ORIENTATION());
+      ds.field("VIEW_FROM", &self.VIEW_FROM());
+      ds.field("DELETE", &self.DELETE());
+      ds.field("BOX", &self.BOX());
+      ds.field("CORRIDOR", &self.CORRIDOR());
+      ds.field("CYLINDER", &self.CYLINDER());
+      ds.field("ELLIPSOID", &self.ELLIPSOID());
+      ds.field("POLYLINE_VOLUME", &self.POLYLINE_VOLUME());
+      ds.field("RECTANGLE", &self.RECTANGLE());
+      ds.field("TILESET", &self.TILESET());
+      ds.field("WALL", &self.WALL());
+      ds.field("POSITION_INTERPOLATION", &self.POSITION_INTERPOLATION());
+      ds.field("POSITION_REFERENCE_FRAME", &self.POSITION_REFERENCE_FRAME());
+      ds.field("POSITION_REFERENCE", &self.POSITION_REFERENCE());
+      ds.field("ORIENTATION_EPOCH", &self.ORIENTATION_EPOCH());
+      ds.field("ORIENTATION_ARRAY", &self.ORIENTATION_ARRAY());
+      ds.field("ORIENTATION_INTERPOLATION", &self.ORIENTATION_INTERPOLATION());
+      ds.field("ORIENTATION_REFERENCE", &self.ORIENTATION_REFERENCE());
+      ds.field("DYNAMIC_PROPERTIES", &self.DYNAMIC_PROPERTIES());
       ds.finish()
   }
 }
@@ -4392,6 +14757,25 @@ pub struct CZMPacketT {
   pub MODEL: Option<Box<CZMModelT>>,
   pub PATH: Option<Box<CZMPathT>>,
   pub ELLIPSE: Option<Box<CZMEllipseT>>,
+  pub ORIENTATION: Option<Box<CZMOrientationT>>,
+  pub VIEW_FROM: Option<Box<CZMViewFromT>>,
+  pub DELETE: bool,
+  pub BOX: Option<Box<CZMBoxT>>,
+  pub CORRIDOR: Option<Box<CZMCorridorT>>,
+  pub CYLINDER: Option<Box<CZMCylinderT>>,
+  pub ELLIPSOID: Option<Box<CZMEllipsoidT>>,
+  pub POLYLINE_VOLUME: Option<Box<CZMPolylineVolumeT>>,
+  pub RECTANGLE: Option<Box<CZMRectangleT>>,
+  pub TILESET: Option<Box<CZMTilesetT>>,
+  pub WALL: Option<Box<CZMWallT>>,
+  pub POSITION_INTERPOLATION: Option<Box<CZMInterpolationT>>,
+  pub POSITION_REFERENCE_FRAME: Option<String>,
+  pub POSITION_REFERENCE: Option<String>,
+  pub ORIENTATION_EPOCH: Option<String>,
+  pub ORIENTATION_ARRAY: Option<Vec<f64>>,
+  pub ORIENTATION_INTERPOLATION: Option<Box<CZMInterpolationT>>,
+  pub ORIENTATION_REFERENCE: Option<String>,
+  pub DYNAMIC_PROPERTIES: Option<Vec<CZMDynamicPropertyT>>,
 }
 impl Default for CZMPacketT {
   fn default() -> Self {
@@ -4414,6 +14798,25 @@ impl Default for CZMPacketT {
       MODEL: None,
       PATH: None,
       ELLIPSE: None,
+      ORIENTATION: None,
+      VIEW_FROM: None,
+      DELETE: false,
+      BOX: None,
+      CORRIDOR: None,
+      CYLINDER: None,
+      ELLIPSOID: None,
+      POLYLINE_VOLUME: None,
+      RECTANGLE: None,
+      TILESET: None,
+      WALL: None,
+      POSITION_INTERPOLATION: None,
+      POSITION_REFERENCE_FRAME: None,
+      POSITION_REFERENCE: None,
+      ORIENTATION_EPOCH: None,
+      ORIENTATION_ARRAY: None,
+      ORIENTATION_INTERPOLATION: None,
+      ORIENTATION_REFERENCE: None,
+      DYNAMIC_PROPERTIES: None,
     }
   }
 }
@@ -4476,6 +14879,61 @@ impl CZMPacketT {
     let ELLIPSE = self.ELLIPSE.as_ref().map(|x|{
       x.pack(_fbb)
     });
+    let ORIENTATION = self.ORIENTATION.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let VIEW_FROM = self.VIEW_FROM.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let DELETE = self.DELETE;
+    let BOX = self.BOX.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let CORRIDOR = self.CORRIDOR.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let CYLINDER = self.CYLINDER.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let ELLIPSOID = self.ELLIPSOID.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let POLYLINE_VOLUME = self.POLYLINE_VOLUME.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let RECTANGLE = self.RECTANGLE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let TILESET = self.TILESET.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let WALL = self.WALL.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let POSITION_INTERPOLATION = self.POSITION_INTERPOLATION.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let POSITION_REFERENCE_FRAME = self.POSITION_REFERENCE_FRAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let POSITION_REFERENCE = self.POSITION_REFERENCE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ORIENTATION_EPOCH = self.ORIENTATION_EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ORIENTATION_ARRAY = self.ORIENTATION_ARRAY.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let ORIENTATION_INTERPOLATION = self.ORIENTATION_INTERPOLATION.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let ORIENTATION_REFERENCE = self.ORIENTATION_REFERENCE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DYNAMIC_PROPERTIES = self.DYNAMIC_PROPERTIES.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
     CZMPacket::create(_fbb, &CZMPacketArgs{
       ID,
       NAME,
@@ -4495,6 +14953,25 @@ impl CZMPacketT {
       MODEL,
       PATH,
       ELLIPSE,
+      ORIENTATION,
+      VIEW_FROM,
+      DELETE,
+      BOX,
+      CORRIDOR,
+      CYLINDER,
+      ELLIPSOID,
+      POLYLINE_VOLUME,
+      RECTANGLE,
+      TILESET,
+      WALL,
+      POSITION_INTERPOLATION,
+      POSITION_REFERENCE_FRAME,
+      POSITION_REFERENCE,
+      ORIENTATION_EPOCH,
+      ORIENTATION_ARRAY,
+      ORIENTATION_INTERPOLATION,
+      ORIENTATION_REFERENCE,
+      DYNAMIC_PROPERTIES,
     })
   }
 }
@@ -4520,7 +14997,9 @@ impl<'a> CZM<'a> {
   pub const VT_CLOCK_CURRENT_TIME: flatbuffers::VOffsetT = 8;
   pub const VT_CLOCK_INTERVAL: flatbuffers::VOffsetT = 10;
   pub const VT_CLOCK_MULTIPLIER: flatbuffers::VOffsetT = 12;
-  pub const VT_PACKETS: flatbuffers::VOffsetT = 14;
+  pub const VT_CLOCK_RANGE: flatbuffers::VOffsetT = 14;
+  pub const VT_CLOCK_STEP: flatbuffers::VOffsetT = 16;
+  pub const VT_PACKETS: flatbuffers::VOffsetT = 18;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -4534,6 +15013,8 @@ impl<'a> CZM<'a> {
     let mut builder = CZMBuilder::new(_fbb);
     builder.add_CLOCK_MULTIPLIER(args.CLOCK_MULTIPLIER);
     if let Some(x) = args.PACKETS { builder.add_PACKETS(x); }
+    if let Some(x) = args.CLOCK_STEP { builder.add_CLOCK_STEP(x); }
+    if let Some(x) = args.CLOCK_RANGE { builder.add_CLOCK_RANGE(x); }
     if let Some(x) = args.CLOCK_INTERVAL { builder.add_CLOCK_INTERVAL(x); }
     if let Some(x) = args.CLOCK_CURRENT_TIME { builder.add_CLOCK_CURRENT_TIME(x); }
     if let Some(x) = args.VERSION { builder.add_VERSION(x); }
@@ -4555,6 +15036,12 @@ impl<'a> CZM<'a> {
       x.to_string()
     });
     let CLOCK_MULTIPLIER = self.CLOCK_MULTIPLIER();
+    let CLOCK_RANGE = self.CLOCK_RANGE().map(|x| {
+      x.to_string()
+    });
+    let CLOCK_STEP = self.CLOCK_STEP().map(|x| {
+      x.to_string()
+    });
     let PACKETS = self.PACKETS().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
@@ -4564,6 +15051,8 @@ impl<'a> CZM<'a> {
       CLOCK_CURRENT_TIME,
       CLOCK_INTERVAL,
       CLOCK_MULTIPLIER,
+      CLOCK_RANGE,
+      CLOCK_STEP,
       PACKETS,
     }
   }
@@ -4608,6 +15097,22 @@ impl<'a> CZM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(CZM::VT_CLOCK_MULTIPLIER, Some(0.0)).unwrap()}
   }
+  /// Clock range
+  #[inline]
+  pub fn CLOCK_RANGE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZM::VT_CLOCK_RANGE, None)}
+  }
+  /// Clock step
+  #[inline]
+  pub fn CLOCK_STEP(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CZM::VT_CLOCK_STEP, None)}
+  }
   /// All packets in the document
   #[inline]
   pub fn PACKETS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<CZMPacket<'a>>>> {
@@ -4630,6 +15135,8 @@ impl flatbuffers::Verifiable for CZM<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CLOCK_CURRENT_TIME", Self::VT_CLOCK_CURRENT_TIME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CLOCK_INTERVAL", Self::VT_CLOCK_INTERVAL, false)?
      .visit_field::<f64>("CLOCK_MULTIPLIER", Self::VT_CLOCK_MULTIPLIER, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CLOCK_RANGE", Self::VT_CLOCK_RANGE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CLOCK_STEP", Self::VT_CLOCK_STEP, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<CZMPacket>>>>("PACKETS", Self::VT_PACKETS, false)?
      .finish();
     Ok(())
@@ -4641,6 +15148,8 @@ pub struct CZMArgs<'a> {
     pub CLOCK_CURRENT_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub CLOCK_INTERVAL: Option<flatbuffers::WIPOffset<&'a str>>,
     pub CLOCK_MULTIPLIER: f64,
+    pub CLOCK_RANGE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub CLOCK_STEP: Option<flatbuffers::WIPOffset<&'a str>>,
     pub PACKETS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<CZMPacket<'a>>>>>,
 }
 impl<'a> Default for CZMArgs<'a> {
@@ -4652,6 +15161,8 @@ impl<'a> Default for CZMArgs<'a> {
       CLOCK_CURRENT_TIME: None,
       CLOCK_INTERVAL: None,
       CLOCK_MULTIPLIER: 0.0,
+      CLOCK_RANGE: None,
+      CLOCK_STEP: None,
       PACKETS: None,
     }
   }
@@ -4683,6 +15194,14 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CZMBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(CZM::VT_CLOCK_MULTIPLIER, CLOCK_MULTIPLIER, 0.0);
   }
   #[inline]
+  pub fn add_CLOCK_RANGE(&mut self, CLOCK_RANGE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZM::VT_CLOCK_RANGE, CLOCK_RANGE);
+  }
+  #[inline]
+  pub fn add_CLOCK_STEP(&mut self, CLOCK_STEP: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZM::VT_CLOCK_STEP, CLOCK_STEP);
+  }
+  #[inline]
   pub fn add_PACKETS(&mut self, PACKETS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<CZMPacket<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CZM::VT_PACKETS, PACKETS);
   }
@@ -4709,6 +15228,8 @@ impl core::fmt::Debug for CZM<'_> {
       ds.field("CLOCK_CURRENT_TIME", &self.CLOCK_CURRENT_TIME());
       ds.field("CLOCK_INTERVAL", &self.CLOCK_INTERVAL());
       ds.field("CLOCK_MULTIPLIER", &self.CLOCK_MULTIPLIER());
+      ds.field("CLOCK_RANGE", &self.CLOCK_RANGE());
+      ds.field("CLOCK_STEP", &self.CLOCK_STEP());
       ds.field("PACKETS", &self.PACKETS());
       ds.finish()
   }
@@ -4721,6 +15242,8 @@ pub struct CZMT {
   pub CLOCK_CURRENT_TIME: Option<String>,
   pub CLOCK_INTERVAL: Option<String>,
   pub CLOCK_MULTIPLIER: f64,
+  pub CLOCK_RANGE: Option<String>,
+  pub CLOCK_STEP: Option<String>,
   pub PACKETS: Option<Vec<CZMPacketT>>,
 }
 impl Default for CZMT {
@@ -4731,6 +15254,8 @@ impl Default for CZMT {
       CLOCK_CURRENT_TIME: None,
       CLOCK_INTERVAL: None,
       CLOCK_MULTIPLIER: 0.0,
+      CLOCK_RANGE: None,
+      CLOCK_STEP: None,
       PACKETS: None,
     }
   }
@@ -4753,6 +15278,12 @@ impl CZMT {
       _fbb.create_string(x)
     });
     let CLOCK_MULTIPLIER = self.CLOCK_MULTIPLIER;
+    let CLOCK_RANGE = self.CLOCK_RANGE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CLOCK_STEP = self.CLOCK_STEP.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     let PACKETS = self.PACKETS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
@@ -4762,6 +15293,8 @@ impl CZMT {
       CLOCK_CURRENT_TIME,
       CLOCK_INTERVAL,
       CLOCK_MULTIPLIER,
+      CLOCK_RANGE,
+      CLOCK_STEP,
       PACKETS,
     })
   }

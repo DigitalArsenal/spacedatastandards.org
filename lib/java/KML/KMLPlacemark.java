@@ -62,53 +62,98 @@ public final class KMLPlacemark extends Table {
   public ByteBuffer SNIPPETAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
   public ByteBuffer SNIPPETInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
   /**
+   * Whether open in tree view
+   */
+  public boolean OPEN() { int o = __offset(16); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Address
+   */
+  public String ADDRESS() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ADDRESSAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
+  public ByteBuffer ADDRESSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
+  /**
    * Point geometry
    */
   public KMLPoint POINT() { return POINT(new KMLPoint()); }
-  public KMLPoint POINT(KMLPoint obj) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public KMLPoint POINT(KMLPoint obj) { int o = __offset(20); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * LineString geometry
    */
   public KMLLineString LINE_STRING() { return LINE_STRING(new KMLLineString()); }
-  public KMLLineString LINE_STRING(KMLLineString obj) { int o = __offset(18); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public KMLLineString LINE_STRING(KMLLineString obj) { int o = __offset(22); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * Polygon geometry
    */
   public KMLPolygon POLYGON() { return POLYGON(new KMLPolygon()); }
-  public KMLPolygon POLYGON(KMLPolygon obj) { int o = __offset(20); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public KMLPolygon POLYGON(KMLPolygon obj) { int o = __offset(24); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * LinearRing geometry (standalone)
+   */
+  public KMLLinearRing LINEAR_RING() { return LINEAR_RING(new KMLLinearRing()); }
+  public KMLLinearRing LINEAR_RING(KMLLinearRing obj) { int o = __offset(26); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * MultiGeometry
    */
   public KMLMultiGeometry MULTI_GEOMETRY() { return MULTI_GEOMETRY(new KMLMultiGeometry()); }
-  public KMLMultiGeometry MULTI_GEOMETRY(KMLMultiGeometry obj) { int o = __offset(22); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public KMLMultiGeometry MULTI_GEOMETRY(KMLMultiGeometry obj) { int o = __offset(28); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * 3D Model
+   */
+  public KMLModel MODEL() { return MODEL(new KMLModel()); }
+  public KMLModel MODEL(KMLModel obj) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * gx:Track
+   */
+  public KMLTrack TRACK() { return TRACK(new KMLTrack()); }
+  public KMLTrack TRACK(KMLTrack obj) { int o = __offset(32); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * gx:MultiTrack
+   */
+  public KMLMultiTrack MULTI_TRACK() { return MULTI_TRACK(new KMLMultiTrack()); }
+  public KMLMultiTrack MULTI_TRACK(KMLMultiTrack obj) { int o = __offset(34); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * LookAt viewpoint
    */
   public KMLLookAt LOOK_AT() { return LOOK_AT(new KMLLookAt()); }
-  public KMLLookAt LOOK_AT(KMLLookAt obj) { int o = __offset(24); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public KMLLookAt LOOK_AT(KMLLookAt obj) { int o = __offset(36); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * Camera viewpoint
    */
   public KMLCamera CAMERA() { return CAMERA(new KMLCamera()); }
-  public KMLCamera CAMERA(KMLCamera obj) { int o = __offset(26); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public KMLCamera CAMERA(KMLCamera obj) { int o = __offset(38); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * TimeSpan
    */
   public KMLTimeSpan TIME_SPAN() { return TIME_SPAN(new KMLTimeSpan()); }
-  public KMLTimeSpan TIME_SPAN(KMLTimeSpan obj) { int o = __offset(28); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public KMLTimeSpan TIME_SPAN(KMLTimeSpan obj) { int o = __offset(40); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * TimeStamp
    */
   public KMLTimeStamp TIME_STAMP() { return TIME_STAMP(new KMLTimeStamp()); }
-  public KMLTimeStamp TIME_STAMP(KMLTimeStamp obj) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public KMLTimeStamp TIME_STAMP(KMLTimeStamp obj) { int o = __offset(42); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * Extended data
    */
   public KMLData EXTENDED_DATA(int j) { return EXTENDED_DATA(new KMLData(), j); }
-  public KMLData EXTENDED_DATA(KMLData obj, int j) { int o = __offset(32); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int EXTENDED_DATALength() { int o = __offset(32); return o != 0 ? __vector_len(o) : 0; }
+  public KMLData EXTENDED_DATA(KMLData obj, int j) { int o = __offset(44); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int EXTENDED_DATALength() { int o = __offset(44); return o != 0 ? __vector_len(o) : 0; }
   public KMLData.Vector extendedDataVector() { return extendedDataVector(new KMLData.Vector()); }
-  public KMLData.Vector extendedDataVector(KMLData.Vector obj) { int o = __offset(32); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public KMLData.Vector extendedDataVector(KMLData.Vector obj) { int o = __offset(44); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Schema data
+   */
+  public KMLSchemaData SCHEMA_DATA() { return SCHEMA_DATA(new KMLSchemaData()); }
+  public KMLSchemaData SCHEMA_DATA(KMLSchemaData obj) { int o = __offset(46); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Region
+   */
+  public KMLRegion REGION() { return REGION(new KMLRegion()); }
+  public KMLRegion REGION(KMLRegion obj) { int o = __offset(48); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * StyleMap (inline)
+   */
+  public KMLStyleMap STYLE_MAP() { return STYLE_MAP(new KMLStyleMap()); }
+  public KMLStyleMap STYLE_MAP(KMLStyleMap obj) { int o = __offset(50); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createKMLPlacemark(FlatBufferBuilder builder,
       int NAMEOffset,
@@ -117,52 +162,79 @@ public final class KMLPlacemark extends Table {
       int STYLE_URLOffset,
       int STYLEOffset,
       int SNIPPETOffset,
+      boolean OPEN,
+      int ADDRESSOffset,
       int POINTOffset,
       int LINE_STRINGOffset,
       int POLYGONOffset,
+      int LINEAR_RINGOffset,
       int MULTI_GEOMETRYOffset,
+      int MODELOffset,
+      int TRACKOffset,
+      int MULTI_TRACKOffset,
       int LOOK_ATOffset,
       int CAMERAOffset,
       int TIME_SPANOffset,
       int TIME_STAMPOffset,
-      int EXTENDED_DATAOffset) {
-    builder.startTable(15);
+      int EXTENDED_DATAOffset,
+      int SCHEMA_DATAOffset,
+      int REGIONOffset,
+      int STYLE_MAPOffset) {
+    builder.startTable(24);
+    KMLPlacemark.addStyleMap(builder, STYLE_MAPOffset);
+    KMLPlacemark.addRegion(builder, REGIONOffset);
+    KMLPlacemark.addSchemaData(builder, SCHEMA_DATAOffset);
     KMLPlacemark.addExtendedData(builder, EXTENDED_DATAOffset);
     KMLPlacemark.addTimeStamp(builder, TIME_STAMPOffset);
     KMLPlacemark.addTimeSpan(builder, TIME_SPANOffset);
     KMLPlacemark.addCamera(builder, CAMERAOffset);
     KMLPlacemark.addLookAt(builder, LOOK_ATOffset);
+    KMLPlacemark.addMultiTrack(builder, MULTI_TRACKOffset);
+    KMLPlacemark.addTrack(builder, TRACKOffset);
+    KMLPlacemark.addModel(builder, MODELOffset);
     KMLPlacemark.addMultiGeometry(builder, MULTI_GEOMETRYOffset);
+    KMLPlacemark.addLinearRing(builder, LINEAR_RINGOffset);
     KMLPlacemark.addPolygon(builder, POLYGONOffset);
     KMLPlacemark.addLineString(builder, LINE_STRINGOffset);
     KMLPlacemark.addPoint(builder, POINTOffset);
+    KMLPlacemark.addAddress(builder, ADDRESSOffset);
     KMLPlacemark.addSnippet(builder, SNIPPETOffset);
     KMLPlacemark.addStyle(builder, STYLEOffset);
     KMLPlacemark.addStyleUrl(builder, STYLE_URLOffset);
     KMLPlacemark.addDescription(builder, DESCRIPTIONOffset);
     KMLPlacemark.addName(builder, NAMEOffset);
+    KMLPlacemark.addOpen(builder, OPEN);
     KMLPlacemark.addVisibility(builder, VISIBILITY);
     return KMLPlacemark.endKMLPlacemark(builder);
   }
 
-  public static void startKMLPlacemark(FlatBufferBuilder builder) { builder.startTable(15); }
+  public static void startKMLPlacemark(FlatBufferBuilder builder) { builder.startTable(24); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(0, NAMEOffset, 0); }
   public static void addDescription(FlatBufferBuilder builder, int DESCRIPTIONOffset) { builder.addOffset(1, DESCRIPTIONOffset, 0); }
   public static void addVisibility(FlatBufferBuilder builder, boolean VISIBILITY) { builder.addBoolean(2, VISIBILITY, false); }
   public static void addStyleUrl(FlatBufferBuilder builder, int STYLE_URLOffset) { builder.addOffset(3, STYLE_URLOffset, 0); }
   public static void addStyle(FlatBufferBuilder builder, int STYLEOffset) { builder.addOffset(4, STYLEOffset, 0); }
   public static void addSnippet(FlatBufferBuilder builder, int SNIPPETOffset) { builder.addOffset(5, SNIPPETOffset, 0); }
-  public static void addPoint(FlatBufferBuilder builder, int POINTOffset) { builder.addOffset(6, POINTOffset, 0); }
-  public static void addLineString(FlatBufferBuilder builder, int LINE_STRINGOffset) { builder.addOffset(7, LINE_STRINGOffset, 0); }
-  public static void addPolygon(FlatBufferBuilder builder, int POLYGONOffset) { builder.addOffset(8, POLYGONOffset, 0); }
-  public static void addMultiGeometry(FlatBufferBuilder builder, int MULTI_GEOMETRYOffset) { builder.addOffset(9, MULTI_GEOMETRYOffset, 0); }
-  public static void addLookAt(FlatBufferBuilder builder, int LOOK_ATOffset) { builder.addOffset(10, LOOK_ATOffset, 0); }
-  public static void addCamera(FlatBufferBuilder builder, int CAMERAOffset) { builder.addOffset(11, CAMERAOffset, 0); }
-  public static void addTimeSpan(FlatBufferBuilder builder, int TIME_SPANOffset) { builder.addOffset(12, TIME_SPANOffset, 0); }
-  public static void addTimeStamp(FlatBufferBuilder builder, int TIME_STAMPOffset) { builder.addOffset(13, TIME_STAMPOffset, 0); }
-  public static void addExtendedData(FlatBufferBuilder builder, int EXTENDED_DATAOffset) { builder.addOffset(14, EXTENDED_DATAOffset, 0); }
+  public static void addOpen(FlatBufferBuilder builder, boolean OPEN) { builder.addBoolean(6, OPEN, false); }
+  public static void addAddress(FlatBufferBuilder builder, int ADDRESSOffset) { builder.addOffset(7, ADDRESSOffset, 0); }
+  public static void addPoint(FlatBufferBuilder builder, int POINTOffset) { builder.addOffset(8, POINTOffset, 0); }
+  public static void addLineString(FlatBufferBuilder builder, int LINE_STRINGOffset) { builder.addOffset(9, LINE_STRINGOffset, 0); }
+  public static void addPolygon(FlatBufferBuilder builder, int POLYGONOffset) { builder.addOffset(10, POLYGONOffset, 0); }
+  public static void addLinearRing(FlatBufferBuilder builder, int LINEAR_RINGOffset) { builder.addOffset(11, LINEAR_RINGOffset, 0); }
+  public static void addMultiGeometry(FlatBufferBuilder builder, int MULTI_GEOMETRYOffset) { builder.addOffset(12, MULTI_GEOMETRYOffset, 0); }
+  public static void addModel(FlatBufferBuilder builder, int MODELOffset) { builder.addOffset(13, MODELOffset, 0); }
+  public static void addTrack(FlatBufferBuilder builder, int TRACKOffset) { builder.addOffset(14, TRACKOffset, 0); }
+  public static void addMultiTrack(FlatBufferBuilder builder, int MULTI_TRACKOffset) { builder.addOffset(15, MULTI_TRACKOffset, 0); }
+  public static void addLookAt(FlatBufferBuilder builder, int LOOK_ATOffset) { builder.addOffset(16, LOOK_ATOffset, 0); }
+  public static void addCamera(FlatBufferBuilder builder, int CAMERAOffset) { builder.addOffset(17, CAMERAOffset, 0); }
+  public static void addTimeSpan(FlatBufferBuilder builder, int TIME_SPANOffset) { builder.addOffset(18, TIME_SPANOffset, 0); }
+  public static void addTimeStamp(FlatBufferBuilder builder, int TIME_STAMPOffset) { builder.addOffset(19, TIME_STAMPOffset, 0); }
+  public static void addExtendedData(FlatBufferBuilder builder, int EXTENDED_DATAOffset) { builder.addOffset(20, EXTENDED_DATAOffset, 0); }
   public static int createExtendedDataVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startExtendedDataVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addSchemaData(FlatBufferBuilder builder, int SCHEMA_DATAOffset) { builder.addOffset(21, SCHEMA_DATAOffset, 0); }
+  public static void addRegion(FlatBufferBuilder builder, int REGIONOffset) { builder.addOffset(22, REGIONOffset, 0); }
+  public static void addStyleMap(FlatBufferBuilder builder, int STYLE_MAPOffset) { builder.addOffset(23, STYLE_MAPOffset, 0); }
   public static int endKMLPlacemark(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

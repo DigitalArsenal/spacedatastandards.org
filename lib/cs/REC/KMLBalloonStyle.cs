@@ -41,22 +41,27 @@ public struct KMLBalloonStyle : IFlatbufferObject
   public ArraySegment<byte>? GetTEXTBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetTEXTArray() { return __p.__vector_as_array<byte>(8); }
+  /// Display mode
+  public KMLDisplayMode DISPLAY_MODE { get { int o = __p.__offset(10); return o != 0 ? (KMLDisplayMode)__p.bb.GetSbyte(o + __p.bb_pos) : KMLDisplayMode.DEFAULT; } }
 
   public static Offset<KMLBalloonStyle> CreateKMLBalloonStyle(FlatBufferBuilder builder,
       StringOffset BG_COLOROffset = default(StringOffset),
       StringOffset TEXT_COLOROffset = default(StringOffset),
-      StringOffset TEXTOffset = default(StringOffset)) {
-    builder.StartTable(3);
+      StringOffset TEXTOffset = default(StringOffset),
+      KMLDisplayMode DISPLAY_MODE = KMLDisplayMode.DEFAULT) {
+    builder.StartTable(4);
     KMLBalloonStyle.AddTEXT(builder, TEXTOffset);
     KMLBalloonStyle.AddTEXT_COLOR(builder, TEXT_COLOROffset);
     KMLBalloonStyle.AddBG_COLOR(builder, BG_COLOROffset);
+    KMLBalloonStyle.AddDISPLAY_MODE(builder, DISPLAY_MODE);
     return KMLBalloonStyle.EndKMLBalloonStyle(builder);
   }
 
-  public static void StartKMLBalloonStyle(FlatBufferBuilder builder) { builder.StartTable(3); }
+  public static void StartKMLBalloonStyle(FlatBufferBuilder builder) { builder.StartTable(4); }
   public static void AddBG_COLOR(FlatBufferBuilder builder, StringOffset BG_COLOROffset) { builder.AddOffset(0, BG_COLOROffset.Value, 0); }
   public static void AddTEXT_COLOR(FlatBufferBuilder builder, StringOffset TEXT_COLOROffset) { builder.AddOffset(1, TEXT_COLOROffset.Value, 0); }
   public static void AddTEXT(FlatBufferBuilder builder, StringOffset TEXTOffset) { builder.AddOffset(2, TEXTOffset.Value, 0); }
+  public static void AddDISPLAY_MODE(FlatBufferBuilder builder, KMLDisplayMode DISPLAY_MODE) { builder.AddSbyte(3, (sbyte)DISPLAY_MODE, 0); }
   public static Offset<KMLBalloonStyle> EndKMLBalloonStyle(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<KMLBalloonStyle>(o);
@@ -70,6 +75,7 @@ public struct KMLBalloonStyle : IFlatbufferObject
     _o.BG_COLOR = this.BG_COLOR;
     _o.TEXT_COLOR = this.TEXT_COLOR;
     _o.TEXT = this.TEXT;
+    _o.DISPLAY_MODE = this.DISPLAY_MODE;
   }
   public static Offset<KMLBalloonStyle> Pack(FlatBufferBuilder builder, KMLBalloonStyleT _o) {
     if (_o == null) return default(Offset<KMLBalloonStyle>);
@@ -80,7 +86,8 @@ public struct KMLBalloonStyle : IFlatbufferObject
       builder,
       _BG_COLOR,
       _TEXT_COLOR,
-      _TEXT);
+      _TEXT,
+      _o.DISPLAY_MODE);
   }
 }
 
@@ -89,11 +96,13 @@ public class KMLBalloonStyleT
   public string BG_COLOR { get; set; }
   public string TEXT_COLOR { get; set; }
   public string TEXT { get; set; }
+  public KMLDisplayMode DISPLAY_MODE { get; set; }
 
   public KMLBalloonStyleT() {
     this.BG_COLOR = null;
     this.TEXT_COLOR = null;
     this.TEXT = null;
+    this.DISPLAY_MODE = KMLDisplayMode.DEFAULT;
   }
 }
 
@@ -106,6 +115,7 @@ static public class KMLBalloonStyleVerify
       && verifier.VerifyString(tablePos, 4 /*BG_COLOR*/, false)
       && verifier.VerifyString(tablePos, 6 /*TEXT_COLOR*/, false)
       && verifier.VerifyString(tablePos, 8 /*TEXT*/, false)
+      && verifier.VerifyField(tablePos, 10 /*DISPLAY_MODE*/, 1 /*KMLDisplayMode*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

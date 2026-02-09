@@ -80,8 +80,60 @@ func (rcv *KMLLineStyle) MutateWIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
 }
 
+/// gx:outerColor
+func (rcv *KMLLineStyle) GX_OUTER_COLOR() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// gx:outerColor
+/// gx:outerWidth
+func (rcv *KMLLineStyle) GX_OUTER_WIDTH() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// gx:outerWidth
+func (rcv *KMLLineStyle) MutateGX_OUTER_WIDTH(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(12, n)
+}
+
+/// gx:physicalWidth
+func (rcv *KMLLineStyle) GX_PHYSICAL_WIDTH() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// gx:physicalWidth
+func (rcv *KMLLineStyle) MutateGX_PHYSICAL_WIDTH(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(14, n)
+}
+
+/// gx:labelVisibility
+func (rcv *KMLLineStyle) GX_LABEL_VISIBILITY() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+/// gx:labelVisibility
+func (rcv *KMLLineStyle) MutateGX_LABEL_VISIBILITY(n bool) bool {
+	return rcv._tab.MutateBoolSlot(16, n)
+}
+
 func KMLLineStyleStart(builder *flatbuffers.Builder) {
-	builder.StartObject(3)
+	builder.StartObject(7)
 }
 func KMLLineStyleAddCOLOR(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COLOR), 0)
@@ -91,6 +143,18 @@ func KMLLineStyleAddCOLOR_MODE(builder *flatbuffers.Builder, COLOR_MODE KMLColor
 }
 func KMLLineStyleAddWIDTH(builder *flatbuffers.Builder, WIDTH float64) {
 	builder.PrependFloat64Slot(2, WIDTH, 0.0)
+}
+func KMLLineStyleAddGX_OUTER_COLOR(builder *flatbuffers.Builder, GX_OUTER_COLOR flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(GX_OUTER_COLOR), 0)
+}
+func KMLLineStyleAddGX_OUTER_WIDTH(builder *flatbuffers.Builder, GX_OUTER_WIDTH float64) {
+	builder.PrependFloat64Slot(4, GX_OUTER_WIDTH, 0.0)
+}
+func KMLLineStyleAddGX_PHYSICAL_WIDTH(builder *flatbuffers.Builder, GX_PHYSICAL_WIDTH float64) {
+	builder.PrependFloat64Slot(5, GX_PHYSICAL_WIDTH, 0.0)
+}
+func KMLLineStyleAddGX_LABEL_VISIBILITY(builder *flatbuffers.Builder, GX_LABEL_VISIBILITY bool) {
+	builder.PrependBoolSlot(6, GX_LABEL_VISIBILITY, false)
 }
 func KMLLineStyleEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

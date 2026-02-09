@@ -6,6 +6,7 @@ import * as flatbuffers from 'flatbuffers';
 
 import { CZMColor, CZMColorT } from './CZMColor.js';
 import { CZMHeightReference } from './CZMHeightReference.js';
+import { CZMMaterial, CZMMaterialT } from './CZMMaterial.js';
 
 
 /**
@@ -70,7 +71,7 @@ FILL():boolean {
 }
 
 /**
- * Fill color
+ * Fill color (legacy solid color)
  */
 COLOR(obj?:CZMColor):CZMColor|null {
   const offset = this.bb!.__offset(this.bb_pos, 14);
@@ -109,8 +110,94 @@ HEIGHT_REFERENCE():CZMHeightReference {
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : CZMHeightReference.NONE;
 }
 
+/**
+ * Extruded height in meters
+ */
+EXTRUDED_HEIGHT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Extruded height reference
+ */
+EXTRUDED_HEIGHT_REFERENCE():string|null
+EXTRUDED_HEIGHT_REFERENCE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EXTRUDED_HEIGHT_REFERENCE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Texture rotation in radians
+ */
+ST_ROTATION():number {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Granularity in radians
+ */
+GRANULARITY():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Full surface material
+ */
+MATERIAL(obj?:CZMMaterial):CZMMaterial|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? (obj || new CZMMaterial()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Outline width in pixels
+ */
+OUTLINE_WIDTH():number {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Number of vertical lines
+ */
+NUMBER_OF_VERTICAL_LINES():number {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Shadow mode
+ */
+SHADOWS():string|null
+SHADOWS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SHADOWS(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Classification type
+ */
+CLASSIFICATION_TYPE():string|null
+CLASSIFICATION_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CLASSIFICATION_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Z-index for ordering
+ */
+Z_INDEX():number {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+}
+
 static startCZMEllipse(builder:flatbuffers.Builder) {
-  builder.startObject(10);
+  builder.startObject(20);
 }
 
 static addShow(builder:flatbuffers.Builder, SHOW:boolean) {
@@ -153,6 +240,46 @@ static addHeightReference(builder:flatbuffers.Builder, HEIGHT_REFERENCE:CZMHeigh
   builder.addFieldInt8(9, HEIGHT_REFERENCE, CZMHeightReference.NONE);
 }
 
+static addExtrudedHeight(builder:flatbuffers.Builder, EXTRUDED_HEIGHT:number) {
+  builder.addFieldFloat64(10, EXTRUDED_HEIGHT, 0.0);
+}
+
+static addExtrudedHeightReference(builder:flatbuffers.Builder, EXTRUDED_HEIGHT_REFERENCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, EXTRUDED_HEIGHT_REFERENCEOffset, 0);
+}
+
+static addStRotation(builder:flatbuffers.Builder, ST_ROTATION:number) {
+  builder.addFieldFloat64(12, ST_ROTATION, 0.0);
+}
+
+static addGranularity(builder:flatbuffers.Builder, GRANULARITY:number) {
+  builder.addFieldFloat64(13, GRANULARITY, 0.0);
+}
+
+static addMaterial(builder:flatbuffers.Builder, MATERIALOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, MATERIALOffset, 0);
+}
+
+static addOutlineWidth(builder:flatbuffers.Builder, OUTLINE_WIDTH:number) {
+  builder.addFieldFloat64(15, OUTLINE_WIDTH, 0.0);
+}
+
+static addNumberOfVerticalLines(builder:flatbuffers.Builder, NUMBER_OF_VERTICAL_LINES:number) {
+  builder.addFieldInt32(16, NUMBER_OF_VERTICAL_LINES, 0);
+}
+
+static addShadows(builder:flatbuffers.Builder, SHADOWSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, SHADOWSOffset, 0);
+}
+
+static addClassificationType(builder:flatbuffers.Builder, CLASSIFICATION_TYPEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(18, CLASSIFICATION_TYPEOffset, 0);
+}
+
+static addZIndex(builder:flatbuffers.Builder, Z_INDEX:number) {
+  builder.addFieldInt32(19, Z_INDEX, 0);
+}
+
 static endCZMEllipse(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -170,7 +297,17 @@ unpack(): CZMEllipseT {
     this.OUTLINE(),
     (this.OUTLINE_COLOR() !== null ? this.OUTLINE_COLOR()!.unpack() : null),
     this.HEIGHT(),
-    this.HEIGHT_REFERENCE()
+    this.HEIGHT_REFERENCE(),
+    this.EXTRUDED_HEIGHT(),
+    this.EXTRUDED_HEIGHT_REFERENCE(),
+    this.ST_ROTATION(),
+    this.GRANULARITY(),
+    (this.MATERIAL() !== null ? this.MATERIAL()!.unpack() : null),
+    this.OUTLINE_WIDTH(),
+    this.NUMBER_OF_VERTICAL_LINES(),
+    this.SHADOWS(),
+    this.CLASSIFICATION_TYPE(),
+    this.Z_INDEX()
   );
 }
 
@@ -186,6 +323,16 @@ unpackTo(_o: CZMEllipseT): void {
   _o.OUTLINE_COLOR = (this.OUTLINE_COLOR() !== null ? this.OUTLINE_COLOR()!.unpack() : null);
   _o.HEIGHT = this.HEIGHT();
   _o.HEIGHT_REFERENCE = this.HEIGHT_REFERENCE();
+  _o.EXTRUDED_HEIGHT = this.EXTRUDED_HEIGHT();
+  _o.EXTRUDED_HEIGHT_REFERENCE = this.EXTRUDED_HEIGHT_REFERENCE();
+  _o.ST_ROTATION = this.ST_ROTATION();
+  _o.GRANULARITY = this.GRANULARITY();
+  _o.MATERIAL = (this.MATERIAL() !== null ? this.MATERIAL()!.unpack() : null);
+  _o.OUTLINE_WIDTH = this.OUTLINE_WIDTH();
+  _o.NUMBER_OF_VERTICAL_LINES = this.NUMBER_OF_VERTICAL_LINES();
+  _o.SHADOWS = this.SHADOWS();
+  _o.CLASSIFICATION_TYPE = this.CLASSIFICATION_TYPE();
+  _o.Z_INDEX = this.Z_INDEX();
 }
 }
 
@@ -200,13 +347,27 @@ constructor(
   public OUTLINE: boolean = false,
   public OUTLINE_COLOR: CZMColorT|null = null,
   public HEIGHT: number = 0.0,
-  public HEIGHT_REFERENCE: CZMHeightReference = CZMHeightReference.NONE
+  public HEIGHT_REFERENCE: CZMHeightReference = CZMHeightReference.NONE,
+  public EXTRUDED_HEIGHT: number = 0.0,
+  public EXTRUDED_HEIGHT_REFERENCE: string|Uint8Array|null = null,
+  public ST_ROTATION: number = 0.0,
+  public GRANULARITY: number = 0.0,
+  public MATERIAL: CZMMaterialT|null = null,
+  public OUTLINE_WIDTH: number = 0.0,
+  public NUMBER_OF_VERTICAL_LINES: number = 0,
+  public SHADOWS: string|Uint8Array|null = null,
+  public CLASSIFICATION_TYPE: string|Uint8Array|null = null,
+  public Z_INDEX: number = 0
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const COLOR = (this.COLOR !== null ? this.COLOR!.pack(builder) : 0);
   const OUTLINE_COLOR = (this.OUTLINE_COLOR !== null ? this.OUTLINE_COLOR!.pack(builder) : 0);
+  const EXTRUDED_HEIGHT_REFERENCE = (this.EXTRUDED_HEIGHT_REFERENCE !== null ? builder.createString(this.EXTRUDED_HEIGHT_REFERENCE!) : 0);
+  const MATERIAL = (this.MATERIAL !== null ? this.MATERIAL!.pack(builder) : 0);
+  const SHADOWS = (this.SHADOWS !== null ? builder.createString(this.SHADOWS!) : 0);
+  const CLASSIFICATION_TYPE = (this.CLASSIFICATION_TYPE !== null ? builder.createString(this.CLASSIFICATION_TYPE!) : 0);
 
   CZMEllipse.startCZMEllipse(builder);
   CZMEllipse.addShow(builder, this.SHOW);
@@ -219,6 +380,16 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   CZMEllipse.addOutlineColor(builder, OUTLINE_COLOR);
   CZMEllipse.addHeight(builder, this.HEIGHT);
   CZMEllipse.addHeightReference(builder, this.HEIGHT_REFERENCE);
+  CZMEllipse.addExtrudedHeight(builder, this.EXTRUDED_HEIGHT);
+  CZMEllipse.addExtrudedHeightReference(builder, EXTRUDED_HEIGHT_REFERENCE);
+  CZMEllipse.addStRotation(builder, this.ST_ROTATION);
+  CZMEllipse.addGranularity(builder, this.GRANULARITY);
+  CZMEllipse.addMaterial(builder, MATERIAL);
+  CZMEllipse.addOutlineWidth(builder, this.OUTLINE_WIDTH);
+  CZMEllipse.addNumberOfVerticalLines(builder, this.NUMBER_OF_VERTICAL_LINES);
+  CZMEllipse.addShadows(builder, SHADOWS);
+  CZMEllipse.addClassificationType(builder, CLASSIFICATION_TYPE);
+  CZMEllipse.addZIndex(builder, this.Z_INDEX);
 
   return CZMEllipse.endCZMEllipse(builder);
 }

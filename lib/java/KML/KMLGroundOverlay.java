@@ -45,50 +45,75 @@ public final class KMLGroundOverlay extends Table {
    */
   public boolean VISIBILITY() { int o = __offset(8); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
+   * Whether open in tree view
+   */
+  public boolean OPEN() { int o = __offset(10); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
    * Icon/image URL
    */
-  public String ICON_HREF() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ICON_HREFAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
-  public ByteBuffer ICON_HREFInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  public String ICON_HREF() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ICON_HREFAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer ICON_HREFInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
   /**
    * Color in aabbggrr hex format
    */
-  public String COLOR() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer COLORAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
-  public ByteBuffer COLORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  public String COLOR() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer COLORAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer COLORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
   /**
    * North latitude of bounding box
    */
-  public double NORTH() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double NORTH() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * South latitude of bounding box
    */
-  public double SOUTH() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double SOUTH() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * East longitude of bounding box
    */
-  public double EAST() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double EAST() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * West longitude of bounding box
    */
-  public double WEST() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double WEST() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Rotation in degrees
    */
-  public double ROTATION() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double ROTATION() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Altitude in meters
    */
-  public double ALTITUDE() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double ALTITUDE() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Altitude mode
    */
-  public byte ALTITUDE_MODE() { int o = __offset(26); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public byte ALTITUDE_MODE() { int o = __offset(28); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Draw order
+   */
+  public int DRAW_ORDER() { int o = __offset(30); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * LatLonQuad (non-rectangular overlay)
+   */
+  public KMLLatLonQuad LAT_LON_QUAD() { return LAT_LON_QUAD(new KMLLatLonQuad()); }
+  public KMLLatLonQuad LAT_LON_QUAD(KMLLatLonQuad obj) { int o = __offset(32); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Style URL reference
+   */
+  public String STYLE_URL() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer STYLE_URLAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
+  public ByteBuffer STYLE_URLInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  /**
+   * Region
+   */
+  public KMLRegion REGION() { return REGION(new KMLRegion()); }
+  public KMLRegion REGION(KMLRegion obj) { int o = __offset(36); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createKMLGroundOverlay(FlatBufferBuilder builder,
       int NAMEOffset,
       int DESCRIPTIONOffset,
       boolean VISIBILITY,
+      boolean OPEN,
       int ICON_HREFOffset,
       int COLOROffset,
       double NORTH,
@@ -97,36 +122,50 @@ public final class KMLGroundOverlay extends Table {
       double WEST,
       double ROTATION,
       double ALTITUDE,
-      byte ALTITUDE_MODE) {
-    builder.startTable(12);
+      byte ALTITUDE_MODE,
+      int DRAW_ORDER,
+      int LAT_LON_QUADOffset,
+      int STYLE_URLOffset,
+      int REGIONOffset) {
+    builder.startTable(17);
     KMLGroundOverlay.addAltitude(builder, ALTITUDE);
     KMLGroundOverlay.addRotation(builder, ROTATION);
     KMLGroundOverlay.addWest(builder, WEST);
     KMLGroundOverlay.addEast(builder, EAST);
     KMLGroundOverlay.addSouth(builder, SOUTH);
     KMLGroundOverlay.addNorth(builder, NORTH);
+    KMLGroundOverlay.addRegion(builder, REGIONOffset);
+    KMLGroundOverlay.addStyleUrl(builder, STYLE_URLOffset);
+    KMLGroundOverlay.addLatLonQuad(builder, LAT_LON_QUADOffset);
+    KMLGroundOverlay.addDrawOrder(builder, DRAW_ORDER);
     KMLGroundOverlay.addColor(builder, COLOROffset);
     KMLGroundOverlay.addIconHref(builder, ICON_HREFOffset);
     KMLGroundOverlay.addDescription(builder, DESCRIPTIONOffset);
     KMLGroundOverlay.addName(builder, NAMEOffset);
     KMLGroundOverlay.addAltitudeMode(builder, ALTITUDE_MODE);
+    KMLGroundOverlay.addOpen(builder, OPEN);
     KMLGroundOverlay.addVisibility(builder, VISIBILITY);
     return KMLGroundOverlay.endKMLGroundOverlay(builder);
   }
 
-  public static void startKMLGroundOverlay(FlatBufferBuilder builder) { builder.startTable(12); }
+  public static void startKMLGroundOverlay(FlatBufferBuilder builder) { builder.startTable(17); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(0, NAMEOffset, 0); }
   public static void addDescription(FlatBufferBuilder builder, int DESCRIPTIONOffset) { builder.addOffset(1, DESCRIPTIONOffset, 0); }
   public static void addVisibility(FlatBufferBuilder builder, boolean VISIBILITY) { builder.addBoolean(2, VISIBILITY, false); }
-  public static void addIconHref(FlatBufferBuilder builder, int ICON_HREFOffset) { builder.addOffset(3, ICON_HREFOffset, 0); }
-  public static void addColor(FlatBufferBuilder builder, int COLOROffset) { builder.addOffset(4, COLOROffset, 0); }
-  public static void addNorth(FlatBufferBuilder builder, double NORTH) { builder.addDouble(5, NORTH, 0.0); }
-  public static void addSouth(FlatBufferBuilder builder, double SOUTH) { builder.addDouble(6, SOUTH, 0.0); }
-  public static void addEast(FlatBufferBuilder builder, double EAST) { builder.addDouble(7, EAST, 0.0); }
-  public static void addWest(FlatBufferBuilder builder, double WEST) { builder.addDouble(8, WEST, 0.0); }
-  public static void addRotation(FlatBufferBuilder builder, double ROTATION) { builder.addDouble(9, ROTATION, 0.0); }
-  public static void addAltitude(FlatBufferBuilder builder, double ALTITUDE) { builder.addDouble(10, ALTITUDE, 0.0); }
-  public static void addAltitudeMode(FlatBufferBuilder builder, byte ALTITUDE_MODE) { builder.addByte(11, ALTITUDE_MODE, 0); }
+  public static void addOpen(FlatBufferBuilder builder, boolean OPEN) { builder.addBoolean(3, OPEN, false); }
+  public static void addIconHref(FlatBufferBuilder builder, int ICON_HREFOffset) { builder.addOffset(4, ICON_HREFOffset, 0); }
+  public static void addColor(FlatBufferBuilder builder, int COLOROffset) { builder.addOffset(5, COLOROffset, 0); }
+  public static void addNorth(FlatBufferBuilder builder, double NORTH) { builder.addDouble(6, NORTH, 0.0); }
+  public static void addSouth(FlatBufferBuilder builder, double SOUTH) { builder.addDouble(7, SOUTH, 0.0); }
+  public static void addEast(FlatBufferBuilder builder, double EAST) { builder.addDouble(8, EAST, 0.0); }
+  public static void addWest(FlatBufferBuilder builder, double WEST) { builder.addDouble(9, WEST, 0.0); }
+  public static void addRotation(FlatBufferBuilder builder, double ROTATION) { builder.addDouble(10, ROTATION, 0.0); }
+  public static void addAltitude(FlatBufferBuilder builder, double ALTITUDE) { builder.addDouble(11, ALTITUDE, 0.0); }
+  public static void addAltitudeMode(FlatBufferBuilder builder, byte ALTITUDE_MODE) { builder.addByte(12, ALTITUDE_MODE, 0); }
+  public static void addDrawOrder(FlatBufferBuilder builder, int DRAW_ORDER) { builder.addInt(13, DRAW_ORDER, 0); }
+  public static void addLatLonQuad(FlatBufferBuilder builder, int LAT_LON_QUADOffset) { builder.addOffset(14, LAT_LON_QUADOffset, 0); }
+  public static void addStyleUrl(FlatBufferBuilder builder, int STYLE_URLOffset) { builder.addOffset(15, STYLE_URLOffset, 0); }
+  public static void addRegion(FlatBufferBuilder builder, int REGIONOffset) { builder.addOffset(16, REGIONOffset, 0); }
   public static int endKMLGroundOverlay(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

@@ -20,21 +20,36 @@ public struct KMLLinearRing : IFlatbufferObject
   /// Coordinates (first = last to close the ring)
   public KMLCoordinate? COORDINATES(int j) { int o = __p.__offset(4); return o != 0 ? (KMLCoordinate?)(new KMLCoordinate()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int COORDINATESLength { get { int o = __p.__offset(4); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Whether to extrude to ground
+  public bool EXTRUDE { get { int o = __p.__offset(6); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Whether to tessellate
+  public bool TESSELLATE { get { int o = __p.__offset(8); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Altitude mode
+  public KMLAltitudeMode ALTITUDE_MODE { get { int o = __p.__offset(10); return o != 0 ? (KMLAltitudeMode)__p.bb.GetSbyte(o + __p.bb_pos) : KMLAltitudeMode.CLAMP_TO_GROUND; } }
 
   public static Offset<KMLLinearRing> CreateKMLLinearRing(FlatBufferBuilder builder,
-      VectorOffset COORDINATESOffset = default(VectorOffset)) {
-    builder.StartTable(1);
+      VectorOffset COORDINATESOffset = default(VectorOffset),
+      bool EXTRUDE = false,
+      bool TESSELLATE = false,
+      KMLAltitudeMode ALTITUDE_MODE = KMLAltitudeMode.CLAMP_TO_GROUND) {
+    builder.StartTable(4);
     KMLLinearRing.AddCOORDINATES(builder, COORDINATESOffset);
+    KMLLinearRing.AddALTITUDE_MODE(builder, ALTITUDE_MODE);
+    KMLLinearRing.AddTESSELLATE(builder, TESSELLATE);
+    KMLLinearRing.AddEXTRUDE(builder, EXTRUDE);
     return KMLLinearRing.EndKMLLinearRing(builder);
   }
 
-  public static void StartKMLLinearRing(FlatBufferBuilder builder) { builder.StartTable(1); }
+  public static void StartKMLLinearRing(FlatBufferBuilder builder) { builder.StartTable(4); }
   public static void AddCOORDINATES(FlatBufferBuilder builder, VectorOffset COORDINATESOffset) { builder.AddOffset(0, COORDINATESOffset.Value, 0); }
   public static VectorOffset CreateCOORDINATESVector(FlatBufferBuilder builder, Offset<KMLCoordinate>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateCOORDINATESVectorBlock(FlatBufferBuilder builder, Offset<KMLCoordinate>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCOORDINATESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<KMLCoordinate>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCOORDINATESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<KMLCoordinate>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartCOORDINATESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddEXTRUDE(FlatBufferBuilder builder, bool EXTRUDE) { builder.AddBool(1, EXTRUDE, false); }
+  public static void AddTESSELLATE(FlatBufferBuilder builder, bool TESSELLATE) { builder.AddBool(2, TESSELLATE, false); }
+  public static void AddALTITUDE_MODE(FlatBufferBuilder builder, KMLAltitudeMode ALTITUDE_MODE) { builder.AddSbyte(3, (sbyte)ALTITUDE_MODE, 0); }
   public static Offset<KMLLinearRing> EndKMLLinearRing(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<KMLLinearRing>(o);
@@ -47,6 +62,9 @@ public struct KMLLinearRing : IFlatbufferObject
   public void UnPackTo(KMLLinearRingT _o) {
     _o.COORDINATES = new List<KMLCoordinateT>();
     for (var _j = 0; _j < this.COORDINATESLength; ++_j) {_o.COORDINATES.Add(this.COORDINATES(_j).HasValue ? this.COORDINATES(_j).Value.UnPack() : null);}
+    _o.EXTRUDE = this.EXTRUDE;
+    _o.TESSELLATE = this.TESSELLATE;
+    _o.ALTITUDE_MODE = this.ALTITUDE_MODE;
   }
   public static Offset<KMLLinearRing> Pack(FlatBufferBuilder builder, KMLLinearRingT _o) {
     if (_o == null) return default(Offset<KMLLinearRing>);
@@ -58,16 +76,25 @@ public struct KMLLinearRing : IFlatbufferObject
     }
     return CreateKMLLinearRing(
       builder,
-      _COORDINATES);
+      _COORDINATES,
+      _o.EXTRUDE,
+      _o.TESSELLATE,
+      _o.ALTITUDE_MODE);
   }
 }
 
 public class KMLLinearRingT
 {
   public List<KMLCoordinateT> COORDINATES { get; set; }
+  public bool EXTRUDE { get; set; }
+  public bool TESSELLATE { get; set; }
+  public KMLAltitudeMode ALTITUDE_MODE { get; set; }
 
   public KMLLinearRingT() {
     this.COORDINATES = null;
+    this.EXTRUDE = false;
+    this.TESSELLATE = false;
+    this.ALTITUDE_MODE = KMLAltitudeMode.CLAMP_TO_GROUND;
   }
 }
 
@@ -78,6 +105,9 @@ static public class KMLLinearRingVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyVectorOfTables(tablePos, 4 /*COORDINATES*/, KMLCoordinateVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 6 /*EXTRUDE*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 8 /*TESSELLATE*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 10 /*ALTITUDE_MODE*/, 1 /*KMLAltitudeMode*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

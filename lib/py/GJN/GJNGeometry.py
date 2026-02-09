@@ -153,8 +153,20 @@ class GJNGeometry(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         return o == 0
 
+    # Bounding box (optional, per RFC 7946 Section 5)
+    # GJNGeometry
+    def BBOX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from GJNBoundingBox import GJNBoundingBox
+            obj = GJNBoundingBox()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def GJNGeometryStart(builder):
-    builder.StartObject(6)
+    builder.StartObject(7)
 
 def Start(builder):
     GJNGeometryStart(builder)
@@ -219,12 +231,19 @@ def GJNGeometryStartGEOMETRIESVector(builder, numElems):
 def StartGEOMETRIESVector(builder, numElems):
     return GJNGeometryStartGEOMETRIESVector(builder, numElems)
 
+def GJNGeometryAddBBOX(builder, BBOX):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(BBOX), 0)
+
+def AddBBOX(builder, BBOX):
+    GJNGeometryAddBBOX(builder, BBOX)
+
 def GJNGeometryEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return GJNGeometryEnd(builder)
 
+import GJNBoundingBox
 import GJNLinearRing
 import GJNPolygonRings
 import GJNPosition
@@ -243,6 +262,7 @@ class GJNGeometryT(object):
         self.RINGS = None  # type: List[GJNLinearRing.GJNLinearRingT]
         self.POLYGON_RINGS = None  # type: List[GJNPolygonRings.GJNPolygonRingsT]
         self.GEOMETRIES = None  # type: List[GJNGeometry.GJNGeometryT]
+        self.BBOX = None  # type: Optional[GJNBoundingBox.GJNBoundingBoxT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -300,6 +320,8 @@ class GJNGeometryT(object):
                 else:
                     gJNGeometry_ = GJNGeometry.GJNGeometryT.InitFromObj(gjngeometry.GEOMETRIES(i))
                     self.GEOMETRIES.append(gJNGeometry_)
+        if gjngeometry.BBOX() is not None:
+            self.BBOX = GJNBoundingBox.GJNBoundingBoxT.InitFromObj(gjngeometry.BBOX())
 
     # GJNGeometryT
     def Pack(self, builder):
@@ -337,6 +359,8 @@ class GJNGeometryT(object):
             for i in reversed(range(len(self.GEOMETRIES))):
                 builder.PrependUOffsetTRelative(GEOMETRIESlist[i])
             GEOMETRIES = builder.EndVector()
+        if self.BBOX is not None:
+            BBOX = self.BBOX.Pack(builder)
         GJNGeometryStart(builder)
         GJNGeometryAddTYPE(builder, self.TYPE)
         if self.POINT is not None:
@@ -349,5 +373,7 @@ class GJNGeometryT(object):
             GJNGeometryAddPOLYGON_RINGS(builder, POLYGON_RINGS)
         if self.GEOMETRIES is not None:
             GJNGeometryAddGEOMETRIES(builder, GEOMETRIES)
+        if self.BBOX is not None:
+            GJNGeometryAddBBOX(builder, BBOX)
         gjngeometry = GJNGeometryEnd(builder)
         return gjngeometry

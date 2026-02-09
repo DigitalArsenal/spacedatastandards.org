@@ -59,6 +59,44 @@ class KMLLineStyle : Table() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * gx:outerColor
+     */
+    val GX_OUTER_COLOR : String?
+        get() {
+            val o = __offset(10)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val GX_OUTER_COLORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
+    fun GX_OUTER_COLORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    /**
+     * gx:outerWidth
+     */
+    val GX_OUTER_WIDTH : Double
+        get() {
+            val o = __offset(12)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * gx:physicalWidth
+     */
+    val GX_PHYSICAL_WIDTH : Double
+        get() {
+            val o = __offset(14)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * gx:labelVisibility
+     */
+    val GX_LABEL_VISIBILITY : Boolean
+        get() {
+            val o = __offset(16)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsKMLLineStyle(_bb: ByteBuffer): KMLLineStyle = getRootAsKMLLineStyle(_bb, KMLLineStyle())
@@ -66,17 +104,25 @@ class KMLLineStyle : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createKMLLineStyle(builder: FlatBufferBuilder, COLOROffset: Int, COLOR_MODE: Byte, WIDTH: Double) : Int {
-            builder.startTable(3)
+        fun createKMLLineStyle(builder: FlatBufferBuilder, COLOROffset: Int, COLOR_MODE: Byte, WIDTH: Double, GX_OUTER_COLOROffset: Int, GX_OUTER_WIDTH: Double, GX_PHYSICAL_WIDTH: Double, GX_LABEL_VISIBILITY: Boolean) : Int {
+            builder.startTable(7)
+            addGX_PHYSICAL_WIDTH(builder, GX_PHYSICAL_WIDTH)
+            addGX_OUTER_WIDTH(builder, GX_OUTER_WIDTH)
             addWIDTH(builder, WIDTH)
+            addGX_OUTER_COLOR(builder, GX_OUTER_COLOROffset)
             addCOLOR(builder, COLOROffset)
+            addGX_LABEL_VISIBILITY(builder, GX_LABEL_VISIBILITY)
             addCOLOR_MODE(builder, COLOR_MODE)
             return endKMLLineStyle(builder)
         }
-        fun startKMLLineStyle(builder: FlatBufferBuilder) = builder.startTable(3)
+        fun startKMLLineStyle(builder: FlatBufferBuilder) = builder.startTable(7)
         fun addCOLOR(builder: FlatBufferBuilder, COLOR: Int) = builder.addOffset(0, COLOR, 0)
         fun addCOLOR_MODE(builder: FlatBufferBuilder, COLOR_MODE: Byte) = builder.addByte(1, COLOR_MODE, 0)
         fun addWIDTH(builder: FlatBufferBuilder, WIDTH: Double) = builder.addDouble(2, WIDTH, 0.0)
+        fun addGX_OUTER_COLOR(builder: FlatBufferBuilder, GX_OUTER_COLOR: Int) = builder.addOffset(3, GX_OUTER_COLOR, 0)
+        fun addGX_OUTER_WIDTH(builder: FlatBufferBuilder, GX_OUTER_WIDTH: Double) = builder.addDouble(4, GX_OUTER_WIDTH, 0.0)
+        fun addGX_PHYSICAL_WIDTH(builder: FlatBufferBuilder, GX_PHYSICAL_WIDTH: Double) = builder.addDouble(5, GX_PHYSICAL_WIDTH, 0.0)
+        fun addGX_LABEL_VISIBILITY(builder: FlatBufferBuilder, GX_LABEL_VISIBILITY: Boolean) = builder.addBoolean(6, GX_LABEL_VISIBILITY, false)
         fun endKMLLineStyle(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

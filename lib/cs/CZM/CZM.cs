@@ -53,9 +53,25 @@ public struct CZM : IFlatbufferObject
   public byte[] GetCLOCK_INTERVALArray() { return __p.__vector_as_array<byte>(10); }
   /// Clock settings - multiplier
   public double CLOCK_MULTIPLIER { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Clock range
+  public string CLOCK_RANGE { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCLOCK_RANGEBytes() { return __p.__vector_as_span<byte>(14, 1); }
+#else
+  public ArraySegment<byte>? GetCLOCK_RANGEBytes() { return __p.__vector_as_arraysegment(14); }
+#endif
+  public byte[] GetCLOCK_RANGEArray() { return __p.__vector_as_array<byte>(14); }
+  /// Clock step
+  public string CLOCK_STEP { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCLOCK_STEPBytes() { return __p.__vector_as_span<byte>(16, 1); }
+#else
+  public ArraySegment<byte>? GetCLOCK_STEPBytes() { return __p.__vector_as_arraysegment(16); }
+#endif
+  public byte[] GetCLOCK_STEPArray() { return __p.__vector_as_array<byte>(16); }
   /// All packets in the document
-  public CZMPacket? PACKETS(int j) { int o = __p.__offset(14); return o != 0 ? (CZMPacket?)(new CZMPacket()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int PACKETSLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public CZMPacket? PACKETS(int j) { int o = __p.__offset(18); return o != 0 ? (CZMPacket?)(new CZMPacket()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int PACKETSLength { get { int o = __p.__offset(18); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<CZM> CreateCZM(FlatBufferBuilder builder,
       StringOffset NAMEOffset = default(StringOffset),
@@ -63,10 +79,14 @@ public struct CZM : IFlatbufferObject
       StringOffset CLOCK_CURRENT_TIMEOffset = default(StringOffset),
       StringOffset CLOCK_INTERVALOffset = default(StringOffset),
       double CLOCK_MULTIPLIER = 0.0,
+      StringOffset CLOCK_RANGEOffset = default(StringOffset),
+      StringOffset CLOCK_STEPOffset = default(StringOffset),
       VectorOffset PACKETSOffset = default(VectorOffset)) {
-    builder.StartTable(6);
+    builder.StartTable(8);
     CZM.AddCLOCK_MULTIPLIER(builder, CLOCK_MULTIPLIER);
     CZM.AddPACKETS(builder, PACKETSOffset);
+    CZM.AddCLOCK_STEP(builder, CLOCK_STEPOffset);
+    CZM.AddCLOCK_RANGE(builder, CLOCK_RANGEOffset);
     CZM.AddCLOCK_INTERVAL(builder, CLOCK_INTERVALOffset);
     CZM.AddCLOCK_CURRENT_TIME(builder, CLOCK_CURRENT_TIMEOffset);
     CZM.AddVERSION(builder, VERSIONOffset);
@@ -74,13 +94,15 @@ public struct CZM : IFlatbufferObject
     return CZM.EndCZM(builder);
   }
 
-  public static void StartCZM(FlatBufferBuilder builder) { builder.StartTable(6); }
+  public static void StartCZM(FlatBufferBuilder builder) { builder.StartTable(8); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(0, NAMEOffset.Value, 0); }
   public static void AddVERSION(FlatBufferBuilder builder, StringOffset VERSIONOffset) { builder.AddOffset(1, VERSIONOffset.Value, 0); }
   public static void AddCLOCK_CURRENT_TIME(FlatBufferBuilder builder, StringOffset CLOCK_CURRENT_TIMEOffset) { builder.AddOffset(2, CLOCK_CURRENT_TIMEOffset.Value, 0); }
   public static void AddCLOCK_INTERVAL(FlatBufferBuilder builder, StringOffset CLOCK_INTERVALOffset) { builder.AddOffset(3, CLOCK_INTERVALOffset.Value, 0); }
   public static void AddCLOCK_MULTIPLIER(FlatBufferBuilder builder, double CLOCK_MULTIPLIER) { builder.AddDouble(4, CLOCK_MULTIPLIER, 0.0); }
-  public static void AddPACKETS(FlatBufferBuilder builder, VectorOffset PACKETSOffset) { builder.AddOffset(5, PACKETSOffset.Value, 0); }
+  public static void AddCLOCK_RANGE(FlatBufferBuilder builder, StringOffset CLOCK_RANGEOffset) { builder.AddOffset(5, CLOCK_RANGEOffset.Value, 0); }
+  public static void AddCLOCK_STEP(FlatBufferBuilder builder, StringOffset CLOCK_STEPOffset) { builder.AddOffset(6, CLOCK_STEPOffset.Value, 0); }
+  public static void AddPACKETS(FlatBufferBuilder builder, VectorOffset PACKETSOffset) { builder.AddOffset(7, PACKETSOffset.Value, 0); }
   public static VectorOffset CreatePACKETSVector(FlatBufferBuilder builder, Offset<CZMPacket>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreatePACKETSVectorBlock(FlatBufferBuilder builder, Offset<CZMPacket>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreatePACKETSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<CZMPacket>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
@@ -103,6 +125,8 @@ public struct CZM : IFlatbufferObject
     _o.CLOCK_CURRENT_TIME = this.CLOCK_CURRENT_TIME;
     _o.CLOCK_INTERVAL = this.CLOCK_INTERVAL;
     _o.CLOCK_MULTIPLIER = this.CLOCK_MULTIPLIER;
+    _o.CLOCK_RANGE = this.CLOCK_RANGE;
+    _o.CLOCK_STEP = this.CLOCK_STEP;
     _o.PACKETS = new List<CZMPacketT>();
     for (var _j = 0; _j < this.PACKETSLength; ++_j) {_o.PACKETS.Add(this.PACKETS(_j).HasValue ? this.PACKETS(_j).Value.UnPack() : null);}
   }
@@ -112,6 +136,8 @@ public struct CZM : IFlatbufferObject
     var _VERSION = _o.VERSION == null ? default(StringOffset) : builder.CreateString(_o.VERSION);
     var _CLOCK_CURRENT_TIME = _o.CLOCK_CURRENT_TIME == null ? default(StringOffset) : builder.CreateString(_o.CLOCK_CURRENT_TIME);
     var _CLOCK_INTERVAL = _o.CLOCK_INTERVAL == null ? default(StringOffset) : builder.CreateString(_o.CLOCK_INTERVAL);
+    var _CLOCK_RANGE = _o.CLOCK_RANGE == null ? default(StringOffset) : builder.CreateString(_o.CLOCK_RANGE);
+    var _CLOCK_STEP = _o.CLOCK_STEP == null ? default(StringOffset) : builder.CreateString(_o.CLOCK_STEP);
     var _PACKETS = default(VectorOffset);
     if (_o.PACKETS != null) {
       var __PACKETS = new Offset<CZMPacket>[_o.PACKETS.Count];
@@ -125,6 +151,8 @@ public struct CZM : IFlatbufferObject
       _CLOCK_CURRENT_TIME,
       _CLOCK_INTERVAL,
       _o.CLOCK_MULTIPLIER,
+      _CLOCK_RANGE,
+      _CLOCK_STEP,
       _PACKETS);
   }
 }
@@ -136,6 +164,8 @@ public class CZMT
   public string CLOCK_CURRENT_TIME { get; set; }
   public string CLOCK_INTERVAL { get; set; }
   public double CLOCK_MULTIPLIER { get; set; }
+  public string CLOCK_RANGE { get; set; }
+  public string CLOCK_STEP { get; set; }
   public List<CZMPacketT> PACKETS { get; set; }
 
   public CZMT() {
@@ -144,6 +174,8 @@ public class CZMT
     this.CLOCK_CURRENT_TIME = null;
     this.CLOCK_INTERVAL = null;
     this.CLOCK_MULTIPLIER = 0.0;
+    this.CLOCK_RANGE = null;
+    this.CLOCK_STEP = null;
     this.PACKETS = null;
   }
   public static CZMT DeserializeFromBinary(byte[] fbBuffer) {
@@ -167,7 +199,9 @@ static public class CZMVerify
       && verifier.VerifyString(tablePos, 8 /*CLOCK_CURRENT_TIME*/, false)
       && verifier.VerifyString(tablePos, 10 /*CLOCK_INTERVAL*/, false)
       && verifier.VerifyField(tablePos, 12 /*CLOCK_MULTIPLIER*/, 8 /*double*/, 8, false)
-      && verifier.VerifyVectorOfTables(tablePos, 14 /*PACKETS*/, CZMPacketVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 14 /*CLOCK_RANGE*/, false)
+      && verifier.VerifyString(tablePos, 16 /*CLOCK_STEP*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 18 /*PACKETS*/, CZMPacketVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

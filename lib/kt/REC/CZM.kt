@@ -94,11 +94,39 @@ class CZM : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
+     * Clock range
+     */
+    val CLOCK_RANGE : String?
+        get() {
+            val o = __offset(14)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val CLOCK_RANGEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
+    fun CLOCK_RANGEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    /**
+     * Clock step
+     */
+    val CLOCK_STEP : String?
+        get() {
+            val o = __offset(16)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val CLOCK_STEPAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
+    fun CLOCK_STEPInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    /**
      * All packets in the document
      */
     fun PACKETS(j: Int) : CZMPacket? = PACKETS(CZMPacket(), j)
     fun PACKETS(obj: CZMPacket, j: Int) : CZMPacket? {
-        val o = __offset(14)
+        val o = __offset(18)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
@@ -107,7 +135,7 @@ class CZM : Table() {
     }
     val PACKETSLength : Int
         get() {
-            val o = __offset(14); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(18); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
@@ -117,23 +145,27 @@ class CZM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun CZMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CZM")
-        fun createCZM(builder: FlatBufferBuilder, NAMEOffset: Int, VERSIONOffset: Int, CLOCK_CURRENT_TIMEOffset: Int, CLOCK_INTERVALOffset: Int, CLOCK_MULTIPLIER: Double, PACKETSOffset: Int) : Int {
-            builder.startTable(6)
+        fun createCZM(builder: FlatBufferBuilder, NAMEOffset: Int, VERSIONOffset: Int, CLOCK_CURRENT_TIMEOffset: Int, CLOCK_INTERVALOffset: Int, CLOCK_MULTIPLIER: Double, CLOCK_RANGEOffset: Int, CLOCK_STEPOffset: Int, PACKETSOffset: Int) : Int {
+            builder.startTable(8)
             addCLOCK_MULTIPLIER(builder, CLOCK_MULTIPLIER)
             addPACKETS(builder, PACKETSOffset)
+            addCLOCK_STEP(builder, CLOCK_STEPOffset)
+            addCLOCK_RANGE(builder, CLOCK_RANGEOffset)
             addCLOCK_INTERVAL(builder, CLOCK_INTERVALOffset)
             addCLOCK_CURRENT_TIME(builder, CLOCK_CURRENT_TIMEOffset)
             addVERSION(builder, VERSIONOffset)
             addNAME(builder, NAMEOffset)
             return endCZM(builder)
         }
-        fun startCZM(builder: FlatBufferBuilder) = builder.startTable(6)
+        fun startCZM(builder: FlatBufferBuilder) = builder.startTable(8)
         fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(0, NAME, 0)
         fun addVERSION(builder: FlatBufferBuilder, VERSION: Int) = builder.addOffset(1, VERSION, 0)
         fun addCLOCK_CURRENT_TIME(builder: FlatBufferBuilder, CLOCK_CURRENT_TIME: Int) = builder.addOffset(2, CLOCK_CURRENT_TIME, 0)
         fun addCLOCK_INTERVAL(builder: FlatBufferBuilder, CLOCK_INTERVAL: Int) = builder.addOffset(3, CLOCK_INTERVAL, 0)
         fun addCLOCK_MULTIPLIER(builder: FlatBufferBuilder, CLOCK_MULTIPLIER: Double) = builder.addDouble(4, CLOCK_MULTIPLIER, 0.0)
-        fun addPACKETS(builder: FlatBufferBuilder, PACKETS: Int) = builder.addOffset(5, PACKETS, 0)
+        fun addCLOCK_RANGE(builder: FlatBufferBuilder, CLOCK_RANGE: Int) = builder.addOffset(5, CLOCK_RANGE, 0)
+        fun addCLOCK_STEP(builder: FlatBufferBuilder, CLOCK_STEP: Int) = builder.addOffset(6, CLOCK_STEP, 0)
+        fun addPACKETS(builder: FlatBufferBuilder, PACKETS: Int) = builder.addOffset(7, PACKETS, 0)
         fun createPacketsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

@@ -45,7 +45,7 @@ public final class CZMPath extends Table {
    */
   public double WIDTH() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Path color
+   * Path color (legacy solid color)
    */
   public CZMColor COLOR() { return COLOR(new CZMColor()); }
   public CZMColor COLOR(CZMColor obj) { int o = __offset(12); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
@@ -53,6 +53,11 @@ public final class CZMPath extends Table {
    * Resolution in seconds
    */
   public double RESOLUTION() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Full polyline material
+   */
+  public CZMPolylineMaterial MATERIAL() { return MATERIAL(new CZMPolylineMaterial()); }
+  public CZMPolylineMaterial MATERIAL(CZMPolylineMaterial obj) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createCZMPath(FlatBufferBuilder builder,
       boolean SHOW,
@@ -60,24 +65,27 @@ public final class CZMPath extends Table {
       double TRAIL_TIME,
       double WIDTH,
       int COLOROffset,
-      double RESOLUTION) {
-    builder.startTable(6);
+      double RESOLUTION,
+      int MATERIALOffset) {
+    builder.startTable(7);
     CZMPath.addResolution(builder, RESOLUTION);
     CZMPath.addWidth(builder, WIDTH);
     CZMPath.addTrailTime(builder, TRAIL_TIME);
     CZMPath.addLeadTime(builder, LEAD_TIME);
+    CZMPath.addMaterial(builder, MATERIALOffset);
     CZMPath.addColor(builder, COLOROffset);
     CZMPath.addShow(builder, SHOW);
     return CZMPath.endCZMPath(builder);
   }
 
-  public static void startCZMPath(FlatBufferBuilder builder) { builder.startTable(6); }
+  public static void startCZMPath(FlatBufferBuilder builder) { builder.startTable(7); }
   public static void addShow(FlatBufferBuilder builder, boolean SHOW) { builder.addBoolean(0, SHOW, false); }
   public static void addLeadTime(FlatBufferBuilder builder, double LEAD_TIME) { builder.addDouble(1, LEAD_TIME, 0.0); }
   public static void addTrailTime(FlatBufferBuilder builder, double TRAIL_TIME) { builder.addDouble(2, TRAIL_TIME, 0.0); }
   public static void addWidth(FlatBufferBuilder builder, double WIDTH) { builder.addDouble(3, WIDTH, 0.0); }
   public static void addColor(FlatBufferBuilder builder, int COLOROffset) { builder.addOffset(4, COLOROffset, 0); }
   public static void addResolution(FlatBufferBuilder builder, double RESOLUTION) { builder.addDouble(5, RESOLUTION, 0.0); }
+  public static void addMaterial(FlatBufferBuilder builder, int MATERIALOffset) { builder.addOffset(6, MATERIALOffset, 0); }
   public static int endCZMPath(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

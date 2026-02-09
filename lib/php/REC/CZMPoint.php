@@ -97,28 +97,79 @@ class CZMPoint extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \CZMHeightReference::NONE;
     }
 
+    /// Scale by distance
+    public function getSCALE_BY_DISTANCE()
+    {
+        $obj = new CZMNearFarScalar();
+        $o = $this->__offset(16);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Translucency by distance
+    public function getTRANSLUCENCY_BY_DISTANCE()
+    {
+        $obj = new CZMNearFarScalar();
+        $o = $this->__offset(18);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Distance display condition near
+    /**
+     * @return double
+     */
+    public function getDISTANCE_DISPLAY_CONDITION_NEAR()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Distance display condition far
+    /**
+     * @return double
+     */
+    public function getDISTANCE_DISPLAY_CONDITION_FAR()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Disable depth test distance
+    /**
+     * @return double
+     */
+    public function getDISABLE_DEPTH_TEST_DISTANCE()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCZMPoint(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(6);
+        $builder->StartObject(11);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CZMPoint
      */
-    public static function createCZMPoint(FlatBufferBuilder $builder, $SHOW, $COLOR, $OUTLINE_COLOR, $OUTLINE_WIDTH, $PIXEL_SIZE, $HEIGHT_REFERENCE)
+    public static function createCZMPoint(FlatBufferBuilder $builder, $SHOW, $COLOR, $OUTLINE_COLOR, $OUTLINE_WIDTH, $PIXEL_SIZE, $HEIGHT_REFERENCE, $SCALE_BY_DISTANCE, $TRANSLUCENCY_BY_DISTANCE, $DISTANCE_DISPLAY_CONDITION_NEAR, $DISTANCE_DISPLAY_CONDITION_FAR, $DISABLE_DEPTH_TEST_DISTANCE)
     {
-        $builder->startObject(6);
+        $builder->startObject(11);
         self::addSHOW($builder, $SHOW);
         self::addCOLOR($builder, $COLOR);
         self::addOUTLINE_COLOR($builder, $OUTLINE_COLOR);
         self::addOUTLINE_WIDTH($builder, $OUTLINE_WIDTH);
         self::addPIXEL_SIZE($builder, $PIXEL_SIZE);
         self::addHEIGHT_REFERENCE($builder, $HEIGHT_REFERENCE);
+        self::addSCALE_BY_DISTANCE($builder, $SCALE_BY_DISTANCE);
+        self::addTRANSLUCENCY_BY_DISTANCE($builder, $TRANSLUCENCY_BY_DISTANCE);
+        self::addDISTANCE_DISPLAY_CONDITION_NEAR($builder, $DISTANCE_DISPLAY_CONDITION_NEAR);
+        self::addDISTANCE_DISPLAY_CONDITION_FAR($builder, $DISTANCE_DISPLAY_CONDITION_FAR);
+        self::addDISABLE_DEPTH_TEST_DISTANCE($builder, $DISABLE_DEPTH_TEST_DISTANCE);
         $o = $builder->endObject();
         return $o;
     }
@@ -181,6 +232,56 @@ class CZMPoint extends Table
     public static function addHEIGHT_REFERENCE(FlatBufferBuilder $builder, $HEIGHT_REFERENCE)
     {
         $builder->addSbyteX(5, $HEIGHT_REFERENCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSCALE_BY_DISTANCE(FlatBufferBuilder $builder, $SCALE_BY_DISTANCE)
+    {
+        $builder->addOffsetX(6, $SCALE_BY_DISTANCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addTRANSLUCENCY_BY_DISTANCE(FlatBufferBuilder $builder, $TRANSLUCENCY_BY_DISTANCE)
+    {
+        $builder->addOffsetX(7, $TRANSLUCENCY_BY_DISTANCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDISTANCE_DISPLAY_CONDITION_NEAR(FlatBufferBuilder $builder, $DISTANCE_DISPLAY_CONDITION_NEAR)
+    {
+        $builder->addDoubleX(8, $DISTANCE_DISPLAY_CONDITION_NEAR, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDISTANCE_DISPLAY_CONDITION_FAR(FlatBufferBuilder $builder, $DISTANCE_DISPLAY_CONDITION_FAR)
+    {
+        $builder->addDoubleX(9, $DISTANCE_DISPLAY_CONDITION_FAR, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDISABLE_DEPTH_TEST_DISTANCE(FlatBufferBuilder $builder, $DISABLE_DEPTH_TEST_DISTANCE)
+    {
+        $builder->addDoubleX(10, $DISABLE_DEPTH_TEST_DISTANCE, 0.0);
     }
 
     /**

@@ -39,10 +39,42 @@ public struct CZMPolyline : IFlatbufferObject
   public double[] GetPOSITIONS_CARTESIANArray() { return __p.__vector_as_array<double>(8); }
   /// Line width in pixels
   public double WIDTH { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Line color (solid color material)
+  /// Line color (solid color material, legacy)
   public CZMColor? COLOR { get { int o = __p.__offset(12); return o != 0 ? (CZMColor?)(new CZMColor()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Whether to clamp to ground
   public bool CLAMP_TO_GROUND { get { int o = __p.__offset(14); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Arc type
+  public string ARC_TYPE { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetARC_TYPEBytes() { return __p.__vector_as_span<byte>(16, 1); }
+#else
+  public ArraySegment<byte>? GetARC_TYPEBytes() { return __p.__vector_as_arraysegment(16); }
+#endif
+  public byte[] GetARC_TYPEArray() { return __p.__vector_as_array<byte>(16); }
+  /// Granularity in radians
+  public double GRANULARITY { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Full polyline material
+  public CZMPolylineMaterial? MATERIAL { get { int o = __p.__offset(20); return o != 0 ? (CZMPolylineMaterial?)(new CZMPolylineMaterial()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Shadow mode
+  public string SHADOWS { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSHADOWSBytes() { return __p.__vector_as_span<byte>(22, 1); }
+#else
+  public ArraySegment<byte>? GetSHADOWSBytes() { return __p.__vector_as_arraysegment(22); }
+#endif
+  public byte[] GetSHADOWSArray() { return __p.__vector_as_array<byte>(22); }
+  /// Depth fail material
+  public CZMPolylineMaterial? DEPTH_FAIL_MATERIAL { get { int o = __p.__offset(24); return o != 0 ? (CZMPolylineMaterial?)(new CZMPolylineMaterial()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Classification type
+  public string CLASSIFICATION_TYPE { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCLASSIFICATION_TYPEBytes() { return __p.__vector_as_span<byte>(26, 1); }
+#else
+  public ArraySegment<byte>? GetCLASSIFICATION_TYPEBytes() { return __p.__vector_as_arraysegment(26); }
+#endif
+  public byte[] GetCLASSIFICATION_TYPEArray() { return __p.__vector_as_array<byte>(26); }
+  /// Z-index for ordering
+  public int Z_INDEX { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
 
   public static Offset<CZMPolyline> CreateCZMPolyline(FlatBufferBuilder builder,
       bool SHOW = false,
@@ -50,9 +82,23 @@ public struct CZMPolyline : IFlatbufferObject
       VectorOffset POSITIONS_CARTESIANOffset = default(VectorOffset),
       double WIDTH = 0.0,
       Offset<CZMColor> COLOROffset = default(Offset<CZMColor>),
-      bool CLAMP_TO_GROUND = false) {
-    builder.StartTable(6);
+      bool CLAMP_TO_GROUND = false,
+      StringOffset ARC_TYPEOffset = default(StringOffset),
+      double GRANULARITY = 0.0,
+      Offset<CZMPolylineMaterial> MATERIALOffset = default(Offset<CZMPolylineMaterial>),
+      StringOffset SHADOWSOffset = default(StringOffset),
+      Offset<CZMPolylineMaterial> DEPTH_FAIL_MATERIALOffset = default(Offset<CZMPolylineMaterial>),
+      StringOffset CLASSIFICATION_TYPEOffset = default(StringOffset),
+      int Z_INDEX = 0) {
+    builder.StartTable(13);
+    CZMPolyline.AddGRANULARITY(builder, GRANULARITY);
     CZMPolyline.AddWIDTH(builder, WIDTH);
+    CZMPolyline.AddZ_INDEX(builder, Z_INDEX);
+    CZMPolyline.AddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPEOffset);
+    CZMPolyline.AddDEPTH_FAIL_MATERIAL(builder, DEPTH_FAIL_MATERIALOffset);
+    CZMPolyline.AddSHADOWS(builder, SHADOWSOffset);
+    CZMPolyline.AddMATERIAL(builder, MATERIALOffset);
+    CZMPolyline.AddARC_TYPE(builder, ARC_TYPEOffset);
     CZMPolyline.AddCOLOR(builder, COLOROffset);
     CZMPolyline.AddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIANOffset);
     CZMPolyline.AddPOSITIONS_CARTOGRAPHIC_DEGREES(builder, POSITIONS_CARTOGRAPHIC_DEGREESOffset);
@@ -61,7 +107,7 @@ public struct CZMPolyline : IFlatbufferObject
     return CZMPolyline.EndCZMPolyline(builder);
   }
 
-  public static void StartCZMPolyline(FlatBufferBuilder builder) { builder.StartTable(6); }
+  public static void StartCZMPolyline(FlatBufferBuilder builder) { builder.StartTable(13); }
   public static void AddSHOW(FlatBufferBuilder builder, bool SHOW) { builder.AddBool(0, SHOW, false); }
   public static void AddPOSITIONS_CARTOGRAPHIC_DEGREES(FlatBufferBuilder builder, VectorOffset POSITIONS_CARTOGRAPHIC_DEGREESOffset) { builder.AddOffset(1, POSITIONS_CARTOGRAPHIC_DEGREESOffset.Value, 0); }
   public static VectorOffset CreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
@@ -78,6 +124,13 @@ public struct CZMPolyline : IFlatbufferObject
   public static void AddWIDTH(FlatBufferBuilder builder, double WIDTH) { builder.AddDouble(3, WIDTH, 0.0); }
   public static void AddCOLOR(FlatBufferBuilder builder, Offset<CZMColor> COLOROffset) { builder.AddOffset(4, COLOROffset.Value, 0); }
   public static void AddCLAMP_TO_GROUND(FlatBufferBuilder builder, bool CLAMP_TO_GROUND) { builder.AddBool(5, CLAMP_TO_GROUND, false); }
+  public static void AddARC_TYPE(FlatBufferBuilder builder, StringOffset ARC_TYPEOffset) { builder.AddOffset(6, ARC_TYPEOffset.Value, 0); }
+  public static void AddGRANULARITY(FlatBufferBuilder builder, double GRANULARITY) { builder.AddDouble(7, GRANULARITY, 0.0); }
+  public static void AddMATERIAL(FlatBufferBuilder builder, Offset<CZMPolylineMaterial> MATERIALOffset) { builder.AddOffset(8, MATERIALOffset.Value, 0); }
+  public static void AddSHADOWS(FlatBufferBuilder builder, StringOffset SHADOWSOffset) { builder.AddOffset(9, SHADOWSOffset.Value, 0); }
+  public static void AddDEPTH_FAIL_MATERIAL(FlatBufferBuilder builder, Offset<CZMPolylineMaterial> DEPTH_FAIL_MATERIALOffset) { builder.AddOffset(10, DEPTH_FAIL_MATERIALOffset.Value, 0); }
+  public static void AddCLASSIFICATION_TYPE(FlatBufferBuilder builder, StringOffset CLASSIFICATION_TYPEOffset) { builder.AddOffset(11, CLASSIFICATION_TYPEOffset.Value, 0); }
+  public static void AddZ_INDEX(FlatBufferBuilder builder, int Z_INDEX) { builder.AddInt(12, Z_INDEX, 0); }
   public static Offset<CZMPolyline> EndCZMPolyline(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CZMPolyline>(o);
@@ -96,6 +149,13 @@ public struct CZMPolyline : IFlatbufferObject
     _o.WIDTH = this.WIDTH;
     _o.COLOR = this.COLOR.HasValue ? this.COLOR.Value.UnPack() : null;
     _o.CLAMP_TO_GROUND = this.CLAMP_TO_GROUND;
+    _o.ARC_TYPE = this.ARC_TYPE;
+    _o.GRANULARITY = this.GRANULARITY;
+    _o.MATERIAL = this.MATERIAL.HasValue ? this.MATERIAL.Value.UnPack() : null;
+    _o.SHADOWS = this.SHADOWS;
+    _o.DEPTH_FAIL_MATERIAL = this.DEPTH_FAIL_MATERIAL.HasValue ? this.DEPTH_FAIL_MATERIAL.Value.UnPack() : null;
+    _o.CLASSIFICATION_TYPE = this.CLASSIFICATION_TYPE;
+    _o.Z_INDEX = this.Z_INDEX;
   }
   public static Offset<CZMPolyline> Pack(FlatBufferBuilder builder, CZMPolylineT _o) {
     if (_o == null) return default(Offset<CZMPolyline>);
@@ -110,6 +170,11 @@ public struct CZMPolyline : IFlatbufferObject
       _POSITIONS_CARTESIAN = CreatePOSITIONS_CARTESIANVector(builder, __POSITIONS_CARTESIAN);
     }
     var _COLOR = _o.COLOR == null ? default(Offset<CZMColor>) : CZMColor.Pack(builder, _o.COLOR);
+    var _ARC_TYPE = _o.ARC_TYPE == null ? default(StringOffset) : builder.CreateString(_o.ARC_TYPE);
+    var _MATERIAL = _o.MATERIAL == null ? default(Offset<CZMPolylineMaterial>) : CZMPolylineMaterial.Pack(builder, _o.MATERIAL);
+    var _SHADOWS = _o.SHADOWS == null ? default(StringOffset) : builder.CreateString(_o.SHADOWS);
+    var _DEPTH_FAIL_MATERIAL = _o.DEPTH_FAIL_MATERIAL == null ? default(Offset<CZMPolylineMaterial>) : CZMPolylineMaterial.Pack(builder, _o.DEPTH_FAIL_MATERIAL);
+    var _CLASSIFICATION_TYPE = _o.CLASSIFICATION_TYPE == null ? default(StringOffset) : builder.CreateString(_o.CLASSIFICATION_TYPE);
     return CreateCZMPolyline(
       builder,
       _o.SHOW,
@@ -117,7 +182,14 @@ public struct CZMPolyline : IFlatbufferObject
       _POSITIONS_CARTESIAN,
       _o.WIDTH,
       _COLOR,
-      _o.CLAMP_TO_GROUND);
+      _o.CLAMP_TO_GROUND,
+      _ARC_TYPE,
+      _o.GRANULARITY,
+      _MATERIAL,
+      _SHADOWS,
+      _DEPTH_FAIL_MATERIAL,
+      _CLASSIFICATION_TYPE,
+      _o.Z_INDEX);
   }
 }
 
@@ -129,6 +201,13 @@ public class CZMPolylineT
   public double WIDTH { get; set; }
   public CZMColorT COLOR { get; set; }
   public bool CLAMP_TO_GROUND { get; set; }
+  public string ARC_TYPE { get; set; }
+  public double GRANULARITY { get; set; }
+  public CZMPolylineMaterialT MATERIAL { get; set; }
+  public string SHADOWS { get; set; }
+  public CZMPolylineMaterialT DEPTH_FAIL_MATERIAL { get; set; }
+  public string CLASSIFICATION_TYPE { get; set; }
+  public int Z_INDEX { get; set; }
 
   public CZMPolylineT() {
     this.SHOW = false;
@@ -137,6 +216,13 @@ public class CZMPolylineT
     this.WIDTH = 0.0;
     this.COLOR = null;
     this.CLAMP_TO_GROUND = false;
+    this.ARC_TYPE = null;
+    this.GRANULARITY = 0.0;
+    this.MATERIAL = null;
+    this.SHADOWS = null;
+    this.DEPTH_FAIL_MATERIAL = null;
+    this.CLASSIFICATION_TYPE = null;
+    this.Z_INDEX = 0;
   }
 }
 
@@ -152,6 +238,13 @@ static public class CZMPolylineVerify
       && verifier.VerifyField(tablePos, 10 /*WIDTH*/, 8 /*double*/, 8, false)
       && verifier.VerifyTable(tablePos, 12 /*COLOR*/, CZMColorVerify.Verify, false)
       && verifier.VerifyField(tablePos, 14 /*CLAMP_TO_GROUND*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyString(tablePos, 16 /*ARC_TYPE*/, false)
+      && verifier.VerifyField(tablePos, 18 /*GRANULARITY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyTable(tablePos, 20 /*MATERIAL*/, CZMPolylineMaterialVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 22 /*SHADOWS*/, false)
+      && verifier.VerifyTable(tablePos, 24 /*DEPTH_FAIL_MATERIAL*/, CZMPolylineMaterialVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 26 /*CLASSIFICATION_TYPE*/, false)
+      && verifier.VerifyField(tablePos, 28 /*Z_INDEX*/, 4 /*int*/, 4, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

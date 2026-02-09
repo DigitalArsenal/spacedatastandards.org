@@ -7,6 +7,8 @@ import * as flatbuffers from 'flatbuffers';
 import { CZMClassificationType } from './CZMClassificationType.js';
 import { CZMColor, CZMColorT } from './CZMColor.js';
 import { CZMHeightReference } from './CZMHeightReference.js';
+import { CZMMaterial, CZMMaterialT } from './CZMMaterial.js';
+import { CZMPolygonHole, CZMPolygonHoleT } from './CZMPolygonHole.js';
 
 
 /**
@@ -83,7 +85,7 @@ FILL():boolean {
 }
 
 /**
- * Fill color (solid color material)
+ * Fill color (solid color material, legacy)
  */
 COLOR(obj?:CZMColor):CZMColor|null {
   const offset = this.bb!.__offset(this.bb_pos, 12);
@@ -130,8 +132,123 @@ CLASSIFICATION_TYPE():CZMClassificationType {
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : CZMClassificationType.TERRAIN;
 }
 
+/**
+ * Holes (position lists: each hole is [lon,lat,h,...])
+ */
+HOLES(index: number, obj?:CZMPolygonHole):CZMPolygonHole|null {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? (obj || new CZMPolygonHole()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+holesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Arc type
+ */
+ARC_TYPE():string|null
+ARC_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ARC_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Height in meters
+ */
+HEIGHT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Extruded height reference
+ */
+EXTRUDED_HEIGHT_REFERENCE():string|null
+EXTRUDED_HEIGHT_REFERENCE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EXTRUDED_HEIGHT_REFERENCE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Texture rotation in radians
+ */
+ST_ROTATION():number {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Granularity in radians
+ */
+GRANULARITY():number {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Full surface material
+ */
+MATERIAL(obj?:CZMMaterial):CZMMaterial|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? (obj || new CZMMaterial()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Outline width in pixels
+ */
+OUTLINE_WIDTH():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Whether to use per-position heights
+ */
+PER_POSITION_HEIGHT():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Whether to close the top of extruded polygon
+ */
+CLOSE_TOP():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Whether to close the bottom of extruded polygon
+ */
+CLOSE_BOTTOM():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Shadow mode
+ */
+SHADOWS():string|null
+SHADOWS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SHADOWS(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Z-index for ordering
+ */
+Z_INDEX():number {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+}
+
 static startCZMPolygon(builder:flatbuffers.Builder) {
-  builder.startObject(10);
+  builder.startObject(23);
 }
 
 static addShow(builder:flatbuffers.Builder, SHOW:boolean) {
@@ -208,6 +325,70 @@ static addClassificationType(builder:flatbuffers.Builder, CLASSIFICATION_TYPE:CZ
   builder.addFieldInt8(9, CLASSIFICATION_TYPE, CZMClassificationType.TERRAIN);
 }
 
+static addHoles(builder:flatbuffers.Builder, HOLESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(10, HOLESOffset, 0);
+}
+
+static createHolesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startHolesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addArcType(builder:flatbuffers.Builder, ARC_TYPEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, ARC_TYPEOffset, 0);
+}
+
+static addHeight(builder:flatbuffers.Builder, HEIGHT:number) {
+  builder.addFieldFloat64(12, HEIGHT, 0.0);
+}
+
+static addExtrudedHeightReference(builder:flatbuffers.Builder, EXTRUDED_HEIGHT_REFERENCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, EXTRUDED_HEIGHT_REFERENCEOffset, 0);
+}
+
+static addStRotation(builder:flatbuffers.Builder, ST_ROTATION:number) {
+  builder.addFieldFloat64(14, ST_ROTATION, 0.0);
+}
+
+static addGranularity(builder:flatbuffers.Builder, GRANULARITY:number) {
+  builder.addFieldFloat64(15, GRANULARITY, 0.0);
+}
+
+static addMaterial(builder:flatbuffers.Builder, MATERIALOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, MATERIALOffset, 0);
+}
+
+static addOutlineWidth(builder:flatbuffers.Builder, OUTLINE_WIDTH:number) {
+  builder.addFieldFloat64(17, OUTLINE_WIDTH, 0.0);
+}
+
+static addPerPositionHeight(builder:flatbuffers.Builder, PER_POSITION_HEIGHT:boolean) {
+  builder.addFieldInt8(18, +PER_POSITION_HEIGHT, +false);
+}
+
+static addCloseTop(builder:flatbuffers.Builder, CLOSE_TOP:boolean) {
+  builder.addFieldInt8(19, +CLOSE_TOP, +false);
+}
+
+static addCloseBottom(builder:flatbuffers.Builder, CLOSE_BOTTOM:boolean) {
+  builder.addFieldInt8(20, +CLOSE_BOTTOM, +false);
+}
+
+static addShadows(builder:flatbuffers.Builder, SHADOWSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(21, SHADOWSOffset, 0);
+}
+
+static addZIndex(builder:flatbuffers.Builder, Z_INDEX:number) {
+  builder.addFieldInt32(22, Z_INDEX, 0);
+}
+
 static endCZMPolygon(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -225,7 +406,20 @@ unpack(): CZMPolygonT {
     (this.OUTLINE_COLOR() !== null ? this.OUTLINE_COLOR()!.unpack() : null),
     this.EXTRUDED_HEIGHT(),
     this.HEIGHT_REFERENCE(),
-    this.CLASSIFICATION_TYPE()
+    this.CLASSIFICATION_TYPE(),
+    this.bb!.createObjList<CZMPolygonHole, CZMPolygonHoleT>(this.HOLES.bind(this), this.holesLength()),
+    this.ARC_TYPE(),
+    this.HEIGHT(),
+    this.EXTRUDED_HEIGHT_REFERENCE(),
+    this.ST_ROTATION(),
+    this.GRANULARITY(),
+    (this.MATERIAL() !== null ? this.MATERIAL()!.unpack() : null),
+    this.OUTLINE_WIDTH(),
+    this.PER_POSITION_HEIGHT(),
+    this.CLOSE_TOP(),
+    this.CLOSE_BOTTOM(),
+    this.SHADOWS(),
+    this.Z_INDEX()
   );
 }
 
@@ -241,6 +435,19 @@ unpackTo(_o: CZMPolygonT): void {
   _o.EXTRUDED_HEIGHT = this.EXTRUDED_HEIGHT();
   _o.HEIGHT_REFERENCE = this.HEIGHT_REFERENCE();
   _o.CLASSIFICATION_TYPE = this.CLASSIFICATION_TYPE();
+  _o.HOLES = this.bb!.createObjList<CZMPolygonHole, CZMPolygonHoleT>(this.HOLES.bind(this), this.holesLength());
+  _o.ARC_TYPE = this.ARC_TYPE();
+  _o.HEIGHT = this.HEIGHT();
+  _o.EXTRUDED_HEIGHT_REFERENCE = this.EXTRUDED_HEIGHT_REFERENCE();
+  _o.ST_ROTATION = this.ST_ROTATION();
+  _o.GRANULARITY = this.GRANULARITY();
+  _o.MATERIAL = (this.MATERIAL() !== null ? this.MATERIAL()!.unpack() : null);
+  _o.OUTLINE_WIDTH = this.OUTLINE_WIDTH();
+  _o.PER_POSITION_HEIGHT = this.PER_POSITION_HEIGHT();
+  _o.CLOSE_TOP = this.CLOSE_TOP();
+  _o.CLOSE_BOTTOM = this.CLOSE_BOTTOM();
+  _o.SHADOWS = this.SHADOWS();
+  _o.Z_INDEX = this.Z_INDEX();
 }
 }
 
@@ -255,7 +462,20 @@ constructor(
   public OUTLINE_COLOR: CZMColorT|null = null,
   public EXTRUDED_HEIGHT: number = 0.0,
   public HEIGHT_REFERENCE: CZMHeightReference = CZMHeightReference.NONE,
-  public CLASSIFICATION_TYPE: CZMClassificationType = CZMClassificationType.TERRAIN
+  public CLASSIFICATION_TYPE: CZMClassificationType = CZMClassificationType.TERRAIN,
+  public HOLES: (CZMPolygonHoleT)[] = [],
+  public ARC_TYPE: string|Uint8Array|null = null,
+  public HEIGHT: number = 0.0,
+  public EXTRUDED_HEIGHT_REFERENCE: string|Uint8Array|null = null,
+  public ST_ROTATION: number = 0.0,
+  public GRANULARITY: number = 0.0,
+  public MATERIAL: CZMMaterialT|null = null,
+  public OUTLINE_WIDTH: number = 0.0,
+  public PER_POSITION_HEIGHT: boolean = false,
+  public CLOSE_TOP: boolean = false,
+  public CLOSE_BOTTOM: boolean = false,
+  public SHADOWS: string|Uint8Array|null = null,
+  public Z_INDEX: number = 0
 ){}
 
 
@@ -264,6 +484,11 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const POSITIONS_CARTESIAN = CZMPolygon.createPositionsCartesianVector(builder, this.POSITIONS_CARTESIAN);
   const COLOR = (this.COLOR !== null ? this.COLOR!.pack(builder) : 0);
   const OUTLINE_COLOR = (this.OUTLINE_COLOR !== null ? this.OUTLINE_COLOR!.pack(builder) : 0);
+  const HOLES = CZMPolygon.createHolesVector(builder, builder.createObjectOffsetList(this.HOLES));
+  const ARC_TYPE = (this.ARC_TYPE !== null ? builder.createString(this.ARC_TYPE!) : 0);
+  const EXTRUDED_HEIGHT_REFERENCE = (this.EXTRUDED_HEIGHT_REFERENCE !== null ? builder.createString(this.EXTRUDED_HEIGHT_REFERENCE!) : 0);
+  const MATERIAL = (this.MATERIAL !== null ? this.MATERIAL!.pack(builder) : 0);
+  const SHADOWS = (this.SHADOWS !== null ? builder.createString(this.SHADOWS!) : 0);
 
   CZMPolygon.startCZMPolygon(builder);
   CZMPolygon.addShow(builder, this.SHOW);
@@ -276,6 +501,19 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   CZMPolygon.addExtrudedHeight(builder, this.EXTRUDED_HEIGHT);
   CZMPolygon.addHeightReference(builder, this.HEIGHT_REFERENCE);
   CZMPolygon.addClassificationType(builder, this.CLASSIFICATION_TYPE);
+  CZMPolygon.addHoles(builder, HOLES);
+  CZMPolygon.addArcType(builder, ARC_TYPE);
+  CZMPolygon.addHeight(builder, this.HEIGHT);
+  CZMPolygon.addExtrudedHeightReference(builder, EXTRUDED_HEIGHT_REFERENCE);
+  CZMPolygon.addStRotation(builder, this.ST_ROTATION);
+  CZMPolygon.addGranularity(builder, this.GRANULARITY);
+  CZMPolygon.addMaterial(builder, MATERIAL);
+  CZMPolygon.addOutlineWidth(builder, this.OUTLINE_WIDTH);
+  CZMPolygon.addPerPositionHeight(builder, this.PER_POSITION_HEIGHT);
+  CZMPolygon.addCloseTop(builder, this.CLOSE_TOP);
+  CZMPolygon.addCloseBottom(builder, this.CLOSE_BOTTOM);
+  CZMPolygon.addShadows(builder, SHADOWS);
+  CZMPolygon.addZIndex(builder, this.Z_INDEX);
 
   return CZMPolygon.endCZMPolygon(builder);
 }

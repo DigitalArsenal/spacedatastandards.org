@@ -89,8 +89,68 @@ class CZMModel(object):
             return obj
         return None
 
+    # Whether to incrementally load textures
+    # CZMModel
+    def INCREMENTALLY_LOAD_TEXTURES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Whether to run animations
+    # CZMModel
+    def RUN_ANIMATIONS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Shadow mode
+    # CZMModel
+    def SHADOWS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Silhouette color
+    # CZMModel
+    def SILHOUETTE_COLOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from CZMColor import CZMColor
+            obj = CZMColor()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Silhouette size in pixels
+    # CZMModel
+    def SILHOUETTE_SIZE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Color blend mode
+    # CZMModel
+    def COLOR_BLEND_MODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Color blend amount (0-1)
+    # CZMModel
+    def COLOR_BLEND_AMOUNT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
 def CZMModelStart(builder):
-    builder.StartObject(7)
+    builder.StartObject(14)
 
 def Start(builder):
     CZMModelStart(builder)
@@ -137,6 +197,48 @@ def CZMModelAddCOLOR(builder, COLOR):
 def AddCOLOR(builder, COLOR):
     CZMModelAddCOLOR(builder, COLOR)
 
+def CZMModelAddINCREMENTALLY_LOAD_TEXTURES(builder, INCREMENTALLY_LOAD_TEXTURES):
+    builder.PrependBoolSlot(7, INCREMENTALLY_LOAD_TEXTURES, 0)
+
+def AddINCREMENTALLY_LOAD_TEXTURES(builder, INCREMENTALLY_LOAD_TEXTURES):
+    CZMModelAddINCREMENTALLY_LOAD_TEXTURES(builder, INCREMENTALLY_LOAD_TEXTURES)
+
+def CZMModelAddRUN_ANIMATIONS(builder, RUN_ANIMATIONS):
+    builder.PrependBoolSlot(8, RUN_ANIMATIONS, 0)
+
+def AddRUN_ANIMATIONS(builder, RUN_ANIMATIONS):
+    CZMModelAddRUN_ANIMATIONS(builder, RUN_ANIMATIONS)
+
+def CZMModelAddSHADOWS(builder, SHADOWS):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(SHADOWS), 0)
+
+def AddSHADOWS(builder, SHADOWS):
+    CZMModelAddSHADOWS(builder, SHADOWS)
+
+def CZMModelAddSILHOUETTE_COLOR(builder, SILHOUETTE_COLOR):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(SILHOUETTE_COLOR), 0)
+
+def AddSILHOUETTE_COLOR(builder, SILHOUETTE_COLOR):
+    CZMModelAddSILHOUETTE_COLOR(builder, SILHOUETTE_COLOR)
+
+def CZMModelAddSILHOUETTE_SIZE(builder, SILHOUETTE_SIZE):
+    builder.PrependFloat64Slot(11, SILHOUETTE_SIZE, 0.0)
+
+def AddSILHOUETTE_SIZE(builder, SILHOUETTE_SIZE):
+    CZMModelAddSILHOUETTE_SIZE(builder, SILHOUETTE_SIZE)
+
+def CZMModelAddCOLOR_BLEND_MODE(builder, COLOR_BLEND_MODE):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(COLOR_BLEND_MODE), 0)
+
+def AddCOLOR_BLEND_MODE(builder, COLOR_BLEND_MODE):
+    CZMModelAddCOLOR_BLEND_MODE(builder, COLOR_BLEND_MODE)
+
+def CZMModelAddCOLOR_BLEND_AMOUNT(builder, COLOR_BLEND_AMOUNT):
+    builder.PrependFloat64Slot(13, COLOR_BLEND_AMOUNT, 0.0)
+
+def AddCOLOR_BLEND_AMOUNT(builder, COLOR_BLEND_AMOUNT):
+    CZMModelAddCOLOR_BLEND_AMOUNT(builder, COLOR_BLEND_AMOUNT)
+
 def CZMModelEnd(builder):
     return builder.EndObject()
 
@@ -160,6 +262,13 @@ class CZMModelT(object):
         self.MAXIMUM_SCALE = 0.0  # type: float
         self.HEIGHT_REFERENCE = 0  # type: int
         self.COLOR = None  # type: Optional[CZMColor.CZMColorT]
+        self.INCREMENTALLY_LOAD_TEXTURES = False  # type: bool
+        self.RUN_ANIMATIONS = False  # type: bool
+        self.SHADOWS = None  # type: str
+        self.SILHOUETTE_COLOR = None  # type: Optional[CZMColor.CZMColorT]
+        self.SILHOUETTE_SIZE = 0.0  # type: float
+        self.COLOR_BLEND_MODE = None  # type: str
+        self.COLOR_BLEND_AMOUNT = 0.0  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -190,6 +299,14 @@ class CZMModelT(object):
         self.HEIGHT_REFERENCE = czmmodel.HEIGHT_REFERENCE()
         if czmmodel.COLOR() is not None:
             self.COLOR = CZMColor.CZMColorT.InitFromObj(czmmodel.COLOR())
+        self.INCREMENTALLY_LOAD_TEXTURES = czmmodel.INCREMENTALLY_LOAD_TEXTURES()
+        self.RUN_ANIMATIONS = czmmodel.RUN_ANIMATIONS()
+        self.SHADOWS = czmmodel.SHADOWS()
+        if czmmodel.SILHOUETTE_COLOR() is not None:
+            self.SILHOUETTE_COLOR = CZMColor.CZMColorT.InitFromObj(czmmodel.SILHOUETTE_COLOR())
+        self.SILHOUETTE_SIZE = czmmodel.SILHOUETTE_SIZE()
+        self.COLOR_BLEND_MODE = czmmodel.COLOR_BLEND_MODE()
+        self.COLOR_BLEND_AMOUNT = czmmodel.COLOR_BLEND_AMOUNT()
 
     # CZMModelT
     def Pack(self, builder):
@@ -197,6 +314,12 @@ class CZMModelT(object):
             GLTF = builder.CreateString(self.GLTF)
         if self.COLOR is not None:
             COLOR = self.COLOR.Pack(builder)
+        if self.SHADOWS is not None:
+            SHADOWS = builder.CreateString(self.SHADOWS)
+        if self.SILHOUETTE_COLOR is not None:
+            SILHOUETTE_COLOR = self.SILHOUETTE_COLOR.Pack(builder)
+        if self.COLOR_BLEND_MODE is not None:
+            COLOR_BLEND_MODE = builder.CreateString(self.COLOR_BLEND_MODE)
         CZMModelStart(builder)
         CZMModelAddSHOW(builder, self.SHOW)
         if self.GLTF is not None:
@@ -207,5 +330,15 @@ class CZMModelT(object):
         CZMModelAddHEIGHT_REFERENCE(builder, self.HEIGHT_REFERENCE)
         if self.COLOR is not None:
             CZMModelAddCOLOR(builder, COLOR)
+        CZMModelAddINCREMENTALLY_LOAD_TEXTURES(builder, self.INCREMENTALLY_LOAD_TEXTURES)
+        CZMModelAddRUN_ANIMATIONS(builder, self.RUN_ANIMATIONS)
+        if self.SHADOWS is not None:
+            CZMModelAddSHADOWS(builder, SHADOWS)
+        if self.SILHOUETTE_COLOR is not None:
+            CZMModelAddSILHOUETTE_COLOR(builder, SILHOUETTE_COLOR)
+        CZMModelAddSILHOUETTE_SIZE(builder, self.SILHOUETTE_SIZE)
+        if self.COLOR_BLEND_MODE is not None:
+            CZMModelAddCOLOR_BLEND_MODE(builder, COLOR_BLEND_MODE)
+        CZMModelAddCOLOR_BLEND_AMOUNT(builder, self.COLOR_BLEND_AMOUNT)
         czmmodel = CZMModelEnd(builder)
         return czmmodel

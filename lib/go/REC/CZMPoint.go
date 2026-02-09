@@ -128,8 +128,80 @@ func (rcv *CZMPoint) MutateHEIGHT_REFERENCE(n CZMHeightReference) bool {
 	return rcv._tab.MutateInt8Slot(14, int8(n))
 }
 
+/// Scale by distance
+func (rcv *CZMPoint) SCALE_BY_DISTANCE(obj *CZMNearFarScalar) *CZMNearFarScalar {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CZMNearFarScalar)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// Scale by distance
+/// Translucency by distance
+func (rcv *CZMPoint) TRANSLUCENCY_BY_DISTANCE(obj *CZMNearFarScalar) *CZMNearFarScalar {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(CZMNearFarScalar)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// Translucency by distance
+/// Distance display condition near
+func (rcv *CZMPoint) DISTANCE_DISPLAY_CONDITION_NEAR() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Distance display condition near
+func (rcv *CZMPoint) MutateDISTANCE_DISPLAY_CONDITION_NEAR(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+/// Distance display condition far
+func (rcv *CZMPoint) DISTANCE_DISPLAY_CONDITION_FAR() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Distance display condition far
+func (rcv *CZMPoint) MutateDISTANCE_DISPLAY_CONDITION_FAR(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+/// Disable depth test distance
+func (rcv *CZMPoint) DISABLE_DEPTH_TEST_DISTANCE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Disable depth test distance
+func (rcv *CZMPoint) MutateDISABLE_DEPTH_TEST_DISTANCE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
 func CZMPointStart(builder *flatbuffers.Builder) {
-	builder.StartObject(6)
+	builder.StartObject(11)
 }
 func CZMPointAddSHOW(builder *flatbuffers.Builder, SHOW bool) {
 	builder.PrependBoolSlot(0, SHOW, false)
@@ -148,6 +220,21 @@ func CZMPointAddPIXEL_SIZE(builder *flatbuffers.Builder, PIXEL_SIZE float64) {
 }
 func CZMPointAddHEIGHT_REFERENCE(builder *flatbuffers.Builder, HEIGHT_REFERENCE CZMHeightReference) {
 	builder.PrependInt8Slot(5, int8(HEIGHT_REFERENCE), 0)
+}
+func CZMPointAddSCALE_BY_DISTANCE(builder *flatbuffers.Builder, SCALE_BY_DISTANCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(SCALE_BY_DISTANCE), 0)
+}
+func CZMPointAddTRANSLUCENCY_BY_DISTANCE(builder *flatbuffers.Builder, TRANSLUCENCY_BY_DISTANCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(TRANSLUCENCY_BY_DISTANCE), 0)
+}
+func CZMPointAddDISTANCE_DISPLAY_CONDITION_NEAR(builder *flatbuffers.Builder, DISTANCE_DISPLAY_CONDITION_NEAR float64) {
+	builder.PrependFloat64Slot(8, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0)
+}
+func CZMPointAddDISTANCE_DISPLAY_CONDITION_FAR(builder *flatbuffers.Builder, DISTANCE_DISPLAY_CONDITION_FAR float64) {
+	builder.PrependFloat64Slot(9, DISTANCE_DISPLAY_CONDITION_FAR, 0.0)
+}
+func CZMPointAddDISABLE_DEPTH_TEST_DISTANCE(builder *flatbuffers.Builder, DISABLE_DEPTH_TEST_DISTANCE float64) {
+	builder.PrependFloat64Slot(10, DISABLE_DEPTH_TEST_DISTANCE, 0.0)
 }
 func CZMPointEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

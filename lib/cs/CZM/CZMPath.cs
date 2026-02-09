@@ -25,10 +25,12 @@ public struct CZMPath : IFlatbufferObject
   public double TRAIL_TIME { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Line width in pixels
   public double WIDTH { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Path color
+  /// Path color (legacy solid color)
   public CZMColor? COLOR { get { int o = __p.__offset(12); return o != 0 ? (CZMColor?)(new CZMColor()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Resolution in seconds
   public double RESOLUTION { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Full polyline material
+  public CZMPolylineMaterial? MATERIAL { get { int o = __p.__offset(16); return o != 0 ? (CZMPolylineMaterial?)(new CZMPolylineMaterial()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<CZMPath> CreateCZMPath(FlatBufferBuilder builder,
       bool SHOW = false,
@@ -36,24 +38,27 @@ public struct CZMPath : IFlatbufferObject
       double TRAIL_TIME = 0.0,
       double WIDTH = 0.0,
       Offset<CZMColor> COLOROffset = default(Offset<CZMColor>),
-      double RESOLUTION = 0.0) {
-    builder.StartTable(6);
+      double RESOLUTION = 0.0,
+      Offset<CZMPolylineMaterial> MATERIALOffset = default(Offset<CZMPolylineMaterial>)) {
+    builder.StartTable(7);
     CZMPath.AddRESOLUTION(builder, RESOLUTION);
     CZMPath.AddWIDTH(builder, WIDTH);
     CZMPath.AddTRAIL_TIME(builder, TRAIL_TIME);
     CZMPath.AddLEAD_TIME(builder, LEAD_TIME);
+    CZMPath.AddMATERIAL(builder, MATERIALOffset);
     CZMPath.AddCOLOR(builder, COLOROffset);
     CZMPath.AddSHOW(builder, SHOW);
     return CZMPath.EndCZMPath(builder);
   }
 
-  public static void StartCZMPath(FlatBufferBuilder builder) { builder.StartTable(6); }
+  public static void StartCZMPath(FlatBufferBuilder builder) { builder.StartTable(7); }
   public static void AddSHOW(FlatBufferBuilder builder, bool SHOW) { builder.AddBool(0, SHOW, false); }
   public static void AddLEAD_TIME(FlatBufferBuilder builder, double LEAD_TIME) { builder.AddDouble(1, LEAD_TIME, 0.0); }
   public static void AddTRAIL_TIME(FlatBufferBuilder builder, double TRAIL_TIME) { builder.AddDouble(2, TRAIL_TIME, 0.0); }
   public static void AddWIDTH(FlatBufferBuilder builder, double WIDTH) { builder.AddDouble(3, WIDTH, 0.0); }
   public static void AddCOLOR(FlatBufferBuilder builder, Offset<CZMColor> COLOROffset) { builder.AddOffset(4, COLOROffset.Value, 0); }
   public static void AddRESOLUTION(FlatBufferBuilder builder, double RESOLUTION) { builder.AddDouble(5, RESOLUTION, 0.0); }
+  public static void AddMATERIAL(FlatBufferBuilder builder, Offset<CZMPolylineMaterial> MATERIALOffset) { builder.AddOffset(6, MATERIALOffset.Value, 0); }
   public static Offset<CZMPath> EndCZMPath(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CZMPath>(o);
@@ -70,10 +75,12 @@ public struct CZMPath : IFlatbufferObject
     _o.WIDTH = this.WIDTH;
     _o.COLOR = this.COLOR.HasValue ? this.COLOR.Value.UnPack() : null;
     _o.RESOLUTION = this.RESOLUTION;
+    _o.MATERIAL = this.MATERIAL.HasValue ? this.MATERIAL.Value.UnPack() : null;
   }
   public static Offset<CZMPath> Pack(FlatBufferBuilder builder, CZMPathT _o) {
     if (_o == null) return default(Offset<CZMPath>);
     var _COLOR = _o.COLOR == null ? default(Offset<CZMColor>) : CZMColor.Pack(builder, _o.COLOR);
+    var _MATERIAL = _o.MATERIAL == null ? default(Offset<CZMPolylineMaterial>) : CZMPolylineMaterial.Pack(builder, _o.MATERIAL);
     return CreateCZMPath(
       builder,
       _o.SHOW,
@@ -81,7 +88,8 @@ public struct CZMPath : IFlatbufferObject
       _o.TRAIL_TIME,
       _o.WIDTH,
       _COLOR,
-      _o.RESOLUTION);
+      _o.RESOLUTION,
+      _MATERIAL);
   }
 }
 
@@ -93,6 +101,7 @@ public class CZMPathT
   public double WIDTH { get; set; }
   public CZMColorT COLOR { get; set; }
   public double RESOLUTION { get; set; }
+  public CZMPolylineMaterialT MATERIAL { get; set; }
 
   public CZMPathT() {
     this.SHOW = false;
@@ -101,6 +110,7 @@ public class CZMPathT
     this.WIDTH = 0.0;
     this.COLOR = null;
     this.RESOLUTION = 0.0;
+    this.MATERIAL = null;
   }
 }
 
@@ -116,6 +126,7 @@ static public class CZMPathVerify
       && verifier.VerifyField(tablePos, 10 /*WIDTH*/, 8 /*double*/, 8, false)
       && verifier.VerifyTable(tablePos, 12 /*COLOR*/, CZMColorVerify.Verify, false)
       && verifier.VerifyField(tablePos, 14 /*RESOLUTION*/, 8 /*double*/, 8, false)
+      && verifier.VerifyTable(tablePos, 16 /*MATERIAL*/, CZMPolylineMaterialVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

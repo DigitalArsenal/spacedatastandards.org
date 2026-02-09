@@ -35,6 +35,8 @@ public struct KMLStyle : IFlatbufferObject
   public KMLPolyStyle? POLY_STYLE { get { int o = __p.__offset(12); return o != 0 ? (KMLPolyStyle?)(new KMLPolyStyle()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Balloon style
   public KMLBalloonStyle? BALLOON_STYLE { get { int o = __p.__offset(14); return o != 0 ? (KMLBalloonStyle?)(new KMLBalloonStyle()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// List style
+  public KMLListStyle? LIST_STYLE { get { int o = __p.__offset(16); return o != 0 ? (KMLListStyle?)(new KMLListStyle()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<KMLStyle> CreateKMLStyle(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
@@ -42,8 +44,10 @@ public struct KMLStyle : IFlatbufferObject
       Offset<KMLLabelStyle> LABEL_STYLEOffset = default(Offset<KMLLabelStyle>),
       Offset<KMLLineStyle> LINE_STYLEOffset = default(Offset<KMLLineStyle>),
       Offset<KMLPolyStyle> POLY_STYLEOffset = default(Offset<KMLPolyStyle>),
-      Offset<KMLBalloonStyle> BALLOON_STYLEOffset = default(Offset<KMLBalloonStyle>)) {
-    builder.StartTable(6);
+      Offset<KMLBalloonStyle> BALLOON_STYLEOffset = default(Offset<KMLBalloonStyle>),
+      Offset<KMLListStyle> LIST_STYLEOffset = default(Offset<KMLListStyle>)) {
+    builder.StartTable(7);
+    KMLStyle.AddLIST_STYLE(builder, LIST_STYLEOffset);
     KMLStyle.AddBALLOON_STYLE(builder, BALLOON_STYLEOffset);
     KMLStyle.AddPOLY_STYLE(builder, POLY_STYLEOffset);
     KMLStyle.AddLINE_STYLE(builder, LINE_STYLEOffset);
@@ -53,13 +57,14 @@ public struct KMLStyle : IFlatbufferObject
     return KMLStyle.EndKMLStyle(builder);
   }
 
-  public static void StartKMLStyle(FlatBufferBuilder builder) { builder.StartTable(6); }
+  public static void StartKMLStyle(FlatBufferBuilder builder) { builder.StartTable(7); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddICON_STYLE(FlatBufferBuilder builder, Offset<KMLIconStyle> ICON_STYLEOffset) { builder.AddOffset(1, ICON_STYLEOffset.Value, 0); }
   public static void AddLABEL_STYLE(FlatBufferBuilder builder, Offset<KMLLabelStyle> LABEL_STYLEOffset) { builder.AddOffset(2, LABEL_STYLEOffset.Value, 0); }
   public static void AddLINE_STYLE(FlatBufferBuilder builder, Offset<KMLLineStyle> LINE_STYLEOffset) { builder.AddOffset(3, LINE_STYLEOffset.Value, 0); }
   public static void AddPOLY_STYLE(FlatBufferBuilder builder, Offset<KMLPolyStyle> POLY_STYLEOffset) { builder.AddOffset(4, POLY_STYLEOffset.Value, 0); }
   public static void AddBALLOON_STYLE(FlatBufferBuilder builder, Offset<KMLBalloonStyle> BALLOON_STYLEOffset) { builder.AddOffset(5, BALLOON_STYLEOffset.Value, 0); }
+  public static void AddLIST_STYLE(FlatBufferBuilder builder, Offset<KMLListStyle> LIST_STYLEOffset) { builder.AddOffset(6, LIST_STYLEOffset.Value, 0); }
   public static Offset<KMLStyle> EndKMLStyle(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<KMLStyle>(o);
@@ -76,6 +81,7 @@ public struct KMLStyle : IFlatbufferObject
     _o.LINE_STYLE = this.LINE_STYLE.HasValue ? this.LINE_STYLE.Value.UnPack() : null;
     _o.POLY_STYLE = this.POLY_STYLE.HasValue ? this.POLY_STYLE.Value.UnPack() : null;
     _o.BALLOON_STYLE = this.BALLOON_STYLE.HasValue ? this.BALLOON_STYLE.Value.UnPack() : null;
+    _o.LIST_STYLE = this.LIST_STYLE.HasValue ? this.LIST_STYLE.Value.UnPack() : null;
   }
   public static Offset<KMLStyle> Pack(FlatBufferBuilder builder, KMLStyleT _o) {
     if (_o == null) return default(Offset<KMLStyle>);
@@ -85,6 +91,7 @@ public struct KMLStyle : IFlatbufferObject
     var _LINE_STYLE = _o.LINE_STYLE == null ? default(Offset<KMLLineStyle>) : KMLLineStyle.Pack(builder, _o.LINE_STYLE);
     var _POLY_STYLE = _o.POLY_STYLE == null ? default(Offset<KMLPolyStyle>) : KMLPolyStyle.Pack(builder, _o.POLY_STYLE);
     var _BALLOON_STYLE = _o.BALLOON_STYLE == null ? default(Offset<KMLBalloonStyle>) : KMLBalloonStyle.Pack(builder, _o.BALLOON_STYLE);
+    var _LIST_STYLE = _o.LIST_STYLE == null ? default(Offset<KMLListStyle>) : KMLListStyle.Pack(builder, _o.LIST_STYLE);
     return CreateKMLStyle(
       builder,
       _ID,
@@ -92,7 +99,8 @@ public struct KMLStyle : IFlatbufferObject
       _LABEL_STYLE,
       _LINE_STYLE,
       _POLY_STYLE,
-      _BALLOON_STYLE);
+      _BALLOON_STYLE,
+      _LIST_STYLE);
   }
 }
 
@@ -104,6 +112,7 @@ public class KMLStyleT
   public KMLLineStyleT LINE_STYLE { get; set; }
   public KMLPolyStyleT POLY_STYLE { get; set; }
   public KMLBalloonStyleT BALLOON_STYLE { get; set; }
+  public KMLListStyleT LIST_STYLE { get; set; }
 
   public KMLStyleT() {
     this.ID = null;
@@ -112,6 +121,7 @@ public class KMLStyleT
     this.LINE_STYLE = null;
     this.POLY_STYLE = null;
     this.BALLOON_STYLE = null;
+    this.LIST_STYLE = null;
   }
 }
 
@@ -127,6 +137,7 @@ static public class KMLStyleVerify
       && verifier.VerifyTable(tablePos, 10 /*LINE_STYLE*/, KMLLineStyleVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 12 /*POLY_STYLE*/, KMLPolyStyleVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 14 /*BALLOON_STYLE*/, KMLBalloonStyleVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 16 /*LIST_STYLE*/, KMLListStyleVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

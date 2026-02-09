@@ -217,8 +217,124 @@ class KML(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         return o == 0
 
+    # Schemas
+    # KML
+    def SCHEMAS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from KMLSchema import KMLSchema
+            obj = KMLSchema()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # KML
+    def SCHEMASLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # KML
+    def SCHEMASIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        return o == 0
+
+    # Screen overlays
+    # KML
+    def SCREEN_OVERLAYS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from KMLScreenOverlay import KMLScreenOverlay
+            obj = KMLScreenOverlay()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # KML
+    def SCREEN_OVERLAYSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # KML
+    def SCREEN_OVERLAYSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        return o == 0
+
+    # Photo overlays
+    # KML
+    def PHOTO_OVERLAYS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from KMLPhotoOverlay import KMLPhotoOverlay
+            obj = KMLPhotoOverlay()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # KML
+    def PHOTO_OVERLAYSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # KML
+    def PHOTO_OVERLAYSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        return o == 0
+
+    # Tours
+    # KML
+    def TOURS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from KMLTour import KMLTour
+            obj = KMLTour()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # KML
+    def TOURSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # KML
+    def TOURSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        return o == 0
+
+    # NetworkLinkControl
+    # KML
+    def NETWORK_LINK_CONTROL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from KMLNetworkLinkControl import KMLNetworkLinkControl
+            obj = KMLNetworkLinkControl()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def KMLStart(builder):
-    builder.StartObject(10)
+    builder.StartObject(15)
 
 def Start(builder):
     KMLStart(builder)
@@ -319,6 +435,60 @@ def KMLStartGROUND_OVERLAYSVector(builder, numElems):
 def StartGROUND_OVERLAYSVector(builder, numElems):
     return KMLStartGROUND_OVERLAYSVector(builder, numElems)
 
+def KMLAddSCHEMAS(builder, SCHEMAS):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(SCHEMAS), 0)
+
+def AddSCHEMAS(builder, SCHEMAS):
+    KMLAddSCHEMAS(builder, SCHEMAS)
+
+def KMLStartSCHEMASVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSCHEMASVector(builder, numElems):
+    return KMLStartSCHEMASVector(builder, numElems)
+
+def KMLAddSCREEN_OVERLAYS(builder, SCREEN_OVERLAYS):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(SCREEN_OVERLAYS), 0)
+
+def AddSCREEN_OVERLAYS(builder, SCREEN_OVERLAYS):
+    KMLAddSCREEN_OVERLAYS(builder, SCREEN_OVERLAYS)
+
+def KMLStartSCREEN_OVERLAYSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSCREEN_OVERLAYSVector(builder, numElems):
+    return KMLStartSCREEN_OVERLAYSVector(builder, numElems)
+
+def KMLAddPHOTO_OVERLAYS(builder, PHOTO_OVERLAYS):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(PHOTO_OVERLAYS), 0)
+
+def AddPHOTO_OVERLAYS(builder, PHOTO_OVERLAYS):
+    KMLAddPHOTO_OVERLAYS(builder, PHOTO_OVERLAYS)
+
+def KMLStartPHOTO_OVERLAYSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartPHOTO_OVERLAYSVector(builder, numElems):
+    return KMLStartPHOTO_OVERLAYSVector(builder, numElems)
+
+def KMLAddTOURS(builder, TOURS):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(TOURS), 0)
+
+def AddTOURS(builder, TOURS):
+    KMLAddTOURS(builder, TOURS)
+
+def KMLStartTOURSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartTOURSVector(builder, numElems):
+    return KMLStartTOURSVector(builder, numElems)
+
+def KMLAddNETWORK_LINK_CONTROL(builder, NETWORK_LINK_CONTROL):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(NETWORK_LINK_CONTROL), 0)
+
+def AddNETWORK_LINK_CONTROL(builder, NETWORK_LINK_CONTROL):
+    KMLAddNETWORK_LINK_CONTROL(builder, NETWORK_LINK_CONTROL)
+
 def KMLEnd(builder):
     return builder.EndObject()
 
@@ -328,11 +498,16 @@ def End(builder):
 import KMLFolder
 import KMLGroundOverlay
 import KMLNetworkLink
+import KMLNetworkLinkControl
+import KMLPhotoOverlay
 import KMLPlacemark
+import KMLSchema
+import KMLScreenOverlay
 import KMLStyle
 import KMLStyleMap
+import KMLTour
 try:
-    from typing import List
+    from typing import List, Optional
 except:
     pass
 
@@ -350,6 +525,11 @@ class KMLT(object):
         self.FOLDERS = None  # type: List[KMLFolder.KMLFolderT]
         self.NETWORK_LINKS = None  # type: List[KMLNetworkLink.KMLNetworkLinkT]
         self.GROUND_OVERLAYS = None  # type: List[KMLGroundOverlay.KMLGroundOverlayT]
+        self.SCHEMAS = None  # type: List[KMLSchema.KMLSchemaT]
+        self.SCREEN_OVERLAYS = None  # type: List[KMLScreenOverlay.KMLScreenOverlayT]
+        self.PHOTO_OVERLAYS = None  # type: List[KMLPhotoOverlay.KMLPhotoOverlayT]
+        self.TOURS = None  # type: List[KMLTour.KMLTourT]
+        self.NETWORK_LINK_CONTROL = None  # type: Optional[KMLNetworkLinkControl.KMLNetworkLinkControlT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -424,6 +604,40 @@ class KMLT(object):
                 else:
                     kMLGroundOverlay_ = KMLGroundOverlay.KMLGroundOverlayT.InitFromObj(KML.GROUND_OVERLAYS(i))
                     self.GROUND_OVERLAYS.append(kMLGroundOverlay_)
+        if not KML.SCHEMASIsNone():
+            self.SCHEMAS = []
+            for i in range(KML.SCHEMASLength()):
+                if KML.SCHEMAS(i) is None:
+                    self.SCHEMAS.append(None)
+                else:
+                    kMLSchema_ = KMLSchema.KMLSchemaT.InitFromObj(KML.SCHEMAS(i))
+                    self.SCHEMAS.append(kMLSchema_)
+        if not KML.SCREEN_OVERLAYSIsNone():
+            self.SCREEN_OVERLAYS = []
+            for i in range(KML.SCREEN_OVERLAYSLength()):
+                if KML.SCREEN_OVERLAYS(i) is None:
+                    self.SCREEN_OVERLAYS.append(None)
+                else:
+                    kMLScreenOverlay_ = KMLScreenOverlay.KMLScreenOverlayT.InitFromObj(KML.SCREEN_OVERLAYS(i))
+                    self.SCREEN_OVERLAYS.append(kMLScreenOverlay_)
+        if not KML.PHOTO_OVERLAYSIsNone():
+            self.PHOTO_OVERLAYS = []
+            for i in range(KML.PHOTO_OVERLAYSLength()):
+                if KML.PHOTO_OVERLAYS(i) is None:
+                    self.PHOTO_OVERLAYS.append(None)
+                else:
+                    kMLPhotoOverlay_ = KMLPhotoOverlay.KMLPhotoOverlayT.InitFromObj(KML.PHOTO_OVERLAYS(i))
+                    self.PHOTO_OVERLAYS.append(kMLPhotoOverlay_)
+        if not KML.TOURSIsNone():
+            self.TOURS = []
+            for i in range(KML.TOURSLength()):
+                if KML.TOURS(i) is None:
+                    self.TOURS.append(None)
+                else:
+                    kMLTour_ = KMLTour.KMLTourT.InitFromObj(KML.TOURS(i))
+                    self.TOURS.append(kMLTour_)
+        if KML.NETWORK_LINK_CONTROL() is not None:
+            self.NETWORK_LINK_CONTROL = KMLNetworkLinkControl.KMLNetworkLinkControlT.InitFromObj(KML.NETWORK_LINK_CONTROL())
 
     # KMLT
     def Pack(self, builder):
@@ -479,6 +693,40 @@ class KMLT(object):
             for i in reversed(range(len(self.GROUND_OVERLAYS))):
                 builder.PrependUOffsetTRelative(GROUND_OVERLAYSlist[i])
             GROUND_OVERLAYS = builder.EndVector()
+        if self.SCHEMAS is not None:
+            SCHEMASlist = []
+            for i in range(len(self.SCHEMAS)):
+                SCHEMASlist.append(self.SCHEMAS[i].Pack(builder))
+            KMLStartSCHEMASVector(builder, len(self.SCHEMAS))
+            for i in reversed(range(len(self.SCHEMAS))):
+                builder.PrependUOffsetTRelative(SCHEMASlist[i])
+            SCHEMAS = builder.EndVector()
+        if self.SCREEN_OVERLAYS is not None:
+            SCREEN_OVERLAYSlist = []
+            for i in range(len(self.SCREEN_OVERLAYS)):
+                SCREEN_OVERLAYSlist.append(self.SCREEN_OVERLAYS[i].Pack(builder))
+            KMLStartSCREEN_OVERLAYSVector(builder, len(self.SCREEN_OVERLAYS))
+            for i in reversed(range(len(self.SCREEN_OVERLAYS))):
+                builder.PrependUOffsetTRelative(SCREEN_OVERLAYSlist[i])
+            SCREEN_OVERLAYS = builder.EndVector()
+        if self.PHOTO_OVERLAYS is not None:
+            PHOTO_OVERLAYSlist = []
+            for i in range(len(self.PHOTO_OVERLAYS)):
+                PHOTO_OVERLAYSlist.append(self.PHOTO_OVERLAYS[i].Pack(builder))
+            KMLStartPHOTO_OVERLAYSVector(builder, len(self.PHOTO_OVERLAYS))
+            for i in reversed(range(len(self.PHOTO_OVERLAYS))):
+                builder.PrependUOffsetTRelative(PHOTO_OVERLAYSlist[i])
+            PHOTO_OVERLAYS = builder.EndVector()
+        if self.TOURS is not None:
+            TOURSlist = []
+            for i in range(len(self.TOURS)):
+                TOURSlist.append(self.TOURS[i].Pack(builder))
+            KMLStartTOURSVector(builder, len(self.TOURS))
+            for i in reversed(range(len(self.TOURS))):
+                builder.PrependUOffsetTRelative(TOURSlist[i])
+            TOURS = builder.EndVector()
+        if self.NETWORK_LINK_CONTROL is not None:
+            NETWORK_LINK_CONTROL = self.NETWORK_LINK_CONTROL.Pack(builder)
         KMLStart(builder)
         if self.NAME is not None:
             KMLAddNAME(builder, NAME)
@@ -498,5 +746,15 @@ class KMLT(object):
             KMLAddNETWORK_LINKS(builder, NETWORK_LINKS)
         if self.GROUND_OVERLAYS is not None:
             KMLAddGROUND_OVERLAYS(builder, GROUND_OVERLAYS)
+        if self.SCHEMAS is not None:
+            KMLAddSCHEMAS(builder, SCHEMAS)
+        if self.SCREEN_OVERLAYS is not None:
+            KMLAddSCREEN_OVERLAYS(builder, SCREEN_OVERLAYS)
+        if self.PHOTO_OVERLAYS is not None:
+            KMLAddPHOTO_OVERLAYS(builder, PHOTO_OVERLAYS)
+        if self.TOURS is not None:
+            KMLAddTOURS(builder, TOURS)
+        if self.NETWORK_LINK_CONTROL is not None:
+            KMLAddNETWORK_LINK_CONTROL(builder, NETWORK_LINK_CONTROL)
         KML = KMLEnd(builder)
         return KML

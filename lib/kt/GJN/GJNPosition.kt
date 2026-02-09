@@ -53,6 +53,14 @@ class GJNPosition : Table() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * True if altitude was explicitly provided (distinguishes 0 from absent)
+     */
+    val HAS_ALTITUDE : Boolean
+        get() {
+            val o = __offset(10)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsGJNPosition(_bb: ByteBuffer): GJNPosition = getRootAsGJNPosition(_bb, GJNPosition())
@@ -60,17 +68,19 @@ class GJNPosition : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createGJNPosition(builder: FlatBufferBuilder, LONGITUDE: Double, LATITUDE: Double, ALTITUDE: Double) : Int {
-            builder.startTable(3)
+        fun createGJNPosition(builder: FlatBufferBuilder, LONGITUDE: Double, LATITUDE: Double, ALTITUDE: Double, HAS_ALTITUDE: Boolean) : Int {
+            builder.startTable(4)
             addALTITUDE(builder, ALTITUDE)
             addLATITUDE(builder, LATITUDE)
             addLONGITUDE(builder, LONGITUDE)
+            addHAS_ALTITUDE(builder, HAS_ALTITUDE)
             return endGJNPosition(builder)
         }
-        fun startGJNPosition(builder: FlatBufferBuilder) = builder.startTable(3)
+        fun startGJNPosition(builder: FlatBufferBuilder) = builder.startTable(4)
         fun addLONGITUDE(builder: FlatBufferBuilder, LONGITUDE: Double) = builder.addDouble(0, LONGITUDE, 0.0)
         fun addLATITUDE(builder: FlatBufferBuilder, LATITUDE: Double) = builder.addDouble(1, LATITUDE, 0.0)
         fun addALTITUDE(builder: FlatBufferBuilder, ALTITUDE: Double) = builder.addDouble(2, ALTITUDE, 0.0)
+        fun addHAS_ALTITUDE(builder: FlatBufferBuilder, HAS_ALTITUDE: Boolean) = builder.addBoolean(3, HAS_ALTITUDE, false)
         fun endGJNPosition(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

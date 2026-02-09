@@ -48,25 +48,55 @@ public final class GJNProperty extends Table {
    * True if NUM_VALUE should be used instead of VALUE
    */
   public boolean IS_NUMERIC() { int o = __offset(10); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * True if this property value is a boolean
+   */
+  public boolean IS_BOOL() { int o = __offset(12); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Boolean value (use when IS_BOOL is true)
+   */
+  public boolean BOOL_VALUE() { int o = __offset(14); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * True if this property value is JSON null
+   */
+  public boolean IS_NULL() { int o = __offset(16); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Raw JSON string for complex values (objects, arrays)
+   */
+  public String JSON_VALUE() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer JSON_VALUEAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
+  public ByteBuffer JSON_VALUEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
 
   public static int createGJNProperty(FlatBufferBuilder builder,
       int KEYOffset,
       int VALUEOffset,
       double NUM_VALUE,
-      boolean IS_NUMERIC) {
-    builder.startTable(4);
+      boolean IS_NUMERIC,
+      boolean IS_BOOL,
+      boolean BOOL_VALUE,
+      boolean IS_NULL,
+      int JSON_VALUEOffset) {
+    builder.startTable(8);
     GJNProperty.addNumValue(builder, NUM_VALUE);
+    GJNProperty.addJsonValue(builder, JSON_VALUEOffset);
     GJNProperty.addValue(builder, VALUEOffset);
     GJNProperty.addKey(builder, KEYOffset);
+    GJNProperty.addIsNull(builder, IS_NULL);
+    GJNProperty.addBoolValue(builder, BOOL_VALUE);
+    GJNProperty.addIsBool(builder, IS_BOOL);
     GJNProperty.addIsNumeric(builder, IS_NUMERIC);
     return GJNProperty.endGJNProperty(builder);
   }
 
-  public static void startGJNProperty(FlatBufferBuilder builder) { builder.startTable(4); }
+  public static void startGJNProperty(FlatBufferBuilder builder) { builder.startTable(8); }
   public static void addKey(FlatBufferBuilder builder, int KEYOffset) { builder.addOffset(0, KEYOffset, 0); }
   public static void addValue(FlatBufferBuilder builder, int VALUEOffset) { builder.addOffset(1, VALUEOffset, 0); }
   public static void addNumValue(FlatBufferBuilder builder, double NUM_VALUE) { builder.addDouble(2, NUM_VALUE, 0.0); }
   public static void addIsNumeric(FlatBufferBuilder builder, boolean IS_NUMERIC) { builder.addBoolean(3, IS_NUMERIC, false); }
+  public static void addIsBool(FlatBufferBuilder builder, boolean IS_BOOL) { builder.addBoolean(4, IS_BOOL, false); }
+  public static void addBoolValue(FlatBufferBuilder builder, boolean BOOL_VALUE) { builder.addBoolean(5, BOOL_VALUE, false); }
+  public static void addIsNull(FlatBufferBuilder builder, boolean IS_NULL) { builder.addBoolean(6, IS_NULL, false); }
+  public static void addJsonValue(FlatBufferBuilder builder, int JSON_VALUEOffset) { builder.addOffset(7, JSON_VALUEOffset, 0); }
   public static int endGJNProperty(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

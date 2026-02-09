@@ -68,25 +68,66 @@ class KMLLineStyle extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// gx:outerColor
+    public function getGX_OUTER_COLOR()
+    {
+        $o = $this->__offset(10);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// gx:outerWidth
+    /**
+     * @return double
+     */
+    public function getGX_OUTER_WIDTH()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// gx:physicalWidth
+    /**
+     * @return double
+     */
+    public function getGX_PHYSICAL_WIDTH()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// gx:labelVisibility
+    /**
+     * @return bool
+     */
+    public function getGX_LABEL_VISIBILITY()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startKMLLineStyle(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(3);
+        $builder->StartObject(7);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return KMLLineStyle
      */
-    public static function createKMLLineStyle(FlatBufferBuilder $builder, $COLOR, $COLOR_MODE, $WIDTH)
+    public static function createKMLLineStyle(FlatBufferBuilder $builder, $COLOR, $COLOR_MODE, $WIDTH, $GX_OUTER_COLOR, $GX_OUTER_WIDTH, $GX_PHYSICAL_WIDTH, $GX_LABEL_VISIBILITY)
     {
-        $builder->startObject(3);
+        $builder->startObject(7);
         self::addCOLOR($builder, $COLOR);
         self::addCOLOR_MODE($builder, $COLOR_MODE);
         self::addWIDTH($builder, $WIDTH);
+        self::addGX_OUTER_COLOR($builder, $GX_OUTER_COLOR);
+        self::addGX_OUTER_WIDTH($builder, $GX_OUTER_WIDTH);
+        self::addGX_PHYSICAL_WIDTH($builder, $GX_PHYSICAL_WIDTH);
+        self::addGX_LABEL_VISIBILITY($builder, $GX_LABEL_VISIBILITY);
         $o = $builder->endObject();
         return $o;
     }
@@ -119,6 +160,46 @@ class KMLLineStyle extends Table
     public static function addWIDTH(FlatBufferBuilder $builder, $WIDTH)
     {
         $builder->addDoubleX(2, $WIDTH, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addGX_OUTER_COLOR(FlatBufferBuilder $builder, $GX_OUTER_COLOR)
+    {
+        $builder->addOffsetX(3, $GX_OUTER_COLOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addGX_OUTER_WIDTH(FlatBufferBuilder $builder, $GX_OUTER_WIDTH)
+    {
+        $builder->addDoubleX(4, $GX_OUTER_WIDTH, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addGX_PHYSICAL_WIDTH(FlatBufferBuilder $builder, $GX_PHYSICAL_WIDTH)
+    {
+        $builder->addDoubleX(5, $GX_PHYSICAL_WIDTH, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addGX_LABEL_VISIBILITY(FlatBufferBuilder $builder, $GX_LABEL_VISIBILITY)
+    {
+        $builder->addBoolX(6, $GX_LABEL_VISIBILITY, false);
     }
 
     /**

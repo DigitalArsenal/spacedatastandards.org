@@ -33,6 +33,8 @@ public struct GJNGeometry : IFlatbufferObject
   /// Child geometries (for GeometryCollection)
   public GJNGeometry? GEOMETRIES(int j) { int o = __p.__offset(14); return o != 0 ? (GJNGeometry?)(new GJNGeometry()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int GEOMETRIESLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Bounding box (optional, per RFC 7946 Section 5)
+  public GJNBoundingBox? BBOX { get { int o = __p.__offset(16); return o != 0 ? (GJNBoundingBox?)(new GJNBoundingBox()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<GJNGeometry> CreateGJNGeometry(FlatBufferBuilder builder,
       GJNGeometryType TYPE = GJNGeometryType.POINT,
@@ -40,8 +42,10 @@ public struct GJNGeometry : IFlatbufferObject
       VectorOffset POSITIONSOffset = default(VectorOffset),
       VectorOffset RINGSOffset = default(VectorOffset),
       VectorOffset POLYGON_RINGSOffset = default(VectorOffset),
-      VectorOffset GEOMETRIESOffset = default(VectorOffset)) {
-    builder.StartTable(6);
+      VectorOffset GEOMETRIESOffset = default(VectorOffset),
+      Offset<GJNBoundingBox> BBOXOffset = default(Offset<GJNBoundingBox>)) {
+    builder.StartTable(7);
+    GJNGeometry.AddBBOX(builder, BBOXOffset);
     GJNGeometry.AddGEOMETRIES(builder, GEOMETRIESOffset);
     GJNGeometry.AddPOLYGON_RINGS(builder, POLYGON_RINGSOffset);
     GJNGeometry.AddRINGS(builder, RINGSOffset);
@@ -51,7 +55,7 @@ public struct GJNGeometry : IFlatbufferObject
     return GJNGeometry.EndGJNGeometry(builder);
   }
 
-  public static void StartGJNGeometry(FlatBufferBuilder builder) { builder.StartTable(6); }
+  public static void StartGJNGeometry(FlatBufferBuilder builder) { builder.StartTable(7); }
   public static void AddTYPE(FlatBufferBuilder builder, GJNGeometryType TYPE) { builder.AddSbyte(0, (sbyte)TYPE, 0); }
   public static void AddPOINT(FlatBufferBuilder builder, Offset<GJNPosition> POINTOffset) { builder.AddOffset(1, POINTOffset.Value, 0); }
   public static void AddPOSITIONS(FlatBufferBuilder builder, VectorOffset POSITIONSOffset) { builder.AddOffset(2, POSITIONSOffset.Value, 0); }
@@ -78,6 +82,7 @@ public struct GJNGeometry : IFlatbufferObject
   public static VectorOffset CreateGEOMETRIESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<GJNGeometry>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateGEOMETRIESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<GJNGeometry>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartGEOMETRIESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddBBOX(FlatBufferBuilder builder, Offset<GJNBoundingBox> BBOXOffset) { builder.AddOffset(6, BBOXOffset.Value, 0); }
   public static Offset<GJNGeometry> EndGJNGeometry(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<GJNGeometry>(o);
@@ -98,6 +103,7 @@ public struct GJNGeometry : IFlatbufferObject
     for (var _j = 0; _j < this.POLYGON_RINGSLength; ++_j) {_o.POLYGON_RINGS.Add(this.POLYGON_RINGS(_j).HasValue ? this.POLYGON_RINGS(_j).Value.UnPack() : null);}
     _o.GEOMETRIES = new List<GJNGeometryT>();
     for (var _j = 0; _j < this.GEOMETRIESLength; ++_j) {_o.GEOMETRIES.Add(this.GEOMETRIES(_j).HasValue ? this.GEOMETRIES(_j).Value.UnPack() : null);}
+    _o.BBOX = this.BBOX.HasValue ? this.BBOX.Value.UnPack() : null;
   }
   public static Offset<GJNGeometry> Pack(FlatBufferBuilder builder, GJNGeometryT _o) {
     if (_o == null) return default(Offset<GJNGeometry>);
@@ -126,6 +132,7 @@ public struct GJNGeometry : IFlatbufferObject
       for (var _j = 0; _j < __GEOMETRIES.Length; ++_j) { __GEOMETRIES[_j] = GJNGeometry.Pack(builder, _o.GEOMETRIES[_j]); }
       _GEOMETRIES = CreateGEOMETRIESVector(builder, __GEOMETRIES);
     }
+    var _BBOX = _o.BBOX == null ? default(Offset<GJNBoundingBox>) : GJNBoundingBox.Pack(builder, _o.BBOX);
     return CreateGJNGeometry(
       builder,
       _o.TYPE,
@@ -133,7 +140,8 @@ public struct GJNGeometry : IFlatbufferObject
       _POSITIONS,
       _RINGS,
       _POLYGON_RINGS,
-      _GEOMETRIES);
+      _GEOMETRIES,
+      _BBOX);
   }
 }
 
@@ -145,6 +153,7 @@ public class GJNGeometryT
   public List<GJNLinearRingT> RINGS { get; set; }
   public List<GJNPolygonRingsT> POLYGON_RINGS { get; set; }
   public List<GJNGeometryT> GEOMETRIES { get; set; }
+  public GJNBoundingBoxT BBOX { get; set; }
 
   public GJNGeometryT() {
     this.TYPE = GJNGeometryType.POINT;
@@ -153,6 +162,7 @@ public class GJNGeometryT
     this.RINGS = null;
     this.POLYGON_RINGS = null;
     this.GEOMETRIES = null;
+    this.BBOX = null;
   }
 }
 
@@ -168,6 +178,7 @@ static public class GJNGeometryVerify
       && verifier.VerifyVectorOfTables(tablePos, 10 /*RINGS*/, GJNLinearRingVerify.Verify, false)
       && verifier.VerifyVectorOfTables(tablePos, 12 /*POLYGON_RINGS*/, GJNPolygonRingsVerify.Verify, false)
       && verifier.VerifyVectorOfTables(tablePos, 14 /*GEOMETRIES*/, GJNGeometryVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 16 /*BBOX*/, GJNBoundingBoxVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

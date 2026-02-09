@@ -87,8 +87,68 @@ COLOR(obj?:CZMColor):CZMColor|null {
   return offset ? (obj || new CZMColor()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Whether to incrementally load textures
+ */
+INCREMENTALLY_LOAD_TEXTURES():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Whether to run animations
+ */
+RUN_ANIMATIONS():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Shadow mode
+ */
+SHADOWS():string|null
+SHADOWS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SHADOWS(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Silhouette color
+ */
+SILHOUETTE_COLOR(obj?:CZMColor):CZMColor|null {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? (obj || new CZMColor()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Silhouette size in pixels
+ */
+SILHOUETTE_SIZE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Color blend mode
+ */
+COLOR_BLEND_MODE():string|null
+COLOR_BLEND_MODE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+COLOR_BLEND_MODE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Color blend amount (0-1)
+ */
+COLOR_BLEND_AMOUNT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
 static startCZMModel(builder:flatbuffers.Builder) {
-  builder.startObject(7);
+  builder.startObject(14);
 }
 
 static addShow(builder:flatbuffers.Builder, SHOW:boolean) {
@@ -119,6 +179,34 @@ static addColor(builder:flatbuffers.Builder, COLOROffset:flatbuffers.Offset) {
   builder.addFieldOffset(6, COLOROffset, 0);
 }
 
+static addIncrementallyLoadTextures(builder:flatbuffers.Builder, INCREMENTALLY_LOAD_TEXTURES:boolean) {
+  builder.addFieldInt8(7, +INCREMENTALLY_LOAD_TEXTURES, +false);
+}
+
+static addRunAnimations(builder:flatbuffers.Builder, RUN_ANIMATIONS:boolean) {
+  builder.addFieldInt8(8, +RUN_ANIMATIONS, +false);
+}
+
+static addShadows(builder:flatbuffers.Builder, SHADOWSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, SHADOWSOffset, 0);
+}
+
+static addSilhouetteColor(builder:flatbuffers.Builder, SILHOUETTE_COLOROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(10, SILHOUETTE_COLOROffset, 0);
+}
+
+static addSilhouetteSize(builder:flatbuffers.Builder, SILHOUETTE_SIZE:number) {
+  builder.addFieldFloat64(11, SILHOUETTE_SIZE, 0.0);
+}
+
+static addColorBlendMode(builder:flatbuffers.Builder, COLOR_BLEND_MODEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(12, COLOR_BLEND_MODEOffset, 0);
+}
+
+static addColorBlendAmount(builder:flatbuffers.Builder, COLOR_BLEND_AMOUNT:number) {
+  builder.addFieldFloat64(13, COLOR_BLEND_AMOUNT, 0.0);
+}
+
 static endCZMModel(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -133,7 +221,14 @@ unpack(): CZMModelT {
     this.MINIMUM_PIXEL_SIZE(),
     this.MAXIMUM_SCALE(),
     this.HEIGHT_REFERENCE(),
-    (this.COLOR() !== null ? this.COLOR()!.unpack() : null)
+    (this.COLOR() !== null ? this.COLOR()!.unpack() : null),
+    this.INCREMENTALLY_LOAD_TEXTURES(),
+    this.RUN_ANIMATIONS(),
+    this.SHADOWS(),
+    (this.SILHOUETTE_COLOR() !== null ? this.SILHOUETTE_COLOR()!.unpack() : null),
+    this.SILHOUETTE_SIZE(),
+    this.COLOR_BLEND_MODE(),
+    this.COLOR_BLEND_AMOUNT()
   );
 }
 
@@ -146,6 +241,13 @@ unpackTo(_o: CZMModelT): void {
   _o.MAXIMUM_SCALE = this.MAXIMUM_SCALE();
   _o.HEIGHT_REFERENCE = this.HEIGHT_REFERENCE();
   _o.COLOR = (this.COLOR() !== null ? this.COLOR()!.unpack() : null);
+  _o.INCREMENTALLY_LOAD_TEXTURES = this.INCREMENTALLY_LOAD_TEXTURES();
+  _o.RUN_ANIMATIONS = this.RUN_ANIMATIONS();
+  _o.SHADOWS = this.SHADOWS();
+  _o.SILHOUETTE_COLOR = (this.SILHOUETTE_COLOR() !== null ? this.SILHOUETTE_COLOR()!.unpack() : null);
+  _o.SILHOUETTE_SIZE = this.SILHOUETTE_SIZE();
+  _o.COLOR_BLEND_MODE = this.COLOR_BLEND_MODE();
+  _o.COLOR_BLEND_AMOUNT = this.COLOR_BLEND_AMOUNT();
 }
 }
 
@@ -157,13 +259,23 @@ constructor(
   public MINIMUM_PIXEL_SIZE: number = 0.0,
   public MAXIMUM_SCALE: number = 0.0,
   public HEIGHT_REFERENCE: CZMHeightReference = CZMHeightReference.NONE,
-  public COLOR: CZMColorT|null = null
+  public COLOR: CZMColorT|null = null,
+  public INCREMENTALLY_LOAD_TEXTURES: boolean = false,
+  public RUN_ANIMATIONS: boolean = false,
+  public SHADOWS: string|Uint8Array|null = null,
+  public SILHOUETTE_COLOR: CZMColorT|null = null,
+  public SILHOUETTE_SIZE: number = 0.0,
+  public COLOR_BLEND_MODE: string|Uint8Array|null = null,
+  public COLOR_BLEND_AMOUNT: number = 0.0
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const GLTF = (this.GLTF !== null ? builder.createString(this.GLTF!) : 0);
   const COLOR = (this.COLOR !== null ? this.COLOR!.pack(builder) : 0);
+  const SHADOWS = (this.SHADOWS !== null ? builder.createString(this.SHADOWS!) : 0);
+  const SILHOUETTE_COLOR = (this.SILHOUETTE_COLOR !== null ? this.SILHOUETTE_COLOR!.pack(builder) : 0);
+  const COLOR_BLEND_MODE = (this.COLOR_BLEND_MODE !== null ? builder.createString(this.COLOR_BLEND_MODE!) : 0);
 
   CZMModel.startCZMModel(builder);
   CZMModel.addShow(builder, this.SHOW);
@@ -173,6 +285,13 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   CZMModel.addMaximumScale(builder, this.MAXIMUM_SCALE);
   CZMModel.addHeightReference(builder, this.HEIGHT_REFERENCE);
   CZMModel.addColor(builder, COLOR);
+  CZMModel.addIncrementallyLoadTextures(builder, this.INCREMENTALLY_LOAD_TEXTURES);
+  CZMModel.addRunAnimations(builder, this.RUN_ANIMATIONS);
+  CZMModel.addShadows(builder, SHADOWS);
+  CZMModel.addSilhouetteColor(builder, SILHOUETTE_COLOR);
+  CZMModel.addSilhouetteSize(builder, this.SILHOUETTE_SIZE);
+  CZMModel.addColorBlendMode(builder, COLOR_BLEND_MODE);
+  CZMModel.addColorBlendAmount(builder, this.COLOR_BLEND_AMOUNT);
 
   return CZMModel.endCZMModel(builder);
 }

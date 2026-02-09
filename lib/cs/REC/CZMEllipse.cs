@@ -27,7 +27,7 @@ public struct CZMEllipse : IFlatbufferObject
   public double ROTATION { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Fill flag
   public bool FILL { get { int o = __p.__offset(12); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  /// Fill color
+  /// Fill color (legacy solid color)
   public CZMColor? COLOR { get { int o = __p.__offset(14); return o != 0 ? (CZMColor?)(new CZMColor()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Outline flag
   public bool OUTLINE { get { int o = __p.__offset(16); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
@@ -37,6 +37,44 @@ public struct CZMEllipse : IFlatbufferObject
   public double HEIGHT { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Height reference
   public CZMHeightReference HEIGHT_REFERENCE { get { int o = __p.__offset(22); return o != 0 ? (CZMHeightReference)__p.bb.GetSbyte(o + __p.bb_pos) : CZMHeightReference.NONE; } }
+  /// Extruded height in meters
+  public double EXTRUDED_HEIGHT { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Extruded height reference
+  public string EXTRUDED_HEIGHT_REFERENCE { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetEXTRUDED_HEIGHT_REFERENCEBytes() { return __p.__vector_as_span<byte>(26, 1); }
+#else
+  public ArraySegment<byte>? GetEXTRUDED_HEIGHT_REFERENCEBytes() { return __p.__vector_as_arraysegment(26); }
+#endif
+  public byte[] GetEXTRUDED_HEIGHT_REFERENCEArray() { return __p.__vector_as_array<byte>(26); }
+  /// Texture rotation in radians
+  public double ST_ROTATION { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Granularity in radians
+  public double GRANULARITY { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Full surface material
+  public CZMMaterial? MATERIAL { get { int o = __p.__offset(32); return o != 0 ? (CZMMaterial?)(new CZMMaterial()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Outline width in pixels
+  public double OUTLINE_WIDTH { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Number of vertical lines
+  public int NUMBER_OF_VERTICAL_LINES { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  /// Shadow mode
+  public string SHADOWS { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSHADOWSBytes() { return __p.__vector_as_span<byte>(38, 1); }
+#else
+  public ArraySegment<byte>? GetSHADOWSBytes() { return __p.__vector_as_arraysegment(38); }
+#endif
+  public byte[] GetSHADOWSArray() { return __p.__vector_as_array<byte>(38); }
+  /// Classification type
+  public string CLASSIFICATION_TYPE { get { int o = __p.__offset(40); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCLASSIFICATION_TYPEBytes() { return __p.__vector_as_span<byte>(40, 1); }
+#else
+  public ArraySegment<byte>? GetCLASSIFICATION_TYPEBytes() { return __p.__vector_as_arraysegment(40); }
+#endif
+  public byte[] GetCLASSIFICATION_TYPEArray() { return __p.__vector_as_array<byte>(40); }
+  /// Z-index for ordering
+  public int Z_INDEX { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
 
   public static Offset<CZMEllipse> CreateCZMEllipse(FlatBufferBuilder builder,
       bool SHOW = false,
@@ -48,12 +86,32 @@ public struct CZMEllipse : IFlatbufferObject
       bool OUTLINE = false,
       Offset<CZMColor> OUTLINE_COLOROffset = default(Offset<CZMColor>),
       double HEIGHT = 0.0,
-      CZMHeightReference HEIGHT_REFERENCE = CZMHeightReference.NONE) {
-    builder.StartTable(10);
+      CZMHeightReference HEIGHT_REFERENCE = CZMHeightReference.NONE,
+      double EXTRUDED_HEIGHT = 0.0,
+      StringOffset EXTRUDED_HEIGHT_REFERENCEOffset = default(StringOffset),
+      double ST_ROTATION = 0.0,
+      double GRANULARITY = 0.0,
+      Offset<CZMMaterial> MATERIALOffset = default(Offset<CZMMaterial>),
+      double OUTLINE_WIDTH = 0.0,
+      int NUMBER_OF_VERTICAL_LINES = 0,
+      StringOffset SHADOWSOffset = default(StringOffset),
+      StringOffset CLASSIFICATION_TYPEOffset = default(StringOffset),
+      int Z_INDEX = 0) {
+    builder.StartTable(20);
+    CZMEllipse.AddOUTLINE_WIDTH(builder, OUTLINE_WIDTH);
+    CZMEllipse.AddGRANULARITY(builder, GRANULARITY);
+    CZMEllipse.AddST_ROTATION(builder, ST_ROTATION);
+    CZMEllipse.AddEXTRUDED_HEIGHT(builder, EXTRUDED_HEIGHT);
     CZMEllipse.AddHEIGHT(builder, HEIGHT);
     CZMEllipse.AddROTATION(builder, ROTATION);
     CZMEllipse.AddSEMI_MINOR_AXIS(builder, SEMI_MINOR_AXIS);
     CZMEllipse.AddSEMI_MAJOR_AXIS(builder, SEMI_MAJOR_AXIS);
+    CZMEllipse.AddZ_INDEX(builder, Z_INDEX);
+    CZMEllipse.AddCLASSIFICATION_TYPE(builder, CLASSIFICATION_TYPEOffset);
+    CZMEllipse.AddSHADOWS(builder, SHADOWSOffset);
+    CZMEllipse.AddNUMBER_OF_VERTICAL_LINES(builder, NUMBER_OF_VERTICAL_LINES);
+    CZMEllipse.AddMATERIAL(builder, MATERIALOffset);
+    CZMEllipse.AddEXTRUDED_HEIGHT_REFERENCE(builder, EXTRUDED_HEIGHT_REFERENCEOffset);
     CZMEllipse.AddOUTLINE_COLOR(builder, OUTLINE_COLOROffset);
     CZMEllipse.AddCOLOR(builder, COLOROffset);
     CZMEllipse.AddHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE);
@@ -63,7 +121,7 @@ public struct CZMEllipse : IFlatbufferObject
     return CZMEllipse.EndCZMEllipse(builder);
   }
 
-  public static void StartCZMEllipse(FlatBufferBuilder builder) { builder.StartTable(10); }
+  public static void StartCZMEllipse(FlatBufferBuilder builder) { builder.StartTable(20); }
   public static void AddSHOW(FlatBufferBuilder builder, bool SHOW) { builder.AddBool(0, SHOW, false); }
   public static void AddSEMI_MAJOR_AXIS(FlatBufferBuilder builder, double SEMI_MAJOR_AXIS) { builder.AddDouble(1, SEMI_MAJOR_AXIS, 0.0); }
   public static void AddSEMI_MINOR_AXIS(FlatBufferBuilder builder, double SEMI_MINOR_AXIS) { builder.AddDouble(2, SEMI_MINOR_AXIS, 0.0); }
@@ -74,6 +132,16 @@ public struct CZMEllipse : IFlatbufferObject
   public static void AddOUTLINE_COLOR(FlatBufferBuilder builder, Offset<CZMColor> OUTLINE_COLOROffset) { builder.AddOffset(7, OUTLINE_COLOROffset.Value, 0); }
   public static void AddHEIGHT(FlatBufferBuilder builder, double HEIGHT) { builder.AddDouble(8, HEIGHT, 0.0); }
   public static void AddHEIGHT_REFERENCE(FlatBufferBuilder builder, CZMHeightReference HEIGHT_REFERENCE) { builder.AddSbyte(9, (sbyte)HEIGHT_REFERENCE, 0); }
+  public static void AddEXTRUDED_HEIGHT(FlatBufferBuilder builder, double EXTRUDED_HEIGHT) { builder.AddDouble(10, EXTRUDED_HEIGHT, 0.0); }
+  public static void AddEXTRUDED_HEIGHT_REFERENCE(FlatBufferBuilder builder, StringOffset EXTRUDED_HEIGHT_REFERENCEOffset) { builder.AddOffset(11, EXTRUDED_HEIGHT_REFERENCEOffset.Value, 0); }
+  public static void AddST_ROTATION(FlatBufferBuilder builder, double ST_ROTATION) { builder.AddDouble(12, ST_ROTATION, 0.0); }
+  public static void AddGRANULARITY(FlatBufferBuilder builder, double GRANULARITY) { builder.AddDouble(13, GRANULARITY, 0.0); }
+  public static void AddMATERIAL(FlatBufferBuilder builder, Offset<CZMMaterial> MATERIALOffset) { builder.AddOffset(14, MATERIALOffset.Value, 0); }
+  public static void AddOUTLINE_WIDTH(FlatBufferBuilder builder, double OUTLINE_WIDTH) { builder.AddDouble(15, OUTLINE_WIDTH, 0.0); }
+  public static void AddNUMBER_OF_VERTICAL_LINES(FlatBufferBuilder builder, int NUMBER_OF_VERTICAL_LINES) { builder.AddInt(16, NUMBER_OF_VERTICAL_LINES, 0); }
+  public static void AddSHADOWS(FlatBufferBuilder builder, StringOffset SHADOWSOffset) { builder.AddOffset(17, SHADOWSOffset.Value, 0); }
+  public static void AddCLASSIFICATION_TYPE(FlatBufferBuilder builder, StringOffset CLASSIFICATION_TYPEOffset) { builder.AddOffset(18, CLASSIFICATION_TYPEOffset.Value, 0); }
+  public static void AddZ_INDEX(FlatBufferBuilder builder, int Z_INDEX) { builder.AddInt(19, Z_INDEX, 0); }
   public static Offset<CZMEllipse> EndCZMEllipse(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CZMEllipse>(o);
@@ -94,11 +162,25 @@ public struct CZMEllipse : IFlatbufferObject
     _o.OUTLINE_COLOR = this.OUTLINE_COLOR.HasValue ? this.OUTLINE_COLOR.Value.UnPack() : null;
     _o.HEIGHT = this.HEIGHT;
     _o.HEIGHT_REFERENCE = this.HEIGHT_REFERENCE;
+    _o.EXTRUDED_HEIGHT = this.EXTRUDED_HEIGHT;
+    _o.EXTRUDED_HEIGHT_REFERENCE = this.EXTRUDED_HEIGHT_REFERENCE;
+    _o.ST_ROTATION = this.ST_ROTATION;
+    _o.GRANULARITY = this.GRANULARITY;
+    _o.MATERIAL = this.MATERIAL.HasValue ? this.MATERIAL.Value.UnPack() : null;
+    _o.OUTLINE_WIDTH = this.OUTLINE_WIDTH;
+    _o.NUMBER_OF_VERTICAL_LINES = this.NUMBER_OF_VERTICAL_LINES;
+    _o.SHADOWS = this.SHADOWS;
+    _o.CLASSIFICATION_TYPE = this.CLASSIFICATION_TYPE;
+    _o.Z_INDEX = this.Z_INDEX;
   }
   public static Offset<CZMEllipse> Pack(FlatBufferBuilder builder, CZMEllipseT _o) {
     if (_o == null) return default(Offset<CZMEllipse>);
     var _COLOR = _o.COLOR == null ? default(Offset<CZMColor>) : CZMColor.Pack(builder, _o.COLOR);
     var _OUTLINE_COLOR = _o.OUTLINE_COLOR == null ? default(Offset<CZMColor>) : CZMColor.Pack(builder, _o.OUTLINE_COLOR);
+    var _EXTRUDED_HEIGHT_REFERENCE = _o.EXTRUDED_HEIGHT_REFERENCE == null ? default(StringOffset) : builder.CreateString(_o.EXTRUDED_HEIGHT_REFERENCE);
+    var _MATERIAL = _o.MATERIAL == null ? default(Offset<CZMMaterial>) : CZMMaterial.Pack(builder, _o.MATERIAL);
+    var _SHADOWS = _o.SHADOWS == null ? default(StringOffset) : builder.CreateString(_o.SHADOWS);
+    var _CLASSIFICATION_TYPE = _o.CLASSIFICATION_TYPE == null ? default(StringOffset) : builder.CreateString(_o.CLASSIFICATION_TYPE);
     return CreateCZMEllipse(
       builder,
       _o.SHOW,
@@ -110,7 +192,17 @@ public struct CZMEllipse : IFlatbufferObject
       _o.OUTLINE,
       _OUTLINE_COLOR,
       _o.HEIGHT,
-      _o.HEIGHT_REFERENCE);
+      _o.HEIGHT_REFERENCE,
+      _o.EXTRUDED_HEIGHT,
+      _EXTRUDED_HEIGHT_REFERENCE,
+      _o.ST_ROTATION,
+      _o.GRANULARITY,
+      _MATERIAL,
+      _o.OUTLINE_WIDTH,
+      _o.NUMBER_OF_VERTICAL_LINES,
+      _SHADOWS,
+      _CLASSIFICATION_TYPE,
+      _o.Z_INDEX);
   }
 }
 
@@ -126,6 +218,16 @@ public class CZMEllipseT
   public CZMColorT OUTLINE_COLOR { get; set; }
   public double HEIGHT { get; set; }
   public CZMHeightReference HEIGHT_REFERENCE { get; set; }
+  public double EXTRUDED_HEIGHT { get; set; }
+  public string EXTRUDED_HEIGHT_REFERENCE { get; set; }
+  public double ST_ROTATION { get; set; }
+  public double GRANULARITY { get; set; }
+  public CZMMaterialT MATERIAL { get; set; }
+  public double OUTLINE_WIDTH { get; set; }
+  public int NUMBER_OF_VERTICAL_LINES { get; set; }
+  public string SHADOWS { get; set; }
+  public string CLASSIFICATION_TYPE { get; set; }
+  public int Z_INDEX { get; set; }
 
   public CZMEllipseT() {
     this.SHOW = false;
@@ -138,6 +240,16 @@ public class CZMEllipseT
     this.OUTLINE_COLOR = null;
     this.HEIGHT = 0.0;
     this.HEIGHT_REFERENCE = CZMHeightReference.NONE;
+    this.EXTRUDED_HEIGHT = 0.0;
+    this.EXTRUDED_HEIGHT_REFERENCE = null;
+    this.ST_ROTATION = 0.0;
+    this.GRANULARITY = 0.0;
+    this.MATERIAL = null;
+    this.OUTLINE_WIDTH = 0.0;
+    this.NUMBER_OF_VERTICAL_LINES = 0;
+    this.SHADOWS = null;
+    this.CLASSIFICATION_TYPE = null;
+    this.Z_INDEX = 0;
   }
 }
 
@@ -157,6 +269,16 @@ static public class CZMEllipseVerify
       && verifier.VerifyTable(tablePos, 18 /*OUTLINE_COLOR*/, CZMColorVerify.Verify, false)
       && verifier.VerifyField(tablePos, 20 /*HEIGHT*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 22 /*HEIGHT_REFERENCE*/, 1 /*CZMHeightReference*/, 1, false)
+      && verifier.VerifyField(tablePos, 24 /*EXTRUDED_HEIGHT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 26 /*EXTRUDED_HEIGHT_REFERENCE*/, false)
+      && verifier.VerifyField(tablePos, 28 /*ST_ROTATION*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 30 /*GRANULARITY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyTable(tablePos, 32 /*MATERIAL*/, CZMMaterialVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 34 /*OUTLINE_WIDTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 36 /*NUMBER_OF_VERTICAL_LINES*/, 4 /*int*/, 4, false)
+      && verifier.VerifyString(tablePos, 38 /*SHADOWS*/, false)
+      && verifier.VerifyString(tablePos, 40 /*CLASSIFICATION_TYPE*/, false)
+      && verifier.VerifyField(tablePos, 42 /*Z_INDEX*/, 4 /*int*/, 4, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

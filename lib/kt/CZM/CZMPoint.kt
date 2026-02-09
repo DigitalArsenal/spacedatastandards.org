@@ -85,6 +85,54 @@ class CZMPoint : Table() {
             val o = __offset(14)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
+    /**
+     * Scale by distance
+     */
+    val SCALE_BY_DISTANCE : CZMNearFarScalar? get() = SCALE_BY_DISTANCE(CZMNearFarScalar())
+    fun SCALE_BY_DISTANCE(obj: CZMNearFarScalar) : CZMNearFarScalar? {
+        val o = __offset(16)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Translucency by distance
+     */
+    val TRANSLUCENCY_BY_DISTANCE : CZMNearFarScalar? get() = TRANSLUCENCY_BY_DISTANCE(CZMNearFarScalar())
+    fun TRANSLUCENCY_BY_DISTANCE(obj: CZMNearFarScalar) : CZMNearFarScalar? {
+        val o = __offset(18)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Distance display condition near
+     */
+    val DISTANCE_DISPLAY_CONDITION_NEAR : Double
+        get() {
+            val o = __offset(20)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Distance display condition far
+     */
+    val DISTANCE_DISPLAY_CONDITION_FAR : Double
+        get() {
+            val o = __offset(22)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Disable depth test distance
+     */
+    val DISABLE_DEPTH_TEST_DISTANCE : Double
+        get() {
+            val o = __offset(24)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsCZMPoint(_bb: ByteBuffer): CZMPoint = getRootAsCZMPoint(_bb, CZMPoint())
@@ -92,23 +140,33 @@ class CZMPoint : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMPoint(builder: FlatBufferBuilder, SHOW: Boolean, COLOROffset: Int, OUTLINE_COLOROffset: Int, OUTLINE_WIDTH: Double, PIXEL_SIZE: Double, HEIGHT_REFERENCE: Byte) : Int {
-            builder.startTable(6)
+        fun createCZMPoint(builder: FlatBufferBuilder, SHOW: Boolean, COLOROffset: Int, OUTLINE_COLOROffset: Int, OUTLINE_WIDTH: Double, PIXEL_SIZE: Double, HEIGHT_REFERENCE: Byte, SCALE_BY_DISTANCEOffset: Int, TRANSLUCENCY_BY_DISTANCEOffset: Int, DISTANCE_DISPLAY_CONDITION_NEAR: Double, DISTANCE_DISPLAY_CONDITION_FAR: Double, DISABLE_DEPTH_TEST_DISTANCE: Double) : Int {
+            builder.startTable(11)
+            addDISABLE_DEPTH_TEST_DISTANCE(builder, DISABLE_DEPTH_TEST_DISTANCE)
+            addDISTANCE_DISPLAY_CONDITION_FAR(builder, DISTANCE_DISPLAY_CONDITION_FAR)
+            addDISTANCE_DISPLAY_CONDITION_NEAR(builder, DISTANCE_DISPLAY_CONDITION_NEAR)
             addPIXEL_SIZE(builder, PIXEL_SIZE)
             addOUTLINE_WIDTH(builder, OUTLINE_WIDTH)
+            addTRANSLUCENCY_BY_DISTANCE(builder, TRANSLUCENCY_BY_DISTANCEOffset)
+            addSCALE_BY_DISTANCE(builder, SCALE_BY_DISTANCEOffset)
             addOUTLINE_COLOR(builder, OUTLINE_COLOROffset)
             addCOLOR(builder, COLOROffset)
             addHEIGHT_REFERENCE(builder, HEIGHT_REFERENCE)
             addSHOW(builder, SHOW)
             return endCZMPoint(builder)
         }
-        fun startCZMPoint(builder: FlatBufferBuilder) = builder.startTable(6)
+        fun startCZMPoint(builder: FlatBufferBuilder) = builder.startTable(11)
         fun addSHOW(builder: FlatBufferBuilder, SHOW: Boolean) = builder.addBoolean(0, SHOW, false)
         fun addCOLOR(builder: FlatBufferBuilder, COLOR: Int) = builder.addOffset(1, COLOR, 0)
         fun addOUTLINE_COLOR(builder: FlatBufferBuilder, OUTLINE_COLOR: Int) = builder.addOffset(2, OUTLINE_COLOR, 0)
         fun addOUTLINE_WIDTH(builder: FlatBufferBuilder, OUTLINE_WIDTH: Double) = builder.addDouble(3, OUTLINE_WIDTH, 0.0)
         fun addPIXEL_SIZE(builder: FlatBufferBuilder, PIXEL_SIZE: Double) = builder.addDouble(4, PIXEL_SIZE, 0.0)
         fun addHEIGHT_REFERENCE(builder: FlatBufferBuilder, HEIGHT_REFERENCE: Byte) = builder.addByte(5, HEIGHT_REFERENCE, 0)
+        fun addSCALE_BY_DISTANCE(builder: FlatBufferBuilder, SCALE_BY_DISTANCE: Int) = builder.addOffset(6, SCALE_BY_DISTANCE, 0)
+        fun addTRANSLUCENCY_BY_DISTANCE(builder: FlatBufferBuilder, TRANSLUCENCY_BY_DISTANCE: Int) = builder.addOffset(7, TRANSLUCENCY_BY_DISTANCE, 0)
+        fun addDISTANCE_DISPLAY_CONDITION_NEAR(builder: FlatBufferBuilder, DISTANCE_DISPLAY_CONDITION_NEAR: Double) = builder.addDouble(8, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0)
+        fun addDISTANCE_DISPLAY_CONDITION_FAR(builder: FlatBufferBuilder, DISTANCE_DISPLAY_CONDITION_FAR: Double) = builder.addDouble(9, DISTANCE_DISPLAY_CONDITION_FAR, 0.0)
+        fun addDISABLE_DEPTH_TEST_DISTANCE(builder: FlatBufferBuilder, DISABLE_DEPTH_TEST_DISTANCE: Double) = builder.addDouble(10, DISABLE_DEPTH_TEST_DISTANCE, 0.0)
         fun endCZMPoint(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

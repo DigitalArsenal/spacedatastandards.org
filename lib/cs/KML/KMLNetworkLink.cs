@@ -25,52 +25,83 @@ public struct KMLNetworkLink : IFlatbufferObject
   public ArraySegment<byte>? GetNAMEBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetNAMEArray() { return __p.__vector_as_array<byte>(4); }
-  /// Whether the link is visible
-  public bool VISIBILITY { get { int o = __p.__offset(6); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  /// Link URL
-  public string HREF { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Description
+  public string DESCRIPTION { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetHREFBytes() { return __p.__vector_as_span<byte>(8, 1); }
+  public Span<byte> GetDESCRIPTIONBytes() { return __p.__vector_as_span<byte>(6, 1); }
 #else
-  public ArraySegment<byte>? GetHREFBytes() { return __p.__vector_as_arraysegment(8); }
+  public ArraySegment<byte>? GetDESCRIPTIONBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
-  public byte[] GetHREFArray() { return __p.__vector_as_array<byte>(8); }
+  public byte[] GetDESCRIPTIONArray() { return __p.__vector_as_array<byte>(6); }
+  /// Whether the link is visible
+  public bool VISIBILITY { get { int o = __p.__offset(8); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Whether open in tree view
+  public bool OPEN { get { int o = __p.__offset(10); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Link URL
+  public string HREF { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetHREFBytes() { return __p.__vector_as_span<byte>(12, 1); }
+#else
+  public ArraySegment<byte>? GetHREFBytes() { return __p.__vector_as_arraysegment(12); }
+#endif
+  public byte[] GetHREFArray() { return __p.__vector_as_array<byte>(12); }
   /// Refresh mode
-  public KMLRefreshMode REFRESH_MODE { get { int o = __p.__offset(10); return o != 0 ? (KMLRefreshMode)__p.bb.GetSbyte(o + __p.bb_pos) : KMLRefreshMode.ON_CHANGE; } }
+  public KMLRefreshMode REFRESH_MODE { get { int o = __p.__offset(14); return o != 0 ? (KMLRefreshMode)__p.bb.GetSbyte(o + __p.bb_pos) : KMLRefreshMode.ON_CHANGE; } }
   /// Refresh interval in seconds
-  public double REFRESH_INTERVAL { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double REFRESH_INTERVAL { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// View refresh mode
-  public KMLViewRefreshMode VIEW_REFRESH_MODE { get { int o = __p.__offset(14); return o != 0 ? (KMLViewRefreshMode)__p.bb.GetSbyte(o + __p.bb_pos) : KMLViewRefreshMode.NEVER; } }
+  public KMLViewRefreshMode VIEW_REFRESH_MODE { get { int o = __p.__offset(18); return o != 0 ? (KMLViewRefreshMode)__p.bb.GetSbyte(o + __p.bb_pos) : KMLViewRefreshMode.NEVER; } }
   /// View refresh time in seconds
-  public double VIEW_REFRESH_TIME { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double VIEW_REFRESH_TIME { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Whether to refresh on visibility change
+  public bool REFRESH_VISIBILITY { get { int o = __p.__offset(22); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Whether to fly to view on refresh
+  public bool FLY_TO_VIEW { get { int o = __p.__offset(24); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Full link element
+  public KMLLink? LINK { get { int o = __p.__offset(26); return o != 0 ? (KMLLink?)(new KMLLink()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<KMLNetworkLink> CreateKMLNetworkLink(FlatBufferBuilder builder,
       StringOffset NAMEOffset = default(StringOffset),
+      StringOffset DESCRIPTIONOffset = default(StringOffset),
       bool VISIBILITY = false,
+      bool OPEN = false,
       StringOffset HREFOffset = default(StringOffset),
       KMLRefreshMode REFRESH_MODE = KMLRefreshMode.ON_CHANGE,
       double REFRESH_INTERVAL = 0.0,
       KMLViewRefreshMode VIEW_REFRESH_MODE = KMLViewRefreshMode.NEVER,
-      double VIEW_REFRESH_TIME = 0.0) {
-    builder.StartTable(7);
+      double VIEW_REFRESH_TIME = 0.0,
+      bool REFRESH_VISIBILITY = false,
+      bool FLY_TO_VIEW = false,
+      Offset<KMLLink> LINKOffset = default(Offset<KMLLink>)) {
+    builder.StartTable(12);
     KMLNetworkLink.AddVIEW_REFRESH_TIME(builder, VIEW_REFRESH_TIME);
     KMLNetworkLink.AddREFRESH_INTERVAL(builder, REFRESH_INTERVAL);
+    KMLNetworkLink.AddLINK(builder, LINKOffset);
     KMLNetworkLink.AddHREF(builder, HREFOffset);
+    KMLNetworkLink.AddDESCRIPTION(builder, DESCRIPTIONOffset);
     KMLNetworkLink.AddNAME(builder, NAMEOffset);
+    KMLNetworkLink.AddFLY_TO_VIEW(builder, FLY_TO_VIEW);
+    KMLNetworkLink.AddREFRESH_VISIBILITY(builder, REFRESH_VISIBILITY);
     KMLNetworkLink.AddVIEW_REFRESH_MODE(builder, VIEW_REFRESH_MODE);
     KMLNetworkLink.AddREFRESH_MODE(builder, REFRESH_MODE);
+    KMLNetworkLink.AddOPEN(builder, OPEN);
     KMLNetworkLink.AddVISIBILITY(builder, VISIBILITY);
     return KMLNetworkLink.EndKMLNetworkLink(builder);
   }
 
-  public static void StartKMLNetworkLink(FlatBufferBuilder builder) { builder.StartTable(7); }
+  public static void StartKMLNetworkLink(FlatBufferBuilder builder) { builder.StartTable(12); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(0, NAMEOffset.Value, 0); }
-  public static void AddVISIBILITY(FlatBufferBuilder builder, bool VISIBILITY) { builder.AddBool(1, VISIBILITY, false); }
-  public static void AddHREF(FlatBufferBuilder builder, StringOffset HREFOffset) { builder.AddOffset(2, HREFOffset.Value, 0); }
-  public static void AddREFRESH_MODE(FlatBufferBuilder builder, KMLRefreshMode REFRESH_MODE) { builder.AddSbyte(3, (sbyte)REFRESH_MODE, 0); }
-  public static void AddREFRESH_INTERVAL(FlatBufferBuilder builder, double REFRESH_INTERVAL) { builder.AddDouble(4, REFRESH_INTERVAL, 0.0); }
-  public static void AddVIEW_REFRESH_MODE(FlatBufferBuilder builder, KMLViewRefreshMode VIEW_REFRESH_MODE) { builder.AddSbyte(5, (sbyte)VIEW_REFRESH_MODE, 0); }
-  public static void AddVIEW_REFRESH_TIME(FlatBufferBuilder builder, double VIEW_REFRESH_TIME) { builder.AddDouble(6, VIEW_REFRESH_TIME, 0.0); }
+  public static void AddDESCRIPTION(FlatBufferBuilder builder, StringOffset DESCRIPTIONOffset) { builder.AddOffset(1, DESCRIPTIONOffset.Value, 0); }
+  public static void AddVISIBILITY(FlatBufferBuilder builder, bool VISIBILITY) { builder.AddBool(2, VISIBILITY, false); }
+  public static void AddOPEN(FlatBufferBuilder builder, bool OPEN) { builder.AddBool(3, OPEN, false); }
+  public static void AddHREF(FlatBufferBuilder builder, StringOffset HREFOffset) { builder.AddOffset(4, HREFOffset.Value, 0); }
+  public static void AddREFRESH_MODE(FlatBufferBuilder builder, KMLRefreshMode REFRESH_MODE) { builder.AddSbyte(5, (sbyte)REFRESH_MODE, 0); }
+  public static void AddREFRESH_INTERVAL(FlatBufferBuilder builder, double REFRESH_INTERVAL) { builder.AddDouble(6, REFRESH_INTERVAL, 0.0); }
+  public static void AddVIEW_REFRESH_MODE(FlatBufferBuilder builder, KMLViewRefreshMode VIEW_REFRESH_MODE) { builder.AddSbyte(7, (sbyte)VIEW_REFRESH_MODE, 0); }
+  public static void AddVIEW_REFRESH_TIME(FlatBufferBuilder builder, double VIEW_REFRESH_TIME) { builder.AddDouble(8, VIEW_REFRESH_TIME, 0.0); }
+  public static void AddREFRESH_VISIBILITY(FlatBufferBuilder builder, bool REFRESH_VISIBILITY) { builder.AddBool(9, REFRESH_VISIBILITY, false); }
+  public static void AddFLY_TO_VIEW(FlatBufferBuilder builder, bool FLY_TO_VIEW) { builder.AddBool(10, FLY_TO_VIEW, false); }
+  public static void AddLINK(FlatBufferBuilder builder, Offset<KMLLink> LINKOffset) { builder.AddOffset(11, LINKOffset.Value, 0); }
   public static Offset<KMLNetworkLink> EndKMLNetworkLink(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<KMLNetworkLink>(o);
@@ -82,47 +113,69 @@ public struct KMLNetworkLink : IFlatbufferObject
   }
   public void UnPackTo(KMLNetworkLinkT _o) {
     _o.NAME = this.NAME;
+    _o.DESCRIPTION = this.DESCRIPTION;
     _o.VISIBILITY = this.VISIBILITY;
+    _o.OPEN = this.OPEN;
     _o.HREF = this.HREF;
     _o.REFRESH_MODE = this.REFRESH_MODE;
     _o.REFRESH_INTERVAL = this.REFRESH_INTERVAL;
     _o.VIEW_REFRESH_MODE = this.VIEW_REFRESH_MODE;
     _o.VIEW_REFRESH_TIME = this.VIEW_REFRESH_TIME;
+    _o.REFRESH_VISIBILITY = this.REFRESH_VISIBILITY;
+    _o.FLY_TO_VIEW = this.FLY_TO_VIEW;
+    _o.LINK = this.LINK.HasValue ? this.LINK.Value.UnPack() : null;
   }
   public static Offset<KMLNetworkLink> Pack(FlatBufferBuilder builder, KMLNetworkLinkT _o) {
     if (_o == null) return default(Offset<KMLNetworkLink>);
     var _NAME = _o.NAME == null ? default(StringOffset) : builder.CreateString(_o.NAME);
+    var _DESCRIPTION = _o.DESCRIPTION == null ? default(StringOffset) : builder.CreateString(_o.DESCRIPTION);
     var _HREF = _o.HREF == null ? default(StringOffset) : builder.CreateString(_o.HREF);
+    var _LINK = _o.LINK == null ? default(Offset<KMLLink>) : KMLLink.Pack(builder, _o.LINK);
     return CreateKMLNetworkLink(
       builder,
       _NAME,
+      _DESCRIPTION,
       _o.VISIBILITY,
+      _o.OPEN,
       _HREF,
       _o.REFRESH_MODE,
       _o.REFRESH_INTERVAL,
       _o.VIEW_REFRESH_MODE,
-      _o.VIEW_REFRESH_TIME);
+      _o.VIEW_REFRESH_TIME,
+      _o.REFRESH_VISIBILITY,
+      _o.FLY_TO_VIEW,
+      _LINK);
   }
 }
 
 public class KMLNetworkLinkT
 {
   public string NAME { get; set; }
+  public string DESCRIPTION { get; set; }
   public bool VISIBILITY { get; set; }
+  public bool OPEN { get; set; }
   public string HREF { get; set; }
   public KMLRefreshMode REFRESH_MODE { get; set; }
   public double REFRESH_INTERVAL { get; set; }
   public KMLViewRefreshMode VIEW_REFRESH_MODE { get; set; }
   public double VIEW_REFRESH_TIME { get; set; }
+  public bool REFRESH_VISIBILITY { get; set; }
+  public bool FLY_TO_VIEW { get; set; }
+  public KMLLinkT LINK { get; set; }
 
   public KMLNetworkLinkT() {
     this.NAME = null;
+    this.DESCRIPTION = null;
     this.VISIBILITY = false;
+    this.OPEN = false;
     this.HREF = null;
     this.REFRESH_MODE = KMLRefreshMode.ON_CHANGE;
     this.REFRESH_INTERVAL = 0.0;
     this.VIEW_REFRESH_MODE = KMLViewRefreshMode.NEVER;
     this.VIEW_REFRESH_TIME = 0.0;
+    this.REFRESH_VISIBILITY = false;
+    this.FLY_TO_VIEW = false;
+    this.LINK = null;
   }
 }
 
@@ -133,12 +186,17 @@ static public class KMLNetworkLinkVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*NAME*/, false)
-      && verifier.VerifyField(tablePos, 6 /*VISIBILITY*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyString(tablePos, 8 /*HREF*/, false)
-      && verifier.VerifyField(tablePos, 10 /*REFRESH_MODE*/, 1 /*KMLRefreshMode*/, 1, false)
-      && verifier.VerifyField(tablePos, 12 /*REFRESH_INTERVAL*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 14 /*VIEW_REFRESH_MODE*/, 1 /*KMLViewRefreshMode*/, 1, false)
-      && verifier.VerifyField(tablePos, 16 /*VIEW_REFRESH_TIME*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 6 /*DESCRIPTION*/, false)
+      && verifier.VerifyField(tablePos, 8 /*VISIBILITY*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 10 /*OPEN*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyString(tablePos, 12 /*HREF*/, false)
+      && verifier.VerifyField(tablePos, 14 /*REFRESH_MODE*/, 1 /*KMLRefreshMode*/, 1, false)
+      && verifier.VerifyField(tablePos, 16 /*REFRESH_INTERVAL*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 18 /*VIEW_REFRESH_MODE*/, 1 /*KMLViewRefreshMode*/, 1, false)
+      && verifier.VerifyField(tablePos, 20 /*VIEW_REFRESH_TIME*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 22 /*REFRESH_VISIBILITY*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 24 /*FLY_TO_VIEW*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyTable(tablePos, 26 /*LINK*/, KMLLinkVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

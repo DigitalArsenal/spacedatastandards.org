@@ -62,7 +62,7 @@ class CZMPath : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Path color
+     * Path color (legacy solid color)
      */
     val COLOR : CZMColor? get() = COLOR(CZMColor())
     fun COLOR(obj: CZMColor) : CZMColor? {
@@ -81,6 +81,18 @@ class CZMPath : Table() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Full polyline material
+     */
+    val MATERIAL : CZMPolylineMaterial? get() = MATERIAL(CZMPolylineMaterial())
+    fun MATERIAL(obj: CZMPolylineMaterial) : CZMPolylineMaterial? {
+        val o = __offset(16)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsCZMPath(_bb: ByteBuffer): CZMPath = getRootAsCZMPath(_bb, CZMPath())
@@ -88,23 +100,25 @@ class CZMPath : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCZMPath(builder: FlatBufferBuilder, SHOW: Boolean, LEAD_TIME: Double, TRAIL_TIME: Double, WIDTH: Double, COLOROffset: Int, RESOLUTION: Double) : Int {
-            builder.startTable(6)
+        fun createCZMPath(builder: FlatBufferBuilder, SHOW: Boolean, LEAD_TIME: Double, TRAIL_TIME: Double, WIDTH: Double, COLOROffset: Int, RESOLUTION: Double, MATERIALOffset: Int) : Int {
+            builder.startTable(7)
             addRESOLUTION(builder, RESOLUTION)
             addWIDTH(builder, WIDTH)
             addTRAIL_TIME(builder, TRAIL_TIME)
             addLEAD_TIME(builder, LEAD_TIME)
+            addMATERIAL(builder, MATERIALOffset)
             addCOLOR(builder, COLOROffset)
             addSHOW(builder, SHOW)
             return endCZMPath(builder)
         }
-        fun startCZMPath(builder: FlatBufferBuilder) = builder.startTable(6)
+        fun startCZMPath(builder: FlatBufferBuilder) = builder.startTable(7)
         fun addSHOW(builder: FlatBufferBuilder, SHOW: Boolean) = builder.addBoolean(0, SHOW, false)
         fun addLEAD_TIME(builder: FlatBufferBuilder, LEAD_TIME: Double) = builder.addDouble(1, LEAD_TIME, 0.0)
         fun addTRAIL_TIME(builder: FlatBufferBuilder, TRAIL_TIME: Double) = builder.addDouble(2, TRAIL_TIME, 0.0)
         fun addWIDTH(builder: FlatBufferBuilder, WIDTH: Double) = builder.addDouble(3, WIDTH, 0.0)
         fun addCOLOR(builder: FlatBufferBuilder, COLOR: Int) = builder.addOffset(4, COLOR, 0)
         fun addRESOLUTION(builder: FlatBufferBuilder, RESOLUTION: Double) = builder.addDouble(5, RESOLUTION, 0.0)
+        fun addMATERIAL(builder: FlatBufferBuilder, MATERIAL: Int) = builder.addOffset(6, MATERIAL, 0)
         fun endCZMPath(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

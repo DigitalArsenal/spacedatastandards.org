@@ -3,6 +3,7 @@ import { KMLBalloonStyle, KMLBalloonStyleT } from './KMLBalloonStyle.js';
 import { KMLIconStyle, KMLIconStyleT } from './KMLIconStyle.js';
 import { KMLLabelStyle, KMLLabelStyleT } from './KMLLabelStyle.js';
 import { KMLLineStyle, KMLLineStyleT } from './KMLLineStyle.js';
+import { KMLListStyle, KMLListStyleT } from './KMLListStyle.js';
 import { KMLPolyStyle, KMLPolyStyleT } from './KMLPolyStyle.js';
 /**
  * Style definition
@@ -38,6 +39,10 @@ export declare class KMLStyle implements flatbuffers.IUnpackableObject<KMLStyleT
      * Balloon style
      */
     BALLOON_STYLE(obj?: KMLBalloonStyle): KMLBalloonStyle | null;
+    /**
+     * List style
+     */
+    LIST_STYLE(obj?: KMLListStyle): KMLListStyle | null;
     static startKMLStyle(builder: flatbuffers.Builder): void;
     static addId(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset): void;
     static addIconStyle(builder: flatbuffers.Builder, ICON_STYLEOffset: flatbuffers.Offset): void;
@@ -45,6 +50,7 @@ export declare class KMLStyle implements flatbuffers.IUnpackableObject<KMLStyleT
     static addLineStyle(builder: flatbuffers.Builder, LINE_STYLEOffset: flatbuffers.Offset): void;
     static addPolyStyle(builder: flatbuffers.Builder, POLY_STYLEOffset: flatbuffers.Offset): void;
     static addBalloonStyle(builder: flatbuffers.Builder, BALLOON_STYLEOffset: flatbuffers.Offset): void;
+    static addListStyle(builder: flatbuffers.Builder, LIST_STYLEOffset: flatbuffers.Offset): void;
     static endKMLStyle(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): KMLStyleT;
     unpackTo(_o: KMLStyleT): void;
@@ -56,7 +62,8 @@ export declare class KMLStyleT implements flatbuffers.IGeneratedObject {
     LINE_STYLE: KMLLineStyleT | null;
     POLY_STYLE: KMLPolyStyleT | null;
     BALLOON_STYLE: KMLBalloonStyleT | null;
-    constructor(ID?: string | Uint8Array | null, ICON_STYLE?: KMLIconStyleT | null, LABEL_STYLE?: KMLLabelStyleT | null, LINE_STYLE?: KMLLineStyleT | null, POLY_STYLE?: KMLPolyStyleT | null, BALLOON_STYLE?: KMLBalloonStyleT | null);
+    LIST_STYLE: KMLListStyleT | null;
+    constructor(ID?: string | Uint8Array | null, ICON_STYLE?: KMLIconStyleT | null, LABEL_STYLE?: KMLLabelStyleT | null, LINE_STYLE?: KMLLineStyleT | null, POLY_STYLE?: KMLPolyStyleT | null, BALLOON_STYLE?: KMLBalloonStyleT | null, LIST_STYLE?: KMLListStyleT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=KMLStyle.d.ts.map

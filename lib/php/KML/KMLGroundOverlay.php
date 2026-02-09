@@ -65,17 +65,27 @@ class KMLGroundOverlay extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Whether open in tree view
+    /**
+     * @return bool
+     */
+    public function getOPEN()
+    {
+        $o = $this->__offset(10);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /// Icon/image URL
     public function getICON_HREF()
     {
-        $o = $this->__offset(10);
+        $o = $this->__offset(12);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Color in aabbggrr hex format
     public function getCOLOR()
     {
-        $o = $this->__offset(12);
+        $o = $this->__offset(14);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -85,7 +95,7 @@ class KMLGroundOverlay extends Table
      */
     public function getNORTH()
     {
-        $o = $this->__offset(14);
+        $o = $this->__offset(16);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -95,7 +105,7 @@ class KMLGroundOverlay extends Table
      */
     public function getSOUTH()
     {
-        $o = $this->__offset(16);
+        $o = $this->__offset(18);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -105,7 +115,7 @@ class KMLGroundOverlay extends Table
      */
     public function getEAST()
     {
-        $o = $this->__offset(18);
+        $o = $this->__offset(20);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -115,7 +125,7 @@ class KMLGroundOverlay extends Table
      */
     public function getWEST()
     {
-        $o = $this->__offset(20);
+        $o = $this->__offset(22);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -125,7 +135,7 @@ class KMLGroundOverlay extends Table
      */
     public function getROTATION()
     {
-        $o = $this->__offset(22);
+        $o = $this->__offset(24);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -135,7 +145,7 @@ class KMLGroundOverlay extends Table
      */
     public function getALTITUDE()
     {
-        $o = $this->__offset(24);
+        $o = $this->__offset(26);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -145,8 +155,41 @@ class KMLGroundOverlay extends Table
      */
     public function getALTITUDE_MODE()
     {
-        $o = $this->__offset(26);
+        $o = $this->__offset(28);
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \KMLAltitudeMode::CLAMP_TO_GROUND;
+    }
+
+    /// Draw order
+    /**
+     * @return int
+     */
+    public function getDRAW_ORDER()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+    }
+
+    /// LatLonQuad (non-rectangular overlay)
+    public function getLAT_LON_QUAD()
+    {
+        $obj = new KMLLatLonQuad();
+        $o = $this->__offset(32);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Style URL reference
+    public function getSTYLE_URL()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Region
+    public function getREGION()
+    {
+        $obj = new KMLRegion();
+        $o = $this->__offset(36);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     /**
@@ -155,19 +198,20 @@ class KMLGroundOverlay extends Table
      */
     public static function startKMLGroundOverlay(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(12);
+        $builder->StartObject(17);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return KMLGroundOverlay
      */
-    public static function createKMLGroundOverlay(FlatBufferBuilder $builder, $NAME, $DESCRIPTION, $VISIBILITY, $ICON_HREF, $COLOR, $NORTH, $SOUTH, $EAST, $WEST, $ROTATION, $ALTITUDE, $ALTITUDE_MODE)
+    public static function createKMLGroundOverlay(FlatBufferBuilder $builder, $NAME, $DESCRIPTION, $VISIBILITY, $OPEN, $ICON_HREF, $COLOR, $NORTH, $SOUTH, $EAST, $WEST, $ROTATION, $ALTITUDE, $ALTITUDE_MODE, $DRAW_ORDER, $LAT_LON_QUAD, $STYLE_URL, $REGION)
     {
-        $builder->startObject(12);
+        $builder->startObject(17);
         self::addNAME($builder, $NAME);
         self::addDESCRIPTION($builder, $DESCRIPTION);
         self::addVISIBILITY($builder, $VISIBILITY);
+        self::addOPEN($builder, $OPEN);
         self::addICON_HREF($builder, $ICON_HREF);
         self::addCOLOR($builder, $COLOR);
         self::addNORTH($builder, $NORTH);
@@ -177,6 +221,10 @@ class KMLGroundOverlay extends Table
         self::addROTATION($builder, $ROTATION);
         self::addALTITUDE($builder, $ALTITUDE);
         self::addALTITUDE_MODE($builder, $ALTITUDE_MODE);
+        self::addDRAW_ORDER($builder, $DRAW_ORDER);
+        self::addLAT_LON_QUAD($builder, $LAT_LON_QUAD);
+        self::addSTYLE_URL($builder, $STYLE_URL);
+        self::addREGION($builder, $REGION);
         $o = $builder->endObject();
         return $o;
     }
@@ -213,12 +261,22 @@ class KMLGroundOverlay extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addOPEN(FlatBufferBuilder $builder, $OPEN)
+    {
+        $builder->addBoolX(3, $OPEN, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param StringOffset
      * @return void
      */
     public static function addICON_HREF(FlatBufferBuilder $builder, $ICON_HREF)
     {
-        $builder->addOffsetX(3, $ICON_HREF, 0);
+        $builder->addOffsetX(4, $ICON_HREF, 0);
     }
 
     /**
@@ -228,7 +286,7 @@ class KMLGroundOverlay extends Table
      */
     public static function addCOLOR(FlatBufferBuilder $builder, $COLOR)
     {
-        $builder->addOffsetX(4, $COLOR, 0);
+        $builder->addOffsetX(5, $COLOR, 0);
     }
 
     /**
@@ -238,7 +296,7 @@ class KMLGroundOverlay extends Table
      */
     public static function addNORTH(FlatBufferBuilder $builder, $NORTH)
     {
-        $builder->addDoubleX(5, $NORTH, 0.0);
+        $builder->addDoubleX(6, $NORTH, 0.0);
     }
 
     /**
@@ -248,7 +306,7 @@ class KMLGroundOverlay extends Table
      */
     public static function addSOUTH(FlatBufferBuilder $builder, $SOUTH)
     {
-        $builder->addDoubleX(6, $SOUTH, 0.0);
+        $builder->addDoubleX(7, $SOUTH, 0.0);
     }
 
     /**
@@ -258,7 +316,7 @@ class KMLGroundOverlay extends Table
      */
     public static function addEAST(FlatBufferBuilder $builder, $EAST)
     {
-        $builder->addDoubleX(7, $EAST, 0.0);
+        $builder->addDoubleX(8, $EAST, 0.0);
     }
 
     /**
@@ -268,7 +326,7 @@ class KMLGroundOverlay extends Table
      */
     public static function addWEST(FlatBufferBuilder $builder, $WEST)
     {
-        $builder->addDoubleX(8, $WEST, 0.0);
+        $builder->addDoubleX(9, $WEST, 0.0);
     }
 
     /**
@@ -278,7 +336,7 @@ class KMLGroundOverlay extends Table
      */
     public static function addROTATION(FlatBufferBuilder $builder, $ROTATION)
     {
-        $builder->addDoubleX(9, $ROTATION, 0.0);
+        $builder->addDoubleX(10, $ROTATION, 0.0);
     }
 
     /**
@@ -288,7 +346,7 @@ class KMLGroundOverlay extends Table
      */
     public static function addALTITUDE(FlatBufferBuilder $builder, $ALTITUDE)
     {
-        $builder->addDoubleX(10, $ALTITUDE, 0.0);
+        $builder->addDoubleX(11, $ALTITUDE, 0.0);
     }
 
     /**
@@ -298,7 +356,47 @@ class KMLGroundOverlay extends Table
      */
     public static function addALTITUDE_MODE(FlatBufferBuilder $builder, $ALTITUDE_MODE)
     {
-        $builder->addSbyteX(11, $ALTITUDE_MODE, 0);
+        $builder->addSbyteX(12, $ALTITUDE_MODE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addDRAW_ORDER(FlatBufferBuilder $builder, $DRAW_ORDER)
+    {
+        $builder->addIntX(13, $DRAW_ORDER, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addLAT_LON_QUAD(FlatBufferBuilder $builder, $LAT_LON_QUAD)
+    {
+        $builder->addOffsetX(14, $LAT_LON_QUAD, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSTYLE_URL(FlatBufferBuilder $builder, $STYLE_URL)
+    {
+        $builder->addOffsetX(15, $STYLE_URL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addREGION(FlatBufferBuilder $builder, $REGION)
+    {
+        $builder->addOffsetX(16, $REGION, 0);
     }
 
     /**

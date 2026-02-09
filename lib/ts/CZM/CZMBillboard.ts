@@ -114,8 +114,104 @@ TRANSLUCENCY_BY_DISTANCE(obj?:CZMNearFarScalar):CZMNearFarScalar|null {
   return offset ? (obj || new CZMNearFarScalar()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Rotation in radians
+ */
+ROTATION():number {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Whether size is in meters
+ */
+SIZE_IN_METERS():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Width in pixels
+ */
+WIDTH():number {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Height in pixels
+ */
+HEIGHT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Eye offset X in meters
+ */
+EYE_OFFSET_X():number {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Eye offset Y in meters
+ */
+EYE_OFFSET_Y():number {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Eye offset Z in meters
+ */
+EYE_OFFSET_Z():number {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Scale by distance
+ */
+SCALE_BY_DISTANCE(obj?:CZMNearFarScalar):CZMNearFarScalar|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? (obj || new CZMNearFarScalar()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Pixel offset scale by distance
+ */
+PIXEL_OFFSET_SCALE_BY_DISTANCE(obj?:CZMNearFarScalar):CZMNearFarScalar|null {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? (obj || new CZMNearFarScalar()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Distance display condition near
+ */
+DISTANCE_DISPLAY_CONDITION_NEAR():number {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Distance display condition far
+ */
+DISTANCE_DISPLAY_CONDITION_FAR():number {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Disable depth test distance
+ */
+DISABLE_DEPTH_TEST_DISTANCE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
 static startCZMBillboard(builder:flatbuffers.Builder) {
-  builder.startObject(10);
+  builder.startObject(22);
 }
 
 static addShow(builder:flatbuffers.Builder, SHOW:boolean) {
@@ -158,6 +254,54 @@ static addTranslucencyByDistance(builder:flatbuffers.Builder, TRANSLUCENCY_BY_DI
   builder.addFieldOffset(9, TRANSLUCENCY_BY_DISTANCEOffset, 0);
 }
 
+static addRotation(builder:flatbuffers.Builder, ROTATION:number) {
+  builder.addFieldFloat64(10, ROTATION, 0.0);
+}
+
+static addSizeInMeters(builder:flatbuffers.Builder, SIZE_IN_METERS:boolean) {
+  builder.addFieldInt8(11, +SIZE_IN_METERS, +false);
+}
+
+static addWidth(builder:flatbuffers.Builder, WIDTH:number) {
+  builder.addFieldFloat64(12, WIDTH, 0.0);
+}
+
+static addHeight(builder:flatbuffers.Builder, HEIGHT:number) {
+  builder.addFieldFloat64(13, HEIGHT, 0.0);
+}
+
+static addEyeOffsetX(builder:flatbuffers.Builder, EYE_OFFSET_X:number) {
+  builder.addFieldFloat64(14, EYE_OFFSET_X, 0.0);
+}
+
+static addEyeOffsetY(builder:flatbuffers.Builder, EYE_OFFSET_Y:number) {
+  builder.addFieldFloat64(15, EYE_OFFSET_Y, 0.0);
+}
+
+static addEyeOffsetZ(builder:flatbuffers.Builder, EYE_OFFSET_Z:number) {
+  builder.addFieldFloat64(16, EYE_OFFSET_Z, 0.0);
+}
+
+static addScaleByDistance(builder:flatbuffers.Builder, SCALE_BY_DISTANCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, SCALE_BY_DISTANCEOffset, 0);
+}
+
+static addPixelOffsetScaleByDistance(builder:flatbuffers.Builder, PIXEL_OFFSET_SCALE_BY_DISTANCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(18, PIXEL_OFFSET_SCALE_BY_DISTANCEOffset, 0);
+}
+
+static addDistanceDisplayConditionNear(builder:flatbuffers.Builder, DISTANCE_DISPLAY_CONDITION_NEAR:number) {
+  builder.addFieldFloat64(19, DISTANCE_DISPLAY_CONDITION_NEAR, 0.0);
+}
+
+static addDistanceDisplayConditionFar(builder:flatbuffers.Builder, DISTANCE_DISPLAY_CONDITION_FAR:number) {
+  builder.addFieldFloat64(20, DISTANCE_DISPLAY_CONDITION_FAR, 0.0);
+}
+
+static addDisableDepthTestDistance(builder:flatbuffers.Builder, DISABLE_DEPTH_TEST_DISTANCE:number) {
+  builder.addFieldFloat64(21, DISABLE_DEPTH_TEST_DISTANCE, 0.0);
+}
+
 static endCZMBillboard(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -175,7 +319,19 @@ unpack(): CZMBillboardT {
     this.PIXEL_OFFSET_Y(),
     this.HORIZONTAL_ORIGIN(),
     this.VERTICAL_ORIGIN(),
-    (this.TRANSLUCENCY_BY_DISTANCE() !== null ? this.TRANSLUCENCY_BY_DISTANCE()!.unpack() : null)
+    (this.TRANSLUCENCY_BY_DISTANCE() !== null ? this.TRANSLUCENCY_BY_DISTANCE()!.unpack() : null),
+    this.ROTATION(),
+    this.SIZE_IN_METERS(),
+    this.WIDTH(),
+    this.HEIGHT(),
+    this.EYE_OFFSET_X(),
+    this.EYE_OFFSET_Y(),
+    this.EYE_OFFSET_Z(),
+    (this.SCALE_BY_DISTANCE() !== null ? this.SCALE_BY_DISTANCE()!.unpack() : null),
+    (this.PIXEL_OFFSET_SCALE_BY_DISTANCE() !== null ? this.PIXEL_OFFSET_SCALE_BY_DISTANCE()!.unpack() : null),
+    this.DISTANCE_DISPLAY_CONDITION_NEAR(),
+    this.DISTANCE_DISPLAY_CONDITION_FAR(),
+    this.DISABLE_DEPTH_TEST_DISTANCE()
   );
 }
 
@@ -191,6 +347,18 @@ unpackTo(_o: CZMBillboardT): void {
   _o.HORIZONTAL_ORIGIN = this.HORIZONTAL_ORIGIN();
   _o.VERTICAL_ORIGIN = this.VERTICAL_ORIGIN();
   _o.TRANSLUCENCY_BY_DISTANCE = (this.TRANSLUCENCY_BY_DISTANCE() !== null ? this.TRANSLUCENCY_BY_DISTANCE()!.unpack() : null);
+  _o.ROTATION = this.ROTATION();
+  _o.SIZE_IN_METERS = this.SIZE_IN_METERS();
+  _o.WIDTH = this.WIDTH();
+  _o.HEIGHT = this.HEIGHT();
+  _o.EYE_OFFSET_X = this.EYE_OFFSET_X();
+  _o.EYE_OFFSET_Y = this.EYE_OFFSET_Y();
+  _o.EYE_OFFSET_Z = this.EYE_OFFSET_Z();
+  _o.SCALE_BY_DISTANCE = (this.SCALE_BY_DISTANCE() !== null ? this.SCALE_BY_DISTANCE()!.unpack() : null);
+  _o.PIXEL_OFFSET_SCALE_BY_DISTANCE = (this.PIXEL_OFFSET_SCALE_BY_DISTANCE() !== null ? this.PIXEL_OFFSET_SCALE_BY_DISTANCE()!.unpack() : null);
+  _o.DISTANCE_DISPLAY_CONDITION_NEAR = this.DISTANCE_DISPLAY_CONDITION_NEAR();
+  _o.DISTANCE_DISPLAY_CONDITION_FAR = this.DISTANCE_DISPLAY_CONDITION_FAR();
+  _o.DISABLE_DEPTH_TEST_DISTANCE = this.DISABLE_DEPTH_TEST_DISTANCE();
 }
 }
 
@@ -205,7 +373,19 @@ constructor(
   public PIXEL_OFFSET_Y: number = 0.0,
   public HORIZONTAL_ORIGIN: CZMHorizontalOrigin = CZMHorizontalOrigin.LEFT,
   public VERTICAL_ORIGIN: CZMVerticalOrigin = CZMVerticalOrigin.BASELINE,
-  public TRANSLUCENCY_BY_DISTANCE: CZMNearFarScalarT|null = null
+  public TRANSLUCENCY_BY_DISTANCE: CZMNearFarScalarT|null = null,
+  public ROTATION: number = 0.0,
+  public SIZE_IN_METERS: boolean = false,
+  public WIDTH: number = 0.0,
+  public HEIGHT: number = 0.0,
+  public EYE_OFFSET_X: number = 0.0,
+  public EYE_OFFSET_Y: number = 0.0,
+  public EYE_OFFSET_Z: number = 0.0,
+  public SCALE_BY_DISTANCE: CZMNearFarScalarT|null = null,
+  public PIXEL_OFFSET_SCALE_BY_DISTANCE: CZMNearFarScalarT|null = null,
+  public DISTANCE_DISPLAY_CONDITION_NEAR: number = 0.0,
+  public DISTANCE_DISPLAY_CONDITION_FAR: number = 0.0,
+  public DISABLE_DEPTH_TEST_DISTANCE: number = 0.0
 ){}
 
 
@@ -213,6 +393,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const IMAGE = (this.IMAGE !== null ? builder.createString(this.IMAGE!) : 0);
   const COLOR = (this.COLOR !== null ? this.COLOR!.pack(builder) : 0);
   const TRANSLUCENCY_BY_DISTANCE = (this.TRANSLUCENCY_BY_DISTANCE !== null ? this.TRANSLUCENCY_BY_DISTANCE!.pack(builder) : 0);
+  const SCALE_BY_DISTANCE = (this.SCALE_BY_DISTANCE !== null ? this.SCALE_BY_DISTANCE!.pack(builder) : 0);
+  const PIXEL_OFFSET_SCALE_BY_DISTANCE = (this.PIXEL_OFFSET_SCALE_BY_DISTANCE !== null ? this.PIXEL_OFFSET_SCALE_BY_DISTANCE!.pack(builder) : 0);
 
   CZMBillboard.startCZMBillboard(builder);
   CZMBillboard.addShow(builder, this.SHOW);
@@ -225,6 +407,18 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   CZMBillboard.addHorizontalOrigin(builder, this.HORIZONTAL_ORIGIN);
   CZMBillboard.addVerticalOrigin(builder, this.VERTICAL_ORIGIN);
   CZMBillboard.addTranslucencyByDistance(builder, TRANSLUCENCY_BY_DISTANCE);
+  CZMBillboard.addRotation(builder, this.ROTATION);
+  CZMBillboard.addSizeInMeters(builder, this.SIZE_IN_METERS);
+  CZMBillboard.addWidth(builder, this.WIDTH);
+  CZMBillboard.addHeight(builder, this.HEIGHT);
+  CZMBillboard.addEyeOffsetX(builder, this.EYE_OFFSET_X);
+  CZMBillboard.addEyeOffsetY(builder, this.EYE_OFFSET_Y);
+  CZMBillboard.addEyeOffsetZ(builder, this.EYE_OFFSET_Z);
+  CZMBillboard.addScaleByDistance(builder, SCALE_BY_DISTANCE);
+  CZMBillboard.addPixelOffsetScaleByDistance(builder, PIXEL_OFFSET_SCALE_BY_DISTANCE);
+  CZMBillboard.addDistanceDisplayConditionNear(builder, this.DISTANCE_DISPLAY_CONDITION_NEAR);
+  CZMBillboard.addDistanceDisplayConditionFar(builder, this.DISTANCE_DISPLAY_CONDITION_FAR);
+  CZMBillboard.addDisableDepthTestDistance(builder, this.DISABLE_DEPTH_TEST_DISTANCE);
 
   return CZMBillboard.endCZMBillboard(builder);
 }

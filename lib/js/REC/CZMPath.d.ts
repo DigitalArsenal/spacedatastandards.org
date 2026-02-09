@@ -1,5 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
 import { CZMColor, CZMColorT } from './CZMColor.js';
+import { CZMPolylineMaterial, CZMPolylineMaterialT } from './CZMPolylineMaterial.js';
 /**
  * Path properties (orbit trail)
  */
@@ -26,13 +27,17 @@ export declare class CZMPath implements flatbuffers.IUnpackableObject<CZMPathT> 
      */
     WIDTH(): number;
     /**
-     * Path color
+     * Path color (legacy solid color)
      */
     COLOR(obj?: CZMColor): CZMColor | null;
     /**
      * Resolution in seconds
      */
     RESOLUTION(): number;
+    /**
+     * Full polyline material
+     */
+    MATERIAL(obj?: CZMPolylineMaterial): CZMPolylineMaterial | null;
     static startCZMPath(builder: flatbuffers.Builder): void;
     static addShow(builder: flatbuffers.Builder, SHOW: boolean): void;
     static addLeadTime(builder: flatbuffers.Builder, LEAD_TIME: number): void;
@@ -40,6 +45,7 @@ export declare class CZMPath implements flatbuffers.IUnpackableObject<CZMPathT> 
     static addWidth(builder: flatbuffers.Builder, WIDTH: number): void;
     static addColor(builder: flatbuffers.Builder, COLOROffset: flatbuffers.Offset): void;
     static addResolution(builder: flatbuffers.Builder, RESOLUTION: number): void;
+    static addMaterial(builder: flatbuffers.Builder, MATERIALOffset: flatbuffers.Offset): void;
     static endCZMPath(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): CZMPathT;
     unpackTo(_o: CZMPathT): void;
@@ -51,7 +57,8 @@ export declare class CZMPathT implements flatbuffers.IGeneratedObject {
     WIDTH: number;
     COLOR: CZMColorT | null;
     RESOLUTION: number;
-    constructor(SHOW?: boolean, LEAD_TIME?: number, TRAIL_TIME?: number, WIDTH?: number, COLOR?: CZMColorT | null, RESOLUTION?: number);
+    MATERIAL: CZMPolylineMaterialT | null;
+    constructor(SHOW?: boolean, LEAD_TIME?: number, TRAIL_TIME?: number, WIDTH?: number, COLOR?: CZMColorT | null, RESOLUTION?: number, MATERIAL?: CZMPolylineMaterialT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=CZMPath.d.ts.map

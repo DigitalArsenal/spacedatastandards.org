@@ -101,7 +101,7 @@ class CZMPolygon extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
-    /// Fill color (solid color material)
+    /// Fill color (solid color material, legacy)
     public function getCOLOR()
     {
         $obj = new CZMColor();
@@ -157,22 +157,151 @@ class CZMPolygon extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \CZMClassificationType::TERRAIN;
     }
 
+    /// Holes (position lists: each hole is [lon,lat,h,...])
+    /**
+     * @returnVectorOffset
+     */
+    public function getHOLES($j)
+    {
+        $o = $this->__offset(24);
+        $obj = new CZMPolygonHole();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHOLESLength()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Arc type
+    public function getARC_TYPE()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Height in meters
+    /**
+     * @return double
+     */
+    public function getHEIGHT()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Extruded height reference
+    public function getEXTRUDED_HEIGHT_REFERENCE()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Texture rotation in radians
+    /**
+     * @return double
+     */
+    public function getST_ROTATION()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Granularity in radians
+    /**
+     * @return double
+     */
+    public function getGRANULARITY()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Full surface material
+    public function getMATERIAL()
+    {
+        $obj = new CZMMaterial();
+        $o = $this->__offset(36);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Outline width in pixels
+    /**
+     * @return double
+     */
+    public function getOUTLINE_WIDTH()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Whether to use per-position heights
+    /**
+     * @return bool
+     */
+    public function getPER_POSITION_HEIGHT()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Whether to close the top of extruded polygon
+    /**
+     * @return bool
+     */
+    public function getCLOSE_TOP()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Whether to close the bottom of extruded polygon
+    /**
+     * @return bool
+     */
+    public function getCLOSE_BOTTOM()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Shadow mode
+    public function getSHADOWS()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Z-index for ordering
+    /**
+     * @return int
+     */
+    public function getZ_INDEX()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCZMPolygon(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(10);
+        $builder->StartObject(23);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CZMPolygon
      */
-    public static function createCZMPolygon(FlatBufferBuilder $builder, $SHOW, $POSITIONS_CARTOGRAPHIC_DEGREES, $POSITIONS_CARTESIAN, $FILL, $COLOR, $OUTLINE, $OUTLINE_COLOR, $EXTRUDED_HEIGHT, $HEIGHT_REFERENCE, $CLASSIFICATION_TYPE)
+    public static function createCZMPolygon(FlatBufferBuilder $builder, $SHOW, $POSITIONS_CARTOGRAPHIC_DEGREES, $POSITIONS_CARTESIAN, $FILL, $COLOR, $OUTLINE, $OUTLINE_COLOR, $EXTRUDED_HEIGHT, $HEIGHT_REFERENCE, $CLASSIFICATION_TYPE, $HOLES, $ARC_TYPE, $HEIGHT, $EXTRUDED_HEIGHT_REFERENCE, $ST_ROTATION, $GRANULARITY, $MATERIAL, $OUTLINE_WIDTH, $PER_POSITION_HEIGHT, $CLOSE_TOP, $CLOSE_BOTTOM, $SHADOWS, $Z_INDEX)
     {
-        $builder->startObject(10);
+        $builder->startObject(23);
         self::addSHOW($builder, $SHOW);
         self::addPOSITIONS_CARTOGRAPHIC_DEGREES($builder, $POSITIONS_CARTOGRAPHIC_DEGREES);
         self::addPOSITIONS_CARTESIAN($builder, $POSITIONS_CARTESIAN);
@@ -183,6 +312,19 @@ class CZMPolygon extends Table
         self::addEXTRUDED_HEIGHT($builder, $EXTRUDED_HEIGHT);
         self::addHEIGHT_REFERENCE($builder, $HEIGHT_REFERENCE);
         self::addCLASSIFICATION_TYPE($builder, $CLASSIFICATION_TYPE);
+        self::addHOLES($builder, $HOLES);
+        self::addARC_TYPE($builder, $ARC_TYPE);
+        self::addHEIGHT($builder, $HEIGHT);
+        self::addEXTRUDED_HEIGHT_REFERENCE($builder, $EXTRUDED_HEIGHT_REFERENCE);
+        self::addST_ROTATION($builder, $ST_ROTATION);
+        self::addGRANULARITY($builder, $GRANULARITY);
+        self::addMATERIAL($builder, $MATERIAL);
+        self::addOUTLINE_WIDTH($builder, $OUTLINE_WIDTH);
+        self::addPER_POSITION_HEIGHT($builder, $PER_POSITION_HEIGHT);
+        self::addCLOSE_TOP($builder, $CLOSE_TOP);
+        self::addCLOSE_BOTTOM($builder, $CLOSE_BOTTOM);
+        self::addSHADOWS($builder, $SHADOWS);
+        self::addZ_INDEX($builder, $Z_INDEX);
         $o = $builder->endObject();
         return $o;
     }
@@ -333,6 +475,160 @@ class CZMPolygon extends Table
     public static function addCLASSIFICATION_TYPE(FlatBufferBuilder $builder, $CLASSIFICATION_TYPE)
     {
         $builder->addSbyteX(9, $CLASSIFICATION_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addHOLES(FlatBufferBuilder $builder, $HOLES)
+    {
+        $builder->addOffsetX(10, $HOLES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createHOLESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startHOLESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addARC_TYPE(FlatBufferBuilder $builder, $ARC_TYPE)
+    {
+        $builder->addOffsetX(11, $ARC_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addHEIGHT(FlatBufferBuilder $builder, $HEIGHT)
+    {
+        $builder->addDoubleX(12, $HEIGHT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEXTRUDED_HEIGHT_REFERENCE(FlatBufferBuilder $builder, $EXTRUDED_HEIGHT_REFERENCE)
+    {
+        $builder->addOffsetX(13, $EXTRUDED_HEIGHT_REFERENCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addST_ROTATION(FlatBufferBuilder $builder, $ST_ROTATION)
+    {
+        $builder->addDoubleX(14, $ST_ROTATION, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addGRANULARITY(FlatBufferBuilder $builder, $GRANULARITY)
+    {
+        $builder->addDoubleX(15, $GRANULARITY, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addMATERIAL(FlatBufferBuilder $builder, $MATERIAL)
+    {
+        $builder->addOffsetX(16, $MATERIAL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addOUTLINE_WIDTH(FlatBufferBuilder $builder, $OUTLINE_WIDTH)
+    {
+        $builder->addDoubleX(17, $OUTLINE_WIDTH, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addPER_POSITION_HEIGHT(FlatBufferBuilder $builder, $PER_POSITION_HEIGHT)
+    {
+        $builder->addBoolX(18, $PER_POSITION_HEIGHT, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addCLOSE_TOP(FlatBufferBuilder $builder, $CLOSE_TOP)
+    {
+        $builder->addBoolX(19, $CLOSE_TOP, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addCLOSE_BOTTOM(FlatBufferBuilder $builder, $CLOSE_BOTTOM)
+    {
+        $builder->addBoolX(20, $CLOSE_BOTTOM, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSHADOWS(FlatBufferBuilder $builder, $SHADOWS)
+    {
+        $builder->addOffsetX(21, $SHADOWS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addZ_INDEX(FlatBufferBuilder $builder, $Z_INDEX)
+    {
+        $builder->addIntX(22, $Z_INDEX, 0);
     }
 
     /**
