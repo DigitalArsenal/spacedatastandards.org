@@ -10,34 +10,34 @@ extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_MODULATION_TYPE: i8 = 0;
+pub const ENUM_MIN_COM_MODULATION_TYPE: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_MODULATION_TYPE: i8 = 14;
+pub const ENUM_MAX_COM_MODULATION_TYPE: i8 = 14;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_MODULATION_TYPE: [ModulationType; 15] = [
-  ModulationType::AM,
-  ModulationType::FM,
-  ModulationType::PM,
-  ModulationType::BPSK,
-  ModulationType::QPSK,
-  ModulationType::PSK8,
-  ModulationType::QAM16,
-  ModulationType::QAM64,
-  ModulationType::QAM256,
-  ModulationType::FSK,
-  ModulationType::MSK,
-  ModulationType::OFDM,
-  ModulationType::SPREAD_SPECTRUM,
-  ModulationType::FHSS,
-  ModulationType::DSSS,
+pub const ENUM_VALUES_COM_MODULATION_TYPE: [ComModulationType; 15] = [
+  ComModulationType::AM,
+  ComModulationType::FM,
+  ComModulationType::PM,
+  ComModulationType::BPSK,
+  ComModulationType::QPSK,
+  ComModulationType::PSK8,
+  ComModulationType::QAM16,
+  ComModulationType::QAM64,
+  ComModulationType::QAM256,
+  ComModulationType::FSK,
+  ComModulationType::MSK,
+  ComModulationType::OFDM,
+  ComModulationType::SPREAD_SPECTRUM,
+  ComModulationType::FHSS,
+  ComModulationType::DSSS,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct ModulationType(pub i8);
+pub struct ComModulationType(pub i8);
 #[allow(non_upper_case_globals)]
-impl ModulationType {
+impl ComModulationType {
   pub const AM: Self = Self(0);
   pub const FM: Self = Self(1);
   pub const PM: Self = Self(2);
@@ -95,7 +95,7 @@ impl ModulationType {
     }
   }
 }
-impl core::fmt::Debug for ModulationType {
+impl core::fmt::Debug for ComModulationType {
   fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -104,7 +104,7 @@ impl core::fmt::Debug for ModulationType {
     }
   }
 }
-impl<'a> flatbuffers::Follow<'a> for ModulationType {
+impl<'a> flatbuffers::Follow<'a> for ComModulationType {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -113,15 +113,15 @@ impl<'a> flatbuffers::Follow<'a> for ModulationType {
   }
 }
 
-impl flatbuffers::Push for ModulationType {
-    type Output = ModulationType;
+impl flatbuffers::Push for ComModulationType {
+    type Output = ComModulationType;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         flatbuffers::emplace_scalar::<i8>(dst, self.0);
     }
 }
 
-impl flatbuffers::EndianScalar for ModulationType {
+impl flatbuffers::EndianScalar for ComModulationType {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -135,7 +135,7 @@ impl flatbuffers::EndianScalar for ModulationType {
   }
 }
 
-impl<'a> flatbuffers::Verifiable for ModulationType {
+impl<'a> flatbuffers::Verifiable for ComModulationType {
   #[inline]
   fn run_verifier(
     v: &mut flatbuffers::Verifier, pos: usize
@@ -145,7 +145,7 @@ impl<'a> flatbuffers::Verifiable for ModulationType {
   }
 }
 
-impl flatbuffers::SimpleToVerifyInSlice for ModulationType {}
+impl flatbuffers::SimpleToVerifyInSlice for ComModulationType {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_BAND_TYPE: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]

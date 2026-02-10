@@ -22,48 +22,48 @@ struct commsTransponderBuilder;
 struct CMS;
 struct CMSBuilder;
 
-enum modulationType : int8_t {
-  modulationType_BPSK = 0,
-  modulationType_QPSK = 1,
-  modulationType_OQPSK = 2,
-  modulationType_PSK8 = 3,
-  modulationType_QAM16 = 4,
-  modulationType_QAM64 = 5,
-  modulationType_FSK = 6,
-  modulationType_MSK = 7,
-  modulationType_GMSK = 8,
-  modulationType_AM = 9,
-  modulationType_FM = 10,
-  modulationType_PM = 11,
-  modulationType_SPREAD_SPECTRUM = 12,
-  modulationType_DVB_S2 = 13,
-  modulationType_DVB_S2X = 14,
-  modulationType_MIN = modulationType_BPSK,
-  modulationType_MAX = modulationType_DVB_S2X
+enum CmsModulationType : int8_t {
+  CmsModulationType_BPSK = 0,
+  CmsModulationType_QPSK = 1,
+  CmsModulationType_OQPSK = 2,
+  CmsModulationType_PSK8 = 3,
+  CmsModulationType_QAM16 = 4,
+  CmsModulationType_QAM64 = 5,
+  CmsModulationType_FSK = 6,
+  CmsModulationType_MSK = 7,
+  CmsModulationType_GMSK = 8,
+  CmsModulationType_AM = 9,
+  CmsModulationType_FM = 10,
+  CmsModulationType_PM = 11,
+  CmsModulationType_SPREAD_SPECTRUM = 12,
+  CmsModulationType_DVB_S2 = 13,
+  CmsModulationType_DVB_S2X = 14,
+  CmsModulationType_MIN = CmsModulationType_BPSK,
+  CmsModulationType_MAX = CmsModulationType_DVB_S2X
 };
 
-inline const modulationType (&EnumValuesmodulationType())[15] {
-  static const modulationType values[] = {
-    modulationType_BPSK,
-    modulationType_QPSK,
-    modulationType_OQPSK,
-    modulationType_PSK8,
-    modulationType_QAM16,
-    modulationType_QAM64,
-    modulationType_FSK,
-    modulationType_MSK,
-    modulationType_GMSK,
-    modulationType_AM,
-    modulationType_FM,
-    modulationType_PM,
-    modulationType_SPREAD_SPECTRUM,
-    modulationType_DVB_S2,
-    modulationType_DVB_S2X
+inline const CmsModulationType (&EnumValuesCmsModulationType())[15] {
+  static const CmsModulationType values[] = {
+    CmsModulationType_BPSK,
+    CmsModulationType_QPSK,
+    CmsModulationType_OQPSK,
+    CmsModulationType_PSK8,
+    CmsModulationType_QAM16,
+    CmsModulationType_QAM64,
+    CmsModulationType_FSK,
+    CmsModulationType_MSK,
+    CmsModulationType_GMSK,
+    CmsModulationType_AM,
+    CmsModulationType_FM,
+    CmsModulationType_PM,
+    CmsModulationType_SPREAD_SPECTRUM,
+    CmsModulationType_DVB_S2,
+    CmsModulationType_DVB_S2X
   };
   return values;
 }
 
-inline const char * const *EnumNamesmodulationType() {
+inline const char * const *EnumNamesCmsModulationType() {
   static const char * const names[16] = {
     "BPSK",
     "QPSK",
@@ -85,10 +85,10 @@ inline const char * const *EnumNamesmodulationType() {
   return names;
 }
 
-inline const char *EnumNamemodulationType(modulationType e) {
-  if (::flatbuffers::IsOutRange(e, modulationType_BPSK, modulationType_DVB_S2X)) return "";
+inline const char *EnumNameCmsModulationType(CmsModulationType e) {
+  if (::flatbuffers::IsOutRange(e, CmsModulationType_BPSK, CmsModulationType_DVB_S2X)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesmodulationType()[index];
+  return EnumNamesCmsModulationType()[index];
 }
 
 enum encryptionType : int8_t {
@@ -175,8 +175,8 @@ struct commsChannel FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetField<double>(VT_BANDWIDTH, 0.0);
   }
   /// Modulation type
-  modulationType MODULATION() const {
-    return static_cast<modulationType>(GetField<int8_t>(VT_MODULATION, 0));
+  CmsModulationType MODULATION() const {
+    return static_cast<CmsModulationType>(GetField<int8_t>(VT_MODULATION, 0));
   }
   /// Data rate in Mbps
   double DATA_RATE() const {
@@ -231,7 +231,7 @@ struct commsChannelBuilder {
   void add_BANDWIDTH(double BANDWIDTH) {
     fbb_.AddElement<double>(commsChannel::VT_BANDWIDTH, BANDWIDTH, 0.0);
   }
-  void add_MODULATION(modulationType MODULATION) {
+  void add_MODULATION(CmsModulationType MODULATION) {
     fbb_.AddElement<int8_t>(commsChannel::VT_MODULATION, static_cast<int8_t>(MODULATION), 0);
   }
   void add_DATA_RATE(double DATA_RATE) {
@@ -264,7 +264,7 @@ inline ::flatbuffers::Offset<commsChannel> CreatecommsChannel(
     double UPLINK_FREQ = 0.0,
     double DOWNLINK_FREQ = 0.0,
     double BANDWIDTH = 0.0,
-    modulationType MODULATION = modulationType_BPSK,
+    CmsModulationType MODULATION = CmsModulationType_BPSK,
     double DATA_RATE = 0.0,
     encryptionType ENCRYPTION = encryptionType_NONE,
     double FEC_RATE = 0.0,
@@ -290,7 +290,7 @@ inline ::flatbuffers::Offset<commsChannel> CreatecommsChannelDirect(
     double UPLINK_FREQ = 0.0,
     double DOWNLINK_FREQ = 0.0,
     double BANDWIDTH = 0.0,
-    modulationType MODULATION = modulationType_BPSK,
+    CmsModulationType MODULATION = CmsModulationType_BPSK,
     double DATA_RATE = 0.0,
     encryptionType ENCRYPTION = encryptionType_NONE,
     double FEC_RATE = 0.0,

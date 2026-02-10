@@ -373,24 +373,24 @@ impl<'a> flatbuffers::Verifiable for MeasurementType {
 
 impl flatbuffers::SimpleToVerifyInSlice for MeasurementType {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_TRACK_STATUS: i8 = 0;
+pub const ENUM_MIN_TKG_TRACK_STATUS: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_TRACK_STATUS: i8 = 4;
+pub const ENUM_MAX_TKG_TRACK_STATUS: i8 = 4;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_TRACK_STATUS: [TrackStatus; 5] = [
-  TrackStatus::TENTATIVE,
-  TrackStatus::CONFIRMED,
-  TrackStatus::COASTING,
-  TrackStatus::LOST,
-  TrackStatus::DELETED,
+pub const ENUM_VALUES_TKG_TRACK_STATUS: [TkgTrackStatus; 5] = [
+  TkgTrackStatus::TENTATIVE,
+  TkgTrackStatus::CONFIRMED,
+  TkgTrackStatus::COASTING,
+  TkgTrackStatus::LOST,
+  TkgTrackStatus::DELETED,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct TrackStatus(pub i8);
+pub struct TkgTrackStatus(pub i8);
 #[allow(non_upper_case_globals)]
-impl TrackStatus {
+impl TkgTrackStatus {
   pub const TENTATIVE: Self = Self(0);
   pub const CONFIRMED: Self = Self(1);
   pub const COASTING: Self = Self(2);
@@ -418,7 +418,7 @@ impl TrackStatus {
     }
   }
 }
-impl core::fmt::Debug for TrackStatus {
+impl core::fmt::Debug for TkgTrackStatus {
   fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -427,7 +427,7 @@ impl core::fmt::Debug for TrackStatus {
     }
   }
 }
-impl<'a> flatbuffers::Follow<'a> for TrackStatus {
+impl<'a> flatbuffers::Follow<'a> for TkgTrackStatus {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -436,15 +436,15 @@ impl<'a> flatbuffers::Follow<'a> for TrackStatus {
   }
 }
 
-impl flatbuffers::Push for TrackStatus {
-    type Output = TrackStatus;
+impl flatbuffers::Push for TkgTrackStatus {
+    type Output = TkgTrackStatus;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         flatbuffers::emplace_scalar::<i8>(dst, self.0);
     }
 }
 
-impl flatbuffers::EndianScalar for TrackStatus {
+impl flatbuffers::EndianScalar for TkgTrackStatus {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -458,7 +458,7 @@ impl flatbuffers::EndianScalar for TrackStatus {
   }
 }
 
-impl<'a> flatbuffers::Verifiable for TrackStatus {
+impl<'a> flatbuffers::Verifiable for TkgTrackStatus {
   #[inline]
   fn run_verifier(
     v: &mut flatbuffers::Verifier, pos: usize
@@ -468,7 +468,7 @@ impl<'a> flatbuffers::Verifiable for TrackStatus {
   }
 }
 
-impl flatbuffers::SimpleToVerifyInSlice for TrackStatus {}
+impl flatbuffers::SimpleToVerifyInSlice for TkgTrackStatus {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_ASSOCIATION_METHOD: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]

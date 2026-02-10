@@ -100,7 +100,7 @@ public struct TRK : IFlatbufferObject
 #endif
   public byte[] GetTRK_NUMArray() { return __p.__vector_as_array<byte>(22); }
   /// Track status
-  public trackStatus TRK_STAT { get { int o = __p.__offset(24); return o != 0 ? (trackStatus)__p.bb.GetSbyte(o + __p.bb_pos) : trackStatus.ACTIVE; } }
+  public TrkTrackStatus TRK_STAT { get { int o = __p.__offset(24); return o != 0 ? (TrkTrackStatus)__p.bb.GetSbyte(o + __p.bb_pos) : TrkTrackStatus.ACTIVE; } }
   /// Object nationality
   public string OBJ_NAT { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -358,7 +358,7 @@ public struct TRK : IFlatbufferObject
       StringOffset SEN_QUALOffset = default(StringOffset),
       StringOffset TRK_IDOffset = default(StringOffset),
       StringOffset TRK_NUMOffset = default(StringOffset),
-      trackStatus TRK_STAT = trackStatus.ACTIVE,
+      TrkTrackStatus TRK_STAT = TrkTrackStatus.ACTIVE,
       StringOffset OBJ_NATOffset = default(StringOffset),
       StringOffset OBJ_IDOffset = default(StringOffset),
       StringOffset OBJ_TYPEOffset = default(StringOffset),
@@ -481,7 +481,7 @@ public struct TRK : IFlatbufferObject
   public static void AddSEN_QUAL(FlatBufferBuilder builder, StringOffset SEN_QUALOffset) { builder.AddOffset(7, SEN_QUALOffset.Value, 0); }
   public static void AddTRK_ID(FlatBufferBuilder builder, StringOffset TRK_IDOffset) { builder.AddOffset(8, TRK_IDOffset.Value, 0); }
   public static void AddTRK_NUM(FlatBufferBuilder builder, StringOffset TRK_NUMOffset) { builder.AddOffset(9, TRK_NUMOffset.Value, 0); }
-  public static void AddTRK_STAT(FlatBufferBuilder builder, trackStatus TRK_STAT) { builder.AddSbyte(10, (sbyte)TRK_STAT, 0); }
+  public static void AddTRK_STAT(FlatBufferBuilder builder, TrkTrackStatus TRK_STAT) { builder.AddSbyte(10, (sbyte)TRK_STAT, 0); }
   public static void AddOBJ_NAT(FlatBufferBuilder builder, StringOffset OBJ_NATOffset) { builder.AddOffset(11, OBJ_NATOffset.Value, 0); }
   public static void AddOBJ_ID(FlatBufferBuilder builder, StringOffset OBJ_IDOffset) { builder.AddOffset(12, OBJ_IDOffset.Value, 0); }
   public static void AddOBJ_TYPE(FlatBufferBuilder builder, StringOffset OBJ_TYPEOffset) { builder.AddOffset(13, OBJ_TYPEOffset.Value, 0); }
@@ -829,7 +829,7 @@ public class TRKT
   public string SEN_QUAL { get; set; }
   public string TRK_ID { get; set; }
   public string TRK_NUM { get; set; }
-  public trackStatus TRK_STAT { get; set; }
+  public TrkTrackStatus TRK_STAT { get; set; }
   public string OBJ_NAT { get; set; }
   public string OBJ_ID { get; set; }
   public string OBJ_TYPE { get; set; }
@@ -890,7 +890,7 @@ public class TRKT
     this.SEN_QUAL = null;
     this.TRK_ID = null;
     this.TRK_NUM = null;
-    this.TRK_STAT = trackStatus.ACTIVE;
+    this.TRK_STAT = TrkTrackStatus.ACTIVE;
     this.OBJ_NAT = null;
     this.OBJ_ID = null;
     this.OBJ_TYPE = null;
@@ -966,7 +966,7 @@ static public class TRKVerify
       && verifier.VerifyString(tablePos, 18 /*SEN_QUAL*/, false)
       && verifier.VerifyString(tablePos, 20 /*TRK_ID*/, false)
       && verifier.VerifyString(tablePos, 22 /*TRK_NUM*/, false)
-      && verifier.VerifyField(tablePos, 24 /*TRK_STAT*/, 1 /*trackStatus*/, 1, false)
+      && verifier.VerifyField(tablePos, 24 /*TRK_STAT*/, 1 /*TrkTrackStatus*/, 1, false)
       && verifier.VerifyString(tablePos, 26 /*OBJ_NAT*/, false)
       && verifier.VerifyString(tablePos, 28 /*OBJ_ID*/, false)
       && verifier.VerifyString(tablePos, 30 /*OBJ_TYPE*/, false)

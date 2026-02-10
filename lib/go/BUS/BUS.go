@@ -267,16 +267,16 @@ func (rcv *BUS) MutateBATTERY_CAPACITY(n float64) bool {
 }
 
 /// Stabilization method
-func (rcv *BUS) STABILIZATION() stabilizationType {
+func (rcv *BUS) STABILIZATION() BusStabilizationType {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
-		return stabilizationType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return BusStabilizationType(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
 /// Stabilization method
-func (rcv *BUS) MutateSTABILIZATION(n stabilizationType) bool {
+func (rcv *BUS) MutateSTABILIZATION(n BusStabilizationType) bool {
 	return rcv._tab.MutateInt8Slot(36, int8(n))
 }
 
@@ -439,7 +439,7 @@ func BUSAddPAYLOAD_POWER(builder *flatbuffers.Builder, PAYLOAD_POWER float64) {
 func BUSAddBATTERY_CAPACITY(builder *flatbuffers.Builder, BATTERY_CAPACITY float64) {
 	builder.PrependFloat64Slot(15, BATTERY_CAPACITY, 0.0)
 }
-func BUSAddSTABILIZATION(builder *flatbuffers.Builder, STABILIZATION stabilizationType) {
+func BUSAddSTABILIZATION(builder *flatbuffers.Builder, STABILIZATION BusStabilizationType) {
 	builder.PrependInt8Slot(16, int8(STABILIZATION), 0)
 }
 func BUSAddPOINTING_ACCURACY(builder *flatbuffers.Builder, POINTING_ACCURACY float64) {

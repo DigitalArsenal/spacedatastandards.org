@@ -5,32 +5,32 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-class TrackStatus {
+class TrkTrackStatus {
   final int value;
-  const TrackStatus._(this.value);
+  const TrkTrackStatus._(this.value);
 
-  factory TrackStatus.fromValue(int value) {
+  factory TrkTrackStatus.fromValue(int value) {
     final result = values[value];
     if (result == null) {
-        throw StateError('Invalid value $value for bit flag enum TrackStatus');
+        throw StateError('Invalid value $value for bit flag enum TrkTrackStatus');
     }
     return result;
   }
 
-  static TrackStatus? _createOrNull(int? value) => 
-      value == null ? null : TrackStatus.fromValue(value);
+  static TrkTrackStatus? _createOrNull(int? value) => 
+      value == null ? null : TrkTrackStatus.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 5;
   static bool containsValue(int value) => values.containsKey(value);
 
-  static const TrackStatus ACTIVE = TrackStatus._(0);
-  static const TrackStatus DROPPED = TrackStatus._(1);
-  static const TrackStatus TENTATIVE = TrackStatus._(2);
-  static const TrackStatus CONFIRMED = TrackStatus._(3);
-  static const TrackStatus COASTED = TrackStatus._(4);
-  static const TrackStatus DEAD = TrackStatus._(5);
-  static const Map<int, TrackStatus> values = {
+  static const TrkTrackStatus ACTIVE = TrkTrackStatus._(0);
+  static const TrkTrackStatus DROPPED = TrkTrackStatus._(1);
+  static const TrkTrackStatus TENTATIVE = TrkTrackStatus._(2);
+  static const TrkTrackStatus CONFIRMED = TrkTrackStatus._(3);
+  static const TrkTrackStatus COASTED = TrkTrackStatus._(4);
+  static const TrkTrackStatus DEAD = TrkTrackStatus._(5);
+  static const Map<int, TrkTrackStatus> values = {
     0: ACTIVE,
     1: DROPPED,
     2: TENTATIVE,
@@ -38,23 +38,23 @@ class TrackStatus {
     4: COASTED,
     5: DEAD};
 
-  static const fb.Reader<TrackStatus> reader = _TrackStatusReader();
+  static const fb.Reader<TrkTrackStatus> reader = _TrkTrackStatusReader();
 
   @override
   String toString() {
-    return 'TrackStatus{value: $value}';
+    return 'TrkTrackStatus{value: $value}';
   }
 }
 
-class _TrackStatusReader extends fb.Reader<TrackStatus> {
-  const _TrackStatusReader();
+class _TrkTrackStatusReader extends fb.Reader<TrkTrackStatus> {
+  const _TrkTrackStatusReader();
 
   @override
   int get size => 1;
 
   @override
-  TrackStatus read(fb.BufferContext bc, int offset) =>
-      TrackStatus.fromValue(const fb.Int8Reader().read(bc, offset));
+  TrkTrackStatus read(fb.BufferContext bc, int offset) =>
+      TrkTrackStatus.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
 class TrackEnvironment {
@@ -143,7 +143,7 @@ class TRK {
   ///  Track number
   String? get TRK_NUM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
   ///  Track status
-  TrackStatus get TRK_STAT => TrackStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 24, 0));
+  TrkTrackStatus get TRK_STAT => TrkTrackStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 24, 0));
   ///  Object nationality
   String? get OBJ_NAT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
   ///  Object identifier
@@ -304,7 +304,7 @@ class TRKBuilder {
     fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
-  int addTrkStat(TrackStatus? TRK_STAT) {
+  int addTrkStat(TrkTrackStatus? TRK_STAT) {
     fbBuilder.addInt8(10, TRK_STAT?.value);
     return fbBuilder.offset;
   }
@@ -517,7 +517,7 @@ class TRKObjectBuilder extends fb.ObjectBuilder {
   final String? _SEN_QUAL;
   final String? _TRK_ID;
   final String? _TRK_NUM;
-  final TrackStatus? _TRK_STAT;
+  final TrkTrackStatus? _TRK_STAT;
   final String? _OBJ_NAT;
   final String? _OBJ_ID;
   final String? _OBJ_TYPE;
@@ -578,7 +578,7 @@ class TRKObjectBuilder extends fb.ObjectBuilder {
     String? SEN_QUAL,
     String? TRK_ID,
     String? TRK_NUM,
-    TrackStatus? TRK_STAT,
+    TrkTrackStatus? TRK_STAT,
     String? OBJ_NAT,
     String? OBJ_ID,
     String? OBJ_TYPE,

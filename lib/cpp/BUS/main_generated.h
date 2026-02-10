@@ -67,30 +67,30 @@ inline const char *EnumNamebusSize(busSize e) {
   return EnumNamesbusSize()[index];
 }
 
-enum stabilizationType : int8_t {
-  stabilizationType_THREE_AXIS = 0,
-  stabilizationType_SPIN = 1,
-  stabilizationType_GRAVITY_GRADIENT = 2,
-  stabilizationType_MAGNETIC = 3,
-  stabilizationType_DUAL_SPIN = 4,
-  stabilizationType_NONE = 5,
-  stabilizationType_MIN = stabilizationType_THREE_AXIS,
-  stabilizationType_MAX = stabilizationType_NONE
+enum BusStabilizationType : int8_t {
+  BusStabilizationType_THREE_AXIS = 0,
+  BusStabilizationType_SPIN = 1,
+  BusStabilizationType_GRAVITY_GRADIENT = 2,
+  BusStabilizationType_MAGNETIC = 3,
+  BusStabilizationType_DUAL_SPIN = 4,
+  BusStabilizationType_NONE = 5,
+  BusStabilizationType_MIN = BusStabilizationType_THREE_AXIS,
+  BusStabilizationType_MAX = BusStabilizationType_NONE
 };
 
-inline const stabilizationType (&EnumValuesstabilizationType())[6] {
-  static const stabilizationType values[] = {
-    stabilizationType_THREE_AXIS,
-    stabilizationType_SPIN,
-    stabilizationType_GRAVITY_GRADIENT,
-    stabilizationType_MAGNETIC,
-    stabilizationType_DUAL_SPIN,
-    stabilizationType_NONE
+inline const BusStabilizationType (&EnumValuesBusStabilizationType())[6] {
+  static const BusStabilizationType values[] = {
+    BusStabilizationType_THREE_AXIS,
+    BusStabilizationType_SPIN,
+    BusStabilizationType_GRAVITY_GRADIENT,
+    BusStabilizationType_MAGNETIC,
+    BusStabilizationType_DUAL_SPIN,
+    BusStabilizationType_NONE
   };
   return values;
 }
 
-inline const char * const *EnumNamesstabilizationType() {
+inline const char * const *EnumNamesBusStabilizationType() {
   static const char * const names[7] = {
     "THREE_AXIS",
     "SPIN",
@@ -103,10 +103,10 @@ inline const char * const *EnumNamesstabilizationType() {
   return names;
 }
 
-inline const char *EnumNamestabilizationType(stabilizationType e) {
-  if (::flatbuffers::IsOutRange(e, stabilizationType_THREE_AXIS, stabilizationType_NONE)) return "";
+inline const char *EnumNameBusStabilizationType(BusStabilizationType e) {
+  if (::flatbuffers::IsOutRange(e, BusStabilizationType_THREE_AXIS, BusStabilizationType_NONE)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesstabilizationType()[index];
+  return EnumNamesBusStabilizationType()[index];
 }
 
 /// Satellite Bus Specification
@@ -204,8 +204,8 @@ struct BUS FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetField<double>(VT_BATTERY_CAPACITY, 0.0);
   }
   /// Stabilization method
-  stabilizationType STABILIZATION() const {
-    return static_cast<stabilizationType>(GetField<int8_t>(VT_STABILIZATION, 0));
+  BusStabilizationType STABILIZATION() const {
+    return static_cast<BusStabilizationType>(GetField<int8_t>(VT_STABILIZATION, 0));
   }
   /// Pointing accuracy in degrees
   double POINTING_ACCURACY() const {
@@ -326,7 +326,7 @@ struct BUSBuilder {
   void add_BATTERY_CAPACITY(double BATTERY_CAPACITY) {
     fbb_.AddElement<double>(BUS::VT_BATTERY_CAPACITY, BATTERY_CAPACITY, 0.0);
   }
-  void add_STABILIZATION(stabilizationType STABILIZATION) {
+  void add_STABILIZATION(BusStabilizationType STABILIZATION) {
     fbb_.AddElement<int8_t>(BUS::VT_STABILIZATION, static_cast<int8_t>(STABILIZATION), 0);
   }
   void add_POINTING_ACCURACY(double POINTING_ACCURACY) {
@@ -382,7 +382,7 @@ inline ::flatbuffers::Offset<BUS> CreateBUS(
     double POWER_GENERATION = 0.0,
     double PAYLOAD_POWER = 0.0,
     double BATTERY_CAPACITY = 0.0,
-    stabilizationType STABILIZATION = stabilizationType_THREE_AXIS,
+    BusStabilizationType STABILIZATION = BusStabilizationType_THREE_AXIS,
     double POINTING_ACCURACY = 0.0,
     double POINTING_KNOWLEDGE = 0.0,
     double DESIGN_LIFE = 0.0,
@@ -438,7 +438,7 @@ inline ::flatbuffers::Offset<BUS> CreateBUSDirect(
     double POWER_GENERATION = 0.0,
     double PAYLOAD_POWER = 0.0,
     double BATTERY_CAPACITY = 0.0,
-    stabilizationType STABILIZATION = stabilizationType_THREE_AXIS,
+    BusStabilizationType STABILIZATION = BusStabilizationType_THREE_AXIS,
     double POINTING_ACCURACY = 0.0,
     double POINTING_KNOWLEDGE = 0.0,
     double DESIGN_LIFE = 0.0,

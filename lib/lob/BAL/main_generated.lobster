@@ -38,10 +38,10 @@ enum ProjectileType:
     ProjectileType_GRENADE = 14
     ProjectileType_ROCKET = 15
 
-enum StabilizationType:
-    StabilizationType_SPIN = 0
-    StabilizationType_FIN = 1
-    StabilizationType_DUAL = 2
+enum BalStabilizationType:
+    BalStabilizationType_SPIN = 0
+    BalStabilizationType_FIN = 1
+    BalStabilizationType_DUAL = 2
 
 enum PenetrationModel:
     PenetrationModel_DE_MARRE = 0

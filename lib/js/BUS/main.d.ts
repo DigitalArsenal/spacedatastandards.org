@@ -1,4 +1,4 @@
 export { BUS, BUST } from './BUS.js';
+export { BusStabilizationType } from './BusStabilizationType.js';
 export { busSize } from './busSize.js';
-export { stabilizationType } from './stabilizationType.js';
 //# sourceMappingURL=main.d.ts.map

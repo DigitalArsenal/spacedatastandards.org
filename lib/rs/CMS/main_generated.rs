@@ -10,34 +10,34 @@ extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_MODULATION_TYPE: i8 = 0;
+pub const ENUM_MIN_CMS_MODULATION_TYPE: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_MODULATION_TYPE: i8 = 14;
+pub const ENUM_MAX_CMS_MODULATION_TYPE: i8 = 14;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_MODULATION_TYPE: [modulationType; 15] = [
-  modulationType::BPSK,
-  modulationType::QPSK,
-  modulationType::OQPSK,
-  modulationType::PSK8,
-  modulationType::QAM16,
-  modulationType::QAM64,
-  modulationType::FSK,
-  modulationType::MSK,
-  modulationType::GMSK,
-  modulationType::AM,
-  modulationType::FM,
-  modulationType::PM,
-  modulationType::SPREAD_SPECTRUM,
-  modulationType::DVB_S2,
-  modulationType::DVB_S2X,
+pub const ENUM_VALUES_CMS_MODULATION_TYPE: [CmsModulationType; 15] = [
+  CmsModulationType::BPSK,
+  CmsModulationType::QPSK,
+  CmsModulationType::OQPSK,
+  CmsModulationType::PSK8,
+  CmsModulationType::QAM16,
+  CmsModulationType::QAM64,
+  CmsModulationType::FSK,
+  CmsModulationType::MSK,
+  CmsModulationType::GMSK,
+  CmsModulationType::AM,
+  CmsModulationType::FM,
+  CmsModulationType::PM,
+  CmsModulationType::SPREAD_SPECTRUM,
+  CmsModulationType::DVB_S2,
+  CmsModulationType::DVB_S2X,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct modulationType(pub i8);
+pub struct CmsModulationType(pub i8);
 #[allow(non_upper_case_globals)]
-impl modulationType {
+impl CmsModulationType {
   pub const BPSK: Self = Self(0);
   pub const QPSK: Self = Self(1);
   pub const OQPSK: Self = Self(2);
@@ -95,7 +95,7 @@ impl modulationType {
     }
   }
 }
-impl core::fmt::Debug for modulationType {
+impl core::fmt::Debug for CmsModulationType {
   fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -104,7 +104,7 @@ impl core::fmt::Debug for modulationType {
     }
   }
 }
-impl<'a> flatbuffers::Follow<'a> for modulationType {
+impl<'a> flatbuffers::Follow<'a> for CmsModulationType {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -113,15 +113,15 @@ impl<'a> flatbuffers::Follow<'a> for modulationType {
   }
 }
 
-impl flatbuffers::Push for modulationType {
-    type Output = modulationType;
+impl flatbuffers::Push for CmsModulationType {
+    type Output = CmsModulationType;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         flatbuffers::emplace_scalar::<i8>(dst, self.0);
     }
 }
 
-impl flatbuffers::EndianScalar for modulationType {
+impl flatbuffers::EndianScalar for CmsModulationType {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -135,7 +135,7 @@ impl flatbuffers::EndianScalar for modulationType {
   }
 }
 
-impl<'a> flatbuffers::Verifiable for modulationType {
+impl<'a> flatbuffers::Verifiable for CmsModulationType {
   #[inline]
   fn run_verifier(
     v: &mut flatbuffers::Verifier, pos: usize
@@ -145,7 +145,7 @@ impl<'a> flatbuffers::Verifiable for modulationType {
   }
 }
 
-impl flatbuffers::SimpleToVerifyInSlice for modulationType {}
+impl flatbuffers::SimpleToVerifyInSlice for CmsModulationType {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_ENCRYPTION_TYPE: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -377,11 +377,11 @@ impl<'a> commsChannel<'a> {
   }
   /// Modulation type
   #[inline]
-  pub fn MODULATION(&self) -> modulationType {
+  pub fn MODULATION(&self) -> CmsModulationType {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<modulationType>(commsChannel::VT_MODULATION, Some(modulationType::BPSK)).unwrap()}
+    unsafe { self._tab.get::<CmsModulationType>(commsChannel::VT_MODULATION, Some(CmsModulationType::BPSK)).unwrap()}
   }
   /// Data rate in Mbps
   #[inline]
@@ -429,7 +429,7 @@ impl flatbuffers::Verifiable for commsChannel<'_> {
      .visit_field::<f64>("UPLINK_FREQ", Self::VT_UPLINK_FREQ, false)?
      .visit_field::<f64>("DOWNLINK_FREQ", Self::VT_DOWNLINK_FREQ, false)?
      .visit_field::<f64>("BANDWIDTH", Self::VT_BANDWIDTH, false)?
-     .visit_field::<modulationType>("MODULATION", Self::VT_MODULATION, false)?
+     .visit_field::<CmsModulationType>("MODULATION", Self::VT_MODULATION, false)?
      .visit_field::<f64>("DATA_RATE", Self::VT_DATA_RATE, false)?
      .visit_field::<encryptionType>("ENCRYPTION", Self::VT_ENCRYPTION, false)?
      .visit_field::<f64>("FEC_RATE", Self::VT_FEC_RATE, false)?
@@ -444,7 +444,7 @@ pub struct commsChannelArgs<'a> {
     pub UPLINK_FREQ: f64,
     pub DOWNLINK_FREQ: f64,
     pub BANDWIDTH: f64,
-    pub MODULATION: modulationType,
+    pub MODULATION: CmsModulationType,
     pub DATA_RATE: f64,
     pub ENCRYPTION: encryptionType,
     pub FEC_RATE: f64,
@@ -459,7 +459,7 @@ impl<'a> Default for commsChannelArgs<'a> {
       UPLINK_FREQ: 0.0,
       DOWNLINK_FREQ: 0.0,
       BANDWIDTH: 0.0,
-      MODULATION: modulationType::BPSK,
+      MODULATION: CmsModulationType::BPSK,
       DATA_RATE: 0.0,
       ENCRYPTION: encryptionType::NONE,
       FEC_RATE: 0.0,
@@ -494,8 +494,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> commsChannelBuilder<'a, 'b, A> 
     self.fbb_.push_slot::<f64>(commsChannel::VT_BANDWIDTH, BANDWIDTH, 0.0);
   }
   #[inline]
-  pub fn add_MODULATION(&mut self, MODULATION: modulationType) {
-    self.fbb_.push_slot::<modulationType>(commsChannel::VT_MODULATION, MODULATION, modulationType::BPSK);
+  pub fn add_MODULATION(&mut self, MODULATION: CmsModulationType) {
+    self.fbb_.push_slot::<CmsModulationType>(commsChannel::VT_MODULATION, MODULATION, CmsModulationType::BPSK);
   }
   #[inline]
   pub fn add_DATA_RATE(&mut self, DATA_RATE: f64) {
@@ -552,7 +552,7 @@ pub struct commsChannelT {
   pub UPLINK_FREQ: f64,
   pub DOWNLINK_FREQ: f64,
   pub BANDWIDTH: f64,
-  pub MODULATION: modulationType,
+  pub MODULATION: CmsModulationType,
   pub DATA_RATE: f64,
   pub ENCRYPTION: encryptionType,
   pub FEC_RATE: f64,
@@ -566,7 +566,7 @@ impl Default for commsChannelT {
       UPLINK_FREQ: 0.0,
       DOWNLINK_FREQ: 0.0,
       BANDWIDTH: 0.0,
-      MODULATION: modulationType::BPSK,
+      MODULATION: CmsModulationType::BPSK,
       DATA_RATE: 0.0,
       ENCRYPTION: encryptionType::NONE,
       FEC_RATE: 0.0,

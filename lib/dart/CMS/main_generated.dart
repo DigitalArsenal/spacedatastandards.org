@@ -5,41 +5,41 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-class ModulationType {
+class CmsModulationType {
   final int value;
-  const ModulationType._(this.value);
+  const CmsModulationType._(this.value);
 
-  factory ModulationType.fromValue(int value) {
+  factory CmsModulationType.fromValue(int value) {
     final result = values[value];
     if (result == null) {
-        throw StateError('Invalid value $value for bit flag enum ModulationType');
+        throw StateError('Invalid value $value for bit flag enum CmsModulationType');
     }
     return result;
   }
 
-  static ModulationType? _createOrNull(int? value) => 
-      value == null ? null : ModulationType.fromValue(value);
+  static CmsModulationType? _createOrNull(int? value) => 
+      value == null ? null : CmsModulationType.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 14;
   static bool containsValue(int value) => values.containsKey(value);
 
-  static const ModulationType BPSK = ModulationType._(0);
-  static const ModulationType QPSK = ModulationType._(1);
-  static const ModulationType OQPSK = ModulationType._(2);
-  static const ModulationType PSK8 = ModulationType._(3);
-  static const ModulationType QAM16 = ModulationType._(4);
-  static const ModulationType QAM64 = ModulationType._(5);
-  static const ModulationType FSK = ModulationType._(6);
-  static const ModulationType MSK = ModulationType._(7);
-  static const ModulationType GMSK = ModulationType._(8);
-  static const ModulationType AM = ModulationType._(9);
-  static const ModulationType FM = ModulationType._(10);
-  static const ModulationType PM = ModulationType._(11);
-  static const ModulationType SPREAD_SPECTRUM = ModulationType._(12);
-  static const ModulationType DVB_S2 = ModulationType._(13);
-  static const ModulationType DVB_S2X = ModulationType._(14);
-  static const Map<int, ModulationType> values = {
+  static const CmsModulationType BPSK = CmsModulationType._(0);
+  static const CmsModulationType QPSK = CmsModulationType._(1);
+  static const CmsModulationType OQPSK = CmsModulationType._(2);
+  static const CmsModulationType PSK8 = CmsModulationType._(3);
+  static const CmsModulationType QAM16 = CmsModulationType._(4);
+  static const CmsModulationType QAM64 = CmsModulationType._(5);
+  static const CmsModulationType FSK = CmsModulationType._(6);
+  static const CmsModulationType MSK = CmsModulationType._(7);
+  static const CmsModulationType GMSK = CmsModulationType._(8);
+  static const CmsModulationType AM = CmsModulationType._(9);
+  static const CmsModulationType FM = CmsModulationType._(10);
+  static const CmsModulationType PM = CmsModulationType._(11);
+  static const CmsModulationType SPREAD_SPECTRUM = CmsModulationType._(12);
+  static const CmsModulationType DVB_S2 = CmsModulationType._(13);
+  static const CmsModulationType DVB_S2X = CmsModulationType._(14);
+  static const Map<int, CmsModulationType> values = {
     0: BPSK,
     1: QPSK,
     2: OQPSK,
@@ -56,23 +56,23 @@ class ModulationType {
     13: DVB_S2,
     14: DVB_S2X};
 
-  static const fb.Reader<ModulationType> reader = _ModulationTypeReader();
+  static const fb.Reader<CmsModulationType> reader = _CmsModulationTypeReader();
 
   @override
   String toString() {
-    return 'ModulationType{value: $value}';
+    return 'CmsModulationType{value: $value}';
   }
 }
 
-class _ModulationTypeReader extends fb.Reader<ModulationType> {
-  const _ModulationTypeReader();
+class _CmsModulationTypeReader extends fb.Reader<CmsModulationType> {
+  const _CmsModulationTypeReader();
 
   @override
   int get size => 1;
 
   @override
-  ModulationType read(fb.BufferContext bc, int offset) =>
-      ModulationType.fromValue(const fb.Int8Reader().read(bc, offset));
+  CmsModulationType read(fb.BufferContext bc, int offset) =>
+      CmsModulationType.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
 class EncryptionType {
@@ -155,7 +155,7 @@ class CommsChannel {
   ///  Channel bandwidth in MHz
   double get BANDWIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
   ///  Modulation type
-  ModulationType get MODULATION => ModulationType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
+  CmsModulationType get MODULATION => CmsModulationType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
   ///  Data rate in Mbps
   double get DATA_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
   ///  Encryption method
@@ -208,7 +208,7 @@ class CommsChannelBuilder {
     fbBuilder.addFloat64(4, BANDWIDTH);
     return fbBuilder.offset;
   }
-  int addModulation(ModulationType? MODULATION) {
+  int addModulation(CmsModulationType? MODULATION) {
     fbBuilder.addInt8(5, MODULATION?.value);
     return fbBuilder.offset;
   }
@@ -240,7 +240,7 @@ class CommsChannelObjectBuilder extends fb.ObjectBuilder {
   final double? _UPLINK_FREQ;
   final double? _DOWNLINK_FREQ;
   final double? _BANDWIDTH;
-  final ModulationType? _MODULATION;
+  final CmsModulationType? _MODULATION;
   final double? _DATA_RATE;
   final EncryptionType? _ENCRYPTION;
   final double? _FEC_RATE;
@@ -252,7 +252,7 @@ class CommsChannelObjectBuilder extends fb.ObjectBuilder {
     double? UPLINK_FREQ,
     double? DOWNLINK_FREQ,
     double? BANDWIDTH,
-    ModulationType? MODULATION,
+    CmsModulationType? MODULATION,
     double? DATA_RATE,
     EncryptionType? ENCRYPTION,
     double? FEC_RATE,

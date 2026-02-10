@@ -63,32 +63,32 @@ class _BusSizeReader extends fb.Reader<BusSize> {
       BusSize.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-class StabilizationType {
+class BusStabilizationType {
   final int value;
-  const StabilizationType._(this.value);
+  const BusStabilizationType._(this.value);
 
-  factory StabilizationType.fromValue(int value) {
+  factory BusStabilizationType.fromValue(int value) {
     final result = values[value];
     if (result == null) {
-        throw StateError('Invalid value $value for bit flag enum StabilizationType');
+        throw StateError('Invalid value $value for bit flag enum BusStabilizationType');
     }
     return result;
   }
 
-  static StabilizationType? _createOrNull(int? value) => 
-      value == null ? null : StabilizationType.fromValue(value);
+  static BusStabilizationType? _createOrNull(int? value) => 
+      value == null ? null : BusStabilizationType.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 5;
   static bool containsValue(int value) => values.containsKey(value);
 
-  static const StabilizationType THREE_AXIS = StabilizationType._(0);
-  static const StabilizationType SPIN = StabilizationType._(1);
-  static const StabilizationType GRAVITY_GRADIENT = StabilizationType._(2);
-  static const StabilizationType MAGNETIC = StabilizationType._(3);
-  static const StabilizationType DUAL_SPIN = StabilizationType._(4);
-  static const StabilizationType NONE = StabilizationType._(5);
-  static const Map<int, StabilizationType> values = {
+  static const BusStabilizationType THREE_AXIS = BusStabilizationType._(0);
+  static const BusStabilizationType SPIN = BusStabilizationType._(1);
+  static const BusStabilizationType GRAVITY_GRADIENT = BusStabilizationType._(2);
+  static const BusStabilizationType MAGNETIC = BusStabilizationType._(3);
+  static const BusStabilizationType DUAL_SPIN = BusStabilizationType._(4);
+  static const BusStabilizationType NONE = BusStabilizationType._(5);
+  static const Map<int, BusStabilizationType> values = {
     0: THREE_AXIS,
     1: SPIN,
     2: GRAVITY_GRADIENT,
@@ -96,23 +96,23 @@ class StabilizationType {
     4: DUAL_SPIN,
     5: NONE};
 
-  static const fb.Reader<StabilizationType> reader = _StabilizationTypeReader();
+  static const fb.Reader<BusStabilizationType> reader = _BusStabilizationTypeReader();
 
   @override
   String toString() {
-    return 'StabilizationType{value: $value}';
+    return 'BusStabilizationType{value: $value}';
   }
 }
 
-class _StabilizationTypeReader extends fb.Reader<StabilizationType> {
-  const _StabilizationTypeReader();
+class _BusStabilizationTypeReader extends fb.Reader<BusStabilizationType> {
+  const _BusStabilizationTypeReader();
 
   @override
   int get size => 1;
 
   @override
-  StabilizationType read(fb.BufferContext bc, int offset) =>
-      StabilizationType.fromValue(const fb.Int8Reader().read(bc, offset));
+  BusStabilizationType read(fb.BufferContext bc, int offset) =>
+      BusStabilizationType.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
 ///  Satellite Bus Specification
@@ -161,7 +161,7 @@ class BUS {
   ///  Battery capacity in Watt-hours
   double get BATTERY_CAPACITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
   ///  Stabilization method
-  StabilizationType get STABILIZATION => StabilizationType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 36, 0));
+  BusStabilizationType get STABILIZATION => BusStabilizationType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 36, 0));
   ///  Pointing accuracy in degrees
   double get POINTING_ACCURACY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
   ///  Pointing knowledge in degrees
@@ -266,7 +266,7 @@ class BUSBuilder {
     fbBuilder.addFloat64(15, BATTERY_CAPACITY);
     return fbBuilder.offset;
   }
-  int addStabilization(StabilizationType? STABILIZATION) {
+  int addStabilization(BusStabilizationType? STABILIZATION) {
     fbBuilder.addInt8(16, STABILIZATION?.value);
     return fbBuilder.offset;
   }
@@ -325,7 +325,7 @@ class BUSObjectBuilder extends fb.ObjectBuilder {
   final double? _POWER_GENERATION;
   final double? _PAYLOAD_POWER;
   final double? _BATTERY_CAPACITY;
-  final StabilizationType? _STABILIZATION;
+  final BusStabilizationType? _STABILIZATION;
   final double? _POINTING_ACCURACY;
   final double? _POINTING_KNOWLEDGE;
   final double? _DESIGN_LIFE;
@@ -352,7 +352,7 @@ class BUSObjectBuilder extends fb.ObjectBuilder {
     double? POWER_GENERATION,
     double? PAYLOAD_POWER,
     double? BATTERY_CAPACITY,
-    StabilizationType? STABILIZATION,
+    BusStabilizationType? STABILIZATION,
     double? POINTING_ACCURACY,
     double? POINTING_KNOWLEDGE,
     double? DESIGN_LIFE,

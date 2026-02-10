@@ -105,16 +105,16 @@ func (rcv *commsChannel) MutateBANDWIDTH(n float64) bool {
 }
 
 /// Modulation type
-func (rcv *commsChannel) MODULATION() modulationType {
+func (rcv *commsChannel) MODULATION() CmsModulationType {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
-		return modulationType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return CmsModulationType(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
 /// Modulation type
-func (rcv *commsChannel) MutateMODULATION(n modulationType) bool {
+func (rcv *commsChannel) MutateMODULATION(n CmsModulationType) bool {
 	return rcv._tab.MutateInt8Slot(14, int8(n))
 }
 
@@ -192,7 +192,7 @@ func commsChannelAddDOWNLINK_FREQ(builder *flatbuffers.Builder, DOWNLINK_FREQ fl
 func commsChannelAddBANDWIDTH(builder *flatbuffers.Builder, BANDWIDTH float64) {
 	builder.PrependFloat64Slot(4, BANDWIDTH, 0.0)
 }
-func commsChannelAddMODULATION(builder *flatbuffers.Builder, MODULATION modulationType) {
+func commsChannelAddMODULATION(builder *flatbuffers.Builder, MODULATION CmsModulationType) {
 	builder.PrependInt8Slot(5, int8(MODULATION), 0)
 }
 func commsChannelAddDATA_RATE(builder *flatbuffers.Builder, DATA_RATE float64) {

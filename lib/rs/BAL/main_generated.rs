@@ -365,22 +365,22 @@ impl<'a> flatbuffers::Verifiable for ProjectileType {
 
 impl flatbuffers::SimpleToVerifyInSlice for ProjectileType {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_STABILIZATION_TYPE: i8 = 0;
+pub const ENUM_MIN_BAL_STABILIZATION_TYPE: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_STABILIZATION_TYPE: i8 = 2;
+pub const ENUM_MAX_BAL_STABILIZATION_TYPE: i8 = 2;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_STABILIZATION_TYPE: [StabilizationType; 3] = [
-  StabilizationType::SPIN,
-  StabilizationType::FIN,
-  StabilizationType::DUAL,
+pub const ENUM_VALUES_BAL_STABILIZATION_TYPE: [BalStabilizationType; 3] = [
+  BalStabilizationType::SPIN,
+  BalStabilizationType::FIN,
+  BalStabilizationType::DUAL,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct StabilizationType(pub i8);
+pub struct BalStabilizationType(pub i8);
 #[allow(non_upper_case_globals)]
-impl StabilizationType {
+impl BalStabilizationType {
   pub const SPIN: Self = Self(0);
   pub const FIN: Self = Self(1);
   pub const DUAL: Self = Self(2);
@@ -402,7 +402,7 @@ impl StabilizationType {
     }
   }
 }
-impl core::fmt::Debug for StabilizationType {
+impl core::fmt::Debug for BalStabilizationType {
   fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -411,7 +411,7 @@ impl core::fmt::Debug for StabilizationType {
     }
   }
 }
-impl<'a> flatbuffers::Follow<'a> for StabilizationType {
+impl<'a> flatbuffers::Follow<'a> for BalStabilizationType {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -420,15 +420,15 @@ impl<'a> flatbuffers::Follow<'a> for StabilizationType {
   }
 }
 
-impl flatbuffers::Push for StabilizationType {
-    type Output = StabilizationType;
+impl flatbuffers::Push for BalStabilizationType {
+    type Output = BalStabilizationType;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         flatbuffers::emplace_scalar::<i8>(dst, self.0);
     }
 }
 
-impl flatbuffers::EndianScalar for StabilizationType {
+impl flatbuffers::EndianScalar for BalStabilizationType {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -442,7 +442,7 @@ impl flatbuffers::EndianScalar for StabilizationType {
   }
 }
 
-impl<'a> flatbuffers::Verifiable for StabilizationType {
+impl<'a> flatbuffers::Verifiable for BalStabilizationType {
   #[inline]
   fn run_verifier(
     v: &mut flatbuffers::Verifier, pos: usize
@@ -452,7 +452,7 @@ impl<'a> flatbuffers::Verifiable for StabilizationType {
   }
 }
 
-impl flatbuffers::SimpleToVerifyInSlice for StabilizationType {}
+impl flatbuffers::SimpleToVerifyInSlice for BalStabilizationType {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_PENETRATION_MODEL: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]

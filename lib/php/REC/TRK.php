@@ -118,7 +118,7 @@ class TRK extends Table
     public function getTRK_STAT()
     {
         $o = $this->__offset(24);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \trackStatus::ACTIVE;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \TrkTrackStatus::ACTIVE;
     }
 
     /// Object nationality

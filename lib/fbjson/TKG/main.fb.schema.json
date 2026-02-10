@@ -160,7 +160,7 @@
         }
       }
     },
-    "TrackStatus": {
+    "TkgTrackStatus": {
       "type": "string",
       "enum": [
         "TENTATIVE",

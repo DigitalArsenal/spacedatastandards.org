@@ -46,7 +46,7 @@
         }
       }
     },
-    "stabilizationType": {
+    "BusStabilizationType": {
       "type": "string",
       "enum": [
         "THREE_AXIS",
@@ -194,7 +194,7 @@
           "x-flatbuffer-type": "double"
         },
         "STABILIZATION": {
-          "$ref": "#/definitions/stabilizationType",
+          "$ref": "#/definitions/BusStabilizationType",
           "description": "Stabilization method",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",

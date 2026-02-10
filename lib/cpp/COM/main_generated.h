@@ -16,48 +16,48 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct COM;
 struct COMBuilder;
 
-enum ModulationType : int8_t {
-  ModulationType_AM = 0,
-  ModulationType_FM = 1,
-  ModulationType_PM = 2,
-  ModulationType_BPSK = 3,
-  ModulationType_QPSK = 4,
-  ModulationType_PSK8 = 5,
-  ModulationType_QAM16 = 6,
-  ModulationType_QAM64 = 7,
-  ModulationType_QAM256 = 8,
-  ModulationType_FSK = 9,
-  ModulationType_MSK = 10,
-  ModulationType_OFDM = 11,
-  ModulationType_SPREAD_SPECTRUM = 12,
-  ModulationType_FHSS = 13,
-  ModulationType_DSSS = 14,
-  ModulationType_MIN = ModulationType_AM,
-  ModulationType_MAX = ModulationType_DSSS
+enum ComModulationType : int8_t {
+  ComModulationType_AM = 0,
+  ComModulationType_FM = 1,
+  ComModulationType_PM = 2,
+  ComModulationType_BPSK = 3,
+  ComModulationType_QPSK = 4,
+  ComModulationType_PSK8 = 5,
+  ComModulationType_QAM16 = 6,
+  ComModulationType_QAM64 = 7,
+  ComModulationType_QAM256 = 8,
+  ComModulationType_FSK = 9,
+  ComModulationType_MSK = 10,
+  ComModulationType_OFDM = 11,
+  ComModulationType_SPREAD_SPECTRUM = 12,
+  ComModulationType_FHSS = 13,
+  ComModulationType_DSSS = 14,
+  ComModulationType_MIN = ComModulationType_AM,
+  ComModulationType_MAX = ComModulationType_DSSS
 };
 
-inline const ModulationType (&EnumValuesModulationType())[15] {
-  static const ModulationType values[] = {
-    ModulationType_AM,
-    ModulationType_FM,
-    ModulationType_PM,
-    ModulationType_BPSK,
-    ModulationType_QPSK,
-    ModulationType_PSK8,
-    ModulationType_QAM16,
-    ModulationType_QAM64,
-    ModulationType_QAM256,
-    ModulationType_FSK,
-    ModulationType_MSK,
-    ModulationType_OFDM,
-    ModulationType_SPREAD_SPECTRUM,
-    ModulationType_FHSS,
-    ModulationType_DSSS
+inline const ComModulationType (&EnumValuesComModulationType())[15] {
+  static const ComModulationType values[] = {
+    ComModulationType_AM,
+    ComModulationType_FM,
+    ComModulationType_PM,
+    ComModulationType_BPSK,
+    ComModulationType_QPSK,
+    ComModulationType_PSK8,
+    ComModulationType_QAM16,
+    ComModulationType_QAM64,
+    ComModulationType_QAM256,
+    ComModulationType_FSK,
+    ComModulationType_MSK,
+    ComModulationType_OFDM,
+    ComModulationType_SPREAD_SPECTRUM,
+    ComModulationType_FHSS,
+    ComModulationType_DSSS
   };
   return values;
 }
 
-inline const char * const *EnumNamesModulationType() {
+inline const char * const *EnumNamesComModulationType() {
   static const char * const names[16] = {
     "AM",
     "FM",
@@ -79,10 +79,10 @@ inline const char * const *EnumNamesModulationType() {
   return names;
 }
 
-inline const char *EnumNameModulationType(ModulationType e) {
-  if (::flatbuffers::IsOutRange(e, ModulationType_AM, ModulationType_DSSS)) return "";
+inline const char *EnumNameComModulationType(ComModulationType e) {
+  if (::flatbuffers::IsOutRange(e, ComModulationType_AM, ComModulationType_DSSS)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesModulationType()[index];
+  return EnumNamesComModulationType()[index];
 }
 
 enum BandType : int8_t {

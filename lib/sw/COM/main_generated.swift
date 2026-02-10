@@ -4,7 +4,7 @@
 
 import FlatBuffers
 
-public enum ModulationType: Int8, Enum, Verifiable {
+public enum ComModulationType: Int8, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -24,8 +24,8 @@ public enum ModulationType: Int8, Enum, Verifiable {
   case fhss = 13
   case dsss = 14
 
-  public static var max: ModulationType { return .dsss }
-  public static var min: ModulationType { return .am }
+  public static var max: ComModulationType { return .dsss }
+  public static var min: ComModulationType { return .am }
 }
 
 

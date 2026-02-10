@@ -3,8 +3,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export { BAL, BALT } from './BAL.js';
+export { BalStabilizationType } from './BalStabilizationType.js';
 export { BallisticModel } from './BallisticModel.js';
 export { DragModel } from './DragModel.js';
 export { PenetrationModel } from './PenetrationModel.js';
 export { ProjectileType } from './ProjectileType.js';
-export { StabilizationType } from './StabilizationType.js';

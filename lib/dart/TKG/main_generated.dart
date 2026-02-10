@@ -191,54 +191,54 @@ class _MeasurementTypeReader extends fb.Reader<MeasurementType> {
       MeasurementType.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-class TrackStatus {
+class TkgTrackStatus {
   final int value;
-  const TrackStatus._(this.value);
+  const TkgTrackStatus._(this.value);
 
-  factory TrackStatus.fromValue(int value) {
+  factory TkgTrackStatus.fromValue(int value) {
     final result = values[value];
     if (result == null) {
-        throw StateError('Invalid value $value for bit flag enum TrackStatus');
+        throw StateError('Invalid value $value for bit flag enum TkgTrackStatus');
     }
     return result;
   }
 
-  static TrackStatus? _createOrNull(int? value) => 
-      value == null ? null : TrackStatus.fromValue(value);
+  static TkgTrackStatus? _createOrNull(int? value) => 
+      value == null ? null : TkgTrackStatus.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 4;
   static bool containsValue(int value) => values.containsKey(value);
 
-  static const TrackStatus TENTATIVE = TrackStatus._(0);
-  static const TrackStatus CONFIRMED = TrackStatus._(1);
-  static const TrackStatus COASTING = TrackStatus._(2);
-  static const TrackStatus LOST = TrackStatus._(3);
-  static const TrackStatus DELETED = TrackStatus._(4);
-  static const Map<int, TrackStatus> values = {
+  static const TkgTrackStatus TENTATIVE = TkgTrackStatus._(0);
+  static const TkgTrackStatus CONFIRMED = TkgTrackStatus._(1);
+  static const TkgTrackStatus COASTING = TkgTrackStatus._(2);
+  static const TkgTrackStatus LOST = TkgTrackStatus._(3);
+  static const TkgTrackStatus DELETED = TkgTrackStatus._(4);
+  static const Map<int, TkgTrackStatus> values = {
     0: TENTATIVE,
     1: CONFIRMED,
     2: COASTING,
     3: LOST,
     4: DELETED};
 
-  static const fb.Reader<TrackStatus> reader = _TrackStatusReader();
+  static const fb.Reader<TkgTrackStatus> reader = _TkgTrackStatusReader();
 
   @override
   String toString() {
-    return 'TrackStatus{value: $value}';
+    return 'TkgTrackStatus{value: $value}';
   }
 }
 
-class _TrackStatusReader extends fb.Reader<TrackStatus> {
-  const _TrackStatusReader();
+class _TkgTrackStatusReader extends fb.Reader<TkgTrackStatus> {
+  const _TkgTrackStatusReader();
 
   @override
   int get size => 1;
 
   @override
-  TrackStatus read(fb.BufferContext bc, int offset) =>
-      TrackStatus.fromValue(const fb.Int8Reader().read(bc, offset));
+  TkgTrackStatus read(fb.BufferContext bc, int offset) =>
+      TkgTrackStatus.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
 class AssociationMethod {

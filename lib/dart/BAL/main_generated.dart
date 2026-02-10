@@ -187,50 +187,50 @@ class _ProjectileTypeReader extends fb.Reader<ProjectileType> {
       ProjectileType.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-class StabilizationType {
+class BalStabilizationType {
   final int value;
-  const StabilizationType._(this.value);
+  const BalStabilizationType._(this.value);
 
-  factory StabilizationType.fromValue(int value) {
+  factory BalStabilizationType.fromValue(int value) {
     final result = values[value];
     if (result == null) {
-        throw StateError('Invalid value $value for bit flag enum StabilizationType');
+        throw StateError('Invalid value $value for bit flag enum BalStabilizationType');
     }
     return result;
   }
 
-  static StabilizationType? _createOrNull(int? value) => 
-      value == null ? null : StabilizationType.fromValue(value);
+  static BalStabilizationType? _createOrNull(int? value) => 
+      value == null ? null : BalStabilizationType.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 2;
   static bool containsValue(int value) => values.containsKey(value);
 
-  static const StabilizationType SPIN = StabilizationType._(0);
-  static const StabilizationType FIN = StabilizationType._(1);
-  static const StabilizationType DUAL = StabilizationType._(2);
-  static const Map<int, StabilizationType> values = {
+  static const BalStabilizationType SPIN = BalStabilizationType._(0);
+  static const BalStabilizationType FIN = BalStabilizationType._(1);
+  static const BalStabilizationType DUAL = BalStabilizationType._(2);
+  static const Map<int, BalStabilizationType> values = {
     0: SPIN,
     1: FIN,
     2: DUAL};
 
-  static const fb.Reader<StabilizationType> reader = _StabilizationTypeReader();
+  static const fb.Reader<BalStabilizationType> reader = _BalStabilizationTypeReader();
 
   @override
   String toString() {
-    return 'StabilizationType{value: $value}';
+    return 'BalStabilizationType{value: $value}';
   }
 }
 
-class _StabilizationTypeReader extends fb.Reader<StabilizationType> {
-  const _StabilizationTypeReader();
+class _BalStabilizationTypeReader extends fb.Reader<BalStabilizationType> {
+  const _BalStabilizationTypeReader();
 
   @override
   int get size => 1;
 
   @override
-  StabilizationType read(fb.BufferContext bc, int offset) =>
-      StabilizationType.fromValue(const fb.Int8Reader().read(bc, offset));
+  BalStabilizationType read(fb.BufferContext bc, int offset) =>
+      BalStabilizationType.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
 class PenetrationModel {

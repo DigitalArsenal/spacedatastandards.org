@@ -181,24 +181,24 @@ inline const char *EnumNameProjectileType(ProjectileType e) {
   return EnumNamesProjectileType()[index];
 }
 
-enum StabilizationType : int8_t {
-  StabilizationType_SPIN = 0,
-  StabilizationType_FIN = 1,
-  StabilizationType_DUAL = 2,
-  StabilizationType_MIN = StabilizationType_SPIN,
-  StabilizationType_MAX = StabilizationType_DUAL
+enum BalStabilizationType : int8_t {
+  BalStabilizationType_SPIN = 0,
+  BalStabilizationType_FIN = 1,
+  BalStabilizationType_DUAL = 2,
+  BalStabilizationType_MIN = BalStabilizationType_SPIN,
+  BalStabilizationType_MAX = BalStabilizationType_DUAL
 };
 
-inline const StabilizationType (&EnumValuesStabilizationType())[3] {
-  static const StabilizationType values[] = {
-    StabilizationType_SPIN,
-    StabilizationType_FIN,
-    StabilizationType_DUAL
+inline const BalStabilizationType (&EnumValuesBalStabilizationType())[3] {
+  static const BalStabilizationType values[] = {
+    BalStabilizationType_SPIN,
+    BalStabilizationType_FIN,
+    BalStabilizationType_DUAL
   };
   return values;
 }
 
-inline const char * const *EnumNamesStabilizationType() {
+inline const char * const *EnumNamesBalStabilizationType() {
   static const char * const names[4] = {
     "SPIN",
     "FIN",
@@ -208,10 +208,10 @@ inline const char * const *EnumNamesStabilizationType() {
   return names;
 }
 
-inline const char *EnumNameStabilizationType(StabilizationType e) {
-  if (::flatbuffers::IsOutRange(e, StabilizationType_SPIN, StabilizationType_DUAL)) return "";
+inline const char *EnumNameBalStabilizationType(BalStabilizationType e) {
+  if (::flatbuffers::IsOutRange(e, BalStabilizationType_SPIN, BalStabilizationType_DUAL)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesStabilizationType()[index];
+  return EnumNamesBalStabilizationType()[index];
 }
 
 enum PenetrationModel : int8_t {

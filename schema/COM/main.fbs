@@ -1,7 +1,7 @@
-// Hash: 840b925abcbd036bfd81925cda410cac5477ad81f7b440d27067292ef64d8fd1
-// Version: 0.0.2
+// Hash: 10e8b94ba47381b62e7c81b9b33ef186f7848c3915b33ec395a7ae02edbe0491
+// Version: 0.0.3
 // -----------------------------------END_HEADER
-enum ModulationType : byte {
+enum ComModulationType : byte {
   AM,
   FM,
   PM,

@@ -67,7 +67,7 @@ public enum MeasurementType: Int8, Enum, Verifiable {
 }
 
 
-public enum TrackStatus: Int8, Enum, Verifiable {
+public enum TkgTrackStatus: Int8, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -77,8 +77,8 @@ public enum TrackStatus: Int8, Enum, Verifiable {
   case lost = 3
   case deleted = 4
 
-  public static var max: TrackStatus { return .deleted }
-  public static var min: TrackStatus { return .tentative }
+  public static var max: TkgTrackStatus { return .deleted }
+  public static var min: TkgTrackStatus { return .tentative }
 }
 
 

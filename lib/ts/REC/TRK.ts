@@ -4,8 +4,8 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { TrkTrackStatus } from './TrkTrackStatus.js';
 import { trackEnvironment } from './trackEnvironment.js';
-import { trackStatus } from './trackStatus.js';
 
 
 /**
@@ -136,9 +136,9 @@ TRK_NUM(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * Track status
  */
-TRK_STAT():trackStatus {
+TRK_STAT():TrkTrackStatus {
   const offset = this.bb!.__offset(this.bb_pos, 24);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : trackStatus.ACTIVE;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : TrkTrackStatus.ACTIVE;
 }
 
 /**
@@ -700,8 +700,8 @@ static addTrkNum(builder:flatbuffers.Builder, TRK_NUMOffset:flatbuffers.Offset) 
   builder.addFieldOffset(9, TRK_NUMOffset, 0);
 }
 
-static addTrkStat(builder:flatbuffers.Builder, TRK_STAT:trackStatus) {
-  builder.addFieldInt8(10, TRK_STAT, trackStatus.ACTIVE);
+static addTrkStat(builder:flatbuffers.Builder, TRK_STAT:TrkTrackStatus) {
+  builder.addFieldInt8(10, TRK_STAT, TrkTrackStatus.ACTIVE);
 }
 
 static addObjNat(builder:flatbuffers.Builder, OBJ_NATOffset:flatbuffers.Offset) {
@@ -1081,7 +1081,7 @@ static finishSizePrefixedTRKBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$TRK', true);
 }
 
-static createTRK(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CNTCTOffset:flatbuffers.Offset, MSG_TSOffset:flatbuffers.Offset, MSN_IDOffset:flatbuffers.Offset, ASSET_NATOffset:flatbuffers.Offset, ASSETOffset:flatbuffers.Offset, SENSOR_IDOffset:flatbuffers.Offset, SEN_QUALOffset:flatbuffers.Offset, TRK_IDOffset:flatbuffers.Offset, TRK_NUMOffset:flatbuffers.Offset, TRK_STAT:trackStatus, OBJ_NATOffset:flatbuffers.Offset, OBJ_IDOffset:flatbuffers.Offset, OBJ_TYPEOffset:flatbuffers.Offset, OBJ_SPECOffset:flatbuffers.Offset, OBJ_PLATOffset:flatbuffers.Offset, OBJ_ACTOffset:flatbuffers.Offset, MOD_TYPEOffset:flatbuffers.Offset, TRK_ITM_IDOffset:flatbuffers.Offset, TSOffset:flatbuffers.Offset, TRK_QUAL:number, TRK_PT_TYPEOffset:flatbuffers.Offset, OBJ_IDENTOffset:flatbuffers.Offset, IDENT_CRED:number, IDENT_REL:number, IDENT_AMPOffset:flatbuffers.Offset, ENVIRONMENT:trackEnvironment, ENVIRONMENT_CONF:number, TRK_CONF:number, LAT:number, LON:number, ALT:number, SPD:number, HDNG:number, COURSE:number, SRC_TYPSOffset:flatbuffers.Offset, SRC_IDSOffset:flatbuffers.Offset, CALL_SIGNOffset:flatbuffers.Offset, MULTI_SOURCE:boolean, J_SERIESOffset:flatbuffers.Offset, STRENGTH:number, M1:number, M1V:number, M2:number, M2V:number, M3A:number, M3AV:number, TAGSOffset:flatbuffers.Offset, TRACK_START_TIMEOffset:flatbuffers.Offset, TRACK_STEP_SIZE:number, TRACK_COMPONENTS:number, ECEF_POSOffset:flatbuffers.Offset, ECEF_VELOffset:flatbuffers.Offset, ECEF_ACCOffset:flatbuffers.Offset, LC_POSOffset:flatbuffers.Offset, LC_VELOffset:flatbuffers.Offset, LC_ACCOffset:flatbuffers.Offset, COVOffset:flatbuffers.Offset, ERR_ELLPOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createTRK(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CNTCTOffset:flatbuffers.Offset, MSG_TSOffset:flatbuffers.Offset, MSN_IDOffset:flatbuffers.Offset, ASSET_NATOffset:flatbuffers.Offset, ASSETOffset:flatbuffers.Offset, SENSOR_IDOffset:flatbuffers.Offset, SEN_QUALOffset:flatbuffers.Offset, TRK_IDOffset:flatbuffers.Offset, TRK_NUMOffset:flatbuffers.Offset, TRK_STAT:TrkTrackStatus, OBJ_NATOffset:flatbuffers.Offset, OBJ_IDOffset:flatbuffers.Offset, OBJ_TYPEOffset:flatbuffers.Offset, OBJ_SPECOffset:flatbuffers.Offset, OBJ_PLATOffset:flatbuffers.Offset, OBJ_ACTOffset:flatbuffers.Offset, MOD_TYPEOffset:flatbuffers.Offset, TRK_ITM_IDOffset:flatbuffers.Offset, TSOffset:flatbuffers.Offset, TRK_QUAL:number, TRK_PT_TYPEOffset:flatbuffers.Offset, OBJ_IDENTOffset:flatbuffers.Offset, IDENT_CRED:number, IDENT_REL:number, IDENT_AMPOffset:flatbuffers.Offset, ENVIRONMENT:trackEnvironment, ENVIRONMENT_CONF:number, TRK_CONF:number, LAT:number, LON:number, ALT:number, SPD:number, HDNG:number, COURSE:number, SRC_TYPSOffset:flatbuffers.Offset, SRC_IDSOffset:flatbuffers.Offset, CALL_SIGNOffset:flatbuffers.Offset, MULTI_SOURCE:boolean, J_SERIESOffset:flatbuffers.Offset, STRENGTH:number, M1:number, M1V:number, M2:number, M2V:number, M3A:number, M3AV:number, TAGSOffset:flatbuffers.Offset, TRACK_START_TIMEOffset:flatbuffers.Offset, TRACK_STEP_SIZE:number, TRACK_COMPONENTS:number, ECEF_POSOffset:flatbuffers.Offset, ECEF_VELOffset:flatbuffers.Offset, ECEF_ACCOffset:flatbuffers.Offset, LC_POSOffset:flatbuffers.Offset, LC_VELOffset:flatbuffers.Offset, LC_ACCOffset:flatbuffers.Offset, COVOffset:flatbuffers.Offset, ERR_ELLPOffset:flatbuffers.Offset):flatbuffers.Offset {
   TRK.startTRK(builder);
   TRK.addId(builder, IDOffset);
   TRK.addCntct(builder, CNTCTOffset);
@@ -1285,7 +1285,7 @@ constructor(
   public SEN_QUAL: string|Uint8Array|null = null,
   public TRK_ID: string|Uint8Array|null = null,
   public TRK_NUM: string|Uint8Array|null = null,
-  public TRK_STAT: trackStatus = trackStatus.ACTIVE,
+  public TRK_STAT: TrkTrackStatus = TrkTrackStatus.ACTIVE,
   public OBJ_NAT: string|Uint8Array|null = null,
   public OBJ_ID: string|Uint8Array|null = null,
   public OBJ_TYPE: string|Uint8Array|null = null,

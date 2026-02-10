@@ -1092,7 +1092,7 @@
         }
       }
     },
-    "StabilizationType": {
+    "BalStabilizationType": {
       "type": "string",
       "enum": [
         "SPIN",
@@ -1257,7 +1257,7 @@
         }
       }
     },
-    "stabilizationType": {
+    "BusStabilizationType": {
       "type": "string",
       "enum": [
         "THREE_AXIS",
@@ -2979,7 +2979,7 @@
         }
       }
     },
-    "modulationType": {
+    "CmsModulationType": {
       "type": "string",
       "enum": [
         "BPSK",
@@ -3089,7 +3089,7 @@
         }
       }
     },
-    "ModulationType": {
+    "ComModulationType": {
       "type": "string",
       "enum": [
         "AM",
@@ -8977,7 +8977,7 @@
         }
       }
     },
-    "TrackStatus": {
+    "TkgTrackStatus": {
       "type": "string",
       "enum": [
         "TENTATIVE",
@@ -9211,7 +9211,7 @@
         }
       }
     },
-    "trackStatus": {
+    "TrkTrackStatus": {
       "type": "string",
       "enum": [
         "ACTIVE",
@@ -12664,7 +12664,7 @@
           "x-flatbuffer-type": "double"
         },
         "STABILIZATION": {
-          "$ref": "#/definitions/stabilizationType",
+          "$ref": "#/definitions/BusStabilizationType",
           "description": "Stabilization method",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -15785,7 +15785,7 @@
           "x-flatbuffer-type": "double"
         },
         "MODULATION": {
-          "$ref": "#/definitions/modulationType",
+          "$ref": "#/definitions/CmsModulationType",
           "description": "Modulation type",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -38050,7 +38050,7 @@
           "x-flatbuffer-type": "string"
         },
         "TRK_STAT": {
-          "$ref": "#/definitions/trackStatus",
+          "$ref": "#/definitions/TrkTrackStatus",
           "description": "Track status",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",

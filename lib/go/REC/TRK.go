@@ -155,16 +155,16 @@ func (rcv *TRK) TRK_NUM() []byte {
 
 /// Track number
 /// Track status
-func (rcv *TRK) TRK_STAT() trackStatus {
+func (rcv *TRK) TRK_STAT() TrkTrackStatus {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
-		return trackStatus(rcv._tab.GetInt8(o + rcv._tab.Pos))
+		return TrkTrackStatus(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
 /// Track status
-func (rcv *TRK) MutateTRK_STAT(n trackStatus) bool {
+func (rcv *TRK) MutateTRK_STAT(n TrkTrackStatus) bool {
 	return rcv._tab.MutateInt8Slot(24, int8(n))
 }
 
@@ -940,7 +940,7 @@ func TRKAddTRK_ID(builder *flatbuffers.Builder, TRK_ID flatbuffers.UOffsetT) {
 func TRKAddTRK_NUM(builder *flatbuffers.Builder, TRK_NUM flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(TRK_NUM), 0)
 }
-func TRKAddTRK_STAT(builder *flatbuffers.Builder, TRK_STAT trackStatus) {
+func TRKAddTRK_STAT(builder *flatbuffers.Builder, TRK_STAT TrkTrackStatus) {
 	builder.PrependInt8Slot(10, int8(TRK_STAT), 0)
 }
 func TRKAddOBJ_NAT(builder *flatbuffers.Builder, OBJ_NAT flatbuffers.UOffsetT) {

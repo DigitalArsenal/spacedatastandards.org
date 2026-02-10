@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "trackStatus": {
+    "TrkTrackStatus": {
       "type": "string",
       "enum": [
         "ACTIVE",
@@ -122,7 +122,7 @@
           "x-flatbuffer-type": "string"
         },
         "TRK_STAT": {
-          "$ref": "#/definitions/trackStatus",
+          "$ref": "#/definitions/TrkTrackStatus",
           "description": "Track status",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",

@@ -1,3 +1,6 @@
+# Detect case-insensitive name collisions in FlatBuffer schemas
+node scripts/checkSchemaCasing.js
+
 # Update schema list and count in index.html from manifest
 node scripts/updateSchemaList.cjs
 node scripts/updateSchemaCount.cjs

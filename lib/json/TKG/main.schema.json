@@ -13,7 +13,7 @@
       "type" : "string",
       "enum": ["POSITION_3D", "POSITION_2D", "RANGE_BEARING", "RANGE_BEARING_ELEVATION", "RANGE_ONLY", "BEARING_ONLY", "RANGE_RATE", "ANGLES_ONLY", "TLE", "GPS", "RADAR", "ADSB", "SONAR"]
     },
-    "TrackStatus" : {
+    "TkgTrackStatus" : {
       "type" : "string",
       "enum": ["TENTATIVE", "CONFIRMED", "COASTING", "LOST", "DELETED"]
     },

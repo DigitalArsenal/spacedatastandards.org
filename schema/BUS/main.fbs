@@ -1,5 +1,5 @@
-// Hash: fd1ecfe93d46c47ff384417d11c017805d92352a9754023f0768f77586cc6f02
-// Version: 0.0.2
+// Hash: 58ed3d029f554f157afa7d43a80e9e5c5a54728a280a55930221f1b1331db5f8
+// Version: 0.0.3
 // -----------------------------------END_HEADER
 enum busSize : byte {
   FEMTO,
@@ -13,7 +13,7 @@ enum busSize : byte {
   HEAVY
 }
 
-enum stabilizationType : byte {
+enum BusStabilizationType : byte {
   THREE_AXIS,
   SPIN,
   GRAVITY_GRADIENT,
@@ -57,7 +57,7 @@ table BUS {
   /// Battery capacity in Watt-hours
   BATTERY_CAPACITY:double;
   /// Stabilization method
-  STABILIZATION:stabilizationType;
+  STABILIZATION:BusStabilizationType;
   /// Pointing accuracy in degrees
   POINTING_ACCURACY:double;
   /// Pointing knowledge in degrees

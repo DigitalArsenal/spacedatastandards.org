@@ -152,7 +152,7 @@
         }
       }
     },
-    "StabilizationType": {
+    "BalStabilizationType": {
       "type": "string",
       "enum": [
         "SPIN",

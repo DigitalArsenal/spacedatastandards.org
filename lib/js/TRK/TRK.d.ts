@@ -1,6 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
+import { TrkTrackStatus } from './TrkTrackStatus.js';
 import { trackEnvironment } from './trackEnvironment.js';
-import { trackStatus } from './trackStatus.js';
 /**
  * Track
  */
@@ -64,7 +64,7 @@ export declare class TRK implements flatbuffers.IUnpackableObject<TRKT> {
     /**
      * Track status
      */
-    TRK_STAT(): trackStatus;
+    TRK_STAT(): TrkTrackStatus;
     /**
      * Object nationality
      */
@@ -305,7 +305,7 @@ export declare class TRK implements flatbuffers.IUnpackableObject<TRKT> {
     static addSenQual(builder: flatbuffers.Builder, SEN_QUALOffset: flatbuffers.Offset): void;
     static addTrkId(builder: flatbuffers.Builder, TRK_IDOffset: flatbuffers.Offset): void;
     static addTrkNum(builder: flatbuffers.Builder, TRK_NUMOffset: flatbuffers.Offset): void;
-    static addTrkStat(builder: flatbuffers.Builder, TRK_STAT: trackStatus): void;
+    static addTrkStat(builder: flatbuffers.Builder, TRK_STAT: TrkTrackStatus): void;
     static addObjNat(builder: flatbuffers.Builder, OBJ_NATOffset: flatbuffers.Offset): void;
     static addObjId(builder: flatbuffers.Builder, OBJ_IDOffset: flatbuffers.Offset): void;
     static addObjType(builder: flatbuffers.Builder, OBJ_TYPEOffset: flatbuffers.Offset): void;
@@ -411,7 +411,7 @@ export declare class TRK implements flatbuffers.IUnpackableObject<TRKT> {
     static endTRK(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishTRKBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedTRKBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createTRK(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, CNTCTOffset: flatbuffers.Offset, MSG_TSOffset: flatbuffers.Offset, MSN_IDOffset: flatbuffers.Offset, ASSET_NATOffset: flatbuffers.Offset, ASSETOffset: flatbuffers.Offset, SENSOR_IDOffset: flatbuffers.Offset, SEN_QUALOffset: flatbuffers.Offset, TRK_IDOffset: flatbuffers.Offset, TRK_NUMOffset: flatbuffers.Offset, TRK_STAT: trackStatus, OBJ_NATOffset: flatbuffers.Offset, OBJ_IDOffset: flatbuffers.Offset, OBJ_TYPEOffset: flatbuffers.Offset, OBJ_SPECOffset: flatbuffers.Offset, OBJ_PLATOffset: flatbuffers.Offset, OBJ_ACTOffset: flatbuffers.Offset, MOD_TYPEOffset: flatbuffers.Offset, TRK_ITM_IDOffset: flatbuffers.Offset, TSOffset: flatbuffers.Offset, TRK_QUAL: number, TRK_PT_TYPEOffset: flatbuffers.Offset, OBJ_IDENTOffset: flatbuffers.Offset, IDENT_CRED: number, IDENT_REL: number, IDENT_AMPOffset: flatbuffers.Offset, ENVIRONMENT: trackEnvironment, ENVIRONMENT_CONF: number, TRK_CONF: number, LAT: number, LON: number, ALT: number, SPD: number, HDNG: number, COURSE: number, SRC_TYPSOffset: flatbuffers.Offset, SRC_IDSOffset: flatbuffers.Offset, CALL_SIGNOffset: flatbuffers.Offset, MULTI_SOURCE: boolean, J_SERIESOffset: flatbuffers.Offset, STRENGTH: number, M1: number, M1V: number, M2: number, M2V: number, M3A: number, M3AV: number, TAGSOffset: flatbuffers.Offset, TRACK_START_TIMEOffset: flatbuffers.Offset, TRACK_STEP_SIZE: number, TRACK_COMPONENTS: number, ECEF_POSOffset: flatbuffers.Offset, ECEF_VELOffset: flatbuffers.Offset, ECEF_ACCOffset: flatbuffers.Offset, LC_POSOffset: flatbuffers.Offset, LC_VELOffset: flatbuffers.Offset, LC_ACCOffset: flatbuffers.Offset, COVOffset: flatbuffers.Offset, ERR_ELLPOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createTRK(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, CNTCTOffset: flatbuffers.Offset, MSG_TSOffset: flatbuffers.Offset, MSN_IDOffset: flatbuffers.Offset, ASSET_NATOffset: flatbuffers.Offset, ASSETOffset: flatbuffers.Offset, SENSOR_IDOffset: flatbuffers.Offset, SEN_QUALOffset: flatbuffers.Offset, TRK_IDOffset: flatbuffers.Offset, TRK_NUMOffset: flatbuffers.Offset, TRK_STAT: TrkTrackStatus, OBJ_NATOffset: flatbuffers.Offset, OBJ_IDOffset: flatbuffers.Offset, OBJ_TYPEOffset: flatbuffers.Offset, OBJ_SPECOffset: flatbuffers.Offset, OBJ_PLATOffset: flatbuffers.Offset, OBJ_ACTOffset: flatbuffers.Offset, MOD_TYPEOffset: flatbuffers.Offset, TRK_ITM_IDOffset: flatbuffers.Offset, TSOffset: flatbuffers.Offset, TRK_QUAL: number, TRK_PT_TYPEOffset: flatbuffers.Offset, OBJ_IDENTOffset: flatbuffers.Offset, IDENT_CRED: number, IDENT_REL: number, IDENT_AMPOffset: flatbuffers.Offset, ENVIRONMENT: trackEnvironment, ENVIRONMENT_CONF: number, TRK_CONF: number, LAT: number, LON: number, ALT: number, SPD: number, HDNG: number, COURSE: number, SRC_TYPSOffset: flatbuffers.Offset, SRC_IDSOffset: flatbuffers.Offset, CALL_SIGNOffset: flatbuffers.Offset, MULTI_SOURCE: boolean, J_SERIESOffset: flatbuffers.Offset, STRENGTH: number, M1: number, M1V: number, M2: number, M2V: number, M3A: number, M3AV: number, TAGSOffset: flatbuffers.Offset, TRACK_START_TIMEOffset: flatbuffers.Offset, TRACK_STEP_SIZE: number, TRACK_COMPONENTS: number, ECEF_POSOffset: flatbuffers.Offset, ECEF_VELOffset: flatbuffers.Offset, ECEF_ACCOffset: flatbuffers.Offset, LC_POSOffset: flatbuffers.Offset, LC_VELOffset: flatbuffers.Offset, LC_ACCOffset: flatbuffers.Offset, COVOffset: flatbuffers.Offset, ERR_ELLPOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): TRKT;
     unpackTo(_o: TRKT): void;
 }
@@ -426,7 +426,7 @@ export declare class TRKT implements flatbuffers.IGeneratedObject {
     SEN_QUAL: string | Uint8Array | null;
     TRK_ID: string | Uint8Array | null;
     TRK_NUM: string | Uint8Array | null;
-    TRK_STAT: trackStatus;
+    TRK_STAT: TrkTrackStatus;
     OBJ_NAT: string | Uint8Array | null;
     OBJ_ID: string | Uint8Array | null;
     OBJ_TYPE: string | Uint8Array | null;
@@ -475,7 +475,7 @@ export declare class TRKT implements flatbuffers.IGeneratedObject {
     LC_ACC: (number)[];
     COV: (number)[];
     ERR_ELLP: (number)[];
-    constructor(ID?: string | Uint8Array | null, CNTCT?: string | Uint8Array | null, MSG_TS?: string | Uint8Array | null, MSN_ID?: string | Uint8Array | null, ASSET_NAT?: string | Uint8Array | null, ASSET?: string | Uint8Array | null, SENSOR_ID?: string | Uint8Array | null, SEN_QUAL?: string | Uint8Array | null, TRK_ID?: string | Uint8Array | null, TRK_NUM?: string | Uint8Array | null, TRK_STAT?: trackStatus, OBJ_NAT?: string | Uint8Array | null, OBJ_ID?: string | Uint8Array | null, OBJ_TYPE?: string | Uint8Array | null, OBJ_SPEC?: string | Uint8Array | null, OBJ_PLAT?: string | Uint8Array | null, OBJ_ACT?: string | Uint8Array | null, MOD_TYPE?: string | Uint8Array | null, TRK_ITM_ID?: string | Uint8Array | null, TS?: string | Uint8Array | null, TRK_QUAL?: number, TRK_PT_TYPE?: string | Uint8Array | null, OBJ_IDENT?: string | Uint8Array | null, IDENT_CRED?: number, IDENT_REL?: number, IDENT_AMP?: string | Uint8Array | null, ENVIRONMENT?: trackEnvironment, ENVIRONMENT_CONF?: number, TRK_CONF?: number, LAT?: number, LON?: number, ALT?: number, SPD?: number, HDNG?: number, COURSE?: number, SRC_TYPS?: (string)[], SRC_IDS?: (string)[], CALL_SIGN?: string | Uint8Array | null, MULTI_SOURCE?: boolean, J_SERIES?: string | Uint8Array | null, STRENGTH?: number, M1?: number, M1V?: number, M2?: number, M2V?: number, M3A?: number, M3AV?: number, TAGS?: (string)[], TRACK_START_TIME?: string | Uint8Array | null, TRACK_STEP_SIZE?: number, TRACK_COMPONENTS?: number, ECEF_POS?: (number)[], ECEF_VEL?: (number)[], ECEF_ACC?: (number)[], LC_POS?: (number)[], LC_VEL?: (number)[], LC_ACC?: (number)[], COV?: (number)[], ERR_ELLP?: (number)[]);
+    constructor(ID?: string | Uint8Array | null, CNTCT?: string | Uint8Array | null, MSG_TS?: string | Uint8Array | null, MSN_ID?: string | Uint8Array | null, ASSET_NAT?: string | Uint8Array | null, ASSET?: string | Uint8Array | null, SENSOR_ID?: string | Uint8Array | null, SEN_QUAL?: string | Uint8Array | null, TRK_ID?: string | Uint8Array | null, TRK_NUM?: string | Uint8Array | null, TRK_STAT?: TrkTrackStatus, OBJ_NAT?: string | Uint8Array | null, OBJ_ID?: string | Uint8Array | null, OBJ_TYPE?: string | Uint8Array | null, OBJ_SPEC?: string | Uint8Array | null, OBJ_PLAT?: string | Uint8Array | null, OBJ_ACT?: string | Uint8Array | null, MOD_TYPE?: string | Uint8Array | null, TRK_ITM_ID?: string | Uint8Array | null, TS?: string | Uint8Array | null, TRK_QUAL?: number, TRK_PT_TYPE?: string | Uint8Array | null, OBJ_IDENT?: string | Uint8Array | null, IDENT_CRED?: number, IDENT_REL?: number, IDENT_AMP?: string | Uint8Array | null, ENVIRONMENT?: trackEnvironment, ENVIRONMENT_CONF?: number, TRK_CONF?: number, LAT?: number, LON?: number, ALT?: number, SPD?: number, HDNG?: number, COURSE?: number, SRC_TYPS?: (string)[], SRC_IDS?: (string)[], CALL_SIGN?: string | Uint8Array | null, MULTI_SOURCE?: boolean, J_SERIES?: string | Uint8Array | null, STRENGTH?: number, M1?: number, M1V?: number, M2?: number, M2V?: number, M3A?: number, M3AV?: number, TAGS?: (string)[], TRACK_START_TIME?: string | Uint8Array | null, TRACK_STEP_SIZE?: number, TRACK_COMPONENTS?: number, ECEF_POS?: (number)[], ECEF_VEL?: (number)[], ECEF_ACC?: (number)[], LC_POS?: (number)[], LC_VEL?: (number)[], LC_ACC?: (number)[], COV?: (number)[], ERR_ELLP?: (number)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=TRK.d.ts.map

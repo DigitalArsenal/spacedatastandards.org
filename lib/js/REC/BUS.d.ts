@@ -1,6 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
+import { BusStabilizationType } from './BusStabilizationType.js';
 import { busSize } from './busSize.js';
-import { stabilizationType } from './stabilizationType.js';
 /**
  * Satellite Bus Specification
  */
@@ -81,7 +81,7 @@ export declare class BUS implements flatbuffers.IUnpackableObject<BUST> {
     /**
      * Stabilization method
      */
-    STABILIZATION(): stabilizationType;
+    STABILIZATION(): BusStabilizationType;
     /**
      * Pointing accuracy in degrees
      */
@@ -132,7 +132,7 @@ export declare class BUS implements flatbuffers.IUnpackableObject<BUST> {
     static addPowerGeneration(builder: flatbuffers.Builder, POWER_GENERATION: number): void;
     static addPayloadPower(builder: flatbuffers.Builder, PAYLOAD_POWER: number): void;
     static addBatteryCapacity(builder: flatbuffers.Builder, BATTERY_CAPACITY: number): void;
-    static addStabilization(builder: flatbuffers.Builder, STABILIZATION: stabilizationType): void;
+    static addStabilization(builder: flatbuffers.Builder, STABILIZATION: BusStabilizationType): void;
     static addPointingAccuracy(builder: flatbuffers.Builder, POINTING_ACCURACY: number): void;
     static addPointingKnowledge(builder: flatbuffers.Builder, POINTING_KNOWLEDGE: number): void;
     static addDesignLife(builder: flatbuffers.Builder, DESIGN_LIFE: number): void;
@@ -144,7 +144,7 @@ export declare class BUS implements flatbuffers.IUnpackableObject<BUST> {
     static endBUS(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishBUSBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedBUSBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createBUS(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, NAMEOffset: flatbuffers.Offset, MANUFACTUREROffset: flatbuffers.Offset, SIZE: busSize, DRY_MASS: number, WET_MASS: number, PAYLOAD_MASS: number, DIM_X: number, DIM_Y: number, DIM_Z: number, STOWED_X: number, STOWED_Y: number, STOWED_Z: number, POWER_GENERATION: number, PAYLOAD_POWER: number, BATTERY_CAPACITY: number, STABILIZATION: stabilizationType, POINTING_ACCURACY: number, POINTING_KNOWLEDGE: number, DESIGN_LIFE: number, DATA_STORAGE: number, DOWNLINK_RATE: number, PAYLOAD_SLOTS: number, HERITAGE_COUNT: number, NOTESOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createBUS(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, NAMEOffset: flatbuffers.Offset, MANUFACTUREROffset: flatbuffers.Offset, SIZE: busSize, DRY_MASS: number, WET_MASS: number, PAYLOAD_MASS: number, DIM_X: number, DIM_Y: number, DIM_Z: number, STOWED_X: number, STOWED_Y: number, STOWED_Z: number, POWER_GENERATION: number, PAYLOAD_POWER: number, BATTERY_CAPACITY: number, STABILIZATION: BusStabilizationType, POINTING_ACCURACY: number, POINTING_KNOWLEDGE: number, DESIGN_LIFE: number, DATA_STORAGE: number, DOWNLINK_RATE: number, PAYLOAD_SLOTS: number, HERITAGE_COUNT: number, NOTESOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): BUST;
     unpackTo(_o: BUST): void;
 }
@@ -165,7 +165,7 @@ export declare class BUST implements flatbuffers.IGeneratedObject {
     POWER_GENERATION: number;
     PAYLOAD_POWER: number;
     BATTERY_CAPACITY: number;
-    STABILIZATION: stabilizationType;
+    STABILIZATION: BusStabilizationType;
     POINTING_ACCURACY: number;
     POINTING_KNOWLEDGE: number;
     DESIGN_LIFE: number;
@@ -174,7 +174,7 @@ export declare class BUST implements flatbuffers.IGeneratedObject {
     PAYLOAD_SLOTS: number;
     HERITAGE_COUNT: number;
     NOTES: string | Uint8Array | null;
-    constructor(ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, MANUFACTURER?: string | Uint8Array | null, SIZE?: busSize, DRY_MASS?: number, WET_MASS?: number, PAYLOAD_MASS?: number, DIM_X?: number, DIM_Y?: number, DIM_Z?: number, STOWED_X?: number, STOWED_Y?: number, STOWED_Z?: number, POWER_GENERATION?: number, PAYLOAD_POWER?: number, BATTERY_CAPACITY?: number, STABILIZATION?: stabilizationType, POINTING_ACCURACY?: number, POINTING_KNOWLEDGE?: number, DESIGN_LIFE?: number, DATA_STORAGE?: number, DOWNLINK_RATE?: number, PAYLOAD_SLOTS?: number, HERITAGE_COUNT?: number, NOTES?: string | Uint8Array | null);
+    constructor(ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, MANUFACTURER?: string | Uint8Array | null, SIZE?: busSize, DRY_MASS?: number, WET_MASS?: number, PAYLOAD_MASS?: number, DIM_X?: number, DIM_Y?: number, DIM_Z?: number, STOWED_X?: number, STOWED_Y?: number, STOWED_Z?: number, POWER_GENERATION?: number, PAYLOAD_POWER?: number, BATTERY_CAPACITY?: number, STABILIZATION?: BusStabilizationType, POINTING_ACCURACY?: number, POINTING_KNOWLEDGE?: number, DESIGN_LIFE?: number, DATA_STORAGE?: number, DOWNLINK_RATE?: number, PAYLOAD_SLOTS?: number, HERITAGE_COUNT?: number, NOTES?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=BUS.d.ts.map

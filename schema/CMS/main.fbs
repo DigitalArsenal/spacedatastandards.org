@@ -1,7 +1,7 @@
-// Hash: c76f53da4229410b31ff52364d93b114e34bd0c73efc9d1638d1bc0527fa613f
-// Version: 0.0.3
+// Hash: ae3d2d52a501570ae34eddbece952dc023b4c84a562c81d3071ae50abb3af4e1
+// Version: 0.0.4
 // -----------------------------------END_HEADER
-enum modulationType : byte {
+enum CmsModulationType : byte {
   BPSK,
   QPSK,
   OQPSK,
@@ -43,7 +43,7 @@ table commsChannel {
   /// Channel bandwidth in MHz
   BANDWIDTH:double;
   /// Modulation type
-  MODULATION:modulationType;
+  MODULATION:CmsModulationType;
   /// Data rate in Mbps
   DATA_RATE:double;
   /// Encryption method

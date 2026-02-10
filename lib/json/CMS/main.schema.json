@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "modulationType" : {
+    "CmsModulationType" : {
       "type" : "string",
       "enum": ["BPSK", "QPSK", "OQPSK", "PSK8", "QAM16", "QAM64", "FSK", "MSK", "GMSK", "AM", "FM", "PM", "SPREAD_SPECTRUM", "DVB_S2", "DVB_S2X"]
     },
@@ -34,7 +34,7 @@
                 "description" : "Channel bandwidth in MHz"
               },
         "MODULATION" : {
-                "$ref" : "#/definitions/modulationType",
+                "$ref" : "#/definitions/CmsModulationType",
                 "description" : "Modulation type"
               },
         "DATA_RATE" : {

@@ -1,7 +1,7 @@
-// Hash: fdfd34c0dd0b48c4eff5778644d78889cab9c7a637f8eb724db118c48b19aa26
-// Version: 2.0.2
+// Hash: 5b87a47537300cd28c1f8ceac4ae8b0323077aa01869fe77a0af9e30ab273ad3
+// Version: 2.0.3
 // -----------------------------------END_HEADER
-enum trackStatus : byte {
+enum TrkTrackStatus : byte {
   ACTIVE,
   DROPPED,
   TENTATIVE,
@@ -42,7 +42,7 @@ table TRK {
   /// Track number
   TRK_NUM:string;
   /// Track status
-  TRK_STAT:trackStatus;
+  TRK_STAT:TrkTrackStatus;
   /// Object nationality
   OBJ_NAT:string;
   /// Object identifier

@@ -1,5 +1,5 @@
-// Hash: d481dbc51d12c393c05051a54b18f9bcd06205d429902dd0889f5db96193201f
-// Version: 0.0.2
+// Hash: 3857bd488c907c9faeeb3f401d7852b9bd96bcd21d3dbd978ef7212db15aefe0
+// Version: 0.0.3
 // -----------------------------------END_HEADER
 enum FilterType : byte {
   ALPHA_BETA,
@@ -43,7 +43,7 @@ enum MeasurementType : byte {
   SONAR                   // Sonar bearing/range
 }
 
-enum TrackStatus : byte {
+enum TkgTrackStatus : byte {
   TENTATIVE,              // Initial detections,
   CONFIRMED,              // Confirmed track,
   COASTING,               // No recent update,

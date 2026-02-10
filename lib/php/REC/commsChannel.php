@@ -92,7 +92,7 @@ class commsChannel extends Table
     public function getMODULATION()
     {
         $o = $this->__offset(14);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \modulationType::BPSK;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \CmsModulationType::BPSK;
     }
 
     /// Data rate in Mbps

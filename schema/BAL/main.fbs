@@ -1,5 +1,5 @@
-// Hash: fa2cd0d11ca94e65b6a38e7b37bf5b9d90a6bb28061c7a694be4d74ffc211b83
-// Version: 0.0.2
+// Hash: e67570ad4b641365a788ca3980c3e48e831842125a422632ae6a5fc2dd597210
+// Version: 0.0.3
 // -----------------------------------END_HEADER
 enum DragModel : byte {
   G1,                     // Standard rifle bullet,
@@ -41,7 +41,7 @@ enum ProjectileType : byte {
   ROCKET
 }
 
-enum StabilizationType : byte {
+enum BalStabilizationType : byte {
   SPIN,                   // Spin stabilized,
   FIN,                    // Fin stabilized,
   DUAL                    // Spin + fin (e.g., APFSDS)

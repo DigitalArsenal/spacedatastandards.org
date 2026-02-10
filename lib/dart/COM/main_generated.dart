@@ -5,41 +5,41 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-class ModulationType {
+class ComModulationType {
   final int value;
-  const ModulationType._(this.value);
+  const ComModulationType._(this.value);
 
-  factory ModulationType.fromValue(int value) {
+  factory ComModulationType.fromValue(int value) {
     final result = values[value];
     if (result == null) {
-        throw StateError('Invalid value $value for bit flag enum ModulationType');
+        throw StateError('Invalid value $value for bit flag enum ComModulationType');
     }
     return result;
   }
 
-  static ModulationType? _createOrNull(int? value) => 
-      value == null ? null : ModulationType.fromValue(value);
+  static ComModulationType? _createOrNull(int? value) => 
+      value == null ? null : ComModulationType.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 14;
   static bool containsValue(int value) => values.containsKey(value);
 
-  static const ModulationType AM = ModulationType._(0);
-  static const ModulationType FM = ModulationType._(1);
-  static const ModulationType PM = ModulationType._(2);
-  static const ModulationType BPSK = ModulationType._(3);
-  static const ModulationType QPSK = ModulationType._(4);
-  static const ModulationType PSK8 = ModulationType._(5);
-  static const ModulationType QAM16 = ModulationType._(6);
-  static const ModulationType QAM64 = ModulationType._(7);
-  static const ModulationType QAM256 = ModulationType._(8);
-  static const ModulationType FSK = ModulationType._(9);
-  static const ModulationType MSK = ModulationType._(10);
-  static const ModulationType OFDM = ModulationType._(11);
-  static const ModulationType SPREAD_SPECTRUM = ModulationType._(12);
-  static const ModulationType FHSS = ModulationType._(13);
-  static const ModulationType DSSS = ModulationType._(14);
-  static const Map<int, ModulationType> values = {
+  static const ComModulationType AM = ComModulationType._(0);
+  static const ComModulationType FM = ComModulationType._(1);
+  static const ComModulationType PM = ComModulationType._(2);
+  static const ComModulationType BPSK = ComModulationType._(3);
+  static const ComModulationType QPSK = ComModulationType._(4);
+  static const ComModulationType PSK8 = ComModulationType._(5);
+  static const ComModulationType QAM16 = ComModulationType._(6);
+  static const ComModulationType QAM64 = ComModulationType._(7);
+  static const ComModulationType QAM256 = ComModulationType._(8);
+  static const ComModulationType FSK = ComModulationType._(9);
+  static const ComModulationType MSK = ComModulationType._(10);
+  static const ComModulationType OFDM = ComModulationType._(11);
+  static const ComModulationType SPREAD_SPECTRUM = ComModulationType._(12);
+  static const ComModulationType FHSS = ComModulationType._(13);
+  static const ComModulationType DSSS = ComModulationType._(14);
+  static const Map<int, ComModulationType> values = {
     0: AM,
     1: FM,
     2: PM,
@@ -56,23 +56,23 @@ class ModulationType {
     13: FHSS,
     14: DSSS};
 
-  static const fb.Reader<ModulationType> reader = _ModulationTypeReader();
+  static const fb.Reader<ComModulationType> reader = _ComModulationTypeReader();
 
   @override
   String toString() {
-    return 'ModulationType{value: $value}';
+    return 'ComModulationType{value: $value}';
   }
 }
 
-class _ModulationTypeReader extends fb.Reader<ModulationType> {
-  const _ModulationTypeReader();
+class _ComModulationTypeReader extends fb.Reader<ComModulationType> {
+  const _ComModulationTypeReader();
 
   @override
   int get size => 1;
 
   @override
-  ModulationType read(fb.BufferContext bc, int offset) =>
-      ModulationType.fromValue(const fb.Int8Reader().read(bc, offset));
+  ComModulationType read(fb.BufferContext bc, int offset) =>
+      ComModulationType.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
 class BandType {

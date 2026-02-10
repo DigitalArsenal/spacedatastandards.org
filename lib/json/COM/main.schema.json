@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "ModulationType" : {
+    "ComModulationType" : {
       "type" : "string",
       "enum": ["AM", "FM", "PM", "BPSK", "QPSK", "PSK8", "QAM16", "QAM64", "QAM256", "FSK", "MSK", "OFDM", "SPREAD_SPECTRUM", "FHSS", "DSSS"]
     },

@@ -10,25 +10,25 @@ extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_TRACK_STATUS: i8 = 0;
+pub const ENUM_MIN_TRK_TRACK_STATUS: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_TRACK_STATUS: i8 = 5;
+pub const ENUM_MAX_TRK_TRACK_STATUS: i8 = 5;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_TRACK_STATUS: [trackStatus; 6] = [
-  trackStatus::ACTIVE,
-  trackStatus::DROPPED,
-  trackStatus::TENTATIVE,
-  trackStatus::CONFIRMED,
-  trackStatus::COASTED,
-  trackStatus::DEAD,
+pub const ENUM_VALUES_TRK_TRACK_STATUS: [TrkTrackStatus; 6] = [
+  TrkTrackStatus::ACTIVE,
+  TrkTrackStatus::DROPPED,
+  TrkTrackStatus::TENTATIVE,
+  TrkTrackStatus::CONFIRMED,
+  TrkTrackStatus::COASTED,
+  TrkTrackStatus::DEAD,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct trackStatus(pub i8);
+pub struct TrkTrackStatus(pub i8);
 #[allow(non_upper_case_globals)]
-impl trackStatus {
+impl TrkTrackStatus {
   pub const ACTIVE: Self = Self(0);
   pub const DROPPED: Self = Self(1);
   pub const TENTATIVE: Self = Self(2);
@@ -59,7 +59,7 @@ impl trackStatus {
     }
   }
 }
-impl core::fmt::Debug for trackStatus {
+impl core::fmt::Debug for TrkTrackStatus {
   fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -68,7 +68,7 @@ impl core::fmt::Debug for trackStatus {
     }
   }
 }
-impl<'a> flatbuffers::Follow<'a> for trackStatus {
+impl<'a> flatbuffers::Follow<'a> for TrkTrackStatus {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -77,15 +77,15 @@ impl<'a> flatbuffers::Follow<'a> for trackStatus {
   }
 }
 
-impl flatbuffers::Push for trackStatus {
-    type Output = trackStatus;
+impl flatbuffers::Push for TrkTrackStatus {
+    type Output = TrkTrackStatus;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         flatbuffers::emplace_scalar::<i8>(dst, self.0);
     }
 }
 
-impl flatbuffers::EndianScalar for trackStatus {
+impl flatbuffers::EndianScalar for TrkTrackStatus {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -99,7 +99,7 @@ impl flatbuffers::EndianScalar for trackStatus {
   }
 }
 
-impl<'a> flatbuffers::Verifiable for trackStatus {
+impl<'a> flatbuffers::Verifiable for TrkTrackStatus {
   #[inline]
   fn run_verifier(
     v: &mut flatbuffers::Verifier, pos: usize
@@ -109,7 +109,7 @@ impl<'a> flatbuffers::Verifiable for trackStatus {
   }
 }
 
-impl flatbuffers::SimpleToVerifyInSlice for trackStatus {}
+impl flatbuffers::SimpleToVerifyInSlice for TrkTrackStatus {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_TRACK_ENVIRONMENT: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -637,11 +637,11 @@ impl<'a> TRK<'a> {
   }
   /// Track status
   #[inline]
-  pub fn TRK_STAT(&self) -> trackStatus {
+  pub fn TRK_STAT(&self) -> TrkTrackStatus {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<trackStatus>(TRK::VT_TRK_STAT, Some(trackStatus::ACTIVE)).unwrap()}
+    unsafe { self._tab.get::<TrkTrackStatus>(TRK::VT_TRK_STAT, Some(TrkTrackStatus::ACTIVE)).unwrap()}
   }
   /// Object nationality
   #[inline]
@@ -1046,7 +1046,7 @@ impl flatbuffers::Verifiable for TRK<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SEN_QUAL", Self::VT_SEN_QUAL, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRK_ID", Self::VT_TRK_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRK_NUM", Self::VT_TRK_NUM, false)?
-     .visit_field::<trackStatus>("TRK_STAT", Self::VT_TRK_STAT, false)?
+     .visit_field::<TrkTrackStatus>("TRK_STAT", Self::VT_TRK_STAT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJ_NAT", Self::VT_OBJ_NAT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJ_ID", Self::VT_OBJ_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJ_TYPE", Self::VT_OBJ_TYPE, false)?
@@ -1110,7 +1110,7 @@ pub struct TRKArgs<'a> {
     pub SEN_QUAL: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TRK_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TRK_NUM: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub TRK_STAT: trackStatus,
+    pub TRK_STAT: TrkTrackStatus,
     pub OBJ_NAT: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OBJ_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OBJ_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -1174,7 +1174,7 @@ impl<'a> Default for TRKArgs<'a> {
       SEN_QUAL: None,
       TRK_ID: None,
       TRK_NUM: None,
-      TRK_STAT: trackStatus::ACTIVE,
+      TRK_STAT: TrkTrackStatus::ACTIVE,
       OBJ_NAT: None,
       OBJ_ID: None,
       OBJ_TYPE: None,
@@ -1273,8 +1273,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> TRKBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_TRK_NUM, TRK_NUM);
   }
   #[inline]
-  pub fn add_TRK_STAT(&mut self, TRK_STAT: trackStatus) {
-    self.fbb_.push_slot::<trackStatus>(TRK::VT_TRK_STAT, TRK_STAT, trackStatus::ACTIVE);
+  pub fn add_TRK_STAT(&mut self, TRK_STAT: TrkTrackStatus) {
+    self.fbb_.push_slot::<TrkTrackStatus>(TRK::VT_TRK_STAT, TRK_STAT, TrkTrackStatus::ACTIVE);
   }
   #[inline]
   pub fn add_OBJ_NAT(&mut self, OBJ_NAT: flatbuffers::WIPOffset<&'b  str>) {
@@ -1561,7 +1561,7 @@ pub struct TRKT {
   pub SEN_QUAL: Option<String>,
   pub TRK_ID: Option<String>,
   pub TRK_NUM: Option<String>,
-  pub TRK_STAT: trackStatus,
+  pub TRK_STAT: TrkTrackStatus,
   pub OBJ_NAT: Option<String>,
   pub OBJ_ID: Option<String>,
   pub OBJ_TYPE: Option<String>,
@@ -1624,7 +1624,7 @@ impl Default for TRKT {
       SEN_QUAL: None,
       TRK_ID: None,
       TRK_NUM: None,
-      TRK_STAT: trackStatus::ACTIVE,
+      TRK_STAT: TrkTrackStatus::ACTIVE,
       OBJ_NAT: None,
       OBJ_ID: None,
       OBJ_TYPE: None,

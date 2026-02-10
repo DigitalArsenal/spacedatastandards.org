@@ -12,13 +12,13 @@ enum busSize:
     busSize_LARGE = 7
     busSize_HEAVY = 8
 
-enum stabilizationType:
-    stabilizationType_THREE_AXIS = 0
-    stabilizationType_SPIN = 1
-    stabilizationType_GRAVITY_GRADIENT = 2
-    stabilizationType_MAGNETIC = 3
-    stabilizationType_DUAL_SPIN = 4
-    stabilizationType_NONE = 5
+enum BusStabilizationType:
+    BusStabilizationType_THREE_AXIS = 0
+    BusStabilizationType_SPIN = 1
+    BusStabilizationType_GRAVITY_GRADIENT = 2
+    BusStabilizationType_MAGNETIC = 3
+    BusStabilizationType_DUAL_SPIN = 4
+    BusStabilizationType_NONE = 5
 
 class BUS
 
@@ -73,8 +73,8 @@ class BUS : flatbuffers.handle
     def BATTERY_CAPACITY() -> float:
         return flatbuffers.field_float64(buf_, pos_, 34, 0.0)
     /// Stabilization method
-    def STABILIZATION() -> stabilizationType:
-        return stabilizationType(flatbuffers.field_int8(buf_, pos_, 36, 0))
+    def STABILIZATION() -> BusStabilizationType:
+        return BusStabilizationType(flatbuffers.field_int8(buf_, pos_, 36, 0))
     /// Pointing accuracy in degrees
     def POINTING_ACCURACY() -> float:
         return flatbuffers.field_float64(buf_, pos_, 38, 0.0)
@@ -155,7 +155,7 @@ struct BUSBuilder:
     def add_BATTERY_CAPACITY(BATTERY_CAPACITY:float):
         b_.PrependFloat64Slot(15, BATTERY_CAPACITY, 0.0)
         return this
-    def add_STABILIZATION(STABILIZATION:stabilizationType):
+    def add_STABILIZATION(STABILIZATION:BusStabilizationType):
         b_.PrependInt8Slot(16, STABILIZATION, 0)
         return this
     def add_POINTING_ACCURACY(POINTING_ACCURACY:float):

@@ -40,7 +40,7 @@ public struct commsChannel : IFlatbufferObject
   /// Channel bandwidth in MHz
   public double BANDWIDTH { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Modulation type
-  public modulationType MODULATION { get { int o = __p.__offset(14); return o != 0 ? (modulationType)__p.bb.GetSbyte(o + __p.bb_pos) : modulationType.BPSK; } }
+  public CmsModulationType MODULATION { get { int o = __p.__offset(14); return o != 0 ? (CmsModulationType)__p.bb.GetSbyte(o + __p.bb_pos) : CmsModulationType.BPSK; } }
   /// Data rate in Mbps
   public double DATA_RATE { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Encryption method
@@ -56,7 +56,7 @@ public struct commsChannel : IFlatbufferObject
       double UPLINK_FREQ = 0.0,
       double DOWNLINK_FREQ = 0.0,
       double BANDWIDTH = 0.0,
-      modulationType MODULATION = modulationType.BPSK,
+      CmsModulationType MODULATION = CmsModulationType.BPSK,
       double DATA_RATE = 0.0,
       encryptionType ENCRYPTION = encryptionType.NONE,
       double FEC_RATE = 0.0,
@@ -81,7 +81,7 @@ public struct commsChannel : IFlatbufferObject
   public static void AddUPLINK_FREQ(FlatBufferBuilder builder, double UPLINK_FREQ) { builder.AddDouble(2, UPLINK_FREQ, 0.0); }
   public static void AddDOWNLINK_FREQ(FlatBufferBuilder builder, double DOWNLINK_FREQ) { builder.AddDouble(3, DOWNLINK_FREQ, 0.0); }
   public static void AddBANDWIDTH(FlatBufferBuilder builder, double BANDWIDTH) { builder.AddDouble(4, BANDWIDTH, 0.0); }
-  public static void AddMODULATION(FlatBufferBuilder builder, modulationType MODULATION) { builder.AddSbyte(5, (sbyte)MODULATION, 0); }
+  public static void AddMODULATION(FlatBufferBuilder builder, CmsModulationType MODULATION) { builder.AddSbyte(5, (sbyte)MODULATION, 0); }
   public static void AddDATA_RATE(FlatBufferBuilder builder, double DATA_RATE) { builder.AddDouble(6, DATA_RATE, 0.0); }
   public static void AddENCRYPTION(FlatBufferBuilder builder, encryptionType ENCRYPTION) { builder.AddSbyte(7, (sbyte)ENCRYPTION, 0); }
   public static void AddFEC_RATE(FlatBufferBuilder builder, double FEC_RATE) { builder.AddDouble(8, FEC_RATE, 0.0); }
@@ -133,7 +133,7 @@ public class commsChannelT
   public double UPLINK_FREQ { get; set; }
   public double DOWNLINK_FREQ { get; set; }
   public double BANDWIDTH { get; set; }
-  public modulationType MODULATION { get; set; }
+  public CmsModulationType MODULATION { get; set; }
   public double DATA_RATE { get; set; }
   public encryptionType ENCRYPTION { get; set; }
   public double FEC_RATE { get; set; }
@@ -145,7 +145,7 @@ public class commsChannelT
     this.UPLINK_FREQ = 0.0;
     this.DOWNLINK_FREQ = 0.0;
     this.BANDWIDTH = 0.0;
-    this.MODULATION = modulationType.BPSK;
+    this.MODULATION = CmsModulationType.BPSK;
     this.DATA_RATE = 0.0;
     this.ENCRYPTION = encryptionType.NONE;
     this.FEC_RATE = 0.0;
@@ -164,7 +164,7 @@ static public class commsChannelVerify
       && verifier.VerifyField(tablePos, 8 /*UPLINK_FREQ*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 10 /*DOWNLINK_FREQ*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 12 /*BANDWIDTH*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 14 /*MODULATION*/, 1 /*modulationType*/, 1, false)
+      && verifier.VerifyField(tablePos, 14 /*MODULATION*/, 1 /*CmsModulationType*/, 1, false)
       && verifier.VerifyField(tablePos, 16 /*DATA_RATE*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 18 /*ENCRYPTION*/, 1 /*encryptionType*/, 1, false)
       && verifier.VerifyField(tablePos, 20 /*FEC_RATE*/, 8 /*double*/, 8, false)

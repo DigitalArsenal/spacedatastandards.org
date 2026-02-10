@@ -187,28 +187,28 @@ inline const char *EnumNameMeasurementType(MeasurementType e) {
   return EnumNamesMeasurementType()[index];
 }
 
-enum TrackStatus : int8_t {
-  TrackStatus_TENTATIVE = 0,
-  TrackStatus_CONFIRMED = 1,
-  TrackStatus_COASTING = 2,
-  TrackStatus_LOST = 3,
-  TrackStatus_DELETED = 4,
-  TrackStatus_MIN = TrackStatus_TENTATIVE,
-  TrackStatus_MAX = TrackStatus_DELETED
+enum TkgTrackStatus : int8_t {
+  TkgTrackStatus_TENTATIVE = 0,
+  TkgTrackStatus_CONFIRMED = 1,
+  TkgTrackStatus_COASTING = 2,
+  TkgTrackStatus_LOST = 3,
+  TkgTrackStatus_DELETED = 4,
+  TkgTrackStatus_MIN = TkgTrackStatus_TENTATIVE,
+  TkgTrackStatus_MAX = TkgTrackStatus_DELETED
 };
 
-inline const TrackStatus (&EnumValuesTrackStatus())[5] {
-  static const TrackStatus values[] = {
-    TrackStatus_TENTATIVE,
-    TrackStatus_CONFIRMED,
-    TrackStatus_COASTING,
-    TrackStatus_LOST,
-    TrackStatus_DELETED
+inline const TkgTrackStatus (&EnumValuesTkgTrackStatus())[5] {
+  static const TkgTrackStatus values[] = {
+    TkgTrackStatus_TENTATIVE,
+    TkgTrackStatus_CONFIRMED,
+    TkgTrackStatus_COASTING,
+    TkgTrackStatus_LOST,
+    TkgTrackStatus_DELETED
   };
   return values;
 }
 
-inline const char * const *EnumNamesTrackStatus() {
+inline const char * const *EnumNamesTkgTrackStatus() {
   static const char * const names[6] = {
     "TENTATIVE",
     "CONFIRMED",
@@ -220,10 +220,10 @@ inline const char * const *EnumNamesTrackStatus() {
   return names;
 }
 
-inline const char *EnumNameTrackStatus(TrackStatus e) {
-  if (::flatbuffers::IsOutRange(e, TrackStatus_TENTATIVE, TrackStatus_DELETED)) return "";
+inline const char *EnumNameTkgTrackStatus(TkgTrackStatus e) {
+  if (::flatbuffers::IsOutRange(e, TkgTrackStatus_TENTATIVE, TkgTrackStatus_DELETED)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamesTrackStatus()[index];
+  return EnumNamesTkgTrackStatus()[index];
 }
 
 enum AssociationMethod : int8_t {

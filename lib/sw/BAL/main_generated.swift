@@ -65,7 +65,7 @@ public enum ProjectileType: Int8, Enum, Verifiable {
 }
 
 
-public enum StabilizationType: Int8, Enum, Verifiable {
+public enum BalStabilizationType: Int8, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -73,8 +73,8 @@ public enum StabilizationType: Int8, Enum, Verifiable {
   case fin = 1
   case dual = 2
 
-  public static var max: StabilizationType { return .dual }
-  public static var min: StabilizationType { return .spin }
+  public static var max: BalStabilizationType { return .dual }
+  public static var min: BalStabilizationType { return .spin }
 }
 
 

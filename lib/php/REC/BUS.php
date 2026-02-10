@@ -199,7 +199,7 @@ class BUS extends Table
     public function getSTABILIZATION()
     {
         $o = $this->__offset(36);
-        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \stabilizationType::THREE_AXIS;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \BusStabilizationType::THREE_AXIS;
     }
 
     /// Pointing accuracy in degrees

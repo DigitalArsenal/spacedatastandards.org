@@ -4,7 +4,7 @@
 
 import FlatBuffers
 
-public enum trackStatus: Int8, Enum, Verifiable {
+public enum TrkTrackStatus: Int8, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -15,8 +15,8 @@ public enum trackStatus: Int8, Enum, Verifiable {
   case coasted = 4
   case dead = 5
 
-  public static var max: trackStatus { return .dead }
-  public static var min: trackStatus { return .active }
+  public static var max: TrkTrackStatus { return .dead }
+  public static var min: TrkTrackStatus { return .active }
 }
 
 
@@ -143,7 +143,7 @@ public struct TRK: FlatBufferObject, Verifiable {
   public var TRK_NUM: String? { let o = _accessor.offset(VTOFFSET.TRK_NUM.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var TRK_NUMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRK_NUM.v) }
   ///  Track status
-  public var TRK_STAT: trackStatus { let o = _accessor.offset(VTOFFSET.TRK_STAT.v); return o == 0 ? .active : trackStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .active }
+  public var TRK_STAT: TrkTrackStatus { let o = _accessor.offset(VTOFFSET.TRK_STAT.v); return o == 0 ? .active : TrkTrackStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .active }
   ///  Object nationality
   public var OBJ_NAT: String? { let o = _accessor.offset(VTOFFSET.OBJ_NAT.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OBJ_NATSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJ_NAT.v) }
@@ -296,7 +296,7 @@ public struct TRK: FlatBufferObject, Verifiable {
   public static func add(SEN_QUAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEN_QUAL, at: VTOFFSET.SEN_QUAL.p) }
   public static func add(TRK_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRK_ID, at: VTOFFSET.TRK_ID.p) }
   public static func add(TRK_NUM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRK_NUM, at: VTOFFSET.TRK_NUM.p) }
-  public static func add(TRK_STAT: trackStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRK_STAT.rawValue, def: 0, at: VTOFFSET.TRK_STAT.p) }
+  public static func add(TRK_STAT: TrkTrackStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRK_STAT.rawValue, def: 0, at: VTOFFSET.TRK_STAT.p) }
   public static func add(OBJ_NAT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJ_NAT, at: VTOFFSET.OBJ_NAT.p) }
   public static func add(OBJ_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJ_ID, at: VTOFFSET.OBJ_ID.p) }
   public static func add(OBJ_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJ_TYPE, at: VTOFFSET.OBJ_TYPE.p) }
@@ -359,7 +359,7 @@ public struct TRK: FlatBufferObject, Verifiable {
     SEN_QUALOffset SEN_QUAL: Offset = Offset(),
     TRK_IDOffset TRK_ID: Offset = Offset(),
     TRK_NUMOffset TRK_NUM: Offset = Offset(),
-    TRK_STAT: trackStatus = .active,
+    TRK_STAT: TrkTrackStatus = .active,
     OBJ_NATOffset OBJ_NAT: Offset = Offset(),
     OBJ_IDOffset OBJ_ID: Offset = Offset(),
     OBJ_TYPEOffset OBJ_TYPE: Offset = Offset(),
@@ -484,7 +484,7 @@ public struct TRK: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.SEN_QUAL.p, fieldName: "SEN_QUAL", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.TRK_ID.p, fieldName: "TRK_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.TRK_NUM.p, fieldName: "TRK_NUM", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TRK_STAT.p, fieldName: "TRK_STAT", required: false, type: trackStatus.self)
+    try _v.visit(field: VTOFFSET.TRK_STAT.p, fieldName: "TRK_STAT", required: false, type: TrkTrackStatus.self)
     try _v.visit(field: VTOFFSET.OBJ_NAT.p, fieldName: "OBJ_NAT", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.OBJ_ID.p, fieldName: "OBJ_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.OBJ_TYPE.p, fieldName: "OBJ_TYPE", required: false, type: ForwardOffset<String>.self)

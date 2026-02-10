@@ -4,8 +4,8 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { CmsModulationType } from './CmsModulationType.js';
 import { encryptionType } from './encryptionType.js';
-import { ModulationType } from './ModulationType.js';
 
 
 /**
@@ -76,9 +76,9 @@ BANDWIDTH():number {
 /**
  * Modulation type
  */
-MODULATION():ModulationType {
+MODULATION():CmsModulationType {
   const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : ModulationType.BPSK;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : CmsModulationType.BPSK;
 }
 
 /**
@@ -137,8 +137,8 @@ static addBandwidth(builder:flatbuffers.Builder, BANDWIDTH:number) {
   builder.addFieldFloat64(4, BANDWIDTH, 0.0);
 }
 
-static addModulation(builder:flatbuffers.Builder, MODULATION:ModulationType) {
-  builder.addFieldInt8(5, MODULATION, ModulationType.BPSK);
+static addModulation(builder:flatbuffers.Builder, MODULATION:CmsModulationType) {
+  builder.addFieldInt8(5, MODULATION, CmsModulationType.BPSK);
 }
 
 static addDataRate(builder:flatbuffers.Builder, DATA_RATE:number) {
@@ -162,7 +162,7 @@ static endcommsChannel(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createcommsChannel(builder:flatbuffers.Builder, CHANNEL_IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, UPLINK_FREQ:number, DOWNLINK_FREQ:number, BANDWIDTH:number, MODULATION:ModulationType, DATA_RATE:number, ENCRYPTION:encryptionType, FEC_RATE:number, POWER:number):flatbuffers.Offset {
+static createcommsChannel(builder:flatbuffers.Builder, CHANNEL_IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, UPLINK_FREQ:number, DOWNLINK_FREQ:number, BANDWIDTH:number, MODULATION:CmsModulationType, DATA_RATE:number, ENCRYPTION:encryptionType, FEC_RATE:number, POWER:number):flatbuffers.Offset {
   commsChannel.startcommsChannel(builder);
   commsChannel.addChannelId(builder, CHANNEL_IDOffset);
   commsChannel.addName(builder, NAMEOffset);
@@ -214,7 +214,7 @@ constructor(
   public UPLINK_FREQ: number = 0.0,
   public DOWNLINK_FREQ: number = 0.0,
   public BANDWIDTH: number = 0.0,
-  public MODULATION: ModulationType = ModulationType.BPSK,
+  public MODULATION: CmsModulationType = CmsModulationType.BPSK,
   public DATA_RATE: number = 0.0,
   public ENCRYPTION: encryptionType = encryptionType.NONE,
   public FEC_RATE: number = 0.0,

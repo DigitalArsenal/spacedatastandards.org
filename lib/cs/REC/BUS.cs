@@ -70,7 +70,7 @@ public struct BUS : IFlatbufferObject
   /// Battery capacity in Watt-hours
   public double BATTERY_CAPACITY { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Stabilization method
-  public stabilizationType STABILIZATION { get { int o = __p.__offset(36); return o != 0 ? (stabilizationType)__p.bb.GetSbyte(o + __p.bb_pos) : stabilizationType.THREE_AXIS; } }
+  public BusStabilizationType STABILIZATION { get { int o = __p.__offset(36); return o != 0 ? (BusStabilizationType)__p.bb.GetSbyte(o + __p.bb_pos) : BusStabilizationType.THREE_AXIS; } }
   /// Pointing accuracy in degrees
   public double POINTING_ACCURACY { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Pointing knowledge in degrees
@@ -111,7 +111,7 @@ public struct BUS : IFlatbufferObject
       double POWER_GENERATION = 0.0,
       double PAYLOAD_POWER = 0.0,
       double BATTERY_CAPACITY = 0.0,
-      stabilizationType STABILIZATION = stabilizationType.THREE_AXIS,
+      BusStabilizationType STABILIZATION = BusStabilizationType.THREE_AXIS,
       double POINTING_ACCURACY = 0.0,
       double POINTING_KNOWLEDGE = 0.0,
       double DESIGN_LIFE = 0.0,
@@ -166,7 +166,7 @@ public struct BUS : IFlatbufferObject
   public static void AddPOWER_GENERATION(FlatBufferBuilder builder, double POWER_GENERATION) { builder.AddDouble(13, POWER_GENERATION, 0.0); }
   public static void AddPAYLOAD_POWER(FlatBufferBuilder builder, double PAYLOAD_POWER) { builder.AddDouble(14, PAYLOAD_POWER, 0.0); }
   public static void AddBATTERY_CAPACITY(FlatBufferBuilder builder, double BATTERY_CAPACITY) { builder.AddDouble(15, BATTERY_CAPACITY, 0.0); }
-  public static void AddSTABILIZATION(FlatBufferBuilder builder, stabilizationType STABILIZATION) { builder.AddSbyte(16, (sbyte)STABILIZATION, 0); }
+  public static void AddSTABILIZATION(FlatBufferBuilder builder, BusStabilizationType STABILIZATION) { builder.AddSbyte(16, (sbyte)STABILIZATION, 0); }
   public static void AddPOINTING_ACCURACY(FlatBufferBuilder builder, double POINTING_ACCURACY) { builder.AddDouble(17, POINTING_ACCURACY, 0.0); }
   public static void AddPOINTING_KNOWLEDGE(FlatBufferBuilder builder, double POINTING_KNOWLEDGE) { builder.AddDouble(18, POINTING_KNOWLEDGE, 0.0); }
   public static void AddDESIGN_LIFE(FlatBufferBuilder builder, double DESIGN_LIFE) { builder.AddDouble(19, DESIGN_LIFE, 0.0); }
@@ -267,7 +267,7 @@ public class BUST
   public double POWER_GENERATION { get; set; }
   public double PAYLOAD_POWER { get; set; }
   public double BATTERY_CAPACITY { get; set; }
-  public stabilizationType STABILIZATION { get; set; }
+  public BusStabilizationType STABILIZATION { get; set; }
   public double POINTING_ACCURACY { get; set; }
   public double POINTING_KNOWLEDGE { get; set; }
   public double DESIGN_LIFE { get; set; }
@@ -294,7 +294,7 @@ public class BUST
     this.POWER_GENERATION = 0.0;
     this.PAYLOAD_POWER = 0.0;
     this.BATTERY_CAPACITY = 0.0;
-    this.STABILIZATION = stabilizationType.THREE_AXIS;
+    this.STABILIZATION = BusStabilizationType.THREE_AXIS;
     this.POINTING_ACCURACY = 0.0;
     this.POINTING_KNOWLEDGE = 0.0;
     this.DESIGN_LIFE = 0.0;
@@ -336,7 +336,7 @@ static public class BUSVerify
       && verifier.VerifyField(tablePos, 30 /*POWER_GENERATION*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 32 /*PAYLOAD_POWER*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 34 /*BATTERY_CAPACITY*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 36 /*STABILIZATION*/, 1 /*stabilizationType*/, 1, false)
+      && verifier.VerifyField(tablePos, 36 /*STABILIZATION*/, 1 /*BusStabilizationType*/, 1, false)
       && verifier.VerifyField(tablePos, 38 /*POINTING_ACCURACY*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 40 /*POINTING_KNOWLEDGE*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 42 /*DESIGN_LIFE*/, 8 /*double*/, 8, false)

@@ -4,8 +4,8 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { BusStabilizationType } from './BusStabilizationType.js';
 import { busSize } from './busSize.js';
-import { stabilizationType } from './stabilizationType.js';
 
 
 /**
@@ -170,9 +170,9 @@ BATTERY_CAPACITY():number {
 /**
  * Stabilization method
  */
-STABILIZATION():stabilizationType {
+STABILIZATION():BusStabilizationType {
   const offset = this.bb!.__offset(this.bb_pos, 36);
-  return offset ? this.bb!.readInt8(this.bb_pos + offset) : stabilizationType.THREE_AXIS;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : BusStabilizationType.THREE_AXIS;
 }
 
 /**
@@ -309,8 +309,8 @@ static addBatteryCapacity(builder:flatbuffers.Builder, BATTERY_CAPACITY:number) 
   builder.addFieldFloat64(15, BATTERY_CAPACITY, 0.0);
 }
 
-static addStabilization(builder:flatbuffers.Builder, STABILIZATION:stabilizationType) {
-  builder.addFieldInt8(16, STABILIZATION, stabilizationType.THREE_AXIS);
+static addStabilization(builder:flatbuffers.Builder, STABILIZATION:BusStabilizationType) {
+  builder.addFieldInt8(16, STABILIZATION, BusStabilizationType.THREE_AXIS);
 }
 
 static addPointingAccuracy(builder:flatbuffers.Builder, POINTING_ACCURACY:number) {
@@ -358,7 +358,7 @@ static finishSizePrefixedBUSBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$BUS', true);
 }
 
-static createBUS(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, MANUFACTUREROffset:flatbuffers.Offset, SIZE:busSize, DRY_MASS:number, WET_MASS:number, PAYLOAD_MASS:number, DIM_X:number, DIM_Y:number, DIM_Z:number, STOWED_X:number, STOWED_Y:number, STOWED_Z:number, POWER_GENERATION:number, PAYLOAD_POWER:number, BATTERY_CAPACITY:number, STABILIZATION:stabilizationType, POINTING_ACCURACY:number, POINTING_KNOWLEDGE:number, DESIGN_LIFE:number, DATA_STORAGE:number, DOWNLINK_RATE:number, PAYLOAD_SLOTS:number, HERITAGE_COUNT:number, NOTESOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createBUS(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, MANUFACTUREROffset:flatbuffers.Offset, SIZE:busSize, DRY_MASS:number, WET_MASS:number, PAYLOAD_MASS:number, DIM_X:number, DIM_Y:number, DIM_Z:number, STOWED_X:number, STOWED_Y:number, STOWED_Z:number, POWER_GENERATION:number, PAYLOAD_POWER:number, BATTERY_CAPACITY:number, STABILIZATION:BusStabilizationType, POINTING_ACCURACY:number, POINTING_KNOWLEDGE:number, DESIGN_LIFE:number, DATA_STORAGE:number, DOWNLINK_RATE:number, PAYLOAD_SLOTS:number, HERITAGE_COUNT:number, NOTESOffset:flatbuffers.Offset):flatbuffers.Offset {
   BUS.startBUS(builder);
   BUS.addId(builder, IDOffset);
   BUS.addName(builder, NAMEOffset);
@@ -466,7 +466,7 @@ constructor(
   public POWER_GENERATION: number = 0.0,
   public PAYLOAD_POWER: number = 0.0,
   public BATTERY_CAPACITY: number = 0.0,
-  public STABILIZATION: stabilizationType = stabilizationType.THREE_AXIS,
+  public STABILIZATION: BusStabilizationType = BusStabilizationType.THREE_AXIS,
   public POINTING_ACCURACY: number = 0.0,
   public POINTING_KNOWLEDGE: number = 0.0,
   public DESIGN_LIFE: number = 0.0,

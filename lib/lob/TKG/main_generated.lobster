@@ -40,12 +40,12 @@ enum MeasurementType:
     MeasurementType_ADSB = 11
     MeasurementType_SONAR = 12
 
-enum TrackStatus:
-    TrackStatus_TENTATIVE = 0
-    TrackStatus_CONFIRMED = 1
-    TrackStatus_COASTING = 2
-    TrackStatus_LOST = 3
-    TrackStatus_DELETED = 4
+enum TkgTrackStatus:
+    TkgTrackStatus_TENTATIVE = 0
+    TkgTrackStatus_CONFIRMED = 1
+    TkgTrackStatus_COASTING = 2
+    TkgTrackStatus_LOST = 3
+    TkgTrackStatus_DELETED = 4
 
 enum AssociationMethod:
     AssociationMethod_NEAREST_NEIGHBOR = 0

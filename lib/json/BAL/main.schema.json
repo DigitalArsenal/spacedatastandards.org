@@ -13,7 +13,7 @@
       "type" : "string",
       "enum": ["BALL", "HOLLOW_POINT", "BOAT_TAIL", "ARMOR_PIERCING", "ARMOR_PIERCING_INCENDIARY", "TRACER", "SABOT", "SUBCALIBER", "HEAT", "HESH", "HE", "APFSDS", "ARTILLERY_HE", "MORTAR", "GRENADE", "ROCKET"]
     },
-    "StabilizationType" : {
+    "BalStabilizationType" : {
       "type" : "string",
       "enum": ["SPIN", "FIN", "DUAL"]
     },

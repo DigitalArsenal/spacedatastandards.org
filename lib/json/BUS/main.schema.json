@@ -5,7 +5,7 @@
       "type" : "string",
       "enum": ["FEMTO", "PICO", "NANO", "MICRO", "MINI", "SMALL", "MEDIUM", "LARGE", "HEAVY"]
     },
-    "stabilizationType" : {
+    "BusStabilizationType" : {
       "type" : "string",
       "enum": ["THREE_AXIS", "SPIN", "GRAVITY_GRADIENT", "MAGNETIC", "DUAL_SPIN", "NONE"]
     },
@@ -78,7 +78,7 @@
                 "description" : "Battery capacity in Watt-hours"
               },
         "STABILIZATION" : {
-                "$ref" : "#/definitions/stabilizationType",
+                "$ref" : "#/definitions/BusStabilizationType",
                 "description" : "Stabilization method"
               },
         "POINTING_ACCURACY" : {

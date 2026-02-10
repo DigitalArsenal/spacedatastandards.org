@@ -4,7 +4,7 @@
 
 import FlatBuffers
 
-public enum modulationType: Int8, Enum, Verifiable {
+public enum CmsModulationType: Int8, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -24,8 +24,8 @@ public enum modulationType: Int8, Enum, Verifiable {
   case dvbS2 = 13
   case dvbS2x = 14
 
-  public static var max: modulationType { return .dvbS2x }
-  public static var min: modulationType { return .bpsk }
+  public static var max: CmsModulationType { return .dvbS2x }
+  public static var min: CmsModulationType { return .bpsk }
 }
 
 
@@ -87,7 +87,7 @@ public struct commsChannel: FlatBufferObject, Verifiable {
   ///  Channel bandwidth in MHz
   public var BANDWIDTH: Double { let o = _accessor.offset(VTOFFSET.BANDWIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Modulation type
-  public var MODULATION: modulationType { let o = _accessor.offset(VTOFFSET.MODULATION.v); return o == 0 ? .bpsk : modulationType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .bpsk }
+  public var MODULATION: CmsModulationType { let o = _accessor.offset(VTOFFSET.MODULATION.v); return o == 0 ? .bpsk : CmsModulationType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .bpsk }
   ///  Data rate in Mbps
   public var DATA_RATE: Double { let o = _accessor.offset(VTOFFSET.DATA_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Encryption method
@@ -102,7 +102,7 @@ public struct commsChannel: FlatBufferObject, Verifiable {
   public static func add(UPLINK_FREQ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPLINK_FREQ, def: 0.0, at: VTOFFSET.UPLINK_FREQ.p) }
   public static func add(DOWNLINK_FREQ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DOWNLINK_FREQ, def: 0.0, at: VTOFFSET.DOWNLINK_FREQ.p) }
   public static func add(BANDWIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BANDWIDTH, def: 0.0, at: VTOFFSET.BANDWIDTH.p) }
-  public static func add(MODULATION: modulationType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODULATION.rawValue, def: 0, at: VTOFFSET.MODULATION.p) }
+  public static func add(MODULATION: CmsModulationType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODULATION.rawValue, def: 0, at: VTOFFSET.MODULATION.p) }
   public static func add(DATA_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_RATE, def: 0.0, at: VTOFFSET.DATA_RATE.p) }
   public static func add(ENCRYPTION: encryptionType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENCRYPTION.rawValue, def: 0, at: VTOFFSET.ENCRYPTION.p) }
   public static func add(FEC_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FEC_RATE, def: 0.0, at: VTOFFSET.FEC_RATE.p) }
@@ -115,7 +115,7 @@ public struct commsChannel: FlatBufferObject, Verifiable {
     UPLINK_FREQ: Double = 0.0,
     DOWNLINK_FREQ: Double = 0.0,
     BANDWIDTH: Double = 0.0,
-    MODULATION: modulationType = .bpsk,
+    MODULATION: CmsModulationType = .bpsk,
     DATA_RATE: Double = 0.0,
     ENCRYPTION: encryptionType = .none_,
     FEC_RATE: Double = 0.0,
@@ -142,7 +142,7 @@ public struct commsChannel: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.UPLINK_FREQ.p, fieldName: "UPLINK_FREQ", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.DOWNLINK_FREQ.p, fieldName: "DOWNLINK_FREQ", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.BANDWIDTH.p, fieldName: "BANDWIDTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.MODULATION.p, fieldName: "MODULATION", required: false, type: modulationType.self)
+    try _v.visit(field: VTOFFSET.MODULATION.p, fieldName: "MODULATION", required: false, type: CmsModulationType.self)
     try _v.visit(field: VTOFFSET.DATA_RATE.p, fieldName: "DATA_RATE", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.ENCRYPTION.p, fieldName: "ENCRYPTION", required: false, type: encryptionType.self)
     try _v.visit(field: VTOFFSET.FEC_RATE.p, fieldName: "FEC_RATE", required: false, type: Double.self)

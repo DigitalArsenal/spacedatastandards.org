@@ -123,25 +123,25 @@ impl<'a> flatbuffers::Verifiable for busSize {
 
 impl flatbuffers::SimpleToVerifyInSlice for busSize {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_STABILIZATION_TYPE: i8 = 0;
+pub const ENUM_MIN_BUS_STABILIZATION_TYPE: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_STABILIZATION_TYPE: i8 = 5;
+pub const ENUM_MAX_BUS_STABILIZATION_TYPE: i8 = 5;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_STABILIZATION_TYPE: [stabilizationType; 6] = [
-  stabilizationType::THREE_AXIS,
-  stabilizationType::SPIN,
-  stabilizationType::GRAVITY_GRADIENT,
-  stabilizationType::MAGNETIC,
-  stabilizationType::DUAL_SPIN,
-  stabilizationType::NONE,
+pub const ENUM_VALUES_BUS_STABILIZATION_TYPE: [BusStabilizationType; 6] = [
+  BusStabilizationType::THREE_AXIS,
+  BusStabilizationType::SPIN,
+  BusStabilizationType::GRAVITY_GRADIENT,
+  BusStabilizationType::MAGNETIC,
+  BusStabilizationType::DUAL_SPIN,
+  BusStabilizationType::NONE,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct stabilizationType(pub i8);
+pub struct BusStabilizationType(pub i8);
 #[allow(non_upper_case_globals)]
-impl stabilizationType {
+impl BusStabilizationType {
   pub const THREE_AXIS: Self = Self(0);
   pub const SPIN: Self = Self(1);
   pub const GRAVITY_GRADIENT: Self = Self(2);
@@ -172,7 +172,7 @@ impl stabilizationType {
     }
   }
 }
-impl core::fmt::Debug for stabilizationType {
+impl core::fmt::Debug for BusStabilizationType {
   fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
     if let Some(name) = self.variant_name() {
       f.write_str(name)
@@ -181,7 +181,7 @@ impl core::fmt::Debug for stabilizationType {
     }
   }
 }
-impl<'a> flatbuffers::Follow<'a> for stabilizationType {
+impl<'a> flatbuffers::Follow<'a> for BusStabilizationType {
   type Inner = Self;
   #[inline]
   unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
@@ -190,15 +190,15 @@ impl<'a> flatbuffers::Follow<'a> for stabilizationType {
   }
 }
 
-impl flatbuffers::Push for stabilizationType {
-    type Output = stabilizationType;
+impl flatbuffers::Push for BusStabilizationType {
+    type Output = BusStabilizationType;
     #[inline]
     unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
         flatbuffers::emplace_scalar::<i8>(dst, self.0);
     }
 }
 
-impl flatbuffers::EndianScalar for stabilizationType {
+impl flatbuffers::EndianScalar for BusStabilizationType {
   type Scalar = i8;
   #[inline]
   fn to_little_endian(self) -> i8 {
@@ -212,7 +212,7 @@ impl flatbuffers::EndianScalar for stabilizationType {
   }
 }
 
-impl<'a> flatbuffers::Verifiable for stabilizationType {
+impl<'a> flatbuffers::Verifiable for BusStabilizationType {
   #[inline]
   fn run_verifier(
     v: &mut flatbuffers::Verifier, pos: usize
@@ -222,7 +222,7 @@ impl<'a> flatbuffers::Verifiable for stabilizationType {
   }
 }
 
-impl flatbuffers::SimpleToVerifyInSlice for stabilizationType {}
+impl flatbuffers::SimpleToVerifyInSlice for BusStabilizationType {}
 pub enum BUSOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -497,11 +497,11 @@ impl<'a> BUS<'a> {
   }
   /// Stabilization method
   #[inline]
-  pub fn STABILIZATION(&self) -> stabilizationType {
+  pub fn STABILIZATION(&self) -> BusStabilizationType {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<stabilizationType>(BUS::VT_STABILIZATION, Some(stabilizationType::THREE_AXIS)).unwrap()}
+    unsafe { self._tab.get::<BusStabilizationType>(BUS::VT_STABILIZATION, Some(BusStabilizationType::THREE_AXIS)).unwrap()}
   }
   /// Pointing accuracy in degrees
   #[inline]
@@ -592,7 +592,7 @@ impl flatbuffers::Verifiable for BUS<'_> {
      .visit_field::<f64>("POWER_GENERATION", Self::VT_POWER_GENERATION, false)?
      .visit_field::<f64>("PAYLOAD_POWER", Self::VT_PAYLOAD_POWER, false)?
      .visit_field::<f64>("BATTERY_CAPACITY", Self::VT_BATTERY_CAPACITY, false)?
-     .visit_field::<stabilizationType>("STABILIZATION", Self::VT_STABILIZATION, false)?
+     .visit_field::<BusStabilizationType>("STABILIZATION", Self::VT_STABILIZATION, false)?
      .visit_field::<f64>("POINTING_ACCURACY", Self::VT_POINTING_ACCURACY, false)?
      .visit_field::<f64>("POINTING_KNOWLEDGE", Self::VT_POINTING_KNOWLEDGE, false)?
      .visit_field::<f64>("DESIGN_LIFE", Self::VT_DESIGN_LIFE, false)?
@@ -622,7 +622,7 @@ pub struct BUSArgs<'a> {
     pub POWER_GENERATION: f64,
     pub PAYLOAD_POWER: f64,
     pub BATTERY_CAPACITY: f64,
-    pub STABILIZATION: stabilizationType,
+    pub STABILIZATION: BusStabilizationType,
     pub POINTING_ACCURACY: f64,
     pub POINTING_KNOWLEDGE: f64,
     pub DESIGN_LIFE: f64,
@@ -652,7 +652,7 @@ impl<'a> Default for BUSArgs<'a> {
       POWER_GENERATION: 0.0,
       PAYLOAD_POWER: 0.0,
       BATTERY_CAPACITY: 0.0,
-      STABILIZATION: stabilizationType::THREE_AXIS,
+      STABILIZATION: BusStabilizationType::THREE_AXIS,
       POINTING_ACCURACY: 0.0,
       POINTING_KNOWLEDGE: 0.0,
       DESIGN_LIFE: 0.0,
@@ -735,8 +735,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> BUSBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(BUS::VT_BATTERY_CAPACITY, BATTERY_CAPACITY, 0.0);
   }
   #[inline]
-  pub fn add_STABILIZATION(&mut self, STABILIZATION: stabilizationType) {
-    self.fbb_.push_slot::<stabilizationType>(BUS::VT_STABILIZATION, STABILIZATION, stabilizationType::THREE_AXIS);
+  pub fn add_STABILIZATION(&mut self, STABILIZATION: BusStabilizationType) {
+    self.fbb_.push_slot::<BusStabilizationType>(BUS::VT_STABILIZATION, STABILIZATION, BusStabilizationType::THREE_AXIS);
   }
   #[inline]
   pub fn add_POINTING_ACCURACY(&mut self, POINTING_ACCURACY: f64) {
@@ -835,7 +835,7 @@ pub struct BUST {
   pub POWER_GENERATION: f64,
   pub PAYLOAD_POWER: f64,
   pub BATTERY_CAPACITY: f64,
-  pub STABILIZATION: stabilizationType,
+  pub STABILIZATION: BusStabilizationType,
   pub POINTING_ACCURACY: f64,
   pub POINTING_KNOWLEDGE: f64,
   pub DESIGN_LIFE: f64,
@@ -864,7 +864,7 @@ impl Default for BUST {
       POWER_GENERATION: 0.0,
       PAYLOAD_POWER: 0.0,
       BATTERY_CAPACITY: 0.0,
-      STABILIZATION: stabilizationType::THREE_AXIS,
+      STABILIZATION: BusStabilizationType::THREE_AXIS,
       POINTING_ACCURACY: 0.0,
       POINTING_KNOWLEDGE: 0.0,
       DESIGN_LIFE: 0.0,

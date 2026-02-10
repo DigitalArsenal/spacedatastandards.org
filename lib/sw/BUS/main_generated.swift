@@ -23,7 +23,7 @@ public enum busSize: Int8, Enum, Verifiable {
 }
 
 
-public enum stabilizationType: Int8, Enum, Verifiable {
+public enum BusStabilizationType: Int8, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
@@ -34,8 +34,8 @@ public enum stabilizationType: Int8, Enum, Verifiable {
   case dualSpin = 4
   case none_ = 5
 
-  public static var max: stabilizationType { return .none_ }
-  public static var min: stabilizationType { return .threeAxis }
+  public static var max: BusStabilizationType { return .none_ }
+  public static var min: BusStabilizationType { return .threeAxis }
 }
 
 
@@ -117,7 +117,7 @@ public struct BUS: FlatBufferObject, Verifiable {
   ///  Battery capacity in Watt-hours
   public var BATTERY_CAPACITY: Double { let o = _accessor.offset(VTOFFSET.BATTERY_CAPACITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Stabilization method
-  public var STABILIZATION: stabilizationType { let o = _accessor.offset(VTOFFSET.STABILIZATION.v); return o == 0 ? .threeAxis : stabilizationType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .threeAxis }
+  public var STABILIZATION: BusStabilizationType { let o = _accessor.offset(VTOFFSET.STABILIZATION.v); return o == 0 ? .threeAxis : BusStabilizationType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .threeAxis }
   ///  Pointing accuracy in degrees
   public var POINTING_ACCURACY: Double { let o = _accessor.offset(VTOFFSET.POINTING_ACCURACY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Pointing knowledge in degrees
@@ -152,7 +152,7 @@ public struct BUS: FlatBufferObject, Verifiable {
   public static func add(POWER_GENERATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POWER_GENERATION, def: 0.0, at: VTOFFSET.POWER_GENERATION.p) }
   public static func add(PAYLOAD_POWER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PAYLOAD_POWER, def: 0.0, at: VTOFFSET.PAYLOAD_POWER.p) }
   public static func add(BATTERY_CAPACITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BATTERY_CAPACITY, def: 0.0, at: VTOFFSET.BATTERY_CAPACITY.p) }
-  public static func add(STABILIZATION: stabilizationType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STABILIZATION.rawValue, def: 0, at: VTOFFSET.STABILIZATION.p) }
+  public static func add(STABILIZATION: BusStabilizationType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STABILIZATION.rawValue, def: 0, at: VTOFFSET.STABILIZATION.p) }
   public static func add(POINTING_ACCURACY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POINTING_ACCURACY, def: 0.0, at: VTOFFSET.POINTING_ACCURACY.p) }
   public static func add(POINTING_KNOWLEDGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POINTING_KNOWLEDGE, def: 0.0, at: VTOFFSET.POINTING_KNOWLEDGE.p) }
   public static func add(DESIGN_LIFE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DESIGN_LIFE, def: 0.0, at: VTOFFSET.DESIGN_LIFE.p) }
@@ -180,7 +180,7 @@ public struct BUS: FlatBufferObject, Verifiable {
     POWER_GENERATION: Double = 0.0,
     PAYLOAD_POWER: Double = 0.0,
     BATTERY_CAPACITY: Double = 0.0,
-    STABILIZATION: stabilizationType = .threeAxis,
+    STABILIZATION: BusStabilizationType = .threeAxis,
     POINTING_ACCURACY: Double = 0.0,
     POINTING_KNOWLEDGE: Double = 0.0,
     DESIGN_LIFE: Double = 0.0,
@@ -237,7 +237,7 @@ public struct BUS: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.POWER_GENERATION.p, fieldName: "POWER_GENERATION", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.PAYLOAD_POWER.p, fieldName: "PAYLOAD_POWER", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.BATTERY_CAPACITY.p, fieldName: "BATTERY_CAPACITY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.STABILIZATION.p, fieldName: "STABILIZATION", required: false, type: stabilizationType.self)
+    try _v.visit(field: VTOFFSET.STABILIZATION.p, fieldName: "STABILIZATION", required: false, type: BusStabilizationType.self)
     try _v.visit(field: VTOFFSET.POINTING_ACCURACY.p, fieldName: "POINTING_ACCURACY", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.POINTING_KNOWLEDGE.p, fieldName: "POINTING_KNOWLEDGE", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.DESIGN_LIFE.p, fieldName: "DESIGN_LIFE", required: false, type: Double.self)

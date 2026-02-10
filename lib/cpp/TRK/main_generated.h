@@ -16,30 +16,30 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct TRK;
 struct TRKBuilder;
 
-enum trackStatus : int8_t {
-  trackStatus_ACTIVE = 0,
-  trackStatus_DROPPED = 1,
-  trackStatus_TENTATIVE = 2,
-  trackStatus_CONFIRMED = 3,
-  trackStatus_COASTED = 4,
-  trackStatus_DEAD = 5,
-  trackStatus_MIN = trackStatus_ACTIVE,
-  trackStatus_MAX = trackStatus_DEAD
+enum TrkTrackStatus : int8_t {
+  TrkTrackStatus_ACTIVE = 0,
+  TrkTrackStatus_DROPPED = 1,
+  TrkTrackStatus_TENTATIVE = 2,
+  TrkTrackStatus_CONFIRMED = 3,
+  TrkTrackStatus_COASTED = 4,
+  TrkTrackStatus_DEAD = 5,
+  TrkTrackStatus_MIN = TrkTrackStatus_ACTIVE,
+  TrkTrackStatus_MAX = TrkTrackStatus_DEAD
 };
 
-inline const trackStatus (&EnumValuestrackStatus())[6] {
-  static const trackStatus values[] = {
-    trackStatus_ACTIVE,
-    trackStatus_DROPPED,
-    trackStatus_TENTATIVE,
-    trackStatus_CONFIRMED,
-    trackStatus_COASTED,
-    trackStatus_DEAD
+inline const TrkTrackStatus (&EnumValuesTrkTrackStatus())[6] {
+  static const TrkTrackStatus values[] = {
+    TrkTrackStatus_ACTIVE,
+    TrkTrackStatus_DROPPED,
+    TrkTrackStatus_TENTATIVE,
+    TrkTrackStatus_CONFIRMED,
+    TrkTrackStatus_COASTED,
+    TrkTrackStatus_DEAD
   };
   return values;
 }
 
-inline const char * const *EnumNamestrackStatus() {
+inline const char * const *EnumNamesTrkTrackStatus() {
   static const char * const names[7] = {
     "ACTIVE",
     "DROPPED",
@@ -52,10 +52,10 @@ inline const char * const *EnumNamestrackStatus() {
   return names;
 }
 
-inline const char *EnumNametrackStatus(trackStatus e) {
-  if (::flatbuffers::IsOutRange(e, trackStatus_ACTIVE, trackStatus_DEAD)) return "";
+inline const char *EnumNameTrkTrackStatus(TrkTrackStatus e) {
+  if (::flatbuffers::IsOutRange(e, TrkTrackStatus_ACTIVE, TrkTrackStatus_DEAD)) return "";
   const size_t index = static_cast<size_t>(e);
-  return EnumNamestrackStatus()[index];
+  return EnumNamesTrkTrackStatus()[index];
 }
 
 enum trackEnvironment : int8_t {
@@ -205,8 +205,8 @@ struct TRK FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::String *>(VT_TRK_NUM);
   }
   /// Track status
-  trackStatus TRK_STAT() const {
-    return static_cast<trackStatus>(GetField<int8_t>(VT_TRK_STAT, 0));
+  TrkTrackStatus TRK_STAT() const {
+    return static_cast<TrkTrackStatus>(GetField<int8_t>(VT_TRK_STAT, 0));
   }
   /// Object nationality
   const ::flatbuffers::String *OBJ_NAT() const {
@@ -538,7 +538,7 @@ struct TRKBuilder {
   void add_TRK_NUM(::flatbuffers::Offset<::flatbuffers::String> TRK_NUM) {
     fbb_.AddOffset(TRK::VT_TRK_NUM, TRK_NUM);
   }
-  void add_TRK_STAT(trackStatus TRK_STAT) {
+  void add_TRK_STAT(TrkTrackStatus TRK_STAT) {
     fbb_.AddElement<int8_t>(TRK::VT_TRK_STAT, static_cast<int8_t>(TRK_STAT), 0);
   }
   void add_OBJ_NAT(::flatbuffers::Offset<::flatbuffers::String> OBJ_NAT) {
@@ -708,7 +708,7 @@ inline ::flatbuffers::Offset<TRK> CreateTRK(
     ::flatbuffers::Offset<::flatbuffers::String> SEN_QUAL = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TRK_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TRK_NUM = 0,
-    trackStatus TRK_STAT = trackStatus_ACTIVE,
+    TrkTrackStatus TRK_STAT = TrkTrackStatus_ACTIVE,
     ::flatbuffers::Offset<::flatbuffers::String> OBJ_NAT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OBJ_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OBJ_TYPE = 0,
@@ -832,7 +832,7 @@ inline ::flatbuffers::Offset<TRK> CreateTRKDirect(
     const char *SEN_QUAL = nullptr,
     const char *TRK_ID = nullptr,
     const char *TRK_NUM = nullptr,
-    trackStatus TRK_STAT = trackStatus_ACTIVE,
+    TrkTrackStatus TRK_STAT = TrkTrackStatus_ACTIVE,
     const char *OBJ_NAT = nullptr,
     const char *OBJ_ID = nullptr,
     const char *OBJ_TYPE = nullptr,

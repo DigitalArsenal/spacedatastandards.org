@@ -6462,7 +6462,7 @@
                         "ROCKET"
                     ]
                 },
-                "StabilizationType": {
+                "BalStabilizationType": {
                     "type": "string",
                     "enum": [
                         "SPIN",
@@ -8571,7 +8571,7 @@
                         "HEAVY"
                     ]
                 },
-                "stabilizationType": {
+                "BusStabilizationType": {
                     "type": "string",
                     "enum": [
                         "THREE_AXIS",
@@ -8651,7 +8651,7 @@
                             "description": "Battery capacity in Watt-hours"
                         },
                         "STABILIZATION": {
-                            "$ref": "#/definitions/stabilizationType",
+                            "$ref": "#/definitions/BusStabilizationType",
                             "description": "Stabilization method"
                         },
                         "POINTING_ACCURACY": {
@@ -12094,7 +12094,7 @@
                         "ROCKET"
                     ]
                 },
-                "StabilizationType": {
+                "BalStabilizationType": {
                     "type": "string",
                     "enum": [
                         "SPIN",
@@ -12149,7 +12149,7 @@
                         "HEAVY"
                     ]
                 },
-                "stabilizationType": {
+                "BusStabilizationType": {
                     "type": "string",
                     "enum": [
                         "THREE_AXIS",
@@ -12576,7 +12576,7 @@
                         "PEER_ABORT"
                     ]
                 },
-                "modulationType": {
+                "CmsModulationType": {
                     "type": "string",
                     "enum": [
                         "BPSK",
@@ -12609,7 +12609,7 @@
                         "CUSTOM"
                     ]
                 },
-                "ModulationType": {
+                "ComModulationType": {
                     "type": "string",
                     "enum": [
                         "AM",
@@ -14492,7 +14492,7 @@
                         "SONAR"
                     ]
                 },
-                "TrackStatus": {
+                "TkgTrackStatus": {
                     "type": "string",
                     "enum": [
                         "TENTATIVE",
@@ -14567,7 +14567,7 @@
                         "GPS_DISCIPLINED"
                     ]
                 },
-                "trackStatus": {
+                "TrkTrackStatus": {
                     "type": "string",
                     "enum": [
                         "ACTIVE",
@@ -16587,7 +16587,7 @@
                             "description": "Battery capacity in Watt-hours"
                         },
                         "STABILIZATION": {
-                            "$ref": "#/definitions/stabilizationType",
+                            "$ref": "#/definitions/BusStabilizationType",
                             "description": "Stabilization method"
                         },
                         "POINTING_ACCURACY": {
@@ -17700,7 +17700,7 @@
                             "description": "Channel bandwidth in MHz"
                         },
                         "MODULATION": {
-                            "$ref": "#/definitions/modulationType",
+                            "$ref": "#/definitions/CmsModulationType",
                             "description": "Modulation type"
                         },
                         "DATA_RATE": {
@@ -33716,7 +33716,7 @@
                             "description": "Track number"
                         },
                         "TRK_STAT": {
-                            "$ref": "#/definitions/trackStatus",
+                            "$ref": "#/definitions/TrkTrackStatus",
                             "description": "Track status"
                         },
                         "OBJ_NAT": {
@@ -40590,7 +40590,7 @@
         "CMS": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "modulationType": {
+                "CmsModulationType": {
                     "type": "string",
                     "enum": [
                         "BPSK",
@@ -40648,7 +40648,7 @@
                             "description": "Channel bandwidth in MHz"
                         },
                         "MODULATION": {
-                            "$ref": "#/definitions/modulationType",
+                            "$ref": "#/definitions/CmsModulationType",
                             "description": "Modulation type"
                         },
                         "DATA_RATE": {
@@ -48215,7 +48215,7 @@
         "TRK": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "trackStatus": {
+                "TrkTrackStatus": {
                     "type": "string",
                     "enum": [
                         "ACTIVE",
@@ -48282,7 +48282,7 @@
                             "description": "Track number"
                         },
                         "TRK_STAT": {
-                            "$ref": "#/definitions/trackStatus",
+                            "$ref": "#/definitions/TrkTrackStatus",
                             "description": "Track status"
                         },
                         "OBJ_NAT": {
@@ -54292,7 +54292,7 @@
                         "SONAR"
                     ]
                 },
-                "TrackStatus": {
+                "TkgTrackStatus": {
                     "type": "string",
                     "enum": [
                         "TENTATIVE",
@@ -55653,7 +55653,7 @@
         "COM": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "ModulationType": {
+                "ComModulationType": {
                     "type": "string",
                     "enum": [
                         "AM",
