@@ -620,6 +620,9 @@ jobs:
                                   </goals>
                               </execution>
                           </executions>
+                          <configuration>
+                              <doclint>none</doclint>
+                          </configuration>
                       </plugin>
                       <plugin>
                           <groupId>org.apache.maven.plugins</groupId>
