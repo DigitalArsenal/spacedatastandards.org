@@ -117,7 +117,7 @@ jobs:
       - name: Publish to npm
         run: |
           unset NODE_AUTH_TOKEN
-          npm publish --provenance --access public
+          npm publish --provenance --access public --tag latest
 
   # ============================================
   # GitHub Packages (npm)
@@ -199,14 +199,16 @@ jobs:
 
       - name: Create pyproject.toml
         run: |
-          cat > lib/py/pyproject.toml << 'EOF'
+          # Convert semver to PEP 440: replace - with . (e.g., 23.3.3-0.3.1 -> 23.3.3.0.3.1)
+          PEP440_VERSION=$(echo "${{ needs.build.outputs.version }}" | tr '-' '.')
+          cat > lib/py/pyproject.toml << EOF
           [build-system]
           requires = ["setuptools>=61.0", "wheel"]
           build-backend = "setuptools.build_meta"
 
           [project]
           name = "spacedatastandards.org"
-          version = "${{ needs.build.outputs.version }}"
+          version = "${PEP440_VERSION}"
           description = "Space data standards framework based on CCSDS standards and Google FlatBuffers"
           readme = "README.md"
           license = {text = "Apache-2.0"}
@@ -660,6 +662,12 @@ jobs:
             # Remove original directory
             rm -rf "$dir"
           done
+
+      - name: Fix Java byte overflow in union types
+        run: |
+          # FlatBuffers unions with >127 members overflow Java's signed byte.
+          # Change RecordType constants from byte to int to support >127 union members.
+          find lib/java -name 'RecordType.java' -exec sed -i 's/public static final byte/public static final int/g' {} +
 
       - name: Build and sign artifacts
         run: |
