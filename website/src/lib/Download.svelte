@@ -151,6 +151,30 @@
           </div>
         </a>
 
+        <a href="https://crates.io/crates/spacedatastandards" target="_blank" rel="noopener" class="pm-card">
+          <div class="pm-icon cargo">RS</div>
+          <div class="pm-info">
+            <div class="pm-name">crates.io / Rust</div>
+            <code class="pm-command">cargo add spacedatastandards</code>
+          </div>
+        </a>
+
+        <a href="https://pub.dev/packages/spacedatastandards" target="_blank" rel="noopener" class="pm-card">
+          <div class="pm-icon dart">DT</div>
+          <div class="pm-info">
+            <div class="pm-name">pub.dev / Dart</div>
+            <code class="pm-command">dart pub add spacedatastandards</code>
+          </div>
+        </a>
+
+        <a href="https://central.sonatype.com/artifact/io.spacedatastandards/spacedatastandards" target="_blank" rel="noopener" class="pm-card">
+          <div class="pm-icon maven">MVN</div>
+          <div class="pm-info">
+            <div class="pm-name">Maven Central / Java</div>
+            <code class="pm-command">implementation "io.spacedatastandards:spacedatastandards"</code>
+          </div>
+        </a>
+
         <a href="https://packagist.org/packages/digitalarsenal/spacedatastandards" target="_blank" rel="noopener" class="pm-card">
           <div class="pm-icon php">PHP</div>
           <div class="pm-info">
@@ -526,6 +550,9 @@
   .pm-icon.pypi { background: linear-gradient(135deg, #3775a9, #ffd43b); color: #3775a9; }
   .pm-icon.go { background: linear-gradient(135deg, #00add8, #007d9c); }
   .pm-icon.github { background: linear-gradient(135deg, #333, #24292e); }
+  .pm-icon.cargo { background: linear-gradient(135deg, #dea584, #c67849); }
+  .pm-icon.dart { background: linear-gradient(135deg, #0175c2, #02569b); }
+  .pm-icon.maven { background: linear-gradient(135deg, #c71a36, #8b0000); }
   .pm-icon.php { background: linear-gradient(135deg, #777bb4, #4f5b93); }
   .pm-icon.source { background: linear-gradient(135deg, var(--accent), var(--accent-hover)); }
 
