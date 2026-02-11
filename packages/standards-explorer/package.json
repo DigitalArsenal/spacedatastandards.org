@@ -33,6 +33,7 @@
   "dependencies": {
     "flatc-wasm": "^26.1.15",
     "flatbuffers": "^25.9.23",
+    "flatsql": "^0.3.6",
     "hd-wallet-wasm": "^1.1.5",
     "hd-wallet-ui": "^1.1.5",
     "spacedatastandards.org": "^1.65.0"

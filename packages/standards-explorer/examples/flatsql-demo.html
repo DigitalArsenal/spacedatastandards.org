@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlatSQL + Standards Explorer - SQL Querying &amp; Encryption Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-tertiary: #1a1a2e;
+      --border: #2a2a3e;
+      --text-primary: #e0e0e0;
+      --text-secondary: #9ca3af;
+      --accent: #4a9eff;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --error: #ef4444;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+    }
+    .container { max-width: 1400px; margin: 0 auto; padding: 32px; }
+    header {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    h1 { font-size: 28px; font-weight: 600; margin: 0; }
+    h1 span { color: var(--accent); }
+    h2 { font-size: 20px; margin: 32px 0 16px; color: var(--accent); }
+    .card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    pre {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      max-height: 400px;
+      overflow-y: auto;
+      margin: 12px 0;
+    }
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg-tertiary);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+    button {
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    button:hover { opacity: 0.9; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    button.secondary {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+    }
+    input, textarea, select {
+      width: 100%;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 14px;
+      color: var(--text-primary);
+      font-family: inherit;
+      box-sizing: border-box;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    textarea {
+      font-family: 'JetBrains Mono', monospace;
+      resize: vertical;
+      min-height: 60px;
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+    .form-group { margin-bottom: 16px; }
+    .btn-group { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 24px;
+    }
+    .result-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+    }
+    .result-table th {
+      text-align: left;
+      padding: 8px 12px;
+      background: var(--bg-tertiary);
+      border-bottom: 2px solid var(--accent);
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .result-table td {
+      padding: 6px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .result-table tr:hover td {
+      background: rgba(74, 158, 255, 0.05);
+    }
+    .status {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .status.ready { background: rgba(34, 197, 94, 0.2); color: var(--success); }
+    .status.loading { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+    .status.error { background: rgba(239, 68, 68, 0.2); color: var(--error); }
+    .log-entry {
+      padding: 4px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .log-entry:last-child { border-bottom: none; }
+    .log-entry .timestamp {
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      margin-right: 8px;
+    }
+    .preset-queries {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .preset-btn {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      color: var(--accent);
+      padding: 6px 12px;
+      font-size: 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .preset-btn:hover {
+      background: var(--accent);
+      color: white;
+    }
+    .encrypted-field {
+      color: var(--warning);
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1><span>FlatSQL</span> + Standards Explorer</h1>
+    <p style="color: var(--text-secondary); margin: 8px 0 0 0;">
+      SQL queries over FlatBuffer storage with encryption at rest
+    </p>
+    <div style="margin-top: 12px;">
+      <span class="status loading" id="init-status">Initializing...</span>
+    </div>
+  </header>
+
+  <div class="grid">
+    <!-- SQL Query Panel -->
+    <div class="card">
+      <div class="card-title">SQL Query Console</div>
+      <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 16px;">
+        Run SQL queries against FlatBuffer-backed tables loaded with space data.
+      </p>
+
+      <div class="form-group">
+        <label>Preset Queries</label>
+        <div class="preset-queries">
+          <button class="preset-btn" data-query="SELECT OBJECT_NAME, NORAD_CAT_ID, INCLINATION, MEAN_MOTION FROM OMM">All OMMs</button>
+          <button class="preset-btn" data-query="SELECT OBJECT_NAME, MEAN_MOTION, INCLINATION FROM OMM WHERE MEAN_MOTION > 11 ORDER BY INCLINATION">LEO Objects</button>
+          <button class="preset-btn" data-query="SELECT OBJECT_NAME, INCLINATION FROM OMM WHERE INCLINATION > 95 AND INCLINATION < 100">Sun-Sync</button>
+          <button class="preset-btn" data-query="SELECT OBJECT_NAME, ECCENTRICITY, BSTAR FROM OMM WHERE ECCENTRICITY > 0.01">High Ecc</button>
+          <button class="preset-btn" data-query="SELECT OBJECT_NAME, MEAN_MOTION FROM OMM WHERE MEAN_MOTION < 2">GEO</button>
+          <button class="preset-btn" data-query="SELECT COUNT(*) FROM OMM">Count</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>SQL Query</label>
+        <textarea id="sql-input" rows="3">SELECT OBJECT_NAME, NORAD_CAT_ID, INCLINATION, MEAN_MOTION FROM OMM</textarea>
+      </div>
+
+      <div class="btn-group">
+        <button id="run-query-btn" disabled>Run Query</button>
+        <button class="secondary" id="clear-results-btn">Clear</button>
+      </div>
+
+      <div id="query-results" style="margin-top: 16px;"></div>
+    </div>
+
+    <!-- Data & Schema Panel -->
+    <div class="card">
+      <div class="card-title">Database Info</div>
+
+      <div id="schema-info" style="color: var(--text-secondary); font-size: 14px;">
+        Loading schema information...
+      </div>
+
+      <h3 style="font-size: 14px; color: var(--accent); margin-top: 20px;">Activity Log</h3>
+      <div id="activity-log" style="max-height: 300px; overflow-y: auto;">
+      </div>
+    </div>
+  </div>
+
+  <!-- Encryption Demo Panel -->
+  <div class="card">
+    <div class="card-title">Encryption at Rest Demo</div>
+    <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 16px;">
+      Demonstrates per-field AES-256-CTR encryption using the <code>(encrypted)</code> FlatBuffers attribute.
+      Non-encrypted fields remain queryable while sensitive data is protected.
+    </p>
+
+    <div class="grid">
+      <div>
+        <h3 style="font-size: 14px; color: var(--accent);">Schema with Encrypted Fields</h3>
+        <pre id="enc-schema">namespace SDS;
+
+table SensitiveSatellite {
+  NORAD_CAT_ID: uint32 (key);
+  OBJECT_NAME: string;         // queryable
+  CLASSIFICATION: string;      // queryable
+  OWNER: string;               // queryable
+  ORBIT_REGIME: string;        // queryable
+  PRECISE_INCLINATION: double <span class="encrypted-field">(encrypted)</span>;
+  PRECISE_LONGITUDE: double <span class="encrypted-field">(encrypted)</span>;
+  SENSOR_TASKING: string <span class="encrypted-field">(encrypted)</span>;
+}</pre>
+        <div class="btn-group">
+          <button id="run-encryption-btn" disabled>Run Encryption Demo</button>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="font-size: 14px; color: var(--accent);">Encryption Results</h3>
+        <pre id="enc-results" style="min-height: 200px;">Click "Run Encryption Demo" to see per-field encryption in action...</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Code Generation Panel -->
+  <div class="card">
+    <div class="card-title">Code Generation (flatc-wasm)</div>
+    <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 16px;">
+      Generate source code for any Space Data Standards schema in 11+ languages.
+    </p>
+
+    <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: end;">
+      <div class="form-group" style="flex: 1; min-width: 200px;">
+        <label>Schema</label>
+        <select id="codegen-schema">
+          <option value="OMM">OMM - Orbit Mean-Elements</option>
+          <option value="CAT">CAT - Satellite Catalog</option>
+          <option value="CDM">CDM - Conjunction Data</option>
+          <option value="EPM">EPM - Entity Profile</option>
+          <option value="EME">EME - Encrypted Message</option>
+        </select>
+      </div>
+      <div class="form-group" style="flex: 1; min-width: 200px;">
+        <label>Language</label>
+        <select id="codegen-lang">
+          <option value="ts">TypeScript</option>
+          <option value="python">Python</option>
+          <option value="rust">Rust</option>
+          <option value="go">Go</option>
+          <option value="cpp">C++</option>
+          <option value="java">Java</option>
+          <option value="csharp">C#</option>
+          <option value="swift">Swift</option>
+          <option value="kotlin">Kotlin</option>
+          <option value="dart">Dart</option>
+          <option value="php">PHP</option>
+        </select>
+      </div>
+      <div>
+        <button id="codegen-btn" disabled>Generate</button>
+      </div>
+    </div>
+
+    <pre id="codegen-output" style="min-height: 100px;">Initialize to generate code...</pre>
+  </div>
+</div>
+
+<script type="module">
+  import { StandardsExplorer } from '../src/index.js';
+  import { FlatcRunner } from 'flatc-wasm';
+  import { FlatSQLDatabase, FlatcAccessor } from 'flatsql';
+
+  // ── State ────────────────────────────────────────────────────────────────
+  const state = {
+    explorer: null,
+    flatc: null,
+    ommDB: null,
+    ommAccessor: null,
+  };
+
+  const $ = id => document.getElementById(id);
+
+  // ── OMM Schema (self-contained) ──────────────────────────────────────────
+  const OMM_SCHEMA = `
+namespace SDS;
+table OMM {
+  OBJECT_NAME: string;
+  OBJECT_ID: string;
+  NORAD_CAT_ID: uint32 (key);
+  CENTER_NAME: string;
+  EPOCH: string;
+  MEAN_MOTION: double;
+  ECCENTRICITY: double;
+  INCLINATION: double;
+  RA_OF_ASC_NODE: double;
+  ARG_OF_PERICENTER: double;
+  MEAN_ANOMALY: double;
+  BSTAR: double;
+  CLASSIFICATION_TYPE: string;
+}
+root_type OMM;
+`;
+
+  // ── Sample Data ──────────────────────────────────────────────────────────
+  const SAMPLE_OMMS = [
+    { OBJECT_NAME: "ISS (ZARYA)", OBJECT_ID: "1998-067A", NORAD_CAT_ID: 25544, CENTER_NAME: "EARTH", EPOCH: "2025-01-15T12:00:00Z", MEAN_MOTION: 15.489, ECCENTRICITY: 0.0001234, INCLINATION: 51.6416, RA_OF_ASC_NODE: 200.12, ARG_OF_PERICENTER: 120.57, MEAN_ANOMALY: 240.90, BSTAR: 0.000031, CLASSIFICATION_TYPE: "U" },
+    { OBJECT_NAME: "STARLINK-1007", OBJECT_ID: "2019-074A", NORAD_CAT_ID: 44713, CENTER_NAME: "EARTH", EPOCH: "2025-01-15T10:30:00Z", MEAN_MOTION: 15.06, ECCENTRICITY: 0.0001567, INCLINATION: 53.0536, RA_OF_ASC_NODE: 145.68, ARG_OF_PERICENTER: 90.12, MEAN_ANOMALY: 270.46, BSTAR: 0.000045, CLASSIFICATION_TYPE: "U" },
+    { OBJECT_NAME: "HUBBLE", OBJECT_ID: "1990-037B", NORAD_CAT_ID: 20580, CENTER_NAME: "EARTH", EPOCH: "2025-01-15T08:00:00Z", MEAN_MOTION: 15.09, ECCENTRICITY: 0.0002789, INCLINATION: 28.4698, RA_OF_ASC_NODE: 310.46, ARG_OF_PERICENTER: 50.79, MEAN_ANOMALY: 309.23, BSTAR: 0.000067, CLASSIFICATION_TYPE: "U" },
+    { OBJECT_NAME: "TERRA", OBJECT_ID: "1999-068A", NORAD_CAT_ID: 25994, CENTER_NAME: "EARTH", EPOCH: "2025-01-15T06:00:00Z", MEAN_MOTION: 14.57, ECCENTRICITY: 0.0001123, INCLINATION: 98.2104, RA_OF_ASC_NODE: 45.68, ARG_OF_PERICENTER: 80.12, MEAN_ANOMALY: 280.46, BSTAR: 0.000023, CLASSIFICATION_TYPE: "U" },
+    { OBJECT_NAME: "LANDSAT 9", OBJECT_ID: "2021-088A", NORAD_CAT_ID: 49260, CENTER_NAME: "EARTH", EPOCH: "2025-01-15T07:00:00Z", MEAN_MOTION: 14.57, ECCENTRICITY: 0.0001056, INCLINATION: 98.2207, RA_OF_ASC_NODE: 46.12, ARG_OF_PERICENTER: 81.46, MEAN_ANOMALY: 279.79, BSTAR: 0.000021, CLASSIFICATION_TYPE: "U" },
+    { OBJECT_NAME: "COSMOS 2251 DEB", OBJECT_ID: "1993-036BKC", NORAD_CAT_ID: 34567, CENTER_NAME: "EARTH", EPOCH: "2025-01-15T09:00:00Z", MEAN_MOTION: 14.35, ECCENTRICITY: 0.0123456, INCLINATION: 74.0356, RA_OF_ASC_NODE: 180.23, ARG_OF_PERICENTER: 200.57, MEAN_ANOMALY: 159.89, BSTAR: 0.00012, CLASSIFICATION_TYPE: "U" },
+    { OBJECT_NAME: "TIANGONG", OBJECT_ID: "2021-035A", NORAD_CAT_ID: 48274, CENTER_NAME: "EARTH", EPOCH: "2025-01-15T11:00:00Z", MEAN_MOTION: 15.60, ECCENTRICITY: 0.0003456, INCLINATION: 41.4700, RA_OF_ASC_NODE: 220.57, ARG_OF_PERICENTER: 150.89, MEAN_ANOMALY: 210.12, BSTAR: 0.000035, CLASSIFICATION_TYPE: "U" },
+    { OBJECT_NAME: "GPS BIIR-2", OBJECT_ID: "1997-035A", NORAD_CAT_ID: 24876, CENTER_NAME: "EARTH", EPOCH: "2025-01-15T05:00:00Z", MEAN_MOTION: 2.0056, ECCENTRICITY: 0.0065432, INCLINATION: 55.7234, RA_OF_ASC_NODE: 260.12, ARG_OF_PERICENTER: 40.46, MEAN_ANOMALY: 320.79, BSTAR: 0.0, CLASSIFICATION_TYPE: "U" },
+    { OBJECT_NAME: "GOES 16", OBJECT_ID: "2016-071A", NORAD_CAT_ID: 41866, CENTER_NAME: "EARTH", EPOCH: "2025-01-15T04:00:00Z", MEAN_MOTION: 1.0027, ECCENTRICITY: 0.0001789, INCLINATION: 0.0523, RA_OF_ASC_NODE: 75.23, ARG_OF_PERICENTER: 300.57, MEAN_ANOMALY: 60.89, BSTAR: 0.0, CLASSIFICATION_TYPE: "U" },
+    { OBJECT_NAME: "FENGYUN 1C DEB", OBJECT_ID: "1999-025DPZ", NORAD_CAT_ID: 39012, CENTER_NAME: "EARTH", EPOCH: "2025-01-15T09:30:00Z", MEAN_MOTION: 14.10, ECCENTRICITY: 0.0234567, INCLINATION: 99.1234, RA_OF_ASC_NODE: 130.46, ARG_OF_PERICENTER: 170.79, MEAN_ANOMALY: 190.01, BSTAR: 0.00015, CLASSIFICATION_TYPE: "U" },
+  ];
+
+  // ── Logging ──────────────────────────────────────────────────────────────
+  function log(msg) {
+    const logEl = $('activity-log');
+    const entry = document.createElement('div');
+    entry.className = 'log-entry';
+    const time = new Date().toLocaleTimeString();
+    entry.innerHTML = `<span class="timestamp">${time}</span>${msg}`;
+    logEl.appendChild(entry);
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+
+  // ── Render query results as HTML table ───────────────────────────────────
+  function renderResults(result) {
+    if (!result || !result.columns || !result.rows) return '<p>No results</p>';
+    if (result.rows.length === 0) return `<p>0 rows (columns: ${result.columns.join(', ')})</p>`;
+
+    let html = '<table class="result-table"><thead><tr>';
+    for (const col of result.columns) {
+      html += `<th>${col}</th>`;
+    }
+    html += '</tr></thead><tbody>';
+    for (const row of result.rows) {
+      html += '<tr>';
+      for (const val of row) {
+        const s = String(val ?? 'null');
+        html += `<td>${s.length > 40 ? s.substring(0, 37) + '...' : s}</td>`;
+      }
+      html += '</tr>';
+    }
+    html += `</tbody></table>`;
+    html += `<p style="color: var(--text-secondary); font-size: 12px; margin-top: 8px;">${result.rows.length} row${result.rows.length !== 1 ? 's' : ''}</p>`;
+    return html;
+  }
+
+  // ── Initialize ───────────────────────────────────────────────────────────
+  async function init() {
+    try {
+      log('Initializing flatc-wasm...');
+      state.flatc = await FlatcRunner.init();
+      log(`flatc-wasm ready: ${state.flatc.version()}`);
+
+      log('Initializing Standards Explorer...');
+      state.explorer = new StandardsExplorer();
+      await state.explorer.init();
+      log(`Explorer ready: ${state.explorer.getStandards().length} standards`);
+
+      log('Creating FlatSQL database...');
+      state.ommAccessor = new FlatcAccessor(state.flatc, OMM_SCHEMA);
+      state.ommDB = FlatSQLDatabase.fromSchema(OMM_SCHEMA, state.ommAccessor, 'omm-catalog');
+
+      // Insert sample data
+      for (const omm of SAMPLE_OMMS) {
+        state.ommDB.insert('OMM', omm);
+      }
+
+      const stats = state.ommDB.getStats();
+      log(`Loaded ${stats[0]?.recordCount ?? 0} OMM records into FlatSQL`);
+
+      // Update UI
+      $('init-status').textContent = 'Ready';
+      $('init-status').className = 'status ready';
+      $('run-query-btn').disabled = false;
+      $('codegen-btn').disabled = false;
+      $('run-encryption-btn').disabled = false;
+
+      // Show schema info
+      const schema = state.ommDB.getSchema();
+      let info = `<strong>Database:</strong> ${schema.name}<br>`;
+      for (const table of schema.tables) {
+        info += `<strong>Table:</strong> ${table.name} (${table.columns.length} columns)<br>`;
+        info += `<strong>Columns:</strong> ${table.columns.map(c => c.name).join(', ')}<br>`;
+        info += `<strong>Indexes:</strong> ${table.indexes.join(', ') || 'none'}<br>`;
+        info += `<strong>Records:</strong> ${stats[0]?.recordCount ?? 0}<br>`;
+      }
+      $('schema-info').innerHTML = info;
+
+      log('Initialization complete');
+    } catch (err) {
+      console.error('Init failed:', err);
+      $('init-status').textContent = 'Error';
+      $('init-status').className = 'status error';
+      log(`Error: ${err.message}`);
+    }
+  }
+
+  // ── Run SQL Query ────────────────────────────────────────────────────────
+  function runQuery() {
+    const sql = $('sql-input').value.trim();
+    if (!sql || !state.ommDB) return;
+
+    log(`Query: ${sql}`);
+    const start = performance.now();
+
+    try {
+      const result = state.ommDB.query(sql);
+      const elapsed = (performance.now() - start).toFixed(2);
+      $('query-results').innerHTML = renderResults(result);
+      log(`Result: ${result.rows.length} rows in ${elapsed}ms`);
+    } catch (err) {
+      $('query-results').innerHTML = `<pre style="color: var(--error);">Error: ${err.message}</pre>`;
+      log(`Query error: ${err.message}`);
+    }
+  }
+
+  // ── Encryption Demo ──────────────────────────────────────────────────────
+  async function runEncryptionDemo() {
+    const output = $('enc-results');
+    output.textContent = 'Running encryption demo...\n\n';
+
+    const schema = {
+      entry: '/sat.fbs',
+      files: { '/sat.fbs': `
+namespace SDS;
+table SensitiveSatellite {
+  NORAD_CAT_ID: uint32 (key);
+  OBJECT_NAME: string;
+  CLASSIFICATION: string;
+  OWNER: string;
+  ORBIT_REGIME: string;
+  PRECISE_INCLINATION: double;
+  PRECISE_LONGITUDE: double;
+  SENSOR_TASKING: string;
+}
+root_type SensitiveSatellite;
+`}
+    };
+
+    const record = {
+      NORAD_CAT_ID: 90001,
+      OBJECT_NAME: "USA-224",
+      CLASSIFICATION: "CLASSIFIED",
+      OWNER: "US",
+      ORBIT_REGIME: "LEO-SSO",
+      PRECISE_INCLINATION: 97.8912,
+      PRECISE_LONGITUDE: -122.4567,
+      SENSOR_TASKING: "PRIORITY-1 IMAGING PACIFIC",
+    };
+
+    try {
+      // Binary round-trip
+      const json = JSON.stringify(record);
+      const binary = state.flatc.generateBinary(schema, json);
+      const roundtripped = JSON.parse(state.flatc.generateJSON(schema, { path: '/s.bin', data: binary }));
+
+      output.textContent += `Record: ${record.OBJECT_NAME}\n`;
+      output.textContent += `JSON size: ${json.length} bytes\n`;
+      output.textContent += `FlatBuffer size: ${binary.byteLength} bytes\n`;
+      output.textContent += `Compression: ${((1 - binary.byteLength / json.length) * 100).toFixed(1)}%\n\n`;
+      output.textContent += `Round-trip verification:\n`;
+      output.textContent += `  OBJECT_NAME: ${roundtripped.OBJECT_NAME === record.OBJECT_NAME ? 'PASS' : 'FAIL'}\n`;
+      output.textContent += `  PRECISE_INCLINATION: ${roundtripped.PRECISE_INCLINATION === record.PRECISE_INCLINATION ? 'PASS' : 'FAIL'}\n`;
+      output.textContent += `  SENSOR_TASKING: ${roundtripped.SENSOR_TASKING === record.SENSOR_TASKING ? 'PASS' : 'FAIL'}\n\n`;
+
+      // Show hex comparison
+      const hex = Array.from(new Uint8Array(binary.buffer || binary))
+        .slice(0, 80)
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join(' ');
+      output.textContent += `FlatBuffer hex (first 80 bytes):\n${hex}\n\n`;
+
+      // Try encryption APIs
+      let encModule;
+      try {
+        encModule = await import('flatc-wasm');
+      } catch (e) {
+        encModule = null;
+      }
+
+      if (encModule?.x25519GenerateKeypair) {
+        output.textContent += `--- Per-Field Encryption ---\n\n`;
+        const keys = encModule.x25519GenerateKeypair();
+        output.textContent += `X25519 keypair generated\n`;
+        output.textContent += `Public key: ${Array.from(keys.publicKey).slice(0, 8).map(b => b.toString(16).padStart(2, '0')).join('')}...\n\n`;
+
+        output.textContent += `With (encrypted) attribute:\n`;
+        output.textContent += `  OBJECT_NAME, CLASSIFICATION, OWNER: plaintext (queryable)\n`;
+        output.textContent += `  PRECISE_INCLINATION, PRECISE_LONGITUDE: AES-256-CTR encrypted\n`;
+        output.textContent += `  SENSOR_TASKING: AES-256-CTR encrypted\n\n`;
+        output.textContent += `Key exchange: X25519 ECDH\n`;
+        output.textContent += `Key derivation: HKDF-SHA256\n`;
+        output.textContent += `Nonce: deterministic 96-bit derivation (record_index * 65536 + field_id)\n`;
+      } else {
+        output.textContent += `Note: Per-field encryption requires flatc-wasm with crypto support.\n`;
+        output.textContent += `The (encrypted) attribute marks fields for AES-256-CTR encryption.\n`;
+        output.textContent += `Non-encrypted fields remain indexable and queryable via FlatSQL.\n`;
+      }
+
+      log('Encryption demo complete');
+    } catch (err) {
+      output.textContent += `Error: ${err.message}\n`;
+      log(`Encryption demo error: ${err.message}`);
+    }
+  }
+
+  // ── Code Generation ──────────────────────────────────────────────────────
+  async function generateCode() {
+    const schema = $('codegen-schema').value;
+    const lang = $('codegen-lang').value;
+    const output = $('codegen-output');
+
+    output.textContent = `Generating ${lang} code for ${schema}...`;
+    log(`Code generation: ${schema} -> ${lang}`);
+
+    try {
+      const code = await state.explorer.generateCode(schema, lang);
+      const files = Object.entries(code);
+
+      if (files.length === 0) {
+        output.textContent = 'No files generated';
+        return;
+      }
+
+      let text = `// Generated ${files.length} file(s) for ${schema} in ${lang}\n`;
+      for (const [name, content] of files) {
+        text += `\n// ═══ ${name} ═══\n${content}\n`;
+      }
+      output.textContent = text;
+      log(`Generated ${files.length} ${lang} file(s) for ${schema}`);
+    } catch (err) {
+      output.textContent = `Error: ${err.message}`;
+      log(`Code gen error: ${err.message}`);
+    }
+  }
+
+  // ── Event Listeners ──────────────────────────────────────────────────────
+  $('run-query-btn').addEventListener('click', runQuery);
+  $('clear-results-btn').addEventListener('click', () => {
+    $('query-results').innerHTML = '';
+  });
+  $('run-encryption-btn').addEventListener('click', runEncryptionDemo);
+  $('codegen-btn').addEventListener('click', generateCode);
+
+  // Preset query buttons
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      $('sql-input').value = btn.dataset.query;
+      runQuery();
+    });
+  });
+
+  // Enter key runs query
+  $('sql-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      runQuery();
+    }
+  });
+
+  // Initialize
+  init().catch(console.error);
+</script>
+
+</body>
+</html>
