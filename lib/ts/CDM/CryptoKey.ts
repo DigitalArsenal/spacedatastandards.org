@@ -49,7 +49,7 @@ XPUB(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Private part of the cryptographic key in hexidecimal format, should be kept secret 
+ * Private part of the cryptographic key in hexidecimal format, should be kept secret
  */
 PRIVATE_KEY():string|null
 PRIVATE_KEY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null

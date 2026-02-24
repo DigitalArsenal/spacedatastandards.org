@@ -58,7 +58,7 @@ class CryptoKey : Table() {
     val XPUBAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
     fun XPUBInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
     /**
-     * Private part of the cryptographic key in hexidecimal format, should be kept secret 
+     * Private part of the cryptographic key in hexidecimal format, should be kept secret
      */
     val PRIVATE_KEY : String?
         get() {

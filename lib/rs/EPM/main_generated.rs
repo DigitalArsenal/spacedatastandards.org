@@ -186,7 +186,7 @@ impl<'a> CryptoKey<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CryptoKey::VT_XPUB, None)}
   }
-  /// Private part of the cryptographic key in hexidecimal format, should be kept secret 
+  /// Private part of the cryptographic key in hexidecimal format, should be kept secret
   #[inline]
   pub fn PRIVATE_KEY(&self) -> Option<&'a str> {
     // Safety:
@@ -662,6 +662,334 @@ impl AddressT {
     })
   }
 }
+pub enum ChainProofOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Proves a blockchain key derives from the same HD wallet as the signing key
+pub struct ChainProof<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for ChainProof<'a> {
+  type Inner = ChainProof<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> ChainProof<'a> {
+  pub const VT_CHAIN: flatbuffers::VOffsetT = 4;
+  pub const VT_ADDRESS: flatbuffers::VOffsetT = 6;
+  pub const VT_PUBLIC_KEY: flatbuffers::VOffsetT = 8;
+  pub const VT_KEY_PATH: flatbuffers::VOffsetT = 10;
+  pub const VT_SIGNATURE: flatbuffers::VOffsetT = 12;
+  pub const VT_SIGNED_PAYLOAD: flatbuffers::VOffsetT = 14;
+  pub const VT_ALGORITHM: flatbuffers::VOffsetT = 16;
+  pub const VT_ENCODING: flatbuffers::VOffsetT = 18;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    ChainProof { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args ChainProofArgs<'args>
+  ) -> flatbuffers::WIPOffset<ChainProof<'bldr>> {
+    let mut builder = ChainProofBuilder::new(_fbb);
+    if let Some(x) = args.ENCODING { builder.add_ENCODING(x); }
+    if let Some(x) = args.ALGORITHM { builder.add_ALGORITHM(x); }
+    if let Some(x) = args.SIGNED_PAYLOAD { builder.add_SIGNED_PAYLOAD(x); }
+    if let Some(x) = args.SIGNATURE { builder.add_SIGNATURE(x); }
+    if let Some(x) = args.KEY_PATH { builder.add_KEY_PATH(x); }
+    if let Some(x) = args.PUBLIC_KEY { builder.add_PUBLIC_KEY(x); }
+    if let Some(x) = args.ADDRESS { builder.add_ADDRESS(x); }
+    if let Some(x) = args.CHAIN { builder.add_CHAIN(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> ChainProofT {
+    let CHAIN = self.CHAIN().map(|x| {
+      x.to_string()
+    });
+    let ADDRESS = self.ADDRESS().map(|x| {
+      x.to_string()
+    });
+    let PUBLIC_KEY = self.PUBLIC_KEY().map(|x| {
+      x.to_string()
+    });
+    let KEY_PATH = self.KEY_PATH().map(|x| {
+      x.to_string()
+    });
+    let SIGNATURE = self.SIGNATURE().map(|x| {
+      x.to_string()
+    });
+    let SIGNED_PAYLOAD = self.SIGNED_PAYLOAD().map(|x| {
+      x.to_string()
+    });
+    let ALGORITHM = self.ALGORITHM().map(|x| {
+      x.to_string()
+    });
+    let ENCODING = self.ENCODING().map(|x| {
+      x.to_string()
+    });
+    ChainProofT {
+      CHAIN,
+      ADDRESS,
+      PUBLIC_KEY,
+      KEY_PATH,
+      SIGNATURE,
+      SIGNED_PAYLOAD,
+      ALGORITHM,
+      ENCODING,
+    }
+  }
+
+  /// Chain identifier (e.g., "bitcoin", "ethereum", "solana")
+  #[inline]
+  pub fn CHAIN(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ChainProof::VT_CHAIN, None)}
+  }
+  /// Derived blockchain address
+  #[inline]
+  pub fn ADDRESS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ChainProof::VT_ADDRESS, None)}
+  }
+  /// Public key for this chain (hex-encoded)
+  #[inline]
+  pub fn PUBLIC_KEY(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ChainProof::VT_PUBLIC_KEY, None)}
+  }
+  /// BIP-44 derivation path (e.g., "m/44'/0'/0'/0/0")
+  #[inline]
+  pub fn KEY_PATH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ChainProof::VT_KEY_PATH, None)}
+  }
+  /// Signature over the attestation payload (hex-encoded)
+  #[inline]
+  pub fn SIGNATURE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ChainProof::VT_SIGNATURE, None)}
+  }
+  /// The canonical payload that was signed (hex-encoded)
+  #[inline]
+  pub fn SIGNED_PAYLOAD(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ChainProof::VT_SIGNED_PAYLOAD, None)}
+  }
+  /// Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")
+  #[inline]
+  pub fn ALGORITHM(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ChainProof::VT_ALGORITHM, None)}
+  }
+  /// Signature encoding format (e.g., "compact", "raw-ed25519")
+  #[inline]
+  pub fn ENCODING(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ChainProof::VT_ENCODING, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for ChainProof<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CHAIN", Self::VT_CHAIN, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ADDRESS", Self::VT_ADDRESS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("PUBLIC_KEY", Self::VT_PUBLIC_KEY, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("KEY_PATH", Self::VT_KEY_PATH, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SIGNATURE", Self::VT_SIGNATURE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SIGNED_PAYLOAD", Self::VT_SIGNED_PAYLOAD, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ALGORITHM", Self::VT_ALGORITHM, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ENCODING", Self::VT_ENCODING, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct ChainProofArgs<'a> {
+    pub CHAIN: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ADDRESS: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub PUBLIC_KEY: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub KEY_PATH: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SIGNED_PAYLOAD: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ALGORITHM: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ENCODING: Option<flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for ChainProofArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    ChainProofArgs {
+      CHAIN: None,
+      ADDRESS: None,
+      PUBLIC_KEY: None,
+      KEY_PATH: None,
+      SIGNATURE: None,
+      SIGNED_PAYLOAD: None,
+      ALGORITHM: None,
+      ENCODING: None,
+    }
+  }
+}
+
+pub struct ChainProofBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> ChainProofBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_CHAIN(&mut self, CHAIN: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ChainProof::VT_CHAIN, CHAIN);
+  }
+  #[inline]
+  pub fn add_ADDRESS(&mut self, ADDRESS: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ChainProof::VT_ADDRESS, ADDRESS);
+  }
+  #[inline]
+  pub fn add_PUBLIC_KEY(&mut self, PUBLIC_KEY: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ChainProof::VT_PUBLIC_KEY, PUBLIC_KEY);
+  }
+  #[inline]
+  pub fn add_KEY_PATH(&mut self, KEY_PATH: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ChainProof::VT_KEY_PATH, KEY_PATH);
+  }
+  #[inline]
+  pub fn add_SIGNATURE(&mut self, SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ChainProof::VT_SIGNATURE, SIGNATURE);
+  }
+  #[inline]
+  pub fn add_SIGNED_PAYLOAD(&mut self, SIGNED_PAYLOAD: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ChainProof::VT_SIGNED_PAYLOAD, SIGNED_PAYLOAD);
+  }
+  #[inline]
+  pub fn add_ALGORITHM(&mut self, ALGORITHM: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ChainProof::VT_ALGORITHM, ALGORITHM);
+  }
+  #[inline]
+  pub fn add_ENCODING(&mut self, ENCODING: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ChainProof::VT_ENCODING, ENCODING);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> ChainProofBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    ChainProofBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<ChainProof<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for ChainProof<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("ChainProof");
+      ds.field("CHAIN", &self.CHAIN());
+      ds.field("ADDRESS", &self.ADDRESS());
+      ds.field("PUBLIC_KEY", &self.PUBLIC_KEY());
+      ds.field("KEY_PATH", &self.KEY_PATH());
+      ds.field("SIGNATURE", &self.SIGNATURE());
+      ds.field("SIGNED_PAYLOAD", &self.SIGNED_PAYLOAD());
+      ds.field("ALGORITHM", &self.ALGORITHM());
+      ds.field("ENCODING", &self.ENCODING());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct ChainProofT {
+  pub CHAIN: Option<String>,
+  pub ADDRESS: Option<String>,
+  pub PUBLIC_KEY: Option<String>,
+  pub KEY_PATH: Option<String>,
+  pub SIGNATURE: Option<String>,
+  pub SIGNED_PAYLOAD: Option<String>,
+  pub ALGORITHM: Option<String>,
+  pub ENCODING: Option<String>,
+}
+impl Default for ChainProofT {
+  fn default() -> Self {
+    Self {
+      CHAIN: None,
+      ADDRESS: None,
+      PUBLIC_KEY: None,
+      KEY_PATH: None,
+      SIGNATURE: None,
+      SIGNED_PAYLOAD: None,
+      ALGORITHM: None,
+      ENCODING: None,
+    }
+  }
+}
+impl ChainProofT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<ChainProof<'b>> {
+    let CHAIN = self.CHAIN.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ADDRESS = self.ADDRESS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PUBLIC_KEY = self.PUBLIC_KEY.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let KEY_PATH = self.KEY_PATH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SIGNATURE = self.SIGNATURE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SIGNED_PAYLOAD = self.SIGNED_PAYLOAD.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ALGORITHM = self.ALGORITHM.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ENCODING = self.ENCODING.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    ChainProof::create(_fbb, &ChainProofArgs{
+      CHAIN,
+      ADDRESS,
+      PUBLIC_KEY,
+      KEY_PATH,
+      SIGNATURE,
+      SIGNED_PAYLOAD,
+      ALGORITHM,
+      ENCODING,
+    })
+  }
+}
 pub enum EPMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -694,6 +1022,9 @@ impl<'a> EPM<'a> {
   pub const VT_TELEPHONE: flatbuffers::VOffsetT = 28;
   pub const VT_KEYS: flatbuffers::VOffsetT = 30;
   pub const VT_MULTIFORMAT_ADDRESS: flatbuffers::VOffsetT = 32;
+  pub const VT_SIGNATURE: flatbuffers::VOffsetT = 34;
+  pub const VT_SIGNATURE_TIMESTAMP: flatbuffers::VOffsetT = 36;
+  pub const VT_CHAIN_PROOFS: flatbuffers::VOffsetT = 38;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -705,6 +1036,9 @@ impl<'a> EPM<'a> {
     args: &'args EPMArgs<'args>
   ) -> flatbuffers::WIPOffset<EPM<'bldr>> {
     let mut builder = EPMBuilder::new(_fbb);
+    builder.add_SIGNATURE_TIMESTAMP(args.SIGNATURE_TIMESTAMP);
+    if let Some(x) = args.CHAIN_PROOFS { builder.add_CHAIN_PROOFS(x); }
+    if let Some(x) = args.SIGNATURE { builder.add_SIGNATURE(x); }
     if let Some(x) = args.MULTIFORMAT_ADDRESS { builder.add_MULTIFORMAT_ADDRESS(x); }
     if let Some(x) = args.KEYS { builder.add_KEYS(x); }
     if let Some(x) = args.TELEPHONE { builder.add_TELEPHONE(x); }
@@ -769,6 +1103,13 @@ impl<'a> EPM<'a> {
     let MULTIFORMAT_ADDRESS = self.MULTIFORMAT_ADDRESS().map(|x| {
       x.iter().map(|s| s.to_string()).collect()
     });
+    let SIGNATURE = self.SIGNATURE().map(|x| {
+      x.to_string()
+    });
+    let SIGNATURE_TIMESTAMP = self.SIGNATURE_TIMESTAMP();
+    let CHAIN_PROOFS = self.CHAIN_PROOFS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
     EPMT {
       DN,
       LEGAL_NAME,
@@ -785,6 +1126,9 @@ impl<'a> EPM<'a> {
       TELEPHONE,
       KEYS,
       MULTIFORMAT_ADDRESS,
+      SIGNATURE,
+      SIGNATURE_TIMESTAMP,
+      CHAIN_PROOFS,
     }
   }
 
@@ -908,6 +1252,30 @@ impl<'a> EPM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(EPM::VT_MULTIFORMAT_ADDRESS, None)}
   }
+  /// Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+  #[inline]
+  pub fn SIGNATURE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(EPM::VT_SIGNATURE, None)}
+  }
+  /// Unix timestamp (seconds) when the EPM was signed
+  #[inline]
+  pub fn SIGNATURE_TIMESTAMP(&self) -> i64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i64>(EPM::VT_SIGNATURE_TIMESTAMP, Some(0)).unwrap()}
+  }
+  /// Chain binding proofs linking blockchain keys to the same HD wallet
+  #[inline]
+  pub fn CHAIN_PROOFS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<ChainProof<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<ChainProof>>>>(EPM::VT_CHAIN_PROOFS, None)}
+  }
 }
 
 impl flatbuffers::Verifiable for EPM<'_> {
@@ -932,6 +1300,9 @@ impl flatbuffers::Verifiable for EPM<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TELEPHONE", Self::VT_TELEPHONE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<CryptoKey>>>>("KEYS", Self::VT_KEYS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("MULTIFORMAT_ADDRESS", Self::VT_MULTIFORMAT_ADDRESS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SIGNATURE", Self::VT_SIGNATURE, false)?
+     .visit_field::<i64>("SIGNATURE_TIMESTAMP", Self::VT_SIGNATURE_TIMESTAMP, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<ChainProof>>>>("CHAIN_PROOFS", Self::VT_CHAIN_PROOFS, false)?
      .finish();
     Ok(())
   }
@@ -952,6 +1323,9 @@ pub struct EPMArgs<'a> {
     pub TELEPHONE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub KEYS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<CryptoKey<'a>>>>>,
     pub MULTIFORMAT_ADDRESS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub SIGNATURE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SIGNATURE_TIMESTAMP: i64,
+    pub CHAIN_PROOFS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<ChainProof<'a>>>>>,
 }
 impl<'a> Default for EPMArgs<'a> {
   #[inline]
@@ -972,6 +1346,9 @@ impl<'a> Default for EPMArgs<'a> {
       TELEPHONE: None,
       KEYS: None,
       MULTIFORMAT_ADDRESS: None,
+      SIGNATURE: None,
+      SIGNATURE_TIMESTAMP: 0,
+      CHAIN_PROOFS: None,
     }
   }
 }
@@ -1042,6 +1419,18 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> EPMBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPM::VT_MULTIFORMAT_ADDRESS, MULTIFORMAT_ADDRESS);
   }
   #[inline]
+  pub fn add_SIGNATURE(&mut self, SIGNATURE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPM::VT_SIGNATURE, SIGNATURE);
+  }
+  #[inline]
+  pub fn add_SIGNATURE_TIMESTAMP(&mut self, SIGNATURE_TIMESTAMP: i64) {
+    self.fbb_.push_slot::<i64>(EPM::VT_SIGNATURE_TIMESTAMP, SIGNATURE_TIMESTAMP, 0);
+  }
+  #[inline]
+  pub fn add_CHAIN_PROOFS(&mut self, CHAIN_PROOFS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<ChainProof<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(EPM::VT_CHAIN_PROOFS, CHAIN_PROOFS);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> EPMBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     EPMBuilder {
@@ -1074,6 +1463,9 @@ impl core::fmt::Debug for EPM<'_> {
       ds.field("TELEPHONE", &self.TELEPHONE());
       ds.field("KEYS", &self.KEYS());
       ds.field("MULTIFORMAT_ADDRESS", &self.MULTIFORMAT_ADDRESS());
+      ds.field("SIGNATURE", &self.SIGNATURE());
+      ds.field("SIGNATURE_TIMESTAMP", &self.SIGNATURE_TIMESTAMP());
+      ds.field("CHAIN_PROOFS", &self.CHAIN_PROOFS());
       ds.finish()
   }
 }
@@ -1095,6 +1487,9 @@ pub struct EPMT {
   pub TELEPHONE: Option<String>,
   pub KEYS: Option<Vec<CryptoKeyT>>,
   pub MULTIFORMAT_ADDRESS: Option<Vec<String>>,
+  pub SIGNATURE: Option<String>,
+  pub SIGNATURE_TIMESTAMP: i64,
+  pub CHAIN_PROOFS: Option<Vec<ChainProofT>>,
 }
 impl Default for EPMT {
   fn default() -> Self {
@@ -1114,6 +1509,9 @@ impl Default for EPMT {
       TELEPHONE: None,
       KEYS: None,
       MULTIFORMAT_ADDRESS: None,
+      SIGNATURE: None,
+      SIGNATURE_TIMESTAMP: 0,
+      CHAIN_PROOFS: None,
     }
   }
 }
@@ -1167,6 +1565,13 @@ impl EPMT {
     let MULTIFORMAT_ADDRESS = self.MULTIFORMAT_ADDRESS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
+    let SIGNATURE = self.SIGNATURE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SIGNATURE_TIMESTAMP = self.SIGNATURE_TIMESTAMP;
+    let CHAIN_PROOFS = self.CHAIN_PROOFS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
     EPM::create(_fbb, &EPMArgs{
       DN,
       LEGAL_NAME,
@@ -1183,6 +1588,9 @@ impl EPMT {
       TELEPHONE,
       KEYS,
       MULTIFORMAT_ADDRESS,
+      SIGNATURE,
+      SIGNATURE_TIMESTAMP,
+      CHAIN_PROOFS,
     })
   }
 }

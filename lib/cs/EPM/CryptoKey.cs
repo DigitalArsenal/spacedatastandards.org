@@ -33,7 +33,7 @@ public struct CryptoKey : IFlatbufferObject
   public ArraySegment<byte>? GetXPUBBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetXPUBArray() { return __p.__vector_as_array<byte>(6); }
-  /// Private part of the cryptographic key in hexidecimal format, should be kept secret 
+  /// Private part of the cryptographic key in hexidecimal format, should be kept secret
   public string PRIVATE_KEY { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetPRIVATE_KEYBytes() { return __p.__vector_as_span<byte>(8, 1); }

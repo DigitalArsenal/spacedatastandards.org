@@ -5,6 +5,7 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { Address, AddressT } from './Address.js';
+import { ChainProof, ChainProofT } from './ChainProof.js';
 import { CryptoKey, CryptoKeyT } from './CryptoKey.js';
 
 
@@ -194,8 +195,39 @@ multiformatAddressLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+ */
+SIGNATURE():string|null
+SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SIGNATURE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Unix timestamp (seconds) when the EPM was signed
+ */
+SIGNATURE_TIMESTAMP():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.readInt64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Chain binding proofs linking blockchain keys to the same HD wallet
+ */
+CHAIN_PROOFS(index: number, obj?:ChainProof):ChainProof|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? (obj || new ChainProof()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+chainProofsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startEPM(builder:flatbuffers.Builder) {
-  builder.startObject(15);
+  builder.startObject(18);
 }
 
 static addDn(builder:flatbuffers.Builder, DNOffset:flatbuffers.Offset) {
@@ -294,6 +326,30 @@ static startMultiformatAddressVector(builder:flatbuffers.Builder, numElems:numbe
   builder.startVector(4, numElems, 4);
 }
 
+static addSignature(builder:flatbuffers.Builder, SIGNATUREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(15, SIGNATUREOffset, 0);
+}
+
+static addSignatureTimestamp(builder:flatbuffers.Builder, SIGNATURE_TIMESTAMP:bigint) {
+  builder.addFieldInt64(16, SIGNATURE_TIMESTAMP, BigInt('0'));
+}
+
+static addChainProofs(builder:flatbuffers.Builder, CHAIN_PROOFSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, CHAIN_PROOFSOffset, 0);
+}
+
+static createChainProofsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startChainProofsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endEPM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -324,7 +380,10 @@ unpack(): EPMT {
     this.EMAIL(),
     this.TELEPHONE(),
     this.bb!.createObjList<CryptoKey, CryptoKeyT>(this.KEYS.bind(this), this.keysLength()),
-    this.bb!.createScalarList<string>(this.MULTIFORMAT_ADDRESS.bind(this), this.multiformatAddressLength())
+    this.bb!.createScalarList<string>(this.MULTIFORMAT_ADDRESS.bind(this), this.multiformatAddressLength()),
+    this.SIGNATURE(),
+    this.SIGNATURE_TIMESTAMP(),
+    this.bb!.createObjList<ChainProof, ChainProofT>(this.CHAIN_PROOFS.bind(this), this.chainProofsLength())
   );
 }
 
@@ -345,6 +404,9 @@ unpackTo(_o: EPMT): void {
   _o.TELEPHONE = this.TELEPHONE();
   _o.KEYS = this.bb!.createObjList<CryptoKey, CryptoKeyT>(this.KEYS.bind(this), this.keysLength());
   _o.MULTIFORMAT_ADDRESS = this.bb!.createScalarList<string>(this.MULTIFORMAT_ADDRESS.bind(this), this.multiformatAddressLength());
+  _o.SIGNATURE = this.SIGNATURE();
+  _o.SIGNATURE_TIMESTAMP = this.SIGNATURE_TIMESTAMP();
+  _o.CHAIN_PROOFS = this.bb!.createObjList<ChainProof, ChainProofT>(this.CHAIN_PROOFS.bind(this), this.chainProofsLength());
 }
 }
 
@@ -364,7 +426,10 @@ constructor(
   public EMAIL: string|Uint8Array|null = null,
   public TELEPHONE: string|Uint8Array|null = null,
   public KEYS: (CryptoKeyT)[] = [],
-  public MULTIFORMAT_ADDRESS: (string)[] = []
+  public MULTIFORMAT_ADDRESS: (string)[] = [],
+  public SIGNATURE: string|Uint8Array|null = null,
+  public SIGNATURE_TIMESTAMP: bigint = BigInt('0'),
+  public CHAIN_PROOFS: (ChainProofT)[] = []
 ){}
 
 
@@ -384,6 +449,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const TELEPHONE = (this.TELEPHONE !== null ? builder.createString(this.TELEPHONE!) : 0);
   const KEYS = EPM.createKeysVector(builder, builder.createObjectOffsetList(this.KEYS));
   const MULTIFORMAT_ADDRESS = EPM.createMultiformatAddressVector(builder, builder.createObjectOffsetList(this.MULTIFORMAT_ADDRESS));
+  const SIGNATURE = (this.SIGNATURE !== null ? builder.createString(this.SIGNATURE!) : 0);
+  const CHAIN_PROOFS = EPM.createChainProofsVector(builder, builder.createObjectOffsetList(this.CHAIN_PROOFS));
 
   EPM.startEPM(builder);
   EPM.addDn(builder, DN);
@@ -401,6 +468,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   EPM.addTelephone(builder, TELEPHONE);
   EPM.addKeys(builder, KEYS);
   EPM.addMultiformatAddress(builder, MULTIFORMAT_ADDRESS);
+  EPM.addSignature(builder, SIGNATURE);
+  EPM.addSignatureTimestamp(builder, this.SIGNATURE_TIMESTAMP);
+  EPM.addChainProofs(builder, CHAIN_PROOFS);
 
   return EPM.endEPM(builder);
 }

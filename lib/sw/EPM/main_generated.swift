@@ -46,7 +46,7 @@ public struct CryptoKey: FlatBufferObject, Verifiable {
   ///  Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
   public var XPUB: String? { let o = _accessor.offset(VTOFFSET.XPUB.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var XPUBSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.XPUB.v) }
-  ///  Private part of the cryptographic key in hexidecimal format, should be kept secret 
+  ///  Private part of the cryptographic key in hexidecimal format, should be kept secret
   public var PRIVATE_KEY: String? { let o = _accessor.offset(VTOFFSET.PRIVATE_KEY.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var PRIVATE_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PRIVATE_KEY.v) }
   ///  Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
@@ -183,6 +183,102 @@ public struct Address: FlatBufferObject, Verifiable {
   }
 }
 
+///  Proves a blockchain key derives from the same HD wallet as the signing key
+public struct ChainProof: FlatBufferObject, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$EPM" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: ChainProof.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private enum VTOFFSET: VOffset {
+    case CHAIN = 4
+    case ADDRESS = 6
+    case PUBLIC_KEY = 8
+    case KEY_PATH = 10
+    case SIGNATURE = 12
+    case SIGNED_PAYLOAD = 14
+    case ALGORITHM = 16
+    case ENCODING = 18
+    var v: Int32 { Int32(self.rawValue) }
+    var p: VOffset { self.rawValue }
+  }
+
+  ///  Chain identifier (e.g., "bitcoin", "ethereum", "solana")
+  public var CHAIN: String? { let o = _accessor.offset(VTOFFSET.CHAIN.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CHAINSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CHAIN.v) }
+  ///  Derived blockchain address
+  public var ADDRESS: String? { let o = _accessor.offset(VTOFFSET.ADDRESS.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ADDRESS.v) }
+  ///  Public key for this chain (hex-encoded)
+  public var PUBLIC_KEY: String? { let o = _accessor.offset(VTOFFSET.PUBLIC_KEY.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PUBLIC_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PUBLIC_KEY.v) }
+  ///  BIP-44 derivation path (e.g., "m/44'/0'/0'/0/0")
+  public var KEY_PATH: String? { let o = _accessor.offset(VTOFFSET.KEY_PATH.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var KEY_PATHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.KEY_PATH.v) }
+  ///  Signature over the attestation payload (hex-encoded)
+  public var SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SIGNATURE.v) }
+  ///  The canonical payload that was signed (hex-encoded)
+  public var SIGNED_PAYLOAD: String? { let o = _accessor.offset(VTOFFSET.SIGNED_PAYLOAD.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIGNED_PAYLOADSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SIGNED_PAYLOAD.v) }
+  ///  Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")
+  public var ALGORITHM: String? { let o = _accessor.offset(VTOFFSET.ALGORITHM.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ALGORITHM.v) }
+  ///  Signature encoding format (e.g., "compact", "raw-ed25519")
+  public var ENCODING: String? { let o = _accessor.offset(VTOFFSET.ENCODING.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ENCODINGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ENCODING.v) }
+  public static func startChainProof(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  public static func add(CHAIN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHAIN, at: VTOFFSET.CHAIN.p) }
+  public static func add(ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ADDRESS, at: VTOFFSET.ADDRESS.p) }
+  public static func add(PUBLIC_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLIC_KEY, at: VTOFFSET.PUBLIC_KEY.p) }
+  public static func add(KEY_PATH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEY_PATH, at: VTOFFSET.KEY_PATH.p) }
+  public static func add(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VTOFFSET.SIGNATURE.p) }
+  public static func add(SIGNED_PAYLOAD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNED_PAYLOAD, at: VTOFFSET.SIGNED_PAYLOAD.p) }
+  public static func add(ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALGORITHM, at: VTOFFSET.ALGORITHM.p) }
+  public static func add(ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENCODING, at: VTOFFSET.ENCODING.p) }
+  public static func endChainProof(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createChainProof(
+    _ fbb: inout FlatBufferBuilder,
+    CHAINOffset CHAIN: Offset = Offset(),
+    ADDRESSOffset ADDRESS: Offset = Offset(),
+    PUBLIC_KEYOffset PUBLIC_KEY: Offset = Offset(),
+    KEY_PATHOffset KEY_PATH: Offset = Offset(),
+    SIGNATUREOffset SIGNATURE: Offset = Offset(),
+    SIGNED_PAYLOADOffset SIGNED_PAYLOAD: Offset = Offset(),
+    ALGORITHMOffset ALGORITHM: Offset = Offset(),
+    ENCODINGOffset ENCODING: Offset = Offset()
+  ) -> Offset {
+    let __start = ChainProof.startChainProof(&fbb)
+    ChainProof.add(CHAIN: CHAIN, &fbb)
+    ChainProof.add(ADDRESS: ADDRESS, &fbb)
+    ChainProof.add(PUBLIC_KEY: PUBLIC_KEY, &fbb)
+    ChainProof.add(KEY_PATH: KEY_PATH, &fbb)
+    ChainProof.add(SIGNATURE: SIGNATURE, &fbb)
+    ChainProof.add(SIGNED_PAYLOAD: SIGNED_PAYLOAD, &fbb)
+    ChainProof.add(ALGORITHM: ALGORITHM, &fbb)
+    ChainProof.add(ENCODING: ENCODING, &fbb)
+    return ChainProof.endChainProof(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VTOFFSET.CHAIN.p, fieldName: "CHAIN", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.ADDRESS.p, fieldName: "ADDRESS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.PUBLIC_KEY.p, fieldName: "PUBLIC_KEY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.KEY_PATH.p, fieldName: "KEY_PATH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.SIGNATURE.p, fieldName: "SIGNATURE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.SIGNED_PAYLOAD.p, fieldName: "SIGNED_PAYLOAD", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.ALGORITHM.p, fieldName: "ALGORITHM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.ENCODING.p, fieldName: "ENCODING", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
 ///  Entity Profile Message
 public struct EPM: FlatBufferObject, Verifiable {
 
@@ -211,6 +307,9 @@ public struct EPM: FlatBufferObject, Verifiable {
     case TELEPHONE = 28
     case KEYS = 30
     case MULTIFORMAT_ADDRESS = 32
+    case SIGNATURE = 34
+    case SIGNATURE_TIMESTAMP = 36
+    case CHAIN_PROOFS = 38
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
@@ -262,7 +361,16 @@ public struct EPM: FlatBufferObject, Verifiable {
   public var hasMultiformatAddress: Bool { let o = _accessor.offset(VTOFFSET.MULTIFORMAT_ADDRESS.v); return o == 0 ? false : true }
   public var MULTIFORMAT_ADDRESSCount: Int32 { let o = _accessor.offset(VTOFFSET.MULTIFORMAT_ADDRESS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func MULTIFORMAT_ADDRESS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.MULTIFORMAT_ADDRESS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public static func startEPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
+  ///  Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+  public var SIGNATURE: String? { let o = _accessor.offset(VTOFFSET.SIGNATURE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SIGNATURE.v) }
+  ///  Unix timestamp (seconds) when the EPM was signed
+  public var SIGNATURE_TIMESTAMP: Int64 { let o = _accessor.offset(VTOFFSET.SIGNATURE_TIMESTAMP.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  ///  Chain binding proofs linking blockchain keys to the same HD wallet
+  public var hasChainProofs: Bool { let o = _accessor.offset(VTOFFSET.CHAIN_PROOFS.v); return o == 0 ? false : true }
+  public var CHAIN_PROOFSCount: Int32 { let o = _accessor.offset(VTOFFSET.CHAIN_PROOFS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func CHAIN_PROOFS(at index: Int32) -> ChainProof? { let o = _accessor.offset(VTOFFSET.CHAIN_PROOFS.v); return o == 0 ? nil : ChainProof(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public static func startEPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 18) }
   public static func add(DN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DN, at: VTOFFSET.DN.p) }
   public static func add(LEGAL_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LEGAL_NAME, at: VTOFFSET.LEGAL_NAME.p) }
   public static func add(FAMILY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FAMILY_NAME, at: VTOFFSET.FAMILY_NAME.p) }
@@ -278,6 +386,9 @@ public struct EPM: FlatBufferObject, Verifiable {
   public static func add(TELEPHONE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TELEPHONE, at: VTOFFSET.TELEPHONE.p) }
   public static func addVectorOf(KEYS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEYS, at: VTOFFSET.KEYS.p) }
   public static func addVectorOf(MULTIFORMAT_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MULTIFORMAT_ADDRESS, at: VTOFFSET.MULTIFORMAT_ADDRESS.p) }
+  public static func add(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VTOFFSET.SIGNATURE.p) }
+  public static func add(SIGNATURE_TIMESTAMP: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIGNATURE_TIMESTAMP, def: 0, at: VTOFFSET.SIGNATURE_TIMESTAMP.p) }
+  public static func addVectorOf(CHAIN_PROOFS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHAIN_PROOFS, at: VTOFFSET.CHAIN_PROOFS.p) }
   public static func endEPM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createEPM(
     _ fbb: inout FlatBufferBuilder,
@@ -295,7 +406,10 @@ public struct EPM: FlatBufferObject, Verifiable {
     EMAILOffset EMAIL: Offset = Offset(),
     TELEPHONEOffset TELEPHONE: Offset = Offset(),
     KEYSVectorOffset KEYS: Offset = Offset(),
-    MULTIFORMAT_ADDRESSVectorOffset MULTIFORMAT_ADDRESS: Offset = Offset()
+    MULTIFORMAT_ADDRESSVectorOffset MULTIFORMAT_ADDRESS: Offset = Offset(),
+    SIGNATUREOffset SIGNATURE: Offset = Offset(),
+    SIGNATURE_TIMESTAMP: Int64 = 0,
+    CHAIN_PROOFSVectorOffset CHAIN_PROOFS: Offset = Offset()
   ) -> Offset {
     let __start = EPM.startEPM(&fbb)
     EPM.add(DN: DN, &fbb)
@@ -313,6 +427,9 @@ public struct EPM: FlatBufferObject, Verifiable {
     EPM.add(TELEPHONE: TELEPHONE, &fbb)
     EPM.addVectorOf(KEYS: KEYS, &fbb)
     EPM.addVectorOf(MULTIFORMAT_ADDRESS: MULTIFORMAT_ADDRESS, &fbb)
+    EPM.add(SIGNATURE: SIGNATURE, &fbb)
+    EPM.add(SIGNATURE_TIMESTAMP: SIGNATURE_TIMESTAMP, &fbb)
+    EPM.addVectorOf(CHAIN_PROOFS: CHAIN_PROOFS, &fbb)
     return EPM.endEPM(&fbb, start: __start)
   }
 
@@ -333,6 +450,9 @@ public struct EPM: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.TELEPHONE.p, fieldName: "TELEPHONE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.KEYS.p, fieldName: "KEYS", required: false, type: ForwardOffset<Vector<ForwardOffset<CryptoKey>, CryptoKey>>.self)
     try _v.visit(field: VTOFFSET.MULTIFORMAT_ADDRESS.p, fieldName: "MULTIFORMAT_ADDRESS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VTOFFSET.SIGNATURE.p, fieldName: "SIGNATURE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.SIGNATURE_TIMESTAMP.p, fieldName: "SIGNATURE_TIMESTAMP", required: false, type: Int64.self)
+    try _v.visit(field: VTOFFSET.CHAIN_PROOFS.p, fieldName: "CHAIN_PROOFS", required: false, type: ForwardOffset<Vector<ForwardOffset<ChainProof>, ChainProof>>.self)
     _v.finish()
   }
 }

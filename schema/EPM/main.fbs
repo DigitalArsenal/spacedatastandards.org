@@ -1,5 +1,5 @@
-// Hash: 56a7c33178d35833096bcaff5591b808a11da3adc5e19523ce26aba0aafb3aec
-// Version: 1.0.1
+// Hash: 34c4722ba3c9770f7ca4b9611ee6df2e438198f7e2d23a5b57bec2fe17095e40
+// Version: 1.0.2
 // -----------------------------------END_HEADER
 enum KeyType : byte {
   Signing,
@@ -12,7 +12,7 @@ table CryptoKey {
   PUBLIC_KEY: string;
   /// Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
   XPUB: string;
-  /// Private part of the cryptographic key in hexidecimal format, should be kept secret 
+  /// Private part of the cryptographic key in hexidecimal format, should be kept secret
   PRIVATE_KEY: string;
   /// Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
   XPRIV: string;
@@ -38,6 +38,26 @@ table Address {
   STREET: string;
   /// Post office box number
   POST_OFFICE_BOX_NUMBER: string;
+}
+
+/// Proves a blockchain key derives from the same HD wallet as the signing key
+table ChainProof {
+  /// Chain identifier (e.g., "bitcoin", "ethereum", "solana")
+  CHAIN: string;
+  /// Derived blockchain address
+  ADDRESS: string;
+  /// Public key for this chain (hex-encoded)
+  PUBLIC_KEY: string;
+  /// BIP-44 derivation path (e.g., "m/44'/0'/0'/0/0")
+  KEY_PATH: string;
+  /// Signature over the attestation payload (hex-encoded)
+  SIGNATURE: string;
+  /// The canonical payload that was signed (hex-encoded)
+  SIGNED_PAYLOAD: string;
+  /// Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")
+  ALGORITHM: string;
+  /// Signature encoding format (e.g., "compact", "raw-ed25519")
+  ENCODING: string;
 }
 
 /// Entity Profile Message
@@ -72,6 +92,12 @@ table EPM {
   KEYS: [CryptoKey];
   /// Multiformat addresses associated with the entity
   MULTIFORMAT_ADDRESS: [string];
+  /// Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+  SIGNATURE: string;
+  /// Unix timestamp (seconds) when the EPM was signed
+  SIGNATURE_TIMESTAMP: int64;
+  /// Chain binding proofs linking blockchain keys to the same HD wallet
+  CHAIN_PROOFS: [ChainProof];
 }
 
 root_type EPM;

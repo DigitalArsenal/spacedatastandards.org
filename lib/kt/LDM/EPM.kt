@@ -241,6 +241,44 @@ class EPM : Table() {
         get() {
             val o = __offset(32); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+     */
+    val SIGNATURE : String?
+        get() {
+            val o = __offset(34)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val SIGNATUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
+    fun SIGNATUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    /**
+     * Unix timestamp (seconds) when the EPM was signed
+     */
+    val SIGNATURE_TIMESTAMP : Long
+        get() {
+            val o = __offset(36)
+            return if(o != 0) bb.getLong(o + bb_pos) else 0L
+        }
+    /**
+     * Chain binding proofs linking blockchain keys to the same HD wallet
+     */
+    fun CHAIN_PROOFS(j: Int) : ChainProof? = CHAIN_PROOFS(ChainProof(), j)
+    fun CHAIN_PROOFS(obj: ChainProof, j: Int) : ChainProof? {
+        val o = __offset(38)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val CHAIN_PROOFSLength : Int
+        get() {
+            val o = __offset(38); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsEPM(_bb: ByteBuffer): EPM = getRootAsEPM(_bb, EPM())
@@ -249,8 +287,11 @@ class EPM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun EPMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EPM")
-        fun createEPM(builder: FlatBufferBuilder, DNOffset: Int, LEGAL_NAMEOffset: Int, FAMILY_NAMEOffset: Int, GIVEN_NAMEOffset: Int, ADDITIONAL_NAMEOffset: Int, HONORIFIC_PREFIXOffset: Int, HONORIFIC_SUFFIXOffset: Int, JOB_TITLEOffset: Int, OCCUPATIONOffset: Int, ADDRESSOffset: Int, ALTERNATE_NAMESOffset: Int, EMAILOffset: Int, TELEPHONEOffset: Int, KEYSOffset: Int, MULTIFORMAT_ADDRESSOffset: Int) : Int {
-            builder.startTable(15)
+        fun createEPM(builder: FlatBufferBuilder, DNOffset: Int, LEGAL_NAMEOffset: Int, FAMILY_NAMEOffset: Int, GIVEN_NAMEOffset: Int, ADDITIONAL_NAMEOffset: Int, HONORIFIC_PREFIXOffset: Int, HONORIFIC_SUFFIXOffset: Int, JOB_TITLEOffset: Int, OCCUPATIONOffset: Int, ADDRESSOffset: Int, ALTERNATE_NAMESOffset: Int, EMAILOffset: Int, TELEPHONEOffset: Int, KEYSOffset: Int, MULTIFORMAT_ADDRESSOffset: Int, SIGNATUREOffset: Int, SIGNATURE_TIMESTAMP: Long, CHAIN_PROOFSOffset: Int) : Int {
+            builder.startTable(18)
+            addSIGNATURE_TIMESTAMP(builder, SIGNATURE_TIMESTAMP)
+            addCHAIN_PROOFS(builder, CHAIN_PROOFSOffset)
+            addSIGNATURE(builder, SIGNATUREOffset)
             addMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESSOffset)
             addKEYS(builder, KEYSOffset)
             addTELEPHONE(builder, TELEPHONEOffset)
@@ -268,7 +309,7 @@ class EPM : Table() {
             addDN(builder, DNOffset)
             return endEPM(builder)
         }
-        fun startEPM(builder: FlatBufferBuilder) = builder.startTable(15)
+        fun startEPM(builder: FlatBufferBuilder) = builder.startTable(18)
         fun addDN(builder: FlatBufferBuilder, DN: Int) = builder.addOffset(0, DN, 0)
         fun addLEGAL_NAME(builder: FlatBufferBuilder, LEGAL_NAME: Int) = builder.addOffset(1, LEGAL_NAME, 0)
         fun addFAMILY_NAME(builder: FlatBufferBuilder, FAMILY_NAME: Int) = builder.addOffset(2, FAMILY_NAME, 0)
@@ -308,6 +349,17 @@ class EPM : Table() {
             return builder.endVector()
         }
         fun startMultiformatAddressVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addSIGNATURE(builder: FlatBufferBuilder, SIGNATURE: Int) = builder.addOffset(15, SIGNATURE, 0)
+        fun addSIGNATURE_TIMESTAMP(builder: FlatBufferBuilder, SIGNATURE_TIMESTAMP: Long) = builder.addLong(16, SIGNATURE_TIMESTAMP, 0L)
+        fun addCHAIN_PROOFS(builder: FlatBufferBuilder, CHAIN_PROOFS: Int) = builder.addOffset(17, CHAIN_PROOFS, 0)
+        fun createChainProofsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startChainProofsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endEPM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

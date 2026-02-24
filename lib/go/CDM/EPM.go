@@ -239,8 +239,54 @@ func (rcv *EPM) MULTIFORMAT_ADDRESSLength() int {
 }
 
 /// Multiformat addresses associated with the entity
+/// Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+func (rcv *EPM) SIGNATURE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+/// Unix timestamp (seconds) when the EPM was signed
+func (rcv *EPM) SIGNATURE_TIMESTAMP() int64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.GetInt64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Unix timestamp (seconds) when the EPM was signed
+func (rcv *EPM) MutateSIGNATURE_TIMESTAMP(n int64) bool {
+	return rcv._tab.MutateInt64Slot(36, n)
+}
+
+/// Chain binding proofs linking blockchain keys to the same HD wallet
+func (rcv *EPM) CHAIN_PROOFS(obj *ChainProof, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *EPM) CHAIN_PROOFSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Chain binding proofs linking blockchain keys to the same HD wallet
 func EPMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(15)
+	builder.StartObject(18)
 }
 func EPMAddDN(builder *flatbuffers.Builder, DN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(DN), 0)
@@ -294,6 +340,18 @@ func EPMAddMULTIFORMAT_ADDRESS(builder *flatbuffers.Builder, MULTIFORMAT_ADDRESS
 	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(MULTIFORMAT_ADDRESS), 0)
 }
 func EPMStartMULTIFORMAT_ADDRESSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func EPMAddSIGNATURE(builder *flatbuffers.Builder, SIGNATURE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(SIGNATURE), 0)
+}
+func EPMAddSIGNATURE_TIMESTAMP(builder *flatbuffers.Builder, SIGNATURE_TIMESTAMP int64) {
+	builder.PrependInt64Slot(16, SIGNATURE_TIMESTAMP, 0)
+}
+func EPMAddCHAIN_PROOFS(builder *flatbuffers.Builder, CHAIN_PROOFS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(CHAIN_PROOFS), 0)
+}
+func EPMStartCHAIN_PROOFSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
 func EPMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {

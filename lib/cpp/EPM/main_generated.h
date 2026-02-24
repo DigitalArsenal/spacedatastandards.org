@@ -19,6 +19,9 @@ struct CryptoKeyBuilder;
 struct Address;
 struct AddressBuilder;
 
+struct ChainProof;
+struct ChainProofBuilder;
+
 struct EPM;
 struct EPMBuilder;
 
@@ -72,7 +75,7 @@ struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *XPUB() const {
     return GetPointer<const ::flatbuffers::String *>(VT_XPUB);
   }
-  /// Private part of the cryptographic key in hexidecimal format, should be kept secret 
+  /// Private part of the cryptographic key in hexidecimal format, should be kept secret
   const ::flatbuffers::String *PRIVATE_KEY() const {
     return GetPointer<const ::flatbuffers::String *>(VT_PRIVATE_KEY);
   }
@@ -321,6 +324,164 @@ inline ::flatbuffers::Offset<Address> CreateAddressDirect(
       POST_OFFICE_BOX_NUMBER__);
 }
 
+/// Proves a blockchain key derives from the same HD wallet as the signing key
+struct ChainProof FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef ChainProofBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_CHAIN = 4,
+    VT_ADDRESS = 6,
+    VT_PUBLIC_KEY = 8,
+    VT_KEY_PATH = 10,
+    VT_SIGNATURE = 12,
+    VT_SIGNED_PAYLOAD = 14,
+    VT_ALGORITHM = 16,
+    VT_ENCODING = 18
+  };
+  /// Chain identifier (e.g., "bitcoin", "ethereum", "solana")
+  const ::flatbuffers::String *CHAIN() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CHAIN);
+  }
+  /// Derived blockchain address
+  const ::flatbuffers::String *ADDRESS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ADDRESS);
+  }
+  /// Public key for this chain (hex-encoded)
+  const ::flatbuffers::String *PUBLIC_KEY() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PUBLIC_KEY);
+  }
+  /// BIP-44 derivation path (e.g., "m/44'/0'/0'/0/0")
+  const ::flatbuffers::String *KEY_PATH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_KEY_PATH);
+  }
+  /// Signature over the attestation payload (hex-encoded)
+  const ::flatbuffers::String *SIGNATURE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SIGNATURE);
+  }
+  /// The canonical payload that was signed (hex-encoded)
+  const ::flatbuffers::String *SIGNED_PAYLOAD() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SIGNED_PAYLOAD);
+  }
+  /// Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")
+  const ::flatbuffers::String *ALGORITHM() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ALGORITHM);
+  }
+  /// Signature encoding format (e.g., "compact", "raw-ed25519")
+  const ::flatbuffers::String *ENCODING() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ENCODING);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_CHAIN) &&
+           verifier.VerifyString(CHAIN()) &&
+           VerifyOffset(verifier, VT_ADDRESS) &&
+           verifier.VerifyString(ADDRESS()) &&
+           VerifyOffset(verifier, VT_PUBLIC_KEY) &&
+           verifier.VerifyString(PUBLIC_KEY()) &&
+           VerifyOffset(verifier, VT_KEY_PATH) &&
+           verifier.VerifyString(KEY_PATH()) &&
+           VerifyOffset(verifier, VT_SIGNATURE) &&
+           verifier.VerifyString(SIGNATURE()) &&
+           VerifyOffset(verifier, VT_SIGNED_PAYLOAD) &&
+           verifier.VerifyString(SIGNED_PAYLOAD()) &&
+           VerifyOffset(verifier, VT_ALGORITHM) &&
+           verifier.VerifyString(ALGORITHM()) &&
+           VerifyOffset(verifier, VT_ENCODING) &&
+           verifier.VerifyString(ENCODING()) &&
+           verifier.EndTable();
+  }
+};
+
+struct ChainProofBuilder {
+  typedef ChainProof Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_CHAIN(::flatbuffers::Offset<::flatbuffers::String> CHAIN) {
+    fbb_.AddOffset(ChainProof::VT_CHAIN, CHAIN);
+  }
+  void add_ADDRESS(::flatbuffers::Offset<::flatbuffers::String> ADDRESS) {
+    fbb_.AddOffset(ChainProof::VT_ADDRESS, ADDRESS);
+  }
+  void add_PUBLIC_KEY(::flatbuffers::Offset<::flatbuffers::String> PUBLIC_KEY) {
+    fbb_.AddOffset(ChainProof::VT_PUBLIC_KEY, PUBLIC_KEY);
+  }
+  void add_KEY_PATH(::flatbuffers::Offset<::flatbuffers::String> KEY_PATH) {
+    fbb_.AddOffset(ChainProof::VT_KEY_PATH, KEY_PATH);
+  }
+  void add_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> SIGNATURE) {
+    fbb_.AddOffset(ChainProof::VT_SIGNATURE, SIGNATURE);
+  }
+  void add_SIGNED_PAYLOAD(::flatbuffers::Offset<::flatbuffers::String> SIGNED_PAYLOAD) {
+    fbb_.AddOffset(ChainProof::VT_SIGNED_PAYLOAD, SIGNED_PAYLOAD);
+  }
+  void add_ALGORITHM(::flatbuffers::Offset<::flatbuffers::String> ALGORITHM) {
+    fbb_.AddOffset(ChainProof::VT_ALGORITHM, ALGORITHM);
+  }
+  void add_ENCODING(::flatbuffers::Offset<::flatbuffers::String> ENCODING) {
+    fbb_.AddOffset(ChainProof::VT_ENCODING, ENCODING);
+  }
+  explicit ChainProofBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<ChainProof> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<ChainProof>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<ChainProof> CreateChainProof(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> CHAIN = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ADDRESS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PUBLIC_KEY = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> KEY_PATH = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SIGNATURE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SIGNED_PAYLOAD = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ALGORITHM = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ENCODING = 0) {
+  ChainProofBuilder builder_(_fbb);
+  builder_.add_ENCODING(ENCODING);
+  builder_.add_ALGORITHM(ALGORITHM);
+  builder_.add_SIGNED_PAYLOAD(SIGNED_PAYLOAD);
+  builder_.add_SIGNATURE(SIGNATURE);
+  builder_.add_KEY_PATH(KEY_PATH);
+  builder_.add_PUBLIC_KEY(PUBLIC_KEY);
+  builder_.add_ADDRESS(ADDRESS);
+  builder_.add_CHAIN(CHAIN);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<ChainProof> CreateChainProofDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *CHAIN = nullptr,
+    const char *ADDRESS = nullptr,
+    const char *PUBLIC_KEY = nullptr,
+    const char *KEY_PATH = nullptr,
+    const char *SIGNATURE = nullptr,
+    const char *SIGNED_PAYLOAD = nullptr,
+    const char *ALGORITHM = nullptr,
+    const char *ENCODING = nullptr) {
+  auto CHAIN__ = CHAIN ? _fbb.CreateString(CHAIN) : 0;
+  auto ADDRESS__ = ADDRESS ? _fbb.CreateString(ADDRESS) : 0;
+  auto PUBLIC_KEY__ = PUBLIC_KEY ? _fbb.CreateString(PUBLIC_KEY) : 0;
+  auto KEY_PATH__ = KEY_PATH ? _fbb.CreateString(KEY_PATH) : 0;
+  auto SIGNATURE__ = SIGNATURE ? _fbb.CreateString(SIGNATURE) : 0;
+  auto SIGNED_PAYLOAD__ = SIGNED_PAYLOAD ? _fbb.CreateString(SIGNED_PAYLOAD) : 0;
+  auto ALGORITHM__ = ALGORITHM ? _fbb.CreateString(ALGORITHM) : 0;
+  auto ENCODING__ = ENCODING ? _fbb.CreateString(ENCODING) : 0;
+  return CreateChainProof(
+      _fbb,
+      CHAIN__,
+      ADDRESS__,
+      PUBLIC_KEY__,
+      KEY_PATH__,
+      SIGNATURE__,
+      SIGNED_PAYLOAD__,
+      ALGORITHM__,
+      ENCODING__);
+}
+
 /// Entity Profile Message
 struct EPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef EPMBuilder Builder;
@@ -339,7 +500,10 @@ struct EPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_EMAIL = 26,
     VT_TELEPHONE = 28,
     VT_KEYS = 30,
-    VT_MULTIFORMAT_ADDRESS = 32
+    VT_MULTIFORMAT_ADDRESS = 32,
+    VT_SIGNATURE = 34,
+    VT_SIGNATURE_TIMESTAMP = 36,
+    VT_CHAIN_PROOFS = 38
   };
   /// Distinguished Name of the entity
   const ::flatbuffers::String *DN() const {
@@ -401,6 +565,18 @@ struct EPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *MULTIFORMAT_ADDRESS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_MULTIFORMAT_ADDRESS);
   }
+  /// Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+  const ::flatbuffers::String *SIGNATURE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SIGNATURE);
+  }
+  /// Unix timestamp (seconds) when the EPM was signed
+  int64_t SIGNATURE_TIMESTAMP() const {
+    return GetField<int64_t>(VT_SIGNATURE_TIMESTAMP, 0);
+  }
+  /// Chain binding proofs linking blockchain keys to the same HD wallet
+  const ::flatbuffers::Vector<::flatbuffers::Offset<ChainProof>> *CHAIN_PROOFS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<ChainProof>> *>(VT_CHAIN_PROOFS);
+  }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_DN) &&
@@ -436,6 +612,12 @@ struct EPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_MULTIFORMAT_ADDRESS) &&
            verifier.VerifyVector(MULTIFORMAT_ADDRESS()) &&
            verifier.VerifyVectorOfStrings(MULTIFORMAT_ADDRESS()) &&
+           VerifyOffset(verifier, VT_SIGNATURE) &&
+           verifier.VerifyString(SIGNATURE()) &&
+           VerifyField<int64_t>(verifier, VT_SIGNATURE_TIMESTAMP, 8) &&
+           VerifyOffset(verifier, VT_CHAIN_PROOFS) &&
+           verifier.VerifyVector(CHAIN_PROOFS()) &&
+           verifier.VerifyVectorOfTables(CHAIN_PROOFS()) &&
            verifier.EndTable();
   }
 };
@@ -489,6 +671,15 @@ struct EPMBuilder {
   void add_MULTIFORMAT_ADDRESS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> MULTIFORMAT_ADDRESS) {
     fbb_.AddOffset(EPM::VT_MULTIFORMAT_ADDRESS, MULTIFORMAT_ADDRESS);
   }
+  void add_SIGNATURE(::flatbuffers::Offset<::flatbuffers::String> SIGNATURE) {
+    fbb_.AddOffset(EPM::VT_SIGNATURE, SIGNATURE);
+  }
+  void add_SIGNATURE_TIMESTAMP(int64_t SIGNATURE_TIMESTAMP) {
+    fbb_.AddElement<int64_t>(EPM::VT_SIGNATURE_TIMESTAMP, SIGNATURE_TIMESTAMP, 0);
+  }
+  void add_CHAIN_PROOFS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ChainProof>>> CHAIN_PROOFS) {
+    fbb_.AddOffset(EPM::VT_CHAIN_PROOFS, CHAIN_PROOFS);
+  }
   explicit EPMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -516,8 +707,14 @@ inline ::flatbuffers::Offset<EPM> CreateEPM(
     ::flatbuffers::Offset<::flatbuffers::String> EMAIL = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TELEPHONE = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<CryptoKey>>> KEYS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> MULTIFORMAT_ADDRESS = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> MULTIFORMAT_ADDRESS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SIGNATURE = 0,
+    int64_t SIGNATURE_TIMESTAMP = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ChainProof>>> CHAIN_PROOFS = 0) {
   EPMBuilder builder_(_fbb);
+  builder_.add_SIGNATURE_TIMESTAMP(SIGNATURE_TIMESTAMP);
+  builder_.add_CHAIN_PROOFS(CHAIN_PROOFS);
+  builder_.add_SIGNATURE(SIGNATURE);
   builder_.add_MULTIFORMAT_ADDRESS(MULTIFORMAT_ADDRESS);
   builder_.add_KEYS(KEYS);
   builder_.add_TELEPHONE(TELEPHONE);
@@ -552,7 +749,10 @@ inline ::flatbuffers::Offset<EPM> CreateEPMDirect(
     const char *EMAIL = nullptr,
     const char *TELEPHONE = nullptr,
     const std::vector<::flatbuffers::Offset<CryptoKey>> *KEYS = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *MULTIFORMAT_ADDRESS = nullptr) {
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *MULTIFORMAT_ADDRESS = nullptr,
+    const char *SIGNATURE = nullptr,
+    int64_t SIGNATURE_TIMESTAMP = 0,
+    const std::vector<::flatbuffers::Offset<ChainProof>> *CHAIN_PROOFS = nullptr) {
   auto DN__ = DN ? _fbb.CreateString(DN) : 0;
   auto LEGAL_NAME__ = LEGAL_NAME ? _fbb.CreateString(LEGAL_NAME) : 0;
   auto FAMILY_NAME__ = FAMILY_NAME ? _fbb.CreateString(FAMILY_NAME) : 0;
@@ -567,6 +767,8 @@ inline ::flatbuffers::Offset<EPM> CreateEPMDirect(
   auto TELEPHONE__ = TELEPHONE ? _fbb.CreateString(TELEPHONE) : 0;
   auto KEYS__ = KEYS ? _fbb.CreateVector<::flatbuffers::Offset<CryptoKey>>(*KEYS) : 0;
   auto MULTIFORMAT_ADDRESS__ = MULTIFORMAT_ADDRESS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*MULTIFORMAT_ADDRESS) : 0;
+  auto SIGNATURE__ = SIGNATURE ? _fbb.CreateString(SIGNATURE) : 0;
+  auto CHAIN_PROOFS__ = CHAIN_PROOFS ? _fbb.CreateVector<::flatbuffers::Offset<ChainProof>>(*CHAIN_PROOFS) : 0;
   return CreateEPM(
       _fbb,
       DN__,
@@ -583,7 +785,10 @@ inline ::flatbuffers::Offset<EPM> CreateEPMDirect(
       EMAIL__,
       TELEPHONE__,
       KEYS__,
-      MULTIFORMAT_ADDRESS__);
+      MULTIFORMAT_ADDRESS__,
+      SIGNATURE__,
+      SIGNATURE_TIMESTAMP,
+      CHAIN_PROOFS__);
 }
 
 inline const EPM *GetEPM(const void *buf) {

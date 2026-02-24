@@ -122,6 +122,24 @@ public final class EPM extends Table {
   public int MULTIFORMAT_ADDRESSLength() { int o = __offset(32); return o != 0 ? __vector_len(o) : 0; }
   public StringVector multiformatAddressVector() { return multiformatAddressVector(new StringVector()); }
   public StringVector multiformatAddressVector(StringVector obj) { int o = __offset(32); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+   */
+  public String SIGNATURE() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
+  public ByteBuffer SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  /**
+   * Unix timestamp (seconds) when the EPM was signed
+   */
+  public long SIGNATURE_TIMESTAMP() { int o = __offset(36); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Chain binding proofs linking blockchain keys to the same HD wallet
+   */
+  public ChainProof CHAIN_PROOFS(int j) { return CHAIN_PROOFS(new ChainProof(), j); }
+  public ChainProof CHAIN_PROOFS(ChainProof obj, int j) { int o = __offset(38); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int CHAIN_PROOFSLength() { int o = __offset(38); return o != 0 ? __vector_len(o) : 0; }
+  public ChainProof.Vector chainProofsVector() { return chainProofsVector(new ChainProof.Vector()); }
+  public ChainProof.Vector chainProofsVector(ChainProof.Vector obj) { int o = __offset(38); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createEPM(FlatBufferBuilder builder,
       int DNOffset,
@@ -138,8 +156,14 @@ public final class EPM extends Table {
       int EMAILOffset,
       int TELEPHONEOffset,
       int KEYSOffset,
-      int MULTIFORMAT_ADDRESSOffset) {
-    builder.startTable(15);
+      int MULTIFORMAT_ADDRESSOffset,
+      int SIGNATUREOffset,
+      long SIGNATURE_TIMESTAMP,
+      int CHAIN_PROOFSOffset) {
+    builder.startTable(18);
+    EPM.addSignatureTimestamp(builder, SIGNATURE_TIMESTAMP);
+    EPM.addChainProofs(builder, CHAIN_PROOFSOffset);
+    EPM.addSignature(builder, SIGNATUREOffset);
     EPM.addMultiformatAddress(builder, MULTIFORMAT_ADDRESSOffset);
     EPM.addKeys(builder, KEYSOffset);
     EPM.addTelephone(builder, TELEPHONEOffset);
@@ -158,7 +182,7 @@ public final class EPM extends Table {
     return EPM.endEPM(builder);
   }
 
-  public static void startEPM(FlatBufferBuilder builder) { builder.startTable(15); }
+  public static void startEPM(FlatBufferBuilder builder) { builder.startTable(18); }
   public static void addDn(FlatBufferBuilder builder, int DNOffset) { builder.addOffset(0, DNOffset, 0); }
   public static void addLegalName(FlatBufferBuilder builder, int LEGAL_NAMEOffset) { builder.addOffset(1, LEGAL_NAMEOffset, 0); }
   public static void addFamilyName(FlatBufferBuilder builder, int FAMILY_NAMEOffset) { builder.addOffset(2, FAMILY_NAMEOffset, 0); }
@@ -180,6 +204,11 @@ public final class EPM extends Table {
   public static void addMultiformatAddress(FlatBufferBuilder builder, int MULTIFORMAT_ADDRESSOffset) { builder.addOffset(14, MULTIFORMAT_ADDRESSOffset, 0); }
   public static int createMultiformatAddressVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startMultiformatAddressVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addSignature(FlatBufferBuilder builder, int SIGNATUREOffset) { builder.addOffset(15, SIGNATUREOffset, 0); }
+  public static void addSignatureTimestamp(FlatBufferBuilder builder, long SIGNATURE_TIMESTAMP) { builder.addLong(16, SIGNATURE_TIMESTAMP, 0L); }
+  public static void addChainProofs(FlatBufferBuilder builder, int CHAIN_PROOFSOffset) { builder.addOffset(17, CHAIN_PROOFSOffset, 0); }
+  public static int createChainProofsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startChainProofsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endEPM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

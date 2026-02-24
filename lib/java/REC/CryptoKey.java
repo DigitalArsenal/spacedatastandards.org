@@ -41,7 +41,7 @@ public final class CryptoKey extends Table {
   public ByteBuffer XPUBAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer XPUBInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
   /**
-   * Private part of the cryptographic key in hexidecimal format, should be kept secret 
+   * Private part of the cryptographic key in hexidecimal format, should be kept secret
    */
   public String PRIVATE_KEY() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer PRIVATE_KEYAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }

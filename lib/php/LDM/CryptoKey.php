@@ -55,7 +55,7 @@ class CryptoKey extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Private part of the cryptographic key in hexidecimal format, should be kept secret 
+    /// Private part of the cryptographic key in hexidecimal format, should be kept secret
     public function getPRIVATE_KEY()
     {
         $o = $this->__offset(8);

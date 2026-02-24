@@ -9,6 +9,8 @@ class CryptoKey
 
 class Address
 
+class ChainProof
+
 class EPM
 
 /// Represents cryptographic key information
@@ -19,7 +21,7 @@ class CryptoKey : flatbuffers.handle
     /// Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
     def XPUB() -> string:
         return flatbuffers.field_string(buf_, pos_, 6)
-    /// Private part of the cryptographic key in hexidecimal format, should be kept secret 
+    /// Private part of the cryptographic key in hexidecimal format, should be kept secret
     def PRIVATE_KEY() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
     /// Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
@@ -115,6 +117,67 @@ struct AddressBuilder:
     def end():
         return b_.EndObject()
 
+/// Proves a blockchain key derives from the same HD wallet as the signing key
+class ChainProof : flatbuffers.handle
+    /// Chain identifier (e.g., "bitcoin", "ethereum", "solana")
+    def CHAIN() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Derived blockchain address
+    def ADDRESS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// Public key for this chain (hex-encoded)
+    def PUBLIC_KEY() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    /// BIP-44 derivation path (e.g., "m/44'/0'/0'/0/0")
+    def KEY_PATH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+    /// Signature over the attestation payload (hex-encoded)
+    def SIGNATURE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// The canonical payload that was signed (hex-encoded)
+    def SIGNED_PAYLOAD() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+    /// Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")
+    def ALGORITHM() -> string:
+        return flatbuffers.field_string(buf_, pos_, 16)
+    /// Signature encoding format (e.g., "compact", "raw-ed25519")
+    def ENCODING() -> string:
+        return flatbuffers.field_string(buf_, pos_, 18)
+
+def GetRootAsChainProof(buf:string): return ChainProof { buf, flatbuffers.indirect(buf, 0) }
+
+struct ChainProofBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(8)
+        return this
+    def add_CHAIN(CHAIN:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, CHAIN)
+        return this
+    def add_ADDRESS(ADDRESS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, ADDRESS)
+        return this
+    def add_PUBLIC_KEY(PUBLIC_KEY:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, PUBLIC_KEY)
+        return this
+    def add_KEY_PATH(KEY_PATH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, KEY_PATH)
+        return this
+    def add_SIGNATURE(SIGNATURE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, SIGNATURE)
+        return this
+    def add_SIGNED_PAYLOAD(SIGNED_PAYLOAD:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, SIGNED_PAYLOAD)
+        return this
+    def add_ALGORITHM(ALGORITHM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, ALGORITHM)
+        return this
+    def add_ENCODING(ENCODING:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, ENCODING)
+        return this
+    def end():
+        return b_.EndObject()
+
 /// Entity Profile Message
 class EPM : flatbuffers.handle
     /// Distinguished Name of the entity
@@ -169,13 +232,24 @@ class EPM : flatbuffers.handle
         return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 32) + i * 4)
     def MULTIFORMAT_ADDRESS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 32)
+    /// Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+    def SIGNATURE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 34)
+    /// Unix timestamp (seconds) when the EPM was signed
+    def SIGNATURE_TIMESTAMP() -> int:
+        return flatbuffers.field_int64(buf_, pos_, 36, 0)
+    /// Chain binding proofs linking blockchain keys to the same HD wallet
+    def CHAIN_PROOFS(i:int) -> ChainProof:
+        return ChainProof { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 38) + i * 4) }
+    def CHAIN_PROOFS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 38)
 
 def GetRootAsEPM(buf:string): return EPM { buf, flatbuffers.indirect(buf, 0) }
 
 struct EPMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(15)
+        b_.StartObject(18)
         return this
     def add_DN(DN:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, DN)
@@ -222,6 +296,15 @@ struct EPMBuilder:
     def add_MULTIFORMAT_ADDRESS(MULTIFORMAT_ADDRESS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(14, MULTIFORMAT_ADDRESS)
         return this
+    def add_SIGNATURE(SIGNATURE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(15, SIGNATURE)
+        return this
+    def add_SIGNATURE_TIMESTAMP(SIGNATURE_TIMESTAMP:int):
+        b_.PrependInt64Slot(16, SIGNATURE_TIMESTAMP, 0)
+        return this
+    def add_CHAIN_PROOFS(CHAIN_PROOFS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(17, CHAIN_PROOFS)
+        return this
     def end():
         return b_.EndObject()
 
@@ -242,6 +325,13 @@ def EPMCreateKEYSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
 def EPMStartMULTIFORMAT_ADDRESSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
 def EPMCreateMULTIFORMAT_ADDRESSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def EPMStartCHAIN_PROOFSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def EPMCreateCHAIN_PROOFSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

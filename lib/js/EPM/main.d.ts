@@ -1,4 +1,5 @@
 export { Address, AddressT } from './Address.js';
+export { ChainProof, ChainProofT } from './ChainProof.js';
 export { CryptoKey, CryptoKeyT } from './CryptoKey.js';
 export { EPM, EPMT } from './EPM.js';
 export { KeyType } from './KeyType.js';

@@ -134,6 +134,7 @@ export { CZMWall, CZMWallT } from './CZMWall.js';
 export { CelestialFrame } from './CelestialFrame.js';
 export { CelestialFrameWrapper, CelestialFrameWrapperT } from './CelestialFrameWrapper.js';
 export { CentralBody } from './CentralBody.js';
+export { ChainProof, ChainProofT } from './ChainProof.js';
 export { ClockType } from './ClockType.js';
 export { CmsModulationType } from './CmsModulationType.js';
 export { CollectMethod } from './CollectMethod.js';

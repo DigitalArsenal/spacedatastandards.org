@@ -186,22 +186,59 @@ class EPM extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+    public function getSIGNATURE()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Unix timestamp (seconds) when the EPM was signed
+    /**
+     * @return long
+     */
+    public function getSIGNATURE_TIMESTAMP()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getLong($o + $this->bb_pos) : 0;
+    }
+
+    /// Chain binding proofs linking blockchain keys to the same HD wallet
+    /**
+     * @returnVectorOffset
+     */
+    public function getCHAIN_PROOFS($j)
+    {
+        $o = $this->__offset(38);
+        $obj = new ChainProof();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCHAIN_PROOFSLength()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startEPM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(15);
+        $builder->StartObject(18);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return EPM
      */
-    public static function createEPM(FlatBufferBuilder $builder, $DN, $LEGAL_NAME, $FAMILY_NAME, $GIVEN_NAME, $ADDITIONAL_NAME, $HONORIFIC_PREFIX, $HONORIFIC_SUFFIX, $JOB_TITLE, $OCCUPATION, $ADDRESS, $ALTERNATE_NAMES, $EMAIL, $TELEPHONE, $KEYS, $MULTIFORMAT_ADDRESS)
+    public static function createEPM(FlatBufferBuilder $builder, $DN, $LEGAL_NAME, $FAMILY_NAME, $GIVEN_NAME, $ADDITIONAL_NAME, $HONORIFIC_PREFIX, $HONORIFIC_SUFFIX, $JOB_TITLE, $OCCUPATION, $ADDRESS, $ALTERNATE_NAMES, $EMAIL, $TELEPHONE, $KEYS, $MULTIFORMAT_ADDRESS, $SIGNATURE, $SIGNATURE_TIMESTAMP, $CHAIN_PROOFS)
     {
-        $builder->startObject(15);
+        $builder->startObject(18);
         self::addDN($builder, $DN);
         self::addLEGAL_NAME($builder, $LEGAL_NAME);
         self::addFAMILY_NAME($builder, $FAMILY_NAME);
@@ -217,6 +254,9 @@ class EPM extends Table
         self::addTELEPHONE($builder, $TELEPHONE);
         self::addKEYS($builder, $KEYS);
         self::addMULTIFORMAT_ADDRESS($builder, $MULTIFORMAT_ADDRESS);
+        self::addSIGNATURE($builder, $SIGNATURE);
+        self::addSIGNATURE_TIMESTAMP($builder, $SIGNATURE_TIMESTAMP);
+        self::addCHAIN_PROOFS($builder, $CHAIN_PROOFS);
         $o = $builder->endObject();
         return $o;
     }
@@ -439,6 +479,60 @@ class EPM extends Table
      * @return void
      */
     public static function startMULTIFORMAT_ADDRESSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSIGNATURE(FlatBufferBuilder $builder, $SIGNATURE)
+    {
+        $builder->addOffsetX(15, $SIGNATURE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param long
+     * @return void
+     */
+    public static function addSIGNATURE_TIMESTAMP(FlatBufferBuilder $builder, $SIGNATURE_TIMESTAMP)
+    {
+        $builder->addLongX(16, $SIGNATURE_TIMESTAMP, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCHAIN_PROOFS(FlatBufferBuilder $builder, $CHAIN_PROOFS)
+    {
+        $builder->addOffsetX(17, $CHAIN_PROOFS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createCHAIN_PROOFSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startCHAIN_PROOFSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
     }

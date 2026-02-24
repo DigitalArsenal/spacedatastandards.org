@@ -1,5 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
 import { Address, AddressT } from './Address.js';
+import { ChainProof, ChainProofT } from './ChainProof.js';
 import { CryptoKey, CryptoKeyT } from './CryptoKey.js';
 /**
  * Entity Profile Message
@@ -87,6 +88,20 @@ export declare class EPM implements flatbuffers.IUnpackableObject<EPMT> {
     MULTIFORMAT_ADDRESS(index: number): string;
     MULTIFORMAT_ADDRESS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     multiformatAddressLength(): number;
+    /**
+     * Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+     */
+    SIGNATURE(): string | null;
+    SIGNATURE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Unix timestamp (seconds) when the EPM was signed
+     */
+    SIGNATURE_TIMESTAMP(): bigint;
+    /**
+     * Chain binding proofs linking blockchain keys to the same HD wallet
+     */
+    CHAIN_PROOFS(index: number, obj?: ChainProof): ChainProof | null;
+    chainProofsLength(): number;
     static startEPM(builder: flatbuffers.Builder): void;
     static addDn(builder: flatbuffers.Builder, DNOffset: flatbuffers.Offset): void;
     static addLegalName(builder: flatbuffers.Builder, LEGAL_NAMEOffset: flatbuffers.Offset): void;
@@ -109,6 +124,11 @@ export declare class EPM implements flatbuffers.IUnpackableObject<EPMT> {
     static addMultiformatAddress(builder: flatbuffers.Builder, MULTIFORMAT_ADDRESSOffset: flatbuffers.Offset): void;
     static createMultiformatAddressVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startMultiformatAddressVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addSignature(builder: flatbuffers.Builder, SIGNATUREOffset: flatbuffers.Offset): void;
+    static addSignatureTimestamp(builder: flatbuffers.Builder, SIGNATURE_TIMESTAMP: bigint): void;
+    static addChainProofs(builder: flatbuffers.Builder, CHAIN_PROOFSOffset: flatbuffers.Offset): void;
+    static createChainProofsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startChainProofsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endEPM(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishEPMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedEPMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -131,7 +151,10 @@ export declare class EPMT implements flatbuffers.IGeneratedObject {
     TELEPHONE: string | Uint8Array | null;
     KEYS: (CryptoKeyT)[];
     MULTIFORMAT_ADDRESS: (string)[];
-    constructor(DN?: string | Uint8Array | null, LEGAL_NAME?: string | Uint8Array | null, FAMILY_NAME?: string | Uint8Array | null, GIVEN_NAME?: string | Uint8Array | null, ADDITIONAL_NAME?: string | Uint8Array | null, HONORIFIC_PREFIX?: string | Uint8Array | null, HONORIFIC_SUFFIX?: string | Uint8Array | null, JOB_TITLE?: string | Uint8Array | null, OCCUPATION?: string | Uint8Array | null, ADDRESS?: AddressT | null, ALTERNATE_NAMES?: (string)[], EMAIL?: string | Uint8Array | null, TELEPHONE?: string | Uint8Array | null, KEYS?: (CryptoKeyT)[], MULTIFORMAT_ADDRESS?: (string)[]);
+    SIGNATURE: string | Uint8Array | null;
+    SIGNATURE_TIMESTAMP: bigint;
+    CHAIN_PROOFS: (ChainProofT)[];
+    constructor(DN?: string | Uint8Array | null, LEGAL_NAME?: string | Uint8Array | null, FAMILY_NAME?: string | Uint8Array | null, GIVEN_NAME?: string | Uint8Array | null, ADDITIONAL_NAME?: string | Uint8Array | null, HONORIFIC_PREFIX?: string | Uint8Array | null, HONORIFIC_SUFFIX?: string | Uint8Array | null, JOB_TITLE?: string | Uint8Array | null, OCCUPATION?: string | Uint8Array | null, ADDRESS?: AddressT | null, ALTERNATE_NAMES?: (string)[], EMAIL?: string | Uint8Array | null, TELEPHONE?: string | Uint8Array | null, KEYS?: (CryptoKeyT)[], MULTIFORMAT_ADDRESS?: (string)[], SIGNATURE?: string | Uint8Array | null, SIGNATURE_TIMESTAMP?: bigint, CHAIN_PROOFS?: (ChainProofT)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=EPM.d.ts.map

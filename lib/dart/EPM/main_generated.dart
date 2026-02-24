@@ -66,7 +66,7 @@ class CryptoKey {
   String? get PUBLIC_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
   ///  Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
   String? get XPUB => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Private part of the cryptographic key in hexidecimal format, should be kept secret 
+  ///  Private part of the cryptographic key in hexidecimal format, should be kept secret
   String? get PRIVATE_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   ///  Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
   String? get XPRIV => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
@@ -329,6 +329,165 @@ class AddressObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+///  Proves a blockchain key derives from the same HD wallet as the signing key
+class ChainProof {
+  ChainProof._(this._bc, this._bcOffset);
+  factory ChainProof(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<ChainProof> reader = _ChainProofReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Chain identifier (e.g., "bitcoin", "ethereum", "solana")
+  String? get CHAIN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Derived blockchain address
+  String? get ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Public key for this chain (hex-encoded)
+  String? get PUBLIC_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  BIP-44 derivation path (e.g., "m/44'/0'/0'/0/0")
+  String? get KEY_PATH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Signature over the attestation payload (hex-encoded)
+  String? get SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  The canonical payload that was signed (hex-encoded)
+  String? get SIGNED_PAYLOAD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")
+  String? get ALGORITHM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Signature encoding format (e.g., "compact", "raw-ed25519")
+  String? get ENCODING => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+
+  @override
+  String toString() {
+    return 'ChainProof{CHAIN: ${CHAIN}, ADDRESS: ${ADDRESS}, PUBLIC_KEY: ${PUBLIC_KEY}, KEY_PATH: ${KEY_PATH}, SIGNATURE: ${SIGNATURE}, SIGNED_PAYLOAD: ${SIGNED_PAYLOAD}, ALGORITHM: ${ALGORITHM}, ENCODING: ${ENCODING}}';
+  }
+}
+
+class _ChainProofReader extends fb.TableReader<ChainProof> {
+  const _ChainProofReader();
+
+  @override
+  ChainProof createObject(fb.BufferContext bc, int offset) => 
+    ChainProof._(bc, offset);
+}
+
+class ChainProofBuilder {
+  ChainProofBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(8);
+  }
+
+  int addChainOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addAddressOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addPublicKeyOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addKeyPathOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addSignatureOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addSignedPayloadOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addAlgorithmOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addEncodingOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class ChainProofObjectBuilder extends fb.ObjectBuilder {
+  final String? _CHAIN;
+  final String? _ADDRESS;
+  final String? _PUBLIC_KEY;
+  final String? _KEY_PATH;
+  final String? _SIGNATURE;
+  final String? _SIGNED_PAYLOAD;
+  final String? _ALGORITHM;
+  final String? _ENCODING;
+
+  ChainProofObjectBuilder({
+    String? CHAIN,
+    String? ADDRESS,
+    String? PUBLIC_KEY,
+    String? KEY_PATH,
+    String? SIGNATURE,
+    String? SIGNED_PAYLOAD,
+    String? ALGORITHM,
+    String? ENCODING,
+  })
+      : _CHAIN = CHAIN,
+        _ADDRESS = ADDRESS,
+        _PUBLIC_KEY = PUBLIC_KEY,
+        _KEY_PATH = KEY_PATH,
+        _SIGNATURE = SIGNATURE,
+        _SIGNED_PAYLOAD = SIGNED_PAYLOAD,
+        _ALGORITHM = ALGORITHM,
+        _ENCODING = ENCODING;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? CHAINOffset = _CHAIN == null ? null
+        : fbBuilder.writeString(_CHAIN!);
+    final int? ADDRESSOffset = _ADDRESS == null ? null
+        : fbBuilder.writeString(_ADDRESS!);
+    final int? PUBLIC_KEYOffset = _PUBLIC_KEY == null ? null
+        : fbBuilder.writeString(_PUBLIC_KEY!);
+    final int? KEY_PATHOffset = _KEY_PATH == null ? null
+        : fbBuilder.writeString(_KEY_PATH!);
+    final int? SIGNATUREOffset = _SIGNATURE == null ? null
+        : fbBuilder.writeString(_SIGNATURE!);
+    final int? SIGNED_PAYLOADOffset = _SIGNED_PAYLOAD == null ? null
+        : fbBuilder.writeString(_SIGNED_PAYLOAD!);
+    final int? ALGORITHMOffset = _ALGORITHM == null ? null
+        : fbBuilder.writeString(_ALGORITHM!);
+    final int? ENCODINGOffset = _ENCODING == null ? null
+        : fbBuilder.writeString(_ENCODING!);
+    fbBuilder.startTable(8);
+    fbBuilder.addOffset(0, CHAINOffset);
+    fbBuilder.addOffset(1, ADDRESSOffset);
+    fbBuilder.addOffset(2, PUBLIC_KEYOffset);
+    fbBuilder.addOffset(3, KEY_PATHOffset);
+    fbBuilder.addOffset(4, SIGNATUREOffset);
+    fbBuilder.addOffset(5, SIGNED_PAYLOADOffset);
+    fbBuilder.addOffset(6, ALGORITHMOffset);
+    fbBuilder.addOffset(7, ENCODINGOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Entity Profile Message
 class EPM {
   EPM._(this._bc, this._bcOffset);
@@ -372,10 +531,16 @@ class EPM {
   List<CryptoKey>? get KEYS => const fb.ListReader<CryptoKey>(CryptoKey.reader).vTableGetNullable(_bc, _bcOffset, 30);
   ///  Multiformat addresses associated with the entity
   List<String>? get MULTIFORMAT_ADDRESS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 32);
+  ///  Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+  String? get SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  ///  Unix timestamp (seconds) when the EPM was signed
+  int get SIGNATURE_TIMESTAMP => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 36, 0);
+  ///  Chain binding proofs linking blockchain keys to the same HD wallet
+  List<ChainProof>? get CHAIN_PROOFS => const fb.ListReader<ChainProof>(ChainProof.reader).vTableGetNullable(_bc, _bcOffset, 38);
 
   @override
   String toString() {
-    return 'EPM{DN: ${DN}, LEGAL_NAME: ${LEGAL_NAME}, FAMILY_NAME: ${FAMILY_NAME}, GIVEN_NAME: ${GIVEN_NAME}, ADDITIONAL_NAME: ${ADDITIONAL_NAME}, HONORIFIC_PREFIX: ${HONORIFIC_PREFIX}, HONORIFIC_SUFFIX: ${HONORIFIC_SUFFIX}, JOB_TITLE: ${JOB_TITLE}, OCCUPATION: ${OCCUPATION}, ADDRESS: ${ADDRESS}, ALTERNATE_NAMES: ${ALTERNATE_NAMES}, EMAIL: ${EMAIL}, TELEPHONE: ${TELEPHONE}, KEYS: ${KEYS}, MULTIFORMAT_ADDRESS: ${MULTIFORMAT_ADDRESS}}';
+    return 'EPM{DN: ${DN}, LEGAL_NAME: ${LEGAL_NAME}, FAMILY_NAME: ${FAMILY_NAME}, GIVEN_NAME: ${GIVEN_NAME}, ADDITIONAL_NAME: ${ADDITIONAL_NAME}, HONORIFIC_PREFIX: ${HONORIFIC_PREFIX}, HONORIFIC_SUFFIX: ${HONORIFIC_SUFFIX}, JOB_TITLE: ${JOB_TITLE}, OCCUPATION: ${OCCUPATION}, ADDRESS: ${ADDRESS}, ALTERNATE_NAMES: ${ALTERNATE_NAMES}, EMAIL: ${EMAIL}, TELEPHONE: ${TELEPHONE}, KEYS: ${KEYS}, MULTIFORMAT_ADDRESS: ${MULTIFORMAT_ADDRESS}, SIGNATURE: ${SIGNATURE}, SIGNATURE_TIMESTAMP: ${SIGNATURE_TIMESTAMP}, CHAIN_PROOFS: ${CHAIN_PROOFS}}';
   }
 }
 
@@ -393,7 +558,7 @@ class EPMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(15);
+    fbBuilder.startTable(18);
   }
 
   int addDnOffset(int? offset) {
@@ -456,6 +621,18 @@ class EPMBuilder {
     fbBuilder.addOffset(14, offset);
     return fbBuilder.offset;
   }
+  int addSignatureOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addSignatureTimestamp(int? SIGNATURE_TIMESTAMP) {
+    fbBuilder.addInt64(16, SIGNATURE_TIMESTAMP);
+    return fbBuilder.offset;
+  }
+  int addChainProofsOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -478,6 +655,9 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
   final String? _TELEPHONE;
   final List<CryptoKeyObjectBuilder>? _KEYS;
   final List<String>? _MULTIFORMAT_ADDRESS;
+  final String? _SIGNATURE;
+  final int? _SIGNATURE_TIMESTAMP;
+  final List<ChainProofObjectBuilder>? _CHAIN_PROOFS;
 
   EPMObjectBuilder({
     String? DN,
@@ -495,6 +675,9 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
     String? TELEPHONE,
     List<CryptoKeyObjectBuilder>? KEYS,
     List<String>? MULTIFORMAT_ADDRESS,
+    String? SIGNATURE,
+    int? SIGNATURE_TIMESTAMP,
+    List<ChainProofObjectBuilder>? CHAIN_PROOFS,
   })
       : _DN = DN,
         _LEGAL_NAME = LEGAL_NAME,
@@ -510,7 +693,10 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
         _EMAIL = EMAIL,
         _TELEPHONE = TELEPHONE,
         _KEYS = KEYS,
-        _MULTIFORMAT_ADDRESS = MULTIFORMAT_ADDRESS;
+        _MULTIFORMAT_ADDRESS = MULTIFORMAT_ADDRESS,
+        _SIGNATURE = SIGNATURE,
+        _SIGNATURE_TIMESTAMP = SIGNATURE_TIMESTAMP,
+        _CHAIN_PROOFS = CHAIN_PROOFS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -544,7 +730,11 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_KEYS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? MULTIFORMAT_ADDRESSOffset = _MULTIFORMAT_ADDRESS == null ? null
         : fbBuilder.writeList(_MULTIFORMAT_ADDRESS!.map(fbBuilder.writeString).toList());
-    fbBuilder.startTable(15);
+    final int? SIGNATUREOffset = _SIGNATURE == null ? null
+        : fbBuilder.writeString(_SIGNATURE!);
+    final int? CHAIN_PROOFSOffset = _CHAIN_PROOFS == null ? null
+        : fbBuilder.writeList(_CHAIN_PROOFS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(18);
     fbBuilder.addOffset(0, DNOffset);
     fbBuilder.addOffset(1, LEGAL_NAMEOffset);
     fbBuilder.addOffset(2, FAMILY_NAMEOffset);
@@ -560,6 +750,9 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(12, TELEPHONEOffset);
     fbBuilder.addOffset(13, KEYSOffset);
     fbBuilder.addOffset(14, MULTIFORMAT_ADDRESSOffset);
+    fbBuilder.addOffset(15, SIGNATUREOffset);
+    fbBuilder.addInt64(16, _SIGNATURE_TIMESTAMP);
+    fbBuilder.addOffset(17, CHAIN_PROOFSOffset);
     return fbBuilder.endTable();
   }
 

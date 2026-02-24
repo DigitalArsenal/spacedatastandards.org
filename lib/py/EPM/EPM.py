@@ -197,8 +197,50 @@ class EPM(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         return o == 0
 
+    # Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+    # EPM
+    def SIGNATURE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Unix timestamp (seconds) when the EPM was signed
+    # EPM
+    def SIGNATURE_TIMESTAMP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # Chain binding proofs linking blockchain keys to the same HD wallet
+    # EPM
+    def CHAIN_PROOFS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from ChainProof import ChainProof
+            obj = ChainProof()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # EPM
+    def CHAIN_PROOFSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # EPM
+    def CHAIN_PROOFSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        return o == 0
+
 def EPMStart(builder):
-    builder.StartObject(15)
+    builder.StartObject(18)
 
 def Start(builder):
     EPMStart(builder)
@@ -311,6 +353,30 @@ def EPMStartMULTIFORMAT_ADDRESSVector(builder, numElems):
 def StartMULTIFORMAT_ADDRESSVector(builder, numElems):
     return EPMStartMULTIFORMAT_ADDRESSVector(builder, numElems)
 
+def EPMAddSIGNATURE(builder, SIGNATURE):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNATURE), 0)
+
+def AddSIGNATURE(builder, SIGNATURE):
+    EPMAddSIGNATURE(builder, SIGNATURE)
+
+def EPMAddSIGNATURE_TIMESTAMP(builder, SIGNATURE_TIMESTAMP):
+    builder.PrependInt64Slot(16, SIGNATURE_TIMESTAMP, 0)
+
+def AddSIGNATURE_TIMESTAMP(builder, SIGNATURE_TIMESTAMP):
+    EPMAddSIGNATURE_TIMESTAMP(builder, SIGNATURE_TIMESTAMP)
+
+def EPMAddCHAIN_PROOFS(builder, CHAIN_PROOFS):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(CHAIN_PROOFS), 0)
+
+def AddCHAIN_PROOFS(builder, CHAIN_PROOFS):
+    EPMAddCHAIN_PROOFS(builder, CHAIN_PROOFS)
+
+def EPMStartCHAIN_PROOFSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCHAIN_PROOFSVector(builder, numElems):
+    return EPMStartCHAIN_PROOFSVector(builder, numElems)
+
 def EPMEnd(builder):
     return builder.EndObject()
 
@@ -318,6 +384,7 @@ def End(builder):
     return EPMEnd(builder)
 
 import Address
+import ChainProof
 import CryptoKey
 try:
     from typing import List, Optional
@@ -343,6 +410,9 @@ class EPMT(object):
         self.TELEPHONE = None  # type: str
         self.KEYS = None  # type: List[CryptoKey.CryptoKeyT]
         self.MULTIFORMAT_ADDRESS = None  # type: List[str]
+        self.SIGNATURE = None  # type: str
+        self.SIGNATURE_TIMESTAMP = 0  # type: int
+        self.CHAIN_PROOFS = None  # type: List[ChainProof.ChainProofT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -394,6 +464,16 @@ class EPMT(object):
             self.MULTIFORMAT_ADDRESS = []
             for i in range(EPM.MULTIFORMAT_ADDRESSLength()):
                 self.MULTIFORMAT_ADDRESS.append(EPM.MULTIFORMAT_ADDRESS(i))
+        self.SIGNATURE = EPM.SIGNATURE()
+        self.SIGNATURE_TIMESTAMP = EPM.SIGNATURE_TIMESTAMP()
+        if not EPM.CHAIN_PROOFSIsNone():
+            self.CHAIN_PROOFS = []
+            for i in range(EPM.CHAIN_PROOFSLength()):
+                if EPM.CHAIN_PROOFS(i) is None:
+                    self.CHAIN_PROOFS.append(None)
+                else:
+                    chainProof_ = ChainProof.ChainProofT.InitFromObj(EPM.CHAIN_PROOFS(i))
+                    self.CHAIN_PROOFS.append(chainProof_)
 
     # EPMT
     def Pack(self, builder):
@@ -445,6 +525,16 @@ class EPMT(object):
             for i in reversed(range(len(self.MULTIFORMAT_ADDRESS))):
                 builder.PrependUOffsetTRelative(MULTIFORMAT_ADDRESSlist[i])
             MULTIFORMAT_ADDRESS = builder.EndVector()
+        if self.SIGNATURE is not None:
+            SIGNATURE = builder.CreateString(self.SIGNATURE)
+        if self.CHAIN_PROOFS is not None:
+            CHAIN_PROOFSlist = []
+            for i in range(len(self.CHAIN_PROOFS)):
+                CHAIN_PROOFSlist.append(self.CHAIN_PROOFS[i].Pack(builder))
+            EPMStartCHAIN_PROOFSVector(builder, len(self.CHAIN_PROOFS))
+            for i in reversed(range(len(self.CHAIN_PROOFS))):
+                builder.PrependUOffsetTRelative(CHAIN_PROOFSlist[i])
+            CHAIN_PROOFS = builder.EndVector()
         EPMStart(builder)
         if self.DN is not None:
             EPMAddDN(builder, DN)
@@ -476,5 +566,10 @@ class EPMT(object):
             EPMAddKEYS(builder, KEYS)
         if self.MULTIFORMAT_ADDRESS is not None:
             EPMAddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESS)
+        if self.SIGNATURE is not None:
+            EPMAddSIGNATURE(builder, SIGNATURE)
+        EPMAddSIGNATURE_TIMESTAMP(builder, self.SIGNATURE_TIMESTAMP)
+        if self.CHAIN_PROOFS is not None:
+            EPMAddCHAIN_PROOFS(builder, CHAIN_PROOFS)
         EPM = EPMEnd(builder)
         return EPM

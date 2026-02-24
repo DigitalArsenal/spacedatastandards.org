@@ -2,6 +2,7 @@ export { Address, AddressT } from './Address.js';
 export { BOV, BOVT } from './BOV.js';
 export { Band, BandT } from './Band.js';
 export { CAT, CATT } from './CAT.js';
+export { ChainProof, ChainProofT } from './ChainProof.js';
 export { CryptoKey, CryptoKeyT } from './CryptoKey.js';
 export { DataMode } from './DataMode.js';
 export { DeviceType } from './DeviceType.js';

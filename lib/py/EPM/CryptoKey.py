@@ -45,7 +45,7 @@ class CryptoKey(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Private part of the cryptographic key in hexidecimal format, should be kept secret 
+    # Private part of the cryptographic key in hexidecimal format, should be kept secret
     # CryptoKey
     def PRIVATE_KEY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))

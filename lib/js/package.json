@@ -1,6 +1,6 @@
 {
     "name": "@digitalarsenal/standards",
-    "version": "1.77.0+1770682514096",
+    "version": "1.78.0+1771961792255",
     "type": "module",
     "description": "space data standards framework based on ccsds standards and google flatbuffers",
     "main": "index.js",
@@ -95,6 +95,6 @@
     "homepage": "https://spacedatastandards.org",
     "license": "Apache-2.0",
     "dependencies": {
-        "flatbuffers": "23.3.3"
+        "flatbuffers": "^25.9.23"
     }
 }

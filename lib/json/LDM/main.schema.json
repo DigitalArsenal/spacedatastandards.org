@@ -413,6 +413,45 @@
       },
       "additionalProperties" : false
     },
+    "ChainProof" : {
+      "type" : "object",
+      "description" : "Proves a blockchain key derives from the same HD wallet as the signing key",
+      "properties" : {
+        "CHAIN" : {
+                "type" : "string",
+                "description" : "Chain identifier (e.g., \"bitcoin\", \"ethereum\", \"solana\")"
+              },
+        "ADDRESS" : {
+                "type" : "string",
+                "description" : "Derived blockchain address"
+              },
+        "PUBLIC_KEY" : {
+                "type" : "string",
+                "description" : "Public key for this chain (hex-encoded)"
+              },
+        "KEY_PATH" : {
+                "type" : "string",
+                "description" : "BIP-44 derivation path (e.g., \"m/44'/0'/0'/0/0\")"
+              },
+        "SIGNATURE" : {
+                "type" : "string",
+                "description" : "Signature over the attestation payload (hex-encoded)"
+              },
+        "SIGNED_PAYLOAD" : {
+                "type" : "string",
+                "description" : "The canonical payload that was signed (hex-encoded)"
+              },
+        "ALGORITHM" : {
+                "type" : "string",
+                "description" : "Signature algorithm (e.g., \"secp256k1-compact-bitcoin\", \"secp256k1-compact-ethereum\", \"ed25519\")"
+              },
+        "ENCODING" : {
+                "type" : "string",
+                "description" : "Signature encoding format (e.g., \"compact\", \"raw-ed25519\")"
+              }
+      },
+      "additionalProperties" : false
+    },
     "EPM" : {
       "type" : "object",
       "description" : "Entity Profile Message",
@@ -476,6 +515,18 @@
         "MULTIFORMAT_ADDRESS" : {
                 "type" : "array", "items" : {"type" : "string"},
                 "description" : "Multiformat addresses associated with the entity"
+              },
+        "SIGNATURE" : {
+                "type" : "string",
+                "description" : "Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS"
+              },
+        "SIGNATURE_TIMESTAMP" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix timestamp (seconds) when the EPM was signed"
+              },
+        "CHAIN_PROOFS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ChainProof"},
+                "description" : "Chain binding proofs linking blockchain keys to the same HD wallet"
               }
       },
       "additionalProperties" : false

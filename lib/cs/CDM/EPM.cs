@@ -118,6 +118,19 @@ public struct EPM : IFlatbufferObject
   /// Multiformat addresses associated with the entity
   public string MULTIFORMAT_ADDRESS(int j) { int o = __p.__offset(32); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int MULTIFORMAT_ADDRESSLength { get { int o = __p.__offset(32); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+  public string SIGNATURE { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSIGNATUREBytes() { return __p.__vector_as_span<byte>(34, 1); }
+#else
+  public ArraySegment<byte>? GetSIGNATUREBytes() { return __p.__vector_as_arraysegment(34); }
+#endif
+  public byte[] GetSIGNATUREArray() { return __p.__vector_as_array<byte>(34); }
+  /// Unix timestamp (seconds) when the EPM was signed
+  public long SIGNATURE_TIMESTAMP { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
+  /// Chain binding proofs linking blockchain keys to the same HD wallet
+  public ChainProof? CHAIN_PROOFS(int j) { int o = __p.__offset(38); return o != 0 ? (ChainProof?)(new ChainProof()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int CHAIN_PROOFSLength { get { int o = __p.__offset(38); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<EPM> CreateEPM(FlatBufferBuilder builder,
       StringOffset DNOffset = default(StringOffset),
@@ -134,8 +147,14 @@ public struct EPM : IFlatbufferObject
       StringOffset EMAILOffset = default(StringOffset),
       StringOffset TELEPHONEOffset = default(StringOffset),
       VectorOffset KEYSOffset = default(VectorOffset),
-      VectorOffset MULTIFORMAT_ADDRESSOffset = default(VectorOffset)) {
-    builder.StartTable(15);
+      VectorOffset MULTIFORMAT_ADDRESSOffset = default(VectorOffset),
+      StringOffset SIGNATUREOffset = default(StringOffset),
+      long SIGNATURE_TIMESTAMP = 0,
+      VectorOffset CHAIN_PROOFSOffset = default(VectorOffset)) {
+    builder.StartTable(18);
+    EPM.AddSIGNATURE_TIMESTAMP(builder, SIGNATURE_TIMESTAMP);
+    EPM.AddCHAIN_PROOFS(builder, CHAIN_PROOFSOffset);
+    EPM.AddSIGNATURE(builder, SIGNATUREOffset);
     EPM.AddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESSOffset);
     EPM.AddKEYS(builder, KEYSOffset);
     EPM.AddTELEPHONE(builder, TELEPHONEOffset);
@@ -154,7 +173,7 @@ public struct EPM : IFlatbufferObject
     return EPM.EndEPM(builder);
   }
 
-  public static void StartEPM(FlatBufferBuilder builder) { builder.StartTable(15); }
+  public static void StartEPM(FlatBufferBuilder builder) { builder.StartTable(18); }
   public static void AddDN(FlatBufferBuilder builder, StringOffset DNOffset) { builder.AddOffset(0, DNOffset.Value, 0); }
   public static void AddLEGAL_NAME(FlatBufferBuilder builder, StringOffset LEGAL_NAMEOffset) { builder.AddOffset(1, LEGAL_NAMEOffset.Value, 0); }
   public static void AddFAMILY_NAME(FlatBufferBuilder builder, StringOffset FAMILY_NAMEOffset) { builder.AddOffset(2, FAMILY_NAMEOffset.Value, 0); }
@@ -185,6 +204,14 @@ public struct EPM : IFlatbufferObject
   public static VectorOffset CreateMULTIFORMAT_ADDRESSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateMULTIFORMAT_ADDRESSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartMULTIFORMAT_ADDRESSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddSIGNATURE(FlatBufferBuilder builder, StringOffset SIGNATUREOffset) { builder.AddOffset(15, SIGNATUREOffset.Value, 0); }
+  public static void AddSIGNATURE_TIMESTAMP(FlatBufferBuilder builder, long SIGNATURE_TIMESTAMP) { builder.AddLong(16, SIGNATURE_TIMESTAMP, 0); }
+  public static void AddCHAIN_PROOFS(FlatBufferBuilder builder, VectorOffset CHAIN_PROOFSOffset) { builder.AddOffset(17, CHAIN_PROOFSOffset.Value, 0); }
+  public static VectorOffset CreateCHAIN_PROOFSVector(FlatBufferBuilder builder, Offset<ChainProof>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateCHAIN_PROOFSVectorBlock(FlatBufferBuilder builder, Offset<ChainProof>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCHAIN_PROOFSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<ChainProof>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCHAIN_PROOFSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<ChainProof>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCHAIN_PROOFSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<EPM> EndEPM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<EPM>(o);
@@ -215,6 +242,10 @@ public struct EPM : IFlatbufferObject
     for (var _j = 0; _j < this.KEYSLength; ++_j) {_o.KEYS.Add(this.KEYS(_j).HasValue ? this.KEYS(_j).Value.UnPack() : null);}
     _o.MULTIFORMAT_ADDRESS = new List<string>();
     for (var _j = 0; _j < this.MULTIFORMAT_ADDRESSLength; ++_j) {_o.MULTIFORMAT_ADDRESS.Add(this.MULTIFORMAT_ADDRESS(_j));}
+    _o.SIGNATURE = this.SIGNATURE;
+    _o.SIGNATURE_TIMESTAMP = this.SIGNATURE_TIMESTAMP;
+    _o.CHAIN_PROOFS = new List<ChainProofT>();
+    for (var _j = 0; _j < this.CHAIN_PROOFSLength; ++_j) {_o.CHAIN_PROOFS.Add(this.CHAIN_PROOFS(_j).HasValue ? this.CHAIN_PROOFS(_j).Value.UnPack() : null);}
   }
   public static Offset<EPM> Pack(FlatBufferBuilder builder, EPMT _o) {
     if (_o == null) return default(Offset<EPM>);
@@ -248,6 +279,13 @@ public struct EPM : IFlatbufferObject
       for (var _j = 0; _j < __MULTIFORMAT_ADDRESS.Length; ++_j) { __MULTIFORMAT_ADDRESS[_j] = builder.CreateString(_o.MULTIFORMAT_ADDRESS[_j]); }
       _MULTIFORMAT_ADDRESS = CreateMULTIFORMAT_ADDRESSVector(builder, __MULTIFORMAT_ADDRESS);
     }
+    var _SIGNATURE = _o.SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.SIGNATURE);
+    var _CHAIN_PROOFS = default(VectorOffset);
+    if (_o.CHAIN_PROOFS != null) {
+      var __CHAIN_PROOFS = new Offset<ChainProof>[_o.CHAIN_PROOFS.Count];
+      for (var _j = 0; _j < __CHAIN_PROOFS.Length; ++_j) { __CHAIN_PROOFS[_j] = ChainProof.Pack(builder, _o.CHAIN_PROOFS[_j]); }
+      _CHAIN_PROOFS = CreateCHAIN_PROOFSVector(builder, __CHAIN_PROOFS);
+    }
     return CreateEPM(
       builder,
       _DN,
@@ -264,7 +302,10 @@ public struct EPM : IFlatbufferObject
       _EMAIL,
       _TELEPHONE,
       _KEYS,
-      _MULTIFORMAT_ADDRESS);
+      _MULTIFORMAT_ADDRESS,
+      _SIGNATURE,
+      _o.SIGNATURE_TIMESTAMP,
+      _CHAIN_PROOFS);
   }
 }
 
@@ -285,6 +326,9 @@ public class EPMT
   public string TELEPHONE { get; set; }
   public List<CryptoKeyT> KEYS { get; set; }
   public List<string> MULTIFORMAT_ADDRESS { get; set; }
+  public string SIGNATURE { get; set; }
+  public long SIGNATURE_TIMESTAMP { get; set; }
+  public List<ChainProofT> CHAIN_PROOFS { get; set; }
 
   public EPMT() {
     this.DN = null;
@@ -302,6 +346,9 @@ public class EPMT
     this.TELEPHONE = null;
     this.KEYS = null;
     this.MULTIFORMAT_ADDRESS = null;
+    this.SIGNATURE = null;
+    this.SIGNATURE_TIMESTAMP = 0;
+    this.CHAIN_PROOFS = null;
   }
   public static EPMT DeserializeFromBinary(byte[] fbBuffer) {
     return EPM.GetRootAsEPM(new ByteBuffer(fbBuffer)).UnPack();
@@ -334,6 +381,9 @@ static public class EPMVerify
       && verifier.VerifyString(tablePos, 28 /*TELEPHONE*/, false)
       && verifier.VerifyVectorOfTables(tablePos, 30 /*KEYS*/, CryptoKeyVerify.Verify, false)
       && verifier.VerifyVectorOfStrings(tablePos, 32 /*MULTIFORMAT_ADDRESS*/, false)
+      && verifier.VerifyString(tablePos, 34 /*SIGNATURE*/, false)
+      && verifier.VerifyField(tablePos, 36 /*SIGNATURE_TIMESTAMP*/, 8 /*long*/, 8, false)
+      && verifier.VerifyVectorOfTables(tablePos, 38 /*CHAIN_PROOFS*/, ChainProofVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

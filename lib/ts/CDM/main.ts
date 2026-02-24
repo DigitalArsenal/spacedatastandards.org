@@ -9,6 +9,7 @@ export { CDM, CDMT } from './CDM.js';
 export { CDMObject, CDMObjectT } from './CDMObject.js';
 export { CelestialFrame } from './CelestialFrame.js';
 export { CelestialFrameWrapper, CelestialFrameWrapperT } from './CelestialFrameWrapper.js';
+export { ChainProof, ChainProofT } from './ChainProof.js';
 export { CryptoKey, CryptoKeyT } from './CryptoKey.js';
 export { CustomFrame } from './CustomFrame.js';
 export { CustomFrameWrapper, CustomFrameWrapperT } from './CustomFrameWrapper.js';
