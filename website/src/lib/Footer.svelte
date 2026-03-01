@@ -1,8 +1,10 @@
 <script lang="ts">
   import { link } from "svelte-spa-router";
+
+  export let hideOnMobile: boolean = false;
 </script>
 
-<footer>
+<footer class:hide-on-mobile={hideOnMobile}>
   <div class="footer-content">
     <div class="footer-logo">
       <svg width="22" height="22" viewBox="0 0 100 100" fill="none">
@@ -74,6 +76,10 @@
   }
 
   @media (max-width: 768px) {
+    footer.hide-on-mobile {
+      display: none;
+    }
+
     .footer-content {
       flex-direction: column;
       text-align: center;

@@ -26,6 +26,10 @@
   const currentPath = derived(location, ($location) => {
     return $location;
   });
+
+  const isDocsRoute = derived(currentPath, ($currentPath) => {
+    return $currentPath.startsWith("/docs");
+  });
 </script>
 
 <div class="starfield"></div>
@@ -33,4 +37,4 @@
 <main>
   <Router {routes} />
 </main>
-<Footer />
+<Footer hideOnMobile={$isDocsRoute} />
