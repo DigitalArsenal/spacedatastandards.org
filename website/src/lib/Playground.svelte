@@ -541,6 +541,45 @@
     return positions;
   }
 
+  function getEntityPosition(entity: any, time: any): any {
+    if (!entity?.position) return null;
+    if (typeof entity.position.getValue === "function") {
+      return entity.position.getValue(time);
+    }
+    return entity.position;
+  }
+
+  // Ensure labels are hidden when their anchor point is behind Earth from the camera.
+  function addEntity(entityOptions: any): any {
+    const Cesium = getCesium();
+    const entity = viewer.entities.add(entityOptions);
+
+    if (!viewer || !Cesium || !entity?.label) {
+      return entity;
+    }
+
+    const existingShow = entity.label.show;
+    entity.label.show = new Cesium.CallbackProperty((time: any) => {
+      if (existingShow !== undefined && existingShow !== null) {
+        const baseVisible = typeof existingShow?.getValue === "function"
+          ? Boolean(existingShow.getValue(time))
+          : Boolean(existingShow);
+        if (!baseVisible) return false;
+      }
+
+      const position = getEntityPosition(entity, time);
+      if (!position) return false;
+
+      const occluder = new Cesium.EllipsoidalOccluder(
+        viewer.scene.globe.ellipsoid,
+        viewer.camera.positionWC
+      );
+      return occluder.isPointVisible(position);
+    }, false);
+
+    return entity;
+  }
+
   // Visualize data
   async function visualize() {
     const Cesium = getCesium();
@@ -606,7 +645,7 @@
       new Cesium.Cartesian3(p.x, p.y, p.z)
     );
 
-    viewer.entities.add({
+    addEntity({
       name: data.OBJECT_NAME || "Satellite",
       polyline: {
         positions: cartesianPositions,
@@ -617,7 +656,7 @@
 
     // Add satellite marker at current position (first position)
     const satPos = positions[0];
-    viewer.entities.add({
+    addEntity({
       name: data.OBJECT_NAME || "Satellite",
       position: new Cesium.Cartesian3(satPos.x, satPos.y, satPos.z),
       point: {
@@ -708,7 +747,7 @@
     );
 
     // Create orbit polyline
-    viewer.entities.add({
+    addEntity({
       name: data.OBJECT_NAME || "Spacecraft",
       polyline: {
         positions: positions,
@@ -719,7 +758,7 @@
 
     // Add markers at each ephemeris point
     stateVectors.forEach((sv, idx: number) => {
-      viewer.entities.add({
+      addEntity({
         position: new Cesium.Cartesian3(sv.x, sv.y, sv.z),
         point: {
           pixelSize: idx === 0 ? 10 : 4,
@@ -755,7 +794,7 @@
         data.OBJECT1.Z * 1000
       );
 
-      viewer.entities.add({
+      addEntity({
         name: data.OBJECT1.OBJECT_NAME || "Object 1",
         position: pos1,
         point: {
@@ -785,7 +824,7 @@
         data.OBJECT2.Z * 1000
       );
 
-      viewer.entities.add({
+      addEntity({
         name: data.OBJECT2.OBJECT_NAME || "Object 2",
         position: pos2,
         point: {
@@ -816,7 +855,7 @@
       );
 
       // Line between objects
-      viewer.entities.add({
+      addEntity({
         polyline: {
           positions: [
             new Cesium.Cartesian3(data.OBJECT1.X * 1000, data.OBJECT1.Y * 1000, data.OBJECT1.Z * 1000),
@@ -831,7 +870,7 @@
       });
 
       // TCA label
-      viewer.entities.add({
+      addEntity({
         position: midpoint,
         label: {
           text: `TCA: ${data.TCA || "Unknown"}\nMiss: ${data.MISS_DISTANCE || "?"} km\nPc: ${data.COLLISION_PROBABILITY || "?"}`,
@@ -861,7 +900,7 @@
         (data.LOCATION.ALTITUDE || 0) * 1000
       );
 
-      viewer.entities.add({
+      addEntity({
         name: data.ENTITY_NAME || "Entity",
         position: position,
         point: {
@@ -890,7 +929,7 @@
         data.DESCRIPTION || ""
       ].filter(Boolean).join("\n");
 
-      viewer.entities.add({
+      addEntity({
         position: position,
         label: {
           text: infoText,
@@ -939,7 +978,7 @@
       const color = siteTypeColors[site.SITE_TYPE] || siteTypeColors.OTHER;
 
       // Add site marker
-      viewer.entities.add({
+      addEntity({
         name: site.NAME || "Site",
         position: position,
         point: {
@@ -968,7 +1007,7 @@
         site.DESCRIPTION || ""
       ].filter(Boolean).join("\n");
 
-      viewer.entities.add({
+      addEntity({
         position: position,
         label: {
           text: infoText,
@@ -1003,7 +1042,7 @@
     const launchPosition = Cesium.Cartesian3.fromDegrees(lon, lat, alt);
 
     // Add launch site marker (larger, red)
-    viewer.entities.add({
+    addEntity({
       name: site.NAME || "Launch Site",
       position: launchPosition,
       point: {
@@ -1036,7 +1075,7 @@
 
       const azimuthEnd = Cesium.Cartesian3.fromDegrees(endLon, endLat, endAlt);
 
-      viewer.entities.add({
+      addEntity({
         name: `Azimuth: ${data.AZIMUTH}°`,
         polyline: {
           positions: [launchPosition, azimuthEnd],
@@ -1063,7 +1102,7 @@
         bovPositions.push(pos);
 
         // Add point at each BOV
-        viewer.entities.add({
+        addEntity({
           position: pos,
           point: {
             pixelSize: 8,
@@ -1075,7 +1114,7 @@
       });
 
       // Draw trajectory line through burn-out vectors
-      viewer.entities.add({
+      addEntity({
         name: "Launch Trajectory",
         polyline: {
           positions: bovPositions,
@@ -1095,7 +1134,7 @@
       `Status: ${data.LAUNCH_STATUS || "Unknown"}`
     ].filter(Boolean).join("\n");
 
-    viewer.entities.add({
+    addEntity({
       position: launchPosition,
       label: {
         text: infoText,
@@ -1132,7 +1171,7 @@
     }
 
     // Add observer (ground station) marker
-    viewer.entities.add({
+    addEntity({
       name: data.OBSERVER_ID || data.PARTICIPANT_1 || "Observer",
       position: observerPosition,
       point: {
@@ -1162,7 +1201,7 @@
       );
 
       // Add target marker
-      viewer.entities.add({
+      addEntity({
         name: data.PARTICIPANT_2 || "Target",
         position: targetPosition,
         point: {
@@ -1184,7 +1223,7 @@
       });
 
       // Draw tracking line from observer to target
-      viewer.entities.add({
+      addEntity({
         name: "Tracking Link",
         polyline: {
           positions: [observerPosition, targetPosition],
@@ -1236,7 +1275,7 @@
         positions.push(targetPos);
 
         // Draw observation ray
-        viewer.entities.add({
+        addEntity({
           polyline: {
             positions: [observerPosition, targetPos],
             width: 1,
@@ -1255,7 +1294,7 @@
       `Time: ${data.START_TIME || ""} - ${data.STOP_TIME || ""}`
     ].filter(Boolean).join("\n");
 
-    viewer.entities.add({
+    addEntity({
       position: observerPosition,
       label: {
         text: infoText,
@@ -1355,7 +1394,7 @@
     }
 
     // === 1. OPERATIONS CENTER ===
-    viewer.entities.add({
+    addEntity({
       name: ops.NAME,
       position: opsPos,
       point: {
@@ -1378,7 +1417,7 @@
 
     // === 2. GROUND STATIONS (all shown equally, active one determined dynamically) ===
     gsData.forEach((gs: any) => {
-      viewer.entities.add({
+      addEntity({
         name: gs.NAME,
         position: gs.pos,
         point: {
@@ -1400,7 +1439,7 @@
       });
 
       // Static dim fiber link to every GS
-      viewer.entities.add({
+      addEntity({
         name: `Internet: Ops → ${gs.NAME}`,
         polyline: {
           positions: [opsPos, gs.pos],
@@ -1414,7 +1453,7 @@
     });
 
     // Dynamic bright fiber link — lights up to whichever GS has contact
-    viewer.entities.add({
+    addEntity({
       name: "Active Internet Link",
       polyline: {
         positions: new Cesium.CallbackProperty(() => {
@@ -1432,7 +1471,7 @@
 
     // === 3. SATELLITE ORBIT TRACKS (one per satellite, colored) ===
     for (let s = 0; s < satOrbits.length; s++) {
-      viewer.entities.add({
+      addEntity({
         name: `Orbit Track ${satNames[s]}`,
         polyline: {
           positions: satOrbits[s].map((p: any) => new Cesium.Cartesian3(p.x, p.y, p.z)),
@@ -1446,7 +1485,7 @@
     for (let s = 0; s < satNames.length; s++) {
       const idx = s;
       const col = Cesium.Color.fromCssColorString(satColors[s]);
-      viewer.entities.add({
+      addEntity({
         name: satNames[s],
         position: new Cesium.CallbackProperty(() => getSatPosition(Date.now(), idx), false),
         point: {
@@ -1469,7 +1508,7 @@
     }
 
     // === 5. RF LINK (dynamically connects to whichever GS + sat has LOS) ===
-    viewer.entities.add({
+    addEntity({
       name: "RF Link (TC/TM)",
       polyline: {
         positions: new Cesium.CallbackProperty(() => {
@@ -1499,7 +1538,7 @@
     // Command uplink packets (orange): ops → visible GS → satellite
     for (let i = 0; i < 3; i++) {
       const phase = i / 3;
-      viewer.entities.add({
+      addEntity({
         name: `TC Packet ${i}`,
         position: new Cesium.CallbackProperty(() => {
           const vis = getVisibleGs();
@@ -1527,7 +1566,7 @@
     // Telemetry downlink packets (green): satellite → visible GS → ops
     for (let i = 0; i < 5; i++) {
       const phase = i / 5;
-      viewer.entities.add({
+      addEntity({
         name: `TM Packet ${i}`,
         position: new Cesium.CallbackProperty(() => {
           const vis = getVisibleGs();
@@ -1609,7 +1648,7 @@
     }, 100);
 
     // === 8. XTCE SYSTEM INFO (follows first satellite) ===
-    viewer.entities.add({
+    addEntity({
       name: "XTCE SpaceSystem Info",
       position: new Cesium.CallbackProperty(() => getSatPosition(Date.now(), 0), false),
       label: {
