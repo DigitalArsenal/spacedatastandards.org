@@ -1372,8 +1372,7 @@
         outlineWidth: 2,
         style: Cesium.LabelStyle.FILL_AND_OUTLINE,
         verticalOrigin: Cesium.VerticalOrigin.TOP,
-        pixelOffset: new Cesium.Cartesian2(0, 16),
-        disableDepthTestDistance: Number.POSITIVE_INFINITY
+        pixelOffset: new Cesium.Cartesian2(0, 16)
       }
     });
 
@@ -1396,8 +1395,7 @@
           outlineWidth: 2,
           style: Cesium.LabelStyle.FILL_AND_OUTLINE,
           verticalOrigin: Cesium.VerticalOrigin.TOP,
-          pixelOffset: new Cesium.Cartesian2(0, 14),
-          disableDepthTestDistance: Number.POSITIVE_INFINITY
+          pixelOffset: new Cesium.Cartesian2(0, 14)
         }
       });
 
@@ -1465,8 +1463,7 @@
           outlineWidth: 2,
           style: Cesium.LabelStyle.FILL_AND_OUTLINE,
           verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-          pixelOffset: new Cesium.Cartesian2(0, -16),
-          disableDepthTestDistance: Number.POSITIVE_INFINITY
+          pixelOffset: new Cesium.Cartesian2(0, -16)
         }
       });
     }
@@ -1628,8 +1625,7 @@
         backgroundPadding: new Cesium.Cartesian2(10, 6),
         horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
         verticalOrigin: Cesium.VerticalOrigin.TOP,
-        pixelOffset: new Cesium.Cartesian2(18, 8),
-        disableDepthTestDistance: Number.POSITIVE_INFINITY
+        pixelOffset: new Cesium.Cartesian2(18, 8)
       }
     });
 
