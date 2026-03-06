@@ -76,17 +76,12 @@
   }
 
   @media (max-width: 768px) {
-    footer.hide-on-mobile {
+    footer {
       display: none;
     }
 
-    .footer-content {
-      flex-direction: column;
-      text-align: center;
-    }
-
-    .footer-links {
-      justify-content: center;
+    footer.hide-on-mobile {
+      display: none;
     }
   }
 </style>

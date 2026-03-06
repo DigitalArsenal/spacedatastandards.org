@@ -2327,6 +2327,10 @@ CN_N           = 6.789e-3`
   }
 
   @media (max-width: 768px) {
+    .landing-footer {
+      display: none;
+    }
+
     .hero {
       padding: 100px 20px 60px;
     }

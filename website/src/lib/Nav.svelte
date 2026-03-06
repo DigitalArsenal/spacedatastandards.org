@@ -4,6 +4,15 @@
 
   export let currentPath: Readable<string>;
 
+  const navItems = [
+    { href: "/", label: "Home" },
+    { href: "/schemas", label: "Schemas" },
+    { href: "/docs", label: "Docs" },
+    { href: "/playground", label: "Viz Demo" },
+    { href: "/converter", label: "Converter" },
+    { href: "/download", label: "Download" },
+  ];
+
   let mobileMenuOpen = false;
 
   function toggleMobileMenu() {
@@ -36,12 +45,16 @@
     </div>
 
     <div class="nav-links">
-      <a href="/" use:link class:active={isActive("/", $currentPath)} on:click={closeMobileMenu}>Home</a>
-      <a href="/schemas" use:link class:active={isActive("/schemas", $currentPath)} on:click={closeMobileMenu}>Schemas</a>
-      <a href="/docs" use:link class:active={isActive("/docs", $currentPath)} on:click={closeMobileMenu}>Docs</a>
-      <a href="/playground" use:link class:active={isActive("/playground", $currentPath)} on:click={closeMobileMenu}>Viz Demo</a>
-      <a href="/converter" use:link class:active={isActive("/converter", $currentPath)} on:click={closeMobileMenu}>Converter</a>
-      <a href="/download" use:link class:active={isActive("/download", $currentPath)} on:click={closeMobileMenu}>Download</a>
+      {#each navItems as item}
+        <a
+          href={item.href}
+          use:link
+          class:active={isActive(item.href, $currentPath)}
+          on:click={closeMobileMenu}
+        >
+          {item.label}
+        </a>
+      {/each}
     </div>
 
     <div class="nav-right">
@@ -70,12 +83,9 @@
 </nav>
 
 <div class="mobile-menu" class:open={mobileMenuOpen}>
-  <a href="/" use:link on:click={closeMobileMenu}>Home</a>
-  <a href="/schemas" use:link on:click={closeMobileMenu}>Schemas</a>
-  <a href="/docs" use:link on:click={closeMobileMenu}>Docs</a>
-  <a href="/playground" use:link on:click={closeMobileMenu}>Globe</a>
-  <a href="/converter" use:link on:click={closeMobileMenu}>Converter</a>
-  <a href="/download" use:link on:click={closeMobileMenu}>Download</a>
+  {#each navItems as item}
+    <a href={item.href} use:link on:click={closeMobileMenu}>{item.label}</a>
+  {/each}
   <a href="https://github.com/DigitalArsenal/spacedatastandards.org" target="_blank" on:click={closeMobileMenu}>GitHub</a>
 </div>
 

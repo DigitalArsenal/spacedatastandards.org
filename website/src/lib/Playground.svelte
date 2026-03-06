@@ -2317,6 +2317,8 @@
     border-radius: 8px;
     margin: 0;
     white-space: pre;
+    max-width: min(100%, 340px);
+    overflow-x: auto;
   }
 
   .xtc-hud-tlm {
@@ -2419,6 +2421,8 @@
 
     .globe-container {
       min-height: 50vh;
+      display: flex;
+      flex-direction: column;
     }
 
     .data-input-group {
@@ -2427,6 +2431,67 @@
 
     .data-input {
       min-height: 100px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .playground-page {
+      position: relative;
+      top: 0;
+      left: auto;
+      right: auto;
+      bottom: auto;
+      height: auto;
+      min-height: calc(100dvh - 52px);
+      margin-top: 52px;
+      overflow: visible;
+    }
+
+    .playground-layout {
+      min-height: calc(100dvh - 52px);
+    }
+
+    .control-panel {
+      min-width: 0;
+      max-height: 42vh;
+      padding: 16px;
+      gap: 16px;
+    }
+
+    .action-buttons {
+      flex-direction: column;
+    }
+
+    .help-content {
+      grid-template-columns: 1fr;
+    }
+
+    .globe-container {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: visible;
+    }
+
+    .cesium-wrapper {
+      flex: 1 1 auto;
+      height: auto;
+      min-height: 42vh;
+    }
+
+    .xtc-hud-stack {
+      position: static;
+      width: 100%;
+      padding: 12px;
+      gap: 8px;
+      background: linear-gradient(180deg, rgba(3, 3, 8, 0) 0%, rgba(3, 3, 8, 0.94) 18%);
+      pointer-events: auto;
+    }
+
+    .xtc-hud {
+      max-width: 100%;
+      font-size: 10px;
+      white-space: pre-wrap;
+      word-break: break-word;
     }
   }
 </style>

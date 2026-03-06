@@ -58,6 +58,12 @@ main {
   padding-bottom: 80px; /* Space for fixed footer */
 }
 
+@media (max-width: 768px) {
+  main {
+    padding-bottom: 0;
+  }
+}
+
 a {
   color: inherit;
   text-decoration: none;
