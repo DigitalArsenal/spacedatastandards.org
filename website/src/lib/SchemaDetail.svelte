@@ -353,7 +353,12 @@
               </div>
               {#each fields as field}
                 <div class="field-item">
-                  <div class="field-header" on:click={() => toggleField(field.name)}>
+                  <button
+                    class="field-header"
+                    type="button"
+                    aria-expanded={expandedFields.has(field.name)}
+                    on:click={() => toggleField(field.name)}
+                  >
                     <span class="field-expand" class:expanded={expandedFields.has(field.name)}>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="9 18 15 12 9 6"></polyline>
@@ -364,7 +369,7 @@
                     {#if field.required}
                       <span class="field-required">required</span>
                     {/if}
-                  </div>
+                  </button>
                   {#if expandedFields.has(field.name)}
                     <div class="field-details">
                       <p class="field-description">{field.description || "No description available"}</p>
@@ -722,10 +727,16 @@
   }
 
   .field-header {
+    width: 100%;
     display: flex;
     align-items: center;
     gap: 8px;
     cursor: pointer;
+    padding: 0;
+    border: none;
+    background: none;
+    text-align: left;
+    font: inherit;
   }
 
   .field-expand {

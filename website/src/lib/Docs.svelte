@@ -191,12 +191,14 @@
                     </div>
                     <ul class="doc-items">
                       {#each section.items as item}
-                        <li class="doc-item" on:click={() => handleDocItemClick(item)} on:keydown={(e) => e.key === 'Enter' && handleDocItemClick(item)} role="button" tabindex="0">
-                          <span class="doc-item-title">{item.title}</span>
-                          <span class="doc-item-desc">{item.description}</span>
-                          <svg class="doc-item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                          </svg>
+                        <li>
+                          <button class="doc-item" type="button" on:click={() => handleDocItemClick(item)}>
+                            <span class="doc-item-title">{item.title}</span>
+                            <span class="doc-item-desc">{item.description}</span>
+                            <svg class="doc-item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                              <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                          </button>
                         </li>
                       {/each}
                     </ul>
@@ -1186,8 +1188,13 @@ for (const container of containers) {
   }
 
   .doc-item {
+    width: 100%;
     padding: 10px 0;
     border-bottom: 1px solid var(--ui-border);
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    background: none;
     cursor: pointer;
     transition: all 0.2s;
     display: flex;
@@ -1195,9 +1202,11 @@ for (const container of containers) {
     align-items: center;
     position: relative;
     padding-right: 24px;
+    text-align: left;
+    font: inherit;
   }
 
-  .doc-item:last-child {
+  .doc-items li:last-child .doc-item {
     border-bottom: none;
   }
 

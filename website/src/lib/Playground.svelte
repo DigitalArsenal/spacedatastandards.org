@@ -1,6 +1,13 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
 
+  type XtcHudMetric = {
+    label: string;
+    value: string;
+    wide?: boolean;
+    active?: boolean;
+  };
+
   // Cesium viewer reference
   let cesiumContainer: HTMLDivElement;
   let viewer: any = null;
@@ -15,8 +22,8 @@
   let isLoading = false;
   let visualizationActive = false;
   let xtcHudActive = false;
-  let xtcTlmText = '';
-  let xtcCmdText = '';
+  let xtcTlmMetrics: XtcHudMetric[] = [];
+  let xtcCmdMetrics: XtcHudMetric[] = [];
   let xtcHudTimer: ReturnType<typeof setInterval> | null = null;
   let xtcPreRenderCb: (() => void) | null = null;
 
@@ -1607,44 +1614,43 @@
       const hkSeq = Math.floor(now / 1000) % 16384;
       const attSeq = Math.floor(now / 100) % 16384;
       const pktCount = sim.PKT_COUNT + Math.floor(now / 1000) % 1000;
-      const linkStatus = visible ? `${satNames[vis.satIdx]} via ${vis.gs.NAME}` : 'WAITING FOR PASS';
-
-      xtcTlmText = [
-        `TELEMETRY (XTCE)`,
-        `BATT_V:   ${battV} V`,
-        `SOLAR_I:  ${solarI} A`,
-        `OBC_TEMP: ${obcTemp} degC`,
-        `SC_MODE:  ${sim.SC_MODE}`,
-        ``,
-        `CCSDS SPACE PACKETS`,
-        `HK  APID:0x01 SEQ:${String(hkSeq).padStart(5)}`,
-        `ATT APID:0x02 SEQ:${String(attSeq).padStart(5)}`,
-        `TOTAL: ${pktCount} pkts`,
-        ``,
-        `DOWNLINK  [${linkStatus}]`,
-        `${sim.BIT_RATE_KBPS} kbps | ${sim.DL_FREQ_MHZ} MHz`,
-        `RSSI: ${rssi} dBm`,
-        `Eb/N0: ${margin} dB`
-      ].join('\n');
+      const linkTrack = visible ? satNames[vis.satIdx] : 'NONE';
+      const linkSite = visible ? vis.gs.NAME : 'WAITING';
 
       const cmds = sim.CMD_QUEUE || [];
-      const cmdIdx = Math.floor(now / 24000) % cmds.length;
+      const cmdIdx = cmds.length > 0 ? Math.floor(now / 24000) % cmds.length : 0;
       const accepted = sim.CMD_ACCEPT + Math.floor(now / 24000);
       const gsLabel = visible ? vis.gs.NAME : 'NONE';
       const satLabel = visible ? satNames[vis.satIdx] : 'NONE';
+      const activeCommand = cmds.length > 0 ? cmds[cmdIdx] : 'NONE';
+      const nextCommand = cmds.length > 1 ? cmds[(cmdIdx + 1) % cmds.length] : 'NONE';
 
-      xtcCmdText = [
-        `COMMAND QUEUE (XTCE)`,
-        ...cmds.map((c: string, i: number) =>
-          `${i === cmdIdx ? '\u25b8' : ' '} TC: ${c}`
-        ),
-        ``,
-        `CMD STATUS`,
-        `ACCEPTED: ${accepted}`,
-        `REJECTED: ${sim.CMD_REJECT}`,
-        `UPLINK: ${sim.UL_FREQ_MHZ} MHz S-Band`,
-        `SAT: ${satLabel} | GS: ${gsLabel}`
-      ].join('\n');
+      xtcTlmMetrics = [
+        { label: 'Batt', value: `${battV} V` },
+        { label: 'Solar', value: `${solarI} A` },
+        { label: 'OBC', value: `${obcTemp} C` },
+        { label: 'Mode', value: sim.SC_MODE },
+        { label: 'HK Seq', value: `0x01 / ${String(hkSeq).padStart(5, '0')}` },
+        { label: 'ATT Seq', value: `0x02 / ${String(attSeq).padStart(5, '0')}` },
+        { label: 'Packets', value: `${pktCount}` },
+        { label: 'Eb/N0', value: `${margin} dB` },
+        { label: 'Track', value: linkTrack },
+        { label: 'Site', value: linkSite },
+        { label: 'DL', value: `${sim.BIT_RATE_KBPS}k / ${sim.DL_FREQ_MHZ}MHz`, wide: true },
+        { label: 'RSSI', value: `${rssi} dBm` },
+      ];
+
+      xtcCmdMetrics = [
+        { label: 'Active TC', value: activeCommand, wide: true, active: true },
+        { label: 'Next TC', value: nextCommand, wide: true },
+        { label: 'Queue', value: `${cmds.length}` },
+        { label: 'Accept', value: `${accepted}` },
+        { label: 'Reject', value: `${sim.CMD_REJECT}` },
+        { label: 'Uplink', value: `${sim.UL_FREQ_MHZ} MHz` },
+        { label: 'Band', value: 'S-Band' },
+        { label: 'Sat', value: satLabel },
+        { label: 'GS', value: gsLabel },
+      ];
     }, 100);
 
     // === 8. XTCE SYSTEM INFO (follows first satellite) ===
@@ -1678,6 +1684,8 @@
     }
     visualizationActive = false;
     xtcHudActive = false;
+    xtcTlmMetrics = [];
+    xtcCmdMetrics = [];
     if (xtcHudTimer) {
       clearInterval(xtcHudTimer);
       xtcHudTimer = null;
@@ -1823,8 +1831,8 @@
 
       <!-- Schema Type Selector -->
       <div class="control-group">
-        <label class="control-label">Schema Type</label>
-        <select class="control-select" bind:value={schemaType}>
+        <label class="control-label" for="playground-schema-type">Schema Type</label>
+        <select id="playground-schema-type" class="control-select" bind:value={schemaType}>
           {#each schemaTypes as type}
             <option value={type.value}>{type.label}</option>
           {/each}
@@ -1833,8 +1841,8 @@
 
       <!-- Sample Data Buttons -->
       <div class="control-group">
-        <label class="control-label">Load Sample Data</label>
-        <div class="sample-buttons">
+        <div id="playground-samples-label" class="control-label">Load Sample Data</div>
+        <div class="sample-buttons" role="group" aria-labelledby="playground-samples-label">
           <button class="sample-btn" on:click={() => loadSample("OMM")}>OMM</button>
           <button class="sample-btn" on:click={() => loadSample("OEM")}>OEM</button>
           <button class="sample-btn" on:click={() => loadSample("CDM")}>CDM</button>
@@ -1848,7 +1856,7 @@
 
       <!-- Data Input -->
       <div class="control-group data-input-group">
-        <label class="control-label">
+        <label class="control-label" for="playground-data-input">
           Data Input (JSON)
           {#if inputData}
             <span class="validation-badge" class:valid={isJsonValid} class:invalid={!isJsonValid}>
@@ -1857,6 +1865,7 @@
           {/if}
         </label>
         <textarea
+          id="playground-data-input"
           class="data-input"
           class:invalid={!isJsonValid}
           bind:value={inputData}
@@ -1942,8 +1951,28 @@
       <div class="cesium-wrapper" bind:this={cesiumContainer}></div>
       {#if xtcHudActive}
         <div class="xtc-hud-stack">
-          <pre class="xtc-hud xtc-hud-tlm">{xtcTlmText}</pre>
-          <pre class="xtc-hud xtc-hud-cmd">{xtcCmdText}</pre>
+          <div class="xtc-hud xtc-hud-tlm">
+            <div class="xtc-hud-title">Telemetry (XTCE)</div>
+            <div class="xtc-hud-grid">
+              {#each xtcTlmMetrics as metric}
+                <div class="xtc-hud-item" class:wide={metric.wide}>
+                  <span class="xtc-hud-label">{metric.label}</span>
+                  <span class="xtc-hud-value">{metric.value}</span>
+                </div>
+              {/each}
+            </div>
+          </div>
+          <div class="xtc-hud xtc-hud-cmd">
+            <div class="xtc-hud-title">Command Queue (XTCE)</div>
+            <div class="xtc-hud-grid">
+              {#each xtcCmdMetrics as metric}
+                <div class="xtc-hud-item" class:wide={metric.wide} class:active={metric.active}>
+                  <span class="xtc-hud-label">{metric.label}</span>
+                  <span class="xtc-hud-value">{metric.value}</span>
+                </div>
+              {/each}
+            </div>
+          </div>
         </div>
       {/if}
       {#if !cesiumLoaded}
@@ -2305,20 +2334,72 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    width: 340px;
     z-index: 10;
     pointer-events: none;
   }
 
   .xtc-hud {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    line-height: 1.5;
+    width: 340px;
     padding: 12px 14px;
     border-radius: 8px;
     margin: 0;
-    white-space: pre;
-    max-width: min(100%, 340px);
-    overflow-x: auto;
+    max-width: 340px;
+    font-family: var(--font-mono);
+    box-sizing: border-box;
+  }
+
+  .xtc-hud-title {
+    margin-bottom: 10px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+
+  .xtc-hud-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .xtc-hud-item {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 7px 8px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .xtc-hud-item.wide {
+    grid-column: 1 / -1;
+  }
+
+  .xtc-hud-item.active {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .xtc-hud-label {
+    font-size: 8px;
+    line-height: 1.2;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .xtc-hud-value {
+    min-width: 0;
+    font-size: 10px;
+    line-height: 1.3;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 
   .xtc-hud-tlm {
@@ -2488,10 +2569,57 @@
     }
 
     .xtc-hud {
-      max-width: 100%;
-      font-size: 10px;
-      white-space: pre-wrap;
-      word-break: break-word;
+      width: 175px;
+      max-width: 175px;
+      min-width: 0;
+      padding: 9px 10px;
+    }
+
+    .xtc-hud-title {
+      margin-bottom: 6px;
+      font-size: 8px;
+    }
+
+    .xtc-hud-stack {
+      display: grid;
+      grid-template-columns: repeat(2, 175px);
+      justify-content: center;
+      align-items: start;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .xtc-hud-grid {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+
+    .xtc-hud-item {
+      flex-direction: row;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 6px;
+      padding: 5px 6px;
+    }
+
+    .xtc-hud-item.wide {
+      grid-column: auto;
+    }
+
+    .xtc-hud-item.active {
+      align-items: flex-start;
+    }
+
+    .xtc-hud-label {
+      font-size: 7px;
+      flex: 0 0 auto;
+    }
+
+    .xtc-hud-value {
+      font-size: 8px;
+      line-height: 1.25;
+      flex: 1 1 auto;
+      text-align: right;
     }
   }
 </style>

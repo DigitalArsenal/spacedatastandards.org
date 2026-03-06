@@ -56,9 +56,16 @@
       <div class="card-glow"></div>
 
       <div class="selector-section">
-        <label class="selector-label">Select Language</label>
+        <label class="selector-label" for="download-language-trigger">Select Language</label>
         <div class="dropdown" class:open={dropdownOpen}>
-          <button class="dropdown-trigger" on:click={toggleDropdown}>
+          <button
+            id="download-language-trigger"
+            class="dropdown-trigger"
+            type="button"
+            aria-haspopup="listbox"
+            aria-expanded={dropdownOpen}
+            on:click={toggleDropdown}
+          >
             <span class="lang-badge">{selected.icon}</span>
             <span class="lang-name">{selected.name}</span>
             <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
