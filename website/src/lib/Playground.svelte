@@ -2448,7 +2448,7 @@
     }
 
     .playground-layout {
-      min-height: calc(100dvh - 52px);
+      min-height: 0;
     }
 
     .control-panel {
@@ -2467,15 +2467,15 @@
     }
 
     .globe-container {
-      flex: 1 1 auto;
-      min-height: 0;
+      flex: none;
+      min-height: auto;
       overflow: visible;
     }
 
     .cesium-wrapper {
-      flex: 1 1 auto;
-      height: auto;
-      min-height: 42vh;
+      flex: none;
+      height: clamp(220px, 34vh, 300px);
+      min-height: 0;
     }
 
     .xtc-hud-stack {
