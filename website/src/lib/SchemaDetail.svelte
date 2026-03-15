@@ -1,6 +1,7 @@
 <script lang="ts">
   import { link } from "svelte-spa-router";
   import { onMount } from "svelte";
+  import { schemaTagMap } from "./schemaTaxonomy";
 
   export let params: { name: string } = { name: "" };
 
@@ -44,15 +45,6 @@
     "ACL": "The Access Control Grant (ACL) represents permission to access purchased data from a storefront listing.",
   };
 
-  const categoryMap: Record<string, string> = {
-    "OMM": "Orbital", "OEM": "Orbital", "OCM": "Orbital", "OSM": "Orbital",
-    "CDM": "Conjunction", "CSM": "Conjunction", "CAT": "Conjunction",
-    "EPM": "Entity", "PNM": "Entity",
-    "TDM": "Tracking", "RFM": "Tracking",
-    "MET": "Maneuver", "MPE": "Maneuver",
-    "STF": "Marketplace", "PUR": "Marketplace", "REV": "Marketplace", "ACL": "Marketplace",
-  };
-
   interface FieldInfo {
     name: string;
     type: string;
@@ -64,22 +56,18 @@
   }
 
   let fields: FieldInfo[] = [];
+  const localStandardsExplorerSrc = "/packages/standards-explorer/dist/standards-explorer.min.js";
 
-  // Load standards-explorer from CDN (similar to Cesium pattern)
+  // Load the locally bundled standards-explorer to keep codegen in sync with this repo.
   async function loadStandardsExplorer(): Promise<any> {
-    // Check if already loaded
     if ((window as any).StandardsExplorerLib?.StandardsExplorer) {
       const explorer = new (window as any).StandardsExplorerLib.StandardsExplorer();
       await explorer.init();
       return explorer;
     }
 
-    // Load standards-explorer which bundles flatc-wasm
     return new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = "https://unpkg.com/@spacedatastandards/standards-explorer@latest/dist/standards-explorer.min.js";
-      script.async = true;
-      script.onload = async () => {
+      const initializeExplorer = async () => {
         try {
           const explorer = new (window as any).StandardsExplorerLib.StandardsExplorer();
           await explorer.init();
@@ -87,6 +75,28 @@
         } catch (e) {
           reject(e);
         }
+      };
+      const existingScript = document.querySelector<HTMLScriptElement>('script[data-standards-explorer="true"]');
+      if (existingScript) {
+        if (existingScript.dataset.loaded === "true") {
+          void initializeExplorer();
+          return;
+        }
+        existingScript.addEventListener("load", () => {
+          existingScript.dataset.loaded = "true";
+          void initializeExplorer();
+        }, { once: true });
+        existingScript.addEventListener("error", () => reject(new Error("Failed to load standards-explorer")), { once: true });
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.src = localStandardsExplorerSrc;
+      script.async = true;
+      script.dataset.standardsExplorer = "true";
+      script.onload = () => {
+        script.dataset.loaded = "true";
+        void initializeExplorer();
       };
       script.onerror = () => reject(new Error("Failed to load standards-explorer"));
       document.head.appendChild(script);
@@ -199,7 +209,7 @@
     selectedFile = "";
 
     try {
-      // Lazy-init standards-explorer by loading from CDN (similar to Cesium)
+      // Lazy-init the local standards-explorer bundle.
       if (!standardsExplorer) {
         standardsExplorer = await loadStandardsExplorer();
       }
@@ -280,7 +290,7 @@
         <div class="header-top">
           <h1 class="schema-detail-title">{params.name}</h1>
           <span class="schema-category-badge">
-            {categoryMap[params.name] || "Other"}
+            {schemaTagMap[params.name] || "Other"}
           </span>
         </div>
         <p class="schema-detail-desc">

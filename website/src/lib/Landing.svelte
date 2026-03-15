@@ -1,6 +1,7 @@
 <script lang="ts">
   import { link } from "svelte-spa-router";
   import { onMount } from "svelte";
+  import { landingFeatureCategories } from "./schemaTaxonomy";
 
   let schemaCount = 0;
   let canvas: HTMLCanvasElement;
@@ -8,57 +9,7 @@
   let selectedLang = 'typescript';
 
   // Schema categories with descriptions
-  const categories = [
-    {
-      icon: "orbit",
-      iconClass: "icon-blue",
-      title: "Orbital Data",
-      description: "OMM, OEM, OCM, OSM - Mean elements, ephemerides, and orbit characterization messages",
-      schemas: ["OMM", "OEM", "OCM", "OSM"]
-    },
-    {
-      icon: "alert",
-      iconClass: "icon-orange",
-      title: "Conjunction",
-      description: "CDM, CSM, CAT - Conjunction data, screening, and catalog messages for collision avoidance",
-      schemas: ["CDM", "CSM", "CAT"]
-    },
-    {
-      icon: "user",
-      iconClass: "icon-green",
-      title: "Entity",
-      description: "EPM, PNM - Entity profiles and publish notifications for identity management",
-      schemas: ["EPM", "PNM"]
-    },
-    {
-      icon: "radio",
-      iconClass: "icon-cyan",
-      title: "Tracking",
-      description: "TDM, RFM - Tracking data and reference frame messages for observation data",
-      schemas: ["TDM", "RFM"]
-    },
-    {
-      icon: "rocket",
-      iconClass: "icon-purple",
-      title: "Maneuver",
-      description: "MET, MPE - Maneuver planning and execution messages for operations",
-      schemas: ["MET", "MPE"]
-    },
-    {
-      icon: "telemetry",
-      iconClass: "icon-teal",
-      title: "Telemetry",
-      description: "XTC (XTCE) - XML Telemetry and Command Exchange for spacecraft telemetry data",
-      schemas: ["XTC"]
-    },
-    {
-      icon: "store",
-      iconClass: "icon-gold",
-      title: "Marketplace",
-      description: "STF, PUR, REV, ACL - Storefront, purchase, review, and access control for data commerce",
-      schemas: ["STF", "PUR", "REV", "ACL"]
-    }
-  ];
+  const categories = landingFeatureCategories;
 
   const legacyFormats = [
     { name: "TLE", desc: "Two-Line Element Sets", replacement: "OMM" },

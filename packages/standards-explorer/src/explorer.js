@@ -10,6 +10,7 @@
 import manifest from "spacedatastandards.org/dist/manifest.json" with { type: "json" };
 import jsonSchemas from "spacedatastandards.org/lib/json/index.json" with { type: "json" };
 import fbJsonSchemas from "spacedatastandards.org/lib/fbjson/index.json" with { type: "json" };
+import { FlatcRunner } from "./flatc-runner.js";
 
 const SUPPORTED_LANGUAGES = [
   "cpp", "csharp", "dart", "go", "java", "kotlin",
@@ -36,8 +37,8 @@ const CATEGORIES = [
     title: "Orbit & Trajectory",
     icon: "orbit",
     iconClass: "icon-blue",
-    description: "Orbital state vectors, mean elements, ephemeris, and maneuver data",
-    schemas: ["OMM", "OEM", "OCM", "EPM", "HYP", "BOV"],
+    description: "Orbital state vectors, mean elements, ephemeris, and propagated trajectories",
+    schemas: ["OMM", "OEM", "OCM", "MPE", "HYP", "BOV"],
   },
   {
     title: "Conjunction & Safety",
@@ -65,7 +66,7 @@ const CATEGORIES = [
     icon: "rocket",
     iconClass: "icon-orange",
     description: "Pointing requests, electro-optical observations, and sensor data",
-    schemas: ["PNM", "EOO", "EOP", "MET", "MPE", "ROC"],
+    schemas: ["PNM", "EOO", "EOP", "MET", "ROC"],
   },
   {
     title: "Marketplace & Licensing",
@@ -199,9 +200,8 @@ export class StandardsExplorer {
       throw new Error(`Unknown standard: ${name}`);
     }
 
-    // Lazy-init flatc-wasm
+    // Lazy-init the bundled browser-safe flatc runner.
     if (!this._flatc) {
-      const { FlatcRunner } = await import("flatc-wasm");
       this._flatc = await FlatcRunner.init();
     }
 
