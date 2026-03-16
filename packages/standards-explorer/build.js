@@ -1,4 +1,32 @@
+import { existsSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { build } from "esbuild";
+
+const packageDir = dirname(fileURLToPath(import.meta.url));
+const repoRoot = resolve(packageDir, "../..");
+
+const repoAssetAliases = new Map([
+  ["spacedatastandards.org/dist/manifest.json", resolve(repoRoot, "dist/manifest.json")],
+  ["spacedatastandards.org/lib/json/index.json", resolve(repoRoot, "lib/json/index.json")],
+  ["spacedatastandards.org/lib/fbjson/index.json", resolve(repoRoot, "lib/fbjson/index.json")],
+]);
+
+const localRepoDataPlugin = {
+  name: "local-repo-data",
+  setup(buildContext) {
+    buildContext.onResolve(
+      { filter: /^spacedatastandards\.org\/(dist\/manifest\.json|lib\/json\/index\.json|lib\/fbjson\/index\.json)$/ },
+      (args) => {
+        const localPath = repoAssetAliases.get(args.path);
+        if (localPath && existsSync(localPath)) {
+          return { path: localPath };
+        }
+        return null;
+      },
+    );
+  },
+};
 
 const browserModuleStub = {
   name: "browser-module-stub",
@@ -25,7 +53,7 @@ const sharedBuildOptions = {
   bundle: true,
   platform: "browser",
   target: "es2020",
-  plugins: [browserModuleStub],
+  plugins: [localRepoDataPlugin, browserModuleStub],
 };
 
 // ESM bundle
