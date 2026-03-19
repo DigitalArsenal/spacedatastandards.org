@@ -49,6 +49,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install website dependencies
+        run: npm --prefix website ci
+
       - name: Build all artifacts
         run: npm run build
 
