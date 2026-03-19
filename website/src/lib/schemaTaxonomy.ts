@@ -30,6 +30,7 @@ export const schemaCategoryDefinitions: SchemaCategoryDefinition[] = [
       { abbr: "AST", desc: "Astrodynamics" },
       { abbr: "PCF", desc: "Propagator Configuration" },
       { abbr: "VCM", desc: "Vector Covariance Message" },
+      { abbr: "PPE", desc: "Polynomial Ephemeris" },
     ],
   },
   {

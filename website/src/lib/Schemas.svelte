@@ -49,6 +49,7 @@
     "MSL": "Missile - types, seeker guidance, flight phases",
     "SON": "Sonar - active/passive sonar types, propagation models",
     "ACM": "Attitude Comprehensive Message - quaternions, Euler angles, spin states",
+    "PPE": "Polynomial Ephemeris - Chebyshev polynomial trajectory interpolation for position, velocity, and orbital elements",
   };
 
   // Keywords for search discoverability
@@ -201,6 +202,7 @@
     "KML": ["KML", "Keyhole", "Google Earth", "geographic", "placemark", "style", "OGC"],
     "GPX": ["GPX", "GPS", "exchange", "waypoint", "track", "route", "elevation", "hiking"],
     "COT": ["Cursor on Target", "CoT", "tactical", "ATAK", "TAK", "situational awareness", "XML"],
+    "PPE": ["polynomial", "ephemeris", "Chebyshev", "trajectory", "interpolation", "position", "velocity", "orbital elements", "basis", "coefficients"],
   };
 
   let schemas = writable<SchemaInfo[]>([]);
