@@ -281,9 +281,21 @@
         results = results.filter(s => s.category === $activeCategory);
       }
 
-      const query = $searchQuery.toLowerCase();
+      const rawQuery = $searchQuery.trim();
+      const query = rawQuery.toLowerCase();
 
       if (!query) return results;
+
+      // Direct schema code match: 1-3 uppercase letters, optionally prefixed with $
+      const codeMatch = rawQuery.match(/^\$?([A-Za-z]{1,3})$/);
+      if (codeMatch) {
+        const code = codeMatch[1].toUpperCase();
+        const exact = results.filter(s => s.key === code);
+        if (exact.length > 0) return exact;
+        // Partial prefix match
+        const prefixed = results.filter(s => s.key.startsWith(code));
+        if (prefixed.length > 0) return prefixed;
+      }
 
       // Keyword filter with fuzzy matching
       const keywordMatchKeys = new Set<string>();

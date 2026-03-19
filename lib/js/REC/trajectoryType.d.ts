@@ -1,0 +1,34 @@
+/**
+ * Trajectory state representation type.
+ * Defines how trajectory data is parameterized in this OCM.
+ * CCSDS 502.0-B-3 Section 7 specifies multiple trajectory state types.
+ */
+export declare enum trajectoryType {
+    /**
+     * Cartesian position and velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT).
+     */
+    CARTESIAN_PV = 0,
+    /**
+     * Cartesian position, velocity, and acceleration (9 components).
+     */
+    CARTESIAN_PVA = 1,
+    /**
+     * Polynomial coefficients for Cartesian position (and optionally velocity).
+     * Associated data in POLYNOMIAL_POSITION_RECORDS.
+     */
+    POLYNOMIAL_POS = 2,
+    /**
+     * Polynomial coefficients for classical orbital elements.
+     * Associated data in POLYNOMIAL_OE_RECORDS.
+     */
+    POLYNOMIAL_OE = 3,
+    /**
+     * Hermite interpolating polynomial representation.
+     */
+    HERMITE = 4,
+    /**
+     * Lagrange interpolating polynomial representation.
+     */
+    LAGRANGE = 5
+}
+//# sourceMappingURL=trajectoryType.d.ts.map
