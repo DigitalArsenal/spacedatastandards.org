@@ -1,9 +1,10 @@
-// Hash: 9325c94f5e4ff168083fb7c854a89f9fa14bc07fe6c34225c9551553421a1c74
-// Version: 1.0.4
+// Hash: 0000000000000000000000000000000000000000000000000000000000000000
+// Version: 1.1.0
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
 include "../CAT/main.fbs";
+include "../CPE/main.fbs";
 
 // Orbit Ephemeris Message (OEM)
 // Description
@@ -180,7 +181,11 @@ table ephemerisDataBlock {
   USEABLE_STOP_TIME:string;
   /// End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
   STOP_TIME:string;
-  /// Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
+  /// Recommended interpolation method for ephemeris data.
+  /// Supported methods: Hermite, Linear, Lagrange, Chebyshev.
+  /// When set to "Chebyshev", parsers should use CHEBYSHEV_POSITION_RECORDS
+  /// for high-fidelity polynomial interpolation instead of interpolating across
+  /// discrete state vectors.
   INTERPOLATION:string;
   /// Recommended interpolation degree for ephemeris data
   INTERPOLATION_DEGREE:uint;
@@ -230,6 +235,25 @@ table ephemerisDataBlock {
 
   /// Array of covariance matrix lines (optional)
   COVARIANCE_MATRIX_LINES:[covarianceMatrixLine];
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // CHEBYSHEV POLYNOMIAL INTERPOLATION (optional, supplements both formats)
+  // ─────────────────────────────────────────────────────────────────────────────
+  // When INTERPOLATION is set to "Chebyshev", these records provide polynomial
+  // coefficients for continuous, high-fidelity position evaluation between
+  // discrete state vectors. Each record covers a time segment; together they
+  // should span [START_TIME, STOP_TIME].
+  //
+  // This is an alternative to interpolating across discrete state vectors and
+  // is especially useful for high-precision applications where the generating
+  // ephemeris was produced by numerical integration (e.g., HPOP).
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  /// Optional Chebyshev polynomial position records for high-fidelity interpolation.
+  /// Used when INTERPOLATION is "Chebyshev". Each record covers a time segment with
+  /// polynomial coefficients for continuous position (and optionally velocity) evaluation.
+  /// See CPE schema for record structure and evaluation procedure.
+  CHEBYSHEV_POSITION_RECORDS:[CPEPositionRecord];
 }
 
 /// Orbit Ephemeris Message

@@ -1,0 +1,274 @@
+// Hash: 0000000000000000000000000000000000000000000000000000000000000000
+// Version: 1.0.0
+// -----------------------------------END_HEADER
+include "../RFM/main.fbs";
+include "../TIM/main.fbs";
+include "../CAT/main.fbs";
+
+// Chebyshev Polynomial Ephemeris (CPE)
+// Description
+// The Chebyshev Polynomial Ephemeris (CPE) provides a compact, high-fidelity representation
+// of spacecraft or celestial body trajectories using polynomial coefficient expansions.
+// Instead of storing discrete state vectors at fixed time steps, the CPE stores polynomial
+// coefficients over time segments (records), enabling continuous evaluation at arbitrary
+// epochs within each segment's validity window.
+//
+// This schema supports multiple polynomial basis types (Chebyshev, Legendre, Hermite,
+// Lagrange, power series) and two primary parameterizations:
+//   1. Cartesian position (and optionally velocity) coefficients per axis
+//   2. Classical orbital element coefficients (SMA/rPeriap, ecc, inc, RAAN, argPer, anomaly)
+//
+// The record structure follows the pattern established by Basilisk's chebyPosEphem and
+// oeStateEphem modules: each record covers a time segment defined by a midpoint epoch
+// and half-span, with a fixed number of polynomial coefficients per component.
+//
+// CCSDS Reference documentation: 502.0-B-3 (April 2023), Section 7 — Trajectory State Types.
+// The OCM Blue Book specifies Chebyshev polynomial representations as a valid trajectory
+// state type for compact ephemeris exchange.
+//
+// Usage:
+//   - CPEPositionRecord: Use for Cartesian position/velocity Chebyshev fits (3-axis or 6-axis).
+//   - CPEOrbitalElementRecord: Use for classical orbital element Chebyshev fits (6 elements).
+//   - Multiple records per message represent consecutive (or overlapping) time segments.
+//   - Evaluate at time t by mapping t into the normalized domain [-1, +1] using the record's
+//     EPOCH_MID and EPOCH_HALF_SPAN, then summing the polynomial basis.
+
+// =============================================================================
+// ENUMERATIONS
+// =============================================================================
+
+/// Polynomial basis type for coefficient interpretation.
+/// Determines how the coefficient arrays are evaluated.
+enum polynomialBasisType : byte {
+  /// Chebyshev polynomials of the first kind T_n(x).
+  /// Most common for ephemeris fitting due to minimax approximation properties.
+  CHEBYSHEV,
+
+  /// Legendre polynomials P_n(x).
+  /// Orthogonal on [-1, 1] with unit weight function.
+  LEGENDRE,
+
+  /// Hermite interpolating polynomials.
+  /// Matches both function values and derivatives at nodes.
+  HERMITE,
+
+  /// Lagrange interpolating polynomials.
+  /// Exact interpolation through specified nodes.
+  LAGRANGE,
+
+  /// Standard power series (monomial basis): c0 + c1*x + c2*x^2 + ...
+  POWER_SERIES
+}
+
+/// Anomaly type flag for orbital element records.
+enum anomalyType : byte {
+  /// True anomaly (geometric angle from periapsis).
+  TRUE_ANOMALY,
+
+  /// Mean anomaly (linear in time for Keplerian motion).
+  MEAN_ANOMALY,
+
+  /// Eccentric anomaly (auxiliary angle in the Kepler equation).
+  ECCENTRIC_ANOMALY
+}
+
+/// Orbital element parameterization for the first element (size/shape).
+enum sizeShapeType : byte {
+  /// Semi-major axis (km). Standard for elliptical orbits.
+  SMA,
+
+  /// Radius of periapsis (km). Preferred for hyperbolic orbits.
+  R_PERIAPSIS
+}
+
+// =============================================================================
+// POSITION CHEBYSHEV RECORDS
+// =============================================================================
+
+/// A single time-segment record of polynomial coefficients for Cartesian position
+/// (and optionally velocity). Coefficients are stored per axis.
+///
+/// To evaluate position at time t within this record's validity window:
+///   1. Compute normalized time: tau = (t - EPOCH_MID) / EPOCH_HALF_SPAN
+///      where tau is in [-1, +1].
+///   2. Evaluate the polynomial basis of degree (NUM_COEFFICIENTS - 1) using
+///      the coefficients for each axis.
+///
+/// Velocity coefficients, if present, follow the same evaluation procedure.
+/// If HAS_VELOCITY_COEFFICIENTS is false, velocity can be obtained by
+/// analytically differentiating the position polynomial.
+table CPEPositionRecord {
+  /// Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).
+  /// Together with EPOCH_HALF_SPAN, defines the time interval:
+  ///   [EPOCH_MID - EPOCH_HALF_SPAN, EPOCH_MID + EPOCH_HALF_SPAN]
+  EPOCH_MID: string (required);
+
+  /// Half-span of the validity window in seconds.
+  /// The full span is 2 * EPOCH_HALF_SPAN seconds centered on EPOCH_MID.
+  EPOCH_HALF_SPAN: double;
+
+  /// Number of polynomial coefficients per axis.
+  /// The polynomial degree is (NUM_COEFFICIENTS - 1).
+  /// Typical values: 8-32 for high-fidelity ephemeris fits.
+  NUM_COEFFICIENTS: uint16;
+
+  /// Polynomial basis type for interpreting the coefficient arrays.
+  BASIS_TYPE: polynomialBasisType = CHEBYSHEV;
+
+  /// Position coefficients for X-axis (km).
+  /// Length must equal NUM_COEFFICIENTS. Ordered c0, c1, ..., c_{N-1}.
+  POS_COEFF_X: [double] (required);
+
+  /// Position coefficients for Y-axis (km).
+  /// Length must equal NUM_COEFFICIENTS.
+  POS_COEFF_Y: [double] (required);
+
+  /// Position coefficients for Z-axis (km).
+  /// Length must equal NUM_COEFFICIENTS.
+  POS_COEFF_Z: [double] (required);
+
+  /// Whether explicit velocity coefficients are provided.
+  /// If false, velocity should be derived by differentiating the position polynomial.
+  HAS_VELOCITY_COEFFICIENTS: bool = false;
+
+  /// Velocity coefficients for X-axis (km/s). Optional.
+  /// Length must equal NUM_COEFFICIENTS if present.
+  VEL_COEFF_X: [double];
+
+  /// Velocity coefficients for Y-axis (km/s). Optional.
+  VEL_COEFF_Y: [double];
+
+  /// Velocity coefficients for Z-axis (km/s). Optional.
+  VEL_COEFF_Z: [double];
+
+  /// Maximum position fit residual over this segment (km). Optional quality metric.
+  MAX_POSITION_RESIDUAL: double;
+
+  /// RMS position fit residual over this segment (km). Optional quality metric.
+  RMS_POSITION_RESIDUAL: double;
+}
+
+// =============================================================================
+// ORBITAL ELEMENT CHEBYSHEV RECORDS
+// =============================================================================
+
+/// A single time-segment record of polynomial coefficients for classical orbital elements.
+///
+/// The six classical elements are:
+///   1. SMA or R_PERIAPSIS (size/shape) — see SIZE_SHAPE_TYPE
+///   2. Eccentricity (dimensionless)
+///   3. Inclination (degrees)
+///   4. Right Ascension of Ascending Node / RAAN (degrees)
+///   5. Argument of Periapsis (degrees)
+///   6. Anomaly (degrees) — see ANOMALY_TYPE
+///
+/// Evaluation follows the same normalized-time procedure as CPEPositionRecord.
+table CPEOrbitalElementRecord {
+  /// Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).
+  EPOCH_MID: string (required);
+
+  /// Half-span of the validity window in seconds.
+  EPOCH_HALF_SPAN: double;
+
+  /// Number of polynomial coefficients per element.
+  NUM_COEFFICIENTS: uint16;
+
+  /// Polynomial basis type for interpreting the coefficient arrays.
+  BASIS_TYPE: polynomialBasisType = CHEBYSHEV;
+
+  /// Parameterization of the first orbital element (SMA vs R_PERIAPSIS).
+  SIZE_SHAPE_TYPE: sizeShapeType = SMA;
+
+  /// Anomaly type for the sixth orbital element.
+  ANOMALY_TYPE: anomalyType = TRUE_ANOMALY;
+
+  /// Coefficients for SMA or radius of periapsis (km).
+  /// Length must equal NUM_COEFFICIENTS.
+  COEFF_SIZE_SHAPE: [double] (required);
+
+  /// Coefficients for eccentricity (dimensionless).
+  /// Length must equal NUM_COEFFICIENTS.
+  COEFF_ECCENTRICITY: [double] (required);
+
+  /// Coefficients for inclination (degrees).
+  /// Length must equal NUM_COEFFICIENTS.
+  COEFF_INCLINATION: [double] (required);
+
+  /// Coefficients for RAAN (degrees).
+  /// Length must equal NUM_COEFFICIENTS.
+  COEFF_RAAN: [double] (required);
+
+  /// Coefficients for argument of periapsis (degrees).
+  /// Length must equal NUM_COEFFICIENTS.
+  COEFF_ARG_PERIAPSIS: [double] (required);
+
+  /// Coefficients for anomaly (degrees). See ANOMALY_TYPE for interpretation.
+  /// Length must equal NUM_COEFFICIENTS.
+  COEFF_ANOMALY: [double] (required);
+
+  /// Maximum element fit residual over this segment. Optional quality metric.
+  /// Units depend on the element (km for SMA, degrees for angles, dimensionless for ecc).
+  MAX_ELEMENT_RESIDUAL: double;
+
+  /// RMS element fit residual over this segment. Optional quality metric.
+  RMS_ELEMENT_RESIDUAL: double;
+}
+
+// =============================================================================
+// CPE MESSAGE (TOP-LEVEL)
+// =============================================================================
+
+/// Chebyshev Polynomial Ephemeris — top-level message containing metadata and
+/// one or more polynomial coefficient records for a single space object.
+///
+/// A CPE message may contain position records, orbital element records, or both.
+/// Records should be ordered chronologically by EPOCH_MID and should collectively
+/// cover the time span [START_TIME, STOP_TIME] without gaps.
+table CPE {
+  /// Plain-text comments.
+  COMMENT: [string];
+
+  /// Space object identification.
+  OBJECT: CAT;
+
+  /// Origin of the reference frame (e.g., EARTH, MOON, MARS).
+  CENTER_NAME: string;
+
+  /// Reference frame for position/velocity coefficients.
+  REFERENCE_FRAME: RFM;
+
+  /// Time system used for all epochs in this message.
+  TIME_SYSTEM: timeSystem;
+
+  /// Start of the total time span covered by this ephemeris (ISO 8601).
+  START_TIME: string;
+
+  /// End of the total time span covered by this ephemeris (ISO 8601).
+  STOP_TIME: string;
+
+  /// Default polynomial basis type for all records in this message.
+  /// Individual records may override this with their own BASIS_TYPE field.
+  DEFAULT_BASIS_TYPE: polynomialBasisType = CHEBYSHEV;
+
+  /// Array of position Chebyshev (or other polynomial) records.
+  /// Each record covers a time segment; together they span [START_TIME, STOP_TIME].
+  POSITION_RECORDS: [CPEPositionRecord];
+
+  /// Array of orbital element Chebyshev (or other polynomial) records.
+  /// Each record covers a time segment; together they span [START_TIME, STOP_TIME].
+  ORBITAL_ELEMENT_RECORDS: [CPEOrbitalElementRecord];
+
+  /// Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").
+  EPHEMERIS_SOURCE: string;
+
+  /// Fit span in seconds used to generate each polynomial segment.
+  /// Informational; actual spans are in individual records.
+  NOMINAL_SEGMENT_SPAN: double;
+
+  /// Nominal number of coefficients per segment.
+  /// Informational; actual counts are in individual records.
+  NOMINAL_NUM_COEFFICIENTS: uint16;
+}
+
+root_type CPE;
+file_identifier "$CPE";
