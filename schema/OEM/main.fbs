@@ -4,7 +4,7 @@
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
 include "../CAT/main.fbs";
-include "../CPE/main.fbs";
+include "../PPE/main.fbs";
 
 // Orbit Ephemeris Message (OEM)
 // Description
@@ -183,7 +183,7 @@ table ephemerisDataBlock {
   STOP_TIME:string;
   /// Recommended interpolation method for ephemeris data.
   /// Supported methods: Hermite, Linear, Lagrange, Chebyshev.
-  /// When set to "Chebyshev", parsers should use CHEBYSHEV_POSITION_RECORDS
+  /// When set to "Chebyshev", parsers should use POLYNOMIAL_POSITION_RECORDS
   /// for high-fidelity polynomial interpolation instead of interpolating across
   /// discrete state vectors.
   INTERPOLATION:string;
@@ -237,7 +237,7 @@ table ephemerisDataBlock {
   COVARIANCE_MATRIX_LINES:[covarianceMatrixLine];
 
   // ─────────────────────────────────────────────────────────────────────────────
-  // CHEBYSHEV POLYNOMIAL INTERPOLATION (optional, supplements both formats)
+  // POLYNOMIAL INTERPOLATION (optional, supplements both formats)
   // ─────────────────────────────────────────────────────────────────────────────
   // When INTERPOLATION is set to "Chebyshev", these records provide polynomial
   // coefficients for continuous, high-fidelity position evaluation between
@@ -249,11 +249,11 @@ table ephemerisDataBlock {
   // ephemeris was produced by numerical integration (e.g., HPOP).
   // ─────────────────────────────────────────────────────────────────────────────
 
-  /// Optional Chebyshev polynomial position records for high-fidelity interpolation.
+  /// Optional polynomial position records for high-fidelity interpolation.
   /// Used when INTERPOLATION is "Chebyshev". Each record covers a time segment with
   /// polynomial coefficients for continuous position (and optionally velocity) evaluation.
-  /// See CPE schema for record structure and evaluation procedure.
-  CHEBYSHEV_POSITION_RECORDS:[CPEPositionRecord];
+  /// See PPE schema for record structure and evaluation procedure.
+  POLYNOMIAL_POSITION_RECORDS:[PPEPositionRecord];
 }
 
 /// Orbit Ephemeris Message

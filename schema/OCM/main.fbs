@@ -2,7 +2,7 @@
 // Version: 2.1.0
 // -----------------------------------END_HEADER
 include "../ATM/main.fbs";
-include "../CPE/main.fbs";
+include "../PPE/main.fbs";
 
 // Orbit Comprehensive Message (OCM)
 // Description
@@ -33,13 +33,13 @@ enum trajectoryType : byte {
   /// Cartesian position, velocity, and acceleration (9 components).
   CARTESIAN_PVA,
 
-  /// Chebyshev polynomial coefficients for Cartesian position (and optionally velocity).
-  /// Associated data in CHEBYSHEV_POSITION_RECORDS.
-  CHEBYSHEV_POS,
+  /// Polynomial coefficients for Cartesian position (and optionally velocity).
+  /// Associated data in POLYNOMIAL_POSITION_RECORDS.
+  POLYNOMIAL_POS,
 
-  /// Chebyshev polynomial coefficients for classical orbital elements.
-  /// Associated data in CHEBYSHEV_OE_RECORDS.
-  CHEBYSHEV_OE,
+  /// Polynomial coefficients for classical orbital elements.
+  /// Associated data in POLYNOMIAL_OE_RECORDS.
+  POLYNOMIAL_OE,
 
   /// Hermite interpolating polynomial representation.
   HERMITE,
@@ -353,7 +353,7 @@ table OCM {
   /// Trajectory state representation type.
   /// Determines how orbit state data is parameterized in this message.
   /// For CARTESIAN_PV/CARTESIAN_PVA, use STATE_DATA array.
-  /// For CHEBYSHEV_POS/CHEBYSHEV_OE, use the corresponding polynomial record arrays.
+  /// For POLYNOMIAL_POS/POLYNOMIAL_OE, use the corresponding polynomial record arrays.
   TRAJ_TYPE: trajectoryType = CARTESIAN_PV;
 
   /// Legacy trajectory type string for backward compatibility and extended types
@@ -378,17 +378,17 @@ table OCM {
   /// Time alignment matches STATE_DATA epochs.
   COVARIANCE_DATA:[double];
 
-  /// Chebyshev (or other polynomial) position records.
-  /// Used when TRAJ_TYPE is CHEBYSHEV_POS. Each record covers a time segment
+  /// Polynomial position records.
+  /// Used when TRAJ_TYPE is POLYNOMIAL_POS. Each record covers a time segment
   /// with polynomial coefficients for X, Y, Z position (and optionally velocity).
-  /// See CPE schema for record structure and evaluation procedure.
-  CHEBYSHEV_POSITION_RECORDS: [CPEPositionRecord];
+  /// See PPE schema for record structure and evaluation procedure.
+  POLYNOMIAL_POSITION_RECORDS: [PPEPositionRecord];
 
-  /// Chebyshev (or other polynomial) orbital element records.
-  /// Used when TRAJ_TYPE is CHEBYSHEV_OE. Each record covers a time segment
+  /// Polynomial orbital element records.
+  /// Used when TRAJ_TYPE is POLYNOMIAL_OE. Each record covers a time segment
   /// with polynomial coefficients for classical orbital elements.
-  /// See CPE schema for record structure and evaluation procedure.
-  CHEBYSHEV_OE_RECORDS: [CPEOrbitalElementRecord];
+  /// See PPE schema for record structure and evaluation procedure.
+  POLYNOMIAL_OE_RECORDS: [PPEOrbitalElementRecord];
 
   /// Physical properties of the space object.
   PHYSICAL_PROPERTIES: PhysicalProperties;

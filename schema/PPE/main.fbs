@@ -5,11 +5,11 @@ include "../RFM/main.fbs";
 include "../TIM/main.fbs";
 include "../CAT/main.fbs";
 
-// Chebyshev Polynomial Ephemeris (CPE)
+// Polynomial Ephemeris (PPE)
 // Description
-// The Chebyshev Polynomial Ephemeris (CPE) provides a compact, high-fidelity representation
+// The Polynomial Ephemeris (PPE) provides a compact, high-fidelity representation
 // of spacecraft or celestial body trajectories using polynomial coefficient expansions.
-// Instead of storing discrete state vectors at fixed time steps, the CPE stores polynomial
+// Instead of storing discrete state vectors at fixed time steps, the PPE stores polynomial
 // coefficients over time segments (records), enabling continuous evaluation at arbitrary
 // epochs within each segment's validity window.
 //
@@ -23,12 +23,12 @@ include "../CAT/main.fbs";
 // and half-span, with a fixed number of polynomial coefficients per component.
 //
 // CCSDS Reference documentation: 502.0-B-3 (April 2023), Section 7 — Trajectory State Types.
-// The OCM Blue Book specifies Chebyshev polynomial representations as a valid trajectory
+// The OCM Blue Book specifies polynomial representations as a valid trajectory
 // state type for compact ephemeris exchange.
 //
 // Usage:
-//   - CPEPositionRecord: Use for Cartesian position/velocity Chebyshev fits (3-axis or 6-axis).
-//   - CPEOrbitalElementRecord: Use for classical orbital element Chebyshev fits (6 elements).
+//   - PPEPositionRecord: Use for Cartesian position/velocity polynomial fits (3-axis or 6-axis).
+//   - PPEOrbitalElementRecord: Use for classical orbital element polynomial fits (6 elements).
 //   - Multiple records per message represent consecutive (or overlapping) time segments.
 //   - Evaluate at time t by mapping t into the normalized domain [-1, +1] using the record's
 //     EPOCH_MID and EPOCH_HALF_SPAN, then summing the polynomial basis.
@@ -82,7 +82,7 @@ enum sizeShapeType : byte {
 }
 
 // =============================================================================
-// POSITION CHEBYSHEV RECORDS
+// POSITION POLYNOMIAL RECORDS
 // =============================================================================
 
 /// A single time-segment record of polynomial coefficients for Cartesian position
@@ -97,7 +97,7 @@ enum sizeShapeType : byte {
 /// Velocity coefficients, if present, follow the same evaluation procedure.
 /// If HAS_VELOCITY_COEFFICIENTS is false, velocity can be obtained by
 /// analytically differentiating the position polynomial.
-table CPEPositionRecord {
+table PPEPositionRecord {
   /// Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).
   /// Together with EPOCH_HALF_SPAN, defines the time interval:
   ///   [EPOCH_MID - EPOCH_HALF_SPAN, EPOCH_MID + EPOCH_HALF_SPAN]
@@ -149,7 +149,7 @@ table CPEPositionRecord {
 }
 
 // =============================================================================
-// ORBITAL ELEMENT CHEBYSHEV RECORDS
+// ORBITAL ELEMENT POLYNOMIAL RECORDS
 // =============================================================================
 
 /// A single time-segment record of polynomial coefficients for classical orbital elements.
@@ -162,8 +162,8 @@ table CPEPositionRecord {
 ///   5. Argument of Periapsis (degrees)
 ///   6. Anomaly (degrees) — see ANOMALY_TYPE
 ///
-/// Evaluation follows the same normalized-time procedure as CPEPositionRecord.
-table CPEOrbitalElementRecord {
+/// Evaluation follows the same normalized-time procedure as PPEPositionRecord.
+table PPEOrbitalElementRecord {
   /// Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).
   EPOCH_MID: string (required);
 
@@ -215,16 +215,16 @@ table CPEOrbitalElementRecord {
 }
 
 // =============================================================================
-// CPE MESSAGE (TOP-LEVEL)
+// PPE MESSAGE (TOP-LEVEL)
 // =============================================================================
 
-/// Chebyshev Polynomial Ephemeris — top-level message containing metadata and
+/// Polynomial Ephemeris — top-level message containing metadata and
 /// one or more polynomial coefficient records for a single space object.
 ///
-/// A CPE message may contain position records, orbital element records, or both.
+/// A PPE message may contain position records, orbital element records, or both.
 /// Records should be ordered chronologically by EPOCH_MID and should collectively
 /// cover the time span [START_TIME, STOP_TIME] without gaps.
-table CPE {
+table PPE {
   /// Plain-text comments.
   COMMENT: [string];
 
@@ -250,13 +250,13 @@ table CPE {
   /// Individual records may override this with their own BASIS_TYPE field.
   DEFAULT_BASIS_TYPE: polynomialBasisType = CHEBYSHEV;
 
-  /// Array of position Chebyshev (or other polynomial) records.
+  /// Array of position polynomial records.
   /// Each record covers a time segment; together they span [START_TIME, STOP_TIME].
-  POSITION_RECORDS: [CPEPositionRecord];
+  POSITION_RECORDS: [PPEPositionRecord];
 
-  /// Array of orbital element Chebyshev (or other polynomial) records.
+  /// Array of orbital element polynomial records.
   /// Each record covers a time segment; together they span [START_TIME, STOP_TIME].
-  ORBITAL_ELEMENT_RECORDS: [CPEOrbitalElementRecord];
+  ORBITAL_ELEMENT_RECORDS: [PPEOrbitalElementRecord];
 
   /// Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").
   EPHEMERIS_SOURCE: string;
@@ -270,5 +270,5 @@ table CPE {
   NOMINAL_NUM_COEFFICIENTS: uint16;
 }
 
-root_type CPE;
-file_identifier "$CPE";
+root_type PPE;
+file_identifier "$PPE";
