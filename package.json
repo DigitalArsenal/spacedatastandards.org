@@ -102,7 +102,7 @@
         "deploy": "npm run build && git add -A && git commit -m 'updates' && git push origin main && npm run publish:js",
         "publish:js": "npm publish",
         "start": "node index.js",
-        "build": "python ./scripts/createREC.py && python ./scripts/generateSource.py && python ./scripts/generateVersion.py && npm run build:js && python ./scripts/generateArchives.py && python ./scripts/generateJSONIndex.py && python ./scripts/generateFBJsonSchema.py && python ./scripts/generateGoModule.py",
+        "build": "python ./scripts/createREC.py && python ./scripts/generateSource.py && python ./scripts/generateVersion.py && npm run build:js && python ./scripts/generateArchives.py && python ./scripts/generateJSONIndex.py && python ./scripts/generateFBJsonSchema.py && python ./scripts/generateGoModule.py && node ./scripts/generateSchemaEmbeddings.js",
         "build:mac": "python3 ./scripts/generateSource.py && npm run build:js && python3 ./scripts/generateVersion.py && python3 ./scripts/generateArchives.py && python3 ./scripts/generateJSONIndex.py && python3 ./scripts/generateFBJsonSchema.py && python3 ./scripts/generateGoModule.py",
         "build:js": "rm -rf ./lib/js && mkdir -p ./lib/js && node ./scripts/createTSIndex.js && node ./scripts/fixTSCasing.js && tsc && mv ./lib/js/ts/* ./lib/js && rm -R ./lib/js/ts && find ./lib/js -type f -name '*.ts' ! -name '*.d.ts' -delete && python3 ./scripts/generatePackageJSON.py",
         "build:wasm": "mkdir -p src/cpp/build && cd src/cpp/build && emcmake cmake .. && emmake make && cd ../../.. && cp dist/sds_parsers.js dist/sds_parsers.wasm wasm/node/",
@@ -122,6 +122,7 @@
     "homepage": "https://spacedatastandards.org",
     "license": "Apache-2.0",
     "dependencies": {
+        "@huggingface/transformers": "^3.8.1",
         "ajv": "^8.12.0",
         "buffer": "^6.0.3",
         "esbuild": "^0.20.2",

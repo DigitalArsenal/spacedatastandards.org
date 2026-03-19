@@ -36,7 +36,7 @@ export default defineConfig(({ mode }) => {
     build: {
       emptyOutDir: false,
       rollupOptions: {
-        external: ['cesium', /\/wasm\//],
+        external: ['cesium', /\/wasm\//, /cdn\.jsdelivr\.net/],
         output: {
           inlineDynamicImports: true,
           dir: '../',

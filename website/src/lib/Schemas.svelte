@@ -3,6 +3,7 @@
   import { onMount } from "svelte";
   import { writable, derived } from "svelte/store";
   import { schemaTagMap, schemaTagOptions } from "./schemaTaxonomy";
+  import { loadEmbeddings, semanticSearch, getModelLoadingState } from "./semanticSearch";
 
   interface SchemaInfo {
     key: string;
@@ -207,19 +208,94 @@
   let activeCategory = writable("All");
   let isLoading = true;
 
+  // Semantic search state
+  let semanticScores = writable<Record<string, number>>({});
+  let isSemanticReady = false;
+  let isSemanticSearching = writable(false);
+  let semanticMode = writable(false);
+  let searchDebounceTimer: ReturnType<typeof setTimeout>;
+
+  // Initialize semantic search
+  async function initSemantic() {
+    isSemanticReady = await loadEmbeddings();
+  }
+
+  // Run semantic search with debounce
+  function triggerSemanticSearch(query: string) {
+    clearTimeout(searchDebounceTimer);
+    if (!query || query.length < 3 || !isSemanticReady) {
+      semanticScores.set({});
+      semanticMode.set(false);
+      return;
+    }
+    searchDebounceTimer = setTimeout(async () => {
+      isSemanticSearching.set(true);
+      try {
+        const results = await semanticSearch(query, 0.2);
+        const scores: Record<string, number> = {};
+        for (const r of results) {
+          scores[r.key] = r.score;
+        }
+        semanticScores.set(scores);
+        semanticMode.set(true);
+      } catch (e) {
+        console.error('Semantic search error:', e);
+        semanticMode.set(false);
+      } finally {
+        isSemanticSearching.set(false);
+      }
+    }, 400);
+  }
+
+  // React to search query changes
+  searchQuery.subscribe((q) => triggerSemanticSearch(q));
+
   const filteredSchemas = derived(
-    [schemas, searchQuery, activeCategory],
-    ([$schemas, $searchQuery, $activeCategory]) => {
-      return $schemas.filter((schema) => {
-        const query = $searchQuery.toLowerCase();
-        const matchesSearch = !query ||
-          schema.key.toLowerCase().includes(query) ||
+    [schemas, searchQuery, activeCategory, semanticScores, semanticMode],
+    ([$schemas, $searchQuery, $activeCategory, $semanticScores, $semanticMode]) => {
+      let results = $schemas;
+
+      // Category filter
+      if ($activeCategory !== "All") {
+        results = results.filter(s => s.category === $activeCategory);
+      }
+
+      const query = $searchQuery.toLowerCase();
+
+      if (!query) return results;
+
+      // Keyword filter (always applied as baseline)
+      const keywordFiltered = results.filter((schema) => {
+        return schema.key.toLowerCase().includes(query) ||
           schema.description.toLowerCase().includes(query) ||
           (keywordsMap[schema.key] || []).some(kw => kw.toLowerCase().includes(query));
-        const matchesCategory =
-          $activeCategory === "All" || schema.category === $activeCategory;
-        return matchesSearch && matchesCategory;
       });
+
+      if ($semanticMode && Object.keys($semanticScores).length > 0) {
+        // Merge keyword matches with semantic matches
+        const resultKeys = new Set(keywordFiltered.map(s => s.key));
+
+        // Add semantic matches that aren't already in keyword results
+        const semanticFiltered = results.filter(s =>
+          $semanticScores[s.key] !== undefined && $semanticScores[s.key] >= 0.3
+        );
+        for (const s of semanticFiltered) {
+          resultKeys.add(s.key);
+        }
+
+        const merged = results.filter(s => resultKeys.has(s.key));
+
+        // Sort by semantic score (highest first), with keyword matches boosted
+        merged.sort((a, b) => {
+          const scoreA = ($semanticScores[a.key] || 0) + (keywordFiltered.some(k => k.key === a.key) ? 0.1 : 0);
+          const scoreB = ($semanticScores[b.key] || 0) + (keywordFiltered.some(k => k.key === b.key) ? 0.1 : 0);
+          return scoreB - scoreA;
+        });
+
+        return merged;
+      }
+
+      return keywordFiltered;
     }
   );
 
@@ -257,6 +333,9 @@
       }).sort((a, b) => a.key.localeCompare(b.key));
 
       schemas.set(schemaList);
+
+      // Load semantic search embeddings in background
+      initSemantic();
     } catch (e) {
       console.error('Failed to load schemas:', e);
     } finally {
@@ -322,7 +401,7 @@
       <input
         type="search"
         class="search-box"
-        placeholder="Search schemas..."
+        placeholder="Search schemas... (try natural language, e.g. 'spacecraft maneuvering')"
         bind:value={$searchQuery}
       />
       <div class="filter-pills">
@@ -343,6 +422,11 @@
         Loading schemas...
       {:else}
         Showing {$filteredSchemas.length} of {$schemas.length} schemas
+        {#if $isSemanticSearching}
+          <span class="semantic-badge loading">Loading AI search model...</span>
+        {:else if $semanticMode}
+          <span class="semantic-badge active">AI-powered results</span>
+        {/if}
       {/if}
     </div>
 
@@ -351,12 +435,19 @@
         <a href="/schemas/{schema.key}" use:link class="schema-card">
           <div class="schema-card-header">
             <span class="schema-name">{schema.key}</span>
-            <span
-              class="schema-category"
-              style="background: {getCategoryColor(schema.category)}; color: {getCategoryTextColor(schema.category)};"
-            >
-              {schema.category}
-            </span>
+            <div class="schema-card-badges">
+              {#if $semanticMode && $semanticScores[schema.key]}
+                <span class="relevance-score" title="Semantic relevance">
+                  {Math.round($semanticScores[schema.key] * 100)}%
+                </span>
+              {/if}
+              <span
+                class="schema-category"
+                style="background: {getCategoryColor(schema.category)}; color: {getCategoryTextColor(schema.category)};"
+              >
+                {schema.category}
+              </span>
+            </div>
           </div>
           <p class="schema-desc">{schema.description}</p>
           <div class="schema-meta">
@@ -521,6 +612,43 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: 8px;
+  }
+
+  .schema-card-badges {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .relevance-score {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 10px;
+    background: rgba(102, 126, 234, 0.15);
+    color: #667eea;
+    font-family: var(--font-mono);
+  }
+
+  .semantic-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 12px;
+    margin-left: 8px;
+  }
+
+  .semantic-badge.active {
+    background: rgba(102, 126, 234, 0.15);
+    color: #667eea;
+  }
+
+  .semantic-badge.loading {
+    background: rgba(255, 159, 67, 0.15);
+    color: #ff9f43;
   }
 
   .schema-name {
