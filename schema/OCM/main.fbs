@@ -1,7 +1,8 @@
-// Hash: 89b1dd71dff9f6dfc5a7ed28891da2f9e98da024943f0db51b7c69aec18b051c
-// Version: 2.0.1
+// Hash: 0000000000000000000000000000000000000000000000000000000000000000
+// Version: 2.1.0
 // -----------------------------------END_HEADER
 include "../ATM/main.fbs";
+include "../PPE/main.fbs";
 
 // Orbit Comprehensive Message (OCM)
 // Description
@@ -21,6 +22,31 @@ include "../ATM/main.fbs";
 // Time reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)
 //
 // Covariance uses 21 elements per epoch (lower triangular 6x6 matrix) aligned with state epochs.
+
+/// Trajectory state representation type.
+/// Defines how trajectory data is parameterized in this OCM.
+/// CCSDS 502.0-B-3 Section 7 specifies multiple trajectory state types.
+enum trajectoryType : byte {
+  /// Cartesian position and velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT).
+  CARTESIAN_PV,
+
+  /// Cartesian position, velocity, and acceleration (9 components).
+  CARTESIAN_PVA,
+
+  /// Polynomial coefficients for Cartesian position (and optionally velocity).
+  /// Associated data in POLYNOMIAL_POSITION_RECORDS.
+  POLYNOMIAL_POS,
+
+  /// Polynomial coefficients for classical orbital elements.
+  /// Associated data in POLYNOMIAL_OE_RECORDS.
+  POLYNOMIAL_OE,
+
+  /// Hermite interpolating polynomial representation.
+  HERMITE,
+
+  /// Lagrange interpolating polynomial representation.
+  LAGRANGE
+}
 
 table Header {
   /// Format version in the form of 'x.y', where 'y' is incremented for minor changes, and 'x' for major changes.
@@ -324,8 +350,15 @@ table OCM {
   HEADER: Header;
   /// Metadata section of the OCM.
   METADATA: Metadata;
-  /// Trajectory type (e.g., PROPAGATED, ESTIMATED).
-  TRAJ_TYPE: string;
+  /// Trajectory state representation type.
+  /// Determines how orbit state data is parameterized in this message.
+  /// For CARTESIAN_PV/CARTESIAN_PVA, use STATE_DATA array.
+  /// For POLYNOMIAL_POS/POLYNOMIAL_OE, use the corresponding polynomial record arrays.
+  TRAJ_TYPE: trajectoryType = CARTESIAN_PV;
+
+  /// Legacy trajectory type string for backward compatibility and extended types
+  /// (e.g., "PROPAGATED", "ESTIMATED", "FILTERED").
+  TRAJ_TYPE_DESCRIPTION: string;
 
   /// Time interval between state vectors in seconds (required for time-series data).
   STATE_STEP_SIZE:double;
@@ -344,6 +377,18 @@ table OCM {
   /// Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).
   /// Time alignment matches STATE_DATA epochs.
   COVARIANCE_DATA:[double];
+
+  /// Polynomial position records.
+  /// Used when TRAJ_TYPE is POLYNOMIAL_POS. Each record covers a time segment
+  /// with polynomial coefficients for X, Y, Z position (and optionally velocity).
+  /// See PPE schema for record structure and evaluation procedure.
+  POLYNOMIAL_POSITION_RECORDS: [PPEPositionRecord];
+
+  /// Polynomial orbital element records.
+  /// Used when TRAJ_TYPE is POLYNOMIAL_OE. Each record covers a time segment
+  /// with polynomial coefficients for classical orbital elements.
+  /// See PPE schema for record structure and evaluation procedure.
+  POLYNOMIAL_OE_RECORDS: [PPEOrbitalElementRecord];
 
   /// Physical properties of the space object.
   PHYSICAL_PROPERTIES: PhysicalProperties;
