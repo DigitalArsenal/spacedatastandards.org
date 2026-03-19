@@ -326,7 +326,7 @@ jobs:
       - name: Publish to crates.io
         run: |
           cd lib/rs
-          cargo publish --token ${{ secrets.CARGO_TOKEN }}
+          cargo publish --allow-dirty --token ${{ secrets.CARGO_TOKEN }}
 
   # ============================================
   # pub.dev (Dart)
