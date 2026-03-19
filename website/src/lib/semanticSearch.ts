@@ -69,7 +69,7 @@ export function getModelLoadingState(): boolean {
   return isModelLoading;
 }
 
-export async function semanticSearch(query: string, threshold = 0.25): Promise<SemanticResult[]> {
+export async function semanticSearch(query: string): Promise<SemanticResult[]> {
   if (!embeddingsData) return [];
 
   const embedder = await getEmbedder();
@@ -79,9 +79,7 @@ export async function semanticSearch(query: string, threshold = 0.25): Promise<S
   const results: SemanticResult[] = [];
   for (const [key, embedding] of Object.entries(embeddingsData.embeddings)) {
     const score = cosineSimilarity(queryEmbedding, embedding);
-    if (score >= threshold) {
-      results.push({ key, score });
-    }
+    results.push({ key, score });
   }
 
   results.sort((a, b) => b.score - a.score);

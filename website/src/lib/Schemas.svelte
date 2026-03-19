@@ -222,6 +222,25 @@
     isSemanticReady = await loadEmbeddings();
   }
 
+  // Simple fuzzy match: checks if all characters of needle appear in order in haystack
+  // with tolerance for 1-2 character substitutions
+  function fuzzyMatch(haystack: string, needle: string): boolean {
+    if (haystack.includes(needle)) return true;
+    if (needle.length < 3) return false;
+    // Check edit distance for short queries, or subsequence match for longer ones
+    let h = 0, n = 0, skips = 0;
+    while (h < haystack.length && n < needle.length) {
+      if (haystack[h] === needle[n]) {
+        h++; n++;
+      } else {
+        h++;
+        skips++;
+        if (skips > Math.max(2, needle.length * 0.3)) return false;
+      }
+    }
+    return n >= needle.length - 1; // allow missing last char
+  }
+
   // Run semantic search with debounce
   function triggerSemanticSearch(query: string) {
     clearTimeout(searchDebounceTimer);
@@ -233,7 +252,7 @@
     searchDebounceTimer = setTimeout(async () => {
       isSemanticSearching.set(true);
       try {
-        const results = await semanticSearch(query, 0.2);
+        const results = await semanticSearch(query);
         const scores: Record<string, number> = {};
         for (const r of results) {
           scores[r.key] = r.score;
@@ -266,38 +285,39 @@
 
       if (!query) return results;
 
-      // Keyword filter (always applied as baseline)
-      const keywordFiltered = results.filter((schema) => {
-        return schema.key.toLowerCase().includes(query) ||
-          schema.description.toLowerCase().includes(query) ||
-          (keywordsMap[schema.key] || []).some(kw => kw.toLowerCase().includes(query));
-      });
+      // Keyword filter with fuzzy matching
+      const keywordMatchKeys = new Set<string>();
+      for (const schema of results) {
+        const texts = [
+          schema.key.toLowerCase(),
+          schema.description.toLowerCase(),
+          ...(keywordsMap[schema.key] || []).map(kw => kw.toLowerCase())
+        ];
+        // Split query into words for multi-word matching
+        const queryWords = query.split(/\s+/).filter(w => w.length > 1);
+        const matchesKeyword = queryWords.length > 0
+          ? queryWords.some(word => texts.some(t => fuzzyMatch(t, word)))
+          : texts.some(t => fuzzyMatch(t, query));
+        if (matchesKeyword) {
+          keywordMatchKeys.add(schema.key);
+        }
+      }
 
       if ($semanticMode && Object.keys($semanticScores).length > 0) {
-        // Merge keyword matches with semantic matches
-        const resultKeys = new Set(keywordFiltered.map(s => s.key));
-
-        // Add semantic matches that aren't already in keyword results
-        const semanticFiltered = results.filter(s =>
-          $semanticScores[s.key] !== undefined && $semanticScores[s.key] >= 0.3
-        );
-        for (const s of semanticFiltered) {
-          resultKeys.add(s.key);
-        }
-
-        const merged = results.filter(s => resultKeys.has(s.key));
-
-        // Sort by semantic score (highest first), with keyword matches boosted
-        merged.sort((a, b) => {
-          const scoreA = ($semanticScores[a.key] || 0) + (keywordFiltered.some(k => k.key === a.key) ? 0.1 : 0);
-          const scoreB = ($semanticScores[b.key] || 0) + (keywordFiltered.some(k => k.key === b.key) ? 0.1 : 0);
+        // Sort ALL schemas by semantic score, boost keyword matches
+        const sorted = [...results].sort((a, b) => {
+          const scoreA = ($semanticScores[a.key] || 0) + (keywordMatchKeys.has(a.key) ? 0.15 : 0);
+          const scoreB = ($semanticScores[b.key] || 0) + (keywordMatchKeys.has(b.key) ? 0.15 : 0);
           return scoreB - scoreA;
         });
 
-        return merged;
+        // Show top results: all keyword matches + top semantic matches
+        const topN = Math.max(keywordMatchKeys.size, 15);
+        return sorted.slice(0, topN);
       }
 
-      return keywordFiltered;
+      // Fallback: keyword-only results
+      return results.filter(s => keywordMatchKeys.has(s.key));
     }
   );
 
