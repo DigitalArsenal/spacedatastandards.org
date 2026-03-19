@@ -171,7 +171,11 @@ func (rcv *ephemerisDataBlock) STOP_TIME() []byte {
 }
 
 /// End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)
-/// Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
+/// Recommended interpolation method for ephemeris data.
+/// Supported methods: Hermite, Linear, Lagrange, Chebyshev.
+/// When set to "Chebyshev", parsers should use POLYNOMIAL_POSITION_RECORDS
+/// for high-fidelity polynomial interpolation instead of interpolating across
+/// discrete state vectors.
 func (rcv *ephemerisDataBlock) INTERPOLATION() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
@@ -180,7 +184,11 @@ func (rcv *ephemerisDataBlock) INTERPOLATION() []byte {
 	return nil
 }
 
-/// Recommended interpolation method for ephemeris data (Hermite, Linear, Lagrange, etc.)
+/// Recommended interpolation method for ephemeris data.
+/// Supported methods: Hermite, Linear, Lagrange, Chebyshev.
+/// When set to "Chebyshev", parsers should use POLYNOMIAL_POSITION_RECORDS
+/// for high-fidelity polynomial interpolation instead of interpolating across
+/// discrete state vectors.
 /// Recommended interpolation degree for ephemeris data
 func (rcv *ephemerisDataBlock) INTERPOLATION_DEGREE() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
@@ -319,8 +327,36 @@ func (rcv *ephemerisDataBlock) COVARIANCE_MATRIX_LINESLength() int {
 }
 
 /// Array of covariance matrix lines (optional)
+/// Optional polynomial position records for high-fidelity interpolation.
+/// Used when INTERPOLATION is "Chebyshev". Each record covers a time segment with
+/// polynomial coefficients for continuous position (and optionally velocity) evaluation.
+/// See PPE schema for record structure and evaluation procedure.
+func (rcv *ephemerisDataBlock) POLYNOMIAL_POSITION_RECORDS(obj *PPEPositionRecord, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *ephemerisDataBlock) POLYNOMIAL_POSITION_RECORDSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Optional polynomial position records for high-fidelity interpolation.
+/// Used when INTERPOLATION is "Chebyshev". Each record covers a time segment with
+/// polynomial coefficients for continuous position (and optionally velocity) evaluation.
+/// See PPE schema for record structure and evaluation procedure.
 func ephemerisDataBlockStart(builder *flatbuffers.Builder) {
-	builder.StartObject(18)
+	builder.StartObject(19)
 }
 func ephemerisDataBlockAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COMMENT), 0)
@@ -383,6 +419,12 @@ func ephemerisDataBlockAddCOVARIANCE_MATRIX_LINES(builder *flatbuffers.Builder, 
 	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(COVARIANCE_MATRIX_LINES), 0)
 }
 func ephemerisDataBlockStartCOVARIANCE_MATRIX_LINESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func ephemerisDataBlockAddPOLYNOMIAL_POSITION_RECORDS(builder *flatbuffers.Builder, POLYNOMIAL_POSITION_RECORDS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(POLYNOMIAL_POSITION_RECORDS), 0)
+}
+func ephemerisDataBlockStartPOLYNOMIAL_POSITION_RECORDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
 func ephemerisDataBlockEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
